@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 
 import android.content.ContentValues;
@@ -38,6 +39,12 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 + MoodColumns.ALERT + " TEXT,"
                 + MoodColumns.EFFECT + " TEXT"
                 + ");");
+    	
+    	db.execSQL("CREATE TABLE " + GROUP_TABLE_NAME + " ("
+                + GroupColumns._ID + " INTEGER PRIMARY KEY,"
+                + GroupColumns.GROUP + " TEXT,"
+                + GroupColumns.BULB + " TEXT"
+                + ");");
     }	
     
     public void initialPopulate(){
@@ -59,6 +66,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     	cv.clear();
     	cv.put(MoodColumns.MOOD, "Energize");
     	db.insert(MOOD_TABLE_NAME, null, cv);
+    	
+    	cv.clear();
+    	cv.put(GroupColumns.GROUP, "ALL");
+    	db.insert(GROUP_TABLE_NAME, null, cv);
     
     }
 
@@ -74,8 +85,17 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     	SQLiteDatabase db = this.getWritableDatabase();
     	
     	String[] columns = {MoodColumns.MOOD, MoodColumns._ID};
-        Cursor data = db.query("moods", columns, 
+        Cursor data = db.query(MOOD_TABLE_NAME, columns, 
             null, null, MoodColumns.MOOD, null, null);
+        
+        return data;
+    }
+    public Cursor getGroupCursor(){
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	String[] columns = {GroupColumns.GROUP, GroupColumns._ID};
+        Cursor data = db.query(GROUP_TABLE_NAME, columns, 
+            null, null, GroupColumns.GROUP, null, null);
         
         return data;
     }
