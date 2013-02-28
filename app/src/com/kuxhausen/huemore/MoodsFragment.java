@@ -38,38 +38,16 @@ public class MoodsFragment extends ListFragment {
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
         
-        DatabaseHandler helper = new DatabaseHandler(this.getActivity());
-     	SQLiteDatabase database = helper.getWritableDatabase();
-     	
-     	helper.initialPopulate();
-     	
-     	ContentValues cv = new ContentValues();
-     	cv.put(MoodColumns.MOOD, "testing");
-     	database.insert("moods", null, cv );
-     	
-     	
+        
      	String[] columns = {MoodColumns.MOOD, MoodColumns._ID};
-        Cursor data = database.query("moods", columns, 
-            null, null, null, null, null);
-		
         @SuppressWarnings("deprecation")
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(), 
-            R.layout.mood_row, data, columns,	
+            R.layout.mood_row, ((MainActivity)this.getActivity()).helper.getMoodCursor(), columns,	
             new int[] { R.id.moodTextView});
-
-      
 
 		setListAdapter(dataSource);
         	
-
-            
-        
-
-        
-        
-        // Create an array adapter for the list view, using the groups array
-        //setListAdapter(new ArrayAdapter<String>(getActivity(), layout, StaticDataStore.Moods));
-        
+      
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.mood_view, container, false);
     }

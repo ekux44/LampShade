@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 public class MainActivity extends FragmentActivity 
 implements GroupsFragment.OnHeadlineSelectedListener {
 
+	DatabaseHandler helper;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,11 @@ implements GroupsFragment.OnHeadlineSelectedListener {
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, firstFragment).commit();
+            
+            
+            //initialize database
+            helper = new DatabaseHandler(this);
+            helper.initialPopulate();
         }
     }
 

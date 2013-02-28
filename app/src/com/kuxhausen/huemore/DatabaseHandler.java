@@ -4,6 +4,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -67,5 +68,15 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS notes");
         onCreate(db);
+    }
+    
+    public Cursor getMoodCursor(){
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	
+    	String[] columns = {MoodColumns.MOOD, MoodColumns._ID};
+        Cursor data = db.query("moods", columns, 
+            null, null, MoodColumns.MOOD, null, null);
+        
+        return data;
     }
 }
