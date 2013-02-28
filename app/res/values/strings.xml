@@ -4,5 +4,7 @@
     <string name="app_name">HueMore</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+	<string name="accept">Okay</string>
+	<string name="cancel">Cancel</string>
+	
 </resources>

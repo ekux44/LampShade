@@ -53,18 +53,22 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     	
     	ContentValues cv = new ContentValues();
      	cv.put(MoodColumns.MOOD, "Reading");
+     	cv.put(MoodColumns.CT, 1000000/2700);
     	db.insert(MOOD_TABLE_NAME, null, cv);
     	
     	cv.clear();
     	cv.put(MoodColumns.MOOD, "Concentrate");
+    	cv.put(MoodColumns.CT, 1000000/3400);
     	db.insert(MOOD_TABLE_NAME, null, cv);
     	
     	cv.clear();
     	cv.put(MoodColumns.MOOD, "Relax");
+    	cv.put(MoodColumns.CT, 1000000/2500);
     	db.insert(MOOD_TABLE_NAME, null, cv);
     	
     	cv.clear();
     	cv.put(MoodColumns.MOOD, "Energize");
+    	cv.put(MoodColumns.CT, 1000000/6000);
     	db.insert(MOOD_TABLE_NAME, null, cv);
     	
     	cv.clear();

@@ -3,17 +3,23 @@ package com.kuxhausen.huemore;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
-public class GroupsFragment extends ListFragment {
+public class GroupsFragment extends ListFragment implements OnClickListener{
     OnHeadlineSelectedListener mCallback;
 
     // The container Activity must implement this interface so the frag can deliver messages
@@ -23,8 +29,8 @@ public class GroupsFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
+        Bundle savedInstanceState) {
 
         // We need to use a different list item layout for devices older than Honeycomb
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
@@ -38,6 +44,14 @@ public class GroupsFragment extends ListFragment {
 
 		setListAdapter(dataSource);
         
+		View myView=inflater.inflate(R.layout.group_view, container, false);
+		
+		Button newGroup = (Button)myView.findViewById(R.id.newGroupButton);
+		newGroup.setOnClickListener(this);
+		
+		
+		// Inflate the layout for this fragment
+        return myView;
     }
 
     @Override
@@ -73,4 +87,21 @@ public class GroupsFragment extends ListFragment {
         // Set the item as checked to be highlighted when in two-pane layout
         getListView().setItemChecked(position, true);
     }
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch(v.getId()){
+		case R.id.newGroupButton : 
+			Log.e("asdf", "buttonClicked");
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // 1. Instantiate an AlertDialog.Builder with its constructor
+			// 2. Chain together various setter methods to set the dialog characteristics
+			builder.setMessage(R.string.app_name)
+			       .setTitle(R.string.app_name);
+			AlertDialog dialog = builder.create(); // 3. Get the AlertDialog from create()
+			dialog.show();
+			break;
+		}
+	}
 }
