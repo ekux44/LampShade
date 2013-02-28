@@ -1,9 +1,14 @@
 package com.kuxhausen.huemore;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +35,35 @@ public class MoodsFragment extends ListFragment {
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
+        
+        DatabaseHandler helper = new DatabaseHandler(this.getActivity());
+     	SQLiteDatabase database = helper.getWritableDatabase();
+     	
+     	ContentValues cv = new ContentValues();
+     	cv.put("mood", "testing");
+     	database.insert("moods", null, cv );
+     	
+     	String[] columns = {"_id","mood"};
+        Cursor data = database.query("moods", columns, 
+            null, null, null, null, null);
+		
+        @SuppressWarnings("deprecation")
+		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(), 
+            R.layout.mood_view, data, columns,	
+            new int[] { R.id.brightnessDescripterTextView, R.id.brightnessDescripterTextView });
+
+      
+
+		setListAdapter(dataSource);
+        	
+
+            
+        
+
+        
+        
         // Create an array adapter for the list view, using the groups array
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, StaticDataStore.Moods));
+        //setListAdapter(new ArrayAdapter<String>(getActivity(), layout, StaticDataStore.Moods));
         
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.mood_view, container, false);

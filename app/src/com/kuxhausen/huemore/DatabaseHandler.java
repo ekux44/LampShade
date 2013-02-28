@@ -5,6 +5,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper{
@@ -19,8 +20,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + NOTES_TABLE_NAME + " ("
-                + MoodColumns.MOOD + " TEXT,"
+        /*db.execSQL("CREATE TABLE " + NOTES_TABLE_NAME + " ("
+        		+ BaseColumns._ID + " INTEGER,"
+        		+ MoodColumns.MOOD + " TEXT,"
                 + MoodColumns.PRECEDENCE + " INTEGER,"
                 + MoodColumns.ON + " TEXT,"
                 + MoodColumns.BRI + " INTEGER,"
@@ -30,7 +32,12 @@ public class DatabaseHandler extends SQLiteOpenHelper{
                 + MoodColumns.Y + " REAL,"
                 + MoodColumns.CT + " INTEGER,"
                 + MoodColumns.ALERT + " TEXT,"
-                + MoodColumns.EFFECT + " TEXT,"
+                + MoodColumns.EFFECT + " TEXT"
+                + ");");*/
+    	
+    	db.execSQL("CREATE TABLE " + NOTES_TABLE_NAME + " ("
+                + MoodColumns._ID + " INTEGER PRIMARY KEY,"
+                + MoodColumns.MOOD + " TEXT"
                 + ");");
     }
 
