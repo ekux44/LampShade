@@ -41,13 +41,11 @@ public class MoodsFragment extends ListFragment {
         DatabaseHandler helper = new DatabaseHandler(this.getActivity());
      	SQLiteDatabase database = helper.getWritableDatabase();
      	
+     	helper.initialPopulate();
+     	
      	ContentValues cv = new ContentValues();
      	cv.put(MoodColumns.MOOD, "testing");
      	database.insert("moods", null, cv );
-     	
-     	ContentValues cv2 = new ContentValues();
-     	cv2.put(MoodColumns.MOOD, "asdf");
-     	database.insert("moods", null, cv2 );
      	
      	
      	String[] columns = {MoodColumns.MOOD, MoodColumns._ID};
