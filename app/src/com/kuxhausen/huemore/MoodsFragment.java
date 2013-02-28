@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -40,17 +42,22 @@ public class MoodsFragment extends ListFragment {
      	SQLiteDatabase database = helper.getWritableDatabase();
      	
      	ContentValues cv = new ContentValues();
-     	cv.put("mood", "testing");
+     	cv.put(MoodColumns.MOOD, "testing");
      	database.insert("moods", null, cv );
      	
-     	String[] columns = {"_id","mood"};
+     	ContentValues cv2 = new ContentValues();
+     	cv2.put(MoodColumns.MOOD, "asdf");
+     	database.insert("moods", null, cv2 );
+     	
+     	
+     	String[] columns = {MoodColumns.MOOD, MoodColumns._ID};
         Cursor data = database.query("moods", columns, 
             null, null, null, null, null);
 		
         @SuppressWarnings("deprecation")
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(), 
-            R.layout.mood_view, data, columns,	
-            new int[] { R.id.brightnessDescripterTextView, R.id.brightnessDescripterTextView });
+            R.layout.mood_row, data, columns,	
+            new int[] { R.id.moodTextView});
 
       
 
