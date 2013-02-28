@@ -1,10 +1,14 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
+
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -26,8 +30,14 @@ public class GroupsFragment extends ListFragment {
         int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
-        // Create an array adapter for the list view, using the groups array
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, StaticDataStore.Groups));
+        String[] columns = {GroupColumns.GROUP, GroupColumns._ID};
+        @SuppressWarnings("deprecation")
+		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(), 
+            R.layout.group_row, ((MainActivity)this.getActivity()).helper.getGroupCursor(), columns,	
+            new int[] { R.id.groupTextView});
+
+		setListAdapter(dataSource);
+        
     }
 
     @Override
