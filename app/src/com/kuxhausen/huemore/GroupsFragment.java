@@ -95,12 +95,9 @@ public class GroupsFragment extends ListFragment implements OnClickListener{
 		case R.id.newGroupButton : 
 			Log.e("asdf", "buttonClicked");
 			
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()); // 1. Instantiate an AlertDialog.Builder with its constructor
-			// 2. Chain together various setter methods to set the dialog characteristics
-			builder.setMessage(R.string.app_name)
-			       .setTitle(R.string.app_name);
-			AlertDialog dialog = builder.create(); // 3. Get the AlertDialog from create()
-			dialog.show();
+			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
+			ngdf.show(getFragmentManager(),"dialog");
+			
 			break;
 		}
 	}
