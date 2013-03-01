@@ -77,12 +77,16 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w("asdf", "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS notes");
-        onCreate(db);
+    public void addGroup(String groupname, String[] bulbs){
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	ContentValues cv = new ContentValues();
+    	
+    	for(String bulb: bulbs){
+    		cv.clear();
+        	cv.put(GroupColumns.GROUP, groupname);
+        	cv.put(GroupColumns.BULB, bulb);
+        	db.insert(GROUP_TABLE_NAME, null, cv);
+    	}
     }
     
     public Cursor getMoodCursor(){
@@ -102,5 +106,13 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             null, null, GroupColumns.GROUP, null, null);
         
         return data;
+    }
+    
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.w("asdf", "Upgrading database from version " + oldVersion + " to "
+                + newVersion + ", which will destroy all old data");
+        db.execSQL("DROP TABLE IF EXISTS notes");
+        onCreate(db);
     }
 }

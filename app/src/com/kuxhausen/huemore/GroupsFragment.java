@@ -93,7 +93,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch(v.getId()){
 		case R.id.newGroupButton : 
-			Log.e("asdf", "buttonClicked");
+			
 			
 			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
 			ngdf.show(getFragmentManager(),"dialog");
