@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Convenience definitions for Database Hander
  */
 public final class DatabaseDefinitions {
-	
+
 	// This class cannot be instantiated
 	private DatabaseDefinitions() {
 	}
@@ -22,12 +22,12 @@ public final class DatabaseDefinitions {
 		public static final String GROUP = "Dgroup";
 
 		/**
-		 * which bulb. currently using bulb name string until better method found
+		 * which bulb. currently using bulb name string until better method
+		 * found
 		 */
 		public static final String BULB = "Dbulb";
 	}
-	
-	
+
 	/**
 	 * Notes table
 	 */
