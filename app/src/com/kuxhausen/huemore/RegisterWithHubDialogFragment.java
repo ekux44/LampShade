@@ -51,19 +51,25 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	        @Override
 	        public void onTick(long millisUntilFinished) {
 	           progressBar.setProgress( (int) (((length_in_milliseconds-millisUntilFinished)*100.0)/length_in_milliseconds));
+	           networkRegister = new Register();
+	           networkRegister.execute(c);
 	        }
 
 	        @Override
 	        public void onFinish() {
-	        	networkRegister.execute(c);
+	        	networkRegister = new Register();
+		        networkRegister.execute(c);
+		        
+		        //launch the failed registration dialog
 	        }
 	    };
 	    countDownTimer.start();
 		
+	    
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-	public class Register extends AsyncTask<Object, Void, Integer> {
+	public class Register extends AsyncTask<Object, Void, Boolean> {
 
 		Context cont;
 
@@ -78,7 +84,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		}
 		
 		@Override
-		protected Integer doInBackground(Object... params) {
+		protected Boolean doInBackground(Object... params) {
 			// Get session ID
 			cont = (Context) params[0];
 			Log.i("asyncTask", "doing");
@@ -116,12 +122,21 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		    }
 			
 			Log.i("asyncTask", "finishing");
-			return 1;
+			//return false;
+			return true;
 		}
 
 		@Override
-		protected void onPostExecute(Integer SID) {
+		protected void onPostExecute(Boolean success) {
 			Log.i("asyncTask", "finished");
+			if(success){
+				countDownTimer.cancel();
+				
+				RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
+				rsdf.show(getFragmentManager(), "dialog");
+				
+				dismiss();
+			}
 		}
 	}
 }
