@@ -85,7 +85,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			return "728e44cf55cd29a0ae0fa801bc8b0bb9"; //TODO replace with device specific MD5 hash
 		}
 		public String getDeviceType(){
-			return "MoreHue"; //TODO replace with string from xml values
+			return getString(R.string.app_name);
 		}
 		
 		@Override
@@ -113,10 +113,15 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		        httppost.setHeader("Accept", "application/json");
 		        httppost.setHeader("Content-type", "application/json"); 
 		        
-		        // Execute HTTP Post Request
+		        // execute HTTP post request
 		        HttpResponse response = httpclient.execute(httppost);
-		        Log.e("asdf",response.toString());
-		        Log.e("asdf","wtf " + EntityUtils.toString(response.getEntity()));
+		        
+		        // analyze the response
+		        String responseString = EntityUtils.toString(response.getEntity());
+		        responseString = responseString.substring(1, responseString.length()-1);//pull off the outer brackets
+		        RegistrationResponse responseObject = gson.fromJson(responseString, RegistrationResponse.class);
+		        if (responseObject.success!=null)
+		        	return true;
 		        
 		    } catch (ClientProtocolException e) {
 		    	Log.e("asdf","ClientProtocolException: " +e.getMessage());
@@ -128,7 +133,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			
 			Log.i("asyncTask", "finishing");
 			return false;
-			//return true;
 		}
 
 		@Override
