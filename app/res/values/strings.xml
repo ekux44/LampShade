@@ -7,5 +7,6 @@
 	<string name="accept">Okay</string>
 	<string name="cancel">Cancel</string>
 	<string name="register_success">Link successful</string>
+	<string name="register_fail">Cound not connect to bridge</string>
 	
 </resources>

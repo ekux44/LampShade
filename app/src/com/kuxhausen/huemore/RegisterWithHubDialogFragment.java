@@ -57,10 +57,15 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 
 	        @Override
 	        public void onFinish() {
+	        	//try one last time
 	        	networkRegister = new Register();
 		        networkRegister.execute(c);
 		        
 		        //launch the failed registration dialog
+		        RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
+				rfdf.show(getFragmentManager(), "dialog");
+				
+				dismiss();
 	        }
 	    };
 	    countDownTimer.start();
@@ -122,8 +127,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		    }
 			
 			Log.i("asyncTask", "finishing");
-			//return false;
-			return true;
+			return false;
+			//return true;
 		}
 
 		@Override
