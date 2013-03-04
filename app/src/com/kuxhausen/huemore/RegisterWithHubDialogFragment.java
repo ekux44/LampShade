@@ -1,8 +1,22 @@
 package com.kuxhausen.huemore;
 
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.google.gson.Gson;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.DialogFragment;
@@ -17,6 +31,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	public static final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
+	public Register networkRegister = new Register();
+	public Context c = this.getActivity();
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the Builder class for convenient dialog construction
@@ -28,6 +45,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		builder.setView(registerWithHubView);
 		progressBar = (ProgressBar) registerWithHubView.findViewById(R.id.timerProgressBar);
 		
+		
 		countDownTimer = new CountDownTimer(length_in_milliseconds,period_in_milliseconds) {
 	        private boolean warned = false;
 	        @Override
@@ -37,12 +55,73 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 
 	        @Override
 	        public void onFinish() {
-	            // do whatever when the bar is full
+	        	networkRegister.execute(c);
 	        }
 	    };
 	    countDownTimer.start();
 		
 		// Create the AlertDialog object and return it
 		return builder.create();
+	}
+	public class Register extends AsyncTask<Object, Void, Integer> {
+
+		Context cont;
+
+		public String getBridge(){
+			return "192.168.1.100"; //TODO replace with proper network abstraction
+		}
+		public String getUserName(){
+			return "728e44cf55cd29a0ae0fa801bc8b0bb9"; //TODO replace with device specific MD5 hash
+		}
+		public String getDeviceType(){
+			return "MoreHue"; //TODO replace with string from xml values
+		}
+		
+		@Override
+		protected Integer doInBackground(Object... params) {
+			// Get session ID
+			cont = (Context) params[0];
+			Log.i("asyncTask", "doing");
+			
+			// Create a new HttpClient and Post Header
+		    HttpClient httpclient = new DefaultHttpClient();
+		    HttpPost httppost = new HttpPost("http://"+getBridge()+"/api/");
+
+		    try {
+		        RegistrationRequest request = new RegistrationRequest();
+		        request.username = getUserName();
+		        request.devicetype = getDeviceType();
+		    	Gson gson = new Gson();
+		    	String registrationRequest = gson.toJson(request);
+		    	
+		        StringEntity se = new StringEntity(registrationRequest);
+
+		        //sets the post request as the resulting string
+		        httppost.setEntity(se);
+		        //sets a request header so the page receiving the request will know what to do with it
+		        httppost.setHeader("Accept", "application/json");
+		        httppost.setHeader("Content-type", "application/json"); 
+		        
+		        // Execute HTTP Post Request
+		        HttpResponse response = httpclient.execute(httppost);
+		        Log.e("asdf",response.toString());
+		        Log.e("asdf","wtf " + EntityUtils.toString(response.getEntity()));
+		        
+		    } catch (ClientProtocolException e) {
+		    	Log.e("asdf","ClientProtocolException: " +e.getMessage());
+		    	// TODO Auto-generated catch block
+		    } catch (IOException e) {
+		    	Log.e("asdf","IOException: "+e.getMessage());
+		    	// TODO Auto-generated catch block
+		    }
+			
+			Log.i("asyncTask", "finishing");
+			return 1;
+		}
+
+		@Override
+		protected void onPostExecute(Integer SID) {
+			Log.i("asyncTask", "finished");
+		}
 	}
 }

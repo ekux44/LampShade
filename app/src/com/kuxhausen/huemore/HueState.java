@@ -22,5 +22,5 @@ public class HueState {
 	 */
 	public Integer ct;
 	
-	public HueState(){};
+	public HueState(){}
 }
