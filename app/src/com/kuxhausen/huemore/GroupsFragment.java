@@ -35,11 +35,10 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 				: android.R.layout.simple_list_item_1;
 
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
-		@SuppressWarnings("deprecation")
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.group_row,
 				((MainActivity) this.getActivity()).helper.getGroupCursor(),
-				columns, new int[] { R.id.groupTextView });
+				columns, new int[] { R.id.groupTextView }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 		setListAdapter(dataSource);
 

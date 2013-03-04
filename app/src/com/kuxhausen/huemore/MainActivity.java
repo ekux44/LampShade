@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 public class MainActivity extends FragmentActivity implements
 		GroupsFragment.OnHeadlineSelectedListener {
 
-	DatabaseHandler helper;
+	DatabaseHandler helper = new DatabaseHandler(this);
+	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,9 +40,8 @@ public class MainActivity extends FragmentActivity implements
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragment_container, firstFragment).commit();
 
-			// initialize database
-			helper = new DatabaseHandler(this);
-			helper.initialPopulate();
+			
+			helper.initialPopulate();// initialize database
 		}
 	}
 
