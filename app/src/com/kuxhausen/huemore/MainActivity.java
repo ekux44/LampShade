@@ -1,6 +1,10 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
@@ -42,6 +46,14 @@ public class MainActivity extends FragmentActivity implements
 
 			
 			helper.initialPopulate();// initialize database
+			
+			//check to see if the bridge IP address is setup yet
+			SharedPreferences settings = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			if (!settings.contains(PreferencesKeys.Bridge_IP_Address)) {
+				RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
+				rwhdf.show(this.getSupportFragmentManager(), "dialog");
+			}
 		}
 	}
 

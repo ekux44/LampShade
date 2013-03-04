@@ -11,14 +11,18 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,15 +31,16 @@ import android.widget.ProgressBar;
 
 public class RegisterWithHubDialogFragment extends DialogFragment {
 
-	public static final long length_in_milliseconds = 15000;
-	public static final long period_in_milliseconds = 1000;
+	public final long length_in_milliseconds = 15000;
+	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
 	public Register networkRegister = new Register();
-	public Context c = this.getActivity();
+	public Context parrentActivity;
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		parrentActivity = this.getActivity();
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -52,14 +57,14 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	        public void onTick(long millisUntilFinished) {
 	           progressBar.setProgress( (int) (((length_in_milliseconds-millisUntilFinished)*100.0)/length_in_milliseconds));
 	           networkRegister = new Register();
-	           networkRegister.execute(c);
+	           networkRegister.execute(parrentActivity);
 	        }
 
 	        @Override
 	        public void onFinish() {
 	        	//try one last time
 	        	networkRegister = new Register();
-		        networkRegister.execute(c);
+		        networkRegister.execute(parrentActivity);
 		        
 		        //launch the failed registration dialog
 		        RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
@@ -141,9 +146,22 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			if(success){
 				countDownTimer.cancel();
 				
+				//Show the success dialog
 				RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
 				rsdf.show(getFragmentManager(), "dialog");
 				
+				//Add username and IP to preferences cache
+				SharedPreferences settings = PreferenceManager
+						.getDefaultSharedPreferences(parrentActivity);
+
+				Editor edit = settings.edit();
+				edit.putString(PreferencesKeys.Bridge_IP_Address, getBridge());
+				edit.putString(PreferencesKeys.Hashed_Username, getUserName());
+				edit.commit();
+				
+				
+				
+				//done with registration dialog
 				dismiss();
 			}
 		}
