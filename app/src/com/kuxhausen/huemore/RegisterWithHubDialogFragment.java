@@ -55,22 +55,26 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	        private boolean warned = false;
 	        @Override
 	        public void onTick(long millisUntilFinished) {
-	           progressBar.setProgress( (int) (((length_in_milliseconds-millisUntilFinished)*100.0)/length_in_milliseconds));
-	           networkRegister = new Register();
-	           networkRegister.execute(parrentActivity);
+	        	if(isAdded()){
+	        		progressBar.setProgress( (int) (((length_in_milliseconds-millisUntilFinished)*100.0)/length_in_milliseconds));
+	        		networkRegister = new Register();
+	        		networkRegister.execute(parrentActivity);
+	        	}
 	        }
 
 	        @Override
 	        public void onFinish() {
-	        	//try one last time
-	        	networkRegister = new Register();
-		        networkRegister.execute(parrentActivity);
-		        
-		        //launch the failed registration dialog
-		        RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-				rfdf.show(getFragmentManager(), "dialog");
-				
-				dismiss();
+	        	if(isAdded()){
+		        	//try one last time
+		        	networkRegister = new Register();
+			        networkRegister.execute(parrentActivity);
+			        
+			        //launch the failed registration dialog
+			        RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
+					rfdf.show(getFragmentManager(), "dialog");
+					
+					dismiss();
+	        	}
 	        }
 	    };
 	    countDownTimer.start();
@@ -95,47 +99,48 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		
 		@Override
 		protected Boolean doInBackground(Object... params) {
-			// Get session ID
-			cont = (Context) params[0];
-			Log.i("asyncTask", "doing");
-			
-			// Create a new HttpClient and Post Header
-		    HttpClient httpclient = new DefaultHttpClient();
-		    HttpPost httppost = new HttpPost("http://"+getBridge()+"/api/");
-
-		    try {
-		        RegistrationRequest request = new RegistrationRequest();
-		        request.username = getUserName();
-		        request.devicetype = getDeviceType();
-		    	Gson gson = new Gson();
-		    	String registrationRequest = gson.toJson(request);
-		    	
-		        StringEntity se = new StringEntity(registrationRequest);
-
-		        //sets the post request as the resulting string
-		        httppost.setEntity(se);
-		        //sets a request header so the page receiving the request will know what to do with it
-		        httppost.setHeader("Accept", "application/json");
-		        httppost.setHeader("Content-type", "application/json"); 
-		        
-		        // execute HTTP post request
-		        HttpResponse response = httpclient.execute(httppost);
-		        
-		        // analyze the response
-		        String responseString = EntityUtils.toString(response.getEntity());
-		        responseString = responseString.substring(1, responseString.length()-1);//pull off the outer brackets
-		        RegistrationResponse responseObject = gson.fromJson(responseString, RegistrationResponse.class);
-		        if (responseObject.success!=null)
-		        	return true;
-		        
-		    } catch (ClientProtocolException e) {
-		    	Log.e("asdf","ClientProtocolException: " +e.getMessage());
-		    	// TODO Auto-generated catch block
-		    } catch (IOException e) {
-		    	Log.e("asdf","IOException: "+e.getMessage());
-		    	// TODO Auto-generated catch block
-		    }
-			
+			if(isAdded()){
+				// Get session ID
+				cont = (Context) params[0];
+				Log.i("asyncTask", "doing");
+				
+				// Create a new HttpClient and Post Header
+			    HttpClient httpclient = new DefaultHttpClient();
+			    HttpPost httppost = new HttpPost("http://"+getBridge()+"/api/");
+	
+			    try {
+			        RegistrationRequest request = new RegistrationRequest();
+			        request.username = getUserName();
+			        request.devicetype = getDeviceType();
+			    	Gson gson = new Gson();
+			    	String registrationRequest = gson.toJson(request);
+			    	
+			        StringEntity se = new StringEntity(registrationRequest);
+	
+			        //sets the post request as the resulting string
+			        httppost.setEntity(se);
+			        //sets a request header so the page receiving the request will know what to do with it
+			        httppost.setHeader("Accept", "application/json");
+			        httppost.setHeader("Content-type", "application/json"); 
+			        
+			        // execute HTTP post request
+			        HttpResponse response = httpclient.execute(httppost);
+			        
+			        // analyze the response
+			        String responseString = EntityUtils.toString(response.getEntity());
+			        responseString = responseString.substring(1, responseString.length()-1);//pull off the outer brackets
+			        RegistrationResponse responseObject = gson.fromJson(responseString, RegistrationResponse.class);
+			        if (responseObject.success!=null)
+			        	return true;
+			        
+			    } catch (ClientProtocolException e) {
+			    	Log.e("asdf","ClientProtocolException: " +e.getMessage());
+			    	// TODO Auto-generated catch block
+			    } catch (IOException e) {
+			    	Log.e("asdf","IOException: "+e.getMessage());
+			    	// TODO Auto-generated catch block
+			    }
+			}
 			Log.i("asyncTask", "finishing");
 			return false;
 		}
@@ -143,7 +148,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		@Override
 		protected void onPostExecute(Boolean success) {
 			Log.i("asyncTask", "finished");
-			if(success){
+			if(success && isAdded()){
 				countDownTimer.cancel();
 				
 				//Show the success dialog
