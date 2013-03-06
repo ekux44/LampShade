@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class MainActivity extends FragmentActivity implements
 		GroupsFragment.OnHeadlineSelectedListener {
@@ -19,7 +22,8 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hue_more);
-
+		
+		
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -93,5 +97,25 @@ public class MainActivity extends FragmentActivity implements
 			// Commit the transaction
 			transaction.commit();
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        
+	        case R.id.action_register_with_hub:
+	        	RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
+				rwhdf.show(getSupportFragmentManager(), "dialog");
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 }

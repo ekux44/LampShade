@@ -58,7 +58,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	        	if(isAdded()){
 	        		progressBar.setProgress( (int) (((length_in_milliseconds-millisUntilFinished)*100.0)/length_in_milliseconds));
 	        		networkRegister = new Register();
-	        		networkRegister.execute(parrentActivity);
+		        networkRegister.execute(parrentActivity);
 	        	}
 	        }
 
@@ -94,7 +94,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			return "728e44cf55cd29a0ae0fa801bc8b0bb9"; //TODO replace with device specific MD5 hash
 		}
 		public String getDeviceType(){
-			return getString(R.string.app_name);
+			if(isAdded()){
+				return getString(R.string.app_name);
+			}
+			return null;
 		}
 		
 		@Override

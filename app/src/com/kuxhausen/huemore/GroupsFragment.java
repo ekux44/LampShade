@@ -96,8 +96,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
 			ngdf.show(getFragmentManager(), "dialog");
 			
-			//RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-			//rwhdf.show(getFragmentManager(), "dialog");
+			
 			break;
 		}
 	}
