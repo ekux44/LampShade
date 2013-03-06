@@ -15,15 +15,13 @@ public class MainActivity extends FragmentActivity implements
 		GroupsFragment.OnHeadlineSelectedListener {
 
 	DatabaseHandler helper = new DatabaseHandler(this);
-	
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hue_more);
-		
-		
+
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -48,10 +46,9 @@ public class MainActivity extends FragmentActivity implements
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragment_container, firstFragment).commit();
 
-			
 			helper.initialPopulate();// initialize database
-			
-			//check to see if the bridge IP address is setup yet
+
+			// check to see if the bridge IP address is setup yet
 			SharedPreferences settings = PreferenceManager
 					.getDefaultSharedPreferences(this);
 			if (!settings.contains(PreferencesKeys.Bridge_IP_Address)) {
@@ -98,24 +95,25 @@ public class MainActivity extends FragmentActivity implements
 			transaction.commit();
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-	    switch (item.getItemId()) {
-	        
-	        case R.id.action_register_with_hub:
-	        	RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-				rwhdf.show(getSupportFragmentManager(), "dialog");
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		// Handle item selection
+		switch (item.getItemId()) {
+
+		case R.id.action_register_with_hub:
+			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
+			rwhdf.show(getSupportFragmentManager(), "dialog");
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

@@ -21,6 +21,7 @@ public class HueState {
 	 * ct mode: colour temp (expressed in mireds range 154-500)
 	 */
 	public Integer ct;
-	
-	public HueState(){}
+
+	public HueState() {
+	}
 }

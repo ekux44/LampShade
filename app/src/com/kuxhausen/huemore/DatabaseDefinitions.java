@@ -11,11 +11,11 @@ public final class DatabaseDefinitions {
 	private DatabaseDefinitions() {
 	}
 
-	public static final class PreferencesKeys{
+	public static final class PreferencesKeys {
 		public static final String Bridge_IP_Address = "Bridge_IP_Address";
 		public static final String Hashed_Username = "Hashed_Username";
 	}
-	
+
 	public static final class GroupColumns implements BaseColumns {
 		// This class cannot be instantiated
 		private GroupColumns() {

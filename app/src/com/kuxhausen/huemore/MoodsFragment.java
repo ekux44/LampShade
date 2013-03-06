@@ -33,14 +33,13 @@ public class MoodsFragment extends ListFragment {
 				: android.R.layout.simple_list_item_1;
 
 		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
-		
+
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.mood_row,
 				((MainActivity) this.getActivity()).helper.getMoodCursor(),
-				columns, new int[] { R.id.moodTextView }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+				columns, new int[] { R.id.moodTextView },
+				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
-		
-		
 		setListAdapter(dataSource);
 
 		// Inflate the layout for this fragment

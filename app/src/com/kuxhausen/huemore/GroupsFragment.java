@@ -38,7 +38,8 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.group_row,
 				((MainActivity) this.getActivity()).helper.getGroupCursor(),
-				columns, new int[] { R.id.groupTextView }, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+				columns, new int[] { R.id.groupTextView },
+				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 		setListAdapter(dataSource);
 
@@ -95,8 +96,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 
 			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
 			ngdf.show(getFragmentManager(), "dialog");
-			
-			
+
 			break;
 		}
 	}
