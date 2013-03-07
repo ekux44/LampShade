@@ -23,6 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider android:exported="false" 
+            android:authorities="com.kuxhausen.provider.huemore"
+            android:name="HueMoreProvider"></provider>
     </application>
 
 </manifest>

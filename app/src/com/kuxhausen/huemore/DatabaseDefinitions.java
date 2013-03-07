@@ -1,12 +1,14 @@
 package com.kuxhausen.huemore;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
  * Convenience definitions for Database Hander and Preferences
  */
 public final class DatabaseDefinitions {
-
+	public static final String AUTHORITY = "com.kuxhausen.provider.huemore";
+	
 	// This class cannot be instantiated
 	private DatabaseDefinitions() {
 	}
@@ -21,6 +23,26 @@ public final class DatabaseDefinitions {
 		private GroupColumns() {
 		}
 
+		 /**
+         * The table name offered by this provider
+         */
+        public static final String TABLE_NAME = "groups";
+
+        /*
+         * URI definitions
+         */
+
+        /**
+         * The scheme part for this provider's URI
+         */
+        private static final String SCHEME = "content://";
+        public static final String PATH_GROUPS = "/groups";
+		
+        /**
+         * The content:// style URL for this table
+         */
+        public static final Uri CONTENT_URI =  Uri.parse(SCHEME + AUTHORITY + PATH_GROUPS);
+		
 		/**
 		 * which group this bulb row is part of
 		 */

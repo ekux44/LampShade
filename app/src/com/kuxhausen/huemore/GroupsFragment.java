@@ -1,6 +1,8 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -33,11 +35,21 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
-
+		
+		
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
+		Cursor cursor = getActivity().getContentResolver().query(
+	            DatabaseDefinitions.GroupColumns.CONTENT_URI,            // Use the default content URI for the provider.
+	            columns,                       // Return the note ID and title for each note.
+	            null,                             // No where clause, return all records.
+	            null,                             // No where clause, therefore no where column values.
+	            null  // Use the default sort order.
+	        );
+		
+		
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.group_row,
-				((MainActivity) this.getActivity()).helper.getGroupCursor(),
+				/*(MainActivity) this.getActivity()).helper.getGroupCursor()*/cursor,
 				columns, new int[] { R.id.groupTextView },
 				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
