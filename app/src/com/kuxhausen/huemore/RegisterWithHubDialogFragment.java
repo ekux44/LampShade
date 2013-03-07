@@ -35,7 +35,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
-	public Register networkRegister = new Register();
+	public Register networkRegister;
 	public Context parrentActivity;
 
 	@Override
