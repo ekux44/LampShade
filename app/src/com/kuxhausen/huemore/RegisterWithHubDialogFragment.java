@@ -1,6 +1,11 @@
 package com.kuxhausen.huemore;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.DigestException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -23,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -81,11 +87,17 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			}
 		};
 		countDownTimer.start();
-
+		Log.i("dialog", "created");
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		countDownTimer.cancel();
+		onDestroyView();
+		}
 	public class Register extends AsyncTask<Object, Void, Boolean> {
 
 		Context cont;
@@ -96,9 +108,21 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		}
 
 		public String getUserName() {
-			return "728e44cf55cd29a0ae0fa801bc8b0bb9"; // TODO replace with
-														// device specific MD5
-														// hash
+			
+			try {
+				MessageDigest md;
+				String serialID = Settings.Secure.ANDROID_ID;
+				md = MessageDigest.getInstance("MD5");		
+				String resultString = new BigInteger(1, md.digest(serialID.getBytes())).toString(16);
+				Log.i("asychTask", resultString);
+				return resultString;
+			} catch (NoSuchAlgorithmException e) {
+				Log.e("asdf", "no such algo");
+				e.printStackTrace();
+			}
+			
+			// fall back on hash of hueMore if android ID fails
+			return "f01623452466afd4eba5c1ed0a0a9395"; 
 		}
 
 		public String getDeviceType() {
@@ -145,6 +169,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 					responseString = responseString.substring(1,
 							responseString.length() - 1);// pull off the outer
 															// brackets
+					Log.i("asychTask", responseString);
 					RegistrationResponse responseObject = gson.fromJson(
 							responseString, RegistrationResponse.class);
 					if (responseObject.success != null)
