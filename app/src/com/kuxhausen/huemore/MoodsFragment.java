@@ -33,7 +33,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
@@ -71,18 +73,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 */
 		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.CONTENT_URI, // Use the default
-																// content URI
-																// for the
-																// provider.
-				columns, // Return the note ID and title for each note.
-				null, // No where clause, return all records.
-				null, // No where clause, therefore no where column values.
-				null // Use the default sort order.
-				);
 
+		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
 		dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.mood_row, null, columns,
 				new int[] { R.id.moodTextView }, 0);
@@ -196,13 +188,34 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
+	
+		
+		String[] columns = { MoodColumns.STATE};
+		String[] whereClause = {(String) ((TextView)((LinearLayout)v).getChildAt(0)).getText()};
+		Cursor cursor = getActivity().getContentResolver().query(
+				DatabaseDefinitions.MoodColumns.CONTENT_URI, // Use the default
+																// content URI
+																// for the
+																// provider.
+				columns, // Return the note ID and title for each note.
+				MoodColumns.MOOD+"=?", // No where clause, return all records.
+				whereClause, // No where clause, therefore no where column values.
+				null // Use the default sort order.
+				);
+		
+		String arr[]=new String[4];
+		int i=0;
 
+		cursor.moveToFirst();
+		while (cursor.isAfterLast() == false) 
+		{
+		    arr[i]  = cursor.getString(0);
+		    i++;
+		    cursor.moveToNext();
+		}
+		
 		int[] bulbs = { 3, 4 };
-		String[] moods = {
-				"{\"hue\": 20000, \"sat\": " + (int) (Math.random() * 255)
-						+ "}",
-				"{\"hue\": 35000, \"sat\": " + (int) (Math.random() * 255)
-						+ "}" };
+		String[] moods = { arr[0] };
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
 		pushGroupMood.execute(parrentActivity, bulbs, moods);
 	}

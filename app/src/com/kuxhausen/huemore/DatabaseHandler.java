@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 
@@ -37,21 +38,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues cv = new ContentValues();
+		Gson gson = new Gson();
+		HueState hs = new HueState();
+		
 		cv.put(MoodColumns.MOOD, "Reading");
-
+		hs.ct=(1000000/2700);
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Concentrate");
-
+		hs.ct=(1000000/3400);
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Relax");
+		hs.ct=(1000000/2500);
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Energize");
+		hs.ct=(1000000/6000);
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
