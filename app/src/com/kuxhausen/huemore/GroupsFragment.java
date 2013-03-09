@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
@@ -17,9 +20,16 @@ import android.widget.ListView;
 
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 
-public class GroupsFragment extends ListFragment implements OnClickListener {
+public class GroupsFragment extends ListFragment implements OnClickListener,
+LoaderManager.LoaderCallbacks<Cursor>
+{
 	OnHeadlineSelectedListener mCallback;
-
+	
+	// Identifies a particular Loader being used in this component
+    private static final int GROUPS_LOADER = 0;
+    public CursorAdapter dataSource;
+    
+	
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
 	public interface OnHeadlineSelectedListener {
@@ -37,6 +47,12 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 				: android.R.layout.simple_list_item_1;
 		
 		
+		/*
+         * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed
+         * to onCreateLoader().
+         */
+        getLoaderManager().initLoader(GROUPS_LOADER, null, this);
+		
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
 		Cursor cursor = getActivity().getContentResolver().query(
 	            DatabaseDefinitions.GroupColumns.CONTENT_URI,            // Use the default content URI for the provider.
@@ -47,11 +63,12 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 	        );
 		
 		
-		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
+		dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.group_row,
-				/*(MainActivity) this.getActivity()).helper.getGroupCursor()*/cursor,
-				columns, new int[] { R.id.groupTextView },
-				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+				null,
+				columns, 
+				new int[] { R.id.groupTextView },
+				0);
 
 		setListAdapter(dataSource);
 
@@ -111,5 +128,62 @@ public class GroupsFragment extends ListFragment implements OnClickListener {
 
 			break;
 		}
+	}
+
+	/*
+	* Callback that's invoked when the system has initialized the Loader and
+	* is ready to start the query. This usually happens when initLoader() is
+	* called. The loaderID argument contains the ID value passed to the
+	* initLoader() call.
+	*/
+	@Override
+	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
+		/*
+	     * Takes action based on the ID of the Loader that's being created
+	     */
+	    switch (loaderID) {
+	        case GROUPS_LOADER:
+	            // Returns a new CursorLoader
+	        	String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
+	        	return new CursorLoader(
+	                        getActivity(),   // Parent activity context
+	                        DatabaseDefinitions.GroupColumns.CONTENT_URI,        // Table to query
+	                        columns,     // Projection to return
+	                        null,            // No selection clause
+	                        null,            // No selection arguments
+	                        null             // Default sort order
+	        );
+	        default:
+	            // An invalid id was passed in
+	            return null;
+	    }
+	}
+
+	/*
+	 * Defines the callback that CursorLoader calls
+	 * when it's finished its query
+	 */
+	@Override
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+		/*
+	     * Moves the query results into the adapter, causing the
+	     * ListView fronting this adapter to re-display
+	     */
+		dataSource.changeCursor(cursor);
+		
+	}
+
+	/*
+	 * Invoked when the CursorLoader is being reset. For example, this is
+	 * called if the data in the provider changes and the Cursor becomes stale.
+	 */
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		/*
+	     * Clears out the adapter's reference to the Cursor.
+	     * This prevents memory leaks.
+	     */
+		dataSource.changeCursor(null);
+		
 	}
 }
