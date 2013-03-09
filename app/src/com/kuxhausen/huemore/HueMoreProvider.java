@@ -2,6 +2,8 @@ package com.kuxhausen.huemore;
 
 import java.util.HashMap;
 
+import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -9,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 public class HueMoreProvider extends ContentProvider {
 
@@ -94,7 +97,47 @@ public class HueMoreProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		// TODO Auto-generated method stub
+		String table = null;
+		
+		// Constructs a new query builder and sets its table name
+	       SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+	       
+	       /**
+	        * Choose the projection and adjust the "where" clause based on URI pattern-matching.
+	        */
+	       switch (sUriMatcher.match(uri)) {
+	           // If the incoming URI is for notes, chooses the Notes projection
+	           case GROUPS:
+	        	   qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
+	        	   qb.setProjectionMap(sGroupsProjectionMap);
+	        	   table = DatabaseDefinitions.GroupColumns.TABLE_NAME;
+	        	   break;
+	           case MOODS:
+	        	   qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
+	        	   qb.setProjectionMap(sMoodsProjectionMap);
+	        	   table = DatabaseDefinitions.MoodColumns.TABLE_NAME;
+	        	   break;
+	           default:
+	               // If the URI doesn't match any of the known patterns, throw an exception.
+	               throw new IllegalArgumentException("Unknown URI " + uri);
+	       }
+		
+	    // Opens the database object in "read" mode, since no writes need to be done.
+	       SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		
+
+			long insertId = db.insert(qb.getTables(), null, values);
+			if(insertId == -1) {
+		        // insert failed, do update
+		        //db.update("groups", null, cv);
+			}
+			Log.e("asdf", "insertFailed");
+				
+		    
+		
+		this.getContext().getContentResolver().notifyChange(uri, null);
+		
+		Log.i("contentAdded", ""+uri.getPath());
 		return null;
 	}
 

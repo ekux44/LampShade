@@ -13,7 +13,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	private static final String MOOD_TABLE_NAME = "moods";
 	private static final String GROUP_TABLE_NAME = "groups";
 
@@ -31,7 +31,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		db.execSQL("CREATE TABLE " + GROUP_TABLE_NAME + " (" + GroupColumns._ID
 				+ " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT,"
-				+ GroupColumns.BULB + " TEXT" + ");");
+				+ GroupColumns.PRECEDENCE + " INTEGER," + GroupColumns.BULB + " TEXT" + ");");
 	}
 
 	public void initialPopulate() {
