@@ -60,7 +60,7 @@ public final class DatabaseDefinitions {
 		 * The scheme part for this provider's URI
 		 */
 		private static final String SCHEME = "content://";
-		
+
 		public static final String PATH_MOODS = "/moods";
 
 		/**

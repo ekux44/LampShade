@@ -91,13 +91,14 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		countDownTimer.cancel();
 		onDestroyView();
-		}
+	}
+
 	public class Register extends AsyncTask<Object, Void, Boolean> {
 
 		Context cont;
@@ -108,21 +109,22 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		}
 
 		public String getUserName() {
-			
+
 			try {
 				MessageDigest md;
 				String serialID = Settings.Secure.ANDROID_ID;
-				md = MessageDigest.getInstance("MD5");		
-				String resultString = new BigInteger(1, md.digest(serialID.getBytes())).toString(16);
+				md = MessageDigest.getInstance("MD5");
+				String resultString = new BigInteger(1, md.digest(serialID
+						.getBytes())).toString(16);
 				Log.i("asychTask", resultString);
 				return resultString;
 			} catch (NoSuchAlgorithmException e) {
 				Log.e("asdf", "no such algo");
 				e.printStackTrace();
 			}
-			
+
 			// fall back on hash of hueMore if android ID fails
-			return "f01623452466afd4eba5c1ed0a0a9395"; 
+			return "f01623452466afd4eba5c1ed0a0a9395";
 		}
 
 		public String getDeviceType() {

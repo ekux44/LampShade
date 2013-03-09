@@ -42,12 +42,12 @@ public class NewGroupDialogFragment extends DialogFragment {
 		builder.setView(groupDialogView);
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
-		nameEditText.setText("testing123");
+		nameEditText.setText("name");
 
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						
+
 						ArrayList<String> checkedBulbs = new ArrayList<String>();
 						SparseBooleanArray set = bulbsListView
 								.getCheckedItemPositions();
@@ -58,37 +58,40 @@ public class NewGroupDialogFragment extends DialogFragment {
 						}
 
 						String groupname = nameEditText.getText().toString();
-						/*((MainActivity) getActivity()).helper.addGroup(
-								groupname,
-								checkedBulbs.toArray(new String[checkedBulbs
-										.size()]));*/
-						
-						
-						for(int i = 0; i<checkedBulbs.size(); i++)
-						{
-							// Defines a new Uri object that receives the result of the insertion
+
+						for (int i = 0; i < checkedBulbs.size(); i++) {
+							// Defines a new Uri object that receives the result
+							// of the insertion
 							Uri mNewUri;
 
-							// Defines an object to contain the new values to insert
+							// Defines an object to contain the new values to
+							// insert
 							ContentValues mNewValues = new ContentValues();
 
 							/*
-							 * Sets the values of each column and inserts the word. The arguments to the "put"
-							 * method are "column name" and "value"
+							 * Sets the values of each column and inserts the
+							 * word. The arguments to the "put" method are
+							 * "column name" and "value"
 							 */
-							mNewValues.put(DatabaseDefinitions.GroupColumns.GROUP, groupname);
-							mNewValues.put(DatabaseDefinitions.GroupColumns.BULB, checkedBulbs.get(i));
-							mNewValues.put(DatabaseDefinitions.GroupColumns.PRECEDENCE, i);
+							mNewValues.put(
+									DatabaseDefinitions.GroupColumns.GROUP,
+									groupname);
+							mNewValues.put(
+									DatabaseDefinitions.GroupColumns.BULB,
+									checkedBulbs.get(i));
+							mNewValues
+									.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,
+											i);
 
-
-							mNewUri = getActivity().getContentResolver().insert(
-									DatabaseDefinitions.GroupColumns.CONTENT_URI,   // the user dictionary content URI
-							    mNewValues                          // the values to insert
-							);
-							Log.i("contentAdded", "groupname:"+groupname+" bulb:" + checkedBulbs.get(i));
+							mNewUri = getActivity()
+									.getContentResolver()
+									.insert(DatabaseDefinitions.GroupColumns.CONTENT_URI,
+											mNewValues // the values to insert
+									);
+							Log.i("contentAdded", "groupname:" + groupname
+									+ " bulb:" + checkedBulbs.get(i));
 						}
-							
-						
+
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {

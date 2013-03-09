@@ -14,8 +14,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
 	private static final int DATABASE_VERSION = 3;
-	private static final String MOOD_TABLE_NAME = "moods";
-	private static final String GROUP_TABLE_NAME = "groups";
 
 	public DatabaseHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -24,14 +22,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		db.execSQL("CREATE TABLE " + MOOD_TABLE_NAME + " (" + MoodColumns._ID
-				+ " INTEGER PRIMARY KEY," + MoodColumns.MOOD + " TEXT,"
-				+ MoodColumns.PRECEDENCE + " INTEGER," + MoodColumns.STATE
-				+ " TEXT" + ");");
+		db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
+				+ MoodColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
+				+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
+				+ MoodColumns.STATE + " TEXT" + ");");
 
-		db.execSQL("CREATE TABLE " + GROUP_TABLE_NAME + " (" + GroupColumns._ID
-				+ " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT,"
-				+ GroupColumns.PRECEDENCE + " INTEGER," + GroupColumns.BULB + " TEXT" + ");");
+		db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
+				+ GroupColumns._ID + " INTEGER PRIMARY KEY,"
+				+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
+				+ " INTEGER," + GroupColumns.BULB + " TEXT" + ");");
 	}
 
 	public void initialPopulate() {
@@ -39,58 +38,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		ContentValues cv = new ContentValues();
 		cv.put(MoodColumns.MOOD, "Reading");
-		
-		db.insert(MOOD_TABLE_NAME, null, cv);
+
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Concentrate");
-		
-		db.insert(MOOD_TABLE_NAME, null, cv);
+
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Relax");
-		db.insert(MOOD_TABLE_NAME, null, cv);
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Energize");
-		db.insert(MOOD_TABLE_NAME, null, cv);
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(GroupColumns.GROUP, "ALL");
-		db.insert(GROUP_TABLE_NAME, null, cv);
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-	}
-
-	public void addGroup(String groupname, String[] bulbs) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-
-		for (String bulb : bulbs) {
-			cv.clear();
-			cv.put(GroupColumns.GROUP, groupname);
-			cv.put(GroupColumns.BULB, bulb);
-			db.insert(GROUP_TABLE_NAME, null, cv);
-		}
-	}
-
-	public Cursor getMoodCursor() {
-		SQLiteDatabase db = this.getWritableDatabase();
-
-		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
-		Cursor data = db.query(MOOD_TABLE_NAME, columns, null, null,
-				MoodColumns.MOOD, null, null);
-
-		return data;
-	}
-
-	public Cursor getGroupCursor() {
-		SQLiteDatabase db = this.getWritableDatabase();
-
-		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
-		Cursor data = db.query(GROUP_TABLE_NAME, columns, null, null,
-				GroupColumns.GROUP, null, null);
-
-		return data;
 	}
 
 	@Override
