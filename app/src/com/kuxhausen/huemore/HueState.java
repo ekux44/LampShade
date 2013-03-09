@@ -22,6 +22,11 @@ public class HueState {
 	 */
 	public Integer ct;
 
+	/**
+	 * true if the light is on, false if off
+	 */
+	public boolean on;
+	
 	public HueState() {
 	}
 }

@@ -14,7 +14,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 
 	public DatabaseHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,7 +31,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
 				+ GroupColumns._ID + " INTEGER PRIMARY KEY,"
 				+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
-				+ " INTEGER," + GroupColumns.BULB + " TEXT" + ");");
+				+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
 	}
 
 	public void initialPopulate() {
@@ -43,31 +43,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		
 		cv.put(MoodColumns.MOOD, "Reading");
 		hs.ct=(1000000/2700);
+		hs.on= true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Concentrate");
 		hs.ct=(1000000/3400);
+		hs.on= true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Relax");
 		hs.ct=(1000000/2500);
+		hs.on= true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Energize");
 		hs.ct=(1000000/6000);
+		hs.on= true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		cv.clear();
-		cv.put(GroupColumns.GROUP, "ALL");
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
+		for(int i = 0; i<50; i++){
+			cv.clear();
+			cv.put(GroupColumns.GROUP, "All");
+			cv.put(GroupColumns.BULB, i);
+			cv.put(GroupColumns.PRECEDENCE, i);
+			db.insert(GroupColumns.TABLE_NAME, null, cv);
+		}
 	}
 
 	@Override

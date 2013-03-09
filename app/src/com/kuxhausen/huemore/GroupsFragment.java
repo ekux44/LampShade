@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 
@@ -32,7 +34,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	// deliver messages
 	public interface OnHeadlineSelectedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onArticleSelected(int position);
+		public void onArticleSelected(String group);
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
 		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.CONTENT_URI, // Use the default
+				DatabaseDefinitions.GroupColumns.GROUPS_URI, // Use the default
 																// content URI
 																// for the
 																// provider.
@@ -107,7 +109,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
-		mCallback.onArticleSelected(position);
+		mCallback.onArticleSelected((String) ((TextView)((LinearLayout)v).getChildAt(0)).getText());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
@@ -142,7 +144,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 			// Returns a new CursorLoader
 			String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
-					DatabaseDefinitions.GroupColumns.CONTENT_URI, // Table
+					DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
 					columns, // Projection to return
 					null, // No selection clause
 					null, // No selection arguments

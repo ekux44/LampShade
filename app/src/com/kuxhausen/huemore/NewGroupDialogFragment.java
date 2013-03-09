@@ -19,7 +19,7 @@ import android.widget.ListView;
 
 public class NewGroupDialogFragment extends DialogFragment {
 
-	public static String[] dummyArrayItems = { "Bulb 1", "Bulb 2", "Bulb3" };
+	public static String[] dummyArrayItems = { "1", "2", "3", "4" };
 	ListView bulbsListView;
 	ArrayAdapter<String> rayAdapter;
 	EditText nameEditText;
@@ -78,14 +78,14 @@ public class NewGroupDialogFragment extends DialogFragment {
 									groupname);
 							mNewValues.put(
 									DatabaseDefinitions.GroupColumns.BULB,
-									checkedBulbs.get(i));
+									Integer.parseInt(checkedBulbs.get(i)));
 							mNewValues
 									.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,
 											i);
 
 							mNewUri = getActivity()
 									.getContentResolver()
-									.insert(DatabaseDefinitions.GroupColumns.CONTENT_URI,
+									.insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
 											mNewValues // the values to insert
 									);
 							Log.i("contentAdded", "groupname:" + groupname

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,14 +38,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 
-	final static String ARG_POSITION = "position";
-	int mCurrentPosition = -1;
+	final static String ARG_GROUP = "group";
+	String mCurrentGroup = null;
 	public Context parrentActivity;
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
@@ -59,7 +61,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// the previous article selection set by onSaveInstanceState().
 		// This is primarily necessary when in the two-pane layout.
 		if (savedInstanceState != null) {
-			mCurrentPosition = savedInstanceState.getInt(ARG_POSITION);
+			mCurrentGroup = savedInstanceState.getString(ARG_GROUP);
 		}
 
 		// We need to use a different list item layout for devices older than
@@ -106,19 +108,19 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		Bundle args = getArguments();
 		if (args != null) {
 			// Set article based on argument passed in
-			updateArticleView(args.getInt(ARG_POSITION));
-		} else if (mCurrentPosition != -1) {
+			updateArticleView(args.getString(ARG_GROUP));
+		} else if (mCurrentGroup != null) {
 			// Set article based on saved instance state defined during
 			// onCreateView
-			updateArticleView(mCurrentPosition);
+			updateArticleView(mCurrentGroup);
 		}
 	}
 
-	public void updateArticleView(int position) {
+	public void updateArticleView(String group) {
 		// TextView article = (TextView)
 		// getActivity().findViewById(R.id.article);
 		// article.setText(StaticDataStore.Moods[position]);
-		mCurrentPosition = position;
+		mCurrentGroup = group;
 	}
 
 	@Override
@@ -127,7 +129,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Save the current article selection in case we need to recreate the
 		// fragment
-		outState.putInt(ARG_POSITION, mCurrentPosition);
+		outState.putString(ARG_GROUP, mCurrentGroup);
 	}
 
 	@Override
@@ -153,7 +155,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			// Returns a new CursorLoader
 			String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
-					DatabaseDefinitions.MoodColumns.CONTENT_URI, // Table
+					DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
 					columns, // Projection to return
 					null, // No selection clause
 					null, // No selection arguments
@@ -190,40 +192,55 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		getListView().setItemChecked(position, true);
 	
 		
-		String[] columns = { MoodColumns.STATE};
-		String[] whereClause = {(String) ((TextView)((LinearLayout)v).getChildAt(0)).getText()};
+		String[] groupColumns = { GroupColumns.BULB};
+		String[] gWhereClause = {mCurrentGroup};
 		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.CONTENT_URI, // Use the default
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the default
 																// content URI
 																// for the
 																// provider.
-				columns, // Return the note ID and title for each note.
-				MoodColumns.MOOD+"=?", // No where clause, return all records.
-				whereClause, // No where clause, therefore no where column values.
+				groupColumns, // Return the note ID and title for each note.
+				GroupColumns.GROUP+"=?", // No where clause, return all records.
+				gWhereClause, // No where clause, therefore no where column values.
 				null // Use the default sort order.
 				);
 		
-		String arr[]=new String[4];
-		int i=0;
-
-		cursor.moveToFirst();
-		while (cursor.isAfterLast() == false) 
-		{
-		    arr[i]  = cursor.getString(0);
-		    i++;
-		    cursor.moveToNext();
+		ArrayList<Integer> groupStates = new ArrayList<Integer>();		
+		while (cursor.moveToNext()) {
+		    Log.i("cursorIterator",""+ cursor.getInt(0));
+			groupStates.add(cursor.getInt(0));
 		}
+		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+		Log.i("iterated size)",""+groupStates.size());
 		
-		int[] bulbs = { 3, 4 };
-		String[] moods = { arr[0] };
+		String[] moodColumns = { MoodColumns.STATE};
+		String[] mWereClause = {(String) ((TextView)((LinearLayout)v).getChildAt(0)).getText()};
+		cursor = getActivity().getContentResolver().query(
+				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the default
+																// content URI
+																// for the
+																// provider.
+				moodColumns, // Return the note ID and title for each note.
+				MoodColumns.MOOD+"=?", // No where clause, return all records.
+				mWereClause, // No where clause, therefore no where column values.
+				null // Use the default sort order.
+				);
+		
+		ArrayList<String> moodStates = new ArrayList<String>();		
+		while (cursor.moveToNext()) {
+		    moodStates.add(cursor.getString(0));
+		    Log.i("moodStates", ""+ cursor.getString(0));
+		}
+		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+		
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-		pushGroupMood.execute(parrentActivity, bulbs, moods);
+		pushGroupMood.execute(parrentActivity, bulbS, moodS);
 	}
 
 	private class TransmitGroupMood extends AsyncTask<Object, Void, Integer> {
 
 		Context cont;
-		int[] bulbs;
+		Integer[] bulbs;
 		String[] moods;
 
 		@Override
@@ -231,7 +248,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 			// Get session ID
 			cont = (Context) params[0];
-			bulbs = (int[]) params[1];
+			bulbs = (Integer[]) params[1];
 			moods = (String[]) params[2];
 			Log.i("asyncTask", "doing");
 
