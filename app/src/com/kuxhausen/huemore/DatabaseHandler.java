@@ -13,7 +13,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String MOOD_TABLE_NAME = "moods";
 	private static final String GROUP_TABLE_NAME = "groups";
 
@@ -26,12 +26,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		db.execSQL("CREATE TABLE " + MOOD_TABLE_NAME + " (" + MoodColumns._ID
 				+ " INTEGER PRIMARY KEY," + MoodColumns.MOOD + " TEXT,"
-				+ MoodColumns.PRECEDENCE + " INTEGER," + MoodColumns.ON
-				+ " TEXT," + MoodColumns.BRI + " INTEGER," + MoodColumns.HUE
-				+ " INTEGER," + MoodColumns.SAT + " INTEGER," + MoodColumns.X
-				+ " REAL," + MoodColumns.Y + " REAL," + MoodColumns.CT
-				+ " INTEGER," + MoodColumns.ALERT + " TEXT,"
-				+ MoodColumns.EFFECT + " TEXT" + ");");
+				+ MoodColumns.PRECEDENCE + " INTEGER," + MoodColumns.STATE
+				+ " TEXT" + ");");
 
 		db.execSQL("CREATE TABLE " + GROUP_TABLE_NAME + " (" + GroupColumns._ID
 				+ " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT,"
@@ -43,22 +39,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		ContentValues cv = new ContentValues();
 		cv.put(MoodColumns.MOOD, "Reading");
-		cv.put(MoodColumns.CT, 1000000 / 2700);
+		
 		db.insert(MOOD_TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Concentrate");
-		cv.put(MoodColumns.CT, 1000000 / 3400);
+		
 		db.insert(MOOD_TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Relax");
-		cv.put(MoodColumns.CT, 1000000 / 2500);
 		db.insert(MOOD_TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Energize");
-		cv.put(MoodColumns.CT, 1000000 / 6000);
 		db.insert(MOOD_TABLE_NAME, null, cv);
 
 		cv.clear();

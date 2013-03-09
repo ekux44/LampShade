@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,11 +57,19 @@ public class MoodsFragment extends ListFragment {
 				: android.R.layout.simple_list_item_1;
 
 		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
-
+		Cursor cursor = getActivity().getContentResolver().query(
+	            DatabaseDefinitions.MoodColumns.CONTENT_URI,            // Use the default content URI for the provider.
+	            columns,                       // Return the note ID and title for each note.
+	            null,                             // No where clause, return all records.
+	            null,                             // No where clause, therefore no where column values.
+	            null  // Use the default sort order.
+	        );
+		
+		
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
 				R.layout.mood_row,
-				((MainActivity) this.getActivity()).helper.getMoodCursor(),
-				columns, new int[] { R.id.moodTextView },
+				/*(MainActivity) this.getActivity()).helper.getGroupCursor()*/cursor,
+				columns, new int[] { R.id.moodTextView},
 				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
 		setListAdapter(dataSource);
@@ -116,7 +125,8 @@ public class MoodsFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-
+		
+		
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
 		
@@ -134,6 +144,7 @@ public class MoodsFragment extends ListFragment {
 
 		@Override
 		protected Integer doInBackground(Object... params) {
+			
 			// Get session ID
 			cont = (Context) params[0];
 			bulbs = (int[]) params[1];
@@ -147,7 +158,7 @@ public class MoodsFragment extends ListFragment {
 			String hash = settings.getString(PreferencesKeys.Hashed_Username, "");
 			
 			for(int i = 0; i<bulbs.length; i++){
-			
+				
 				StringBuilder builder = new StringBuilder();
 			    HttpClient client = new DefaultHttpClient();
 			        
@@ -181,7 +192,7 @@ public class MoodsFragment extends ListFragment {
 			        Log.e("asdf", "Failed");
 			      }
 			    } catch (ClientProtocolException e) {
-			      e.printStackTrace();
+			      e.printStackTrace(); 
 			    } catch (IOException e) {
 			      e.printStackTrace();
 			    }

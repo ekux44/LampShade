@@ -17,7 +17,7 @@ public class HueMoreProvider extends ContentProvider {
 	/**
      * A projection map used to select columns from the database
      */
-    private static HashMap<String, String> sGroupsProjectionMap;
+    private static HashMap<String, String> sGroupsProjectionMap,sMoodsProjectionMap;
 	/**
      * A UriMatcher instance
      */
@@ -27,7 +27,7 @@ public class HueMoreProvider extends ContentProvider {
      * of the incoming URI
      */
     // The incoming URI matches the Groups URI pattern
-    private static final int GROUPS = 1;
+    private static final int GROUPS = 1, MOODS = 2;
 
     
     /**
@@ -57,6 +57,26 @@ public class HueMoreProvider extends ContentProvider {
 
         sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,DatabaseDefinitions.GroupColumns.GROUP);
         sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.BULB, DatabaseDefinitions.GroupColumns.BULB);
+        sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.PRECEDENCE, DatabaseDefinitions.GroupColumns.PRECEDENCE);
+        
+        
+     // Add a pattern that routes URIs terminated with "moods" to a MOODS operation
+        sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moods", MOODS);
+
+        /*
+         * Creates and initializes a projection map that returns all columns
+         */
+
+        // Creates a new projection map instance. The map returns a column name
+        // given a string. The two are usually equal.
+        sMoodsProjectionMap = new HashMap<String, String>();
+
+        // Maps the string "_ID" to the column name "_ID"
+        sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns._ID, DatabaseDefinitions.MoodColumns._ID);
+
+        sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,DatabaseDefinitions.MoodColumns.MOOD);
+        sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE, DatabaseDefinitions.MoodColumns.STATE);
+        sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, DatabaseDefinitions.MoodColumns.PRECEDENCE);
 
     }
 	
@@ -105,7 +125,11 @@ public class HueMoreProvider extends ContentProvider {
 	        	   qb.setProjectionMap(sGroupsProjectionMap);
 	               groupBy = DatabaseDefinitions.GroupColumns.GROUP;
 	        	   break;
-
+	           case MOODS:
+	        	   qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
+	        	   qb.setProjectionMap(sMoodsProjectionMap);
+	               groupBy = DatabaseDefinitions.MoodColumns.MOOD;
+	        	   break;
 	           default:
 	               // If the URI doesn't match any of the known patterns, throw an exception.
 	               throw new IllegalArgumentException("Unknown URI " + uri);
