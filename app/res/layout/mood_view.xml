@@ -26,19 +26,21 @@
             android:background="@null"
             android:padding="8dp"
             android:src="@drawable/content_new" />
-
     </LinearLayout>
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:background="#33B5E5" />
+
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1" >
     </ListView>
-	<View
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:background="#33B5E5" />
@@ -58,5 +60,5 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
         android:progress="50" />
-    
+
 </LinearLayout>
