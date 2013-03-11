@@ -41,32 +41,80 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Gson gson = new Gson();
 		HueState hs = new HueState();
 
-		cv.put(MoodColumns.MOOD, "Reading");
-		hs.ct = (1000000 / 2700);
-		hs.on = true;
+		cv.put(MoodColumns.MOOD, "Off");
+		hs.on = false;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Concentrate");
-		hs.ct = (1000000 / 3400);
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Relax");
-		hs.ct = (1000000 / 2500);
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
+		
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Energize");
 		hs.ct = (1000000 / 6000);
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Concentrate");
+		hs.ct = (1000000 / 3400);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.put(MoodColumns.MOOD, "Reading");
+		hs.ct = (1000000 / 2700);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Relax");
+		hs.ct = (1000000 / 2500);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Red");
+		Double[] redPair = {0.6472  ,0.3316};
+		hs.xy = redPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Orange");
+		Double[] orangePair = {0.5663,0.3978};
+		hs.xy = orangePair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Pink");
+		Double[] pinkPair = {0.3385,0.1680};
+		hs.xy = pinkPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Green");
+		Double[] greenPair = {0.4020,0.5041};
+		hs.xy = greenPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Blue");
+		Double[] bluePair = {0.1721,0.0500};
+		hs.xy = bluePair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+
+
+		
 
 		for (int i = 0; i < 50; i++) {
 			cv.clear();
