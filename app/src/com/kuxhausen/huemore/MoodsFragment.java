@@ -36,8 +36,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
@@ -51,6 +54,9 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
+	SeekBar brightnessBar;
+	Integer[] bulbS;
+	int brightness;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,8 +73,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-				: android.R.layout.simple_list_item_1;
-
+				: android.R.layout.simple_list_item_1;		
+		
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
@@ -82,9 +88,40 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 				new int[] { android.R.id.text1}, 0);
 
 		setListAdapter(dataSource);
-
+		
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.mood_view, container, false);
+		View myView = inflater.inflate(R.layout.mood_view, container, false);
+		
+		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
+		brightnessBar.setMax(255);
+		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
+	
+		    @Override       
+		    public void onStopTrackingTouch(SeekBar seekBar) {      
+		    	 HueState hs = new HueState();
+			        hs.bri = brightness;
+			        hs.on = true;
+			        Gson gs = new Gson();
+			        String[] brightnessState = {gs.toJson(hs)};
+			        //TODO deal with off?
+			    	TransmitGroupMood pushGroupMood = new TransmitGroupMood();
+					pushGroupMood.execute(parrentActivity, bulbS, brightnessState);     
+		    }       
+	
+		    @Override       
+		    public void onStartTrackingTouch(SeekBar seekBar) {     
+		        // TODO Auto-generated method stub      
+		    }       
+	
+		    @Override       
+		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {     
+		       brightness = progress;
+		    }       
+		});     
+		
+
+		
+		return myView;
 	}
 
 	@Override
@@ -210,7 +247,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		    Log.i("cursorIterator",""+ cursor.getInt(0));
 			groupStates.add(cursor.getInt(0));
 		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 		Log.i("iterated size)",""+groupStates.size());
 		
 		String[] moodColumns = { MoodColumns.STATE};
@@ -252,7 +289,10 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			moods = (String[]) params[2];
 			Log.i("asyncTask", "doing");
 
-			// Add username and IP to preferences cache
+			if(cont==null || bulbs==null ||moods==null)
+				return -1;
+			
+			// Get username and IP from preferences cache
 			SharedPreferences settings = PreferenceManager
 					.getDefaultSharedPreferences(cont);
 			String bridge = settings.getString(
@@ -314,4 +354,6 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			Log.i("asyncTask", "finished");
 		}
 	}
+	
+	
 }

@@ -70,12 +70,12 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 
 		setListAdapter(dataSource);
 
+		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
 		Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
 		newGroup.setOnClickListener(this);
-
-		// Inflate the layout for this fragment
+		
 		return myView;
 	}
 
