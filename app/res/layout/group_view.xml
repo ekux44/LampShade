@@ -12,12 +12,6 @@
         android:layout_weight="1" >
     </ListView>
 
-    <TextView android:id="@+id/status"
-        android:layout_width="match_parent" 
-        android:layout_height="wrap_content"
-        android:paddingLeft="8dip"
-        android:paddingRight="8dip"/>
-    
     <Button
         android:id="@+id/newGroupButton"
         android:layout_width="match_parent"

@@ -1,10 +1,7 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -14,7 +11,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,14 +18,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 
 public class GroupsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -74,19 +67,17 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 				null // Use the default sort order.
 				);
 
-		dataSource = new SimpleCursorAdapter(this.getActivity(),
-				layout, null, columns,
-				new int[] { android.R.id.text1}, 0);
+		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
+				columns, new int[] { android.R.id.text1 }, 0);
 
 		setListAdapter(dataSource);
-		
-		
+
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
 		Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
 		newGroup.setOnClickListener(this);
-		
+
 		return myView;
 	}
 
@@ -116,46 +107,44 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
-	
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-	    super.onCreateContextMenu(menu, v, menuInfo);
 
-	    selected = (TextView)((AdapterView.AdapterContextMenuInfo)menuInfo).targetView;
-	    if(selected.getText().equals("All")){
-	    	return;
-	    }
-	    MenuInflater inflater = this.getActivity().getMenuInflater();
-	    inflater.inflate(R.menu.group_fragment, menu);
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		if (selected.getText().equals("All")) {
+			return;
+		}
+		MenuInflater inflater = this.getActivity().getMenuInflater();
+		inflater.inflate(R.menu.group_fragment, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-	    switch (item.getItemId()) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		switch (item.getItemId()) {
 
-	        case R.id.contextmenu_delete: // <-- your custom menu item id here
-	        	String groupSelect =  GroupColumns.GROUP+"=?";
-	    		String[] groupArg = {(String) ((TextView)(selected)).getText()};
-				getActivity()
-						.getContentResolver()
-						.delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-								groupSelect, groupArg
-						);
-	            return true;
+		case R.id.contextmenu_delete: // <-- your custom menu item id here
+			String groupSelect = GroupColumns.GROUP + "=?";
+			String[] groupArg = { (String) ((TextView) (selected)).getText() };
+			getActivity().getContentResolver().delete(
+					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
+					groupSelect, groupArg);
+			return true;
 
-	        default:
-	            return super.onContextItemSelected(item);
-	    }
+		default:
+			return super.onContextItemSelected(item);
+		}
 	}
-	
-	
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
-		mCallback.onArticleSelected((String) ((TextView)(v)).getText());
+		mCallback.onArticleSelected((String) ((TextView) (v)).getText());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

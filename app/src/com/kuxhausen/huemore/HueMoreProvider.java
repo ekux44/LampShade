@@ -2,8 +2,6 @@ package com.kuxhausen.huemore;
 
 import java.util.HashMap;
 
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -21,7 +19,8 @@ public class HueMoreProvider extends ContentProvider {
 	 * A projection map used to select columns from the database
 	 */
 	private static HashMap<String, String> sGroupsProjectionMap,
-			sMoodsProjectionMap, sGroupBulbsProjectionMap, sMoodStatesProjectionMap;
+			sMoodsProjectionMap, sGroupBulbsProjectionMap,
+			sMoodStatesProjectionMap;
 	/**
 	 * A UriMatcher instance
 	 */
@@ -31,7 +30,8 @@ public class HueMoreProvider extends ContentProvider {
 	 * pattern of the incoming URI
 	 */
 	// The incoming URI matches the Groups URI pattern
-	private static final int GROUPS = 1, MOODS = 2 , GROUPBULBS = 3, MOODSTATES = 4;
+	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3,
+			MOODSTATES = 4;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -45,48 +45,55 @@ public class HueMoreProvider extends ContentProvider {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 		{
-		// Add a pattern that routes URIs terminated with "groups" to a GROUPS
-		// operation
-		sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groups", GROUPS);
-		// Creates a new projection map instance. The map returns a column name
-		// given a string. The two are usually equal.
-		sGroupsProjectionMap = new HashMap<String, String>();
-
-		// Maps the string "_ID" to the column name "_ID"
-		sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns._ID,
-				DatabaseDefinitions.GroupColumns._ID);
-
-		sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,
-				DatabaseDefinitions.GroupColumns.GROUP);
-		sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.BULB,
-				DatabaseDefinitions.GroupColumns.BULB);
-		sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,
-				DatabaseDefinitions.GroupColumns.PRECEDENCE);
-		}
-		{
-		// Add a pattern that routes URIs terminated with "moods" to a MOODS
-		// operation
-		sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moods", MOODS);
-		// Creates a new projection map instance. The map returns a column name
-		// given a string. The two are usually equal.
-		sMoodsProjectionMap = new HashMap<String, String>();
-
-		// Maps the string "_ID" to the column name "_ID"
-		sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns._ID,
-				DatabaseDefinitions.MoodColumns._ID);
-
-		sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
-				DatabaseDefinitions.MoodColumns.MOOD);
-		sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
-				DatabaseDefinitions.MoodColumns.STATE);
-		sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.PRECEDENCE,
-				DatabaseDefinitions.MoodColumns.PRECEDENCE);
-		}
-		{
-			// Add a pattern that routes URIs terminated with "groups" to a GROUPS
+			// Add a pattern that routes URIs terminated with "groups" to a
+			// GROUPS
 			// operation
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groupbulbs", GROUPBULBS);
-			// Creates a new projection map instance. The map returns a column name
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groups", GROUPS);
+			// Creates a new projection map instance. The map returns a column
+			// name
+			// given a string. The two are usually equal.
+			sGroupsProjectionMap = new HashMap<String, String>();
+
+			// Maps the string "_ID" to the column name "_ID"
+			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns._ID,
+					DatabaseDefinitions.GroupColumns._ID);
+
+			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,
+					DatabaseDefinitions.GroupColumns.GROUP);
+			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.BULB,
+					DatabaseDefinitions.GroupColumns.BULB);
+			sGroupsProjectionMap.put(
+					DatabaseDefinitions.GroupColumns.PRECEDENCE,
+					DatabaseDefinitions.GroupColumns.PRECEDENCE);
+		}
+		{
+			// Add a pattern that routes URIs terminated with "moods" to a MOODS
+			// operation
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moods", MOODS);
+			// Creates a new projection map instance. The map returns a column
+			// name
+			// given a string. The two are usually equal.
+			sMoodsProjectionMap = new HashMap<String, String>();
+
+			// Maps the string "_ID" to the column name "_ID"
+			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns._ID,
+					DatabaseDefinitions.MoodColumns._ID);
+
+			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
+					DatabaseDefinitions.MoodColumns.MOOD);
+			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
+					DatabaseDefinitions.MoodColumns.STATE);
+			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.PRECEDENCE,
+					DatabaseDefinitions.MoodColumns.PRECEDENCE);
+		}
+		{
+			// Add a pattern that routes URIs terminated with "groups" to a
+			// GROUPS
+			// operation
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groupbulbs",
+					GROUPBULBS);
+			// Creates a new projection map instance. The map returns a column
+			// name
 			// given a string. The two are usually equal.
 			sGroupBulbsProjectionMap = new HashMap<String, String>();
 
@@ -94,18 +101,22 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupBulbsProjectionMap.put(DatabaseDefinitions.GroupColumns._ID,
 					DatabaseDefinitions.GroupColumns._ID);
 
-			sGroupBulbsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,
+			sGroupBulbsProjectionMap.put(
+					DatabaseDefinitions.GroupColumns.GROUP,
 					DatabaseDefinitions.GroupColumns.GROUP);
 			sGroupBulbsProjectionMap.put(DatabaseDefinitions.GroupColumns.BULB,
 					DatabaseDefinitions.GroupColumns.BULB);
-			sGroupBulbsProjectionMap.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,
+			sGroupBulbsProjectionMap.put(
+					DatabaseDefinitions.GroupColumns.PRECEDENCE,
 					DatabaseDefinitions.GroupColumns.PRECEDENCE);
-			}
-			{
+		}
+		{
 			// Add a pattern that routes URIs terminated with "moods" to a MOODS
 			// operation
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moodstates", MOODSTATES);
-			// Creates a new projection map instance. The map returns a column name
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moodstates",
+					MOODSTATES);
+			// Creates a new projection map instance. The map returns a column
+			// name
 			// given a string. The two are usually equal.
 			sMoodStatesProjectionMap = new HashMap<String, String>();
 
@@ -117,26 +128,27 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.MoodColumns.MOOD);
 			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
 					DatabaseDefinitions.MoodColumns.STATE);
-			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.PRECEDENCE,
+			sMoodStatesProjectionMap.put(
+					DatabaseDefinitions.MoodColumns.PRECEDENCE,
 					DatabaseDefinitions.MoodColumns.PRECEDENCE);
-			}
+		}
 	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		// Constructs a new query builder and sets its table name
 		String table = null;
-		
-		Uri toNotify = uri;//todo restructure so that GROUPS and GROUPBULBS share notifications
-		
+
+		Uri toNotify = uri;// todo restructure so that GROUPS and GROUPBULBS
+							// share notifications
+
 		/**
 		 * Choose the projection and adjust the "where" clause based on URI
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
 		// If the incoming URI is for notes, chooses the Notes projection
-		
-			
+
 		case GROUPBULBS:
 			table = (DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.GroupColumns.GROUPS_URI;
@@ -145,13 +157,12 @@ public class HueMoreProvider extends ContentProvider {
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		db.delete(table, selection, selectionArgs);
-		
-		
+
 		this.getContext().getContentResolver().notifyChange(uri, null);
 		this.getContext().getContentResolver().notifyChange(toNotify, null);
-		
+
 		Log.i("contentDeleted", "" + uri.getPath());
-				
+
 		return 0;
 	}
 
@@ -200,7 +211,6 @@ public class HueMoreProvider extends ContentProvider {
 			// db.update("groups", null, cv);
 			Log.e("asdf", "insertFailed");
 		}
-		
 
 		this.getContext().getContentResolver().notifyChange(uri, null);
 
@@ -243,7 +253,7 @@ public class HueMoreProvider extends ContentProvider {
 			qb.setProjectionMap(sMoodsProjectionMap);
 			groupBy = DatabaseDefinitions.MoodColumns.MOOD;
 			break;
-			
+
 		case GROUPBULBS:
 			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);

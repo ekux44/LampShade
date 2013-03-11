@@ -37,8 +37,7 @@ public final class DatabaseDefinitions {
 		public static final String GROUP = "Dgroup";
 
 		/**
-		 * which bulb. currently using bulb number until better method
-		 * found
+		 * which bulb. currently using bulb number until better method found
 		 */
 		public static final String BULB = "Dbulb";
 
@@ -74,7 +73,7 @@ public final class DatabaseDefinitions {
 		 */
 		public static final Uri MOODS_URI = Uri.parse(SCHEME + AUTHORITY
 				+ PATH_MOODS);
-		
+
 		public static final String PATH_MOODSTATES = "/moodstates";
 
 		/**
@@ -82,7 +81,7 @@ public final class DatabaseDefinitions {
 		 */
 		public static final Uri MOODSTATES_URI = Uri.parse(SCHEME + AUTHORITY
 				+ PATH_MOODSTATES);
-		
+
 		/**
 		 * which mood this state row is part of
 		 */

@@ -17,7 +17,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -34,7 +33,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -73,54 +71,51 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-				: android.R.layout.simple_list_item_1;		
-		
+				: android.R.layout.simple_list_item_1;
+
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
 		 */
 		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-
 		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
-		dataSource = new SimpleCursorAdapter(this.getActivity(),
-				layout, null, columns,
-				new int[] { android.R.id.text1}, 0);
+		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
+				columns, new int[] { android.R.id.text1 }, 0);
 
 		setListAdapter(dataSource);
-		
+
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.mood_view, container, false);
-		
+
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		brightnessBar.setMax(255);
-		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
-	
-		    @Override       
-		    public void onStopTrackingTouch(SeekBar seekBar) {      
-		    	 HueState hs = new HueState();
-			        hs.bri = brightness;
-			        hs.on = true;
-			        Gson gs = new Gson();
-			        String[] brightnessState = {gs.toJson(hs)};
-			        //TODO deal with off?
-			    	TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-					pushGroupMood.execute(parrentActivity, bulbS, brightnessState);     
-		    }       
-	
-		    @Override       
-		    public void onStartTrackingTouch(SeekBar seekBar) {     
-		        // TODO Auto-generated method stub      
-		    }       
-	
-		    @Override       
-		    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {     
-		       brightness = progress;
-		    }       
-		});     
-		
+		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-		
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				HueState hs = new HueState();
+				hs.bri = brightness;
+				hs.on = true;
+				Gson gs = new Gson();
+				String[] brightnessState = { gs.toJson(hs) };
+				// TODO deal with off?
+				TransmitGroupMood pushGroupMood = new TransmitGroupMood();
+				pushGroupMood.execute(parrentActivity, bulbS, brightnessState);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				brightness = progress;
+			}
+		});
+
 		return myView;
 	}
 
@@ -227,49 +222,51 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-	
-		
-		String[] groupColumns = { GroupColumns.BULB};
-		String[] gWhereClause = {mCurrentGroup};
+
+		String[] groupColumns = { GroupColumns.BULB };
+		String[] gWhereClause = { mCurrentGroup };
 		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the default
-																// content URI
-																// for the
-																// provider.
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																	// default
+																	// content
+																	// URI
+																	// for the
+																	// provider.
 				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP+"=?", // selection clause
-				gWhereClause, //selection clause args
+				GroupColumns.GROUP + "=?", // selection clause
+				gWhereClause, // selection clause args
 				null // Use the default sort order.
 				);
-		
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();		
+
+		ArrayList<Integer> groupStates = new ArrayList<Integer>();
 		while (cursor.moveToNext()) {
-		    Log.i("cursorIterator",""+ cursor.getInt(0));
+			Log.i("cursorIterator", "" + cursor.getInt(0));
 			groupStates.add(cursor.getInt(0));
 		}
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-		Log.i("iterated size)",""+groupStates.size());
-		
-		String[] moodColumns = { MoodColumns.STATE};
-		String[] mWereClause = {(String) ((TextView)(v)).getText()};
+		Log.i("iterated size)", "" + groupStates.size());
+
+		String[] moodColumns = { MoodColumns.STATE };
+		String[] mWereClause = { (String) ((TextView) (v)).getText() };
 		cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the default
+				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
+																// default
 																// content URI
 																// for the
 																// provider.
 				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD+"=?", // selection clause
+				MoodColumns.MOOD + "=?", // selection clause
 				mWereClause, // election clause args
 				null // Use the default sort order.
 				);
-		
-		ArrayList<String> moodStates = new ArrayList<String>();		
+
+		ArrayList<String> moodStates = new ArrayList<String>();
 		while (cursor.moveToNext()) {
-		    moodStates.add(cursor.getString(0));
-		    Log.i("moodStates", ""+ cursor.getString(0));
+			moodStates.add(cursor.getString(0));
+			Log.i("moodStates", "" + cursor.getString(0));
 		}
 		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-		
+
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
 		pushGroupMood.execute(parrentActivity, bulbS, moodS);
 	}
@@ -289,9 +286,9 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			moods = (String[]) params[2];
 			Log.i("asyncTask", "doing");
 
-			if(cont==null || bulbs==null ||moods==null)
+			if (cont == null || bulbs == null || moods == null)
 				return -1;
-			
+
 			// Get username and IP from preferences cache
 			SharedPreferences settings = PreferenceManager
 					.getDefaultSharedPreferences(cont);
@@ -354,6 +351,5 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			Log.i("asyncTask", "finished");
 		}
 	}
-	
-	
+
 }

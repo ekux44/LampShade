@@ -2,7 +2,6 @@ package com.kuxhausen.huemore;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -40,35 +39,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		ContentValues cv = new ContentValues();
 		Gson gson = new Gson();
 		HueState hs = new HueState();
-		
+
 		cv.put(MoodColumns.MOOD, "Reading");
-		hs.ct=(1000000/2700);
-		hs.on= true;
+		hs.ct = (1000000 / 2700);
+		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Concentrate");
-		hs.ct=(1000000/3400);
-		hs.on= true;
+		hs.ct = (1000000 / 3400);
+		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Relax");
-		hs.ct=(1000000/2500);
-		hs.on= true;
+		hs.ct = (1000000 / 2500);
+		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Energize");
-		hs.ct=(1000000/6000);
-		hs.on= true;
+		hs.ct = (1000000 / 6000);
+		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		for(int i = 0; i<50; i++){
+		for (int i = 0; i < 50; i++) {
 			cv.clear();
 			cv.put(GroupColumns.GROUP, "All");
 			cv.put(GroupColumns.BULB, i);
