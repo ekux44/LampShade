@@ -65,8 +65,8 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 				);
 
 		dataSource = new SimpleCursorAdapter(this.getActivity(),
-				R.layout.group_row, null, columns,
-				new int[] { R.id.groupTextView }, 0);
+				layout, null, columns,
+				new int[] { android.R.id.text1}, 0);
 
 		setListAdapter(dataSource);
 
@@ -109,7 +109,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
-		mCallback.onArticleSelected((String) ((TextView)((LinearLayout)v).getChildAt(0)).getText());
+		mCallback.onArticleSelected((String) ((TextView)(v)).getText());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

@@ -19,7 +19,7 @@ import android.widget.ListView;
 
 public class NewGroupDialogFragment extends DialogFragment {
 
-	public static String[] dummyArrayItems = { "1", "2", "3", "4" };
+	public static String[] dummyArrayItems = { "1", "2", "3", "4", "5" };
 	ListView bulbsListView;
 	ArrayAdapter<String> rayAdapter;
 	EditText nameEditText;

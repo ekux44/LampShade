@@ -78,8 +78,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
 		dataSource = new SimpleCursorAdapter(this.getActivity(),
-				R.layout.mood_row, null, columns,
-				new int[] { R.id.moodTextView }, 0);
+				layout, null, columns,
+				new int[] { android.R.id.text1}, 0);
 
 		setListAdapter(dataSource);
 
@@ -214,7 +214,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		Log.i("iterated size)",""+groupStates.size());
 		
 		String[] moodColumns = { MoodColumns.STATE};
-		String[] mWereClause = {(String) ((TextView)((LinearLayout)v).getChildAt(0)).getText()};
+		String[] mWereClause = {(String) ((TextView)(v)).getText()};
 		cursor = getActivity().getContentResolver().query(
 				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the default
 																// content URI
