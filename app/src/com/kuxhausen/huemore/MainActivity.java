@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -21,7 +22,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hue_more);
-
+		
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -45,16 +46,23 @@ public class MainActivity extends FragmentActivity implements
 			// Add the fragment to the 'fragment_container' FrameLayout
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.fragment_container, firstFragment).commit();
-
+	
+		}
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		
+		if(!settings.contains(PreferencesKeys.First_Run)){
 			helper.initialPopulate();// initialize database
-
-			// check to see if the bridge IP address is setup yet
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(this);
-			if (!settings.contains(PreferencesKeys.Bridge_IP_Address)) {
-				RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-				rwhdf.show(this.getSupportFragmentManager(), "dialog");
-			}
+			
+			// Mark no longer first run in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.First_Run, false);
+			edit.commit();
+		}	
+		// check to see if the bridge IP address is setup yet
+		if (!settings.contains(PreferencesKeys.Bridge_IP_Address)) {
+			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
+			rwhdf.show(this.getSupportFragmentManager(), "dialog");
 		}
 	}
 

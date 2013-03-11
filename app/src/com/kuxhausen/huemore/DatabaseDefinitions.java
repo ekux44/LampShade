@@ -106,6 +106,7 @@ public final class DatabaseDefinitions {
 	public static final class PreferencesKeys {
 		public static final String Bridge_IP_Address = "Bridge_IP_Address";
 		public static final String Hashed_Username = "Hashed_Username";
+		public static final String First_Run = "First_Run";
 	}
 
 	public static final String AUTHORITY = "com.kuxhausen.provider.huemore";
