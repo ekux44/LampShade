@@ -2,7 +2,9 @@ package com.kuxhausen.huemore;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -27,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 
 public class GroupsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -35,6 +38,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	public CursorAdapter dataSource;
+	public TextView selected; // updated on long click
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -83,8 +87,6 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
 		newGroup.setOnClickListener(this);
 		
-		//registerForContextMenu((ListView)myView);
-		
 		return myView;
 	}
 
@@ -120,6 +122,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
 
+	    selected = (TextView)((AdapterView.AdapterContextMenuInfo)menuInfo).targetView;
 	    MenuInflater inflater = this.getActivity().getMenuInflater();
 	    inflater.inflate(R.menu.group_fragment, menu);
 	}
@@ -131,7 +134,13 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	    switch (item.getItemId()) {
 
 	        case R.id.contextmenu_delete: // <-- your custom menu item id here
-	            // do something here
+	        	String groupSelect =  GroupColumns.GROUP+"=?";
+	    		String[] groupArg = {(String) ((TextView)(selected)).getText()};
+				getActivity()
+						.getContentResolver()
+						.delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
+								groupSelect, groupArg
+						);
 	            return true;
 
 	        default:

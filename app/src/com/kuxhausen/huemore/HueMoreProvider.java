@@ -124,7 +124,34 @@ public class HueMoreProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// TODO Auto-generated method stub
+		// Constructs a new query builder and sets its table name
+		String table = null;
+		
+		Uri toNotify = uri;//todo restructure so that GROUPS and GROUPBULBS share notifications
+		
+		/**
+		 * Choose the projection and adjust the "where" clause based on URI
+		 * pattern-matching.
+		 */
+		switch (sUriMatcher.match(uri)) {
+		// If the incoming URI is for notes, chooses the Notes projection
+		
+			
+		case GROUPBULBS:
+			table = (DatabaseDefinitions.GroupColumns.TABLE_NAME);
+			toNotify = DatabaseDefinitions.GroupColumns.GROUPS_URI;
+			break;
+		}
+
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		db.delete(table, selection, selectionArgs);
+		
+		
+		this.getContext().getContentResolver().notifyChange(uri, null);
+		this.getContext().getContentResolver().notifyChange(toNotify, null);
+		
+		Log.i("contentDeleted", "" + uri.getPath());
+				
 		return 0;
 	}
 

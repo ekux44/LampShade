@@ -237,8 +237,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 																// for the
 																// provider.
 				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP+"=?", // No where clause, return all records.
-				gWhereClause, // No where clause, therefore no where column values.
+				GroupColumns.GROUP+"=?", // selection clause
+				gWhereClause, //selection clause args
 				null // Use the default sort order.
 				);
 		
@@ -258,8 +258,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 																// for the
 																// provider.
 				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD+"=?", // No where clause, return all records.
-				mWereClause, // No where clause, therefore no where column values.
+				MoodColumns.MOOD+"=?", // selection clause
+				mWereClause, // election clause args
 				null // Use the default sort order.
 				);
 		
