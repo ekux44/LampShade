@@ -11,10 +11,16 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -69,12 +75,15 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 				new int[] { android.R.id.text1}, 0);
 
 		setListAdapter(dataSource);
-
+		
+		
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
 		Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
 		newGroup.setOnClickListener(this);
+		
+		//registerForContextMenu((ListView)myView);
 		
 		return myView;
 	}
@@ -105,7 +114,32 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
+	
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+	    super.onCreateContextMenu(menu, v, menuInfo);
 
+	    MenuInflater inflater = this.getActivity().getMenuInflater();
+	    inflater.inflate(R.menu.group_fragment, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+	    switch (item.getItemId()) {
+
+	        case R.id.contextmenu_delete: // <-- your custom menu item id here
+	            // do something here
+	            return true;
+
+	        default:
+	            return super.onContextItemSelected(item);
+	    }
+	}
+	
+	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
@@ -163,6 +197,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 * fronting this adapter to re-display
 		 */
 		dataSource.changeCursor(cursor);
+		registerForContextMenu(getListView());
 	}
 
 	@Override
@@ -172,5 +207,6 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 * memory leaks.
 		 */
 		dataSource.changeCursor(null);
+		unregisterForContextMenu(getListView());
 	}
 }
