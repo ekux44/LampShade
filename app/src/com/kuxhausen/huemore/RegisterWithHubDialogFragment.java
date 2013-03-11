@@ -31,6 +31,8 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.RegistrationRequest;
+import com.kuxhausen.huemore.state.RegistrationResponse;
 
 public class RegisterWithHubDialogFragment extends DialogFragment {
 

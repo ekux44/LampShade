@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.HueState;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {

@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class HueMoreProvider extends ContentProvider {
 
-	DatabaseHandler mOpenHelper;
+	DatabaseHelper mOpenHelper;
 
 	/**
 	 * A projection map used to select columns from the database
@@ -224,7 +224,7 @@ public class HueMoreProvider extends ContentProvider {
 		// opened until
 		// something tries to access it, and it's only created if it doesn't
 		// already exist.
-		mOpenHelper = new DatabaseHandler(getContext());
+		mOpenHelper = new DatabaseHelper(getContext());
 
 		// Assumes that any failures will be reported by a thrown exception.
 		return true;

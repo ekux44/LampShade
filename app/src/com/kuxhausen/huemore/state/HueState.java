@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.state;
 
 public class HueState {
 	/**

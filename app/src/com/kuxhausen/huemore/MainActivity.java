@@ -15,7 +15,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 public class MainActivity extends FragmentActivity implements
 		GroupsFragment.OnHeadlineSelectedListener {
 
-	DatabaseHandler helper = new DatabaseHandler(this);
+	DatabaseHelper helper = new DatabaseHelper(this);
 
 	/** Called when the activity is first created. */
 	@Override

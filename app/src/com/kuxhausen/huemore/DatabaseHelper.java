@@ -9,13 +9,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.state.HueState;
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
 	private static final int DATABASE_VERSION = 4;
 
-	public DatabaseHandler(Context context) {
+	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
