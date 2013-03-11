@@ -30,7 +30,7 @@
     </LinearLayout>
     <View
         android:layout_width="fill_parent"
-        android:layout_height="2dip"
+        android:layout_height="1dip"
         android:background="#33B5E5" />
     <ListView
         android:id="@id/android:list"
@@ -40,7 +40,7 @@
     </ListView>
 	<View
         android:layout_width="fill_parent"
-        android:layout_height="2dip"
+        android:layout_height="1dip"
         android:background="#33B5E5" />
 
     <TextView
