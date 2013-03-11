@@ -11,5 +11,7 @@
     <string name="action_register_with_hub">Register With Hub</string>
     <string name="contextmenu_delete">Delete</string>
     <string name="contextmenu_edit">Edit</string>
-
+	<string name="groups">Groups</string>
+	<string name="moods">Moods</string>
+	<string name="brightness">Brightness</string>
 </resources>

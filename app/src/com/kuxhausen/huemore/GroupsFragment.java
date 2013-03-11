@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -75,7 +76,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
-		Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
+		ImageButton newGroup = (ImageButton) myView.findViewById(R.id.newGroupButton);
 		newGroup.setOnClickListener(this);
 
 		return myView;
