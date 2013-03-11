@@ -29,10 +29,14 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -56,6 +60,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	SeekBar brightnessBar;
 	Integer[] bulbS;
 	int brightness;
+	public TextView selected; // updated on long click
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -166,6 +171,39 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	}
 
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		/*
+		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		if (selected.getText().equals("Off")) {
+			return;
+		}
+		MenuInflater inflater = this.getActivity().getMenuInflater();
+		inflater.inflate(R.menu.mood_fragment, menu);*/
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		switch (item.getItemId()) {
+
+		case R.id.contextmenu_delete: // <-- your custom menu item id here
+			String moodSelect = MoodColumns.MOOD + "=?";
+			String[] moodArg = { (String) ((TextView) (selected)).getText() };
+			getActivity().getContentResolver().delete(
+					DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
+					moodSelect, moodArg);
+			return true;
+
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+	
+	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
@@ -207,6 +245,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 * fronting this adapter to re-display
 		 */
 		dataSource.changeCursor(cursor);
+		//registerForContextMenu(getListView());
 	}
 
 	@Override
@@ -216,6 +255,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 * memory leaks.
 		 */
 		dataSource.changeCursor(null);
+		//unregisterForContextMenu(getListView());
 	}
 
 	@Override
@@ -224,6 +264,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
 
+		if(mCurrentGroup == null)
+			return;
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { mCurrentGroup };
 		Cursor cursor = getActivity().getContentResolver().query(

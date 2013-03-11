@@ -102,7 +102,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			mCallback = (OnHeadlineSelectedListener) activity;
+			mCallback = (MainActivity) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnHeadlineSelectedListener");
