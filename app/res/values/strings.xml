@@ -14,6 +14,7 @@
     <string name="groups">Groups</string>
     <string name="moods">Moods</string>
     <string name="brightness">Brightness</string>
+    <string name="saturation">Saturation</string>
     <string name="preview">Preview</string>
 
 </resources>

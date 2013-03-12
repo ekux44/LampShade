@@ -45,6 +45,8 @@ public class ColorPickerDialogFragment extends DialogFragment {
         //builder.setView(new ColorPickerView(getActivity(), l, mInitialColor));
         builder.setTitle("pick a color");
         
+        
+        
         // Create the AlertDialog object and return it
      	return builder.create();
     }

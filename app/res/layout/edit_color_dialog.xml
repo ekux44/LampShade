@@ -21,8 +21,23 @@
         android:background="#33B5E5" />
 	<com.kuxhausen.huemore.ColorPickerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
+            android:layout_height="match_parent"
+            android:layout_weight="1" 
             />
-	
+	<TextView
+        android:id="@+id/saturationDescripterTextView"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="@string/saturation" />
+
+    <SeekBar
+        android:id="@+id/saturationBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:progress="50" />
 
 </LinearLayout>
