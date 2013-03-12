@@ -80,17 +80,21 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 		
 		MoodRow mr = new MoodRow();
         mr.name =stateName.getText().toString();
+        if(mr.equals(""))
+        	return;
         mr.color = 0xffff0000;
         moodRowArray.add(mr);
         rayAdapter.add(mr);
         stateName.setText(null);
     }
 
+	@Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.FLAG_EDITOR_ACTION:
                     addState();
                     return true;
             }

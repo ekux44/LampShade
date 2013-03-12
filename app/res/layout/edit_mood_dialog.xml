@@ -9,8 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="mood name"
-        style="@style/AppTheme">
+        android:inputType="text"
+        android:imeOptions="actionDone"
+        android:hint="mood name">
 
         <requestFocus />
     </EditText>

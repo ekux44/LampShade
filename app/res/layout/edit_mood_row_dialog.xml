@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:hint="color name"
         android:layout_weight="1"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         style="@style/AppTheme"/>
     <ImageButton
             android:id="@+id/stateColorButton"

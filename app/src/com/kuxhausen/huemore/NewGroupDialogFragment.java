@@ -11,13 +11,15 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewGroupDialogFragment extends DialogFragment {
+public class NewGroupDialogFragment extends DialogFragment{
 
 	public static String[] dummyArrayItems = { "1", "2", "3", "4", "5" };
 	ListView bulbsListView;
