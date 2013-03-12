@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -46,11 +47,14 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.MainActivity.TransmitGroupMood;
 import com.kuxhausen.huemore.state.HueState;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
-
+	OnMoodSelectedListener mMoodCallback;
+	
+	
 	final static String ARG_GROUP = "group";
 	String mCurrentGroup = null;
 	public Context parrentActivity;
@@ -58,10 +62,17 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
 	SeekBar brightnessBar;
-	Integer[] bulbS;
+	
 	int brightness;
 	public TextView selected; // updated on long click
 
+	// The container Activity must implement this interface so the frag can
+		// deliver messages
+		public interface OnMoodSelectedListener {
+			/** Called by HeadlinesFragment when a list item is selected */
+			public void onMoodSelected(String mood);
+		}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -106,8 +117,8 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 				Gson gs = new Gson();
 				String[] brightnessState = { gs.toJson(hs) };
 				// TODO deal with off?
-				TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-				pushGroupMood.execute(parrentActivity, bulbS, brightnessState);
+				((MainActivity)parrentActivity).onBrightnessChanged(brightnessState);
+				
 			}
 
 			@Override
@@ -125,6 +136,20 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		return myView;
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			mMoodCallback = (MainActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnHeadlineSelectedListener");
+		}
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -263,136 +288,12 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-
-		if(mCurrentGroup == null)
-			return;
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { mCurrentGroup };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (cursor.moveToNext()) {
-			Log.i("cursorIterator", "" + cursor.getInt(0));
-			groupStates.add(cursor.getInt(0));
-		}
-		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-		Log.i("iterated size)", "" + groupStates.size());
-
-		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { (String) ((TextView) (v)).getText() };
-		cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<String> moodStates = new ArrayList<String>();
-		while (cursor.moveToNext()) {
-			moodStates.add(cursor.getString(0));
-			Log.i("moodStates", "" + cursor.getString(0));
-		}
-		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-		pushGroupMood.execute(parrentActivity, bulbS, moodS);
+		
+		// Notify the parent activity of selected item
+		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
+		
 	}
 
-	private class TransmitGroupMood extends AsyncTask<Object, Void, Integer> {
-
-		Context cont;
-		Integer[] bulbs;
-		String[] moods;
-
-		@Override
-		protected Integer doInBackground(Object... params) {
-
-			// Get session ID
-			cont = (Context) params[0];
-			bulbs = (Integer[]) params[1];
-			moods = (String[]) params[2];
-			Log.i("asyncTask", "doing");
-
-			if (cont == null || bulbs == null || moods == null)
-				return -1;
-
-			// Get username and IP from preferences cache
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(cont);
-			String bridge = settings.getString(
-					PreferencesKeys.Bridge_IP_Address, null);
-			String hash = settings.getString(PreferencesKeys.Hashed_Username,
-					"");
-
-			if (bridge == null)
-				return -1;
-
-			for (int i = 0; i < bulbs.length; i++) {
-
-				StringBuilder builder = new StringBuilder();
-				HttpClient client = new DefaultHttpClient();
-
-				HttpPut httpPut = new HttpPut("http://" + bridge + "/api/"
-						+ hash + "/lights/" + bulbs[i] + "/state");
-				try {
-
-					StringEntity se = new StringEntity(moods[i % moods.length]);
-
-					// sets the post request as the resulting string
-					httpPut.setEntity(se);
-
-					HttpResponse response = client.execute(httpPut);
-					StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					Log.e("asdf", "" + statusCode);
-					if (statusCode == 200) {
-
-						Log.e("asdf", response.toString());
-
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(content));
-						String line;
-						String debugOutput = "";
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-							debugOutput += line;
-						}
-						Log.e("asdf", debugOutput);
-					} else {
-						Log.e("asdf", "Failed");
-					}
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			Log.i("asyncTask", "finishing");
-			return 1;
-		}
-
-		@Override
-		protected void onPostExecute(Integer result) {
-			Log.i("asyncTask", "finished");
-		}
-	}
+	
 
 }
