@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -133,6 +134,9 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			}
 		});
 
+		ImageButton newGroup = (ImageButton) myView.findViewById(R.id.newMoodButton);
+		newGroup.setOnClickListener(this);
+		
 		return myView;
 	}
 
@@ -232,6 +236,12 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.newMoodButton:
+
+			NewMoodDialogFragment nmdf = new NewMoodDialogFragment();
+			nmdf.show(getFragmentManager(), "dialog");
+
+			break;
 		}
 	}
 
