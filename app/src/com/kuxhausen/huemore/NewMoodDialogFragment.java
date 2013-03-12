@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener{
+public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener, ColorPickerDialogFragment.OnColorChangedListener{
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
@@ -75,8 +75,8 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 
 	
 	private void addState() {
-		//NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
-		//ngdf.show(getFragmentManager(), "dialog");
+		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
+		cpdf.show(getFragmentManager(), "dialog");
 		
 		MoodRow mr = new MoodRow();
         mr.name =stateName.getText().toString();
@@ -110,5 +110,12 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 			
 			break;
 		}
+	}
+
+
+	@Override
+	public void colorChanged(int color) {
+		// TODO Auto-generated method stub
+		
 	}
 }
