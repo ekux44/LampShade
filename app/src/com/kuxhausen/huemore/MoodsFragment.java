@@ -199,13 +199,13 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		/*
+		
 		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 		if (selected.getText().equals("Off")) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
-		inflater.inflate(R.menu.mood_fragment, menu);*/
+		inflater.inflate(R.menu.mood_fragment, menu);
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 * fronting this adapter to re-display
 		 */
 		dataSource.changeCursor(cursor);
-		//registerForContextMenu(getListView());
+		registerForContextMenu(getListView());
 	}
 
 	@Override
@@ -280,12 +280,12 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 * memory leaks.
 		 */
 		dataSource.changeCursor(null);
-		//unregisterForContextMenu(getListView());
+		unregisterForContextMenu(getListView());
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-
+		
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
 		

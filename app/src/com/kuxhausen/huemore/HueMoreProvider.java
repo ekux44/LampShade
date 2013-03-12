@@ -153,6 +153,11 @@ public class HueMoreProvider extends ContentProvider {
 			table = (DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.GroupColumns.GROUPS_URI;
 			break;
+		case MOODSTATES:
+			table = (DatabaseDefinitions.MoodColumns.TABLE_NAME);
+			toNotify = DatabaseDefinitions.MoodColumns.MOODS_URI;
+			break;	
+			
 		}
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();

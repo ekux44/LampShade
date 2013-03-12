@@ -127,11 +127,11 @@ public class MainActivity extends FragmentActivity implements
 			// Commit the transaction
 			transaction.commit();
 		}
+		pushMoodGroup();
 	}
 	
 	public void onMoodSelected(String moodParam) {
 		mood = moodParam;
-		
 		pushMoodGroup();
 	}
 	public void onBrightnessChanged(String brightnessState[]) {
