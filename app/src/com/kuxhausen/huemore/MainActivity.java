@@ -16,6 +16,9 @@ public class MainActivity extends FragmentActivity implements
 		GroupsFragment.OnHeadlineSelectedListener {
 
 	DatabaseHelper helper = new DatabaseHelper(this);
+	String mood;
+	String group;
+	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -66,19 +69,20 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	public void onArticleSelected(String group) {
+	public void onGroupSelected(String groupParam) {
+		group = groupParam;
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 
 		// Capture the article fragment from the activity layout
-		MoodsFragment articleFrag = (MoodsFragment) getSupportFragmentManager()
+		MoodsFragment moodFrag = (MoodsFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
 
-		if (articleFrag != null) {
+		if (moodFrag != null) {
 			// If article frag is available, we're in two-pane layout...
 
 			// Call a method in the ArticleFragment to update its content
-			articleFrag.updateArticleView(group);
+			moodFrag.updateGroupView(groupParam);
 
 		} else {
 			// If the frag is not available, we're in the one-pane layout and
@@ -87,7 +91,7 @@ public class MainActivity extends FragmentActivity implements
 			// Create fragment and give it an argument for the selected article
 			MoodsFragment newFragment = new MoodsFragment();
 			Bundle args = new Bundle();
-			args.putString(MoodsFragment.ARG_GROUP, group);
+			args.putString(MoodsFragment.ARG_GROUP, groupParam);
 			newFragment.setArguments(args);
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
@@ -103,6 +107,8 @@ public class MainActivity extends FragmentActivity implements
 			transaction.commit();
 		}
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

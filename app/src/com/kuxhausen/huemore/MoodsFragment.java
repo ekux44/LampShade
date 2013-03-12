@@ -146,15 +146,15 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		Bundle args = getArguments();
 		if (args != null) {
 			// Set article based on argument passed in
-			updateArticleView(args.getString(ARG_GROUP));
+			updateGroupView(args.getString(ARG_GROUP));
 		} else if (mCurrentGroup != null) {
 			// Set article based on saved instance state defined during
 			// onCreateView
-			updateArticleView(mCurrentGroup);
+			updateGroupView(mCurrentGroup);
 		}
 	}
 
-	public void updateArticleView(String group) {
+	public void updateGroupView(String group) {
 		// TextView article = (TextView)
 		// getActivity().findViewById(R.id.article);
 		// article.setText(StaticDataStore.Moods[position]);

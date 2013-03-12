@@ -38,7 +38,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	// deliver messages
 	public interface OnHeadlineSelectedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onArticleSelected(String group);
+		public void onGroupSelected(String group);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// Notify the parent activity of selected item
-		mCallback.onArticleSelected((String) ((TextView) (v)).getText());
+		mCallback.onGroupSelected((String) ((TextView) (v)).getText());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
