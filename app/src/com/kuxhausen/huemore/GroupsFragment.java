@@ -125,11 +125,14 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
+		if(selected == null)
+			return false;
+		
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextmenu_delete: // <-- your custom menu item id here
+		case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
 			String groupSelect = GroupColumns.GROUP + "=?";
 			String[] groupArg = { (String) ((TextView) (selected)).getText() };
 			getActivity().getContentResolver().delete(
@@ -144,6 +147,8 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
+		selected = ((TextView) (v));
+		
 		// Notify the parent activity of selected item
 		mCallback.onGroupSelected((String) ((TextView) (v)).getText());
 
@@ -208,7 +213,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
 		 */
+		//unregisterForContextMenu(getListView());
 		dataSource.changeCursor(null);
-		unregisterForContextMenu(getListView());
 	}
 }

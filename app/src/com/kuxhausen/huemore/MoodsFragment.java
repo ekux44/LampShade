@@ -215,7 +215,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextmenu_delete: // <-- your custom menu item id here
+		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
 			String moodSelect = MoodColumns.MOOD + "=?";
 			String[] moodArg = { (String) ((TextView) (selected)).getText() };
 			getActivity().getContentResolver().delete(
@@ -279,12 +279,14 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
 		 */
+		//unregisterForContextMenu(getListView());
 		dataSource.changeCursor(null);
-		unregisterForContextMenu(getListView());
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
+		
+		selected = ((TextView) (v));
 		
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
