@@ -39,5 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" >
     </ListView>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#33B5E5" />
 
 </LinearLayout>
