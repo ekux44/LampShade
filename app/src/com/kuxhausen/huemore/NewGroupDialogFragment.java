@@ -42,7 +42,6 @@ public class NewGroupDialogFragment extends DialogFragment {
 		builder.setView(groupDialogView);
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
-		nameEditText.setText("name");
 
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
