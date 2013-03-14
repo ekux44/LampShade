@@ -107,7 +107,6 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		View myView = inflater.inflate(R.layout.mood_view, container, false);
 
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
-		brightnessBar.setMax(255);
 		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
