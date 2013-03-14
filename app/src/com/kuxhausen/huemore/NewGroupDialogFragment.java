@@ -141,7 +141,17 @@ public class NewGroupDialogFragment extends DialogFragment{
 			return;
 		Gson gson = new Gson();
 		bulbArray = gson.fromJson(jSon, HueBulb[].class);
-		for(int i = 0; i<bulbArray.length; i++){
+		
+		// Get username and IP from preferences cache
+		SharedPreferences settings = PreferenceManager
+						.getDefaultSharedPreferences(getActivity());
+		int numberBulbsUnlocked = settings.getInt(
+							PreferencesKeys.Bulbs_Unlocked, 4);
+		if(bulbArray.length>numberBulbsUnlocked){
+			//tell user to upgrade
+		}
+		
+		for(int i = 0; i<Math.min(bulbArray.length, numberBulbsUnlocked); i++){
 			//bulbNameList.add(bulb.name);
 			HueBulb bulb = bulbArray[i];
 			bulb.number = i+1;

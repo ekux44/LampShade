@@ -81,6 +81,7 @@ public class MainActivity extends FragmentActivity implements
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.First_Run, false);
+			edit.putInt(PreferencesKeys.Bulbs_Unlocked, 10);//TODO load from google store
 			edit.commit();
 		}
 		// check to see if the bridge IP address is setup yet
