@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -48,10 +49,12 @@ public class NewGroupDialogFragment extends DialogFragment{
 	ArrayAdapter<String> rayAdapter;
 	EditText nameEditText;
 	HueBulb[] bulbArray;
+	HashMap<String, Integer> nameToBulb;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		bulbNameList = new ArrayList<String>();
+		nameToBulb = new HashMap<String,Integer>();
 		
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -84,7 +87,7 @@ public class NewGroupDialogFragment extends DialogFragment{
 								.getCheckedItemPositions();
 						for (int i = 0; i < rayAdapter.getCount(); i++) {
 							if (set.get(i)) {
-								checkedBulbs.add(rayAdapter.getItem(i));
+								checkedBulbs.add(nameToBulb.get((rayAdapter.getItem(i))).toString());
 							}
 						}
 
@@ -138,8 +141,11 @@ public class NewGroupDialogFragment extends DialogFragment{
 			return;
 		Gson gson = new Gson();
 		bulbArray = gson.fromJson(jSon, HueBulb[].class);
-		for(HueBulb bulb : bulbArray){
-			bulbNameList.add(bulb.name);
+		for(int i = 0; i<bulbArray.length; i++){
+			//bulbNameList.add(bulb.name);
+			HueBulb bulb = bulbArray[i];
+			bulb.number = i;
+			nameToBulb.put(bulb.name,bulb.number);
 	        rayAdapter.add(bulb.name);
 		}
 	}
@@ -199,6 +205,7 @@ public class NewGroupDialogFragment extends DialogFragment{
 						}
 						returnOutput ="["+ returnOutput.substring(1,
 								returnOutput.length() - 1)+"]";
+						returnOutput = returnOutput.replaceAll("\"[:digit:]+\":", "");
 						Log.e("asdf", returnOutput);
 					} else {
 						Log.e("asdf", "Failed");
