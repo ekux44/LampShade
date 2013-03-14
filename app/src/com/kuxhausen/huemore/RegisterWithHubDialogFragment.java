@@ -1,13 +1,19 @@
 package com.kuxhausen.huemore;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,6 +37,7 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.HueBridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 
@@ -101,10 +108,55 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	public class Register extends AsyncTask<Object, Void, Boolean> {
 
 		Context cont;
+		String bridge = "";
 
 		public String getBridge() {
-			return "192.168.1.100"; // TODO replace with proper network
-									// abstraction
+			
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet("http://" + "www.meethue.com/api/nupnp");
+			bridge = "192.168.1.100";
+			
+			
+			try {
+
+				HttpResponse response = client.execute(httpGet);
+				StatusLine statusLine = response.getStatusLine();
+				int statusCode = statusLine.getStatusCode();
+				Log.e("asdf", "" + statusCode);
+				if (statusCode == 200) {
+
+					Log.e("asdf", response.toString());
+
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(content));
+					bridge = "";
+					String line;
+					String jSon="";
+					while ((line = reader.readLine()) != null) {
+						builder.append(line);
+						jSon += line;
+					}
+					jSon =jSon.substring(1,
+							jSon.length() - 1);
+					Log.e("asdf",jSon);
+					Gson gson = new Gson();
+					bridge = gson.fromJson(jSon, HueBridge.class).internalipaddress;
+					
+					Log.e("asdf", bridge);
+				} else {
+					Log.e("asdf", "Failed");
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+			return bridge; 
 		}
 
 		public String getUserName() {
@@ -203,7 +255,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 						.getDefaultSharedPreferences(parrentActivity);
 
 				Editor edit = settings.edit();
-				edit.putString(PreferencesKeys.Bridge_IP_Address, getBridge());
+				edit.putString(PreferencesKeys.Bridge_IP_Address, bridge);
 				edit.putString(PreferencesKeys.Hashed_Username, getUserName());
 				edit.commit();
 
