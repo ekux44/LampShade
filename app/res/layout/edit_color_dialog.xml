@@ -4,26 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:imeOptions="actionDone"
-        android:hint="mood name">
-
-        <requestFocus />
-    </EditText>
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
-	<com.kuxhausen.huemore.ColorPickerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" 
-            />
 	<TextView
         android:id="@+id/saturationDescripterTextView"
         style="@style/AppTheme"
@@ -39,5 +19,15 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
         android:progress="50" />
-
+    
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#33B5E5" />
+	<com.kuxhausen.huemore.ColorPickerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" 
+            />
+	
 </LinearLayout>

@@ -40,7 +40,6 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
             // Hold the view objects in an object, that way the don't need to be "re-  finded"
             view = new ViewHolder();
             
-            view.state_name= (EditText) rowView.findViewById(R.id.stateNameTextView);
             view.state_color = (ImageView) rowView.findViewById(R.id.stateColorButton);
 
             rowView.setTag(view);
@@ -50,7 +49,6 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 
         /** Set data to your Views. */
         MoodRow item = list.get(position);
-        view.state_name.setText(item.name);
         
         ColorDrawable cd = new ColorDrawable(item.color);
         cd.setAlpha(255);
@@ -60,7 +58,6 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
     }
 
     protected static class ViewHolder{
-        protected EditText state_name;
         protected ImageView state_color;
     }
 }

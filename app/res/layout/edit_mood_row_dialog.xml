@@ -4,15 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/stateNameTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="color name"
-        android:layout_weight="1"
-        android:inputType="text"
-        android:imeOptions="actionDone"
-        style="@style/AppTheme"/>
     <ImageButton
             android:id="@+id/stateColorButton"
             android:layout_width="wrap_content"

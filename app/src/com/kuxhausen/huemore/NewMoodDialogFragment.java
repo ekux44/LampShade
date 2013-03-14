@@ -47,9 +47,6 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 		
-		stateName = (EditText) groupDialogView.findViewById(R.id.stateNameTextView);
-		stateName.setOnKeyListener(this);
-
 		ImageButton stateColor = (ImageButton) groupDialogView.findViewById(R.id.stateColorButton);
 		stateColor.setOnClickListener(this);
 		
@@ -79,13 +76,9 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 		cpdf.show(getFragmentManager(), "dialog");
 		
 		MoodRow mr = new MoodRow();
-        mr.name =stateName.getText().toString();
-        if(mr.equals(""))
-        	return;
         mr.color = 0xffff0000;
         moodRowArray.add(mr);
         rayAdapter.add(mr);
-        stateName.setText(null);
     }
 
 	@Override
