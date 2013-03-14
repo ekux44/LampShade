@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -21,14 +22,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener, ColorPickerDialogFragment.OnColorChangedListener{
+public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener{
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
 	EditText nameEditText;
 	EditText stateName;
-
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		moodRowArray = new ArrayList<MoodRow>();
@@ -72,14 +73,19 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 
 	
 	private void addState() {
-		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
-		cpdf.show(getFragmentManager(), "dialog");
-		
 		MoodRow mr = new MoodRow();
         mr.color = 0xffff0000;
         moodRowArray.add(mr);
         rayAdapter.add(mr);
+		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
+		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
+		cpdf.show(getFragmentManager(), "dialog");
     }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data){
+		rayAdapter.getItem(requestCode).color = resultCode;
+		rayAdapter.notifyDataSetChanged();
+	}
 
 	@Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -103,12 +109,5 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 			
 			break;
 		}
-	}
-
-
-	@Override
-	public void colorChanged(int color) {
-		// TODO Auto-generated method stub
-		
 	}
 }

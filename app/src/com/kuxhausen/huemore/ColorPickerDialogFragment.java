@@ -31,7 +31,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
         
         OnColorChangedListener l = new OnColorChangedListener() {
             public void colorChanged(int color) {
-                //mListener.colorChanged(color);
+            	getTargetFragment().onActivityResult(getTargetRequestCode(),color, null);
                 dismiss();
             }
         };
@@ -40,6 +40,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 		View groupDialogView = inflater.inflate(R.layout.edit_color_dialog,
 				null);
+		((ColorPickerView)groupDialogView.findViewById(R.id.colorWheel)).setOnColorChangedListener(l);
 		builder.setView(groupDialogView);
         
         //builder.setView(new ColorPickerView(getActivity(), l, mInitialColor));
