@@ -144,7 +144,7 @@ public class NewGroupDialogFragment extends DialogFragment{
 		for(int i = 0; i<bulbArray.length; i++){
 			//bulbNameList.add(bulb.name);
 			HueBulb bulb = bulbArray[i];
-			bulb.number = i;
+			bulb.number = i+1;
 			nameToBulb.put(bulb.name,bulb.number);
 	        rayAdapter.add(bulb.name);
 		}
