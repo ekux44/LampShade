@@ -17,7 +17,7 @@
     </EditText>
 	<View
         android:layout_width="fill_parent"
-        android:layout_height="1dip"
+        android:layout_height="2dip"
         android:background="#33B5E5" />
 	<com.kuxhausen.huemore.ColorPickerView
             android:layout_width="match_parent"
