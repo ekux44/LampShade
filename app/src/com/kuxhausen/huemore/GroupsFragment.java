@@ -57,16 +57,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPS_URI, // Use the default
-																// content URI
-																// for the
-																// provider.
-				columns, // Return the note ID and title for each note.
-				null, // No where clause, return all records.
-				null, // No where clause, therefore no where column values.
-				null // Use the default sort order.
-				);
+		
 
 		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
 				columns, new int[] { android.R.id.text1 }, 0);

@@ -33,7 +33,13 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnSeekB
     SeekBar seekBar;
     Integer[] bulbS;
     
-
+    public void onSuccessExit(int color, int hues){
+    	hs.hue = hues;
+    	Intent i = new Intent();
+    	i.putExtra("HueState", gson.toJson(hs));
+    	getTargetFragment().onActivityResult(getTargetRequestCode(),color, i);
+    }
+    
     @Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +54,12 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnSeekB
             public void colorChanged(int color, int hues) {
             	Log.e("asdf","onColorChanged");
             	hs.hue = hues;
-            	Intent i = new Intent();
-            	i.putExtra("HueState", gson.toJson(hs));
-            	getTargetFragment().onActivityResult(getTargetRequestCode(),color, i);
-                preview();
+            	preview();
             }
         };
 
+        
+        
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 		View groupDialogView = inflater.inflate(R.layout.edit_color_dialog,
@@ -72,7 +77,8 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnSeekB
         builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						mListener.colorChanged(cpv.getColor(), cpv.getHue());
+						onSuccessExit(cpv.getColor(), cpv.getHue());
+						
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {

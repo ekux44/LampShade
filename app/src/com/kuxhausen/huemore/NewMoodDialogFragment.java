@@ -139,6 +139,7 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 			states[i] = gson.toJson(moodRowArray.get(i).hs);
 		}
 		((MainActivity)getActivity()).testMood(bulbS, states);
+		Log.e("asdf", "on activity result"+bulbS.length+" "+states.length);
 	}
 
 	@Override
