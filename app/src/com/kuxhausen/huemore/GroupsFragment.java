@@ -115,7 +115,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals("All")) {
+		if (selected.getText().equals("ALL")) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();

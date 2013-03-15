@@ -41,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Gson gson = new Gson();
 		HueState hs = new HueState();
 
-		cv.put(MoodColumns.MOOD, "Off");
+		cv.put(MoodColumns.MOOD, "OFF");
 		hs.on = false;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
@@ -79,8 +79,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.xy = redPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
+		db.insert(MoodColumns.TABLE_NAME, null, cv);	
+		
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Orange");
 		Double[] orangePair = {0.5663,0.3978};
@@ -113,12 +113,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Romantic");
+		hs.xy = pinkPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		hs.xy = redPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Rainbow");
+		hs.xy = orangePair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		hs.xy = pinkPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		hs.xy = greenPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		hs.xy = bluePair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		hs.xy = redPair;
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		
 
 		for (int i = 0; i < 10; i++) {
 			cv.clear();
-			cv.put(GroupColumns.GROUP, "All");
+			cv.put(GroupColumns.GROUP, "ALL");
 			cv.put(GroupColumns.BULB, i);
 			cv.put(GroupColumns.PRECEDENCE, i);
 			db.insert(GroupColumns.TABLE_NAME, null, cv);
