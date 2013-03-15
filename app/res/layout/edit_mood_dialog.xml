@@ -19,7 +19,22 @@
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#33B5E5" />
-	<include layout="@layout/edit_mood_row_dialog" />
+
+	<Button
+	    android:id="@+id/previewButton"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/preview_group" />
+
+	<Button
+	    android:id="@+id/addColor"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/add_color" />
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#33B5E5" />
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"

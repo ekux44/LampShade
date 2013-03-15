@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -48,8 +49,8 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 		
-		ImageButton stateColor = (ImageButton) groupDialogView.findViewById(R.id.stateColorButton);
-		stateColor.setOnClickListener(this);
+		Button addColor = (Button) groupDialogView.findViewById(R.id.addColor);
+		addColor.setOnClickListener(this);
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -60,11 +61,6 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						// User cancelled the dialog
-					}
-				}).setNeutralButton(R.string.preview,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						//TODO launch group selector then apply preview
 					}
 				});
 		// Create the AlertDialog object and return it
@@ -104,7 +100,7 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.stateColorButton:
+		case R.id.addColor:
 			addState();
 			
 			break;
