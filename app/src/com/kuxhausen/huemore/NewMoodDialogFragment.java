@@ -35,7 +35,6 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
 	EditText nameEditText;
-	EditText stateName;
 	Integer[] bulbS;
 	Gson gson = new Gson();
 	
@@ -67,7 +66,39 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						//TODO
+						String groupname = nameEditText.getText().toString();
+						for (int i = 0; i < moodRowArray.size(); i++) {
+							// Defines a new Uri object that receives the result
+							// of the insertion
+							Uri mNewUri;
+
+							// Defines an object to contain the new values to
+							// insert
+							ContentValues mNewValues = new ContentValues();
+
+							/*
+							 * Sets the values of each column and inserts the
+							 * word. The arguments to the "put" method are
+							 * "column name" and "value"
+							 */
+							mNewValues.put(
+									DatabaseDefinitions.MoodColumns.MOOD,
+									groupname);
+							mNewValues.put(
+									DatabaseDefinitions.MoodColumns.STATE,
+									gson.toJson(moodRowArray.get(i).hs));
+							mNewValues
+									.put(DatabaseDefinitions.MoodColumns.PRECEDENCE,
+											i);
+
+							mNewUri = getActivity()
+									.getContentResolver()
+									.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
+											mNewValues // the values to insert
+									);
+							Log.i("contentAdded", "moodname:" + groupname
+									+ " state:" + gson.toJson(rayAdapter.getItem(i).hs));
+						}
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
