@@ -140,6 +140,11 @@ public class MainActivity extends FragmentActivity implements
 		pushGroupMood.execute(this, bulbS, brightnessState);
 	}
 	
+	public void testMood(Integer[] bulbs, String[] states) {
+		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
+		pushGroupMood.execute(this, bulbs, states);
+	}
+	
 	private void pushMoodGroup(){
 		if(group == null || mood == null)
 			return;

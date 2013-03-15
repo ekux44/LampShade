@@ -2,13 +2,17 @@ package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.GroupSelectorDialogFragment.OnGroupSelectedListener;
+import com.kuxhausen.huemore.state.HueState;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -32,9 +36,11 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	ArrayList<MoodRow> moodRowArray;
 	EditText nameEditText;
 	EditText stateName;
+	Integer[] bulbS;
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		
 		moodRowArray = new ArrayList<MoodRow>();
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -76,6 +82,12 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	private void addState() {
 		MoodRow mr = new MoodRow();
         mr.color = 0xff000000;
+        HueState example = new HueState();
+        example.hue=25000;
+        example.sat = 254;
+        example.bri = 128;
+        example.on = true;
+        mr.hs = example;
         moodRowArray.add(mr);
         rayAdapter.add(mr);
 		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
@@ -86,6 +98,13 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
 		rayAdapter.getItem(requestCode).color = resultCode;
 		rayAdapter.notifyDataSetChanged();
+		
+		Gson gson = new Gson();
+		String[] states = new String[moodRowArray.size()];
+		for(int i = 0; i<moodRowArray.size(); i++){
+			states[i] = gson.toJson(moodRowArray.get(i).hs);
+		}
+		((MainActivity)getActivity()).testMood(bulbS, states);
 	}
 
 	@Override
@@ -119,7 +138,26 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 
 	@Override
 	public void groupSelected(String group) {
-		// TODO Auto-generated method stub
-		Log.e("asdf", group);
+		String[] groupColumns = { GroupColumns.BULB };
+		String[] gWhereClause = { group };
+		Cursor cursor = getActivity().getContentResolver().query(
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																	// default
+																	// content
+																	// URI
+																	// for the
+																	// provider.
+				groupColumns, // Return the note ID and title for each note.
+				GroupColumns.GROUP + "=?", // selection clause
+				gWhereClause, // selection clause args
+				null // Use the default sort order.
+				);
+
+		ArrayList<Integer> groupStates = new ArrayList<Integer>();
+		while (cursor.moveToNext()) {
+			Log.i("cursorIterator", "" + cursor.getInt(0));
+			groupStates.add(cursor.getInt(0));
+		}
+		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 	}
 }
