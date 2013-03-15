@@ -22,10 +22,20 @@ import android.widget.ListView;
 
 public class GroupSelectorDialogFragment extends DialogFragment implements OnClickListener {
 	
+	public interface OnGroupSelectedListener {
+        void groupSelected(String group);
+    }
+	
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	public CursorAdapter dataSource;
 	ListView listView;
+	Cursor cursor;
+	private OnGroupSelectedListener mListener;
+	
+	public void setOnGroupSelectedListener(OnGroupSelectedListener listener){
+		mListener = listener;
+	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -42,7 +52,7 @@ public class GroupSelectorDialogFragment extends DialogFragment implements OnCli
 
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
 		
-		Cursor cursor = getActivity().getContentResolver().query(
+		cursor = getActivity().getContentResolver().query(
 				DatabaseDefinitions.GroupColumns.GROUPS_URI, // Use the default
 																// content URI
 																// for the
@@ -67,8 +77,9 @@ public class GroupSelectorDialogFragment extends DialogFragment implements OnCli
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		// TODO Auto-generated method stub
-		
+		cursor.moveToFirst();
+		cursor.move(which);
+		mListener.groupSelected(cursor.getString(0));
 	}
 
 }

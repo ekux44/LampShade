@@ -2,6 +2,8 @@ package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
+import com.kuxhausen.huemore.GroupSelectorDialogFragment.OnGroupSelectedListener;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -23,7 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener{
+public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener, OnGroupSelectedListener{
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
@@ -108,8 +110,16 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 			break;
 		case R.id.previewButton:
 			GroupSelectorDialogFragment gsdf = new GroupSelectorDialogFragment();
+			gsdf.setOnGroupSelectedListener(this);
 			gsdf.show(getFragmentManager(), "dialog");
 			break;
 		}
+	}
+
+
+	@Override
+	public void groupSelected(String group) {
+		// TODO Auto-generated method stub
+		Log.e("asdf", group);
 	}
 }
