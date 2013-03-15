@@ -37,6 +37,7 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	EditText nameEditText;
 	EditText stateName;
 	Integer[] bulbS;
+	Gson gson = new Gson();
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -98,8 +99,9 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
 		rayAdapter.getItem(requestCode).color = resultCode;
 		rayAdapter.notifyDataSetChanged();
+		rayAdapter.getItem(requestCode).hs = gson.fromJson(data.getStringExtra("HueState"), HueState.class);
 		
-		Gson gson = new Gson();
+		
 		String[] states = new String[moodRowArray.size()];
 		for(int i = 0; i<moodRowArray.size(); i++){
 			states[i] = gson.toJson(moodRowArray.get(i).hs);

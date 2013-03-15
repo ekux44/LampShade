@@ -19,6 +19,7 @@ public class ColorPickerView extends View {
         private Paint mCenterPaint;
         private final int[] mColors;
         private OnColorChangedListener mListener;
+        private int hue;
         
         public void setOnColorChangedListener(OnColorChangedListener l){
         	mListener = l;
@@ -33,6 +34,9 @@ public class ColorPickerView extends View {
         
         public int getColor(){
         	return (mCenterPaint.getColor());
+        }
+        public int getHue(){
+        	return hue;
         }
         
         public ColorPickerView(Context c,AttributeSet attrs) {
@@ -191,6 +195,7 @@ public class ColorPickerView extends View {
                         if (unit < 0) {
                             unit += 1;
                         }
+                        hue =(int)( (.25f-unit)*65535);
                         mCenterPaint.setColor(interpColor(mColors, unit));
                         invalidate();
                     }
