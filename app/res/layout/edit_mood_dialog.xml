@@ -9,32 +9,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text"
+        android:hint="mood name"
         android:imeOptions="actionDone"
-        android:hint="mood name">
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>
-	<View
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#33B5E5" />
 
-	<Button
-	    android:id="@+id/previewButton"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:text="@string/preview_group" />
+    <Button
+        android:id="@+id/previewButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/preview_group" />
 
-	<Button
-	    android:id="@+id/addColor"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:text="@string/add_color" />
-	<View
+    <Button
+        android:id="@+id/addColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_color" />
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#33B5E5" />
+
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"

@@ -156,8 +156,8 @@ public class HueMoreProvider extends ContentProvider {
 		case MOODSTATES:
 			table = (DatabaseDefinitions.MoodColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.MoodColumns.MOODS_URI;
-			break;	
-			
+			break;
+
 		}
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();

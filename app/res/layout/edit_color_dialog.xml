@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<TextView
+    <TextView
         android:id="@+id/saturationDescripterTextView"
         style="@style/AppTheme"
         android:layout_width="wrap_content"
@@ -17,19 +17,19 @@
         android:id="@+id/saturationBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
         android:max="255"
+        android:paddingBottom="8dp"
         android:progress="127" />
-    
-	<View
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#33B5E5" />
-	<com.kuxhausen.huemore.ColorPickerView
-            android:id="@+id/colorWheel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" 
-            />
-	
+
+    <com.kuxhausen.huemore.ColorPickerView
+        android:id="@+id/colorWheel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
 </LinearLayout>

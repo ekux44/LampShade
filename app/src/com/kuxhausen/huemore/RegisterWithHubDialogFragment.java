@@ -111,13 +111,13 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		String bridge = "";
 
 		public String getBridge() {
-			
+
 			StringBuilder builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet("http://" + "www.meethue.com/api/nupnp");
+			HttpGet httpGet = new HttpGet("http://"
+					+ "www.meethue.com/api/nupnp");
 			bridge = "192.168.1.100";
-			
-			
+
 			try {
 
 				HttpResponse response = client.execute(httpGet);
@@ -134,17 +134,16 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 							new InputStreamReader(content));
 					bridge = "";
 					String line;
-					String jSon="";
+					String jSon = "";
 					while ((line = reader.readLine()) != null) {
 						builder.append(line);
 						jSon += line;
 					}
-					jSon =jSon.substring(1,
-							jSon.length() - 1);
-					Log.e("asdf",jSon);
+					jSon = jSon.substring(1, jSon.length() - 1);
+					Log.e("asdf", jSon);
 					Gson gson = new Gson();
 					bridge = gson.fromJson(jSon, HueBridge.class).internalipaddress;
-					
+
 					Log.e("asdf", bridge);
 				} else {
 					Log.e("asdf", "Failed");
@@ -154,9 +153,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			
-			return bridge; 
+
+			return bridge;
 		}
 
 		public String getUserName() {

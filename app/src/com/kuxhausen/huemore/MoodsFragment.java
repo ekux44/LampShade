@@ -54,8 +54,7 @@ import com.kuxhausen.huemore.state.HueState;
 public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 	OnMoodSelectedListener mMoodCallback;
-	
-	
+
 	final static String ARG_GROUP = "group";
 	String mCurrentGroup = null;
 	public Context parrentActivity;
@@ -63,17 +62,17 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
 	SeekBar brightnessBar;
-	
+
 	int brightness;
 	public TextView selected; // updated on long click
 
 	// The container Activity must implement this interface so the frag can
-		// deliver messages
-		public interface OnMoodSelectedListener {
-			/** Called by HeadlinesFragment when a list item is selected */
-			public void onMoodSelected(String mood);
-		}
-	
+	// deliver messages
+	public interface OnMoodSelectedListener {
+		/** Called by HeadlinesFragment when a list item is selected */
+		public void onMoodSelected(String mood);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -117,8 +116,9 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 				Gson gs = new Gson();
 				String[] brightnessState = { gs.toJson(hs) };
 				// TODO deal with off?
-				((MainActivity)parrentActivity).onBrightnessChanged(brightnessState);
-				
+				((MainActivity) parrentActivity)
+						.onBrightnessChanged(brightnessState);
+
 			}
 
 			@Override
@@ -133,9 +133,10 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			}
 		});
 
-		ImageButton newGroup = (ImageButton) myView.findViewById(R.id.newMoodButton);
+		ImageButton newGroup = (ImageButton) myView
+				.findViewById(R.id.newMoodButton);
 		newGroup.setOnClickListener(this);
-		
+
 		return myView;
 	}
 
@@ -152,7 +153,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -202,7 +203,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		
+
 		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 		if (selected.getText().equals("OFF")) {
 			return;
@@ -222,15 +223,15 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			String moodSelect = MoodColumns.MOOD + "=?";
 			String[] moodArg = { (String) ((TextView) (selected)).getText() };
 			getActivity().getContentResolver().delete(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
-					moodSelect, moodArg);
+					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
+					moodArg);
 			return true;
 
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -288,23 +289,21 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
 		 */
-		//unregisterForContextMenu(getListView());
+		// unregisterForContextMenu(getListView());
 		dataSource.changeCursor(null);
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		
+
 		selected = ((TextView) (v));
-		
+
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-		
+
 		// Notify the parent activity of selected item
 		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
-		
-	}
 
-	
+	}
 
 }

@@ -20,38 +20,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class GroupSelectorDialogFragment extends DialogFragment implements OnClickListener {
-	
+public class GroupSelectorDialogFragment extends DialogFragment implements
+		OnClickListener {
+
 	public interface OnGroupSelectedListener {
-        void groupSelected(String group);
-    }
-	
+		void groupSelected(String group);
+	}
+
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	public CursorAdapter dataSource;
 	ListView listView;
 	Cursor cursor;
 	private OnGroupSelectedListener mListener;
-	
-	public void setOnGroupSelectedListener(OnGroupSelectedListener listener){
+
+	public void setOnGroupSelectedListener(OnGroupSelectedListener listener) {
 		mListener = listener;
 	}
-	
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		
 
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-		
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
-		
+
 		cursor = getActivity().getContentResolver().query(
 				DatabaseDefinitions.GroupColumns.GROUPS_URI, // Use the default
 																// content URI
@@ -62,15 +61,13 @@ public class GroupSelectorDialogFragment extends DialogFragment implements OnCli
 				null, // No where clause, therefore no where column values.
 				null // Use the default sort order.
 				);
-		
+
 		CursorAdapter dataSource = new SimpleCursorAdapter(this.getActivity(),
-				android.R.layout.simple_list_item_1,
-				cursor,
-				columns, new int[] { android.R.id.text1 },
-				0);
+				android.R.layout.simple_list_item_1, cursor, columns,
+				new int[] { android.R.id.text1 }, 0);
 		builder.setAdapter(dataSource, this);
 		builder.setTitle("Pick a group to preview with");
-		
+
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}

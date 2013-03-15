@@ -57,7 +57,6 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
 		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
-		
 
 		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
 				columns, new int[] { android.R.id.text1 }, 0);
@@ -67,7 +66,8 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
-		ImageButton newGroup = (ImageButton) myView.findViewById(R.id.newGroupButton);
+		ImageButton newGroup = (ImageButton) myView
+				.findViewById(R.id.newGroupButton);
 		newGroup.setOnClickListener(this);
 
 		return myView;
@@ -116,9 +116,9 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		if(selected == null)
+		if (selected == null)
 			return false;
-		
+
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
 		switch (item.getItemId()) {
@@ -139,7 +139,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		selected = ((TextView) (v));
-		
+
 		// Notify the parent activity of selected item
 		mCallback.onGroupSelected((String) ((TextView) (v)).getText());
 
@@ -204,7 +204,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
 		 */
-		//unregisterForContextMenu(getListView());
+		// unregisterForContextMenu(getListView());
 		dataSource.changeCursor(null);
 	}
 }

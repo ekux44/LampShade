@@ -42,7 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewGroupDialogFragment extends DialogFragment{
+public class NewGroupDialogFragment extends DialogFragment {
 
 	ArrayList<String> bulbNameList;
 	ListView bulbsListView;
@@ -54,8 +54,8 @@ public class NewGroupDialogFragment extends DialogFragment{
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		bulbNameList = new ArrayList<String>();
-		nameToBulb = new HashMap<String,Integer>();
-		
+		nameToBulb = new HashMap<String, Integer>();
+
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -66,28 +66,26 @@ public class NewGroupDialogFragment extends DialogFragment{
 				.findViewById(R.id.listView1));
 		bulbsListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
-				android.R.layout.simple_list_item_multiple_choice,
-				bulbNameList);
+				android.R.layout.simple_list_item_multiple_choice, bulbNameList);
 		bulbsListView.setAdapter(rayAdapter);
 		builder.setView(groupDialogView);
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
-		
+
 		GetBulbList pushGroupMood = new GetBulbList();
 		pushGroupMood.execute(getActivity());
-		
+
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 
-						
-						
 						ArrayList<String> checkedBulbs = new ArrayList<String>();
 						SparseBooleanArray set = bulbsListView
 								.getCheckedItemPositions();
 						for (int i = 0; i < rayAdapter.getCount(); i++) {
 							if (set.get(i)) {
-								checkedBulbs.add(nameToBulb.get((rayAdapter.getItem(i))).toString());
+								checkedBulbs.add(nameToBulb.get(
+										(rayAdapter.getItem(i))).toString());
 							}
 						}
 
@@ -136,31 +134,31 @@ public class NewGroupDialogFragment extends DialogFragment{
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-	public void populateList(String jSon){
-		if(jSon== null || jSon.equals(""))
+
+	public void populateList(String jSon) {
+		if (jSon == null || jSon.equals(""))
 			return;
 		Gson gson = new Gson();
 		bulbArray = gson.fromJson(jSon, HueBulb[].class);
-		
+
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
-						.getDefaultSharedPreferences(getActivity());
+				.getDefaultSharedPreferences(getActivity());
 		int numberBulbsUnlocked = settings.getInt(
-							PreferencesKeys.Bulbs_Unlocked, 4);
-		if(bulbArray.length>numberBulbsUnlocked){
-			//tell user to upgrade
+				PreferencesKeys.Bulbs_Unlocked, 4);
+		if (bulbArray.length > numberBulbsUnlocked) {
+			// tell user to upgrade
 		}
-		
-		for(int i = 0; i<Math.min(bulbArray.length, numberBulbsUnlocked); i++){
-			//bulbNameList.add(bulb.name);
+
+		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
+			// bulbNameList.add(bulb.name);
 			HueBulb bulb = bulbArray[i];
-			bulb.number = i+1;
-			nameToBulb.put(bulb.name,bulb.number);
-	        rayAdapter.add(bulb.name);
+			bulb.number = i + 1;
+			nameToBulb.put(bulb.name, bulb.number);
+			rayAdapter.add(bulb.name);
 		}
 	}
-	
-	
+
 	class GetBulbList extends AsyncTask<Object, Void, String> {
 
 		Context cont;
@@ -186,45 +184,46 @@ public class NewGroupDialogFragment extends DialogFragment{
 			if (bridge == null)
 				return returnOutput;
 
-			
-				StringBuilder builder = new StringBuilder();
-				HttpClient client = new DefaultHttpClient();
+			StringBuilder builder = new StringBuilder();
+			HttpClient client = new DefaultHttpClient();
 
-				HttpGet httpGet = new HttpGet("http://" + bridge + "/api/"
-						+ hash + "/lights");
-				
-				try {
+			HttpGet httpGet = new HttpGet("http://" + bridge + "/api/" + hash
+					+ "/lights");
 
-					HttpResponse response = client.execute(httpGet);
-					StatusLine statusLine = response.getStatusLine();
-					int statusCode = statusLine.getStatusCode();
-					Log.e("asdf", "" + statusCode);
-					if (statusCode == 200) {
+			try {
 
-						Log.e("asdf", response.toString());
+				HttpResponse response = client.execute(httpGet);
+				StatusLine statusLine = response.getStatusLine();
+				int statusCode = statusLine.getStatusCode();
+				Log.e("asdf", "" + statusCode);
+				if (statusCode == 200) {
 
-						HttpEntity entity = response.getEntity();
-						InputStream content = entity.getContent();
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(content));
-						String line;
-						
-						while ((line = reader.readLine()) != null) {
-							builder.append(line);
-							returnOutput += line;
-						}
-						returnOutput ="["+ returnOutput.substring(1,
-								returnOutput.length() - 1)+"]";
-						returnOutput = returnOutput.replaceAll("\"[:digit:]+\":", "");
-						Log.e("asdf", returnOutput);
-					} else {
-						Log.e("asdf", "Failed");
+					Log.e("asdf", response.toString());
+
+					HttpEntity entity = response.getEntity();
+					InputStream content = entity.getContent();
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(content));
+					String line;
+
+					while ((line = reader.readLine()) != null) {
+						builder.append(line);
+						returnOutput += line;
 					}
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				
+					returnOutput = "["
+							+ returnOutput.substring(1,
+									returnOutput.length() - 1) + "]";
+					returnOutput = returnOutput.replaceAll("\"[:digit:]+\":",
+							"");
+					Log.e("asdf", returnOutput);
+				} else {
+					Log.e("asdf", "Failed");
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+
 			}
 			Log.i("asyncTask", "finishing");
 			return returnOutput;

@@ -34,7 +34,8 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 
 public class MainActivity extends FragmentActivity implements
-		GroupsFragment.OnHeadlineSelectedListener, MoodsFragment.OnMoodSelectedListener {
+		GroupsFragment.OnHeadlineSelectedListener,
+		MoodsFragment.OnMoodSelectedListener {
 
 	DatabaseHelper helper = new DatabaseHelper(this);
 	String group;
@@ -81,7 +82,8 @@ public class MainActivity extends FragmentActivity implements
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.First_Run, false);
-			edit.putInt(PreferencesKeys.Bulbs_Unlocked, 10);//TODO load from google store
+			edit.putInt(PreferencesKeys.Bulbs_Unlocked, 10);// TODO load from
+															// google store
 			edit.commit();
 		}
 		// check to see if the bridge IP address is setup yet
@@ -130,23 +132,24 @@ public class MainActivity extends FragmentActivity implements
 		}
 		pushMoodGroup();
 	}
-	
+
 	public void onMoodSelected(String moodParam) {
 		mood = moodParam;
 		pushMoodGroup();
 	}
+
 	public void onBrightnessChanged(String brightnessState[]) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
 		pushGroupMood.execute(this, bulbS, brightnessState);
 	}
-	
+
 	public void testMood(Integer[] bulbs, String[] states) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
 		pushGroupMood.execute(this, bulbs, states);
 	}
-	
-	private void pushMoodGroup(){
-		if(group == null || mood == null)
+
+	private void pushMoodGroup() {
+		if (group == null || mood == null)
 			return;
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { group };
@@ -172,7 +175,7 @@ public class MainActivity extends FragmentActivity implements
 		Log.i("iterated size)", "" + groupStates.size());
 
 		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { mood};
+		String[] mWereClause = { mood };
 		cursor = getContentResolver().query(
 				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
 																// default

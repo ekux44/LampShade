@@ -29,7 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-public class NewMoodDialogFragment extends DialogFragment implements OnClickListener , OnKeyListener, OnGroupSelectedListener{
+public class NewMoodDialogFragment extends DialogFragment implements
+		OnClickListener, OnKeyListener, OnGroupSelectedListener {
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
@@ -37,32 +38,32 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	EditText nameEditText;
 	Integer[] bulbS;
 	Gson gson = new Gson();
-	
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		
+
 		moodRowArray = new ArrayList<MoodRow>();
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View groupDialogView = inflater.inflate(R.layout.edit_mood_dialog,
-				null);
+		View groupDialogView = inflater
+				.inflate(R.layout.edit_mood_dialog, null);
 		bulbsListView = ((ListView) groupDialogView
 				.findViewById(R.id.listView1));
-		rayAdapter = new MoodRowAdapter(this.getActivity(),
-				moodRowArray);
+		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		bulbsListView.setAdapter(rayAdapter);
 		builder.setView(groupDialogView);
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
-		
-		Button enablePreview = (Button) groupDialogView.findViewById(R.id.previewButton);
+
+		Button enablePreview = (Button) groupDialogView
+				.findViewById(R.id.previewButton);
 		enablePreview.setOnClickListener(this);
-		
+
 		Button addColor = (Button) groupDialogView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
-		
+
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -87,17 +88,20 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 							mNewValues.put(
 									DatabaseDefinitions.MoodColumns.STATE,
 									gson.toJson(moodRowArray.get(i).hs));
-							mNewValues
-									.put(DatabaseDefinitions.MoodColumns.PRECEDENCE,
-											i);
+							mNewValues.put(
+									DatabaseDefinitions.MoodColumns.PRECEDENCE,
+									i);
 
 							mNewUri = getActivity()
 									.getContentResolver()
 									.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
 											mNewValues // the values to insert
 									);
-							Log.i("contentAdded", "moodname:" + groupname
-									+ " state:" + gson.toJson(rayAdapter.getItem(i).hs));
+							Log.i("contentAdded",
+									"moodname:"
+											+ groupname
+											+ " state:"
+											+ gson.toJson(rayAdapter.getItem(i).hs));
 						}
 					}
 				}).setNegativeButton(R.string.cancel,
@@ -110,51 +114,52 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 		return builder.create();
 	}
 
-	
 	private void addState() {
 		MoodRow mr = new MoodRow();
-        mr.color = 0xff000000;
-        HueState example = new HueState();
-        example.hue=25000;
-        example.sat = 254;
-        example.bri = 128;
-        example.on = true;
-        mr.hs = example;
-        moodRowArray.add(mr);
-        rayAdapter.add(mr);
+		mr.color = 0xff000000;
+		HueState example = new HueState();
+		example.hue = 25000;
+		example.sat = 254;
+		example.bri = 128;
+		example.on = true;
+		mr.hs = example;
+		moodRowArray.add(mr);
+		rayAdapter.add(mr);
 		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
 		cpdf.setPreviewGroups(bulbS);
 		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
 		cpdf.show(getFragmentManager(), "dialog");
-    }
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data){
-		rayAdapter.getItem(requestCode).color = resultCode;
-		rayAdapter.notifyDataSetChanged();
-		rayAdapter.getItem(requestCode).hs = gson.fromJson(data.getStringExtra("HueState"), HueState.class);
-		
-		
-		String[] states = new String[moodRowArray.size()];
-		for(int i = 0; i<moodRowArray.size(); i++){
-			states[i] = gson.toJson(moodRowArray.get(i).hs);
-		}
-		((MainActivity)getActivity()).testMood(bulbS, states);
-		Log.e("asdf", "on activity result"+bulbS.length+" "+states.length);
 	}
 
 	@Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_DPAD_CENTER:
-                case KeyEvent.KEYCODE_ENTER:
-                case KeyEvent.FLAG_EDITOR_ACTION:
-                    addState();
-                    return true;
-            }
-        }
-        return false;
-    }
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		rayAdapter.getItem(requestCode).color = resultCode;
+		rayAdapter.notifyDataSetChanged();
+		rayAdapter.getItem(requestCode).hs = gson.fromJson(
+				data.getStringExtra("HueState"), HueState.class);
+
+		String[] states = new String[moodRowArray.size()];
+		for (int i = 0; i < moodRowArray.size(); i++) {
+			states[i] = gson.toJson(moodRowArray.get(i).hs);
+		}
+		((MainActivity) getActivity()).testMood(bulbS, states);
+		Log.e("asdf", "on activity result" + bulbS.length + " " + states.length);
+	}
+
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN) {
+			switch (keyCode) {
+			case KeyEvent.KEYCODE_DPAD_CENTER:
+			case KeyEvent.KEYCODE_ENTER:
+			case KeyEvent.FLAG_EDITOR_ACTION:
+				addState();
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -169,7 +174,6 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 			break;
 		}
 	}
-
 
 	@Override
 	public void groupSelected(String group) {
