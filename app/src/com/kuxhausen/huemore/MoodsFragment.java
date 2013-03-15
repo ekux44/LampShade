@@ -1,35 +1,17 @@
 package com.kuxhausen.huemore;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -37,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -45,10 +28,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.MainActivity.TransmitGroupMood;
 import com.kuxhausen.huemore.state.HueState;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,
@@ -96,7 +76,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		 */
 		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-		String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
+		String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
 				columns, new int[] { android.R.id.text1 }, 0);
 
@@ -163,7 +143,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// (We do this during onStart because at the point the listview is
 		// available.)
 		if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		}
 
 		// During startup, check if there are arguments passed to the fragment.
@@ -221,7 +201,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
 			String moodSelect = MoodColumns.MOOD + "=?";
-			String[] moodArg = { (String) ((TextView) (selected)).getText() };
+			String[] moodArg = { (String) (selected).getText() };
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
 					moodArg);
@@ -259,7 +239,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		switch (loaderID) {
 		case MOODS_LOADER:
 			// Returns a new CursorLoader
-			String[] columns = { MoodColumns.MOOD, MoodColumns._ID };
+			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
 					DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
 					columns, // Projection to return

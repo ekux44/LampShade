@@ -13,8 +13,6 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
@@ -34,10 +32,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnKeyListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -64,7 +61,7 @@ public class NewGroupDialogFragment extends DialogFragment {
 				null);
 		bulbsListView = ((ListView) groupDialogView
 				.findViewById(R.id.listView1));
-		bulbsListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		bulbsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
 				android.R.layout.simple_list_item_multiple_choice, bulbNameList);
 		bulbsListView.setAdapter(rayAdapter);
@@ -77,6 +74,7 @@ public class NewGroupDialogFragment extends DialogFragment {
 
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
 						ArrayList<String> checkedBulbs = new ArrayList<String>();
@@ -127,6 +125,7 @@ public class NewGroupDialogFragment extends DialogFragment {
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// User cancelled the dialog
 					}

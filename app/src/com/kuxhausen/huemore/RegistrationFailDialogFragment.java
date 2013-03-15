@@ -12,6 +12,7 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 						rwhdf.show(getFragmentManager(), "dialog");

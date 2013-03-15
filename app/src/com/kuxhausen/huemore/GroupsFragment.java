@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -17,8 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,7 +57,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 */
 		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
-		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
+		String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
 
 		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
 				columns, new int[] { android.R.id.text1 }, 0);
@@ -82,7 +83,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		// (We do this during onStart because at the point the listview is
 		// available.)
 		if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		}
 	}
 
@@ -125,7 +126,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 
 		case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
 			String groupSelect = GroupColumns.GROUP + "=?";
-			String[] groupArg = { (String) ((TextView) (selected)).getText() };
+			String[] groupArg = { (String) (selected).getText() };
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
 					groupSelect, groupArg);
@@ -174,7 +175,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		switch (loaderID) {
 		case GROUPS_LOADER:
 			// Returns a new CursorLoader
-			String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
+			String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
 					DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
 					columns, // Projection to return

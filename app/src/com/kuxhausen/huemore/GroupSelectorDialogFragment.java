@@ -9,15 +9,10 @@ import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class GroupSelectorDialogFragment extends DialogFragment implements
@@ -49,7 +44,7 @@ public class GroupSelectorDialogFragment extends DialogFragment implements
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
-		String[] columns = { GroupColumns.GROUP, GroupColumns._ID };
+		String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
 
 		cursor = getActivity().getContentResolver().query(
 				DatabaseDefinitions.GroupColumns.GROUPS_URI, // Use the default

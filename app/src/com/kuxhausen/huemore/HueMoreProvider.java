@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 public class HueMoreProvider extends ContentProvider {
@@ -55,8 +56,8 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupsProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns._ID,
-					DatabaseDefinitions.GroupColumns._ID);
+			sGroupsProjectionMap.put(BaseColumns._ID,
+					BaseColumns._ID);
 
 			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,
 					DatabaseDefinitions.GroupColumns.GROUP);
@@ -76,8 +77,8 @@ public class HueMoreProvider extends ContentProvider {
 			sMoodsProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns._ID,
-					DatabaseDefinitions.MoodColumns._ID);
+			sMoodsProjectionMap.put(BaseColumns._ID,
+					BaseColumns._ID);
 
 			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
 					DatabaseDefinitions.MoodColumns.MOOD);
@@ -98,8 +99,8 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupBulbsProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sGroupBulbsProjectionMap.put(DatabaseDefinitions.GroupColumns._ID,
-					DatabaseDefinitions.GroupColumns._ID);
+			sGroupBulbsProjectionMap.put(BaseColumns._ID,
+					BaseColumns._ID);
 
 			sGroupBulbsProjectionMap.put(
 					DatabaseDefinitions.GroupColumns.GROUP,
@@ -121,8 +122,8 @@ public class HueMoreProvider extends ContentProvider {
 			sMoodStatesProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns._ID,
-					DatabaseDefinitions.MoodColumns._ID);
+			sMoodStatesProjectionMap.put(BaseColumns._ID,
+					BaseColumns._ID);
 
 			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
 					DatabaseDefinitions.MoodColumns.MOOD);

@@ -17,16 +17,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 
 public class NewMoodDialogFragment extends DialogFragment implements
@@ -66,6 +63,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						String groupname = nameEditText.getText().toString();
 						for (int i = 0; i < moodRowArray.size(); i++) {
@@ -106,6 +104,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// User cancelled the dialog
 					}

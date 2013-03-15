@@ -93,6 +93,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	@Override
 	public void onGroupSelected(String groupParam) {
 		group = groupParam;
 		// The user selected the headline of an article from the
@@ -133,6 +134,7 @@ public class MainActivity extends FragmentActivity implements
 		pushMoodGroup();
 	}
 
+	@Override
 	public void onMoodSelected(String moodParam) {
 		mood = moodParam;
 		pushMoodGroup();

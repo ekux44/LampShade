@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -24,12 +25,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 
 		db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
-				+ MoodColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
+				+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
 				+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
 				+ MoodColumns.STATE + " TEXT" + ");");
 
 		db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
-				+ GroupColumns._ID + " INTEGER PRIMARY KEY,"
+				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 				+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
 				+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
 	}
