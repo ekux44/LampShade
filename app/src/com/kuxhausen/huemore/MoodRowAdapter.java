@@ -53,7 +53,7 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
         ColorDrawable cd = new ColorDrawable(item.color);
         cd.setAlpha(255);
         view.state_color.setImageDrawable(cd);
-
+        rowView.setMinimumHeight(96);
         return rowView;
     }
 
