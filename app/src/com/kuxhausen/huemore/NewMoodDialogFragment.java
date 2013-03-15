@@ -49,6 +49,9 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 		
+		Button enablePreview = (Button) groupDialogView.findViewById(R.id.previewButton);
+		enablePreview.setOnClickListener(this);
+		
 		Button addColor = (Button) groupDialogView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 		
@@ -102,7 +105,10 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 		switch (v.getId()) {
 		case R.id.addColor:
 			addState();
-			
+			break;
+		case R.id.previewButton:
+			GroupSelectorDialogFragment gsdf = new GroupSelectorDialogFragment();
+			gsdf.show(getFragmentManager(), "dialog");
 			break;
 		}
 	}
