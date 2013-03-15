@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,11 +94,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 									.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
 											mNewValues // the values to insert
 									);
-							Log.i("contentAdded",
-									"moodname:"
-											+ groupname
-											+ " state:"
-											+ gson.toJson(rayAdapter.getItem(i).hs));
+							
 						}
 					}
 				}).setNegativeButton(R.string.cancel,
@@ -142,7 +137,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 			states[i] = gson.toJson(moodRowArray.get(i).hs);
 		}
 		((MainActivity) getActivity()).testMood(bulbS, states);
-		Log.e("asdf", "on activity result" + bulbS.length + " " + states.length);
+		
 	}
 
 	@Override
@@ -193,7 +188,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 
 		ArrayList<Integer> groupStates = new ArrayList<Integer>();
 		while (cursor.moveToNext()) {
-			Log.i("cursorIterator", "" + cursor.getInt(0));
+			
 			groupStates.add(cursor.getInt(0));
 		}
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);

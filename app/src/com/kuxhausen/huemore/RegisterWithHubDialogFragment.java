@@ -30,7 +30,6 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -93,7 +92,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			}
 		};
 		countDownTimer.start();
-		Log.i("dialog", "created");
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
@@ -123,10 +121,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				HttpResponse response = client.execute(httpGet);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				Log.e("asdf", "" + statusCode);
+				
 				if (statusCode == 200) {
 
-					Log.e("asdf", response.toString());
+					
 
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
@@ -140,13 +138,13 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 						jSon += line;
 					}
 					jSon = jSon.substring(1, jSon.length() - 1);
-					Log.e("asdf", jSon);
+					
 					Gson gson = new Gson();
 					bridge = gson.fromJson(jSon, HueBridge.class).internalipaddress;
 
-					Log.e("asdf", bridge);
+					
 				} else {
-					Log.e("asdf", "Failed");
+					
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -165,10 +163,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				md = MessageDigest.getInstance("MD5");
 				String resultString = new BigInteger(1, md.digest(serialID
 						.getBytes())).toString(16);
-				Log.i("asychTask", resultString);
+				
 				return resultString;
 			} catch (NoSuchAlgorithmException e) {
-				Log.e("asdf", "no such algo");
+				
 				e.printStackTrace();
 			}
 
@@ -188,7 +186,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			if (isAdded()) {
 				// Get session ID
 				cont = (Context) params[0];
-				Log.i("asyncTask", "doing");
+				
 
 				// Create a new HttpClient and Post Header
 				HttpClient httpclient = new DefaultHttpClient();
@@ -220,27 +218,27 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 					responseString = responseString.substring(1,
 							responseString.length() - 1);// pull off the outer
 															// brackets
-					Log.i("asychTask", responseString);
+					
 					RegistrationResponse responseObject = gson.fromJson(
 							responseString, RegistrationResponse.class);
 					if (responseObject.success != null)
 						return true;
 
 				} catch (ClientProtocolException e) {
-					Log.e("asdf", "ClientProtocolException: " + e.getMessage());
+					
 					// TODO Auto-generated catch block
 				} catch (IOException e) {
-					Log.e("asdf", "IOException: " + e.getMessage());
+					
 					// TODO Auto-generated catch block
 				}
 			}
-			Log.i("asyncTask", "finishing");
+			
 			return false;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean success) {
-			Log.i("asyncTask", "finished");
+			
 			if (success && isAdded()) {
 				countDownTimer.cancel();
 

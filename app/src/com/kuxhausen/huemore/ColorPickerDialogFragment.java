@@ -6,16 +6,11 @@ import com.kuxhausen.huemore.state.HueState;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.*;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -51,8 +46,8 @@ public class ColorPickerDialogFragment extends DialogFragment implements
 		mInitialColor = 0;
 
 		mListener = new OnColorChangedListener() {
+			@Override
 			public void colorChanged(int color, int hues) {
-				Log.e("asdf", "onColorChanged");
 				hs.hue = hues;
 				preview();
 			}
@@ -75,12 +70,14 @@ public class ColorPickerDialogFragment extends DialogFragment implements
 		builder.setTitle("Pick a Color");
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						onSuccessExit(cpv.getColor(), cpv.getHue());
 
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						// User cancelled the dialog
 					}

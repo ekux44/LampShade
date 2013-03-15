@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 public class HueMoreProvider extends ContentProvider {
 
@@ -167,8 +166,6 @@ public class HueMoreProvider extends ContentProvider {
 		this.getContext().getContentResolver().notifyChange(uri, null);
 		this.getContext().getContentResolver().notifyChange(toNotify, null);
 
-		Log.i("contentDeleted", "" + uri.getPath());
-
 		return 0;
 	}
 
@@ -215,12 +212,11 @@ public class HueMoreProvider extends ContentProvider {
 		if (insertId == -1) {
 			// insert failed, do update
 			// db.update("groups", null, cv);
-			Log.e("asdf", "insertFailed");
+			
 		}
 
 		this.getContext().getContentResolver().notifyChange(uri, null);
 
-		Log.i("contentAdded", "" + uri.getPath());
 		return null;
 	}
 

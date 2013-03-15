@@ -30,7 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
+
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,8 +118,7 @@ public class NewGroupDialogFragment extends DialogFragment {
 									.insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
 											mNewValues // the values to insert
 									);
-							Log.i("contentAdded", "groupname:" + groupname
-									+ " bulb:" + checkedBulbs.get(i));
+							
 						}
 
 					}
@@ -167,7 +166,7 @@ public class NewGroupDialogFragment extends DialogFragment {
 			String returnOutput = "";
 			// Get session ID
 			cont = (Context) params[0];
-			Log.i("asyncTask", "doing");
+			
 
 			if (cont == null)
 				return returnOutput;
@@ -194,11 +193,10 @@ public class NewGroupDialogFragment extends DialogFragment {
 				HttpResponse response = client.execute(httpGet);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				Log.e("asdf", "" + statusCode);
+				
 				if (statusCode == 200) {
 
-					Log.e("asdf", response.toString());
-
+					
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
 					BufferedReader reader = new BufferedReader(
@@ -214,9 +212,9 @@ public class NewGroupDialogFragment extends DialogFragment {
 									returnOutput.length() - 1) + "]";
 					returnOutput = returnOutput.replaceAll("\"[:digit:]+\":",
 							"");
-					Log.e("asdf", returnOutput);
+					
 				} else {
-					Log.e("asdf", "Failed");
+					
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -224,14 +222,14 @@ public class NewGroupDialogFragment extends DialogFragment {
 				e.printStackTrace();
 
 			}
-			Log.i("asyncTask", "finishing");
+			
 			return returnOutput;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 			populateList(result);
-			Log.i("asyncTask", "finished");
+			
 		}
 	}
 }

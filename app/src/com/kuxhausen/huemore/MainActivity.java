@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -170,12 +169,10 @@ public class MainActivity extends FragmentActivity implements
 
 		ArrayList<Integer> groupStates = new ArrayList<Integer>();
 		while (cursor.moveToNext()) {
-			Log.i("cursorIterator", "" + cursor.getInt(0));
 			groupStates.add(cursor.getInt(0));
 		}
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-		Log.i("iterated size)", "" + groupStates.size());
-
+		
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { mood };
 		cursor = getContentResolver().query(
@@ -193,7 +190,6 @@ public class MainActivity extends FragmentActivity implements
 		ArrayList<String> moodStates = new ArrayList<String>();
 		while (cursor.moveToNext()) {
 			moodStates.add(cursor.getString(0));
-			Log.i("moodStates", "" + cursor.getString(0));
 		}
 		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
 
@@ -235,8 +231,7 @@ public class MainActivity extends FragmentActivity implements
 			cont = (Context) params[0];
 			bulbs = (Integer[]) params[1];
 			moods = (String[]) params[2];
-			Log.i("asyncTask", "doing");
-
+			
 			if (cont == null || bulbs == null || moods == null)
 				return -1;
 
@@ -268,10 +263,7 @@ public class MainActivity extends FragmentActivity implements
 					HttpResponse response = client.execute(httpPut);
 					StatusLine statusLine = response.getStatusLine();
 					int statusCode = statusLine.getStatusCode();
-					Log.e("asdf", "" + statusCode);
 					if (statusCode == 200) {
-
-						Log.e("asdf", response.toString());
 
 						HttpEntity entity = response.getEntity();
 						InputStream content = entity.getContent();
@@ -283,9 +275,7 @@ public class MainActivity extends FragmentActivity implements
 							builder.append(line);
 							debugOutput += line;
 						}
-						Log.e("asdf", debugOutput);
 					} else {
-						Log.e("asdf", "Failed");
 					}
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
@@ -293,13 +283,11 @@ public class MainActivity extends FragmentActivity implements
 					e.printStackTrace();
 				}
 			}
-			Log.i("asyncTask", "finishing");
 			return 1;
 		}
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			Log.i("asyncTask", "finished");
 		}
 	}
 }
