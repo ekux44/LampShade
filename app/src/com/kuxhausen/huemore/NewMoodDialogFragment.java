@@ -92,6 +92,7 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
         moodRowArray.add(mr);
         rayAdapter.add(mr);
 		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
+		cpdf.setPreviewGroups(bulbS);
 		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
 		cpdf.show(getFragmentManager(), "dialog");
     }

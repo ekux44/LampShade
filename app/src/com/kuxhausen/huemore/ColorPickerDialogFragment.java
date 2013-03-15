@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.*;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +31,7 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnSeekB
     private HueState hs;
     Gson gson = new Gson();
     SeekBar seekBar;
+    Integer[] bulbS;
     
 
     @Override
@@ -43,12 +45,13 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnSeekB
 
         
         mListener = new OnColorChangedListener() {
-            public void colorChanged(int color, int hue) {
-            	hs.hue = hue;
+            public void colorChanged(int color, int hues) {
+            	Log.e("asdf","onColorChanged");
+            	hs.hue = hues;
             	Intent i = new Intent();
             	i.putExtra("HueState", gson.toJson(hs));
             	getTargetFragment().onActivityResult(getTargetRequestCode(),color, i);
-                //dismiss();
+                preview();
             }
         };
 
@@ -102,9 +105,18 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnSeekB
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		hs.sat = (short)seekBar.getProgress();
-		
+		preview();		
 	}
 
-	
+
+	public void setPreviewGroups(Integer[] bulbs) {
+		bulbS = bulbs;
+	}
+
+	public void preview() {
+		String[] states = {gson.toJson(hs)};
+		((MainActivity)getActivity()).testMood(bulbS,states);
+		
+	}
 
 }

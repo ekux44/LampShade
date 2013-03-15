@@ -11,6 +11,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -20,6 +21,8 @@ public class ColorPickerView extends View {
         private final int[] mColors;
         private OnColorChangedListener mListener;
         private int hue;
+        private long lastColorChange;
+        private long colorChangeRateLimit = 200000000;//5 times/sec
         
         public void setOnColorChangedListener(OnColorChangedListener l){
         	mListener = l;
@@ -195,20 +198,22 @@ public class ColorPickerView extends View {
                         if (unit < 0) {
                             unit += 1;
                         }
-                        hue =(int)( (.25f-unit)*65535);
+                        hue = (int)((((-unit)<0)?1-unit:unit)*65535);
                         mCenterPaint.setColor(interpColor(mColors, unit));
                         invalidate();
                     }
                     break;
                 case MotionEvent.ACTION_UP:
                     if (mTrackingCenter) {
-                        if (inCenter) {
-                            //mListener.colorChanged(mCenterPaint.getColor());
-                        }
                         mTrackingCenter = false;    // so we draw w/o halo
                         invalidate();
                     }
+                    if(System.nanoTime()-this.lastColorChange>this.colorChangeRateLimit){
+                    	mListener.colorChanged(mCenterPaint.getColor(),hue);
+                    	lastColorChange = System.nanoTime();
+                    }
                     break;
+                    
             }
             return true;
         }
