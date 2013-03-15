@@ -118,6 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.xy = pinkPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = redPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
@@ -128,15 +129,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.xy = orangePair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = pinkPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = greenPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = bluePair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = redPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
