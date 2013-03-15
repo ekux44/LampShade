@@ -74,7 +74,7 @@ public class NewMoodDialogFragment extends DialogFragment implements OnClickList
 	
 	private void addState() {
 		MoodRow mr = new MoodRow();
-        mr.color = 0xffff0000;
+        mr.color = 0xff000000;
         moodRowArray.add(mr);
         rayAdapter.add(mr);
 		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();

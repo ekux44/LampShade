@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.*;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -19,7 +20,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
 
     private OnColorChangedListener mListener;
     private int mInitialColor;
-
+    private ColorPickerView cpv;
 
     @Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -29,10 +30,10 @@ public class ColorPickerDialogFragment extends DialogFragment {
         mInitialColor = 0;
         
         
-        OnColorChangedListener l = new OnColorChangedListener() {
+        mListener = new OnColorChangedListener() {
             public void colorChanged(int color) {
             	getTargetFragment().onActivityResult(getTargetRequestCode(),color, null);
-                dismiss();
+                //dismiss();
             }
         };
 
@@ -40,12 +41,23 @@ public class ColorPickerDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 		View groupDialogView = inflater.inflate(R.layout.edit_color_dialog,
 				null);
-		((ColorPickerView)groupDialogView.findViewById(R.id.colorWheel)).setOnColorChangedListener(l);
+		cpv =((ColorPickerView)groupDialogView.findViewById(R.id.colorWheel));
+		cpv.setOnColorChangedListener(mListener);
 		builder.setView(groupDialogView);
         
         //builder.setView(new ColorPickerView(getActivity(), l, mInitialColor));
-        builder.setTitle("pick a color");
-        
+        builder.setTitle("Pick a Color");
+        builder.setPositiveButton(R.string.accept,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						mListener.colorChanged(cpv.getColor());
+					}
+				}).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// User cancelled the dialog
+					}
+				});
         
         
         // Create the AlertDialog object and return it

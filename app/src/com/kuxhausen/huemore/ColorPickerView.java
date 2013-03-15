@@ -31,6 +31,10 @@ public class ColorPickerView extends View {
         	mCenterPaint.setColor(color);
         }
         
+        public int getColor(){
+        	return (mCenterPaint.getColor());
+        }
+        
         public ColorPickerView(Context c,AttributeSet attrs) {
             super(c, attrs);
             mColors = new int[] {
@@ -168,7 +172,7 @@ public class ColorPickerView extends View {
             
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mTrackingCenter = inCenter;
+                    mTrackingCenter =false;// inCenter;
                     if (inCenter) {
                         mHighlightCenter = true;
                         invalidate();
@@ -194,7 +198,7 @@ public class ColorPickerView extends View {
                 case MotionEvent.ACTION_UP:
                     if (mTrackingCenter) {
                         if (inCenter) {
-                            mListener.colorChanged(mCenterPaint.getColor());
+                            //mListener.colorChanged(mCenterPaint.getColor());
                         }
                         mTrackingCenter = false;    // so we draw w/o halo
                         invalidate();
