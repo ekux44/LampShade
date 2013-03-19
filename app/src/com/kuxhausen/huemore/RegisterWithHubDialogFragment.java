@@ -33,6 +33,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
@@ -103,7 +104,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		onDestroyView();
 	}
 
-	public class Register extends AsyncTask<Object, Void, Boolean> {
+	public class Register extends AsyncTask<Object, Integer, Boolean> {
 
 		Context cont;
 		String bridge = "";
@@ -140,8 +141,13 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 					jSon = jSon.substring(1, jSon.length() - 1);
 					
 					Gson gson = new Gson();
+					try{
 					bridge = gson.fromJson(jSon, HueBridge.class).internalipaddress;
-
+					}
+					catch (NullPointerException e){
+						//publishProgress(-1);
+						//TODO
+					}
 					
 				} else {
 					
@@ -154,6 +160,15 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 
 			return bridge;
 		}
+		
+		/*protected void onProgressUpdate(Integer progress) {
+			if(progress == -1){
+				Toast t = new Toast(parrentActivity);
+				t.setDuration(Toast.LENGTH_LONG);
+				t.setText("Please make sure this device is on the same wifi as the hub and has internet access, then try to register with hub again");
+				t.show();
+			}
+		}*/
 
 		public String getUserName() {
 
@@ -230,6 +245,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				} catch (IOException e) {
 					
 					// TODO Auto-generated catch block
+				} catch (java.lang.IllegalArgumentException e){
+					//TODO deal with null IP from getBridge
 				}
 			}
 			
