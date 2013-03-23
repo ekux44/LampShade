@@ -130,7 +130,7 @@ public class MainActivity extends FragmentActivity implements
 			// Commit the transaction
 			transaction.commit();
 		}
-		pushMoodGroup();
+		//pushMoodGroup();
 	}
 
 	@Override

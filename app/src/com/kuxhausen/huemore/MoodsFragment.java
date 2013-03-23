@@ -167,7 +167,11 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// TextView article = (TextView)
 		// getActivity().findViewById(R.id.article);
 		// article.setText(StaticDataStore.Moods[position]);
+		
 		mCurrentGroup = group;
+		// Set the previous selected item as checked to be highlighted when in two-pane layout
+		getListView().setItemChecked(getListView().getPositionForView(selected), true);
+		
 	}
 
 	@Override
