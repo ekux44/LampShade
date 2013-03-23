@@ -67,7 +67,7 @@ public class ColorPickerDialogFragment extends DialogFragment implements
 
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
-		builder.setTitle("Pick a Color");
+		builder.setTitle(getString(R.string.color_prompt));
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					@Override

@@ -18,5 +18,7 @@
     <string name="preview">Preview</string>
     <string name="preview_group">Enable Preview</string>
     <string name="add_color">Add Color</string>
-
+	<string name="link_prompt">Press the link button on your hub</string>
+	<string name="color_prompt">Pick a Color</string>
+	<string name="group_preview_selection_prompt">Pick a group to preview with</string>
 </resources>
