@@ -138,11 +138,11 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 						builder.append(line);
 						jSon += line;
 					}
-					jSon = jSon.substring(1, jSon.length() - 1);
 					
 					Gson gson = new Gson();
 					try{
-					bridge = gson.fromJson(jSon, HueBridge.class).internalipaddress;
+						// autoselect first hub if multiple hubs
+						bridge = gson.fromJson(jSon, HueBridge[].class)[0].internalipaddress;
 					}
 					catch (NullPointerException e){
 						//publishProgress(-1);
