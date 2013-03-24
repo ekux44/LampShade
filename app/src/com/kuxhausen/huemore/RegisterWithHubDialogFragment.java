@@ -156,6 +156,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}catch (java.lang.ArrayIndexOutOfBoundsException e){
+				//TODO deal with null IP from getBridge
 			}
 
 			return bridge;
@@ -248,6 +250,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				} catch (java.lang.IllegalArgumentException e){
 					//TODO deal with null IP from getBridge
 				}
+				 
 			}
 			
 			return false;
