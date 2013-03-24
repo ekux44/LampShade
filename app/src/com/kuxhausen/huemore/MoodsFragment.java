@@ -45,6 +45,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 	int brightness;
 	public TextView selected; // updated on long click
+	int selectedPos = -1;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -169,8 +170,9 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// article.setText(StaticDataStore.Moods[position]);
 		
 		mCurrentGroup = group;
-		// Set the previous selected item as checked to be highlighted when in two-pane layout
-		getListView().setItemChecked(getListView().getPositionForView(selected), true);
+		// Set the previous selected item as checked to be unhighlighted when in two-pane layout
+		if(selected!= null&&selectedPos > -1)
+			getListView().setItemChecked(selectedPos, false);
 		
 	}
 
@@ -281,6 +283,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	public void onListItemClick(ListView l, View v, int position, long id) {
 
 		selected = ((TextView) (v));
+		selectedPos = position;
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
