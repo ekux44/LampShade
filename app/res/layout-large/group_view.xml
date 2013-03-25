@@ -5,12 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#33B5E5" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone" 
-        android:id="@+id/showOnLandScape">
+        android:id="@+id/showOnLandScape"
+        >
 
         <TextView
             android:id="@+id/TextView01"

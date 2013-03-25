@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 
-public class GroupsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class GroupsFragment extends ListFragment implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 	OnBulbGroupSelectedListener mCallback;
 
 	// Identifies a particular Loader being used in this component
@@ -64,9 +65,28 @@ public class GroupsFragment extends ListFragment implements LoaderManager.Loader
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
-		setHasOptionsMenu(true);
+		ImageButton newGroup = (ImageButton) myView.findViewById(R.id.newGroupButton);
+		newGroup.setOnClickListener(this);
+
+		LinearLayout headingRow = (LinearLayout) myView.findViewById(R.id.showOnLandScape);
+		if(headingRow.getVisibility() == View.GONE)
+			setHasOptionsMenu(true);
 		return myView;
 	}
+	
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.newGroupButton:
+	
+				NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
+				ngdf.show(getFragmentManager(), "dialog");
+	
+				break;
+			}
+		}
+
 	
 	@Override
 	public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
