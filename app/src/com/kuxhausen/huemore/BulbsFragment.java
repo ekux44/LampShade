@@ -145,7 +145,8 @@ public class BulbsFragment extends ListFragment implements LoaderManager.LoaderC
 		selected = ((TextView) (v));
 
 		// Notify the parent activity of selected item
-		mCallback.onBulbSelected((String) ((TextView) (v)).getText());
+		Integer[] iPos= {position+1};
+		mCallback.onBulbSelected(iPos);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

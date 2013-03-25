@@ -35,8 +35,6 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 	OnMoodSelectedListener mMoodCallback;
 
-	final static String ARG_GROUP = "group";
-	String mCurrentGroup = null;
 	public Context parrentActivity;
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
@@ -59,12 +57,6 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
 
-		// If activity recreated (such as from screen rotate), restore
-		// the previous article selection set by onSaveInstanceState().
-		// This is primarily necessary when in the two-pane layout.
-		if (savedInstanceState != null) {
-			mCurrentGroup = savedInstanceState.getString(ARG_GROUP);
-		}
 
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
@@ -147,43 +139,16 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		}
 
-		// During startup, check if there are arguments passed to the fragment.
-		// onStart is a good place to do this because the layout has already
-		// been
-		// applied to the fragment at this point so we can safely call the
-		// method
-		// below that sets the article text.
-		Bundle args = getArguments();
-		if (args != null) {
-			// Set article based on argument passed in
-			updateGroupView(args.getString(ARG_GROUP));
-		} else if (mCurrentGroup != null) {
-			// Set article based on saved instance state defined during
-			// onCreateView
-			updateGroupView(mCurrentGroup);
-		}
+		
 	}
 
-	public void updateGroupView(String group) {
-		// TextView article = (TextView)
-		// getActivity().findViewById(R.id.article);
-		// article.setText(StaticDataStore.Moods[position]);
-		
-		mCurrentGroup = group;
+	public void updateGroupView() {
 		// Set the previous selected item as checked to be unhighlighted when in two-pane layout
 		if(selected!= null&&selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
 		
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-		// Save the current article selection in case we need to recreate the
-		// fragment
-		outState.putString(ARG_GROUP, mCurrentGroup);
-	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,

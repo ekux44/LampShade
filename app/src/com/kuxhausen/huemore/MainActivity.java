@@ -37,7 +37,6 @@ public class MainActivity extends FragmentActivity implements
 		MoodsFragment.OnMoodSelectedListener {
 
 	DatabaseHelper helper = new DatabaseHelper(this);
-	String group;
 	Integer[] bulbS;
 	String mood;
 
@@ -95,7 +94,32 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void onGroupSelected(String groupParam) {
-		group = groupParam;
+		
+		//TODO generate groupbulbJson
+		String[] groupColumns = { GroupColumns.BULB };
+		String[] gWhereClause = { groupParam };
+		Cursor cursor = getContentResolver().query(
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																	// default
+																	// content
+																	// URI
+																	// for the
+																	// provider.
+				groupColumns, // Return the note ID and title for each note.
+				GroupColumns.GROUP + "=?", // selection clause
+				gWhereClause, // selection clause args
+				null // Use the default sort order.
+				);
+
+		ArrayList<Integer> groupStates = new ArrayList<Integer>();
+		while (cursor.moveToNext()) {
+			groupStates.add(cursor.getInt(0));
+		}
+		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+
+		
+		
+		
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 
@@ -107,7 +131,7 @@ public class MainActivity extends FragmentActivity implements
 			// If article frag is available, we're in two-pane layout...
 
 			// Call a method in the ArticleFragment to update its content
-			moodFrag.updateGroupView(groupParam);
+			moodFrag.updateGroupView();
 
 		} else {
 			// If the frag is not available, we're in the one-pane layout and
@@ -115,9 +139,6 @@ public class MainActivity extends FragmentActivity implements
 
 			// Create fragment and give it an argument for the selected article
 			MoodsFragment newFragment = new MoodsFragment();
-			Bundle args = new Bundle();
-			args.putString(MoodsFragment.ARG_GROUP, groupParam);
-			newFragment.setArguments(args);
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
@@ -135,10 +156,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onBulbSelected(String bulbParam) {
-		group = bulbParam;
-		// The user selected the headline of an article from the
-		// HeadlinesFragment
+	public void onBulbSelected(Integer[] bulb) {
+		bulbS = bulb;
 
 		// Capture the article fragment from the activity layout
 		MoodsFragment moodFrag = (MoodsFragment) getSupportFragmentManager()
@@ -148,7 +167,7 @@ public class MainActivity extends FragmentActivity implements
 			// If article frag is available, we're in two-pane layout...
 
 			// Call a method in the ArticleFragment to update its content
-			moodFrag.updateGroupView(bulbParam);
+			moodFrag.updateGroupView();
 
 		} else {
 			// If the frag is not available, we're in the one-pane layout and
@@ -156,9 +175,6 @@ public class MainActivity extends FragmentActivity implements
 
 			// Create fragment and give it an argument for the selected article
 			MoodsFragment newFragment = new MoodsFragment();
-			Bundle args = new Bundle();
-			args.putString(MoodsFragment.ARG_GROUP, bulbParam);
-			newFragment.setArguments(args);
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 
@@ -191,32 +207,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	private void pushMoodGroup() {
-		if (group == null || mood == null)
+		if (bulbS == null || mood == null)
 			return;
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { group };
-		Cursor cursor = getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (cursor.moveToNext()) {
-			groupStates.add(cursor.getInt(0));
-		}
-		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-		
+				
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { mood };
-		cursor = getContentResolver().query(
+		Cursor cursor = getContentResolver().query(
 				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
 																// default
 																// content URI

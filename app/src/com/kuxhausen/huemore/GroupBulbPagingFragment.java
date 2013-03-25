@@ -32,7 +32,7 @@ public class GroupBulbPagingFragment extends Fragment {
  		/** Called by HeadlinesFragment when a list item is selected */
  		public void onGroupSelected(String group);
 
-		public void onBulbSelected(String text);
+		public void onBulbSelected(Integer[] bulbNum);
  	}
     
     @Override
