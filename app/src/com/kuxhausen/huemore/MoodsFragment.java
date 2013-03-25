@@ -129,7 +129,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		switch (item.getItemId()) {
 
 		case R.id.action_add:
-			NewMoodDialogFragment nmdf = new NewMoodDialogFragment();
+			NewMoodPagerDialogFragment nmdf = new NewMoodPagerDialogFragment();
 			nmdf.show(getFragmentManager(), "dialog");
 			return true;
 		default:
@@ -212,7 +212,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.newMoodButton:
 
-			NewMoodDialogFragment nmdf = new NewMoodDialogFragment();
+			NewMoodPagerDialogFragment nmdf = new NewMoodPagerDialogFragment();
 			nmdf.show(getFragmentManager(), "dialog");
 
 			break;

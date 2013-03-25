@@ -22,11 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMoodDialogFragment extends DialogFragment implements
+public class NewMultiGroupDialogFragment extends DialogFragment implements
 		OnClickListener, OnKeyListener, OnGroupSelectedListener {
 
 	ListView bulbsListView;
@@ -37,13 +38,13 @@ public class NewMoodDialogFragment extends DialogFragment implements
 	Gson gson = new Gson();
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
 
 		moodRowArray = new ArrayList<MoodRow>();
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View groupDialogView = inflater
 				.inflate(R.layout.edit_mood_dialog, null);
 		bulbsListView = ((ListView) groupDialogView
@@ -106,7 +107,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 					}
 				});
 		// Create the AlertDialog object and return it
-		return builder.create();
+		return groupDialogView;
 	}
 
 	private void addState() {
@@ -195,3 +196,4 @@ public class NewMoodDialogFragment extends DialogFragment implements
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 	}
 }
+
