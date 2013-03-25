@@ -93,67 +93,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onGroupSelected(String groupParam) {
-
-		// TODO generate groupbulbJson
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { groupParam };
-		Cursor cursor = getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (cursor.moveToNext()) {
-			groupStates.add(cursor.getInt(0));
-		}
-		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-
-		// The user selected the headline of an article from the
-		// HeadlinesFragment
-
-		// Capture the article fragment from the activity layout
-		MoodsFragment moodFrag = (MoodsFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.moods_fragment);
-
-		if (moodFrag != null) {
-			// If article frag is available, we're in two-pane layout...
-
-			// Call a method in the ArticleFragment to update its content
-			moodFrag.updateGroupView();
-
-		} else {
-			// If the frag is not available, we're in the one-pane layout and
-			// must swap frags...
-
-			// Create fragment and give it an argument for the selected article
-			MoodsFragment newFragment = new MoodsFragment();
-			FragmentTransaction transaction = getSupportFragmentManager()
-					.beginTransaction();
-
-			// Replace whatever is in the fragment_container view with this
-			// fragment,
-			// and add the transaction to the back stack so the user can
-			// navigate back
-			transaction.replace(R.id.fragment_container, newFragment);
-			transaction.addToBackStack(null);
-
-			// Commit the transaction
-			transaction.commit();
-		}
-		// pushMoodGroup();
-	}
-
-	@Override
-	public void onBulbSelected(Integer[] bulb) {
+	public void onGroupBulbSelected(Integer[] bulb) {
 		bulbS = bulb;
 
 		// Capture the article fragment from the activity layout

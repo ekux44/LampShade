@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
@@ -67,7 +69,7 @@ public class GroupsFragment extends ListFragment implements LoaderManager.Loader
 	
 	@Override
 	public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
-		inflater.inflate(R.menu.group, menu);
+		inflater.inflate(R.menu.action_group, menu);
 	}
 	
 	@Override
@@ -121,7 +123,7 @@ public class GroupsFragment extends ListFragment implements LoaderManager.Loader
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
-		inflater.inflate(R.menu.group_fragment, menu);
+		inflater.inflate(R.menu.context_group, menu);
 	}
 
 	@Override
@@ -151,8 +153,30 @@ public class GroupsFragment extends ListFragment implements LoaderManager.Loader
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		selected = ((TextView) (v));
 
-		// Notify the parent activity of selected item
-		mCallback.onGroupSelected((String) ((TextView) (v)).getText());
+		//Look up bulbs for that mood from database
+		String[] groupColumns = { GroupColumns.BULB };
+		String[] gWhereClause = { (String) ((TextView) (v)).getText()};
+		Cursor cursor = getActivity().getContentResolver().query(
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																	// default
+																	// content
+																	// URI
+																	// for the
+																	// provider.
+				groupColumns, // Return the note ID and title for each note.
+				GroupColumns.GROUP + "=?", // selection clause
+				gWhereClause, // selection clause args
+				null // Use the default sort order.
+				);
+
+		ArrayList<Integer> groupStates = new ArrayList<Integer>();
+		while (cursor.moveToNext()) {
+			groupStates.add(cursor.getInt(0));
+		}
+		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+		
+		// Notify the parent activity of selected bulbs
+		mCallback.onGroupBulbSelected(bulbS);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

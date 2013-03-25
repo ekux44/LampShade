@@ -33,9 +33,8 @@ public class GroupBulbPagingFragment extends Fragment {
 	// deliver messages
 	public interface OnBulbGroupSelectedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onGroupSelected(String group);
+		public void onGroupBulbSelected(Integer[] bulbNum);
 
-		public void onBulbSelected(Integer[] bulbNum);
 	}
 
 	@Override

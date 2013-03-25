@@ -158,7 +158,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
-		inflater.inflate(R.menu.mood_fragment, menu);
+		inflater.inflate(R.menu.context_mood, menu);
 	}
 
 	@Override

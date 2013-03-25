@@ -111,7 +111,7 @@ public class BulbsFragment extends ListFragment implements
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		MenuInflater inflater = this.getActivity().getMenuInflater();
-		inflater.inflate(R.menu.bulb_fragment, menu);
+		inflater.inflate(R.menu.context_bulb, menu);
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class BulbsFragment extends ListFragment implements
 
 		// Notify the parent activity of selected item
 		Integer[] iPos = { position + 1 };
-		mCallback.onBulbSelected(iPos);
+		mCallback.onGroupBulbSelected(iPos);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
