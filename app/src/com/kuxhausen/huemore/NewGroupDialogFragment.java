@@ -16,7 +16,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.state.HueBulb;
 
 import android.app.AlertDialog;

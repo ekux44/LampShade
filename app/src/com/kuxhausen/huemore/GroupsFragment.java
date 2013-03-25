@@ -27,8 +27,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 
 public class GroupsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	OnBulbGroupSelectedListener mCallback;

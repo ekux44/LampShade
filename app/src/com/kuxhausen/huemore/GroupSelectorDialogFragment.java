@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

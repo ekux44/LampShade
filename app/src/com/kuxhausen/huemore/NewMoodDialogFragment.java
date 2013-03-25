@@ -3,8 +3,9 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.GroupSelectorDialogFragment.OnGroupSelectedListener;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.state.HueState;
 
 import android.app.AlertDialog;

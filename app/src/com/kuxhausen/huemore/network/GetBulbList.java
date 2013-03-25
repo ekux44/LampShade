@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 
 import android.content.Context;
 import android.content.SharedPreferences;

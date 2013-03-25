@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.database;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

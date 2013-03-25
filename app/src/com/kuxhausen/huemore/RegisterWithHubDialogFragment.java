@@ -36,7 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.HueBridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;

@@ -28,7 +28,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.HueState;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,

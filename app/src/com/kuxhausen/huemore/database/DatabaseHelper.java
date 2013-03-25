@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.HueState;
 
 public class DatabaseHelper extends SQLiteOpenHelper {

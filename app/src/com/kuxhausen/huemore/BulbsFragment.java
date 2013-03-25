@@ -30,9 +30,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.state.HueBulb;
 
 public class BulbsFragment extends ListFragment implements
