@@ -109,7 +109,7 @@ public final class DatabaseDefinitions {
 		public static final String Bulbs_Unlocked = "Bulbs_Unlocked";
 	}
 
-	public static final String AUTHORITY = "com.kuxhausen.provider.huemore";
+	public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";
 
 	// This class cannot be instantiated
 	private DatabaseDefinitions() {
