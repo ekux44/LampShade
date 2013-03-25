@@ -60,7 +60,8 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 			// Create an instance of ExampleFragment
-			GroupsFragment firstFragment = new GroupsFragment();
+		GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
+		//		GroupsFragment firstFragment = new GroupsFragment();
 
 			// In case this activity was started with special instructions from
 			// an Intent,
