@@ -39,7 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewGroupDialogFragment extends DialogFragment {
+public class NewGroupDialogFragment extends DialogFragment implements GetBulbList.OnListReturnedListener{
 
 	ArrayList<String> bulbNameList;
 	ListView bulbsListView;
@@ -70,7 +70,7 @@ public class NewGroupDialogFragment extends DialogFragment {
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
 		GetBulbList pushGroupMood = new GetBulbList();
-		pushGroupMood.execute(getActivity());
+		pushGroupMood.execute(getActivity(), this);
 
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -133,7 +133,10 @@ public class NewGroupDialogFragment extends DialogFragment {
 		return builder.create();
 	}
 
-	public void populateList(String jSon) {
+
+
+	@Override
+	public void onListReturned(String jSon) {
 		if (jSon == null || jSon.equals(""))
 			return;
 		Gson gson = new Gson();
@@ -155,81 +158,8 @@ public class NewGroupDialogFragment extends DialogFragment {
 			nameToBulb.put(bulb.name, bulb.number);
 			rayAdapter.add(bulb.name);
 		}
+		
 	}
 
-	class GetBulbList extends AsyncTask<Object, Void, String> {
-
-		Context cont;
-
-		@Override
-		protected String doInBackground(Object... params) {
-			String returnOutput = "";
-			// Get session ID
-			cont = (Context) params[0];
-			
-
-			if (cont == null)
-				return returnOutput;
-
-			// Get username and IP from preferences cache
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(cont);
-			String bridge = settings.getString(
-					PreferencesKeys.Bridge_IP_Address, null);
-			String hash = settings.getString(PreferencesKeys.Hashed_Username,
-					"");
-
-			if (bridge == null)
-				return returnOutput;
-
-			StringBuilder builder = new StringBuilder();
-			HttpClient client = new DefaultHttpClient();
-
-			HttpGet httpGet = new HttpGet("http://" + bridge + "/api/" + hash
-					+ "/lights");
-
-			try {
-
-				HttpResponse response = client.execute(httpGet);
-				StatusLine statusLine = response.getStatusLine();
-				int statusCode = statusLine.getStatusCode();
-				
-				if (statusCode == 200) {
-
-					
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(content));
-					String line;
-
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-						returnOutput += line;
-					}
-					returnOutput = "["
-							+ returnOutput.substring(1,
-									returnOutput.length() - 1) + "]";
-					returnOutput = returnOutput.replaceAll("\"[:digit:]+\":",
-							"");
-					
-				} else {
-					
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-
-			}
-			
-			return returnOutput;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			populateList(result);
-			
-		}
-	}
+	
 }
