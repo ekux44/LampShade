@@ -13,6 +13,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +28,7 @@ import android.widget.TextView;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 
-public class GroupsFragment extends ListFragment implements OnClickListener,
-		LoaderManager.LoaderCallbacks<Cursor> {
+public class GroupsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	OnBulbGroupSelectedListener mCallback;
 
 	// Identifies a particular Loader being used in this component
@@ -61,11 +61,27 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
-		ImageButton newGroup = (ImageButton) myView
-				.findViewById(R.id.newGroupButton);
-		newGroup.setOnClickListener(this);
-
+		setHasOptionsMenu(true);
 		return myView;
+	}
+	
+	@Override
+	public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
+		inflater.inflate(R.menu.group, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+
+		case R.id.action_add:
+			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
+			ngdf.show(getFragmentManager(), "dialog");
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -140,19 +156,6 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.newGroupButton:
-
-			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
-			ngdf.show(getFragmentManager(), "dialog");
-
-			break;
-		}
 	}
 
 	/**
