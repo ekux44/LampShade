@@ -198,7 +198,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener, Loa
 		
 		// Notify the parent activity of selected bulbs
 		mCallback.onGroupBulbSelected(bulbS);
-
+		
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
 	}

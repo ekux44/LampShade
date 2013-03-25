@@ -14,6 +14,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -110,7 +112,29 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 				.findViewById(R.id.newMoodButton);
 		newGroup.setOnClickListener(this);
 
+		LinearLayout headingRow = (LinearLayout) myView.findViewById(R.id.showOnLandScape);
+		if(headingRow.getVisibility() == View.GONE)
+			setHasOptionsMenu(true);
 		return myView;
+	}
+	
+	@Override
+	public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
+		inflater.inflate(R.menu.action_mood, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+
+		case R.id.action_add:
+			NewMoodDialogFragment nmdf = new NewMoodDialogFragment();
+			nmdf.show(getFragmentManager(), "dialog");
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -251,7 +275,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-
+		
 		// Notify the parent activity of selected item
 		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
 

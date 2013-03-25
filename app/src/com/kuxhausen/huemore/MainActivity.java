@@ -100,21 +100,21 @@ public class MainActivity extends FragmentActivity implements
 		bulbS = bulb;
 
 		// Capture the article fragment from the activity layout
-		MoodsFragment moodFrag = (MoodsFragment) getSupportFragmentManager()
+		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
 
 		if (moodFrag != null) {
 			// If article frag is available, we're in two-pane layout...
 
 			// Call a method in the ArticleFragment to update its content
-			moodFrag.updateGroupView();
+			moodFrag.reset();
 
 		} else {
 			// If the frag is not available, we're in the one-pane layout and
 			// must swap frags...
 
 			// Create fragment and give it an argument for the selected article
-			MoodsFragment newFragment = new MoodsFragment();
+			MoodManualPagingFragment newFragment = new MoodManualPagingFragment();
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
 

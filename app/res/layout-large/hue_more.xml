@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/moods_fragment"
-        android:name="com.kuxhausen.huemore.MoodsFragment"
+        android:name="com.kuxhausen.huemore.MoodManualPagingFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2" />

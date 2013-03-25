@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class GroupBulbPagingFragment extends Fragment {
+public class MoodManualPagingFragment extends Fragment {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -21,7 +21,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	 * memory and is a best practice when allowing navigation between objects in
 	 * a potentially large collection.
 	 */
-	GroupBulbPagerAdapter mGroupMoodPagerAdapter;
+	MoodManualPagerAdapter mMoodManualPagerAdapter;
+	
+	private static final int MOOD_LOCATION = 0;
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
@@ -31,10 +33,14 @@ public class GroupBulbPagingFragment extends Fragment {
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
-	public interface OnBulbGroupSelectedListener {
+	public interface OnMoodManualSelectedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onGroupBulbSelected(Integer[] bulbNum);
+		public void onMoodManualSelected(String jSon);
 
+	}
+	
+	public void reset(){
+		((MoodsFragment)(mMoodManualPagerAdapter.getItem(MOOD_LOCATION))).updateGroupView();
 	}
 
 	@Override
@@ -53,11 +59,11 @@ public class GroupBulbPagingFragment extends Fragment {
 		// ViewPager and its adapters use support library fragments, so we must
 		// use
 		// getSupportFragmentManager.
-		mGroupMoodPagerAdapter = new GroupBulbPagerAdapter(this);
+		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-		mViewPager.setAdapter(mGroupMoodPagerAdapter);
+		mViewPager.setAdapter(mMoodManualPagerAdapter);
 
 		return myView;
 	}
@@ -66,9 +72,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
 	 */
-	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
+	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
-		public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment) {
+		public MoodManualPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
 
 			// write your code here
@@ -77,11 +83,11 @@ public class GroupBulbPagingFragment extends Fragment {
 		@Override
 		public Fragment getItem(int i) {
 			switch (i) {
-			case 0:
+			case MOOD_LOCATION:
 				// TODO cache somewhere
-				return new GroupsFragment();
+				return new MoodsFragment();
 			case 1:
-				return new BulbsFragment();
+				return new MoodsFragment();
 			default:
 				return null;
 			}
@@ -95,11 +101,11 @@ public class GroupBulbPagingFragment extends Fragment {
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
-			case 0:
-				return "GROUPS";// TODO figure out how to make static references
+			case MOOD_LOCATION:
+				return "MOODS";// TODO figure out how to make static references
 								// to strings.xml
 			case 1:
-				return "BULBS";
+				return "MANUAL";
 			}
 			return "";
 		}
