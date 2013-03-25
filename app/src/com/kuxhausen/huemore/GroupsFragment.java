@@ -25,11 +25,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.GroupBulbPagingFragment.OnHeadlineSelectedListener;
+import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 
 public class GroupsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
-	OnHeadlineSelectedListener mCallback;
+	OnBulbGroupSelectedListener mCallback;
 
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;

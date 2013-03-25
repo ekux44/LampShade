@@ -28,9 +28,11 @@ public class GroupBulbPagingFragment extends Fragment {
     
     // The container Activity must implement this interface so the frag can
  	// deliver messages
- 	public interface OnHeadlineSelectedListener {
+ 	public interface OnBulbGroupSelectedListener {
  		/** Called by HeadlinesFragment when a list item is selected */
  		public void onGroupSelected(String group);
+
+		public void onBulbSelected(String text);
  	}
     
     @Override

@@ -1,9 +1,13 @@
 package com.kuxhausen.huemore;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -20,22 +24,29 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.GroupBulbPagingFragment.OnHeadlineSelectedListener;
+import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
+import com.kuxhausen.huemore.state.HueBulb;
 
-public class BulbsFragment extends ListFragment implements OnClickListener,
-		LoaderManager.LoaderCallbacks<Cursor> {
-	OnHeadlineSelectedListener mCallback;
+public class BulbsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, GetBulbList.OnListReturnedListener{
+	OnBulbGroupSelectedListener mCallback;
 
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
-	public CursorAdapter dataSource;
+	//public CursorAdapter dataSource;
 	public TextView selected; // updated on long click
 
+	ArrayList<String> bulbNameList;
+	ArrayAdapter<String> rayAdapter;
+	HueBulb[] bulbArray;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,19 +63,20 @@ public class BulbsFragment extends ListFragment implements OnClickListener,
 		 */
 		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
-		String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
-
-		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
-				columns, new int[] { android.R.id.text1 }, 0);
-
-		setListAdapter(dataSource);
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.group_view, container, false);
+		View myView = inflater.inflate(R.layout.bulb_view, container, false);
+		
+		
+		bulbNameList = new ArrayList<String>();
+		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
+				android.R.layout.simple_list_item_1, bulbNameList);
+		setListAdapter(rayAdapter);
+		
+		GetBulbList pushGroupMood = new GetBulbList();
+		pushGroupMood.execute(getActivity(), this);
 
-		ImageButton newGroup = (ImageButton) myView
-				.findViewById(R.id.newGroupButton);
-		newGroup.setOnClickListener(this);
+		
 
 		return myView;
 	}
@@ -101,12 +113,8 @@ public class BulbsFragment extends ListFragment implements OnClickListener,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals("ALL")) {
-			return;
-		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
-		inflater.inflate(R.menu.group_fragment, menu);
+		inflater.inflate(R.menu.bulb_fragment, menu);
 	}
 
 	@Override
@@ -137,24 +145,12 @@ public class BulbsFragment extends ListFragment implements OnClickListener,
 		selected = ((TextView) (v));
 
 		// Notify the parent activity of selected item
-		mCallback.onGroupSelected((String) ((TextView) (v)).getText());
+		mCallback.onBulbSelected((String) ((TextView) (v)).getText());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.newGroupButton:
-
-			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
-			ngdf.show(getFragmentManager(), "dialog");
-
-			break;
-		}
-	}
 
 	/**
 	 * Callback that's invoked when the system has initialized the Loader and is
@@ -190,7 +186,7 @@ public class BulbsFragment extends ListFragment implements OnClickListener,
 		 * Moves the query results into the adapter, causing the ListView
 		 * fronting this adapter to re-display
 		 */
-		dataSource.changeCursor(cursor);
+		//dataSource.changeCursor(cursor);
 		registerForContextMenu(getListView());
 	}
 
@@ -201,6 +197,31 @@ public class BulbsFragment extends ListFragment implements OnClickListener,
 		 * memory leaks.
 		 */
 		// unregisterForContextMenu(getListView());
-		dataSource.changeCursor(null);
+		//dataSource.changeCursor(null);
+	}
+
+	@Override
+	public void onListReturned(String jSon) {
+		if (jSon == null || jSon.equals(""))
+			return;
+		Gson gson = new Gson();
+		bulbArray = gson.fromJson(jSon, HueBulb[].class);
+
+		// Get username and IP from preferences cache
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		int numberBulbsUnlocked = settings.getInt(
+				PreferencesKeys.Bulbs_Unlocked, 4);
+		if (bulbArray.length > numberBulbsUnlocked) {
+			// tell user to upgrade
+		}
+
+		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
+			// bulbNameList.add(bulb.name);
+			HueBulb bulb = bulbArray[i];
+			bulb.number = i + 1;
+			rayAdapter.add(bulb.name);
+		}
+		
 	}
 }

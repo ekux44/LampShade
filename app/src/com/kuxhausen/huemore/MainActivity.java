@@ -33,7 +33,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 
 public class MainActivity extends FragmentActivity implements
-		GroupBulbPagingFragment.OnHeadlineSelectedListener,
+		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsFragment.OnMoodSelectedListener {
 
 	DatabaseHelper helper = new DatabaseHelper(this);
@@ -134,6 +134,46 @@ public class MainActivity extends FragmentActivity implements
 		//pushMoodGroup();
 	}
 
+	@Override
+	public void onBulbSelected(String bulbParam) {
+		group = bulbParam;
+		// The user selected the headline of an article from the
+		// HeadlinesFragment
+
+		// Capture the article fragment from the activity layout
+		MoodsFragment moodFrag = (MoodsFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.moods_fragment);
+
+		if (moodFrag != null) {
+			// If article frag is available, we're in two-pane layout...
+
+			// Call a method in the ArticleFragment to update its content
+			moodFrag.updateGroupView(bulbParam);
+
+		} else {
+			// If the frag is not available, we're in the one-pane layout and
+			// must swap frags...
+
+			// Create fragment and give it an argument for the selected article
+			MoodsFragment newFragment = new MoodsFragment();
+			Bundle args = new Bundle();
+			args.putString(MoodsFragment.ARG_GROUP, bulbParam);
+			newFragment.setArguments(args);
+			FragmentTransaction transaction = getSupportFragmentManager()
+					.beginTransaction();
+
+			// Replace whatever is in the fragment_container view with this
+			// fragment,
+			// and add the transaction to the back stack so the user can
+			// navigate back
+			transaction.replace(R.id.fragment_container, newFragment);
+			transaction.addToBackStack(null);
+
+			// Commit the transaction
+			transaction.commit();
+		}
+		
+	}
 	@Override
 	public void onMoodSelected(String moodParam) {
 		mood = moodParam;
@@ -291,4 +331,6 @@ public class MainActivity extends FragmentActivity implements
 		protected void onPostExecute(Integer result) {
 		}
 	}
+
+	
 }
