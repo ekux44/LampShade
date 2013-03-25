@@ -13,96 +13,97 @@ import android.widget.TextView;
 public class GroupBulbPagingFragment extends Fragment {
 
 	/**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide fragments representing
-     * each object in a collection. We use a {@link android.support.v4.app.FragmentStatePagerAdapter}
-     * derivative, which will destroy and re-create fragments as needed, saving and restoring their
-     * state in the process. This is important to conserve memory and is a best practice when
-     * allowing navigation between objects in a potentially large collection.
-     */
-    GroupBulbPagerAdapter mDemoCollectionPagerAdapter;
+	 * The {@link android.support.v4.view.PagerAdapter} that will provide
+	 * fragments representing each object in a collection. We use a
+	 * {@link android.support.v4.app.FragmentStatePagerAdapter} derivative,
+	 * which will destroy and re-create fragments as needed, saving and
+	 * restoring their state in the process. This is important to conserve
+	 * memory and is a best practice when allowing navigation between objects in
+	 * a potentially large collection.
+	 */
+	GroupBulbPagerAdapter mDemoCollectionPagerAdapter;
 
-    /**
-     * The {@link android.support.v4.view.ViewPager} that will display the object collection.
-     */
-    ViewPager mViewPager;
-    
-    // The container Activity must implement this interface so the frag can
- 	// deliver messages
- 	public interface OnBulbGroupSelectedListener {
- 		/** Called by HeadlinesFragment when a list item is selected */
- 		public void onGroupSelected(String group);
+	/**
+	 * The {@link android.support.v4.view.ViewPager} that will display the
+	 * object collection.
+	 */
+	ViewPager mViewPager;
+
+	// The container Activity must implement this interface so the frag can
+	// deliver messages
+	public interface OnBulbGroupSelectedListener {
+		/** Called by HeadlinesFragment when a list item is selected */
+		public void onGroupSelected(String group);
 
 		public void onBulbSelected(Integer[] bulbNum);
- 	}
-    
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        
-    	
-    	// Inflate the layout for this fragment
-    	View myView = inflater.inflate(R.layout.group_bulb_pager, container, false);
-    	Bundle args = getArguments();
-       
-    	
-    	// Create an adapter that when requested, will return a fragment representing an object in
-        // the collection.
-        // 
-        // ViewPager and its adapters use support library fragments, so we must use
-        // getSupportFragmentManager.
-        mDemoCollectionPagerAdapter = new GroupBulbPagerAdapter(this);
+	}
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-        // Set up the ViewPager, attaching the adapter.
-        mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-        mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-    	
-    	
-        return myView;
-    }
-    
-    /**
-     * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment
-     * representing an object in the collection.
-     */
-    public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
+		// Inflate the layout for this fragment
+		View myView = inflater.inflate(R.layout.group_bulb_pager, container,
+				false);
+		Bundle args = getArguments();
 
-    	public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment)
-    	{
-    	    super(fragment.getChildFragmentManager());
+		// Create an adapter that when requested, will return a fragment
+		// representing an object in
+		// the collection.
+		//
+		// ViewPager and its adapters use support library fragments, so we must
+		// use
+		// getSupportFragmentManager.
+		mDemoCollectionPagerAdapter = new GroupBulbPagerAdapter(this);
 
-    	    // write your code here
-    	}
-    	
+		// Set up the ViewPager, attaching the adapter.
+		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
+		mViewPager.setAdapter(mDemoCollectionPagerAdapter);
 
-        @Override
-        public Fragment getItem(int i) {
-        	switch (i) {
-            case 0:
-                //TODO cache somewhere
-            	return new GroupsFragment();
-            case 1:
-            	return new BulbsFragment();
-            default:
-                return null;
-        	}
-        }
+		return myView;
+	}
 
-        @Override
-        public int getCount() {
-            return 2;
-        }
+	/**
+	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
+	 * fragment representing an object in the collection.
+	 */
+	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-        	switch (position) {
-            case 0:
-            	return "GROUPS";//TODO figure out how to make static references to strings.xml
-            case 1:
-            	return "BULBS";
-        	}
+		public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment) {
+			super(fragment.getChildFragmentManager());
+
+			// write your code here
+		}
+
+		@Override
+		public Fragment getItem(int i) {
+			switch (i) {
+			case 0:
+				// TODO cache somewhere
+				return new GroupsFragment();
+			case 1:
+				return new BulbsFragment();
+			default:
+				return null;
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case 0:
+				return "GROUPS";// TODO figure out how to make static references
+								// to strings.xml
+			case 1:
+				return "BULBS";
+			}
 			return "";
-        }
-    }
-	
+		}
+	}
+
 }

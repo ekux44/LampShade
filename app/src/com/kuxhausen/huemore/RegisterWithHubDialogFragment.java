@@ -122,10 +122,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				HttpResponse response = client.execute(httpGet);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-				
-				if (statusCode == 200) {
 
-					
+				if (statusCode == 200) {
 
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
@@ -138,39 +136,37 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 						builder.append(line);
 						jSon += line;
 					}
-					
+
 					Gson gson = new Gson();
-					try{
+					try {
 						// autoselect first hub if multiple hubs
 						bridge = gson.fromJson(jSon, HueBridge[].class)[0].internalipaddress;
+					} catch (NullPointerException e) {
+						// publishProgress(-1);
+						// TODO
 					}
-					catch (NullPointerException e){
-						//publishProgress(-1);
-						//TODO
-					}
-					
+
 				} else {
-					
+
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}catch (java.lang.ArrayIndexOutOfBoundsException e){
-				//TODO deal with null IP from getBridge
+			} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+				// TODO deal with null IP from getBridge
 			}
 
 			return bridge;
 		}
-		
-		/*protected void onProgressUpdate(Integer progress) {
-			if(progress == -1){
-				Toast t = new Toast(parrentActivity);
-				t.setDuration(Toast.LENGTH_LONG);
-				t.setText("Please make sure this device is on the same wifi as the hub and has internet access, then try to register with hub again");
-				t.show();
-			}
-		}*/
+
+		/*
+		 * protected void onProgressUpdate(Integer progress) { if(progress ==
+		 * -1){ Toast t = new Toast(parrentActivity);
+		 * t.setDuration(Toast.LENGTH_LONG); t.setText(
+		 * "Please make sure this device is on the same wifi as the hub and has internet access, then try to register with hub again"
+		 * ); t.show(); } }
+		 */
 
 		public String getUserName() {
 
@@ -180,10 +176,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				md = MessageDigest.getInstance("MD5");
 				String resultString = new BigInteger(1, md.digest(serialID
 						.getBytes())).toString(16);
-				
+
 				return resultString;
 			} catch (NoSuchAlgorithmException e) {
-				
+
 				e.printStackTrace();
 			}
 
@@ -203,7 +199,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			if (isAdded()) {
 				// Get session ID
 				cont = (Context) params[0];
-				
 
 				// Create a new HttpClient and Post Header
 				HttpClient httpclient = new DefaultHttpClient();
@@ -235,30 +230,30 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 					responseString = responseString.substring(1,
 							responseString.length() - 1);// pull off the outer
 															// brackets
-					
+
 					RegistrationResponse responseObject = gson.fromJson(
 							responseString, RegistrationResponse.class);
 					if (responseObject.success != null)
 						return true;
 
 				} catch (ClientProtocolException e) {
-					
+
 					// TODO Auto-generated catch block
 				} catch (IOException e) {
-					
+
 					// TODO Auto-generated catch block
-				} catch (java.lang.IllegalArgumentException e){
-					//TODO deal with null IP from getBridge
+				} catch (java.lang.IllegalArgumentException e) {
+					// TODO deal with null IP from getBridge
 				}
-				 
+
 			}
-			
+
 			return false;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean success) {
-			
+
 			if (success && isAdded()) {
 				countDownTimer.cancel();
 

@@ -94,7 +94,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 									.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
 											mNewValues // the values to insert
 									);
-							
+
 						}
 					}
 				}).setNegativeButton(R.string.cancel,
@@ -137,7 +137,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 			states[i] = gson.toJson(moodRowArray.get(i).hs);
 		}
 		((MainActivity) getActivity()).testMood(bulbS, states);
-		
+
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public class NewMoodDialogFragment extends DialogFragment implements
 
 		ArrayList<Integer> groupStates = new ArrayList<Integer>();
 		while (cursor.moveToNext()) {
-			
+
 			groupStates.add(cursor.getInt(0));
 		}
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);

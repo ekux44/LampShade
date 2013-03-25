@@ -59,8 +59,8 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 			// Create an instance of ExampleFragment
-		GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
-		//		GroupsFragment firstFragment = new GroupsFragment();
+			GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
+			// GroupsFragment firstFragment = new GroupsFragment();
 
 			// In case this activity was started with special instructions from
 			// an Intent,
@@ -94,8 +94,8 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void onGroupSelected(String groupParam) {
-		
-		//TODO generate groupbulbJson
+
+		// TODO generate groupbulbJson
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { groupParam };
 		Cursor cursor = getContentResolver().query(
@@ -117,9 +117,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
-		
-		
-		
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 
@@ -152,7 +149,7 @@ public class MainActivity extends FragmentActivity implements
 			// Commit the transaction
 			transaction.commit();
 		}
-		//pushMoodGroup();
+		// pushMoodGroup();
 	}
 
 	@Override
@@ -188,8 +185,9 @@ public class MainActivity extends FragmentActivity implements
 			// Commit the transaction
 			transaction.commit();
 		}
-		
+
 	}
+
 	@Override
 	public void onMoodSelected(String moodParam) {
 		mood = moodParam;
@@ -209,7 +207,7 @@ public class MainActivity extends FragmentActivity implements
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
-				
+
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { mood };
 		Cursor cursor = getContentResolver().query(
@@ -268,7 +266,7 @@ public class MainActivity extends FragmentActivity implements
 			cont = (Context) params[0];
 			bulbs = (Integer[]) params[1];
 			moods = (String[]) params[2];
-			
+
 			if (cont == null || bulbs == null || moods == null)
 				return -1;
 
@@ -328,5 +326,4 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	
 }

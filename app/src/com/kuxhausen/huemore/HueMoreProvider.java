@@ -55,8 +55,7 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupsProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sGroupsProjectionMap.put(BaseColumns._ID,
-					BaseColumns._ID);
+			sGroupsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 
 			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,
 					DatabaseDefinitions.GroupColumns.GROUP);
@@ -76,8 +75,7 @@ public class HueMoreProvider extends ContentProvider {
 			sMoodsProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sMoodsProjectionMap.put(BaseColumns._ID,
-					BaseColumns._ID);
+			sMoodsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 
 			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
 					DatabaseDefinitions.MoodColumns.MOOD);
@@ -98,8 +96,7 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupBulbsProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sGroupBulbsProjectionMap.put(BaseColumns._ID,
-					BaseColumns._ID);
+			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 
 			sGroupBulbsProjectionMap.put(
 					DatabaseDefinitions.GroupColumns.GROUP,
@@ -121,8 +118,7 @@ public class HueMoreProvider extends ContentProvider {
 			sMoodStatesProjectionMap = new HashMap<String, String>();
 
 			// Maps the string "_ID" to the column name "_ID"
-			sMoodStatesProjectionMap.put(BaseColumns._ID,
-					BaseColumns._ID);
+			sMoodStatesProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 
 			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
 					DatabaseDefinitions.MoodColumns.MOOD);
@@ -212,7 +208,7 @@ public class HueMoreProvider extends ContentProvider {
 		if (insertId == -1) {
 			// insert failed, do update
 			// db.update("groups", null, cv);
-			
+
 		}
 
 		this.getContext().getContentResolver().notifyChange(uri, null);

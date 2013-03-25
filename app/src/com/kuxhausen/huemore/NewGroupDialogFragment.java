@@ -39,7 +39,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewGroupDialogFragment extends DialogFragment implements GetBulbList.OnListReturnedListener{
+public class NewGroupDialogFragment extends DialogFragment implements
+		GetBulbList.OnListReturnedListener {
 
 	ArrayList<String> bulbNameList;
 	ListView bulbsListView;
@@ -118,7 +119,7 @@ public class NewGroupDialogFragment extends DialogFragment implements GetBulbLis
 									.insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
 											mNewValues // the values to insert
 									);
-							
+
 						}
 
 					}
@@ -132,8 +133,6 @@ public class NewGroupDialogFragment extends DialogFragment implements GetBulbLis
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-
-
 
 	@Override
 	public void onListReturned(String jSon) {
@@ -158,8 +157,7 @@ public class NewGroupDialogFragment extends DialogFragment implements GetBulbLis
 			nameToBulb.put(bulb.name, bulb.number);
 			rayAdapter.add(bulb.name);
 		}
-		
+
 	}
 
-	
 }

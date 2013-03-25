@@ -36,7 +36,6 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	public CursorAdapter dataSource;
 	public TextView selected; // updated on long click
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

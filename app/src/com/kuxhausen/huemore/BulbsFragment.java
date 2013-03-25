@@ -35,18 +35,19 @@ import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 import com.kuxhausen.huemore.state.HueBulb;
 
-public class BulbsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, GetBulbList.OnListReturnedListener{
+public class BulbsFragment extends ListFragment implements
+		LoaderManager.LoaderCallbacks<Cursor>,
+		GetBulbList.OnListReturnedListener {
 	OnBulbGroupSelectedListener mCallback;
 
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
-	//public CursorAdapter dataSource;
+	// public CursorAdapter dataSource;
 	public TextView selected; // updated on long click
 
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
 	HueBulb[] bulbArray;
-	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,20 +64,16 @@ public class BulbsFragment extends ListFragment implements LoaderManager.LoaderC
 		 */
 		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
-
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.bulb_view, container, false);
-		
-		
+
 		bulbNameList = new ArrayList<String>();
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
 				android.R.layout.simple_list_item_1, bulbNameList);
 		setListAdapter(rayAdapter);
-		
+
 		GetBulbList pushGroupMood = new GetBulbList();
 		pushGroupMood.execute(getActivity(), this);
-
-		
 
 		return myView;
 	}
@@ -145,13 +142,12 @@ public class BulbsFragment extends ListFragment implements LoaderManager.LoaderC
 		selected = ((TextView) (v));
 
 		// Notify the parent activity of selected item
-		Integer[] iPos= {position+1};
+		Integer[] iPos = { position + 1 };
 		mCallback.onBulbSelected(iPos);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
 	}
-
 
 	/**
 	 * Callback that's invoked when the system has initialized the Loader and is
@@ -187,7 +183,7 @@ public class BulbsFragment extends ListFragment implements LoaderManager.LoaderC
 		 * Moves the query results into the adapter, causing the ListView
 		 * fronting this adapter to re-display
 		 */
-		//dataSource.changeCursor(cursor);
+		// dataSource.changeCursor(cursor);
 		registerForContextMenu(getListView());
 	}
 
@@ -198,7 +194,7 @@ public class BulbsFragment extends ListFragment implements LoaderManager.LoaderC
 		 * memory leaks.
 		 */
 		// unregisterForContextMenu(getListView());
-		//dataSource.changeCursor(null);
+		// dataSource.changeCursor(null);
 	}
 
 	@Override
@@ -223,6 +219,6 @@ public class BulbsFragment extends ListFragment implements LoaderManager.LoaderC
 			bulb.number = i + 1;
 			rayAdapter.add(bulb.name);
 		}
-		
+
 	}
 }

@@ -57,7 +57,6 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
 
-
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
@@ -139,16 +138,15 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		}
 
-		
 	}
 
 	public void updateGroupView() {
-		// Set the previous selected item as checked to be unhighlighted when in two-pane layout
-		if(selected!= null&&selectedPos > -1)
+		// Set the previous selected item as checked to be unhighlighted when in
+		// two-pane layout
+		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
-		
-	}
 
+	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
