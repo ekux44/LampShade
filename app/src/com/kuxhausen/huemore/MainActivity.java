@@ -33,7 +33,7 @@ import com.kuxhausen.huemore.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.DatabaseDefinitions.PreferencesKeys;
 
 public class MainActivity extends FragmentActivity implements
-		GroupsFragment.OnHeadlineSelectedListener,
+		GroupBulbPagingFragment.OnHeadlineSelectedListener,
 		MoodsFragment.OnMoodSelectedListener {
 
 	DatabaseHelper helper = new DatabaseHelper(this);

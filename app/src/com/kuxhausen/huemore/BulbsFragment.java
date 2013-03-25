@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.kuxhausen.huemore.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnHeadlineSelectedListener;
 
-public class GroupsFragment extends ListFragment implements OnClickListener,
+public class BulbsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 	OnHeadlineSelectedListener mCallback;
 

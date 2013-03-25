@@ -13,6 +13,8 @@
     <string name="contextmenu_edit">Edit</string>
     <string name="groups">Groups</string>
     <string name="moods">Moods</string>
+    <string name="cap_groups">GROUPS</string>
+    <string name="cap_bulbs">BULBS</string>
     <string name="brightness">Brightness</string>
     <string name="saturation">Saturation</string>
     <string name="preview">Preview</string>

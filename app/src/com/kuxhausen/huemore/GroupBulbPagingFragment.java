@@ -19,12 +19,19 @@ public class GroupBulbPagingFragment extends Fragment {
      * state in the process. This is important to conserve memory and is a best practice when
      * allowing navigation between objects in a potentially large collection.
      */
-    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
+    GroupBulbPagerAdapter mDemoCollectionPagerAdapter;
 
     /**
      * The {@link android.support.v4.view.ViewPager} that will display the object collection.
      */
     ViewPager mViewPager;
+    
+    // The container Activity must implement this interface so the frag can
+ 	// deliver messages
+ 	public interface OnHeadlineSelectedListener {
+ 		/** Called by HeadlinesFragment when a list item is selected */
+ 		public void onGroupSelected(String group);
+ 	}
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +48,7 @@ public class GroupBulbPagingFragment extends Fragment {
         // 
         // ViewPager and its adapters use support library fragments, so we must use
         // getSupportFragmentManager.
-        mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getActivity().getSupportFragmentManager());
+        mDemoCollectionPagerAdapter = new GroupBulbPagerAdapter(this);
 
 
         // Set up the ViewPager, attaching the adapter.
@@ -56,30 +63,43 @@ public class GroupBulbPagingFragment extends Fragment {
      * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment
      * representing an object in the collection.
      */
-    public static class DemoCollectionPagerAdapter extends FragmentPagerAdapter {
+    public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
-        public DemoCollectionPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+    	public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment)
+    	{
+    	    super(fragment.getChildFragmentManager());
+
+    	    // write your code here
+    	}
+    	
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new GroupsFragment();
-            Bundle args = new Bundle();
-            //args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1); // Our object is just an integer :-P
-            fragment.setArguments(args);
-            return fragment;
+        	switch (i) {
+            case 0:
+                //TODO cache somewhere
+            	return new GroupsFragment();
+            case 1:
+            	return new BulbsFragment();
+            default:
+                return null;
+        	}
         }
 
         @Override
         public int getCount() {
-            // For this contrived example, we have a 100-object collection.
-            return 100;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "OBJECT " + (position + 1);
+        	switch (position) {
+            case 0:
+            	return "GROUPS";//TODO figure out how to make static references to strings.xml
+            case 1:
+            	return "BULBS";
+        	}
+			return "";
         }
     }
 	
