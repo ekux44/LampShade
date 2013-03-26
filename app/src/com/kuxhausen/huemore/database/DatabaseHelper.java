@@ -55,7 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Concentrate");
-		hs.ct = (1000000 / 3400);
+		hs.ct = (1000000 / 3600);
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
