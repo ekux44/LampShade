@@ -29,7 +29,8 @@ public class MoodManualPagingFragment extends Fragment {
 	 */
 	MoodManualPagerAdapter mMoodManualPagerAdapter;
 
-	private static final int MOOD_LOCATION = 0;
+	private static final int MOOD_LOCATION = 1;
+	private static final int MANUAL_LOCATION = 0;
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
@@ -125,7 +126,7 @@ public class MoodManualPagingFragment extends Fragment {
 			case MOOD_LOCATION:
 				// TODO cache somewhere
 				return new MoodsFragment();
-			case 1:
+			case MANUAL_LOCATION:
 				return new MoodsFragment();
 			default:
 				return null;
@@ -143,7 +144,7 @@ public class MoodManualPagingFragment extends Fragment {
 			case MOOD_LOCATION:
 				return "MOODS";// TODO figure out how to make static references
 								// to strings.xml
-			case 1:
+			case MANUAL_LOCATION:
 				return "MANUAL";
 			}
 			return "";

@@ -23,6 +23,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	 */
 	GroupBulbPagerAdapter mGroupMoodPagerAdapter;
 
+	private static final int GROUP_LOCATION = 1;
+	private static final int BULB_LOCATION = 0;
+	
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
@@ -76,10 +79,10 @@ public class GroupBulbPagingFragment extends Fragment {
 		@Override
 		public Fragment getItem(int i) {
 			switch (i) {
-			case 0:
+			case GROUP_LOCATION:
 				// TODO cache somewhere
 				return new GroupsFragment();
-			case 1:
+			case BULB_LOCATION:
 				return new BulbsFragment();
 			default:
 				return null;
@@ -94,10 +97,10 @@ public class GroupBulbPagingFragment extends Fragment {
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
-			case 0:
+			case GROUP_LOCATION:
 				return "GROUPS";// TODO figure out how to make static references
 								// to strings.xml
-			case 1:
+			case BULB_LOCATION:
 				return "BULBS";
 			}
 			return "";
