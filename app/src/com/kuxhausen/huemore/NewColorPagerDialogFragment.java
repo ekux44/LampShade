@@ -56,7 +56,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 
 	public interface OnCreateColorListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onCreateMood();
+		public Intent onCreateMood();
 
 	}
 
@@ -137,11 +137,11 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "ADVANCED";// TODO figure out how to make static
+				return "HUE";// TODO figure out how to make static
 									// references
 									// to strings.xml
 			case 1:
-				return "ADVANCED";
+				return "TEMPERATURE";
 			}
 			return "";
 		}
@@ -152,8 +152,8 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			((OnCreateColorListener) newColorFragments[currentPage])
-					.onCreateMood();
+			Intent i = ((OnCreateColorListener) newColorFragments[currentPage]).onCreateMood();
+			getTargetFragment().onActivityResult(getTargetRequestCode(), i.getExtras().getInt("Color"), i);
 			this.dismiss();
 			break;
 		case R.id.cancel:

@@ -137,7 +137,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "ADVANCED";// TODO figure out how to make static
+				return "SIMPLE";// TODO figure out how to make static
 									// references
 									// to strings.xml
 			case 1:

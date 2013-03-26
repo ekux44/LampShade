@@ -32,12 +32,6 @@ public class NewColorHueFragment extends Fragment implements
 	SeekBar seekBar;
 	Integer[] bulbS;
 
-	public void onSuccessExit(int color, int hues) {
-		hs.hue = hues;
-		Intent i = new Intent();
-		i.putExtra("HueState", gson.toJson(hs));
-		getTargetFragment().onActivityResult(getTargetRequestCode(), color, i);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,9 +97,12 @@ public class NewColorHueFragment extends Fragment implements
 	}
 
 	@Override
-	public void onCreateMood() {
-		onSuccessExit(cpv.getColor(), cpv.getHue());
-		
+	public Intent onCreateMood() {
+		hs.hue = cpv.getHue();
+		Intent i = new Intent();
+		i.putExtra("HueState", gson.toJson(hs));
+		i.putExtra("Color", cpv.getColor());
+		return i;
 	}
 
 }
