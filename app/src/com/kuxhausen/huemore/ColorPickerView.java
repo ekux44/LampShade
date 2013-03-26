@@ -22,6 +22,8 @@ public class ColorPickerView extends View {
 	private int hue;
 	private long lastColorChange;
 	private long colorChangeRateLimit = 200000000;// 5 times/sec
+	private int parentHeight;
+	private int parentWidth;
 
 	public void setOnColorChangedListener(OnColorChangedListener l) {
 		mListener = l;
@@ -89,18 +91,18 @@ public class ColorPickerView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-		int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
-		int diameter = Math.min(parentWidth, parentHeight);
+		parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+		parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+		int diameter = Math.max(Math.min(parentWidth, parentHeight), 320);
 		setMeasuredDimension(diameter, diameter);
 		CENTER_X = diameter / 2;
 		CENTER_Y = diameter / 2;
-		CENTER_RADIUS = Math.max(diameter / 8, CENTER_RADIUS);
+		CENTER_RADIUS = diameter / 6;
 	}
 
 	private static int CENTER_X = 100;
 	private static int CENTER_Y = 100;
-	private static int CENTER_RADIUS = 32;
+	private static int CENTER_RADIUS = 16;
 
 	private int floatToByte(float x) {
 		int n = java.lang.Math.round(x);
