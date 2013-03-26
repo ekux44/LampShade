@@ -1,5 +1,9 @@
 package com.kuxhausen.huemore;
 
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.state.HueState;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class MoodManualPagingFragment extends Fragment {
@@ -30,6 +36,9 @@ public class MoodManualPagingFragment extends Fragment {
 	 * object collection.
 	 */
 	ViewPager mViewPager;
+	SeekBar brightnessBar;
+	public Context parrentActivity;
+	int brightness;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -48,8 +57,9 @@ public class MoodManualPagingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		parrentActivity = this.getActivity();
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.pager, container, false);
+		View myView = inflater.inflate(R.layout.moodmanual_pager, container, false);
 		Bundle args = getArguments();
 
 		// Create an adapter that when requested, will return a fragment
@@ -65,6 +75,35 @@ public class MoodManualPagingFragment extends Fragment {
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mMoodManualPagerAdapter);
 
+		
+		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
+		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				HueState hs = new HueState();
+				hs.bri = brightness;
+				hs.on = true;
+				Gson gs = new Gson();
+				String[] brightnessState = { gs.toJson(hs) };
+				// TODO deal with off?
+				((MainActivity) parrentActivity)
+						.onBrightnessChanged(brightnessState);
+
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				brightness = progress;
+			}
+		});
+		
 		return myView;
 	}
 

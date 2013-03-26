@@ -38,13 +38,12 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 	OnMoodSelectedListener mMoodCallback;
 
-	public Context parrentActivity;
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
-	SeekBar brightnessBar;
+	
 
-	int brightness;
+	
 	public TextView selected; // updated on long click
 	int selectedPos = -1;
 
@@ -58,8 +57,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		parrentActivity = this.getActivity();
-
+		
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
@@ -80,33 +78,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.mood_view, container, false);
 
-		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
-		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				HueState hs = new HueState();
-				hs.bri = brightness;
-				hs.on = true;
-				Gson gs = new Gson();
-				String[] brightnessState = { gs.toJson(hs) };
-				// TODO deal with off?
-				((MainActivity) parrentActivity)
-						.onBrightnessChanged(brightnessState);
-
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				brightness = progress;
-			}
-		});
+		
 
 		ImageButton newGroup = (ImageButton) myView
 				.findViewById(R.id.newMoodButton);
