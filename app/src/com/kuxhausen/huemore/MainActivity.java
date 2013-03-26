@@ -38,7 +38,7 @@ import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
 /**
  * @author Eric Kuxhausen
- *
+ * 
  */
 public class MainActivity extends FragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
@@ -122,7 +122,8 @@ public class MainActivity extends FragmentActivity implements
 			MoodManualPagingFragment newFragment = new MoodManualPagingFragment();
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+			transaction
+					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			// Replace whatever is in the fragment_container view with this
 			// fragment,
 			// and add the transaction to the back stack so the user can
@@ -132,7 +133,8 @@ public class MainActivity extends FragmentActivity implements
 
 			// Commit the transaction
 			transaction.commit();
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+			transaction
+					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 		}
 
 	}
@@ -150,22 +152,25 @@ public class MainActivity extends FragmentActivity implements
 
 	/*
 	 * test mood by applying to json states array to these bulbs
+	 * 
 	 * @param states
 	 */
-	/*public void testMood(Integer[] bulbs, String[] states) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-		pushGroupMood.execute(this, bulbs, states);
-	}*/
-	
+	/*
+	 * public void testMood(Integer[] bulbs, String[] states) {
+	 * TransmitGroupMood pushGroupMood = new TransmitGroupMood();
+	 * pushGroupMood.execute(this, bulbs, states); }
+	 */
+
 	/**
 	 * test mood by applying to json states array to previously selected moods
+	 * 
 	 * @param states
 	 */
 	public void testMood(String[] states) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
 		pushGroupMood.execute(this, bulbS, states);
 	}
-	
+
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;

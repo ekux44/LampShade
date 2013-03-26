@@ -28,7 +28,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiMoodFragment extends Fragment implements OnClickListener, OnCreateMoodListener {
+public class NewMultiMoodFragment extends Fragment implements OnClickListener,
+		OnCreateMoodListener {
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;

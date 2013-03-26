@@ -27,8 +27,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public class NewColorTempFragment extends Fragment implements
-		OnSeekBarChangeListener, OnCreateColorListener{
-
+		OnSeekBarChangeListener, OnCreateColorListener {
 
 	private int mInitialColor;
 	private HueState hs;
@@ -42,41 +41,40 @@ public class NewColorTempFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle bundle=getArguments();
-		
+		Bundle bundle = getArguments();
+
 		hs = new HueState();
 		hs.on = true;
 		mInitialColor = 0;
 
-		View groupDialogView = inflater.inflate(R.layout.edit_temp_color,
-				null);
-		
+		View groupDialogView = inflater.inflate(R.layout.edit_temp_color, null);
+
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.temperatureBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
 
-		
-		tempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
+		tempEditText = (EditText) groupDialogView
+				.findViewById(R.id.temperatureText);
 		tempEditText.setVisibility(View.VISIBLE);
-		
+
 		tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
-		    @Override
-		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		        if (actionId == EditorInfo.IME_ACTION_DONE) {
-		        	int temp = Integer.parseInt((tempEditText.getText().toString()));
-		        	temp = Math.max(temp, 0);
-		        	temp = Math.min(temp, seekBarOffset +  seekBar.getMax());
-		        	seekBar.setProgress(temp - seekBarOffset);
-		        	hs.ct = ((1000000 /temp ));
-		    		preview();
-		        }
-		        return false;
-		    }
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					int temp = Integer.parseInt((tempEditText.getText()
+							.toString()));
+					temp = Math.max(temp, 0);
+					temp = Math.min(temp, seekBarOffset + seekBar.getMax());
+					seekBar.setProgress(temp - seekBarOffset);
+					hs.ct = ((1000000 / temp));
+					preview();
+				}
+				return false;
+			}
 
 		});
-		
-		
-		
+
 		return groupDialogView;
 	}
 
@@ -95,15 +93,14 @@ public class NewColorTempFragment extends Fragment implements
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		hs.ct = ((1000000 / (seekBarOffset+  seekBar.getProgress())));
-		tempEditText.setText(""+(seekBarOffset+  seekBar.getProgress()));
+		hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
+		tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
 		preview();
 	}
 
-
 	public void preview() {
 		String[] states = { gson.toJson(hs) };
-		((MainActivity) getActivity()).testMood( states);
+		((MainActivity) getActivity()).testMood(states);
 
 	}
 
@@ -111,9 +108,8 @@ public class NewColorTempFragment extends Fragment implements
 	public Intent onCreateColor() {
 		Intent i = new Intent();
 		i.putExtra("HueState", gson.toJson(hs));
-		i.putExtra("Color",""+( 0xff000000));
+		i.putExtra("Color", "" + (0xff000000));
 		return i;
 	}
 
-	
 }

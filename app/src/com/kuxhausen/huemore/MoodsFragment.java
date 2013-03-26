@@ -41,9 +41,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
-	
 
-	
 	public TextView selected; // updated on long click
 	int selectedPos = -1;
 
@@ -57,7 +55,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
@@ -77,8 +75,6 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.mood_view, container, false);
-
-		
 
 		ImageButton newGroup = (ImageButton) myView
 				.findViewById(R.id.newMoodButton);

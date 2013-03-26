@@ -59,7 +59,8 @@ public class MoodManualPagingFragment extends Fragment {
 
 		parrentActivity = this.getActivity();
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.moodmanual_pager, container, false);
+		View myView = inflater.inflate(R.layout.moodmanual_pager, container,
+				false);
 		Bundle args = getArguments();
 
 		// Create an adapter that when requested, will return a fragment
@@ -75,7 +76,6 @@ public class MoodManualPagingFragment extends Fragment {
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mMoodManualPagerAdapter);
 
-		
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -103,7 +103,7 @@ public class MoodManualPagingFragment extends Fragment {
 				brightness = progress;
 			}
 		});
-		
+
 		return myView;
 	}
 

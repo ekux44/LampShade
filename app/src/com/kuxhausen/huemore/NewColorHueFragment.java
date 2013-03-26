@@ -42,8 +42,8 @@ public class NewColorHueFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle bundle=getArguments();
-		
+		Bundle bundle = getArguments();
+
 		hs = new HueState();
 		hs.on = true;
 		mInitialColor = 0;
@@ -56,8 +56,7 @@ public class NewColorHueFragment extends Fragment implements
 			}
 		};
 
-		View groupDialogView = inflater.inflate(R.layout.edit_hue_color,
-				null);
+		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
 		cpv = ((ColorPickerView) groupDialogView.findViewById(R.id.colorWheel));
 		cpv.setOnColorChangedListener(mListener);
 
@@ -68,9 +67,9 @@ public class NewColorHueFragment extends Fragment implements
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
 
-		
-		if(bundle!= null && bundle.getBoolean("ShowEditText", false)){
-			nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
+		if (bundle != null && bundle.getBoolean("ShowEditText", false)) {
+			nameEditText = (EditText) groupDialogView
+					.findViewById(R.id.editText1);
 			nameEditText.setVisibility(View.VISIBLE);
 		}
 		// Create the AlertDialog object and return it
@@ -96,10 +95,9 @@ public class NewColorHueFragment extends Fragment implements
 		preview();
 	}
 
-
 	public void preview() {
 		String[] states = { gson.toJson(hs) };
-		((MainActivity) getActivity()).testMood( states);
+		((MainActivity) getActivity()).testMood(states);
 
 	}
 
@@ -116,28 +114,27 @@ public class NewColorHueFragment extends Fragment implements
 	public void onCreateMood() {
 		onCreateColor();
 		String groupname = nameEditText.getText().toString();
-			// Defines a new Uri object that receives the result
-			// of the insertion
-			Uri mNewUri;
+		// Defines a new Uri object that receives the result
+		// of the insertion
+		Uri mNewUri;
 
-			// Defines an object to contain the new values to
-			// insert
-			ContentValues mNewValues = new ContentValues();
+		// Defines an object to contain the new values to
+		// insert
+		ContentValues mNewValues = new ContentValues();
 
-			/*
-			 * Sets the values of each column and inserts the word. The
-			 * arguments to the "put" method are "column name" and "value"
-			 */
-			mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
-			mNewValues.put(DatabaseDefinitions.MoodColumns.STATE,
-					gson.toJson(hs));
-			mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
+		/*
+		 * Sets the values of each column and inserts the word. The arguments to
+		 * the "put" method are "column name" and "value"
+		 */
+		mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
+		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, gson.toJson(hs));
+		mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
 
-			mNewUri = getActivity().getContentResolver().insert(
-					DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
-																			// values
-																			// to
-																			// insert
-					);
+		mNewUri = getActivity().getContentResolver().insert(
+				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
+																		// values
+																		// to
+																		// insert
+				);
 	}
 }
