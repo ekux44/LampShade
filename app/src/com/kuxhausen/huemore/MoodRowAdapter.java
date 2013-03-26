@@ -35,7 +35,7 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 			view = new ViewHolder();
 
 			view.state_color = (ImageView) rowView
-					.findViewById(R.id.stateColorButton);
+					.findViewById(R.id.stateColorView);
 
 			rowView.setTag(view);
 		} else {

@@ -134,6 +134,7 @@ public class NewMultiMoodFragment extends ListFragment implements OnClickListene
 		Bundle args = new Bundle();
 		args.putString("PreviousState", gson.toJson(moodRowArray.get(position).hs));
 		cpdf.setArguments(args);
+		//cpdf.show(getFragmentManager(), "dialog");
 		rayAdapter.remove(moodRowArray.get(position));
 		moodRowArray.remove(moodRowArray.get(position));
 
