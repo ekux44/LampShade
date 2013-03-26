@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.HueState;
 
 import android.os.Bundle;
@@ -9,13 +10,15 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class ColorPickerDialogFragment extends DialogFragment implements
-		OnSeekBarChangeListener {
+public class NewColorHueFragment extends Fragment implements
+		OnSeekBarChangeListener, OnCreateColorListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -37,7 +40,8 @@ public class ColorPickerDialogFragment extends DialogFragment implements
 	}
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		hs = new HueState();
@@ -53,38 +57,20 @@ public class ColorPickerDialogFragment extends DialogFragment implements
 			}
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View groupDialogView = inflater.inflate(R.layout.edit_color_dialog,
 				null);
 		cpv = ((ColorPickerView) groupDialogView.findViewById(R.id.colorWheel));
 		cpv.setOnColorChangedListener(mListener);
-		builder.setView(groupDialogView);
-
+		
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.saturationBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
 
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
-		builder.setTitle(getString(R.string.color_prompt));
-		builder.setPositiveButton(R.string.accept,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						onSuccessExit(cpv.getColor(), cpv.getHue());
-
-					}
-				}).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						// User cancelled the dialog
-					}
-				});
 
 		// Create the AlertDialog object and return it
-		return builder.create();
+		return groupDialogView;
 	}
 
 	@Override
@@ -114,6 +100,12 @@ public class ColorPickerDialogFragment extends DialogFragment implements
 		String[] states = { gson.toJson(hs) };
 		((MainActivity) getActivity()).testMood(bulbS, states);
 
+	}
+
+	@Override
+	public void onCreateMood() {
+		onSuccessExit(cpv.getColor(), cpv.getHue());
+		
 	}
 
 }

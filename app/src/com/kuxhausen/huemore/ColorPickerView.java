@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.ColorPickerDialogFragment.OnColorChangedListener;
+import com.kuxhausen.huemore.NewColorHueFragment.OnColorChangedListener;
 
 import android.content.Context;
 import android.graphics.Canvas;

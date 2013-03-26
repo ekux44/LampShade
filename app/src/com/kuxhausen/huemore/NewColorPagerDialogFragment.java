@@ -31,7 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMoodPagerDialogFragment extends DialogFragment implements
+public class NewColorPagerDialogFragment extends DialogFragment implements
 		OnClickListener {
 
 	/**
@@ -43,8 +43,8 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 	 * memory and is a best practice when allowing navigation between objects in
 	 * a potentially large collection.
 	 */
-	NewMoodPagerAdapter mNewMoodPagerAdapter;
-	static OnCreateMoodListener[] newMoodFragments;
+	NewMoodPagerAdapter mNewColorPagerAdapter;
+	static OnCreateColorListener[] newColorFragments;
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
@@ -54,7 +54,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 
 	static int currentPage;
 
-	public interface OnCreateMoodListener {
+	public interface OnCreateColorListener {
 		/** Called by HeadlinesFragment when a list item is selected */
 		public void onCreateMood();
 
@@ -75,11 +75,11 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		// ViewPager and its adapters use support library fragments, so we must
 		// use
 		// getSupportFragmentManager.
-		mNewMoodPagerAdapter = new NewMoodPagerAdapter(this);
+		mNewColorPagerAdapter = new NewMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-		mViewPager.setAdapter(mNewMoodPagerAdapter);
+		mViewPager.setAdapter(mNewColorPagerAdapter);
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
 			@Override
@@ -89,14 +89,14 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle("New Mood");
+		this.getDialog().setTitle("New Color");
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 
-		newMoodFragments = new OnCreateMoodListener[2];
+		newColorFragments = new OnCreateColorListener[2];
 		return myView;
 	}
 
@@ -114,15 +114,15 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 
 		@Override
 		public Fragment getItem(int i) {
-			if (newMoodFragments[i] != null)
-				return (Fragment) newMoodFragments[i];
+			if (newColorFragments[i] != null)
+				return (Fragment) newColorFragments[i];
 			switch (i) {
 			case 0:
-				newMoodFragments[i] = new NewMultiMoodFragment();
-				return (Fragment) newMoodFragments[i];
+				newColorFragments[i] = new NewColorHueFragment();
+				return (Fragment) newColorFragments[i];
 			case 1:
-				newMoodFragments[i] = new NewMultiMoodFragment();
-				return (Fragment) newMoodFragments[i];
+				newColorFragments[i] = new NewColorHueFragment();
+				return (Fragment) newColorFragments[i];
 			default:
 				return null;
 			}
@@ -152,7 +152,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			((OnCreateMoodListener) newMoodFragments[currentPage])
+			((OnCreateColorListener) newColorFragments[currentPage])
 					.onCreateMood();
 			this.dismiss();
 			break;

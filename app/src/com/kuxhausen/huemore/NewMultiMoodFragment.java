@@ -29,7 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiMoodDialogFragment extends Fragment implements
+public class NewMultiMoodFragment extends Fragment implements
 		OnClickListener, OnKeyListener, OnGroupSelectedListener,
 		OnCreateMoodListener {
 
@@ -74,8 +74,8 @@ public class NewMultiMoodDialogFragment extends Fragment implements
 		mr.hs = example;
 		moodRowArray.add(mr);
 		rayAdapter.add(mr);
-		ColorPickerDialogFragment cpdf = new ColorPickerDialogFragment();
-		cpdf.setPreviewGroups(bulbS);
+		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
+		//cpdf.setPreviewGroups(bulbS);//TODO fix
 		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
 		cpdf.show(getFragmentManager(), "dialog");
 	}
