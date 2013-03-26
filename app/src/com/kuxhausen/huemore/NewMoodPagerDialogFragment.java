@@ -117,7 +117,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 				return (Fragment) newMoodFragments[i];
 			switch (i) {
 			case 0:
-				newMoodFragments[i] = new NewMultiMoodFragment();
+				newMoodFragments[i] = new NewColorHueFragment();
 				return (Fragment) newMoodFragments[i];
 			case 1:
 				newMoodFragments[i] = new NewMultiMoodFragment();

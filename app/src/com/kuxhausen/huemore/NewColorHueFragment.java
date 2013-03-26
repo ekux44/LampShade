@@ -2,11 +2,15 @@ package com.kuxhausen.huemore;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
+import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.HueState;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
@@ -14,11 +18,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class NewColorHueFragment extends Fragment implements
-		OnSeekBarChangeListener, OnCreateColorListener {
+		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -30,6 +35,7 @@ public class NewColorHueFragment extends Fragment implements
 	private HueState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
+	EditText nameEditText;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +67,9 @@ public class NewColorHueFragment extends Fragment implements
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
 
+		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
+		
+		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
 	}
@@ -92,7 +101,7 @@ public class NewColorHueFragment extends Fragment implements
 	}
 
 	@Override
-	public Intent onCreateMood() {
+	public Intent onCreateColor() {
 		hs.hue = cpv.getHue();
 		Intent i = new Intent();
 		i.putExtra("HueState", gson.toJson(hs));
@@ -100,4 +109,33 @@ public class NewColorHueFragment extends Fragment implements
 		return i;
 	}
 
+	@Override
+	public void onCreateMood() {
+		onCreateColor();
+		String groupname = nameEditText.getText().toString();
+			// Defines a new Uri object that receives the result
+			// of the insertion
+			Uri mNewUri;
+
+			// Defines an object to contain the new values to
+			// insert
+			ContentValues mNewValues = new ContentValues();
+
+			/*
+			 * Sets the values of each column and inserts the word. The
+			 * arguments to the "put" method are "column name" and "value"
+			 */
+			mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
+			mNewValues.put(DatabaseDefinitions.MoodColumns.STATE,
+					gson.toJson(hs));
+			mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
+
+			mNewUri = getActivity().getContentResolver().insert(
+					DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
+																			// values
+																			// to
+																			// insert
+					);
+		
+	}
 }

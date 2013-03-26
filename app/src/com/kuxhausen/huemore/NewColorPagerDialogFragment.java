@@ -55,7 +55,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 
 	public interface OnCreateColorListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public Intent onCreateMood();
+		public Intent onCreateColor();
 
 	}
 
@@ -152,7 +152,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		switch (v.getId()) {
 		case R.id.okay:
 			Intent i = ((OnCreateColorListener) newColorFragments[currentPage])
-					.onCreateMood();
+					.onCreateColor();
 			getTargetFragment().onActivityResult(getTargetRequestCode(),
 					i.getExtras().getInt("Color"), i);
 			this.dismiss();
