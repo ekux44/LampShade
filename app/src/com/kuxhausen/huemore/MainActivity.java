@@ -122,7 +122,7 @@ public class MainActivity extends FragmentActivity implements
 			MoodManualPagingFragment newFragment = new MoodManualPagingFragment();
 			FragmentTransaction transaction = getSupportFragmentManager()
 					.beginTransaction();
-
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 			// Replace whatever is in the fragment_container view with this
 			// fragment,
 			// and add the transaction to the back stack so the user can
@@ -132,6 +132,7 @@ public class MainActivity extends FragmentActivity implements
 
 			// Commit the transaction
 			transaction.commit();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 		}
 
 	}
