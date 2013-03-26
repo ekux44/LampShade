@@ -127,7 +127,7 @@ public class MoodManualPagingFragment extends Fragment {
 				// TODO cache somewhere
 				return new MoodsFragment();
 			case MANUAL_LOCATION:
-				return new MoodsFragment();
+				return new NewColorHueFragment();
 			default:
 				return null;
 			}
