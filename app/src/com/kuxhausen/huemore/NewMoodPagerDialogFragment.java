@@ -138,8 +138,8 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 			switch (position) {
 			case 0:
 				return "SIMPLE";// TODO figure out how to make static
-									// references
-									// to strings.xml
+								// references
+								// to strings.xml
 			case 1:
 				return "ADVANCED";
 			}

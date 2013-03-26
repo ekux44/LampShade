@@ -42,15 +42,15 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 	// deliver messages
 	public interface OnRegisterListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onRegisterResult(boolean success, String bridge, String username);
+		public void onRegisterResult(boolean success, String bridge,
+				String username);
 	}
-	
+
 	public String getBridge() {
 
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet("http://"
-				+ "www.meethue.com/api/nupnp");
+		HttpGet httpGet = new HttpGet("http://" + "www.meethue.com/api/nupnp");
 		bridge = "192.168.1.100";
 
 		try {
@@ -78,7 +78,7 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 					// autoselect first hub if multiple hubs
 					bridge = gson.fromJson(jSon, HueBridge[].class)[0].internalipaddress;
 				} catch (NullPointerException e) {
-					
+
 				}
 
 			} else {
@@ -97,60 +97,56 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Object... params) {
-		
-			// Get session ID
-			cont = (Context) params[0];
-			mResultListener = (OnRegisterListener)params[1];
-			username = (String) params[2];
-			deviceType = (String) params[3];
 
-			// Create a new HttpClient and Post Header
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost("http://" + getBridge()
-					+ "/api/");
+		// Get session ID
+		cont = (Context) params[0];
+		mResultListener = (OnRegisterListener) params[1];
+		username = (String) params[2];
+		deviceType = (String) params[3];
 
-			try {
-				RegistrationRequest request = new RegistrationRequest();
-				request.username = username;
-				request.devicetype = deviceType;
-				Gson gson = new Gson();
-				String registrationRequest = gson.toJson(request);
+		// Create a new HttpClient and Post Header
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost("http://" + getBridge() + "/api/");
 
-				StringEntity se = new StringEntity(registrationRequest);
+		try {
+			RegistrationRequest request = new RegistrationRequest();
+			request.username = username;
+			request.devicetype = deviceType;
+			Gson gson = new Gson();
+			String registrationRequest = gson.toJson(request);
 
-				// sets the post request as the resulting string
-				httppost.setEntity(se);
-				// sets a request header so the page receiving the request
-				// will know what to do with it
-				httppost.setHeader("Accept", "application/json");
-				httppost.setHeader("Content-type", "application/json");
+			StringEntity se = new StringEntity(registrationRequest);
 
-				// execute HTTP post request
-				HttpResponse response = httpclient.execute(httppost);
+			// sets the post request as the resulting string
+			httppost.setEntity(se);
+			// sets a request header so the page receiving the request
+			// will know what to do with it
+			httppost.setHeader("Accept", "application/json");
+			httppost.setHeader("Content-type", "application/json");
 
-				// analyze the response
-				String responseString = EntityUtils.toString(response
-						.getEntity());
-				responseString = responseString.substring(1,
-						responseString.length() - 1);// pull off the outer
-														// brackets
+			// execute HTTP post request
+			HttpResponse response = httpclient.execute(httppost);
 
-				RegistrationResponse responseObject = gson.fromJson(
-						responseString, RegistrationResponse.class);
-				if (responseObject.success != null)
-					return true;
+			// analyze the response
+			String responseString = EntityUtils.toString(response.getEntity());
+			responseString = responseString.substring(1,
+					responseString.length() - 1);// pull off the outer
+													// brackets
 
-			} catch (ClientProtocolException e) {
+			RegistrationResponse responseObject = gson.fromJson(responseString,
+					RegistrationResponse.class);
+			if (responseObject.success != null)
+				return true;
 
-				// TODO Auto-generated catch block
-			} catch (IOException e) {
+		} catch (ClientProtocolException e) {
 
-				// TODO Auto-generated catch block
-			} catch (java.lang.IllegalArgumentException e) {
-				// TODO deal with null IP from getBridge
-			}
+			// TODO Auto-generated catch block
+		} catch (IOException e) {
 
-		
+			// TODO Auto-generated catch block
+		} catch (java.lang.IllegalArgumentException e) {
+			// TODO deal with null IP from getBridge
+		}
 
 		return false;
 	}

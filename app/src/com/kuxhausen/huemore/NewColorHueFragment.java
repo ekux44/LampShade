@@ -32,7 +32,6 @@ public class NewColorHueFragment extends Fragment implements
 	SeekBar seekBar;
 	Integer[] bulbS;
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class NewColorHueFragment extends Fragment implements
 				null);
 		cpv = ((ColorPickerView) groupDialogView.findViewById(R.id.colorWheel));
 		cpv.setOnColorChangedListener(mListener);
-		
+
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.saturationBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();

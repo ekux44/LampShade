@@ -138,8 +138,8 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			switch (position) {
 			case 0:
 				return "HUE";// TODO figure out how to make static
-									// references
-									// to strings.xml
+								// references
+								// to strings.xml
 			case 1:
 				return "TEMPERATURE";
 			}
@@ -152,8 +152,10 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			Intent i = ((OnCreateColorListener) newColorFragments[currentPage]).onCreateMood();
-			getTargetFragment().onActivityResult(getTargetRequestCode(), i.getExtras().getInt("Color"), i);
+			Intent i = ((OnCreateColorListener) newColorFragments[currentPage])
+					.onCreateMood();
+			getTargetFragment().onActivityResult(getTargetRequestCode(),
+					i.getExtras().getInt("Color"), i);
 			this.dismiss();
 			break;
 		case R.id.cancel:

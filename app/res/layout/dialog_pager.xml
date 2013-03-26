@@ -2,46 +2,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<android.support.v4.view.ViewPager 
-	    android:id="@+id/pager"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1">
-	
-	    <!--
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <!--
 	    This title strip will display the currently visible page title, as well as the page
-	    titles for adjacent pages.
-	    -->
-	    <android.support.v4.view.PagerTitleStrip android:id="@+id/pager_title_strip"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" />
-	</android.support.v4.view.ViewPager>
-	
-	<View
+	    titles for adjacent pages.
+        -->
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.view.ViewPager>
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#33B5E5" />
-	 <LinearLayout
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle">
+        android:orientation="horizontal" >
 
-		<Button
-		    android:id="@+id/cancel"
-		    style="?android:attr/buttonBarButtonStyle"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/cancel" />
+        <Button
+            android:id="@+id/cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel" />
 
-		<Button
-		    android:id="@+id/okay"
-		    style="?android:attr/buttonBarButtonStyle"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:text="@string/accept" />
+        <Button
+            android:id="@+id/okay"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/accept" />
+    </LinearLayout>
 
-	</LinearLayout>
 </LinearLayout>

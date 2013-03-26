@@ -2,7 +2,6 @@ package com.kuxhausen.huemore.database;
 
 import java.util.HashMap;
 
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
