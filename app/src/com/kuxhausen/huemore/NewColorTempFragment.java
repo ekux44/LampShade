@@ -15,12 +15,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class NewColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener{
@@ -52,14 +56,28 @@ public class NewColorTempFragment extends Fragment implements
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
 
-		// builder.setView(new ColorPickerView(getActivity(), l,
-		// mInitialColor));
+		
+		tempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
+		tempEditText.setVisibility(View.VISIBLE);
+		
+		tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
+		    @Override
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		        if (actionId == EditorInfo.IME_ACTION_DONE) {
+		        	int temp = Integer.parseInt((tempEditText.getText().toString()));
+		        	temp = Math.max(temp, 0);
+		        	temp = Math.min(temp, seekBarOffset +  seekBar.getMax());
+		        	seekBar.setProgress(temp - seekBarOffset);
+		        	hs.ct = ((1000000 /temp ));
+		    		preview();
+		        }
+		        return false;
+		    }
 
+		});
 		
-			tempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
-			tempEditText.setVisibility(View.VISIBLE);
 		
-		// Create the AlertDialog object and return it
+		
 		return groupDialogView;
 	}
 
