@@ -20,6 +20,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements OnClic
 	 * a potentially large collection.
 	 */
 	NewMoodPagerAdapter mNewMoodPagerAdapter;
+	static OnCreateMoodListener[] newMoodFragments;
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
@@ -74,10 +76,20 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements OnClic
 		// use
 		// getSupportFragmentManager.
 		mNewMoodPagerAdapter = new NewMoodPagerAdapter(this);
+		
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mNewMoodPagerAdapter);
+		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener(){
+
+			@Override
+			public void onPageSelected(int position) {
+				currentPage = position;
+				
+			}
+			
+		});
 		this.getDialog().setTitle("New Mood");
 		
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
@@ -85,7 +97,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements OnClic
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 		
-		
+		newMoodFragments = new OnCreateMoodListener[2];
 		return myView;
 	}
 
@@ -103,13 +115,15 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements OnClic
 
 		@Override
 		public Fragment getItem(int i) {
-			currentPage = i;
+			if(newMoodFragments[i]!=null)
+				return (Fragment)newMoodFragments[i];
 			switch (i) {
 			case 0:
-				// TODO cache somewhere
-				return new NewMultiMoodDialogFragment();
+				newMoodFragments[i]=new NewMultiMoodDialogFragment(); 
+				return (Fragment) newMoodFragments[i];
 			case 1:
-				return new NewMultiMoodDialogFragment();
+				newMoodFragments[i]=new NewMultiMoodDialogFragment(); 
+				return (Fragment) newMoodFragments[i];
 			default:
 				return null;
 			}
@@ -138,7 +152,8 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements OnClic
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			((OnCreateMoodListener)mNewMoodPagerAdapter.getItem(currentPage)).onCreateMood();
+			((OnCreateMoodListener)newMoodFragments[currentPage]).onCreateMood();
+			this.dismiss();
 			break;
 		case R.id.cancel:
 			this.dismiss();

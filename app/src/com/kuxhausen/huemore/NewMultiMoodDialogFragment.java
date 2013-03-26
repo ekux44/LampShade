@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiMoodDialogFragment extends DialogFragment implements
+public class NewMultiMoodDialogFragment extends Fragment implements
 		OnClickListener, OnKeyListener, OnGroupSelectedListener, OnCreateMoodListener {
 
 	ListView bulbsListView;
@@ -39,45 +40,30 @@ public class NewMultiMoodDialogFragment extends DialogFragment implements
 	Gson gson = new Gson();
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
 		moodRowArray = new ArrayList<MoodRow>();
-		// Use the Builder class for convenient dialog construction
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-		View groupDialogView = inflater
+
+		View groupView = inflater
 				.inflate(R.layout.edit_mood_dialog, null);
-		bulbsListView = ((ListView) groupDialogView
+		bulbsListView = ((ListView) groupView
 				.findViewById(R.id.listView1));
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		bulbsListView.setAdapter(rayAdapter);
-		builder.setView(groupDialogView);
 
-		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
-		Button enablePreview = (Button) groupDialogView
+		nameEditText = (EditText) groupView.findViewById(R.id.editText1);
+		
+		Button enablePreview = (Button) groupView
 				.findViewById(R.id.previewButton);
 		enablePreview.setOnClickListener(this);
 
-		Button addColor = (Button) groupDialogView.findViewById(R.id.addColor);
+		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 
-		builder.setPositiveButton(R.string.accept,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						
-					}
-				}).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						// User cancelled the dialog
-					}
-				});
-		// Create the AlertDialog object and return it
-		return groupDialogView;
+		return groupView;
 	}
 
 	private void addState() {
