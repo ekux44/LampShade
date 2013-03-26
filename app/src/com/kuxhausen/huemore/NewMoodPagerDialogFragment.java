@@ -54,7 +54,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 			Bundle savedInstanceState) {
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.pager, container,
+		View myView = inflater.inflate(R.layout.dialog_pager, container,
 				false);
 		Bundle args = getArguments();
 
@@ -70,7 +70,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mGroupMoodPagerAdapter);
-
+		this.getDialog().setTitle("New Mood");
 		return myView;
 	}
 
@@ -91,9 +91,9 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 			switch (i) {
 			case 0:
 				// TODO cache somewhere
-				return new NewMultiGroupDialogFragment();
+				return new NewMultiMoodDialogFragment();
 			case 1:
-				return new NewMultiGroupDialogFragment();
+				return new NewMultiMoodDialogFragment();
 			default:
 				return null;
 			}

@@ -27,7 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiGroupDialogFragment extends DialogFragment implements
+public class NewMultiMoodDialogFragment extends DialogFragment implements
 		OnClickListener, OnKeyListener, OnGroupSelectedListener {
 
 	ListView bulbsListView;
