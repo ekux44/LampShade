@@ -28,8 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiMoodFragment extends Fragment implements OnClickListener,
-		OnKeyListener, OnCreateMoodListener {
+public class NewMultiMoodFragment extends Fragment implements OnClickListener, OnCreateMoodListener {
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
@@ -86,20 +85,6 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 		}
 		((MainActivity) getActivity()).testMood(states);
 
-	}
-
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN) {
-			switch (keyCode) {
-			case KeyEvent.KEYCODE_DPAD_CENTER:
-			case KeyEvent.KEYCODE_ENTER:
-			case KeyEvent.FLAG_EDITOR_ACTION:
-				addState();
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
