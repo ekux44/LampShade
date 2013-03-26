@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiMoodFragment extends Fragment implements OnClickListener,
+public class NewMultiMoodFragment extends ListFragment implements OnClickListener,
 		OnCreateMoodListener {
 
-	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
 	EditText nameEditText;
@@ -41,12 +41,12 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+
 		moodRowArray = new ArrayList<MoodRow>();
 
 		View groupView = inflater.inflate(R.layout.edit_multi_mood, null);
-		bulbsListView = ((ListView) groupView.findViewById(R.id.listView1));
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
-		bulbsListView.setAdapter(rayAdapter);
+		setListAdapter(rayAdapter);
 
 		nameEditText = (EditText) groupView.findViewById(R.id.editText1);
 
@@ -126,5 +126,16 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 																			// insert
 					);
 		}
+	}
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+
+		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
+		Bundle args = new Bundle();
+		args.putString("PreviousState", gson.toJson(moodRowArray.get(position).hs));
+		cpdf.setArguments(args);
+		rayAdapter.remove(moodRowArray.get(position));
+		moodRowArray.remove(moodRowArray.get(position));
+
 	}
 }

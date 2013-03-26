@@ -4,7 +4,7 @@
     android:layout_height="64dip"
     android:orientation="horizontal" >
 
-    <ImageButton
+    <ImageView
         android:id="@+id/stateColorButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
