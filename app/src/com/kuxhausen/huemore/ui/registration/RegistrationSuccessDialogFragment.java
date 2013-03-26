@@ -1,4 +1,7 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.ui.registration;
+
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.string;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,7 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class RegistrationFailDialogFragment extends DialogFragment {
+public class RegistrationSuccessDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -14,13 +17,10 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-						rwhdf.show(getFragmentManager(), "dialog");
-
-						dismiss();
+						// User clicked OK button
 					}
 				});
-		builder.setMessage(R.string.register_fail);
+		builder.setMessage(R.string.register_success);
 		return builder.create();
 	}
 }

@@ -50,7 +50,7 @@ public class NewColorHueFragment extends Fragment implements
 			}
 		};
 
-		View groupDialogView = inflater.inflate(R.layout.edit_color_dialog,
+		View groupDialogView = inflater.inflate(R.layout.edit_hue_color_dialog,
 				null);
 		cpv = ((ColorPickerView) groupDialogView.findViewById(R.id.colorWheel));
 		cpv.setOnColorChangedListener(mListener);

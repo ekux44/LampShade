@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.ui.registration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +36,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.id;
+import com.kuxhausen.huemore.R.layout;
+import com.kuxhausen.huemore.R.string;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
