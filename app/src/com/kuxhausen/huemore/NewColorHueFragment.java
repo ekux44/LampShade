@@ -30,7 +30,6 @@ public class NewColorHueFragment extends Fragment implements
 	private HueState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
-	Integer[] bulbS;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,13 +84,10 @@ public class NewColorHueFragment extends Fragment implements
 		preview();
 	}
 
-	public void setPreviewGroups(Integer[] bulbs) {
-		bulbS = bulbs;
-	}
 
 	public void preview() {
 		String[] states = { gson.toJson(hs) };
-		((MainActivity) getActivity()).testMood(bulbS, states);
+		((MainActivity) getActivity()).testMood( states);
 
 	}
 

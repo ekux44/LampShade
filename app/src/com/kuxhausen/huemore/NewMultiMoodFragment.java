@@ -3,7 +3,6 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.GroupSelectorDialogFragment.OnGroupSelectedListener;
 import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
@@ -30,13 +29,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class NewMultiMoodFragment extends Fragment implements OnClickListener,
-		OnKeyListener, OnGroupSelectedListener, OnCreateMoodListener {
+		OnKeyListener, OnCreateMoodListener {
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
 	EditText nameEditText;
-	Integer[] bulbS;
 	Gson gson = new Gson();
 
 	@Override
@@ -51,10 +49,6 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 		bulbsListView.setAdapter(rayAdapter);
 
 		nameEditText = (EditText) groupView.findViewById(R.id.editText1);
-
-		Button enablePreview = (Button) groupView
-				.findViewById(R.id.previewButton);
-		enablePreview.setOnClickListener(this);
 
 		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
@@ -90,7 +84,7 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 		for (int i = 0; i < moodRowArray.size(); i++) {
 			states[i] = gson.toJson(moodRowArray.get(i).hs);
 		}
-		((MainActivity) getActivity()).testMood(bulbS, states);
+		((MainActivity) getActivity()).testMood(states);
 
 	}
 
@@ -115,37 +109,7 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 		case R.id.addColor:
 			addState();
 			break;
-		case R.id.previewButton:
-			GroupSelectorDialogFragment gsdf = new GroupSelectorDialogFragment();
-			gsdf.setOnGroupSelectedListener(this);
-			gsdf.show(getFragmentManager(), "dialog");
-			break;
 		}
-	}
-
-	@Override
-	public void groupSelected(String group) {
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { group };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (cursor.moveToNext()) {
-
-			groupStates.add(cursor.getInt(0));
-		}
-		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 	}
 
 	@Override

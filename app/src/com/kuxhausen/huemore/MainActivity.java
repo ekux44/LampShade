@@ -36,6 +36,10 @@ import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
+/**
+ * @author Eric Kuxhausen
+ *
+ */
 public class MainActivity extends FragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsFragment.OnMoodSelectedListener {
@@ -143,11 +147,24 @@ public class MainActivity extends FragmentActivity implements
 		pushGroupMood.execute(this, bulbS, brightnessState);
 	}
 
-	public void testMood(Integer[] bulbs, String[] states) {
+	/*
+	 * test mood by applying to json states array to these bulbs
+	 * @param states
+	 */
+	/*public void testMood(Integer[] bulbs, String[] states) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
 		pushGroupMood.execute(this, bulbs, states);
+	}*/
+	
+	/**
+	 * test mood by applying to json states array to previously selected moods
+	 * @param states
+	 */
+	public void testMood(String[] states) {
+		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
+		pushGroupMood.execute(this, bulbS, states);
 	}
-
+	
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
