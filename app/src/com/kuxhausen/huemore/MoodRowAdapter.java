@@ -12,7 +12,7 @@ import android.widget.ImageView;
 public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 
 	public MoodRowAdapter(Activity context, ArrayList<MoodRow> objects) {
-		super(context, R.layout.edit_mood_row_dialog);
+		super(context, R.layout.edit_mood_row);
 		this.activity = context;
 		this.list = objects;
 	}
@@ -28,7 +28,7 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 		if (rowView == null) {
 			// Get a new instance of the row layout view
 			LayoutInflater inflater = activity.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.edit_mood_row_dialog, null);
+			rowView = inflater.inflate(R.layout.edit_mood_row, null);
 
 			// Hold the view objects in an object, that way the don't need to be
 			// "re-  finded"

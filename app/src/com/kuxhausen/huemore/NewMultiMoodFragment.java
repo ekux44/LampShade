@@ -45,7 +45,7 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener,
 
 		moodRowArray = new ArrayList<MoodRow>();
 
-		View groupView = inflater.inflate(R.layout.edit_multi_mood_dialog, null);
+		View groupView = inflater.inflate(R.layout.edit_multi_mood, null);
 		bulbsListView = ((ListView) groupView.findViewById(R.id.listView1));
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		bulbsListView.setAdapter(rayAdapter);
