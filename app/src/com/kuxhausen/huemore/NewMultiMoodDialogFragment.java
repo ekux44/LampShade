@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GroupSelectorDialogFragment.OnGroupSelectedListener;
+import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.state.HueState;
@@ -28,7 +29,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class NewMultiMoodDialogFragment extends DialogFragment implements
-		OnClickListener, OnKeyListener, OnGroupSelectedListener {
+		OnClickListener, OnKeyListener, OnGroupSelectedListener, OnCreateMoodListener {
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
@@ -66,38 +67,7 @@ public class NewMultiMoodDialogFragment extends DialogFragment implements
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						String groupname = nameEditText.getText().toString();
-						for (int i = 0; i < moodRowArray.size(); i++) {
-							// Defines a new Uri object that receives the result
-							// of the insertion
-							Uri mNewUri;
-
-							// Defines an object to contain the new values to
-							// insert
-							ContentValues mNewValues = new ContentValues();
-
-							/*
-							 * Sets the values of each column and inserts the
-							 * word. The arguments to the "put" method are
-							 * "column name" and "value"
-							 */
-							mNewValues.put(
-									DatabaseDefinitions.MoodColumns.MOOD,
-									groupname);
-							mNewValues.put(
-									DatabaseDefinitions.MoodColumns.STATE,
-									gson.toJson(moodRowArray.get(i).hs));
-							mNewValues.put(
-									DatabaseDefinitions.MoodColumns.PRECEDENCE,
-									i);
-
-							mNewUri = getActivity()
-									.getContentResolver()
-									.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
-											mNewValues // the values to insert
-									);
-
-						}
+						
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
@@ -194,6 +164,43 @@ public class NewMultiMoodDialogFragment extends DialogFragment implements
 			groupStates.add(cursor.getInt(0));
 		}
 		bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+	}
+
+	@Override
+	public void onCreateMood() {
+		
+		
+		String groupname = nameEditText.getText().toString();
+		for (int i = 0; i < moodRowArray.size(); i++) {
+			// Defines a new Uri object that receives the result
+			// of the insertion
+			Uri mNewUri;
+
+			// Defines an object to contain the new values to
+			// insert
+			ContentValues mNewValues = new ContentValues();
+
+			/*
+			 * Sets the values of each column and inserts the
+			 * word. The arguments to the "put" method are
+			 * "column name" and "value"
+			 */
+			mNewValues.put(
+					DatabaseDefinitions.MoodColumns.MOOD,
+					groupname);
+			mNewValues.put(
+					DatabaseDefinitions.MoodColumns.STATE,
+					gson.toJson(moodRowArray.get(i).hs));
+			mNewValues.put(
+					DatabaseDefinitions.MoodColumns.PRECEDENCE,
+					i);
+
+			mNewUri = getActivity()
+					.getContentResolver()
+					.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
+							mNewValues // the values to insert
+					);
+		}
 	}
 }
 

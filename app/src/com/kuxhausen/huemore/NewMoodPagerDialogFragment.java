@@ -30,7 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMoodPagerDialogFragment extends DialogFragment {
+public class NewMoodPagerDialogFragment extends DialogFragment implements OnClickListener{
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -41,13 +41,21 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 	 * memory and is a best practice when allowing navigation between objects in
 	 * a potentially large collection.
 	 */
-	GroupBulbPagerAdapter mGroupMoodPagerAdapter;
+	NewMoodPagerAdapter mNewMoodPagerAdapter;
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
 	 */
 	ViewPager mViewPager;
+	
+	static int currentPage;
+	
+	public interface OnCreateMoodListener {
+		/** Called by HeadlinesFragment when a list item is selected */
+		public void onCreateMood();
+
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,12 +73,19 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 		// ViewPager and its adapters use support library fragments, so we must
 		// use
 		// getSupportFragmentManager.
-		mGroupMoodPagerAdapter = new GroupBulbPagerAdapter(this);
+		mNewMoodPagerAdapter = new NewMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-		mViewPager.setAdapter(mGroupMoodPagerAdapter);
+		mViewPager.setAdapter(mNewMoodPagerAdapter);
 		this.getDialog().setTitle("New Mood");
+		
+		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
+		cancelButton.setOnClickListener(this);
+		Button okayButton = (Button) myView.findViewById(R.id.okay);
+		okayButton.setOnClickListener(this);
+		
+		
 		return myView;
 	}
 
@@ -78,9 +93,9 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
 	 */
-	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
+	public static class NewMoodPagerAdapter extends FragmentPagerAdapter {
 
-		public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment) {
+		public NewMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
 
 			// write your code here
@@ -88,6 +103,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 
 		@Override
 		public Fragment getItem(int i) {
+			currentPage = i;
 			switch (i) {
 			case 0:
 				// TODO cache somewhere
@@ -114,6 +130,19 @@ public class NewMoodPagerDialogFragment extends DialogFragment {
 				return "ADVANCED";
 			}
 			return "";
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.okay:
+			((OnCreateMoodListener)mNewMoodPagerAdapter.getItem(currentPage)).onCreateMood();
+			break;
+		case R.id.cancel:
+			this.dismiss();
+			break;
 		}
 	}
 }
