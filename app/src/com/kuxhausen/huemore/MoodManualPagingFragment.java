@@ -22,7 +22,7 @@ public class MoodManualPagingFragment extends Fragment {
 	 * a potentially large collection.
 	 */
 	MoodManualPagerAdapter mMoodManualPagerAdapter;
-	
+
 	private static final int MOOD_LOCATION = 0;
 
 	/**
@@ -38,9 +38,10 @@ public class MoodManualPagingFragment extends Fragment {
 		public void onMoodManualSelected(String jSon);
 
 	}
-	
-	public void reset(){
-		((MoodsFragment)(mMoodManualPagerAdapter.getItem(MOOD_LOCATION))).updateGroupView();
+
+	public void reset() {
+		((MoodsFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
+				.updateGroupView();
 	}
 
 	@Override
@@ -48,8 +49,7 @@ public class MoodManualPagingFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.pager, container,
-				false);
+		View myView = inflater.inflate(R.layout.pager, container, false);
 		Bundle args = getArguments();
 
 		// Create an adapter that when requested, will return a fragment

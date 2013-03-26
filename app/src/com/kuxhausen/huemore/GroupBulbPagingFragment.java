@@ -42,8 +42,7 @@ public class GroupBulbPagingFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.pager, container,
-				false);
+		View myView = inflater.inflate(R.layout.pager, container, false);
 		Bundle args = getArguments();
 
 		// Create an adapter that when requested, will return a fragment

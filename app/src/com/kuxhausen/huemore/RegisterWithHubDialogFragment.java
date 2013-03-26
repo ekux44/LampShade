@@ -43,7 +43,8 @@ import com.kuxhausen.huemore.state.HueBridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 
-public class RegisterWithHubDialogFragment extends DialogFragment implements OnRegisterListener{
+public class RegisterWithHubDialogFragment extends DialogFragment implements
+		OnRegisterListener {
 
 	public final long length_in_milliseconds = 15000;
 	public final long period_in_milliseconds = 1000;
@@ -77,7 +78,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements OnR
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
 					networkRegister = new Register();
-					networkRegister.execute(parrentActivity, me, getUserName(), getDeviceType());
+					networkRegister.execute(parrentActivity, me, getUserName(),
+							getDeviceType());
 				}
 			}
 
@@ -86,7 +88,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements OnR
 				if (isAdded()) {
 					// try one last time
 					networkRegister = new Register();
-					networkRegister.execute(parrentActivity, me, getUserName(), getDeviceType());
+					networkRegister.execute(parrentActivity, me, getUserName(),
+							getDeviceType());
 
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
@@ -130,10 +133,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements OnR
 	public String getDeviceType() {
 		return getString(R.string.app_name);
 	}
-	
+
 	@Override
-	public void onRegisterResult(boolean success, String bridge, String username){
-		
+	public void onRegisterResult(boolean success, String bridge, String username) {
 
 		if (success && isAdded()) {
 			countDownTimer.cancel();
@@ -154,7 +156,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements OnR
 			// done with registration dialog
 			dismiss();
 		}
-	
+
 	}
 
 }

@@ -112,17 +112,18 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 				.findViewById(R.id.newMoodButton);
 		newGroup.setOnClickListener(this);
 
-		LinearLayout headingRow = (LinearLayout) myView.findViewById(R.id.showOnLandScape);
-		if(headingRow.getVisibility() == View.GONE)
+		LinearLayout headingRow = (LinearLayout) myView
+				.findViewById(R.id.showOnLandScape);
+		if (headingRow.getVisibility() == View.GONE)
 			setHasOptionsMenu(true);
 		return myView;
 	}
-	
+
 	@Override
-	public void onCreateOptionsMenu (Menu menu, MenuInflater inflater){
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.action_mood, menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -275,7 +276,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);
-		
+
 		// Notify the parent activity of selected item
 		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
 

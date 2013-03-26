@@ -30,7 +30,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class NewMultiMoodDialogFragment extends Fragment implements
-		OnClickListener, OnKeyListener, OnGroupSelectedListener, OnCreateMoodListener {
+		OnClickListener, OnKeyListener, OnGroupSelectedListener,
+		OnCreateMoodListener {
 
 	ListView bulbsListView;
 	MoodRowAdapter rayAdapter;
@@ -45,17 +46,13 @@ public class NewMultiMoodDialogFragment extends Fragment implements
 
 		moodRowArray = new ArrayList<MoodRow>();
 
-
-		View groupView = inflater
-				.inflate(R.layout.edit_mood_dialog, null);
-		bulbsListView = ((ListView) groupView
-				.findViewById(R.id.listView1));
+		View groupView = inflater.inflate(R.layout.edit_mood_dialog, null);
+		bulbsListView = ((ListView) groupView.findViewById(R.id.listView1));
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		bulbsListView.setAdapter(rayAdapter);
 
-
 		nameEditText = (EditText) groupView.findViewById(R.id.editText1);
-		
+
 		Button enablePreview = (Button) groupView
 				.findViewById(R.id.previewButton);
 		enablePreview.setOnClickListener(this);
@@ -154,8 +151,7 @@ public class NewMultiMoodDialogFragment extends Fragment implements
 
 	@Override
 	public void onCreateMood() {
-		
-		
+
 		String groupname = nameEditText.getText().toString();
 		for (int i = 0; i < moodRowArray.size(); i++) {
 			// Defines a new Uri object that receives the result
@@ -167,26 +163,20 @@ public class NewMultiMoodDialogFragment extends Fragment implements
 			ContentValues mNewValues = new ContentValues();
 
 			/*
-			 * Sets the values of each column and inserts the
-			 * word. The arguments to the "put" method are
-			 * "column name" and "value"
+			 * Sets the values of each column and inserts the word. The
+			 * arguments to the "put" method are "column name" and "value"
 			 */
-			mNewValues.put(
-					DatabaseDefinitions.MoodColumns.MOOD,
-					groupname);
-			mNewValues.put(
-					DatabaseDefinitions.MoodColumns.STATE,
+			mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
+			mNewValues.put(DatabaseDefinitions.MoodColumns.STATE,
 					gson.toJson(moodRowArray.get(i).hs));
-			mNewValues.put(
-					DatabaseDefinitions.MoodColumns.PRECEDENCE,
-					i);
+			mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, i);
 
-			mNewUri = getActivity()
-					.getContentResolver()
-					.insert(DatabaseDefinitions.MoodColumns.MOODS_URI,
-							mNewValues // the values to insert
+			mNewUri = getActivity().getContentResolver().insert(
+					DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
+																			// values
+																			// to
+																			// insert
 					);
 		}
 	}
 }
-
