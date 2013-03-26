@@ -46,7 +46,6 @@ public class NewColorHueFragment extends Fragment implements
 		
 		hs = new HueState();
 		hs.on = true;
-		hs.bri = 128;
 		mInitialColor = 0;
 
 		mListener = new OnColorChangedListener() {

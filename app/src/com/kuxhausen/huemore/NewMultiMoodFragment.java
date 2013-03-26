@@ -61,7 +61,6 @@ public class NewMultiMoodFragment extends Fragment implements OnClickListener, O
 		HueState example = new HueState();
 		example.hue = 25000;
 		example.sat = 254;
-		example.bri = 128;
 		example.on = true;
 		mr.hs = example;
 		moodRowArray.add(mr);
