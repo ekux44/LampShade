@@ -17,6 +17,7 @@
     <string name="cap_bulbs">BULBS</string>
     <string name="brightness">Brightness</string>
     <string name="saturation">Saturation</string>
+    <string name="temperature">Color Temperature (K)</string>
     <string name="preview">Preview</string>
     <string name="preview_group">Enable Preview</string>
     <string name="add_color">Add Color</string>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/temperatureDescripterTextView"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="@string/temperature" />
+
+    <SeekBar
+        android:id="@+id/temperatureBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="4500"
+        android:paddingBottom="8dp"
+        android:progress="2250" />
+
+    <EditText
+        android:id="@+id/temperatureText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="3200" >
+
+        <requestFocus />
+    </EditText>
+
+</LinearLayout>
