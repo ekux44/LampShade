@@ -60,9 +60,7 @@ public class NewMultiMoodFragment extends ListFragment implements OnClickListene
 		MoodRow mr = new MoodRow();
 		mr.color = 0xff000000;
 		HueState example = new HueState();
-		example.hue = 25000;
-		example.sat = 254;
-		example.on = true;
+		example.on = false;
 		mr.hs = example;
 		moodRowArray.add(mr);
 		rayAdapter.add(mr);
