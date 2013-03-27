@@ -108,7 +108,7 @@ public class NewColorTempFragment extends Fragment implements
 	public Intent onCreateColor() {
 		Intent i = new Intent();
 		i.putExtra("HueState", gson.toJson(hs));
-		i.putExtra("Color", "" + (0xffffffff));
+		i.putExtra("Color", 0xffffffff);
 		return i;
 	}
 
