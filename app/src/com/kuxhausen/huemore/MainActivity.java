@@ -24,10 +24,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.kuxhausen.huemore.billing.IabHelper;
+import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseHelper;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
@@ -44,9 +47,10 @@ public class MainActivity extends FragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsFragment.OnMoodSelectedListener {
 
-	DatabaseHelper helper = new DatabaseHelper(this);
+	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	Integer[] bulbS;
 	String mood;
+	IabHelper mPlayHelper;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -84,7 +88,7 @@ public class MainActivity extends FragmentActivity implements
 				.getDefaultSharedPreferences(this);
 
 		if (!settings.contains(PreferencesKeys.First_Run)) {
-			helper.initialPopulate();// initialize database
+			databaseHelper.initialPopulate();// initialize database
 
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
@@ -98,8 +102,29 @@ public class MainActivity extends FragmentActivity implements
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			rwhdf.show(this.getSupportFragmentManager(), "dialog");
 		}
+		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
+		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
+		String base64EncodedPublicKey= firstChunk + secondChunk;
+				// compute your public key and store it in base64EncodedPublicKey
+		   mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
+		   mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			   public void onIabSetupFinished(IabResult result) {
+			      if (!result.isSuccess()) {
+			         // Oh noes, there was a problem.
+			         Log.d("asdf", "Problem setting up In-app Billing: " + result);
+			      }            
+			         // Hooray, IAB is fully set up!  
+			   }
+			});
 	}
 
+	@Override
+	public void onDestroy() {
+	   super.onDestroy();
+	   if (mPlayHelper != null) mPlayHelper.dispose();
+	   mPlayHelper = null;
+	}
+	
 	@Override
 	public void onGroupBulbSelected(Integer[] bulb) {
 		bulbS = bulb;
