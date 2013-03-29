@@ -31,6 +31,8 @@ import android.view.MenuItem;
 
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
+import com.kuxhausen.huemore.billing.Inventory;
+import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseHelper;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
@@ -113,10 +115,70 @@ public class MainActivity extends FragmentActivity implements
 			         // Oh noes, there was a problem.
 			         Log.d("asdf", "Problem setting up In-app Billing: " + result);
 			      }            
-			         // Hooray, IAB is fully set up!  
+			         // Hooray, IAB is fully set up!
+			      mPlayHelper.queryInventoryAsync(mGotInventoryListener);
 			   }
 			});
 	}
+	// Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+           
+            Log.d("asdf", "Query inventory finished.");
+            if (result.isFailure()) {
+              // handle error
+              return;
+            } 
+
+            Log.d("asdf", "Query inventory was successful.");
+            
+            /*
+             * Check for items we own. Notice that for each purchase, we check
+             * the developer payload to see if it's correct! See
+             * verifyDeveloperPayload().
+             */
+            /*
+            // Do we have the premium upgrade?
+            Purchase premiumPurchase = inventory.getPurchase(SKU_PREMIUM);
+            mIsPremium = (premiumPurchase != null && verifyDeveloperPayload(premiumPurchase));
+            Log.d(TAG, "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
+            
+
+            updateUi();
+            setWaitScreen(false);
+            Log.d(TAG, "Initial inventory query finished; enabling main UI.");*/
+        }
+    };
+    
+    /** Verifies the developer payload of a purchase. */
+    boolean verifyDeveloperPayload(Purchase p) {
+        String payload = p.getDeveloperPayload();
+        
+        /*
+         * TODO: verify that the developer payload of the purchase is correct. It will be
+         * the same one that you sent when initiating the purchase.
+         * 
+         * WARNING: Locally generating a random string when starting a purchase and 
+         * verifying it here might seem like a good approach, but this will fail in the 
+         * case where the user purchases an item on one device and then uses your app on 
+         * a different device, because on the other device you will not have access to the
+         * random string you originally generated.
+         *
+         * So a good developer payload has these characteristics:
+         * 
+         * 1. If two different users purchase an item, the payload is different between them,
+         *    so that one user's purchase can't be replayed to another user.
+         * 
+         * 2. The payload must be such that you can verify it even when the app wasn't the
+         *    one who initiated the purchase flow (so that items purchased by the user on 
+         *    one device work on other devices owned by the user).
+         * 
+         * Using your own server to store and verify developer payloads across app
+         * installations is recommended.
+         */
+        
+        return true;
+    }
 
 	@Override
 	public void onDestroy() {
