@@ -55,6 +55,7 @@ public class MainActivity extends FragmentActivity implements
 	String mood;
 	IabHelper mPlayHelper;
 	MainActivity m;
+	Inventory lastQuerriedInventory;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -134,7 +135,8 @@ public class MainActivity extends FragmentActivity implements
             } 
             else{
             Log.d("asdf", "Query inventory was successful.");
-            	int numUnlocked = 10;
+            lastQuerriedInventory = inventory;	
+            int numUnlocked = 10;
             	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
             		numUnlocked+=5;
             	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_2))
@@ -349,8 +351,27 @@ public class MainActivity extends FragmentActivity implements
 			rwhdf.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_unlock_more_bulbs:
-			mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_1, 10001,   
-					   mPurchaseFinishedListener, "");
+			if (lastQuerriedInventory==null)
+				mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+			else{				
+				if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_1, 10001, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_2))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_2, 10002, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_3))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_3, 10003, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_4))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_4, 10004, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_5))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_5, 10005, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_6))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_6, 10006, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_7))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_7, 10007, mPurchaseFinishedListener, "");
+				else if(!lastQuerriedInventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_8))
+					mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_8, 10008, mPurchaseFinishedListener, "");
+			}
+			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
