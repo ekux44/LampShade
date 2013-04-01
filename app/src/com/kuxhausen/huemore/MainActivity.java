@@ -34,6 +34,7 @@ import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.database.DatabaseHelper;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
@@ -53,13 +54,15 @@ public class MainActivity extends FragmentActivity implements
 	Integer[] bulbS;
 	String mood;
 	IabHelper mPlayHelper;
+	MainActivity m;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hue_more);
-
+		m = this;
+		
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -129,9 +132,37 @@ public class MainActivity extends FragmentActivity implements
               // handle error
               return;
             } 
-
+            else{
             Log.d("asdf", "Query inventory was successful.");
-            
+            	int numUnlocked = 10;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_2))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_3))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_4))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_5))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_6))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_7))
+            		numUnlocked+=5;
+            	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_8))
+            		numUnlocked+=5;
+            	// update UI accordingly
+            	
+            	// Get preferences cache
+            	SharedPreferences settings = PreferenceManager
+        				.getDefaultSharedPreferences(m);
+        		if(numUnlocked>settings.getInt(PreferencesKeys.Bulbs_Unlocked, 10)){
+        			// Update the number held in settings
+        			Editor edit = settings.edit();
+        			edit.putInt(PreferencesKeys.Bulbs_Unlocked, numUnlocked);
+        			edit.commit();
+        		}
+            }
             /*
              * Check for items we own. Notice that for each purchase, we check
              * the developer payload to see if it's correct! See
@@ -149,6 +180,21 @@ public class MainActivity extends FragmentActivity implements
             Log.d(TAG, "Initial inventory query finished; enabling main UI.");*/
         }
     };
+    
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener 
+    = new IabHelper.OnIabPurchaseFinishedListener() {
+    public void onIabPurchaseFinished(IabResult result, Purchase purchase) 
+    {
+    	mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+       
+    }
+ };
+    
+    @Override
+    public void onResume() {
+        super.onResume();  
+        //mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+    }
     
     /** Verifies the developer payload of a purchase. */
     boolean verifyDeveloperPayload(Purchase p) {
@@ -301,6 +347,10 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.action_register_with_hub:
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			rwhdf.show(getSupportFragmentManager(), "dialog");
+			return true;
+		case R.id.action_unlock_more_bulbs:
+			mPlayHelper.launchPurchaseFlow(this, PlayItems.FIVE_BULB_UNLOCK_1, 10001,   
+					   mPurchaseFinishedListener, "");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

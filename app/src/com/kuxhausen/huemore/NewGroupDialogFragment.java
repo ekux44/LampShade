@@ -143,11 +143,11 @@ public class NewGroupDialogFragment extends DialogFragment implements
 		Gson gson = new Gson();
 		bulbArray = gson.fromJson(jSon, HueBulb[].class);
 
-		// Get username and IP from preferences cache
+		// Get preferences cache
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		int numberBulbsUnlocked = settings.getInt(
-				PreferencesKeys.Bulbs_Unlocked, 4);
+				PreferencesKeys.Bulbs_Unlocked, 10);
 		if (bulbArray.length > numberBulbsUnlocked) {
 			// tell user to upgrade
 		}

@@ -108,7 +108,18 @@ public final class DatabaseDefinitions {
 		public static final String First_Run = "First_Run";
 		public static final String Bulbs_Unlocked = "Bulbs_Unlocked";
 	}
-
+	
+	public static final class PlayItems {
+		public static final String FIVE_BULB_UNLOCK_1 = "five_bulb_unlock_1";
+		public static final String FIVE_BULB_UNLOCK_2 = "five_bulb_unlock_2";
+		public static final String FIVE_BULB_UNLOCK_3 = "five_bulb_unlock_3";
+		public static final String FIVE_BULB_UNLOCK_4 = "five_bulb_unlock_4";
+		public static final String FIVE_BULB_UNLOCK_5 = "five_bulb_unlock_5";
+		public static final String FIVE_BULB_UNLOCK_6 = "five_bulb_unlock_6";
+		public static final String FIVE_BULB_UNLOCK_7 = "five_bulb_unlock_7";
+		public static final String FIVE_BULB_UNLOCK_8 = "five_bulb_unlock_8";
+	}
+	
 	public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";
 
 	// This class cannot be instantiated
