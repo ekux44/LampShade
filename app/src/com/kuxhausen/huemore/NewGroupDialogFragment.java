@@ -147,7 +147,7 @@ public class NewGroupDialogFragment extends DialogFragment implements
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		int numberBulbsUnlocked = settings.getInt(
-				PreferencesKeys.Bulbs_Unlocked, 10);
+				PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS);
 		if (bulbArray.length > numberBulbsUnlocked) {
 			// tell user to upgrade
 		}

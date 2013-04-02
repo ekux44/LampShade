@@ -99,7 +99,7 @@ public class MainActivity extends FragmentActivity implements
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.First_Run, false);
-			edit.putInt(PreferencesKeys.Bulbs_Unlocked, 10);// TODO load from
+			edit.putInt(PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
 															// google store
 			edit.commit();
 		}
@@ -136,7 +136,7 @@ public class MainActivity extends FragmentActivity implements
             else{
             Log.d("asdf", "Query inventory was successful.");
             lastQuerriedInventory = inventory;	
-            int numUnlocked = 10;
+            int numUnlocked = PreferencesKeys.ALWAYS_FREE_BULBS;
             	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
             		numUnlocked+=5;
             	if(inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_2))
@@ -158,7 +158,7 @@ public class MainActivity extends FragmentActivity implements
             	// Get preferences cache
             	SharedPreferences settings = PreferenceManager
         				.getDefaultSharedPreferences(m);
-        		if(numUnlocked>settings.getInt(PreferencesKeys.Bulbs_Unlocked, 10)){
+        		if(numUnlocked>settings.getInt(PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS)){
         			// Update the number held in settings
         			Editor edit = settings.edit();
         			edit.putInt(PreferencesKeys.Bulbs_Unlocked, numUnlocked);

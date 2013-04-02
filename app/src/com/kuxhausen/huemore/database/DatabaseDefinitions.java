@@ -107,6 +107,7 @@ public final class DatabaseDefinitions {
 		public static final String Hashed_Username = "Hashed_Username";
 		public static final String First_Run = "First_Run";
 		public static final String Bulbs_Unlocked = "Bulbs_Unlocked";
+		public static final int ALWAYS_FREE_BULBS = 10;
 	}
 	
 	public static final class PlayItems {

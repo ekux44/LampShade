@@ -210,7 +210,7 @@ public class BulbsFragment extends ListFragment implements
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		int numberBulbsUnlocked = settings.getInt(
-				PreferencesKeys.Bulbs_Unlocked, 4);
+				PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS);
 		if (bulbArray.length > numberBulbsUnlocked) {
 			// tell user to upgrade
 		}
