@@ -122,12 +122,14 @@ public class MainActivity extends FragmentActivity implements
 			         // Oh noes, there was a problem.
 			         Log.d("asdf", "Problem setting up In-app Billing: " + result);
 			      }            
-			         // Hooray, IAB is fully set up!
-			      mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-			      if(m.bulbListenerFragment != null){
+			      else{   
+			    	  // Hooray, IAB is fully set up!
+			    	  mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+			    	  if(m.bulbListenerFragment != null){
 						GetBulbList pushGroupMood = new GetBulbList();
 						pushGroupMood.execute(m, m.bulbListenerFragment);
 					}
+			      }
 			   }
 			});
 	}
@@ -217,8 +219,8 @@ public class MainActivity extends FragmentActivity implements
     
  
     @Override
-    public void onResume() {
-        super.onResume();  
+    public void onRestart() {
+        super.onRestart();  
         
         String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
 		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
@@ -230,13 +232,15 @@ public class MainActivity extends FragmentActivity implements
 			      if (!result.isSuccess()) {
 			         // Oh noes, there was a problem.
 			         Log.d("asdf", "Problem setting up In-app Billing: " + result);
-			      }            
-			         // Hooray, IAB is fully set up!
-			      mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-			      if(m.bulbListenerFragment != null){
-						GetBulbList pushGroupMood = new GetBulbList();
-						pushGroupMood.execute(m, m.bulbListenerFragment);
-					}
+			      }
+			      else{
+				         // Hooray, IAB is fully set up!
+				      mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+				      if(m.bulbListenerFragment != null){
+							GetBulbList pushGroupMood = new GetBulbList();
+							pushGroupMood.execute(m, m.bulbListenerFragment);
+						}
+			      }
 			   }
 			});
     }
