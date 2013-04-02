@@ -164,14 +164,18 @@ public class MainActivity extends FragmentActivity implements
             		numUnlocked+=5;
             	// update UI accordingly
             	
+            	
             	// Get preferences cache
             	SharedPreferences settings = PreferenceManager
         				.getDefaultSharedPreferences(m);
-        		if(numUnlocked>settings.getInt(PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS)){
+        		int previousMax = settings.getInt(PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS); 
+            	if(numUnlocked>previousMax){
         			// Update the number held in settings
         			Editor edit = settings.edit();
         			edit.putInt(PreferencesKeys.Bulbs_Unlocked, numUnlocked);
         			edit.commit();
+        			
+        			databaseHelper.addBulbs(previousMax, numUnlocked);// initialize database
         		}
             }
             /*

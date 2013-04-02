@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.HueState;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -147,7 +148,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
+			cv.clear();
+			cv.put(GroupColumns.GROUP, "ALL");
+			cv.put(GroupColumns.BULB, i);
+			cv.put(GroupColumns.PRECEDENCE, i);
+			db.insert(GroupColumns.TABLE_NAME, null, cv);
+		}
+	}
+	public void addBulbs(int first, int last)
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues cv = new ContentValues();
+		
+		for (int i = first-1; i < last; i++) {
 			cv.clear();
 			cv.put(GroupColumns.GROUP, "ALL");
 			cv.put(GroupColumns.BULB, i);
