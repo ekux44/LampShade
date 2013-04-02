@@ -39,6 +39,7 @@ import com.kuxhausen.huemore.database.DatabaseHelper;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
@@ -56,6 +57,7 @@ public class MainActivity extends FragmentActivity implements
 	IabHelper mPlayHelper;
 	MainActivity m;
 	Inventory lastQuerriedInventory;
+	public GetBulbList.OnListReturnedListener bulbListenerFragment;
 
 	/** Called when the activity is first created. */
 	@Override
