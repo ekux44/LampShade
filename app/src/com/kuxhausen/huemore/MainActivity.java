@@ -96,18 +96,18 @@ public class MainActivity extends FragmentActivity implements
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		if (!settings.contains(PreferencesKeys.First_Run)) {
+		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.First_Run, false);
-			edit.putInt(PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
+			edit.putBoolean(PreferencesKeys.FIRST_RUN, false);
+			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
 															// google store
 			edit.commit();
 		}
 		// check to see if the bridge IP address is setup yet
-		if (!settings.contains(PreferencesKeys.Bridge_IP_Address)) {
+		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			rwhdf.show(this.getSupportFragmentManager(), "dialog");
 		}
@@ -168,11 +168,11 @@ public class MainActivity extends FragmentActivity implements
             	// Get preferences cache
             	SharedPreferences settings = PreferenceManager
         				.getDefaultSharedPreferences(m);
-        		int previousMax = settings.getInt(PreferencesKeys.Bulbs_Unlocked, PreferencesKeys.ALWAYS_FREE_BULBS); 
+        		int previousMax = settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS); 
             	if(numUnlocked>previousMax){
         			// Update the number held in settings
         			Editor edit = settings.edit();
-        			edit.putInt(PreferencesKeys.Bulbs_Unlocked, numUnlocked);
+        			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
         			edit.commit();
         			
         			databaseHelper.addBulbs(previousMax, numUnlocked);// initialize database

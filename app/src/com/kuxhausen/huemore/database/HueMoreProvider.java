@@ -284,7 +284,7 @@ public class HueMoreProvider extends ContentProvider {
 				selectionArgs, // The values for the where clause
 				groupBy, // don't group the rows
 				null, // don't filter by row groups
-				null // The sort order
+				sortOrder // The sort order
 				);
 
 		// Tells the Cursor what URI to watch, so it knows when its source data

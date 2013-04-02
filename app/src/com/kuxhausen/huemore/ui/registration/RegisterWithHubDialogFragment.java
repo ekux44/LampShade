@@ -153,8 +153,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 					.getDefaultSharedPreferences(parrentActivity);
 
 			Editor edit = settings.edit();
-			edit.putString(PreferencesKeys.Bridge_IP_Address, bridge);
-			edit.putString(PreferencesKeys.Hashed_Username, username);
+			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridge);
+			edit.putString(PreferencesKeys.HASHED_USERNAME, username);
 			edit.commit();
 
 			// done with registration dialog

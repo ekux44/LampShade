@@ -45,9 +45,9 @@ public class GetBulbList extends AsyncTask<Object, Void, String> {
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(cont);
-		String bridge = settings.getString(PreferencesKeys.Bridge_IP_Address,
+		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
 				null);
-		String hash = settings.getString(PreferencesKeys.Hashed_Username, "");
+		String hash = settings.getString(PreferencesKeys.HASHED_USERNAME, "");
 
 		if (bridge == null)
 			return returnOutput;
