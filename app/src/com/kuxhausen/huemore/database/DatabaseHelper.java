@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Gson gson = new Gson();
 		HueState hs = new HueState();
 
-		cv.put(MoodColumns.MOOD, "OFF");
+		cv.put(MoodColumns.MOOD,  ((char)8)+"OFF");
 		hs.on = false;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
@@ -150,7 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		for (int i = 0; i < PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
 			cv.clear();
-			cv.put(GroupColumns.GROUP, "ALL");
+			cv.put(GroupColumns.GROUP, ((char)8)+"ALL");
 			cv.put(GroupColumns.BULB, i);
 			cv.put(GroupColumns.PRECEDENCE, i);
 			db.insert(GroupColumns.TABLE_NAME, null, cv);
@@ -164,7 +164,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		for (int i = first - 1; i < last; i++) {
 			cv.clear();
-			cv.put(GroupColumns.GROUP, "ALL");
+			cv.put(GroupColumns.GROUP,  ((char)8)+"ALL");
 			cv.put(GroupColumns.BULB, i);
 			cv.put(GroupColumns.PRECEDENCE, i);
 			db.insert(GroupColumns.TABLE_NAME, null, cv);
