@@ -16,6 +16,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -123,6 +124,10 @@ public class MainActivity extends FragmentActivity implements
 			      }            
 			         // Hooray, IAB is fully set up!
 			      mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+			      if(m.bulbListenerFragment != null){
+						GetBulbList pushGroupMood = new GetBulbList();
+						pushGroupMood.execute(m, m.bulbListenerFragment);
+					}
 			   }
 			});
 	}
@@ -192,8 +197,25 @@ public class MainActivity extends FragmentActivity implements
     	mPlayHelper.queryInventoryAsync(mGotInventoryListener);
        
     }
- };
+    };
     
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        // Pass on the activity result to the helper for handling
+        if (!mPlayHelper.handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            //Log.d(TAG, "onActivityResult handled by IABUtil.");
+        }
+    }
+    
+ 
     @Override
     public void onResume() {
         super.onResume();  
