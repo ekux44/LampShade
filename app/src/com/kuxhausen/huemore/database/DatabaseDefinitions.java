@@ -109,7 +109,7 @@ public final class DatabaseDefinitions {
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
 	}
-	
+
 	public static final class PlayItems {
 		public static final String FIVE_BULB_UNLOCK_1 = "five_bulb_unlock_1";
 		public static final String FIVE_BULB_UNLOCK_2 = "five_bulb_unlock_2";
@@ -120,7 +120,7 @@ public final class DatabaseDefinitions {
 		public static final String FIVE_BULB_UNLOCK_7 = "five_bulb_unlock_7";
 		public static final String FIVE_BULB_UNLOCK_8 = "five_bulb_unlock_8";
 	}
-	
+
 	public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";
 
 	// This class cannot be instantiated

@@ -77,8 +77,7 @@ public class BulbsFragment extends ListFragment implements
 		GetBulbList pushGroupMood = new GetBulbList();
 		pushGroupMood.execute(getActivity(), this);
 
-		
-		((MainActivity)getActivity()).bulbListenerFragment = this;
+		((MainActivity) getActivity()).bulbListenerFragment = this;
 		return myView;
 	}
 
@@ -212,7 +211,8 @@ public class BulbsFragment extends ListFragment implements
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		int numberBulbsUnlocked = settings.getInt(
-				PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS);
+				PreferencesKeys.BULBS_UNLOCKED,
+				PreferencesKeys.ALWAYS_FREE_BULBS);
 		if (bulbArray.length > numberBulbsUnlocked) {
 			// tell user to upgrade
 		}

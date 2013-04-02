@@ -156,13 +156,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.insert(GroupColumns.TABLE_NAME, null, cv);
 		}
 	}
-	public void addBulbs(int first, int last)
-	{
+
+	public void addBulbs(int first, int last) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues cv = new ContentValues();
-		
-		for (int i = first-1; i < last; i++) {
+
+		for (int i = first - 1; i < last; i++) {
 			cv.clear();
 			cv.put(GroupColumns.GROUP, "ALL");
 			cv.put(GroupColumns.BULB, i);

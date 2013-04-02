@@ -29,8 +29,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class NewMultiMoodFragment extends ListFragment implements OnClickListener,
-		OnCreateMoodListener {
+public class NewMultiMoodFragment extends ListFragment implements
+		OnClickListener, OnCreateMoodListener {
 
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
@@ -40,7 +40,6 @@ public class NewMultiMoodFragment extends ListFragment implements OnClickListene
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
 
 		moodRowArray = new ArrayList<MoodRow>();
 
@@ -125,14 +124,16 @@ public class NewMultiMoodFragment extends ListFragment implements OnClickListene
 					);
 		}
 	}
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 
 		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
 		Bundle args = new Bundle();
-		args.putString("PreviousState", gson.toJson(moodRowArray.get(position).hs));
+		args.putString("PreviousState",
+				gson.toJson(moodRowArray.get(position).hs));
 		cpdf.setArguments(args);
-		//cpdf.show(getFragmentManager(), "dialog");
+		// cpdf.show(getFragmentManager(), "dialog");
 		rayAdapter.remove(moodRowArray.get(position));
 		moodRowArray.remove(moodRowArray.get(position));
 

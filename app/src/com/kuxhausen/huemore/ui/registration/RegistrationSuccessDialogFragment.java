@@ -13,15 +13,16 @@ import android.support.v4.app.DialogFragment;
 
 public class RegistrationSuccessDialogFragment extends DialogFragment {
 	MainActivity ma;
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		ma = (MainActivity)this.getActivity();
+		ma = (MainActivity) this.getActivity();
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						if(ma.bulbListenerFragment != null){
+						if (ma.bulbListenerFragment != null) {
 							GetBulbList pushGroupMood = new GetBulbList();
 							pushGroupMood.execute(ma, ma.bulbListenerFragment);
 						}

@@ -25,7 +25,7 @@ public class GroupBulbPagingFragment extends Fragment {
 
 	private static final int GROUP_LOCATION = 1;
 	private static final int BULB_LOCATION = 0;
-	
+
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.

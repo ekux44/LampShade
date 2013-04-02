@@ -80,7 +80,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mNewColorPagerAdapter);
-		currentPage=0;
+		currentPage = 0;
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
 			@Override
