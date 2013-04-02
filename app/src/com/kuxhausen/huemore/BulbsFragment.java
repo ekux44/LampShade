@@ -217,6 +217,7 @@ public class BulbsFragment extends ListFragment implements
 			// tell user to upgrade
 		}
 
+		rayAdapter.clear();
 		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
 			// bulbNameList.add(bulb.name);
 			HueBulb bulb = bulbArray[i];
