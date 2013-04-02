@@ -23,7 +23,7 @@ public class RegistrationSuccessDialogFragment extends DialogFragment {
 					public void onClick(DialogInterface dialog, int id) {
 						if(ma.bulbListenerFragment != null){
 							GetBulbList pushGroupMood = new GetBulbList();
-							pushGroupMood.execute(getActivity(), ma.bulbListenerFragment);
+							pushGroupMood.execute(ma, ma.bulbListenerFragment);
 						}
 					}
 				});

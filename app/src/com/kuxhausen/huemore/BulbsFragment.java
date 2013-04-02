@@ -77,6 +77,8 @@ public class BulbsFragment extends ListFragment implements
 		GetBulbList pushGroupMood = new GetBulbList();
 		pushGroupMood.execute(getActivity(), this);
 
+		
+		((MainActivity)getActivity()).bulbListenerFragment = this;
 		return myView;
 	}
 
