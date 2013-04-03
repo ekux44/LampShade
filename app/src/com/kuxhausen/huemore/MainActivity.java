@@ -354,15 +354,21 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 	
+	@Override
+	public void onBackPressed(){
+		super.onBackPressed();
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+			initializeActionBar(false);
+		}
+	}
+	
 	private void moveToGroupBulb(){
 		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
 
 		if (moodFrag == null || !moodFrag.isVisible()) {
 			this.onBackPressed();
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-				initializeActionBar(false);
-			}
+			
 		}
 	}
 
