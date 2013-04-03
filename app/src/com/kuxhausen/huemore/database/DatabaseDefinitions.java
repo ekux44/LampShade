@@ -108,6 +108,8 @@ public final class DatabaseDefinitions {
 		public static final String FIRST_RUN = "First_Run";
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
+		public static final String ALL = ((char)8)+"ALL";
+		public static final String OFF = ((char)8)+"OFF";
 	}
 
 	public static final class PlayItems {

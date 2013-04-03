@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.HueState;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,
@@ -148,7 +149,7 @@ public class MoodsFragment extends ListFragment implements OnClickListener,
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals("OFF")) {
+		if (selected.getText().equals(PreferencesKeys.OFF)) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();

@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 
 public class GroupsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -142,7 +143,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals("ALL")) {
+		if (selected.getText().equals(PreferencesKeys.ALL)) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
