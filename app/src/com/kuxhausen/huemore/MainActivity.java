@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -15,17 +16,18 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -90,9 +92,12 @@ public class MainActivity extends FragmentActivity implements
 
 			// Add the fragment to the 'fragment_container' FrameLayout
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragment_container, firstFragment).commit();
+					.add(R.id.fragment_container, firstFragment, GroupBulbPagingFragment.class.getName()).commit();
 
 		}
+		
+		//(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ? this.getActionBar().setDisplayHomeAsUpEnabled(true)
+		//		: System.out.println("wtf");
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
@@ -121,8 +126,7 @@ public class MainActivity extends FragmentActivity implements
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
 					// Oh noes, there was a problem.
-					Log.d("asdf", "Problem setting up In-app Billing: "
-							+ result);
+					//Log.d("asdf", "Problem setting up In-app Billing: "+ result);
 				} else {
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
@@ -141,12 +145,12 @@ public class MainActivity extends FragmentActivity implements
 		public void onQueryInventoryFinished(IabResult result,
 				Inventory inventory) {
 
-			Log.d("asdf", "Query inventory finished.");
+			//Log.d("asdf", "Query inventory finished.");
 			if (result.isFailure()) {
 				// handle error
 				return;
 			} else {
-				Log.d("asdf", "Query inventory was successful.");
+				//Log.d("asdf", "Query inventory was successful.");
 				lastQuerriedInventory = inventory;
 				int numUnlocked = PreferencesKeys.ALWAYS_FREE_BULBS;
 				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
@@ -207,6 +211,12 @@ public class MainActivity extends FragmentActivity implements
 
 		}
 	};
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void initializeActionBar(Boolean value){
+		try {this.getActionBar().setDisplayHomeAsUpEnabled(value);
+		} catch (Error e){}
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,8 +247,7 @@ public class MainActivity extends FragmentActivity implements
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
 					// Oh noes, there was a problem.
-					Log.d("asdf", "Problem setting up In-app Billing: "
-							+ result);
+					//Log.d("asdf", "Problem setting up In-app Billing: "+ result);
 				} else {
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
@@ -328,15 +337,33 @@ public class MainActivity extends FragmentActivity implements
 			// fragment,
 			// and add the transaction to the back stack so the user can
 			// navigate back
-			transaction.replace(R.id.fragment_container, newFragment);
+			transaction.replace(R.id.fragment_container, newFragment, MoodManualPagingFragment.class.getName());
 			transaction.addToBackStack(null);
 
 			// Commit the transaction
 			transaction.commit();
 			transaction
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+			
+			
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+				initializeActionBar(true);
+				
+			}
 		}
 
+	}
+	
+	private void moveToGroupBulb(){
+		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.moods_fragment);
+
+		if (moodFrag == null || !moodFrag.isVisible()) {
+			this.onBackPressed();
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+				initializeActionBar(false);
+			}
+		}
 	}
 
 	@Override
@@ -410,7 +437,9 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-
+		case android.R.id.home:
+			moveToGroupBulb();
+			return true;
 		case R.id.action_register_with_hub:
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			rwhdf.show(getSupportFragmentManager(), "dialog");
