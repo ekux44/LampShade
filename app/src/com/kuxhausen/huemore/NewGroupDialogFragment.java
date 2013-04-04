@@ -42,7 +42,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class NewGroupDialogFragment extends DialogFragment implements
-		GetBulbList.OnListReturnedListener {
+		GetBulbList.OnBulbListReturnedListener {
 
 	ArrayList<String> bulbNameList;
 	ListView bulbsListView;

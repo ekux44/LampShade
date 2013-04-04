@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity implements
 	IabHelper mPlayHelper;
 	MainActivity m;
 	Inventory lastQuerriedInventory;
-	public GetBulbList.OnListReturnedListener bulbListenerFragment;
+	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 
 	/** Called when the activity is first created. */
 	@Override

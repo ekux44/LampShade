@@ -39,7 +39,7 @@ import com.kuxhausen.huemore.state.Bulb;
 
 public class BulbsFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor>,
-		GetBulbList.OnListReturnedListener {
+		GetBulbList.OnBulbListReturnedListener {
 	OnBulbGroupSelectedListener mCallback;
 
 	// Identifies a particular Loader being used in this component

@@ -23,11 +23,11 @@ import android.preference.PreferenceManager;
 public class GetBulbList extends AsyncTask<Object, Void, String> {
 
 	Context cont;
-	OnListReturnedListener mResultListener;
+	OnBulbListReturnedListener mResultListener;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
-	public interface OnListReturnedListener {
+	public interface OnBulbListReturnedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
 		public void onListReturned(String jsonResult);
 	}
@@ -37,9 +37,9 @@ public class GetBulbList extends AsyncTask<Object, Void, String> {
 		String returnOutput = "";
 		// Get session ID
 		cont = (Context) params[0];
-		mResultListener = (OnListReturnedListener) params[1];
+		mResultListener = (OnBulbListReturnedListener) params[1];
 
-		if (cont == null)
+		if (cont == null || mResultListener == null)
 			return returnOutput;
 
 		// Get username and IP from preferences cache
