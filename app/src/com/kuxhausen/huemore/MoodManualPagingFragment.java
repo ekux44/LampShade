@@ -1,6 +1,9 @@
 package com.kuxhausen.huemore;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.network.GetBulbsAttributes;
+import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
+import com.kuxhausen.huemore.state.BulbAttributes;
 import com.kuxhausen.huemore.state.BulbState;
 
 import android.content.Context;
@@ -16,7 +19,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class MoodManualPagingFragment extends Fragment {
+public class MoodManualPagingFragment extends Fragment implements OnAttributeListReturnedListener{
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -40,6 +43,7 @@ public class MoodManualPagingFragment extends Fragment {
 	SeekBar brightnessBar;
 	public Context parrentActivity;
 	int brightness;
+	boolean isTrackingTouch = false;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -90,12 +94,12 @@ public class MoodManualPagingFragment extends Fragment {
 				// TODO deal with off?
 				((MainActivity) parrentActivity)
 						.onBrightnessChanged(brightnessState);
-
+				isTrackingTouch = false;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+				isTrackingTouch = true;
 			}
 
 			@Override
@@ -105,7 +109,15 @@ public class MoodManualPagingFragment extends Fragment {
 			}
 		});
 
+		
 		return myView;
+	}
+	@Override
+	public void onResume(){
+		super.onResume();
+		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes();
+		getBulbsAttributes.execute(parrentActivity, ((MainActivity) parrentActivity).bulbS, this);
+		
 	}
 
 	/**
@@ -148,6 +160,29 @@ public class MoodManualPagingFragment extends Fragment {
 				return "MANUAL";
 			}
 			return "";
+		}
+	}
+
+	@Override
+	public void onListReturned(BulbAttributes[] bulbsAttributes) {
+		if(!isTrackingTouch && bulbsAttributes!= null){
+			int brightnessSum = 0;
+			int brightnessPool = 0;
+			for(BulbAttributes ba : bulbsAttributes)
+			{
+				if(ba != null){
+					if(ba.state.on == false)
+						brightnessPool++;
+					else{
+						brightnessSum += ba.state.bri;
+						brightnessPool++;
+					}
+				}
+			}
+			int brightnessAverage = brightnessSum/brightnessPool;
+			
+			brightness = brightnessAverage;
+			brightnessBar.setProgress(brightnessAverage);
 		}
 	}
 
