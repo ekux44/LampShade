@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.state;
 
-public class HueState {
+public class BulbState {
 	/**
 	 * brightness between 0-254 (NB 0 is not off!)
 	 */
@@ -27,6 +27,6 @@ public class HueState {
 	 */
 	public boolean on;
 
-	public HueState() {
+	public BulbState() {
 	}
 }

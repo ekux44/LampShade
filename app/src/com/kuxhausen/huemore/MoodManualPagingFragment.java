@@ -1,7 +1,7 @@
 package com.kuxhausen.huemore;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.state.HueState;
+import com.kuxhausen.huemore.state.BulbState;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -82,7 +82,7 @@ public class MoodManualPagingFragment extends Fragment {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				HueState hs = new HueState();
+				BulbState hs = new BulbState();
 				hs.bri = brightness;
 				hs.on = true;
 				Gson gs = new Gson();

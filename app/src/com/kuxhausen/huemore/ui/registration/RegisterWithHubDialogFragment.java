@@ -43,7 +43,7 @@ import com.kuxhausen.huemore.R.string;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
-import com.kuxhausen.huemore.state.HueBridge;
+import com.kuxhausen.huemore.state.Bridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 

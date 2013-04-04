@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.HueState;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		ContentValues cv = new ContentValues();
 		Gson gson = new Gson();
-		HueState hs = new HueState();
+		BulbState hs = new BulbState();
 
 		cv.put(MoodColumns.MOOD,  PreferencesKeys.OFF);
 		hs.on = false;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.state.HueState;
+import com.kuxhausen.huemore.state.BulbState;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

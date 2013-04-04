@@ -35,7 +35,7 @@ import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.GetBulbList;
-import com.kuxhausen.huemore.state.HueBulb;
+import com.kuxhausen.huemore.state.Bulb;
 
 public class BulbsFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor>,
@@ -49,7 +49,7 @@ public class BulbsFragment extends ListFragment implements
 
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
-	HueBulb[] bulbArray;
+	Bulb[] bulbArray;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -205,7 +205,7 @@ public class BulbsFragment extends ListFragment implements
 		if (jSon == null || jSon.equals(""))
 			return;
 		Gson gson = new Gson();
-		bulbArray = gson.fromJson(jSon, HueBulb[].class);
+		bulbArray = gson.fromJson(jSon, Bulb[].class);
 
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
@@ -220,7 +220,7 @@ public class BulbsFragment extends ListFragment implements
 		rayAdapter.clear();
 		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
 			// bulbNameList.add(bulb.name);
-			HueBulb bulb = bulbArray[i];
+			Bulb bulb = bulbArray[i];
 			bulb.number = i + 1;
 			rayAdapter.add(bulb.name);
 		}

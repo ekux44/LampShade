@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.state.HueState;
+import com.kuxhausen.huemore.state.BulbState;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -56,7 +56,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 	private void addState() {
 		MoodRow mr = new MoodRow();
 		mr.color = 0xff000000;
-		HueState example = new HueState();
+		BulbState example = new BulbState();
 		example.on = false;
 		mr.hs = example;
 		moodRowArray.add(mr);
@@ -72,7 +72,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 		rayAdapter.getItem(requestCode).color = resultCode;
 		rayAdapter.notifyDataSetChanged();
 		rayAdapter.getItem(requestCode).hs = gson.fromJson(
-				data.getStringExtra("HueState"), HueState.class);
+				data.getStringExtra("HueState"), BulbState.class);
 
 		String[] states = new String[moodRowArray.size()];
 		for (int i = 0; i < moodRowArray.size(); i++) {

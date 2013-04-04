@@ -21,7 +21,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.state.HueBridge;
+import com.kuxhausen.huemore.state.Bridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 
@@ -76,7 +76,7 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 				Gson gson = new Gson();
 				try {
 					// autoselect first hub if multiple hubs
-					bridge = gson.fromJson(jSon, HueBridge[].class)[0].internalipaddress;
+					bridge = gson.fromJson(jSon, Bridge[].class)[0].internalipaddress;
 				} catch (NullPointerException e) {
 
 				}

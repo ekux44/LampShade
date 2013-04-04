@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.GetBulbList;
-import com.kuxhausen.huemore.state.HueBulb;
+import com.kuxhausen.huemore.state.Bulb;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -48,7 +48,7 @@ public class NewGroupDialogFragment extends DialogFragment implements
 	ListView bulbsListView;
 	ArrayAdapter<String> rayAdapter;
 	EditText nameEditText;
-	HueBulb[] bulbArray;
+	Bulb[] bulbArray;
 	HashMap<String, Integer> nameToBulb;
 
 	@Override
@@ -141,7 +141,7 @@ public class NewGroupDialogFragment extends DialogFragment implements
 		if (jSon == null || jSon.equals(""))
 			return;
 		Gson gson = new Gson();
-		bulbArray = gson.fromJson(jSon, HueBulb[].class);
+		bulbArray = gson.fromJson(jSon, Bulb[].class);
 
 		// Get preferences cache
 		SharedPreferences settings = PreferenceManager
@@ -155,7 +155,7 @@ public class NewGroupDialogFragment extends DialogFragment implements
 
 		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
 			// bulbNameList.add(bulb.name);
-			HueBulb bulb = bulbArray[i];
+			Bulb bulb = bulbArray[i];
 			bulb.number = i + 1;
 			nameToBulb.put(bulb.name, bulb.number);
 			rayAdapter.add(bulb.name);

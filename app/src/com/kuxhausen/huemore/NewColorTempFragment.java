@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.state.HueState;
+import com.kuxhausen.huemore.state.BulbState;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ public class NewColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener {
 
 	private int mInitialColor;
-	private HueState hs;
+	private BulbState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
 	EditText tempEditText;
@@ -43,7 +43,7 @@ public class NewColorTempFragment extends Fragment implements
 
 		Bundle bundle = getArguments();
 
-		hs = new HueState();
+		hs = new BulbState();
 		hs.on = true;
 		mInitialColor = 0;
 

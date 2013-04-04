@@ -1,11 +1,11 @@
 package com.kuxhausen.huemore.state;
 
-public class HueBridge {
+public class Bridge {
 
 	public String id;
 	public String internalipaddress;
 	public String macaddress;
 
-	public HueBridge() {
+	public Bridge() {
 	}
 }
