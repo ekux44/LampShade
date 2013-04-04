@@ -35,7 +35,6 @@ public class NewColorHueFragment extends Fragment implements
 	private HueState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
-	EditText nameEditText;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,11 +66,7 @@ public class NewColorHueFragment extends Fragment implements
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
 
-		if (bundle != null && bundle.getBoolean("ShowEditText", false)) {
-			nameEditText = (EditText) groupDialogView
-					.findViewById(R.id.editText1);
-			nameEditText.setVisibility(View.VISIBLE);
-		}
+		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
 	}
@@ -111,9 +106,8 @@ public class NewColorHueFragment extends Fragment implements
 	}
 
 	@Override
-	public void onCreateMood() {
+	public void onCreateMood(String groupname) {
 		onCreateColor();
-		String groupname = nameEditText.getText().toString();
 		// Defines a new Uri object that receives the result
 		// of the insertion
 		Uri mNewUri;

@@ -3,21 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="mood name"
-        android:imeOptions="actionDone"
-        android:inputType="text" >
-
-        <requestFocus />
-    </EditText>
 
     <View
         android:layout_width="fill_parent"

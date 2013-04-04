@@ -53,9 +53,11 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 
 	static int currentPage;
 
+	EditText nameEditText;
+	
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onCreateMood();
+		public void onCreateMood(String groupname);
 
 	}
 
@@ -64,8 +66,10 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 			Bundle savedInstanceState) {
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.dialog_pager, container, false);
+		View myView = inflater.inflate(R.layout.mood_dialog_pager, container, false);
 		Bundle args = getArguments();
+
+		nameEditText = (EditText) myView.findViewById(R.id.editText1);
 
 		// Create an adapter that when requested, will return a fragment
 		// representing an object in
@@ -156,7 +160,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		switch (v.getId()) {
 		case R.id.okay:
 			((OnCreateMoodListener) newMoodFragments[currentPage])
-					.onCreateMood();
+					.onCreateMood(nameEditText.getText().toString());
 			this.dismiss();
 			break;
 		case R.id.cancel:

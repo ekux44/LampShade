@@ -34,7 +34,6 @@ public class NewMultiMoodFragment extends ListFragment implements
 
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
-	EditText nameEditText;
 	Gson gson = new Gson();
 
 	@Override
@@ -47,8 +46,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		setListAdapter(rayAdapter);
 
-		nameEditText = (EditText) groupView.findViewById(R.id.editText1);
-
+		
 		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 
@@ -95,9 +93,8 @@ public class NewMultiMoodFragment extends ListFragment implements
 	}
 
 	@Override
-	public void onCreateMood() {
+	public void onCreateMood(String groupname) {
 
-		String groupname = nameEditText.getText().toString();
 		for (int i = 0; i < moodRowArray.size(); i++) {
 			// Defines a new Uri object that receives the result
 			// of the insertion
