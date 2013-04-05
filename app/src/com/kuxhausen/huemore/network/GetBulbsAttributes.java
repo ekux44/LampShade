@@ -87,7 +87,9 @@ public class GetBulbsAttributes extends AsyncTask<Object, Void, BulbAttributes[]
 						builder.append(line);
 						jSon += line;
 					}
+					
 					result[i]= gson.fromJson(jSon, BulbAttributes.class);
+					//Log.d("asdf", result[i].state.hue+" "+result[i].state.sat+" "+result[i].state.xy[0]+" "+result[i].state.xy[1]);
 	
 				} else {
 					//Hue not found?
