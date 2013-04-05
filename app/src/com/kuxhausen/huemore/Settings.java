@@ -5,6 +5,7 @@ import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.database.DatabaseHelper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -23,6 +24,7 @@ public class Settings extends Activity implements OnClickListener, OnCheckedChan
 	
 	IabHelper mPlayHelper;
 	SharedPreferences settings;
+	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -96,7 +98,24 @@ public class Settings extends Activity implements OnClickListener, OnCheckedChan
 		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 			//unlockfreestuff
 			//mark in preferences
-
+			
+			if (result.isFailure()) {
+				// handle error
+				return;
+			} else {
+				int numUnlocked = 50;
+				int previousMax = settings.getInt(
+						PreferencesKeys.BULBS_UNLOCKED,
+						PreferencesKeys.ALWAYS_FREE_BULBS);
+				if (numUnlocked > previousMax) {
+					// Update the number held in settings
+					Editor edit = settings.edit();
+					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
+					edit.commit();
+					
+					databaseHelper.addBulbs(previousMax, numUnlocked);
+				}
+			}
 		}
 	};
 
