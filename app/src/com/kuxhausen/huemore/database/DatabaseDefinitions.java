@@ -106,6 +106,7 @@ public final class DatabaseDefinitions {
 		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
 		public static final String HASHED_USERNAME = "Hashed_Username";
 		public static final String FIRST_RUN = "First_Run";
+		public static final String FIRST_UPDATE = "First_Update";
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
 		public static final String ALL = ((char)8)+"ALL";

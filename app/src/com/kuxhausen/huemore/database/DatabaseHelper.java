@@ -64,22 +64,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
-		cv.put(MoodColumns.MOOD, "Pink");
-		Double[] pinkPair = { 0.3385, 0.1680 };
-		hs.xy = pinkPair;
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Green");
-		Double[] greenPair = { 0.4020, 0.5041 };
-		hs.xy = greenPair;
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
 		cv.put(MoodColumns.MOOD, "Blue");
 		Double[] bluePair = { 0.1721, 0.0500 };
 		hs.xy = bluePair;
@@ -89,6 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Romantic");
+		Double[] pinkPair = { 0.3385, 0.1680 };
 		hs.xy = pinkPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
@@ -108,6 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		Double[] greenPair = { 0.4020, 0.5041 };
 		hs.xy = greenPair;
 		hs.on = true;
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
@@ -121,19 +107,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		for (int i = 0; i < PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
-			cv.clear();
-			cv.put(GroupColumns.GROUP, PreferencesKeys.ALL);
-			cv.put(GroupColumns.BULB, i);
-			cv.put(GroupColumns.PRECEDENCE, i);
-			db.insert(GroupColumns.TABLE_NAME, null, cv);
-		}
+
 	}
 	
 	public void updatedPopulate(){
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 
+		String[] mSelectionArgs = {"OFF","Reading", "Relax","Concentrate","Energize"};
+		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD+"=? or "
+				+DatabaseDefinitions.MoodColumns.MOOD+"=? or "
+				+DatabaseDefinitions.MoodColumns.MOOD+"=? or "
+				+DatabaseDefinitions.MoodColumns.MOOD+"=? or "
+				+DatabaseDefinitions.MoodColumns.MOOD+"=?", mSelectionArgs);
+		String[] gSelectionArgs = {"ALL"};
+		db.delete(GroupColumns.TABLE_NAME, DatabaseDefinitions.GroupColumns.GROUP+"=?", gSelectionArgs);
+		
 		ContentValues cv = new ContentValues();
 		Gson gson = new Gson();
 		BulbState hs = new BulbState();
@@ -170,6 +159,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Sunset");
+		hs.sat = (200);
+		hs.hue = (8027);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Sunset");
+		hs.sat = (202);
+		hs.hue = (12327);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		for (int i = 0; i < PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
+			cv.clear();
+			cv.put(GroupColumns.GROUP, PreferencesKeys.ALL);
+			cv.put(GroupColumns.BULB, i);
+			cv.put(GroupColumns.PRECEDENCE, i);
+			db.insert(GroupColumns.TABLE_NAME, null, cv);
+		}
 		
 	}
 

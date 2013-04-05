@@ -102,6 +102,14 @@ public class MainActivity extends FragmentActivity implements
 				.getDefaultSharedPreferences(this);
 
 		
+		
+		if (!settings.contains(PreferencesKeys.FIRST_UPDATE)) {
+			databaseHelper.updatedPopulate();
+			// Mark no longer first update in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.FIRST_UPDATE, false);
+			edit.commit();
+		}
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 			databaseHelper.updatedPopulate();
