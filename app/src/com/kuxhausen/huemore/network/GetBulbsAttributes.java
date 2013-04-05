@@ -60,6 +60,8 @@ public class GetBulbsAttributes extends
 		if (bridge == null)
 			return null;
 
+		
+		
 		for (int i = 0; i < bulbs.length; i++) {
 
 			StringBuilder builder = new StringBuilder();
@@ -87,7 +89,9 @@ public class GetBulbsAttributes extends
 						builder.append(line);
 						jSon += line;
 					}
-
+					if(jSon.charAt(0)=='[')
+						return null;
+					//Log.d("asdf",i+ " "+bulbs[i] +jSon);
 					result[i] = gson.fromJson(jSon, BulbAttributes.class);
 					// Log.d("asdf",
 					// result[i].state.hue+" "+result[i].state.sat+" "+result[i].state.xy[0]+" "+result[i].state.xy[1]);

@@ -119,15 +119,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		String[] mSelectionArgs = { "OFF", "Reading", "Relax", "Concentrate",
-				"Energize" };
+				"Energize"};
 		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
 				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
-		String[] gSelectionArgs = { "ALL" };
+		String[] gSelectionArgs = { "ALL" , DatabaseDefinitions.PreferencesKeys.ALL};
 		db.delete(GroupColumns.TABLE_NAME,
-				DatabaseDefinitions.GroupColumns.GROUP + "=?", gSelectionArgs);
+				DatabaseDefinitions.GroupColumns.GROUP + "=? or "+DatabaseDefinitions.GroupColumns.GROUP + "=?", gSelectionArgs);
 
 		ContentValues cv = new ContentValues();
 		Gson gson = new Gson();
@@ -192,7 +192,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		for (int i = 0; i < PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
+		for (int i = 1; i <= PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
 			cv.clear();
 			cv.put(GroupColumns.GROUP, PreferencesKeys.ALL);
 			cv.put(GroupColumns.BULB, i);
@@ -207,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		ContentValues cv = new ContentValues();
 
-		for (int i = first - 1; i < last; i++) {
+		for (int i = first; i <= last; i++) {
 			cv.clear();
 			cv.put(GroupColumns.GROUP, PreferencesKeys.ALL);
 			cv.put(GroupColumns.BULB, i);
