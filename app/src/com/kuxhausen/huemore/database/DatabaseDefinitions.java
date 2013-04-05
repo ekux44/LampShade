@@ -108,7 +108,7 @@ public final class DatabaseDefinitions {
 		public static final String DEFAULT_TO_GROUPS = "default_to_groups";
 		public static final String DEFAULT_TO_MOODS = "default_to_moods";
 		public static final String FIRST_RUN = "First_Run";
-		public static final String FIRST_UPDATE = "First_Update";
+		public static final String SECOND_UPDATE = "Second_Update";
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
 		public static final String ALL = ((char) 8) + "ALL";
