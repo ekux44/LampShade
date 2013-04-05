@@ -122,6 +122,7 @@ public final class DatabaseDefinitions {
 		public static final String FIVE_BULB_UNLOCK_6 = "five_bulb_unlock_6";
 		public static final String FIVE_BULB_UNLOCK_7 = "five_bulb_unlock_7";
 		public static final String FIVE_BULB_UNLOCK_8 = "five_bulb_unlock_8";
+		public static final String BUY_ME_A_BULB_DONATION_1 = "buy_me_a_bulb_donation_1";
 	}
 
 	public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";

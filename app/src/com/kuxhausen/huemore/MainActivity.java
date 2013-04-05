@@ -460,6 +460,9 @@ public class MainActivity extends FragmentActivity implements
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			rwhdf.show(getSupportFragmentManager(), "dialog");
 			return true;
+		case R.id.action_settings:
+			startActivity(new Intent(this, Settings.class));
+			return true;
 		case R.id.action_unlock_more_bulbs:
 			if (lastQuerriedInventory == null)
 				mPlayHelper.queryInventoryAsync(mGotInventoryListener);
