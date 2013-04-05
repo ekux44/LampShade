@@ -1,13 +1,16 @@
 package com.kuxhausen.huemore;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
 import com.kuxhausen.huemore.state.BulbAttributes;
 import com.kuxhausen.huemore.state.BulbState;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -44,6 +47,7 @@ public class MoodManualPagingFragment extends Fragment implements OnAttributeLis
 	public Context parrentActivity;
 	int brightness;
 	boolean isTrackingTouch = false;
+	SharedPreferences settings;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -63,6 +67,8 @@ public class MoodManualPagingFragment extends Fragment implements OnAttributeLis
 			Bundle savedInstanceState) {
 
 		parrentActivity = this.getActivity();
+		settings = PreferenceManager
+				.getDefaultSharedPreferences(parrentActivity);
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.moodmanual_pager, container,
 				false);
@@ -80,7 +86,11 @@ public class MoodManualPagingFragment extends Fragment implements OnAttributeLis
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mMoodManualPagerAdapter);
-
+		if(settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)){
+			mViewPager.setCurrentItem(MOOD_LOCATION);
+		}
+		
+		
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 

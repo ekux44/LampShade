@@ -1,6 +1,10 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,6 +35,7 @@ public class GroupBulbPagingFragment extends Fragment {
 	 * object collection.
 	 */
 	ViewPager mViewPager;
+	SharedPreferences settings;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -44,6 +49,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		settings = PreferenceManager
+				.getDefaultSharedPreferences(this.getActivity());
+		
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.pager, container, false);
 		Bundle args = getArguments();
@@ -60,7 +68,9 @@ public class GroupBulbPagingFragment extends Fragment {
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mGroupMoodPagerAdapter);
-
+		if(settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)){
+			mViewPager.setCurrentItem(GROUP_LOCATION);
+		}
 		return myView;
 	}
 
