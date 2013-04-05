@@ -42,12 +42,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Gson gson = new Gson();
 		BulbState hs = new BulbState();
 
-		cv.put(MoodColumns.MOOD, PreferencesKeys.OFF);
-		hs.on = false;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Red");
 		Double[] redPair = { 0.6472, 0.3316 };
@@ -139,6 +133,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Gson gson = new Gson();
 		BulbState hs = new BulbState();
 
+		cv.put(MoodColumns.MOOD, PreferencesKeys.OFF);
+		hs.on = false;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Reading");
 		hs.sat = (144);
