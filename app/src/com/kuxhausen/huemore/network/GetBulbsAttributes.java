@@ -23,7 +23,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class GetBulbsAttributes extends AsyncTask<Object, Void, BulbAttributes[]> {
+public class GetBulbsAttributes extends
+		AsyncTask<Object, Void, BulbAttributes[]> {
 
 	Context cont;
 	Integer[] bulbs;
@@ -48,7 +49,7 @@ public class GetBulbsAttributes extends AsyncTask<Object, Void, BulbAttributes[]
 
 		BulbAttributes[] result = new BulbAttributes[bulbs.length];
 		Gson gson = new Gson();
-		
+
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(cont);
@@ -60,45 +61,45 @@ public class GetBulbsAttributes extends AsyncTask<Object, Void, BulbAttributes[]
 			return null;
 
 		for (int i = 0; i < bulbs.length; i++) {
-		
+
 			StringBuilder builder = new StringBuilder();
 			HttpClient client = new DefaultHttpClient();
-	
+
 			HttpGet httpGet = new HttpGet("http://" + bridge + "/api/" + hash
 					+ "/lights/" + bulbs[i]);
-	
-			
-			String jSon ="";
+
+			String jSon = "";
 			try {
-	
+
 				HttpResponse response = client.execute(httpGet);
 				StatusLine statusLine = response.getStatusLine();
 				int statusCode = statusLine.getStatusCode();
-	
+
 				if (statusCode == 200) {
-	
+
 					HttpEntity entity = response.getEntity();
 					InputStream content = entity.getContent();
 					BufferedReader reader = new BufferedReader(
 							new InputStreamReader(content));
 					String line;
-	
+
 					while ((line = reader.readLine()) != null) {
 						builder.append(line);
 						jSon += line;
 					}
-					
-					result[i]= gson.fromJson(jSon, BulbAttributes.class);
-					//Log.d("asdf", result[i].state.hue+" "+result[i].state.sat+" "+result[i].state.xy[0]+" "+result[i].state.xy[1]);
-	
+
+					result[i] = gson.fromJson(jSon, BulbAttributes.class);
+					// Log.d("asdf",
+					// result[i].state.hue+" "+result[i].state.sat+" "+result[i].state.xy[0]+" "+result[i].state.xy[1]);
+
 				} else {
-					//Hue not found?
+					// Hue not found?
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-	
+
 			}
 		}
 		return result;

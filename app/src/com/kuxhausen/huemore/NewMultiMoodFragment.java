@@ -46,7 +46,6 @@ public class NewMultiMoodFragment extends ListFragment implements
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		setListAdapter(rayAdapter);
 
-		
 		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 

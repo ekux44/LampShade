@@ -49,9 +49,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		settings = PreferenceManager
-				.getDefaultSharedPreferences(this.getActivity());
-		
+		settings = PreferenceManager.getDefaultSharedPreferences(this
+				.getActivity());
+
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.pager, container, false);
 		Bundle args = getArguments();
@@ -68,7 +68,7 @@ public class GroupBulbPagingFragment extends Fragment {
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mGroupMoodPagerAdapter);
-		if(settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)){
+		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)) {
 			mViewPager.setCurrentItem(GROUP_LOCATION);
 		}
 		return myView;

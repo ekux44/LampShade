@@ -22,7 +22,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class MoodManualPagingFragment extends Fragment implements OnAttributeListReturnedListener{
+public class MoodManualPagingFragment extends Fragment implements
+		OnAttributeListReturnedListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -86,11 +87,10 @@ public class MoodManualPagingFragment extends Fragment implements OnAttributeLis
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mMoodManualPagerAdapter);
-		if(settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)){
+		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)) {
 			mViewPager.setCurrentItem(MOOD_LOCATION);
 		}
-		
-		
+
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -119,15 +119,16 @@ public class MoodManualPagingFragment extends Fragment implements OnAttributeLis
 			}
 		});
 
-		
 		return myView;
 	}
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes();
-		getBulbsAttributes.execute(parrentActivity, ((MainActivity) parrentActivity).bulbS, this);
-		
+		getBulbsAttributes.execute(parrentActivity,
+				((MainActivity) parrentActivity).bulbS, this);
+
 	}
 
 	/**
@@ -175,22 +176,21 @@ public class MoodManualPagingFragment extends Fragment implements OnAttributeLis
 
 	@Override
 	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		if(!isTrackingTouch && bulbsAttributes!= null){
+		if (!isTrackingTouch && bulbsAttributes != null) {
 			int brightnessSum = 0;
 			int brightnessPool = 0;
-			for(BulbAttributes ba : bulbsAttributes)
-			{
-				if(ba != null){
-					if(ba.state.on == false)
+			for (BulbAttributes ba : bulbsAttributes) {
+				if (ba != null) {
+					if (ba.state.on == false)
 						brightnessPool++;
-					else{
+					else {
 						brightnessSum += ba.state.bri;
 						brightnessPool++;
 					}
 				}
 			}
-			int brightnessAverage = brightnessSum/brightnessPool;
-			
+			int brightnessAverage = brightnessSum / brightnessPool;
+
 			brightness = brightnessAverage;
 			brightnessBar.setProgress(brightnessAverage);
 		}

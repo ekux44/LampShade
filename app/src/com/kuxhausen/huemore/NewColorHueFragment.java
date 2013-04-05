@@ -66,7 +66,6 @@ public class NewColorHueFragment extends Fragment implements
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
 
-		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
 	}

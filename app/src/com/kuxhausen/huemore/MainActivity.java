@@ -91,18 +91,19 @@ public class MainActivity extends FragmentActivity implements
 			firstFragment.setArguments(getIntent().getExtras());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragment_container, firstFragment, GroupBulbPagingFragment.class.getName()).commit();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.add(R.id.fragment_container, firstFragment,
+							GroupBulbPagingFragment.class.getName()).commit();
 
 		}
-		
-		//(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ? this.getActionBar().setDisplayHomeAsUpEnabled(true)
-		//		: System.out.println("wtf");
+
+		// (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ?
+		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
+		// : System.out.println("wtf");
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		
-		
 		if (!settings.contains(PreferencesKeys.FIRST_UPDATE)) {
 			databaseHelper.updatedPopulate();
 			// Mark no longer first update in preferences cache
@@ -113,7 +114,7 @@ public class MainActivity extends FragmentActivity implements
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 			databaseHelper.updatedPopulate();
-			
+
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.FIRST_RUN, false);
@@ -122,7 +123,7 @@ public class MainActivity extends FragmentActivity implements
 			// google store
 			edit.commit();
 		}
-		
+
 		if (!settings.contains(PreferencesKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.FIRST_UPDATE, false);
@@ -133,7 +134,7 @@ public class MainActivity extends FragmentActivity implements
 			edit.putBoolean(PreferencesKeys.FIRST_UPDATE, true);
 			edit.commit();
 		}
-		
+
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
@@ -148,7 +149,8 @@ public class MainActivity extends FragmentActivity implements
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
 					// Oh noes, there was a problem.
-					//Log.d("asdf", "Problem setting up In-app Billing: "+ result);
+					// Log.d("asdf", "Problem setting up In-app Billing: "+
+					// result);
 				} else {
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
@@ -167,12 +169,12 @@ public class MainActivity extends FragmentActivity implements
 		public void onQueryInventoryFinished(IabResult result,
 				Inventory inventory) {
 
-			//Log.d("asdf", "Query inventory finished.");
+			// Log.d("asdf", "Query inventory finished.");
 			if (result.isFailure()) {
 				// handle error
 				return;
 			} else {
-				//Log.d("asdf", "Query inventory was successful.");
+				// Log.d("asdf", "Query inventory was successful.");
 				lastQuerriedInventory = inventory;
 				int numUnlocked = PreferencesKeys.ALWAYS_FREE_BULBS;
 				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
@@ -235,11 +237,13 @@ public class MainActivity extends FragmentActivity implements
 
 		}
 	};
-	
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void initializeActionBar(Boolean value){
-		try {this.getActionBar().setDisplayHomeAsUpEnabled(value);
-		} catch (Error e){}
+	public void initializeActionBar(Boolean value) {
+		try {
+			this.getActionBar().setDisplayHomeAsUpEnabled(value);
+		} catch (Error e) {
+		}
 	}
 
 	@Override
@@ -271,7 +275,8 @@ public class MainActivity extends FragmentActivity implements
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
 					// Oh noes, there was a problem.
-					//Log.d("asdf", "Problem setting up In-app Billing: "+ result);
+					// Log.d("asdf", "Problem setting up In-app Billing: "+
+					// result);
 				} else {
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
@@ -361,38 +366,38 @@ public class MainActivity extends FragmentActivity implements
 			// fragment,
 			// and add the transaction to the back stack so the user can
 			// navigate back
-			transaction.replace(R.id.fragment_container, newFragment, MoodManualPagingFragment.class.getName());
+			transaction.replace(R.id.fragment_container, newFragment,
+					MoodManualPagingFragment.class.getName());
 			transaction.addToBackStack(null);
 
 			// Commit the transaction
 			transaction.commit();
 			transaction
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-			
-			
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 				initializeActionBar(true);
-				
+
 			}
 		}
 
 	}
-	
+
 	@Override
-	public void onBackPressed(){
+	public void onBackPressed() {
 		super.onBackPressed();
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			initializeActionBar(false);
 		}
 	}
-	
-	private void moveToGroupBulb(){
+
+	private void moveToGroupBulb() {
 		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
 
 		if (moodFrag == null || !moodFrag.isVisible()) {
 			this.onBackPressed();
-			
+
 		}
 	}
 
