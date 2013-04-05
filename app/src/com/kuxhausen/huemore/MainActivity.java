@@ -194,7 +194,7 @@ public class MainActivity extends FragmentActivity implements
 				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_8))
 					numUnlocked += 5;
 				if (inventory.hasPurchase(PlayItems.BUY_ME_A_BULB_DONATION_1))
-					numUnlocked = Math.min(50, numUnlocked);
+					numUnlocked = Math.max(50, numUnlocked);
 				// update UI accordingly
 
 				// Get preferences cache

@@ -215,8 +215,8 @@ public class BulbsFragment extends ListFragment implements
 				PreferencesKeys.ALWAYS_FREE_BULBS);
 		if (bulbArray.length > numberBulbsUnlocked) {
 			// tell user to upgrade
+			
 		}
-
 		rayAdapter.clear();
 		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
 			// bulbNameList.add(bulb.name);
