@@ -42,7 +42,8 @@
     <RadioGroup
         android:id="@+id/secondViewSettingGroup"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp" >
 
         <RadioButton
             android:id="@+id/moodsViewRadioButton"
@@ -73,6 +74,8 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:padding="8dp"
-	    android:text="@string/donation_prompt" />
+	    android:text="@string/donation_prompt"
+	    android:textSize="16sp"
+	    android:textStyle="italic" />
 
 </LinearLayout>
