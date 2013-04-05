@@ -27,6 +27,7 @@
         <provider android:exported="false" 
             android:authorities="com.kuxhausen.provider.huemore.database"
             android:name=".database.HueMoreProvider"></provider>
+        <activity android:name="Settings"></activity>
     </application>
 
 </manifest>

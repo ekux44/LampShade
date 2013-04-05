@@ -122,6 +122,18 @@ public class MainActivity extends FragmentActivity implements
 			// google store
 			edit.commit();
 		}
+		
+		if (!settings.contains(PreferencesKeys.DEFAULT_TO_GROUPS)) {
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.FIRST_UPDATE, false);
+			edit.commit();
+		}
+		if (!settings.contains(PreferencesKeys.DEFAULT_TO_MOODS)) {
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.FIRST_UPDATE, true);
+			edit.commit();
+		}
+		
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();

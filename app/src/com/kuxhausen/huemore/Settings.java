@@ -4,20 +4,25 @@ import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.database.DatabaseDefinitions.PlayItems;
+import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class Settings extends Activity implements OnClickListener {
+public class Settings extends Activity implements OnClickListener, OnCheckedChangeListener {
 	
 	IabHelper mPlayHelper;
+	SharedPreferences settings;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -32,10 +37,22 @@ public class Settings extends Activity implements OnClickListener {
 		Button donateButton = (Button) findViewById(R.id.donateButton);
 		donateButton.setOnClickListener(this);
 		
-		SharedPreferences settings = PreferenceManager
+		settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		
+		RadioGroup firstViewRadioGroup = (RadioGroup) findViewById(R.id.firstViewSettingsGroup);
+		firstViewRadioGroup.setOnCheckedChangeListener(this);
+		RadioGroup secondViewRadioGroup = (RadioGroup) findViewById(R.id.secondViewSettingGroup);
+		secondViewRadioGroup.setOnCheckedChangeListener(this);
 		
+		if(settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false))
+			firstViewRadioGroup.check(R.id.groupsViewRadioButton);
+		else
+			firstViewRadioGroup.check(R.id.bulbsViewRadioButton);
+		if(settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true))
+			secondViewRadioGroup.check(R.id.moodsViewRadioButton);
+		else
+			secondViewRadioGroup.check(R.id.manualViewRadioButton);	
 		
 		
 		
@@ -82,4 +99,29 @@ public class Settings extends Activity implements OnClickListener {
 
 		}
 	};
+
+	@Override
+	public void onCheckedChanged(RadioGroup group, int checkedId) {
+		Editor edit = settings.edit();
+		switch(checkedId){
+		case R.id.groupsViewRadioButton:
+			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, true);
+			edit.commit();
+			break;
+		case R.id.bulbsViewRadioButton:
+			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false);
+			edit.commit();
+			break;
+		case R.id.moodsViewRadioButton:
+			edit.putBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true);
+			edit.commit();
+			break;
+		case R.id.manualViewRadioButton:
+			edit.putBoolean(PreferencesKeys.DEFAULT_TO_MOODS, false);
+			edit.commit();
+			break;
+		
+		}
+		
+	}
 }
