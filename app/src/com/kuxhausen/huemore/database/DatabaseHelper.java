@@ -48,33 +48,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
-		cv.put(MoodColumns.MOOD, "Energize");
-		hs.ct = (1000000 / 6000);
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Concentrate");
-		hs.ct = (1000000 / 3600);
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.put(MoodColumns.MOOD, "Reading");
-		hs.ct = (1000000 / 2700);
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Relax");
-		hs.ct = (1000000 / 2500);
-		hs.on = true;
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
 		cv.put(MoodColumns.MOOD, "Red");
 		Double[] redPair = { 0.6472, 0.3316 };
 		hs.xy = redPair;
@@ -155,6 +128,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			cv.put(GroupColumns.PRECEDENCE, i);
 			db.insert(GroupColumns.TABLE_NAME, null, cv);
 		}
+	}
+	
+	public void updatedPopulate(){
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues cv = new ContentValues();
+		Gson gson = new Gson();
+		BulbState hs = new BulbState();
+
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Reading");
+		hs.sat = (144);
+		hs.hue = (15331);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Energize");
+		hs.sat = (232);
+		hs.hue = (34495);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Relax");
+		hs.sat = (211);
+		hs.hue = (13122);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Concentrate");
+		hs.sat = (49);
+		hs.hue = (33863);
+		hs.on = true;
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		
 	}
 
 	public void addBulbs(int first, int last) {

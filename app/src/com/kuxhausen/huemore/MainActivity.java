@@ -101,9 +101,11 @@ public class MainActivity extends FragmentActivity implements
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
+		
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
-
+			databaseHelper.updatedPopulate();
+			
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.FIRST_RUN, false);
