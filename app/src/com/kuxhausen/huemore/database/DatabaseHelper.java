@@ -44,6 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		cv.put(MoodColumns.MOOD, PreferencesKeys.OFF);
 		hs.on = false;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -52,6 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Double[] redPair = { 0.6472, 0.3316 };
 		hs.xy = redPair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -60,6 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Double[] orangePair = { 0.5663, 0.3978 };
 		hs.xy = orangePair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -68,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Double[] bluePair = { 0.1721, 0.0500 };
 		hs.xy = bluePair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -76,10 +80,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Double[] pinkPair = { 0.3385, 0.1680 };
 		hs.xy = pinkPair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = redPair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -87,23 +93,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.MOOD, "Rainbow");
 		hs.xy = orangePair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = pinkPair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		Double[] greenPair = { 0.4020, 0.5041 };
 		hs.xy = greenPair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = bluePair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		hs.xy = redPair;
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -133,6 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.sat = (144);
 		hs.hue = (15331);
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -141,6 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.sat = (232);
 		hs.hue = (34495);
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -149,6 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.sat = (211);
 		hs.hue = (13122);
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -157,6 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.sat = (49);
 		hs.hue = (33863);
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
@@ -165,6 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.sat = (200);
 		hs.hue = (8027);
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		cv.clear();
@@ -172,6 +188,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.sat = (202);
 		hs.hue = (12327);
 		hs.on = true;
+		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 

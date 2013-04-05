@@ -32,5 +32,6 @@
     <string name="promp_second_view_setting">Default second screen</string>
     <string name="donation_prompt">Donating will unlock all paid features and help me work on HueMore. Thanks! -Eric</string>
     <string name="settings">Settings</string>
+    <string name="toggleColorLoop">Loop Colors :</string>
 
 </resources>

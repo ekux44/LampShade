@@ -45,6 +45,7 @@ public class NewColorTempFragment extends Fragment implements
 
 		hs = new BulbState();
 		hs.on = true;
+		hs.effect = "none";
 		mInitialColor = 0;
 
 		View groupDialogView = inflater.inflate(R.layout.edit_temp_color, null);

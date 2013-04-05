@@ -18,12 +18,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.ToggleButton;
 
 public class NewColorHueFragment extends Fragment implements
-		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener {
+		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener, OnCheckedChangeListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -35,6 +38,7 @@ public class NewColorHueFragment extends Fragment implements
 	private BulbState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
+	ToggleButton colorLoop;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +49,7 @@ public class NewColorHueFragment extends Fragment implements
 
 		hs = new BulbState();
 		hs.on = true;
+		hs.effect = "none";
 		mInitialColor = 0;
 
 		mListener = new OnColorChangedListener() {
@@ -62,6 +67,9 @@ public class NewColorHueFragment extends Fragment implements
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.saturationBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
+		
+		colorLoop = (ToggleButton)groupDialogView.findViewById(R.id.colorLoopToggleButton);
+		colorLoop.setOnCheckedChangeListener(this);
 
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
@@ -129,5 +137,14 @@ public class NewColorHueFragment extends Fragment implements
 																		// to
 																		// insert
 				);
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		
+		if(isChecked)
+			hs.effect = "colorloop";
+		else
+			hs.effect = "none";
 	}
 }
