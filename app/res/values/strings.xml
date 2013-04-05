@@ -25,5 +25,11 @@
     <string name="link_prompt">Press the link button on your hub</string>
     <string name="color_prompt">Pick a Color</string>
     <string name="group_preview_selection_prompt">Pick a group to preview with</string>
+    <string name="buy_me_a_bulb">Buy the developer a bulb</string>
+    <string name="cap_moods">MOODS</string>
+    <string name="cap_manual">MANUAL</string>
+    <string name="promp_first_view_setting">Default home screen</string>
+    <string name="promp_second_view_setting">Default second screen</string>
+    <string name="donation_prompt">Donating will unlock all paid features and help me work on HueMore. Thanks!</string>
 
 </resources>
