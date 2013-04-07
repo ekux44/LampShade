@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -66,6 +67,8 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("asdf", "onCreate");
+		
 		setContentView(R.layout.hue_more);
 		m = this;
 
@@ -78,8 +81,8 @@ public class MainActivity extends FragmentActivity implements
 			// then we don't need to do anything and should return or else
 			// we could end up with overlapping fragments.
 			if (savedInstanceState != null) {
-				return;
-			}
+				// return;
+			}else{
 
 			// Create an instance of ExampleFragment
 			GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
@@ -95,6 +98,7 @@ public class MainActivity extends FragmentActivity implements
 					.beginTransaction()
 					.add(R.id.fragment_container, firstFragment,
 							GroupBulbPagingFragment.class.getName()).commit();
+			}
 
 		}
 
@@ -145,6 +149,7 @@ public class MainActivity extends FragmentActivity implements
 		String base64EncodedPublicKey = firstChunk + secondChunk;
 		// compute your public key and store it in base64EncodedPublicKey
 		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
+		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper !=null));
 		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
@@ -298,9 +303,11 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Log.d("asdf", "onDestroy");
 		if (mPlayHelper != null)
 			mPlayHelper.dispose();
 		mPlayHelper = null;
+		Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper ==null));
 	}
 
 	@Override
