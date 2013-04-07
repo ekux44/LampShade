@@ -9,8 +9,10 @@ import com.kuxhausen.huemore.database.DatabaseHelper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -38,8 +40,8 @@ public class Settings extends DialogFragment implements OnClickListener,
 		this.getDialog().setTitle("Settings");
 		
 
-		Button donateButton = (Button) myView.findViewById(R.id.donateButton);
-		donateButton.setOnClickListener(this);
+		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
+		rateButton.setOnClickListener(this);
 
 		settings = PreferenceManager.getDefaultSharedPreferences(ma);
 
@@ -63,39 +65,12 @@ public class Settings extends DialogFragment implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.donateButton:
-			ma.mPlayHelper.launchPurchaseFlow(ma,
-					PlayItems.BUY_ME_A_BULB_DONATION_1, 10010,
-					mPurchaseFinishedListener, "");
+		case R.id.rateButton:
+			ma.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.kuxhausen.huemore")));
 			break;
 		}
 
 	}
-
-	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-			// unlockfreestuff
-			// mark in preferences
-
-			if (result.isFailure()) {
-				// handle error
-				return;
-			} else {
-				int numUnlocked = 50;
-				int previousMax = settings.getInt(
-						PreferencesKeys.BULBS_UNLOCKED,
-						PreferencesKeys.ALWAYS_FREE_BULBS);
-				if (numUnlocked > previousMax) {
-					// Update the number held in settings
-					Editor edit = settings.edit();
-					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
-					edit.commit();
-
-					ma.databaseHelper.addBulbs(previousMax, numUnlocked);
-				}
-			}
-		}
-	};
 
 	@Override
 	public void onCheckedChanged(RadioGroup group, int checkedId) {

@@ -64,18 +64,9 @@
         android:background="#33B5E5" />
 
 	<Button
-	    android:id="@+id/donateButton"
+	    android:id="@+id/rateButton"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:text="@string/buy_me_a_bulb" />
-
-	<TextView
-	    android:id="@+id/textView3"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:padding="8dp"
-	    android:text="@string/donation_prompt"
-	    android:textSize="16sp"
-	    android:textStyle="italic" />
+	    android:text="@string/rate_on_google_play" />
 
 </LinearLayout>

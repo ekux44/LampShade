@@ -6,10 +6,10 @@
         android:showAsAction="never"
         android:title="@string/action_register_with_hub"/>
     <item
-        android:id="@+id/action_unlock_more_bulbs"
+        android:id="@+id/action_unlocks"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_unlock_more_bulbs"/>
+        android:title="@string/action_unlocks"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

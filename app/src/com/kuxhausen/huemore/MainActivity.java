@@ -236,13 +236,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 	};
 
-	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-			mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-
-		}
-	};
-
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void initializeActionBar(Boolean value) {
 		try {
@@ -455,51 +448,9 @@ public class MainActivity extends FragmentActivity implements
 			Settings settings = new Settings();
 			settings.show(getSupportFragmentManager(), "dialog");
 			return true;
-		case R.id.action_unlock_more_bulbs:
-			if (lastQuerriedInventory == null)
-				mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-			else {
-				if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_1, 10001,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_2))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_2, 10002,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_3))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_3, 10003,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_4))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_4, 10004,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_5))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_5, 10005,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_6))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_6, 10006,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_7))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_7, 10007,
-							mPurchaseFinishedListener, "");
-				else if (!lastQuerriedInventory
-						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_8))
-					mPlayHelper.launchPurchaseFlow(this,
-							PlayItems.FIVE_BULB_UNLOCK_8, 10008,
-							mPurchaseFinishedListener, "");
-			}
+		case R.id.action_unlocks:
+			Unlocks unlocks = new Unlocks();
+			unlocks.show(getSupportFragmentManager(), "dialog");
 
 			return true;
 		default:
