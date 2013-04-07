@@ -176,7 +176,7 @@ public class MoodManualPagingFragment extends Fragment implements
 
 	@Override
 	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		if (!isTrackingTouch && bulbsAttributes != null) {
+		if (!isTrackingTouch && bulbsAttributes != null && bulbsAttributes.length>0) {
 			int brightnessSum = 0;
 			int brightnessPool = 0;
 			for (BulbAttributes ba : bulbsAttributes) {
