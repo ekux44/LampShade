@@ -14,38 +14,38 @@ import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class Settings extends Activity implements OnClickListener,
+public class Settings extends DialogFragment implements OnClickListener,
 		OnCheckedChangeListener {
 
-	IabHelper mPlayHelper;
 	SharedPreferences settings;
-	DatabaseHelper databaseHelper = new DatabaseHelper(this);
+	MainActivity ma;
 
-	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.settings);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		View myView = inflater.inflate(R.layout.settings, container, false);
+		ma = (MainActivity) this.getActivity();
+		this.getDialog().setTitle("Settings");
+		
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			initializeActionBar(false);// don't turn on until action bar click
-										// handling added
-		}
-
-		Button donateButton = (Button) findViewById(R.id.donateButton);
+		Button donateButton = (Button) myView.findViewById(R.id.donateButton);
 		donateButton.setOnClickListener(this);
 
-		settings = PreferenceManager.getDefaultSharedPreferences(this);
+		settings = PreferenceManager.getDefaultSharedPreferences(ma);
 
-		RadioGroup firstViewRadioGroup = (RadioGroup) findViewById(R.id.firstViewSettingsGroup);
+		RadioGroup firstViewRadioGroup = (RadioGroup) myView.findViewById(R.id.firstViewSettingsGroup);
 		firstViewRadioGroup.setOnCheckedChangeListener(this);
-		RadioGroup secondViewRadioGroup = (RadioGroup) findViewById(R.id.secondViewSettingGroup);
+		RadioGroup secondViewRadioGroup = (RadioGroup) myView.findViewById(R.id.secondViewSettingGroup);
 		secondViewRadioGroup.setOnCheckedChangeListener(this);
 
 		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false))
@@ -57,38 +57,14 @@ public class Settings extends Activity implements OnClickListener,
 		else
 			secondViewRadioGroup.check(R.id.manualViewRadioButton);
 
-		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
-		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
-		String base64EncodedPublicKey = firstChunk + secondChunk;
-		// compute your public key and store it in base64EncodedPublicKey
-		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			public void onIabSetupFinished(IabResult result) {
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					// Log.d("asdf", "Problem setting up In-app Billing: "+
-					// result);
-				} else {
-					// Hooray, IAB is fully set up!
-
-				}
-			}
-		});
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void initializeActionBar(Boolean value) {
-		try {
-			this.getActionBar().setDisplayHomeAsUpEnabled(value);
-		} catch (Error e) {
-		}
+		return myView;
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.donateButton:
-			mPlayHelper.launchPurchaseFlow(this,
+			ma.mPlayHelper.launchPurchaseFlow(ma,
 					PlayItems.BUY_ME_A_BULB_DONATION_1, 10010,
 					mPurchaseFinishedListener, "");
 			break;
@@ -115,7 +91,7 @@ public class Settings extends Activity implements OnClickListener,
 					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
 					edit.commit();
 
-					databaseHelper.addBulbs(previousMax, numUnlocked);
+					ma.databaseHelper.addBulbs(previousMax, numUnlocked);
 				}
 			}
 		}

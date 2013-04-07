@@ -262,33 +262,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	@Override
-	public void onRestart() {
-		super.onRestart();
-
-		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
-		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
-		String base64EncodedPublicKey = firstChunk + secondChunk;
-
-		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			public void onIabSetupFinished(IabResult result) {
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					// Log.d("asdf", "Problem setting up In-app Billing: "+
-					// result);
-				} else {
-					// Hooray, IAB is fully set up!
-					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-					if (m.bulbListenerFragment != null) {
-						GetBulbList pushGroupMood = new GetBulbList();
-						pushGroupMood.execute(m, m.bulbListenerFragment);
-					}
-				}
-			}
-		});
-	}
-
 	/** Verifies the developer payload of a purchase. */
 	boolean verifyDeveloperPayload(Purchase p) {
 		String payload = p.getDeveloperPayload();
@@ -320,14 +293,6 @@ public class MainActivity extends FragmentActivity implements
 		 */
 
 		return true;
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		if (mPlayHelper != null)
-			mPlayHelper.dispose();
-		mPlayHelper = null;
 	}
 
 	@Override
@@ -480,7 +445,8 @@ public class MainActivity extends FragmentActivity implements
 			rwhdf.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_settings:
-			startActivity(new Intent(this, Settings.class));
+			Settings settings = new Settings();
+			settings.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_unlock_more_bulbs:
 			if (lastQuerriedInventory == null)
