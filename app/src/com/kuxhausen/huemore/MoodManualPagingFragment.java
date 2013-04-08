@@ -189,6 +189,8 @@ public class MoodManualPagingFragment extends Fragment implements
 					}
 				}
 			}
+			if(brightnessPool==0)
+				return;
 			int brightnessAverage = brightnessSum / brightnessPool;
 
 			brightness = brightnessAverage;
