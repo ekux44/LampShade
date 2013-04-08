@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -48,77 +50,70 @@ import com.kuxhausen.huemore.state.Bridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 
-public class RegisterWithHubDialogFragment extends DialogFragment implements
+public class ManualRegisterWithHubDialogFragment extends DialogFragment implements
 		OnRegisterListener {
 
-	public final long length_in_milliseconds = 15000;
-	public final long period_in_milliseconds = 1000;
-	public ProgressBar progressBar;
-	public CountDownTimer countDownTimer;
 	public Register networkRegister;
 	public Activity parrentActivity;
 	public OnRegisterListener me;
-	String ip=null;
+	public EditText IPV4part1;
+	public EditText IPV4part2;
+	public EditText IPV4part3;
+	public EditText IPV4part4;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
 		me = this;
-		if(savedInstanceState!=null){
-			ip = savedInstanceState.getString("IP");
-		}
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View registerWithHubView = inflater.inflate(R.layout.register_with_hub,
+		View registerWithHubView = inflater.inflate(R.layout.manually_register_with_hub,
 				null);
+		
+		
+		IPV4part1 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText1);
+		IPV4part2 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText2);
+		IPV4part3 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText3);
+		IPV4part4 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText4);
+		
+		
+		
 		builder.setView(registerWithHubView);
-		progressBar = (ProgressBar) registerWithHubView
-				.findViewById(R.id.timerProgressBar);
+		builder.setPositiveButton(R.string.accept,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						String ip = IPV4part1.getText().toString()+"."+
+								IPV4part2.getText().toString()+"."+
+								IPV4part3.getText().toString()+"."+
+								IPV4part4.getText().toString();
+						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
+						Bundle args = new Bundle();
+						args.putString("IP", ip);
+						rwhdf.setArguments(args);
+						rwhdf.show(getFragmentManager(), "dialog");
 
-		countDownTimer = new CountDownTimer(length_in_milliseconds,
-				period_in_milliseconds) {
-			private boolean warned = false;
-
+						dismiss();
+					}
+				});
+		builder.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
 			@Override
-			public void onTick(long millisUntilFinished) {
-				if (isAdded()) {
-					progressBar
-							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					networkRegister = new Register(parrentActivity, ip);
-					networkRegister.execute(parrentActivity, me, getUserName(),
-							getDeviceType());
-				}
+			public void onClick(DialogInterface dialog, int id) {
+				RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
+				rfdf.show(getFragmentManager(), "dialog");
+
+				dismiss();
 			}
-
-			@Override
-			public void onFinish() {
-				if (isAdded()) {
-					// try one last time
-					networkRegister = new Register(parrentActivity, ip);
-					networkRegister.execute(parrentActivity, me, getUserName(),
-							getDeviceType());
-
-					// launch the failed registration dialog
-					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-					rfdf.show(getFragmentManager(), "dialog");
-
-					dismiss();
-				}
-			}
-		};
-		countDownTimer.start();
+		});
+		
+		
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		countDownTimer.cancel();
-		onDestroyView();
-	}
 
 	public String getUserName() {
 
@@ -147,7 +142,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	public void onRegisterResult(boolean success, String bridge, String username) {
 
 		if (success && isAdded()) {
-			countDownTimer.cancel();
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();

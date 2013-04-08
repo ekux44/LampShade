@@ -25,6 +25,7 @@ import com.kuxhausen.huemore.state.Bridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.provider.Settings;
@@ -44,6 +45,11 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 		/** Called by HeadlinesFragment when a list item is selected */
 		public void onRegisterResult(boolean success, String bridge,
 				String username);
+	}
+
+	public Register(Activity parrentActivity, String ip) {
+		cont = parrentActivity;
+		bridge = ip;
 	}
 
 	public String getBridge() {
@@ -104,9 +110,11 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 		username = (String) params[2];
 		deviceType = (String) params[3];
 
+		if(bridge==null || bridge.equals(""))
+			getBridge();
 		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpPost httppost = new HttpPost("http://" + getBridge() + "/api/");
+		HttpPost httppost = new HttpPost("http://" + bridge + "/api/");
 
 		try {
 			RegistrationRequest request = new RegistrationRequest();
