@@ -6,12 +6,14 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1" >
 
         <!--
 	    This title strip will display the currently visible page title, as well as the page
-	    titles for adjacent pages.
+	    titles for adjacent pages.
+
+
         -->
 
         <android.support.v4.view.PagerTitleStrip
@@ -26,14 +28,12 @@
         android:background="#33B5E5" />
 
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/cancel"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,7 +41,6 @@
 
         <Button
             android:id="@+id/okay"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

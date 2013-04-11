@@ -1,72 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android" 
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        android:fillViewport="true">
-<LinearLayout 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
-    
-    <TextView
-        android:id="@+id/saturationDescripterTextView"
-        style="@style/AppTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="8dp"
-        android:text="@string/saturation" />
-
-    <SeekBar
-        android:id="@+id/saturationBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="255"
-        android:paddingBottom="8dp"
-        android:progress="127" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
-
-    <com.kuxhausen.huemore.ColorPickerView
-        android:id="@+id/colorWheel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp"
-        android:layout_weight="1"
-        android:minHeight="320dp"
-        android:minWidth="320dp" />
+    android:fillViewport="true" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:layout_gravity="center_horizontal">
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="#33B5E5" />
 
         <TextView
-            android:id="@+id/colorLoopTextView"
+            android:id="@+id/saturationDescripterTextView"
+            style="@style/AppTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/toggleColorLoop"
-            android:padding="8dp" />
-        <ToggleButton
-            android:id="@+id/colorLoopToggleButton"
+            android:layout_gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="@string/saturation" />
+
+        <SeekBar
+            android:id="@+id/saturationBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="255"
+            android:paddingBottom="8dp"
+            android:progress="127" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="#33B5E5" />
+
+        <com.kuxhausen.huemore.ColorPickerView
+            android:id="@+id/colorWheel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:minHeight="320dp"
+            android:minWidth="320dp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             />
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
 
-        
+            <TextView
+                android:id="@+id/colorLoopTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/toggleColorLoop" />
 
+            <ToggleButton
+                android:id="@+id/colorLoopToggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
+</ScrollView>
