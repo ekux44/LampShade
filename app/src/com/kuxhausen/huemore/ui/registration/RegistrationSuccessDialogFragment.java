@@ -1,15 +1,14 @@
 package com.kuxhausen.huemore.ui.registration;
 
-import com.kuxhausen.huemore.MainActivity;
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.string;
-import com.kuxhausen.huemore.network.GetBulbList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.network.GetBulbList;
 
 public class RegistrationSuccessDialogFragment extends DialogFragment {
 	MainActivity ma;
@@ -23,8 +22,9 @@ public class RegistrationSuccessDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						if (ma.bulbListenerFragment != null) {
-							GetBulbList pushGroupMood = new GetBulbList();
-							pushGroupMood.execute(ma, ma.bulbListenerFragment);
+							GetBulbList pushGroupMood = new GetBulbList(ma,
+									ma.bulbListenerFragment);
+							pushGroupMood.execute();
 						}
 					}
 				});

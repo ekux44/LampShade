@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.database;
+package com.kuxhausen.huemore.persistence;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.BulbState;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -119,15 +119,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		String[] mSelectionArgs = { "OFF", "Reading", "Relax", "Concentrate",
-				"Energize"};
+				"Energize" };
 		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
 				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
-		String[] gSelectionArgs = { "ALL" , DatabaseDefinitions.PreferencesKeys.ALL};
+		String[] gSelectionArgs = { "ALL",
+				DatabaseDefinitions.PreferencesKeys.ALL };
 		db.delete(GroupColumns.TABLE_NAME,
-				DatabaseDefinitions.GroupColumns.GROUP + "=? or "+DatabaseDefinitions.GroupColumns.GROUP + "=?", gSelectionArgs);
+				DatabaseDefinitions.GroupColumns.GROUP + "=? or "
+						+ DatabaseDefinitions.GroupColumns.GROUP + "=?",
+				gSelectionArgs);
 
 		ContentValues cv = new ContentValues();
 		Gson gson = new Gson();
@@ -138,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		
+
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Reading");
 		hs.sat = (144);

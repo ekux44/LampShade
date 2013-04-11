@@ -1,57 +1,30 @@
 package com.kuxhausen.huemore.ui.registration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
-import com.kuxhausen.huemore.R.string;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
-import com.kuxhausen.huemore.state.Bridge;
-import com.kuxhausen.huemore.state.RegistrationRequest;
-import com.kuxhausen.huemore.state.RegistrationResponse;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class ManualRegisterWithHubDialogFragment extends DialogFragment implements
-		OnRegisterListener {
+public class ManualRegisterWithHubDialogFragment extends DialogFragment
+		implements OnRegisterListener {
 
 	public Register networkRegister;
 	public Activity parrentActivity;
@@ -69,26 +42,27 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment implemen
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View registerWithHubView = inflater.inflate(R.layout.manually_register_with_hub,
-				null);
-		
-		
-		IPV4part1 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText1);
-		IPV4part2 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText2);
-		IPV4part3 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText3);
-		IPV4part4 = (EditText)registerWithHubView.findViewById(R.id.IPv4editText4);
-		
-		
-		
+		View registerWithHubView = inflater.inflate(
+				R.layout.manually_register_with_hub, null);
+
+		IPV4part1 = (EditText) registerWithHubView
+				.findViewById(R.id.IPv4editText1);
+		IPV4part2 = (EditText) registerWithHubView
+				.findViewById(R.id.IPv4editText2);
+		IPV4part3 = (EditText) registerWithHubView
+				.findViewById(R.id.IPv4editText3);
+		IPV4part4 = (EditText) registerWithHubView
+				.findViewById(R.id.IPv4editText4);
+
 		builder.setView(registerWithHubView);
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						String ip = IPV4part1.getText().toString()+"."+
-								IPV4part2.getText().toString()+"."+
-								IPV4part3.getText().toString()+"."+
-								IPV4part4.getText().toString();
+						String ip = IPV4part1.getText().toString() + "."
+								+ IPV4part2.getText().toString() + "."
+								+ IPV4part3.getText().toString() + "."
+								+ IPV4part4.getText().toString();
 						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 						Bundle args = new Bundle();
 						args.putString("IP", ip);
@@ -100,20 +74,18 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment implemen
 				});
 		builder.setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-				rfdf.show(getFragmentManager(), "dialog");
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
+						rfdf.show(getFragmentManager(), "dialog");
 
-				dismiss();
-			}
-		});
-		
-		
+						dismiss();
+					}
+				});
+
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
-
 
 	public String getUserName() {
 

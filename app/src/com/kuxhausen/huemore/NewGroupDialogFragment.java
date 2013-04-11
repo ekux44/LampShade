@@ -1,38 +1,17 @@
 package com.kuxhausen.huemore;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.network.GetBulbList;
-import com.kuxhausen.huemore.state.Bulb;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +19,11 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.Bulb;
 
 public class NewGroupDialogFragment extends DialogFragment implements
 		GetBulbList.OnBulbListReturnedListener {
@@ -72,8 +56,8 @@ public class NewGroupDialogFragment extends DialogFragment implements
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
-		GetBulbList pushGroupMood = new GetBulbList();
-		pushGroupMood.execute(getActivity(), this);
+		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this);
+		pushGroupMood.execute();
 
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -137,11 +121,10 @@ public class NewGroupDialogFragment extends DialogFragment implements
 	}
 
 	@Override
-	public void onListReturned(String jSon) {
-		if (jSon == null || jSon.equals(""))
+	public void onListReturned(Bulb[] result) {
+		if (result == null)
 			return;
-		Gson gson = new Gson();
-		bulbArray = gson.fromJson(jSon, Bulb[].class);
+		bulbArray = result;
 
 		// Get preferences cache
 		SharedPreferences settings = PreferenceManager

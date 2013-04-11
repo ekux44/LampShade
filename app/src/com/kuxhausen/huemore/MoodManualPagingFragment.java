@@ -1,18 +1,10 @@
 package com.kuxhausen.huemore;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.network.GetBulbsAttributes;
-import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
-import com.kuxhausen.huemore.state.BulbAttributes;
-import com.kuxhausen.huemore.state.BulbState;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -20,7 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.network.GetBulbsAttributes;
+import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.BulbAttributes;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class MoodManualPagingFragment extends Fragment implements
 		OnAttributeListReturnedListener {
@@ -125,9 +123,9 @@ public class MoodManualPagingFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes();
-		getBulbsAttributes.execute(parrentActivity,
-				((MainActivity) parrentActivity).bulbS, this);
+		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
+				parrentActivity, ((MainActivity) parrentActivity).bulbS, this);
+		getBulbsAttributes.execute();
 
 	}
 
@@ -176,7 +174,8 @@ public class MoodManualPagingFragment extends Fragment implements
 
 	@Override
 	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		if (!isTrackingTouch && bulbsAttributes != null && bulbsAttributes.length>0) {
+		if (!isTrackingTouch && bulbsAttributes != null
+				&& bulbsAttributes.length > 0) {
 			int brightnessSum = 0;
 			int brightnessPool = 0;
 			for (BulbAttributes ba : bulbsAttributes) {
@@ -189,7 +188,7 @@ public class MoodManualPagingFragment extends Fragment implements
 					}
 				}
 			}
-			if(brightnessPool==0)
+			if (brightnessPool == 0)
 				return;
 			int brightnessAverage = brightnessSum / brightnessPool;
 

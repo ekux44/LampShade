@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,15 +24,11 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class MoodsFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {

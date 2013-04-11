@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.NewColorHueFragment.OnColorChangedListener;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +11,8 @@ import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.kuxhausen.huemore.NewColorHueFragment.OnColorChangedListener;
 
 public class ColorPickerView extends View {
 	private Paint mPaint;

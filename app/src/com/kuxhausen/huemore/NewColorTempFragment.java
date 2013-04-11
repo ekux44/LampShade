@@ -1,19 +1,7 @@
 package com.kuxhausen.huemore;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.state.BulbState;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,6 +13,10 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class NewColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener {

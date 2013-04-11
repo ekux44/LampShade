@@ -26,7 +26,7 @@ public class BulbState {
 	 * true if the light is on, false if off
 	 */
 	public boolean on;
-	
+
 	/**
 	 * The dynamic effect of the light, can either be "none" or "colorloop"
 	 */

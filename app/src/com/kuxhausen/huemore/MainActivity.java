@@ -1,28 +1,12 @@
 package com.kuxhausen.huemore;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,14 +21,13 @@ import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.database.DatabaseHelper;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
 /**
@@ -68,7 +51,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("asdf", "onCreate");
-		
+
 		setContentView(R.layout.hue_more);
 		m = this;
 
@@ -82,22 +65,24 @@ public class MainActivity extends FragmentActivity implements
 			// we could end up with overlapping fragments.
 			if (savedInstanceState != null) {
 				// return;
-			}else{
+			} else {
 
-			// Create an instance of ExampleFragment
-			GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
-			// GroupsFragment firstFragment = new GroupsFragment();
+				// Create an instance of ExampleFragment
+				GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
+				// GroupsFragment firstFragment = new GroupsFragment();
 
-			// In case this activity was started with special instructions from
-			// an Intent,
-			// pass the Intent's extras to the fragment as arguments
-			firstFragment.setArguments(getIntent().getExtras());
+				// In case this activity was started with special instructions
+				// from
+				// an Intent,
+				// pass the Intent's extras to the fragment as arguments
+				firstFragment.setArguments(getIntent().getExtras());
 
-			// Add the fragment to the 'fragment_container' FrameLayout
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(R.id.fragment_container, firstFragment,
-							GroupBulbPagingFragment.class.getName()).commit();
+				// Add the fragment to the 'fragment_container' FrameLayout
+				getSupportFragmentManager()
+						.beginTransaction()
+						.add(R.id.fragment_container, firstFragment,
+								GroupBulbPagingFragment.class.getName())
+						.commit();
 			}
 
 		}
@@ -117,7 +102,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
-			
 
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
@@ -149,7 +133,7 @@ public class MainActivity extends FragmentActivity implements
 		String base64EncodedPublicKey = firstChunk + secondChunk;
 		// compute your public key and store it in base64EncodedPublicKey
 		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper !=null));
+		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
 		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
@@ -160,8 +144,9 @@ public class MainActivity extends FragmentActivity implements
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
 					if (m.bulbListenerFragment != null) {
-						GetBulbList pushGroupMood = new GetBulbList();
-						pushGroupMood.execute(m, m.bulbListenerFragment);
+						GetBulbList pushGroupMood = new GetBulbList(m,
+								m.bulbListenerFragment);
+						pushGroupMood.execute();
 					}
 				}
 			}
@@ -300,7 +285,7 @@ public class MainActivity extends FragmentActivity implements
 		if (mPlayHelper != null)
 			mPlayHelper.dispose();
 		mPlayHelper = null;
-		Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper ==null));
+		Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
 	}
 
 	@Override
@@ -373,8 +358,9 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void onBrightnessChanged(String brightnessState[]) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-		pushGroupMood.execute(this, bulbS, brightnessState);
+		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
+				brightnessState);
+		pushGroupMood.execute();
 	}
 
 	/*
@@ -394,8 +380,9 @@ public class MainActivity extends FragmentActivity implements
 	 * @param states
 	 */
 	public void testMood(String[] states) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-		pushGroupMood.execute(this, bulbS, states);
+		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
+				states);
+		pushGroupMood.execute();
 	}
 
 	private void pushMoodGroup() {
@@ -422,8 +409,9 @@ public class MainActivity extends FragmentActivity implements
 		}
 		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
 
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-		pushGroupMood.execute(this, bulbS, moodS);
+		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
+				moodS);
+		pushGroupMood.execute();
 	}
 
 	@Override

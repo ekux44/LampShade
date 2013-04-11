@@ -13,22 +13,20 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.BulbAttributes;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-public class GetBulbsAttributes extends
-		AsyncTask<Object, Void, BulbAttributes[]> {
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.BulbAttributes;
 
-	Context cont;
-	Integer[] bulbs;
-	OnAttributeListReturnedListener mResultListener;
+public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> {
+
+	private Context cont;
+	private Integer[] bulbs;
+	private OnAttributeListReturnedListener mResultListener;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -37,12 +35,15 @@ public class GetBulbsAttributes extends
 		public void onListReturned(BulbAttributes[] bulbsAttributes);
 	}
 
+	public GetBulbsAttributes(Context context, Integer[] bulbS,
+			OnAttributeListReturnedListener resultListener) {
+		cont = context;
+		bulbs = bulbS;
+		mResultListener = resultListener;
+	}
+
 	@Override
-	protected BulbAttributes[] doInBackground(Object... params) {
-		// Get session ID
-		cont = (Context) params[0];
-		bulbs = (Integer[]) params[1];
-		mResultListener = (OnAttributeListReturnedListener) params[2];
+	protected BulbAttributes[] doInBackground(Void... voids) {
 
 		if (cont == null || bulbs == null || mResultListener == null)
 			return null;
@@ -60,8 +61,6 @@ public class GetBulbsAttributes extends
 		if (bridge == null)
 			return null;
 
-		
-		
 		for (int i = 0; i < bulbs.length; i++) {
 
 			StringBuilder builder = new StringBuilder();
@@ -89,9 +88,9 @@ public class GetBulbsAttributes extends
 						builder.append(line);
 						jSon += line;
 					}
-					if(jSon.charAt(0)=='[')
+					if (jSon.charAt(0) == '[')
 						return null;
-					//Log.d("asdf",i+ " "+bulbs[i] +jSon);
+					// Log.d("asdf",i+ " "+bulbs[i] +jSon);
 					result[i] = gson.fromJson(jSon, BulbAttributes.class);
 					// Log.d("asdf",
 					// result[i].state.hue+" "+result[i].state.sat+" "+result[i].state.xy[0]+" "+result[i].state.xy[1]);

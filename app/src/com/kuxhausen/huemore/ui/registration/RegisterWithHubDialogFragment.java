@@ -1,31 +1,14 @@
 package com.kuxhausen.huemore.ui.registration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -34,19 +17,11 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
-import com.kuxhausen.huemore.R.string;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
-import com.kuxhausen.huemore.state.Bridge;
-import com.kuxhausen.huemore.state.RegistrationRequest;
-import com.kuxhausen.huemore.state.RegistrationResponse;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class RegisterWithHubDialogFragment extends DialogFragment implements
 		OnRegisterListener {
@@ -58,13 +33,13 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	public Register networkRegister;
 	public Activity parrentActivity;
 	public OnRegisterListener me;
-	String ip=null;
+	String ip = null;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
 		me = this;
-		if(savedInstanceState!=null){
+		if (savedInstanceState != null) {
 			ip = savedInstanceState.getString("IP");
 		}
 		// Use the Builder class for convenient dialog construction
@@ -86,9 +61,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 				if (isAdded()) {
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					networkRegister = new Register(parrentActivity, ip);
-					networkRegister.execute(parrentActivity, me, getUserName(),
-							getDeviceType());
+					networkRegister = new Register(parrentActivity, ip, me,
+							getUserName(), getDeviceType());
+					networkRegister.execute();
 				}
 			}
 
@@ -96,9 +71,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 			public void onFinish() {
 				if (isAdded()) {
 					// try one last time
-					networkRegister = new Register(parrentActivity, ip);
-					networkRegister.execute(parrentActivity, me, getUserName(),
-							getDeviceType());
+					networkRegister = new Register(parrentActivity, ip, me,
+							getUserName(), getDeviceType());
+					networkRegister.execute();
 
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();

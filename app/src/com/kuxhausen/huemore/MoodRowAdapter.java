@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;

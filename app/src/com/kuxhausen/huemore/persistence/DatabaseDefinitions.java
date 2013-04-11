@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.database;
+package com.kuxhausen.huemore.persistence;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

@@ -1,13 +1,12 @@
 package com.kuxhausen.huemore.ui.registration;
 
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.string;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import com.kuxhausen.huemore.R;
 
 public class RegistrationFailDialogFragment extends DialogFragment {
 	@Override
@@ -36,7 +35,7 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						
+
 						dismiss();
 					}
 				});

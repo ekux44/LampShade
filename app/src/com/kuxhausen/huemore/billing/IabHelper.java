@@ -15,6 +15,11 @@
 
 package com.kuxhausen.huemore.billing;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -22,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,11 +35,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.vending.billing.IInAppBillingService;
-
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides convenience methods for in-app billing. You can create one instance

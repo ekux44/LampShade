@@ -13,31 +13,36 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class GetBulbList extends AsyncTask<Object, Void, String> {
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.Bulb;
 
-	Context cont;
-	OnBulbListReturnedListener mResultListener;
+public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
+
+	private Context cont;
+	private OnBulbListReturnedListener mResultListener;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
 	public interface OnBulbListReturnedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onListReturned(String jsonResult);
+		public void onListReturned(Bulb[] result);
+	}
+
+	public GetBulbList(Context context,
+			OnBulbListReturnedListener resultListener) {
+		cont = context;
+		mResultListener = resultListener;
 	}
 
 	@Override
-	protected String doInBackground(Object... params) {
-		String returnOutput = "";
-		// Get session ID
-		cont = (Context) params[0];
-		mResultListener = (OnBulbListReturnedListener) params[1];
+	protected Bulb[] doInBackground(Object... params) {
+		Bulb[] returnOutput = null;
 
 		if (cont == null || mResultListener == null)
 			return returnOutput;
@@ -71,16 +76,17 @@ public class GetBulbList extends AsyncTask<Object, Void, String> {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(content));
 				String line;
+				String jSon = "";
 
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
-					returnOutput += line;
+					jSon += line;
 				}
-				returnOutput = "["
-						+ returnOutput.substring(1, returnOutput.length() - 1)
-						+ "]";
-				returnOutput = returnOutput.replaceAll("\"[:digit:]+\":", "");
+				jSon = "[" + jSon.substring(1, jSon.length() - 1) + "]";
+				jSon = jSon.replaceAll("\"[:digit:]+\":", "");
 
+				Gson gson = new Gson();
+				returnOutput = gson.fromJson(jSon, Bulb[].class);
 			} else {
 
 			}
@@ -95,8 +101,8 @@ public class GetBulbList extends AsyncTask<Object, Void, String> {
 	}
 
 	@Override
-	protected void onPostExecute(String jsonResult) {
-		mResultListener.onListReturned(jsonResult);
+	protected void onPostExecute(Bulb[] result) {
+		mResultListener.onListReturned(result);
 
 	}
 }

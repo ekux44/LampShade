@@ -13,28 +13,23 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.Bulb;
 
 public class BulbsFragment extends ListFragment implements
@@ -74,8 +69,8 @@ public class BulbsFragment extends ListFragment implements
 				android.R.layout.simple_list_item_1, bulbNameList);
 		setListAdapter(rayAdapter);
 
-		GetBulbList pushGroupMood = new GetBulbList();
-		pushGroupMood.execute(getActivity(), this);
+		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this);
+		pushGroupMood.execute();
 
 		((MainActivity) getActivity()).bulbListenerFragment = this;
 		return myView;
@@ -201,11 +196,10 @@ public class BulbsFragment extends ListFragment implements
 	}
 
 	@Override
-	public void onListReturned(String jSon) {
-		if (jSon == null || jSon.equals(""))
+	public void onListReturned(Bulb[] result) {
+		if (result == null)
 			return;
-		Gson gson = new Gson();
-		bulbArray = gson.fromJson(jSon, Bulb[].class);
+		bulbArray = result;
 
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
@@ -215,7 +209,7 @@ public class BulbsFragment extends ListFragment implements
 				PreferencesKeys.ALWAYS_FREE_BULBS);
 		if (bulbArray.length > numberBulbsUnlocked) {
 			// tell user to upgrade
-			
+
 		}
 		rayAdapter.clear();
 		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {

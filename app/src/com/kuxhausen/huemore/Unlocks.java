@@ -1,17 +1,7 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.billing.IabHelper;
-import com.kuxhausen.huemore.billing.IabResult;
-import com.kuxhausen.huemore.billing.Purchase;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.database.DatabaseHelper;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -20,9 +10,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+
+import com.kuxhausen.huemore.billing.IabHelper;
+import com.kuxhausen.huemore.billing.IabResult;
+import com.kuxhausen.huemore.billing.Purchase;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class Unlocks extends DialogFragment implements OnClickListener {
 
@@ -38,31 +32,33 @@ public class Unlocks extends DialogFragment implements OnClickListener {
 		View myView = inflater.inflate(R.layout.unlocks, container, false);
 		ma = (MainActivity) this.getActivity();
 		this.getDialog().setTitle("Unlocks");
-		
+
 		settings = PreferenceManager.getDefaultSharedPreferences(ma);
-		
+
 		Button donateButton = (Button) myView.findViewById(R.id.donateButton);
 		donateButton.setOnClickListener(this);
-		
+
 		fiveMoreButton = (Button) myView.findViewById(R.id.fiveMoreButton);
 		fiveMoreButton.setOnClickListener(this);
-		
-		bulbsUnlockedText= (TextView)myView.findViewById(R.id.bulbsUnlockedText);
+
+		bulbsUnlockedText = (TextView) myView
+				.findViewById(R.id.bulbsUnlockedText);
 		updateBulbCount();
-		
+
 		return myView;
 	}
 
-	public void updateBulbCount(){
-		int max = settings.getInt(
-				PreferencesKeys.BULBS_UNLOCKED,
+	public void updateBulbCount() {
+		int max = settings.getInt(PreferencesKeys.BULBS_UNLOCKED,
 				PreferencesKeys.ALWAYS_FREE_BULBS);
-		bulbsUnlockedText.setText(ma.getResources().getString(R.string.bulbs_unlocked_desciptor)+max+"/50");
-		if(max>=50)
+		bulbsUnlockedText.setText(ma.getResources().getString(
+				R.string.bulbs_unlocked_desciptor)
+				+ max + "/50");
+		if (max >= 50)
 			fiveMoreButton.setVisibility(View.INVISIBLE);
-		
+
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -118,16 +114,16 @@ public class Unlocks extends DialogFragment implements OnClickListener {
 			}
 			break;
 		}
-		
+
 	}
 
 	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
 		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 			ma.mPlayHelper.queryInventoryAsync(ma.mGotInventoryListener);
-			updateBulbCount();//TODO may not work
+			updateBulbCount();// TODO may not work
 		}
 	};
-	
+
 	IabHelper.OnIabPurchaseFinishedListener mDonatePurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
 		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 			// unlockfreestuff

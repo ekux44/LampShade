@@ -1,8 +1,5 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.GroupColumns;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -15,6 +12,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.widget.ListView;
+
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 
 public class GroupSelectorDialogFragment extends DialogFragment implements
 		OnClickListener {

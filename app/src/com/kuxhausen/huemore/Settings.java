@@ -1,19 +1,9 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.billing.IabHelper;
-import com.kuxhausen.huemore.billing.IabResult;
-import com.kuxhausen.huemore.billing.Purchase;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.database.DatabaseHelper;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -24,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class Settings extends DialogFragment implements OnClickListener,
 		OnCheckedChangeListener {
@@ -38,16 +30,17 @@ public class Settings extends DialogFragment implements OnClickListener,
 		View myView = inflater.inflate(R.layout.settings, container, false);
 		ma = (MainActivity) this.getActivity();
 		this.getDialog().setTitle("Settings");
-		
 
 		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
 		rateButton.setOnClickListener(this);
 
 		settings = PreferenceManager.getDefaultSharedPreferences(ma);
 
-		RadioGroup firstViewRadioGroup = (RadioGroup) myView.findViewById(R.id.firstViewSettingsGroup);
+		RadioGroup firstViewRadioGroup = (RadioGroup) myView
+				.findViewById(R.id.firstViewSettingsGroup);
 		firstViewRadioGroup.setOnCheckedChangeListener(this);
-		RadioGroup secondViewRadioGroup = (RadioGroup) myView.findViewById(R.id.secondViewSettingGroup);
+		RadioGroup secondViewRadioGroup = (RadioGroup) myView
+				.findViewById(R.id.secondViewSettingGroup);
 		secondViewRadioGroup.setOnCheckedChangeListener(this);
 
 		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false))
@@ -66,7 +59,8 @@ public class Settings extends DialogFragment implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.rateButton:
-			ma.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.kuxhausen.huemore")));
+			ma.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+					.parse("market://details?id=" + "com.kuxhausen.huemore")));
 			break;
 		}
 

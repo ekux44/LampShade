@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,25 +16,20 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
+
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.state.Bridge;
 import com.kuxhausen.huemore.state.RegistrationRequest;
 import com.kuxhausen.huemore.state.RegistrationResponse;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.provider.Settings;
+public class Register extends AsyncTask<Void, Integer, Boolean> {
 
-public class Register extends AsyncTask<Object, Integer, Boolean> {
-
-	Context cont;
-	String bridge = "";
-	String username;
-	String deviceType;
-
-	OnRegisterListener mResultListener;
+	private Context cont;
+	private String bridge, username, deviceType;
+	private OnRegisterListener mResultListener;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -47,9 +39,14 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 				String username);
 	}
 
-	public Register(Activity parrentActivity, String ip) {
+	public Register(Activity parrentActivity, String ip,
+			OnRegisterListener resultListener, String userName,
+			String devicetype) {
 		cont = parrentActivity;
 		bridge = ip;
+		mResultListener = resultListener;
+		username = userName;
+		deviceType = devicetype;
 	}
 
 	public String getBridge() {
@@ -102,15 +99,8 @@ public class Register extends AsyncTask<Object, Integer, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Object... params) {
-
-		// Get session ID
-		cont = (Context) params[0];
-		mResultListener = (OnRegisterListener) params[1];
-		username = (String) params[2];
-		deviceType = (String) params[3];
-
-		if(bridge==null || bridge.equals(""))
+	protected Boolean doInBackground(Void... voids) {
+		if (bridge == null || bridge.equals(""))
 			getBridge();
 		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();

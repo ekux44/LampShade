@@ -14,26 +14,27 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.kuxhausen.huemore.database.DatabaseDefinitions.PreferencesKeys;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class TransmitGroupMood extends AsyncTask<Object, Void, Integer> {
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-	Context cont;
-	Integer[] bulbs;
-	String[] moods;
+public class TransmitGroupMood extends AsyncTask<Void, Void, Integer> {
+
+	private Context cont;
+	private Integer[] bulbs;
+	private String[] moods;
+
+	public TransmitGroupMood(Context context, Integer[] bulbS, String[] moodS) {
+		cont = context;
+		bulbs = bulbS;
+		moods = moodS;
+	}
 
 	@Override
-	protected Integer doInBackground(Object... params) {
-
-		// Get session ID
-		cont = (Context) params[0];
-		bulbs = (Integer[]) params[1];
-		moods = (String[]) params[2];
+	protected Integer doInBackground(Void... voids) {
 
 		if (cont == null || bulbs == null || moods == null)
 			return -1;

@@ -1,32 +1,28 @@
 package com.kuxhausen.huemore;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
-import com.kuxhausen.huemore.database.DatabaseDefinitions;
-import com.kuxhausen.huemore.state.BulbState;
-
+import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
+import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.state.BulbState;
+
 public class NewColorHueFragment extends Fragment implements
-		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener, OnCheckedChangeListener {
+		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener,
+		OnCheckedChangeListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -67,8 +63,9 @@ public class NewColorHueFragment extends Fragment implements
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.saturationBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
-		
-		colorLoop = (ToggleButton)groupDialogView.findViewById(R.id.colorLoopToggleButton);
+
+		colorLoop = (ToggleButton) groupDialogView
+				.findViewById(R.id.colorLoopToggleButton);
 		colorLoop.setOnCheckedChangeListener(this);
 
 		// builder.setView(new ColorPickerView(getActivity(), l,
@@ -141,8 +138,8 @@ public class NewColorHueFragment extends Fragment implements
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		
-		if(isChecked)
+
+		if (isChecked)
 			hs.effect = "colorloop";
 		else
 			hs.effect = "none";
