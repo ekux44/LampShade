@@ -1,0 +1,66 @@
+
+    ,app_name",HueMore,
+    ,action_settings",Settings,
+    ,action_register_with_hub",Register With Hub,
+    ,action_unlocks",Unlocks,
+    
+    ,cap_moods",MOODS,
+    ,cap_manual",MANUAL,
+    ,cap_groups",GROUPS,
+    ,cap_bulbs",BULBS,
+    ,groups",Groups,
+    ,moods",Moods,
+    
+    ,accept",Okay,
+    ,cancel",Cancel,
+    ,register_success",Link successful,
+    ,register_fail",Cound not connect to bridge. Please make sure this device is connected to the same wifi as the hub and has internet access, then try again.,
+    ,link_prompt",Press the link button on your hub,
+    ,manual_ip_prompt",Enter the hub IP address,
+	,advanced",Advanced,
+	,auto_discover",Auto-Connect,
+	,ip_address_v4_seperator",.,
+    
+    ,contextmenu_delete",Delete,
+    ,contextmenu_edit",Edit,
+    
+    ,actionmenu_new_group",New Group,
+	,actionmenu_new_mood",New Mood,
+	,hint_mood_name",mood name,
+	,hint_group_name",group name,
+    
+    ,brightness",Brightness,
+    ,saturation",Saturation,
+    ,temperature",Color Temperature (K),
+    ,color_temp_initial_value",3200,
+    ,add_color",Add Color,
+    ,toggleColorLoop",Loop Colors :,
+    
+    
+    ,promp_first_view_setting",Default home screen,
+    ,promp_second_view_setting",Default second screen,
+    ,rate_on_google_play",Rate on Google Play, 
+    
+    ,unlock_pro_prompt",Unlock Pro Version!,
+    ,unlock_pro_descriptor",Pro version adds Alarms and Timers. More features added weekly.,
+    ,bulbs_discovered_desciptor",Bulbs Discovered: ,
+    ,bulbs_unlocked_desciptor",Bulbs Unlocked: ,
+    ,unlock_more_bulbs_prompt",Unlock more bulbs,
+    ,unlocks_exclusive_or_seperator",OR,
+    ,buy_me_a_bulb",Donate the cost of a bulb,
+	,donation_prompt",Donating will help me work on HueMore. Thanks! -Eric,
+    
+	,group_selection_prompt",Pick a group,
+    ,mood_selection_prompt",Pick a mood,
+    
+    ,nfc",Alarms,
+    ,cap_nfc",NFC,
+    ,nfc_tag_write_success",Saved to Tag,
+    ,nfc_tag_write_fail",Save to Tag Failed,
+    
+    ,alarms",Alarms,
+    ,cap_alarms",ALARMS,
+    ,delay_prompt",Delay,
+    ,transition_prompt",Transition,
+    
+</resources,
