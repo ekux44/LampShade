@@ -9,6 +9,7 @@
         android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="android.permission.NFC"/>
 
     <application
         android:allowBackup="true"
@@ -27,7 +28,15 @@
         <provider android:exported="false" 
             android:authorities="com.kuxhausen.provider.huemore.database"
             android:name=".persistence.HueMoreProvider"></provider>
-        <activity android:name="Settings"></activity>
+        <activity android:name=".nfc.NfcWriterActivity">
+            <intent-filter>
+			    <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+			    <category android:name="android.intent.category.DEFAULT"/>
+			   	<data android:scheme="http"
+              	android:host="www.kuxhausen.com"
+              	android:pathPrefix="/HueMore/nfc" />
+			</intent-filter>
+        </activity>
     </application>
 
 </manifest>

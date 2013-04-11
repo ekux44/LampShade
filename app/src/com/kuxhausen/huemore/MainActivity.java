@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
@@ -23,6 +25,7 @@ import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
+import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
@@ -45,6 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	MainActivity m;
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
+	private NfcAdapter nfcAdapter;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -54,7 +58,8 @@ public class MainActivity extends FragmentActivity implements
 
 		setContentView(R.layout.hue_more);
 		m = this;
-
+		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+		
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -151,6 +156,7 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		});
+		
 	}
 
 	// Listener that's called when we finish querying the items and
@@ -418,6 +424,12 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
+		if(nfcAdapter==null){
+			//hide nfc link if nfc not supported
+			MenuItem menuItem = menu.findItem(R.id.action_nfc);
+			menuItem.setEnabled(false);
+			menuItem.setVisible(false);
+		}
 		return true;
 	}
 
@@ -439,7 +451,16 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.action_unlocks:
 			Unlocks unlocks = new Unlocks();
 			unlocks.show(getSupportFragmentManager(), "dialog");
-
+		case R.id.action_nfc:
+			if(!nfcAdapter.isEnabled()){
+				//startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+				Toast t = new Toast(this);
+				t.makeText(this, "NFC not enabled. Turn on in device settings.", Toast.LENGTH_SHORT);
+				t.show();
+			}else{
+			Intent i = new Intent(this, NfcWriterActivity.class);
+			this.startActivity(i);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

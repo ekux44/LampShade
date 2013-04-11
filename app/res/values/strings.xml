@@ -54,8 +54,11 @@
 	<string name="group_selection_prompt">Pick a group</string>
     <string name="mood_selection_prompt">Pick a mood</string>
     
-    <string name="nfc">Alarms</string>
+    <string name="nfc">Nfc</string>
     <string name="cap_nfc">NFC</string>
+    <string name="nfc_tag_detected">Tag Detected:</string>
+    <string name="nfc_tag_not_detected">Tag Not Found</string>
+    <string name="nfc_tag_write_prompt">Write to Tag</string>
     <string name="nfc_tag_write_success">Saved to Tag</string>
     <string name="nfc_tag_write_fail">Save to Tag Failed</string>
     
