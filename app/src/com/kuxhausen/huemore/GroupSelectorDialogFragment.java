@@ -62,7 +62,7 @@ public class GroupSelectorDialogFragment extends DialogFragment implements
 				android.R.layout.simple_list_item_1, cursor, columns,
 				new int[] { android.R.id.text1 }, 0);
 		builder.setAdapter(dataSource, this);
-		builder.setTitle(getString(R.string.group_preview_selection_prompt));
+		builder.setTitle(getString(R.string.group_selection_prompt));
 
 		// Create the AlertDialog object and return it
 		return builder.create();

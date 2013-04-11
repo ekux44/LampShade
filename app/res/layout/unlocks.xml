@@ -42,9 +42,9 @@
 		    android:id="@+id/textView2"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="OR"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
 		    android:padding="8dp"
+		    android:text="@string/unlocks_exclusive_or_seperator"
+		    android:textAppearance="?android:attr/textAppearanceLarge"
 		    android:textColor="#33B5E5"
 		    android:textStyle="bold" />
 

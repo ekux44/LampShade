@@ -30,7 +30,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="." />
+            android:text="@string/ip_address_v4_seperator" />
 
         <EditText
             android:id="@+id/IPv4editText2"
@@ -44,7 +44,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="." />
+            android:text="@string/ip_address_v4_seperator" />
 
         <EditText
             android:id="@+id/IPv4editText3"
@@ -58,7 +58,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="." />
+            android:text="@string/ip_address_v4_seperator" />
 
         <EditText
             android:id="@+id/IPv4editText4"
