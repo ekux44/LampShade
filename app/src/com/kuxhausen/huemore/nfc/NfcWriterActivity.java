@@ -59,22 +59,22 @@ public class NfcWriterActivity extends Activity implements OnClickListener {
 				if (myTag == null) {
 					Toast.makeText(context,
 							context.getString(R.string.nfc_tag_not_detected),
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 				} else {
 					write(getMessage(), myTag);
 					Toast.makeText(context,
 							context.getString(R.string.nfc_tag_write_success),
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 				}
 			} catch (IOException e) {
 				Toast.makeText(context,
 						context.getString(R.string.nfc_tag_write_fail),
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			} catch (FormatException e) {
 				Toast.makeText(context,
 						context.getString(R.string.nfc_tag_write_fail),
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 			break;
@@ -82,7 +82,9 @@ public class NfcWriterActivity extends Activity implements OnClickListener {
 	}
 
 	private String getMessage() {
-		return "kuxhausen.com/HueMore/nfc";
+		String url = "kuxhausen.com/HueMore/nfc";
+		String jSon = "{\"hue\": 50000,\"on\": true,\"bri\": 200}";
+		return url+jSon;
 	}
 
 	private void write(String text, Tag tag) throws IOException,

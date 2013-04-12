@@ -29,6 +29,8 @@
             android:authorities="com.kuxhausen.provider.huemore.database"
             android:name=".persistence.HueMoreProvider"></provider>
         <activity android:name=".nfc.NfcWriterActivity">
+        </activity>
+        <activity android:name=".nfc.NfcReaderActivity">
             <intent-filter>
 			    <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 			    <category android:name="android.intent.category.DEFAULT"/>
