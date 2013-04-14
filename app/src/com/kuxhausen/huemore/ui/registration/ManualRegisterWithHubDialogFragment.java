@@ -111,9 +111,9 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 	}
 
 	@Override
-	public void onRegisterResult(boolean success, String bridge, String username) {
+	public void onRegisterResult(String bridgeIP, String username) {
 
-		if (success && isAdded()) {
+		if (bridgeIP!=null && isAdded()) {
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
@@ -124,7 +124,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 					.getDefaultSharedPreferences(parrentActivity);
 
 			Editor edit = settings.edit();
-			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridge);
+			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridgeIP);
 			edit.putString(PreferencesKeys.HASHED_USERNAME, username);
 			edit.commit();
 

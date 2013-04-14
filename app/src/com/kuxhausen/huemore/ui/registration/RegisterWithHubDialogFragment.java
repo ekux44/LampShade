@@ -119,9 +119,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	}
 
 	@Override
-	public void onRegisterResult(boolean success, String bridge, String username) {
+	public void onRegisterResult(String bridgeIP, String username) {
 
-		if (success && isAdded()) {
+		if (bridgeIP!=null && isAdded()) {
 			countDownTimer.cancel();
 
 			// Show the success dialog
@@ -133,7 +133,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 					.getDefaultSharedPreferences(parrentActivity);
 
 			Editor edit = settings.edit();
-			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridge);
+			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridgeIP);
 			edit.putString(PreferencesKeys.HASHED_USERNAME, username);
 			edit.commit();
 
