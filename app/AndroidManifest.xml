@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.kuxhausen.huemore.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,9 +28,9 @@
         <provider android:exported="false" 
             android:authorities="com.kuxhausen.provider.huemore.database"
             android:name=".persistence.HueMoreProvider"></provider>
-        <activity android:name=".nfc.NfcWriterActivity">
+        <activity android:name=".nfc.NfcWriterActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name=".nfc.NfcReaderActivity">
+        <activity android:name=".nfc.NfcReaderActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="portrait">
             <intent-filter>
 			    <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 			    <category android:name="android.intent.category.DEFAULT"/>
