@@ -2,9 +2,12 @@ package com.kuxhausen.huemore.nfc;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.billing.Base64;
+import com.kuxhausen.huemore.billing.Base64DecoderException;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -16,6 +19,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -82,10 +86,33 @@ public class NfcWriterActivity extends Activity implements OnClickListener {
 	}
 
 	private String getMessage() {
-		String url = "kuxhausen.com/HueMore/nfc";
+		String url = "kuxhausen.com/HueMore?";
+		Boolean[] b= {true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true, false};
+		
 		String jSon = "{\"hue\": 50000,\"on\": true,\"bri\": 200}";
-		return url+jSon;
+		String encoded = Base64.encodeWebSafe(jSon.getBytes(), false);
+		String result = "";
+		
+		try {
+			result = new String(Base64.decodeWebSafe(encoded));
+		} catch (Base64DecoderException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Log.e("asdf", result);
+		Log.e("asdf", encoded);
+		Log.e("asdf", ""+(result.equals(jSon)));
+		String data="";
+		try {
+			data = URLEncoder.encode(jSon, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return url+data;
 	}
+	//privateString
 
 	private void write(String text, Tag tag) throws IOException,
 			FormatException {
@@ -124,7 +151,7 @@ public class NfcWriterActivity extends Activity implements OnClickListener {
 			Toast.makeText(
 					this,
 					this.getString(R.string.nfc_tag_detected)
-							+ myTag.toString(), Toast.LENGTH_LONG).show();
+							+ myTag.toString(), Toast.LENGTH_SHORT).show();
 		}
 	}
 

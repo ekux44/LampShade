@@ -1,0 +1,19 @@
+4 bit version header
+50 bit bulbs included flags
+7 bit number of states
+STATE
+
+Each state contains
+9 bit properties flagging inclusion of properties in this order:
+1 bit on
+8 bit bri
+16 bit hue
+8 bit sat
+64 bit xy
+9 bit ct  
+2 bit alert
+2 bit effect //One bit more that needed, second bit reserved for future API functionality
+16 bit transitiontime 
+
+
+
