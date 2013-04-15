@@ -30,7 +30,7 @@
             android:name=".persistence.HueMoreProvider"></provider>
         <activity android:name=".nfc.NfcWriterActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name=".nfc.NfcReaderActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="portrait">
+        <activity android:name=".nfc.NfcReaderActivity" android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="portrait" android:noHistory="true">
             <intent-filter>
 			    <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
 			    <category android:name="android.intent.category.DEFAULT"/>

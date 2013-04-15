@@ -15,6 +15,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.BulbState;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -29,6 +30,7 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -110,6 +112,31 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
 		writeTagFilters = new IntentFilter[] { tagDetected };
 
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			initializeActionBar(true);
+
+		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.onBackPressed();
+			return true;
+		
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void initializeActionBar(Boolean value) {
+		try {
+			this.getActionBar().setDisplayHomeAsUpEnabled(value);
+		} catch (Error e) {
+		}
 	}
 
 	@Override

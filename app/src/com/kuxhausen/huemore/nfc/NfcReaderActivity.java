@@ -5,10 +5,12 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.state.BulbState;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,9 +20,11 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.Ndef;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -72,5 +76,29 @@ public class NfcReaderActivity extends Activity {
 	           transmitter.execute();
 	        }
 	    }
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			initializeActionBar(true);
+
+		}
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent i = new Intent(this, MainActivity.class);
+			startActivity(i);
+			return true;
+		
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void initializeActionBar(Boolean value) {
+		try {
+			this.getActionBar().setDisplayHomeAsUpEnabled(value);
+		} catch (Error e) {
+		}
 	}
 }
