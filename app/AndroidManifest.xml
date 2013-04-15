@@ -39,6 +39,7 @@
               	android:pathPrefix="/HueMore/nfc" />
 			</intent-filter>
         </activity>
+        <receiver android:name=".timing.AlarmReciever"></receiver>
     </application>
 
 </manifest>

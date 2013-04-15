@@ -40,7 +40,8 @@ public class AlarmsFragment extends ListFragment{
 		switch (item.getItemId()) {
 
 		case R.id.action_add_alarm:
-			//TODO launch new alarm activity
+			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
+			nadf.show(getFragmentManager(), "dialog");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
