@@ -527,9 +527,10 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.action_nfc:
 			if(!nfcAdapter.isEnabled()){
 				//startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
-				Toast t = new Toast(this);
-				t.makeText(this, "NFC not enabled. Turn on in device settings.", Toast.LENGTH_SHORT);
-				t.show();
+				Toast.makeText(this,
+						this.getString(R.string.nfc_disabled),
+						Toast.LENGTH_SHORT).show();
+				
 			}else{
 			Intent i = new Intent(this, NfcWriterActivity.class);
 			this.startActivity(i);

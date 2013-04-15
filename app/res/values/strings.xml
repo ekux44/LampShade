@@ -61,6 +61,7 @@
     <string name="nfc_tag_write_prompt">Write to Tag</string>
     <string name="nfc_tag_write_success">Saved to Tag</string>
     <string name="nfc_tag_write_fail">Save to Tag Failed</string>
+    <string name="nfc_disabled">NFC is not enabled. Turn it on in your device settings</string>
     
     <string name="alarms">Alarms</string>
     <string name="cap_alarms">ALARMS</string>
