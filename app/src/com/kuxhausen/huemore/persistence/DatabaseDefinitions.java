@@ -7,6 +7,50 @@ import android.provider.BaseColumns;
  * Convenience definitions for Database Hander and Preferences
  */
 public final class DatabaseDefinitions {
+	
+	public static final class AlarmColumns implements BaseColumns {
+		/**
+		 * The table name offered by this provider
+		 */
+		public static final String TABLE_NAME = "alarms";
+
+		/**
+		 * The scheme part for this provider's URI
+		 */
+		private static final String SCHEME = "content://";
+
+		public static final String PATH_ALARMS = "/alarms";
+		/**
+		 * The content:// style URL for this table
+		 */
+		public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY
+				+ PATH_ALARMS);
+
+		/**
+		 * which alarm this is part of
+		 */
+		public static final String ALARM = "Dalarm";
+
+		/**
+		 * JSon'd HueState object
+		 */
+		public static final String STATE = "Dstate";
+
+		/**
+		 * time to go off
+		 */
+		public static final String TIME = "Dtime";
+		
+		/**
+		 * other data needed to delete and alarm
+		 */
+		public static final String INTENT = "Dintent";
+		
+		// This class cannot be instantiated
+		private AlarmColumns() {
+		}
+	}
+	
 	public static final class GroupColumns implements BaseColumns {
 		/**
 		 * The table name offered by this provider
@@ -109,6 +153,7 @@ public final class DatabaseDefinitions {
 		public static final String DEFAULT_TO_MOODS = "default_to_moods";
 		public static final String FIRST_RUN = "First_Run";
 		public static final String THIRD_UPDATE = "Third_Update";
+		public static final String TWO_POINT_OH_UPDATE = "Two_Point_Oh";
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
 		public static final String ALL = ((char) 8) + "ALL";

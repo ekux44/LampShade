@@ -170,14 +170,6 @@ public class MainActivity extends FragmentActivity implements
 		// : System.out.println("wtf");
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
-		if (!settings.contains(PreferencesKeys.THIRD_UPDATE)) {
-			databaseHelper.updatedPopulate();
-			// Mark no longer first update in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.THIRD_UPDATE, false);
-			edit.commit();
-		}
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 
@@ -187,6 +179,20 @@ public class MainActivity extends FragmentActivity implements
 			edit.putInt(PreferencesKeys.BULBS_UNLOCKED,
 					PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
 			// google store
+			edit.commit();
+		}
+		if (!settings.contains(PreferencesKeys.THIRD_UPDATE)) {
+			databaseHelper.updatedPopulate();
+			// Mark no longer first update in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.THIRD_UPDATE, false);
+			edit.commit();
+		}
+		if (!settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE)) {
+			databaseHelper.updatedTwoPointOh();
+			// Mark no longer first update in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.TWO_POINT_OH_UPDATE, false);
 			edit.commit();
 		}
 

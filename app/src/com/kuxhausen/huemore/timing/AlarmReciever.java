@@ -29,11 +29,14 @@ public class AlarmReciever extends BroadcastReceiver {
          PendingIntent pendingIntent =
              PendingIntent.getBroadcast(context, 0, intent, 
              PendingIntent.FLAG_UPDATE_CURRENT);
+         
          Calendar time = Calendar.getInstance();
          time.setTimeInMillis(System.currentTimeMillis());
          time.add(Calendar.SECOND, timeoutInSeconds);
          alarmMgr.set(AlarmManager.RTC_WAKEUP, time.getTimeInMillis(),
                       pendingIntent);
+         
+         //pendingIntent.
      }
 	
 	

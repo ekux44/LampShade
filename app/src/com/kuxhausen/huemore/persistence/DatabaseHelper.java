@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
@@ -203,6 +204,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.insert(GroupColumns.TABLE_NAME, null, cv);
 		}
 
+	}
+	public void updatedTwoPointOh(){
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " ("
+				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+				+ AlarmColumns.ALARM + " TEXT," + AlarmColumns.TIME
+				+ " INTEGER," + AlarmColumns.STATE + " TEXT," + AlarmColumns.INTENT + " TEXT" + ");");
 	}
 
 	public void addBulbs(int first, int last) {
