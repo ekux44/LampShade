@@ -190,6 +190,35 @@ public class HueNfcEncoder {
 					}
 					/** Put 64 bit xy **/{
 						//TODO implement xy mode
+						if(bs.xy!=null){
+							int x = Float.floatToIntBits((float)((double)bs.xy[0]));
+							
+							int bitMask = 1;
+							for (int i = 0; i < 32; i++) {
+								if ((x & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+							
+							int y = Float.floatToIntBits((float)((double)bs.xy[1]));
+							
+							bitMask = 1;
+							for (int i = 0; i < 32; i++) {
+								if ((y & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					/**	Put 9 bit ct **/{
 						if(bs.ct!=null){
@@ -377,7 +406,28 @@ public class HueNfcEncoder {
 						}
 					}
 					/** Get 64 bit xy **/{
-						//TODO implement xy mode
+						if(propertiesFlags[4]){
+							
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 32; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							Double x = (double) Float.intBitsToFloat(value);
+							value = 0;
+							bitMask = 1;
+							for (int j = 0; j < 32; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							Double y = (double) Float.intBitsToFloat(value);
+							bs.xy = new Double[]{x,y};
+						}
 					}
 					/**	Get 9 bit ct **/{
 						if(propertiesFlags[5]){

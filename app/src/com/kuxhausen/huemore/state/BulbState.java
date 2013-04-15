@@ -69,7 +69,8 @@ public class BulbState {
 			result+= "hue:"+hue+" ";
 		if(sat!=null)
 			result+= "sat:"+sat+" ";
-		//TODO xy
+		if(xy!=null)
+			result+= "xy:"+xy[0]+" "+xy[1]+" ";
 		if(ct!=null)
 			result+= "ct:"+ct+" ";
 		if(alert!=null)
