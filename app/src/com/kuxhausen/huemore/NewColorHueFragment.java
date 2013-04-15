@@ -143,5 +143,6 @@ public class NewColorHueFragment extends Fragment implements
 			hs.effect = "colorloop";
 		else
 			hs.effect = "none";
+		preview();
 	}
 }
