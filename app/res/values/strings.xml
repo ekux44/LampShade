@@ -66,5 +66,7 @@
     <string name="cap_alarms">ALARMS</string>
     <string name="delay_prompt">Delay</string>
     <string name="transition_prompt">Transition</string>
+    <string name="mood">Mood</string>
+    <string name="group">Group</string>
     
 </resources>
