@@ -207,13 +207,64 @@ public class HueNfcEncoder {
 						}
 					}
 					/** Put 2 bit alert **/{
-						
+						if(bs.alert!=null){
+							int value = 0;
+							if(bs.alert.equals("none"))
+									value = 0;
+							else if(bs.alert.equals("select"))
+								value = 1;
+							else if(bs.alert.equals("lselect"))
+								value = 2;
+							
+							int bitMask = 1;
+							for (int i = 0; i < 2; i++) {
+								if ((value & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					/** Put 4 bit effect **/{
 						//three more bits than needed, reserved for future API functionality
+						if(bs.effect!=null){
+							int value = 0;
+							if(bs.effect.equals("none"))
+									value = 0;
+							else if(bs.effect.equals("colorloop"))
+								value = 1;
+							
+							int bitMask = 1;
+							for (int i = 0; i < 4; i++) {
+								if ((value & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					/** Put 16 bit transitiontime **/{
-						
+						if(bs.transitiontime!=null){
+							int bitMask = 1;
+							for (int i = 0; i < 16; i++) {
+								if ((bs.transitiontime & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 				}
 			}
@@ -286,61 +337,107 @@ public class HueNfcEncoder {
 						index++;
 					}
 					/** Get 8 bit bri **/{
-						int value = 0;
-						int bitMask = 1;
-						for (int j = 0; j < 8; j++) {
-							if(set.get(index))
-								value |= bitMask;
-							index++;
-							bitMask *= 2;
+						if(propertiesFlags[1]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 8; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							bs.bri = value;
 						}
-						bs.bri = value;
 					}
 					/** Get 16 bit hue **/{
-						int value = 0;
-						int bitMask = 1;
-						for (int j = 0; j < 16; j++) {
-							if(set.get(index))
-								value |= bitMask;
-							index++;
-							bitMask *= 2;
+						if(propertiesFlags[2]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 16; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							bs.hue = value;
 						}
-						bs.hue = value;
 					}
 					
 					/** Get 8 bit sat **/{
-						int value = 0;
-						int bitMask = 1;
-						for (int j = 0; j < 8; j++) {
-							if(set.get(index))
-								value |= bitMask;
-							index++;
-							bitMask *= 2;
+						if(propertiesFlags[3]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 8; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							bs.sat = (short) value;
 						}
-						bs.sat = (short) value;
 					}
 					/** Get 64 bit xy **/{
 						//TODO implement xy mode
 					}
 					/**	Get 9 bit ct **/{
-						int value = 0;
-						int bitMask = 1;
-						for (int j = 0; j < 9; j++) {
-							if(set.get(index))
-								value |= bitMask;
-							index++;
-							bitMask *= 2;
+						if(propertiesFlags[5]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 9; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							bs.ct = value;
 						}
-						bs.ct = value;
 					}
 					/** Get 2 bit alert **/{
-						
+						if(propertiesFlags[6]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 2; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							switch(value){
+							case 0: bs.alert="none";
+							case 1: bs.alert="select";
+							case 2: bs.alert="lselect";
+							}
+						}
 					}
 					/** Get 4 bit effect **/{
 						//three more bits than needed, reserved for future API functionality
+						if(propertiesFlags[7]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 4; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							switch(value){
+							case 0: bs.effect ="none";
+							case 1: bs.effect="colorloop";
+							}
+						}
 					}
 					/** Get 16 bit transitiontime **/{
-						
+						if(propertiesFlags[8]){
+							int value = 0;
+							int bitMask = 1;
+							for (int j = 0; j < 16; j++) {
+								if(set.get(index))
+									value |= bitMask;
+								index++;
+								bitMask *= 2;
+							}
+							bs.transitiontime = value;
+						}
 					}
 					bsRay[i] = bs;
 				}

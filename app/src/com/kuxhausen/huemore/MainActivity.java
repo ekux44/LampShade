@@ -77,20 +77,27 @@ public class MainActivity extends FragmentActivity implements
 			one.bri=0;
 			one.ct=500;
 			bsRay[0]=one;
+			
 			BulbState two = new BulbState();
 			two.on= false;
 			bsRay[1]=two;
+			
 			BulbState three = new BulbState();
 			three.on= true;
 			three.sat=255;
 			three.bri=255;
 			three.hue=0;
 			bsRay[2]=three;
+			
 			BulbState four = new BulbState();
 			four.on= false;
-			four.bri=0;
+			four.bri=1;
+			four.alert="select";
+			four.transitiontime=10;
+			four.effect="colorloop";
 			//four.transitiontime =0;
 			bsRay[3]=four;
+			
 			String interm = com.kuxhausen.huemore.nfc.HueNfcEncoder.encode(bulbs, bsRay);
 			System.out.println(interm);
 			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.nfc.HueNfcEncoder.decode(interm);
