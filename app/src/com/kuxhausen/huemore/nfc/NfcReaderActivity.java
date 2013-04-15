@@ -28,17 +28,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import android.nfc.Tag;
 import android.nfc.FormatException;
 
-public class NfcReaderActivity extends Activity {
+public class NfcReaderActivity extends Activity implements OnCheckedChangeListener, OnClickListener {
 
+	Gson gson = new Gson();
+	String[] stateS = null;
+	Integer[] bulbS = null;
+	ToggleButton onButton;
+	Button doneButton;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.nfc_reader);
 		
+		onButton = (ToggleButton)this.findViewById(R.id.onToggleButton);
+		onButton.setOnCheckedChangeListener(this);
+		
+		doneButton = (Button)this.findViewById(R.id.doneButton);
+		doneButton.setOnClickListener(this);
 
 	}
 	public void onResume() {
@@ -65,15 +80,16 @@ public class NfcReaderActivity extends Activity {
 	           data = data.substring(data.indexOf('?')+1);
 	           //System.out.println(data);
 	           Pair<Integer[], BulbState[]> result = HueNfcEncoder.decode(data);
-	           Gson gson = new Gson();
-	           String[] bulbS = new String[result.second.length];
+	           bulbS = result.first;
+	           stateS = new String[result.second.length];
 	           
 	           for(int i = 0; i<result.second.length; i++){
-	        	   bulbS[i]=gson.toJson(result.second[i]);
+	        	   stateS[i]=gson.toJson(result.second[i]);
 	        	   System.out.println(bulbS[i]);
 	           }
-	           TransmitGroupMood transmitter = new TransmitGroupMood(this,result.first, bulbS);
+	           TransmitGroupMood transmitter = new TransmitGroupMood(this,bulbS, stateS);
 	           transmitter.execute();
+	           onButton.setChecked(true);
 	        }
 	    }
 	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -100,5 +116,21 @@ public class NfcReaderActivity extends Activity {
 			this.getActionBar().setDisplayHomeAsUpEnabled(value);
 		} catch (Error e) {
 		}
+	}
+	
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			BulbState bs = new BulbState();
+			bs.on = isChecked;
+			String[] bsRay = new String[]{gson.toJson(bs)};
+			TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, bsRay);
+			tgm.execute();
+	}
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+			case R.id.doneButton: onBackPressed();
+		}
+		
 	}
 }

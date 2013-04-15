@@ -62,6 +62,8 @@
     <string name="nfc_tag_write_success">Saved to Tag</string>
     <string name="nfc_tag_write_fail">Save to Tag Failed</string>
     <string name="nfc_disabled">NFC is not enabled. Turn it on in your device settings</string>
+    <string name="nfc_read_done">Done</string>
+    <string name="nfc_tag_read_success">NFC tag read</string>
     
     <string name="alarms">Alarms</string>
     <string name="cap_alarms">ALARMS</string>
@@ -69,6 +71,6 @@
     <string name="transition_prompt">Transition</string>
     <string name="mood">Mood</string>
     <string name="group">Group</string>
-    <string name="nfc_tag_read_success">NFC tag read</string>
+    
     
 </resources>
