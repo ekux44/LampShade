@@ -28,6 +28,7 @@
     
     <string name="actionmenu_new_group">New Group</string>
 	<string name="actionmenu_new_mood">New Mood</string>
+	<string name="actionmenu_new_alarm">New Alarm</string>
 	<string name="hint_mood_name">mood name</string>
 	<string name="hint_group_name">group name</string>
     
