@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
 /**
@@ -53,17 +55,58 @@ public class MainActivity extends FragmentActivity implements
 	
 	
 	public void tests(){
-		BitSet b = new BitSet();
-		for(int i= 0; i<10000; i++){
-			if(Math.random()<.5)
-				b.set(i);
+		/** bitSet to encoding test **/
+		{
+			BitSet b = new BitSet();
+			for(int i= 0; i<10000; i++){
+				if(Math.random()<.5)
+					b.set(i);
+			}
+			byte[] intermediate= com.kuxhausen.huemore.nfc.HueNfcEncoder.fromBitSet(b, 10000);
+			BitSet b2 = com.kuxhausen.huemore.nfc.HueNfcEncoder.toBitSet(intermediate);
+			for(int i = 0; i<10000; i++)
+				if(b.get(i)!=b2.get(i))
+					System.out.println(i+" "+b.get(i)+" "+b2.get(i)+" "+intermediate[i/8]);
+			System.out.println("bitSet-Byte[] testComplete");
 		}
-		byte[] intermediate= com.kuxhausen.huemore.nfc.HueNfcEncoder.fromBitSet(b, 10000);
-		BitSet b2 = com.kuxhausen.huemore.nfc.HueNfcEncoder.toBitSet(intermediate);
-		for(int i = 0; i<10000; i++)
-			if(b.get(i)!=b2.get(i))
-				System.out.println(i+" "+b.get(i)+" "+b2.get(i)+" "+intermediate[i/8]);
-		System.out.println("testComplete");
+		{
+			Integer[] bulbs = {1, 4, 8, 3, 43};
+			BulbState[] bsRay = new BulbState[4];
+			BulbState one = new BulbState();
+			one.on= true;
+			one.bri=0;
+			one.ct=500;
+			bsRay[0]=one;
+			BulbState two = new BulbState();
+			two.on= false;
+			bsRay[1]=two;
+			BulbState three = new BulbState();
+			three.on= true;
+			three.sat=255;
+			three.bri=255;
+			three.hue=0;
+			bsRay[2]=three;
+			BulbState four = new BulbState();
+			four.on= false;
+			four.bri=0;
+			//four.transitiontime =0;
+			bsRay[3]=four;
+			String interm = com.kuxhausen.huemore.nfc.HueNfcEncoder.encode(bulbs, bsRay);
+			System.out.println(interm);
+			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.nfc.HueNfcEncoder.decode(interm);
+			System.out.println("resultSize"+results.first.length+"  "+results.second.length);
+			
+			for(int i: results.first){
+				System.out.print(i+"  ");
+			}
+			System.out.println();
+			for(BulbState j: results.second){
+				if(j!=null)
+					System.out.println(j);
+				else
+					System.out.println("wtf-null ");
+			}
+		}
 	}
 	
 

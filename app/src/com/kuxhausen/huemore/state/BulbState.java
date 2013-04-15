@@ -60,4 +60,24 @@ public class BulbState {
 
 	public BulbState() {
 	}
+	public String toString(){
+		String result="";
+		result += "on:"+(on?"true":"false")+" ";
+		if(bri!=null)
+			result+= "bri:"+bri+" ";
+		if(hue!=null)
+			result+= "hue:"+hue+" ";
+		if(sat!=null)
+			result+= "sat:"+sat+" ";
+		//TODO xy
+		if(ct!=null)
+			result+= "ct:"+ct+" ";
+		if(alert!=null)
+			result+= "alert:"+alert+" ";
+		if(effect!=null)
+			result+= "effect:"+effect+" ";
+		if(transitiontime!=null)
+			result+= "transitiontime:"+transitiontime+" ";
+		return result;
+	}
 }

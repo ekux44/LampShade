@@ -138,23 +138,73 @@ public class HueNfcEncoder {
 						
 					}
 					/** Put on bit **/{
-						
+						// On/OFF flag always include in v1 implementation 1
+						set.set(index, bs.on);
+						index++;
 					}
 					/** Put 8 bit bri **/{
-						
+						if(bs.bri!=null){
+							int bitMask = 1;
+							for (int i = 0; i < 8; i++) {
+								if ((bs.bri & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					/** Put 16 bit hue **/{
-						
+						if(bs.hue!=null){
+							int bitMask = 1;
+							for (int i = 0; i < 16; i++) {
+								if ((bs.hue & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					
 					/** Put 8 bit sat **/{
-						
+						if(bs.sat!=null){
+							int bitMask = 1;
+							for (int i = 0; i < 8; i++) {
+								if ((bs.sat & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					/** Put 64 bit xy **/{
 						//TODO implement xy mode
 					}
 					/**	Put 9 bit ct **/{
-						
+						if(bs.ct!=null){
+							int bitMask = 1;
+							for (int i = 0; i < 9; i++) {
+								if ((bs.ct & bitMask) > 0) {
+									set.set(index, true);
+									index++;
+								} else {
+									set.set(index, false);
+									index++;
+								}
+								bitMask *= 2;
+							}
+						}
 					}
 					/** Put 2 bit alert **/{
 						
@@ -214,73 +264,74 @@ public class HueNfcEncoder {
 				bsRay = new BulbState[numStates];
 			}
 			
-			/** Encode each state **/
+			/** Decode each state **/
 			{
-				for(BulbState bs : bsRay){
-					/** Put 9 bit properties flags **/{
-						// On/OFF flag always include in v1 implementation 1
-						set.set(index, true);
-						index++;
-						
-						//Put bri flag
-						if(bs.bri!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put hue flag
-						if(bs.hue!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put sat flag
-						if(bs.sat!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put xy flag
-						if(bs.xy!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put ct flag
-						if(bs.ct!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put alert flag
-						if(bs.alert!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put effect flag
-						if(bs.effect!=null)
-							set.set(index, true);
-						index++;
-						
-						//Put transitiontime flag
-						if(bs.transitiontime!=null)
-							set.set(index, true);
-						index++;
+				for(int i = 0; i<bsRay.length; i++){
+					
+					/**
+					 * On, Bri, Hue, Sat, XY, CT, Alert, Effect, Transitiontime
+					 */
+					boolean[] propertiesFlags = new boolean[9];
+					BulbState bs = new BulbState();
+					/** Get 9 bit properties flags **/{
+						for(int j = 0; j<9; j++){
+							propertiesFlags[j]=set.get(index);
+							index++;
+						}
+							
 						
 					}
 					/** Get on bit **/{
-						
+						bs.on = set.get(index);
+						index++;
 					}
 					/** Get 8 bit bri **/{
-						
+						int value = 0;
+						int bitMask = 1;
+						for (int j = 0; j < 8; j++) {
+							if(set.get(index))
+								value |= bitMask;
+							index++;
+							bitMask *= 2;
+						}
+						bs.bri = value;
 					}
 					/** Get 16 bit hue **/{
-						
+						int value = 0;
+						int bitMask = 1;
+						for (int j = 0; j < 16; j++) {
+							if(set.get(index))
+								value |= bitMask;
+							index++;
+							bitMask *= 2;
+						}
+						bs.hue = value;
 					}
 					
 					/** Get 8 bit sat **/{
-						
+						int value = 0;
+						int bitMask = 1;
+						for (int j = 0; j < 8; j++) {
+							if(set.get(index))
+								value |= bitMask;
+							index++;
+							bitMask *= 2;
+						}
+						bs.sat = (short) value;
 					}
 					/** Get 64 bit xy **/{
 						//TODO implement xy mode
 					}
 					/**	Get 9 bit ct **/{
-						
+						int value = 0;
+						int bitMask = 1;
+						for (int j = 0; j < 9; j++) {
+							if(set.get(index))
+								value |= bitMask;
+							index++;
+							bitMask *= 2;
+						}
+						bs.ct = value;
 					}
 					/** Get 2 bit alert **/{
 						
@@ -291,6 +342,7 @@ public class HueNfcEncoder {
 					/** Get 16 bit transitiontime **/{
 						
 					}
+					bsRay[i] = bs;
 				}
 			}
 			
@@ -301,8 +353,8 @@ public class HueNfcEncoder {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return new Pair<Integer[],BulbState[]>((Integer[]) bList.toArray(), bsRay);
+		
+		return new Pair<Integer[],BulbState[]>(bList.toArray(new Integer[bList.size()]), bsRay);
 	}
 
 	
