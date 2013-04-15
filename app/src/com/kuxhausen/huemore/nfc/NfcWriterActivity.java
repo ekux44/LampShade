@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.billing.Base64;
 import com.kuxhausen.huemore.billing.Base64DecoderException;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.state.BulbState;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -31,6 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.nfc.Tag;
 import android.nfc.FormatException;
@@ -49,6 +53,7 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 	boolean writeMode;
 	Tag myTag;
 	Context context;
+	Gson gson = new Gson();
 	
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
@@ -72,9 +77,9 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
 		 */
-		getSupportLoaderManager().initLoader(GROUPS_LOADER, null, this);
-		getSupportLoaderManager().initLoader(MOODS_LOADER, null, this);
-		
+		LoaderManager lm = getSupportLoaderManager();
+		lm.initLoader(GROUPS_LOADER, null, this);
+		lm.initLoader(MOODS_LOADER, null, this);
 		
 		
 		
@@ -82,12 +87,15 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		sendButton.setOnClickListener(this);
 
 		brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+		
 		groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
 		String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
 		groupDataSource = new SimpleCursorAdapter(this, layout, null,
 				gColumns, new int[] { android.R.id.text1 }, 0);
 		groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		groupSpinner.setAdapter(groupDataSource);
+		
+		
 		moodSpinner = (Spinner) this.findViewById(R.id.moodSpinner);
 		String[] mColumns = { MoodColumns.MOOD, BaseColumns._ID };
 		moodDataSource = new SimpleCursorAdapter(this, layout, null,
@@ -135,13 +143,64 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 	}
 	
 	private String getMessage() {
-		String url = "kuxhausen.com/HueMore?";
+		String url = "kuxhausen.com/HueMore/nfc?";
+		
+		// Look up bulbs for that mood from database
+			String[] groupColumns = { GroupColumns.BULB };
+			String[] gWhereClause = {((TextView)groupSpinner.getSelectedView()).getText().toString() };
+			Cursor groupCursor = getContentResolver().query(
+					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																		// default
+																		// content
+																		// URI
+																		// for the
+																		// provider.
+					groupColumns, // Return the note ID and title for each note.
+					GroupColumns.GROUP + "=?", // selection clause
+					gWhereClause, // selection clause args
+					null // Use the default sort order.
+					);
+
+			ArrayList<Integer> groupStates = new ArrayList<Integer>();
+			while (groupCursor.moveToNext()) {
+				groupStates.add(groupCursor.getInt(0));
+			}
+			Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+
 		
 		
-		String data = HueNfcEncoder.encode(null, null);
+		String[] moodColumns = { MoodColumns.STATE };
+		String[] mWereClause = { ((TextView)moodSpinner.getSelectedView()).getText().toString() };
+		Cursor moodCursor = getContentResolver().query(
+				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
+																// default
+																// content URI
+																// for the
+																// provider.
+				moodColumns, // Return the note ID and title for each note.
+				MoodColumns.MOOD + "=?", // selection clause
+				mWereClause, // election clause args
+				null // Use the default sort order.
+				);
+
+		ArrayList<String> moodStates = new ArrayList<String>();
+		while (moodCursor.moveToNext()) {
+			moodStates.add(moodCursor.getString(0));
+		}
+		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+		BulbState[] bsRay = new BulbState[moodS.length];
+		
+		int brightness = brightnessBar.getProgress();
+		for(int i = 0; i<moodS.length; i++){
+			bsRay[i] = gson.fromJson(moodS[i], BulbState.class);
+			bsRay[i].bri = brightness;
+			
+		}
+		
+		
+		String data = HueNfcEncoder.encode(bulbS, bsRay);
 		return url+data;
 	}
-	//privateString
 
 	private void write(String text, Tag tag) throws IOException,
 			FormatException {
@@ -240,7 +299,7 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 					null, // No selection clause
 					null, // No selection arguments
 					null // Default sort order
-			);
+			); 
 		default:
 			// An invalid id was passed in
 			return null;
@@ -248,29 +307,29 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		/*
 		 * Moves the query results into the adapter, causing the ListView
 		 * fronting this adapter to re-display
 		 */
-		switch(arg0.getId()){
-			case GROUPS_LOADER: groupDataSource.changeCursor(cursor);
-			case MOODS_LOADER: moodDataSource.changeCursor(cursor);
+		switch(loader.getId()){
+			case GROUPS_LOADER: groupDataSource.changeCursor(cursor); break;
+			case MOODS_LOADER: moodDataSource.changeCursor(cursor); break;
 		}
 		
 		//registerForContextMenu(getListView());
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
+	public void onLoaderReset(Loader<Cursor> loader) {
 		/*
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
 		 */
 		// unregisterForContextMenu(getListView());
-		switch(arg0.getId()){
-			case GROUPS_LOADER: groupDataSource.changeCursor(null);
-			case MOODS_LOADER: moodDataSource.changeCursor(null);
+		switch(loader.getId()){
+			case GROUPS_LOADER: groupDataSource.changeCursor(null); break;
+			case MOODS_LOADER: moodDataSource.changeCursor(null); break;
 		}
 	}
 
