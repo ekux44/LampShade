@@ -35,7 +35,7 @@ OnClickListener{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			
+			new AlarmReciever(getActivity(),null, 15);
 			
 			this.dismiss();
 			break;
