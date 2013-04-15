@@ -69,5 +69,6 @@
     <string name="transition_prompt">Transition</string>
     <string name="mood">Mood</string>
     <string name="group">Group</string>
+    <string name="nfc_tag_read_success">NFC tag read</string>
     
 </resources>
