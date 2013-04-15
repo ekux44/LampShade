@@ -47,6 +47,7 @@ public class MoodManualPagingFragment extends Fragment implements
 	int brightness;
 	boolean isTrackingTouch = false;
 	SharedPreferences settings;
+	static NewColorHueFragment nchf = null;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -148,7 +149,8 @@ public class MoodManualPagingFragment extends Fragment implements
 				// TODO cache somewhere
 				return new MoodsFragment();
 			case MANUAL_LOCATION:
-				return new NewColorHueFragment();
+				nchf = new NewColorHueFragment();
+				return nchf;
 			default:
 				return null;
 			}
@@ -194,6 +196,16 @@ public class MoodManualPagingFragment extends Fragment implements
 
 			brightness = brightnessAverage;
 			brightnessBar.setProgress(brightnessAverage);
+			
+			if(nchf!=null){
+				boolean colorLoopOn = false;
+				for (BulbAttributes ba : bulbsAttributes) {
+					if (ba != null && ba.state.effect.equals("colorloop")) 
+						colorLoopOn = true;
+				}
+				if(colorLoopOn)
+					nchf.colorLoop.setChecked(true);
+			}
 		}
 	}
 
