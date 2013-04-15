@@ -84,32 +84,10 @@ public class NfcWriterActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-
+	
 	private String getMessage() {
 		String url = "kuxhausen.com/HueMore?";
-		Boolean[] b= {true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true,true, false, true, true, false};
-		
-		String jSon = "{\"hue\": 50000,\"on\": true,\"bri\": 200}";
-		String encoded = Base64.encodeWebSafe(jSon.getBytes(), false);
-		String result = "";
-		
-		try {
-			result = new String(Base64.decodeWebSafe(encoded));
-		} catch (Base64DecoderException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		Log.e("asdf", result);
-		Log.e("asdf", encoded);
-		Log.e("asdf", ""+(result.equals(jSon)));
-		String data="";
-		try {
-			data = URLEncoder.encode(jSon, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String data = HueNfcEncoder.encode(null, null);
 		return url+data;
 	}
 	//privateString

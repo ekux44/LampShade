@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -49,6 +50,22 @@ public class MainActivity extends FragmentActivity implements
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	private NfcAdapter nfcAdapter;
+	
+	
+	public void tests(){
+		BitSet b = new BitSet();
+		for(int i= 0; i<10000; i++){
+			if(Math.random()<.5)
+				b.set(i);
+		}
+		byte[] intermediate= com.kuxhausen.huemore.nfc.HueNfcEncoder.fromBitSet(b, 10000);
+		BitSet b2 = com.kuxhausen.huemore.nfc.HueNfcEncoder.toBitSet(intermediate);
+		for(int i = 0; i<10000; i++)
+			if(b.get(i)!=b2.get(i))
+				System.out.println(i+" "+b.get(i)+" "+b2.get(i)+" "+intermediate[i/8]);
+		System.out.println("testComplete");
+	}
+	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -156,7 +173,7 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		});
-		
+		tests();
 	}
 
 	// Listener that's called when we finish querying the items and
