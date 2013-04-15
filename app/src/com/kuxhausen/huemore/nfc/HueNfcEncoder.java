@@ -403,9 +403,9 @@ public class HueNfcEncoder {
 								bitMask *= 2;
 							}
 							switch(value){
-							case 0: bs.alert="none";
-							case 1: bs.alert="select";
-							case 2: bs.alert="lselect";
+							case 0: bs.alert="none"; break;
+							case 1: bs.alert="select"; break;
+							case 2: bs.alert="lselect"; break;
 							}
 						}
 					}
@@ -421,8 +421,8 @@ public class HueNfcEncoder {
 								bitMask *= 2;
 							}
 							switch(value){
-							case 0: bs.effect ="none";
-							case 1: bs.effect="colorloop";
+							case 0: bs.effect ="none"; break;
+							case 1: bs.effect="colorloop"; break;
 							}
 						}
 					}

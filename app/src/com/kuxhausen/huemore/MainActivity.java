@@ -74,12 +74,18 @@ public class MainActivity extends FragmentActivity implements
 			BulbState[] bsRay = new BulbState[4];
 			BulbState one = new BulbState();
 			one.on= true;
-			one.bri=0;
-			one.ct=500;
+			one.bri=1;
+			one.ct=2;
+			one.effect="none";
+			one.hue =4;
+			one.sat = 5;
+			one.transitiontime = 6;
+			one.alert = "none";
 			bsRay[0]=one;
 			
 			BulbState two = new BulbState();
 			two.on= false;
+			two.effect = "none";
 			bsRay[1]=two;
 			
 			BulbState three = new BulbState();

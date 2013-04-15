@@ -192,9 +192,10 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		
 		int brightness = brightnessBar.getProgress();
 		for(int i = 0; i<moodS.length; i++){
+			System.out.println(moodS[i]);
 			bsRay[i] = gson.fromJson(moodS[i], BulbState.class);
 			bsRay[i].bri = brightness;
-			
+			System.out.println(bsRay[i]);
 		}
 		
 		
