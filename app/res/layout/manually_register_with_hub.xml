@@ -41,7 +41,7 @@
             android:inputType="number" />
 
         <TextView
-            android:id="@+id/moodsPromptTextView"
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ip_address_v4_seperator" />
