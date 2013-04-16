@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 
 public class NewAlarmDialogFragment extends DialogFragment implements
@@ -21,7 +22,8 @@ OnClickListener{
 		View myView = inflater.inflate(R.layout.edit_alarm_dialog, container, false);
 		Bundle args = getArguments();
 
-		this.getDialog().setTitle("New Alarm");
+		//this.getDialog().setTitle("New Alarm");
+		this.getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
 		Button okayButton = (Button) myView.findViewById(R.id.okay);

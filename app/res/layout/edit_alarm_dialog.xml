@@ -15,6 +15,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <TimePicker
+                android:id="@+id/alarmTimePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+            
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="2dip"
@@ -75,11 +81,7 @@
                 android:paddingBottom="8dp"
                 android:progress="127" />
 
-            <TimePicker
-                android:id="@+id/alarmTimePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" />
+            
         </LinearLayout>
     </ScrollView>
 
