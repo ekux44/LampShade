@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.timing.AlarmsFragment;
 
 public class GroupBulbPagingFragment extends Fragment {
 
@@ -28,7 +27,6 @@ public class GroupBulbPagingFragment extends Fragment {
 
 	private static final int GROUP_LOCATION = 1;
 	private static final int BULB_LOCATION = 0;
-	private static final int ALARM_LOCATION = 2;
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
@@ -94,8 +92,6 @@ public class GroupBulbPagingFragment extends Fragment {
 				return new GroupsFragment();
 			case BULB_LOCATION:
 				return new BulbsFragment();
-			case ALARM_LOCATION:
-				return new AlarmsFragment();
 			default:
 				return null;
 			}
@@ -103,7 +99,7 @@ public class GroupBulbPagingFragment extends Fragment {
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -115,8 +111,6 @@ public class GroupBulbPagingFragment extends Fragment {
 			case BULB_LOCATION:
 				return "BULBS";
 				
-			case ALARM_LOCATION:
-				return "ALARMS";
 			}
 			return "";
 		}
