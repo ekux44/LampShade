@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.billing.Base64;
 import com.kuxhausen.huemore.billing.Base64DecoderException;
+import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,6 +91,22 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		sendButton.setOnClickListener(this);
 
 		brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				preview();
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+			}
+		});
 		
 		groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
 		String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
@@ -143,6 +161,7 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.writeToTagButton:
+			preview();
 			try {
 				if (myTag == null) {
 					Toast.makeText(context,
@@ -168,6 +187,62 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 			break;
 		}
 	}
+	public void preview(){
+		// Look up bulbs for that mood from database
+					String[] groupColumns = { GroupColumns.BULB };
+					String[] gWhereClause = {((TextView)groupSpinner.getSelectedView()).getText().toString() };
+					Cursor groupCursor = getContentResolver().query(
+							DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																				// default
+																				// content
+																				// URI
+																				// for the
+																				// provider.
+							groupColumns, // Return the note ID and title for each note.
+							GroupColumns.GROUP + "=?", // selection clause
+							gWhereClause, // selection clause args
+							null // Use the default sort order.
+							);
+
+					ArrayList<Integer> groupStates = new ArrayList<Integer>();
+					while (groupCursor.moveToNext()) {
+						groupStates.add(groupCursor.getInt(0));
+					}
+					Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+
+				
+				
+				String[] moodColumns = { MoodColumns.STATE };
+				String[] mWereClause = { ((TextView)moodSpinner.getSelectedView()).getText().toString() };
+				Cursor moodCursor = getContentResolver().query(
+						DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
+																		// default
+																		// content URI
+																		// for the
+																		// provider.
+						moodColumns, // Return the note ID and title for each note.
+						MoodColumns.MOOD + "=?", // selection clause
+						mWereClause, // election clause args
+						null // Use the default sort order.
+						);
+
+				ArrayList<String> moodStates = new ArrayList<String>();
+				while (moodCursor.moveToNext()) {
+					moodStates.add(moodCursor.getString(0));
+				}
+				String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+				
+				int brightness = brightnessBar.getProgress();
+				for(int i = 0; i<moodS.length; i++){
+					BulbState bs = gson.fromJson(moodS[i], BulbState.class);
+					bs.bri = brightness;
+					moodS[i]= gson.toJson(bs);//put back into json string for Transmit Group Mood
+				}
+		
+		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, moodS);
+		tgm.execute();
+	}
+	
 	
 	private String getMessage() {
 		String url = "kuxhausen.com/HueMore/nfc?";
@@ -266,8 +341,7 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 			myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 			Toast.makeText(
 					this,
-					this.getString(R.string.nfc_tag_detected)
-							+ myTag.toString(), Toast.LENGTH_SHORT).show();
+					this.getString(R.string.nfc_tag_detected), Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -19,5 +19,5 @@
         android:id="@+id/action_nfc"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/nfc"/>
+        android:title="@string/cap_nfc"/>
 </menu>
