@@ -2,6 +2,8 @@ package com.kuxhausen.huemore.timing;
 
 import com.kuxhausen.huemore.*;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -25,8 +27,20 @@ public class AlarmsListFragment extends ListFragment{
 				.findViewById(R.id.showOnLandScape);
 		if (headingRow.getVisibility() == View.GONE)
 			setHasOptionsMenu(true);
-		
+		getActivity().setTitle(R.string.alarms);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			initializeActionBar(true);
+		}
 		return myView;
+	}
+	
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void initializeActionBar(Boolean value) {
+		try {
+			getActivity().getActionBar().setDisplayHomeAsUpEnabled(value);
+		} catch (Error e) {
+		}
 	}
 	
 	@Override
@@ -38,7 +52,10 @@ public class AlarmsListFragment extends ListFragment{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-
+		case android.R.id.home:
+			getActivity().onBackPressed();
+			return true;
+		
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(), "dialog");
