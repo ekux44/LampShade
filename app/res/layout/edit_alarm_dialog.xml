@@ -42,7 +42,7 @@
 	                android:id="@+id/groupSpinner"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:paddingBottom="8dp" />
+	                android:padding="8dp" />
 			</LinearLayout>
             
 			<LinearLayout
@@ -62,7 +62,7 @@
 	                android:id="@+id/moodSpinner"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:paddingBottom="8dp" />
+	                android:padding="8dp" />
 			</LinearLayout>
             
 
@@ -102,11 +102,15 @@
 	                android:id="@+id/transitionSpinner"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:paddingBottom="8dp" />
+	                android:padding="8dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
+    <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="#33B5E5" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
