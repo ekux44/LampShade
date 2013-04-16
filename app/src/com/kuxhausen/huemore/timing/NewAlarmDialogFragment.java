@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -32,8 +33,9 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
 
 	SeekBar brightnessBar;
-	Spinner groupSpinner, moodSpinner;
+	Spinner groupSpinner, moodSpinner, transitionSpinner;
 	SimpleCursorAdapter groupDataSource, moodDataSource;
+	int[] transitionValues;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,8 +84,17 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 		moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		moodSpinner.setAdapter(moodDataSource);
 		
+		transitionSpinner = (Spinner) myView.findViewById(R.id.transitionSpinner);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+		        R.array.transition_names_array, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		transitionSpinner.setAdapter(adapter);
 		
 		
+		transitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
 		
 		return myView;
 	}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="transition_names_array">
+        <item>Default</item>
+        <item>None</item>
+        <item>1 Second</item>
+        <item>10 Seconds</item>
+        <item>1 Minute</item>
+        <item>10 Minutes</item>
+    </string-array>
+    <integer-array name="transition_values_array">
+        <item>4</item>
+        <item>0</item>
+        <item>10</item>
+        <item>100</item>
+        <item>600</item>
+        <item>6000</item>
+    </integer-array>
+</resources>
