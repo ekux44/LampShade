@@ -341,8 +341,8 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		 * fronting this adapter to re-display
 		 */
 		switch(loader.getId()){
-			case GROUPS_LOADER: groupDataSource.changeCursor(cursor); break;
-			case MOODS_LOADER: moodDataSource.changeCursor(cursor); break;
+			case GROUPS_LOADER: if(groupDataSource!=null) {groupDataSource.changeCursor(cursor);} break;
+			case MOODS_LOADER:  if(moodDataSource!=null) {moodDataSource.changeCursor(cursor);} break;
 		}
 		
 		//registerForContextMenu(getListView());
@@ -356,8 +356,8 @@ public class NfcWriterActivity extends FragmentActivity implements OnClickListen
 		 */
 		// unregisterForContextMenu(getListView());
 		switch(loader.getId()){
-			case GROUPS_LOADER: groupDataSource.changeCursor(null); break;
-			case MOODS_LOADER: moodDataSource.changeCursor(null); break;
+			case GROUPS_LOADER: if(groupDataSource!=null) {groupDataSource.changeCursor(null);} break;
+			case MOODS_LOADER: if(moodDataSource!=null){ moodDataSource.changeCursor(null); }break;
 		}
 	}
 
