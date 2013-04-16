@@ -34,6 +34,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
 /**
@@ -531,6 +532,7 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.action_unlocks:
 			Unlocks unlocks = new Unlocks();
 			unlocks.show(getSupportFragmentManager(), "dialog");
+			return true;
 		case R.id.action_nfc:
 			if(!nfcAdapter.isEnabled()){
 				//startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
@@ -542,6 +544,10 @@ public class MainActivity extends FragmentActivity implements
 			Intent i = new Intent(this, NfcWriterActivity.class);
 			this.startActivity(i);
 			}
+			return true;
+		case R.id.action_alarms:
+			Intent i = new Intent(this, AlarmListActivity.class);
+			this.startActivity(i);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

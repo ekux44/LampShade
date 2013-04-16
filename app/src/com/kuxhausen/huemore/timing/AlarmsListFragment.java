@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class AlarmsFragment extends ListFragment{
+public class AlarmsListFragment extends ListFragment{
 
 	
 	@Override
