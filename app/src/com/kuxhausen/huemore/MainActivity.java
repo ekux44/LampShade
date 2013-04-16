@@ -235,7 +235,8 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		});
-		tests();
+		//Protocol testing
+		//tests();
 	}
 
 	// Listener that's called when we finish querying the items and
