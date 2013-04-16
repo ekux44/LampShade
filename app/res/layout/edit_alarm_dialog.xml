@@ -130,7 +130,8 @@
             	    android:layout_gravity="center_vertical"
             	    android:layout_weight="2"
             	    android:padding="8dp"
-            	    android:text="@string/cap_short_none" />
+            	    android:text="@string/cap_short_none"
+            	    android:textSize="16sp" />
 	
             </LinearLayout> 
         </LinearLayout>

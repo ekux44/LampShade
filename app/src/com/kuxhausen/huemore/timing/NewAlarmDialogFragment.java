@@ -4,6 +4,7 @@ import com.kuxhausen.huemore.*;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.database.Cursor;
 
 import android.support.v4.app.FragmentActivity;
@@ -27,7 +29,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 public class NewAlarmDialogFragment extends DialogFragment implements
-OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener {
 
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
@@ -36,6 +38,11 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 	Spinner groupSpinner, moodSpinner, transitionSpinner;
 	SimpleCursorAdapter groupDataSource, moodDataSource;
 	int[] transitionValues;
+	Button repeatButton;
+	boolean[] repeatDays = new boolean[7];
+	TextView repeatView;
+	String[] days;
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +76,10 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		
+		repeatButton = (Button) myView.findViewById(R.id.repeatButton);
+		repeatButton.setOnClickListener(this);
+		repeatView = (TextView)myView.findViewById(R.id.repeatVisualization);
+		
 		groupSpinner = (Spinner) myView.findViewById(R.id.groupSpinner);
 		String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
 		groupDataSource = new SimpleCursorAdapter(getActivity(), layout, null,
@@ -95,6 +106,7 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 		
 		
 		transitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
+		days = getActivity().getResources().getStringArray(R.array.cap_short_repeat_days);
 		
 		return myView;
 	}
@@ -103,6 +115,11 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.repeatButton:
+			RepeatDialogFragment rdf = new RepeatDialogFragment();
+			rdf.resultListener=this;
+			rdf.show(getFragmentManager(), "dialog");
+			break;
 		case R.id.okay:
 			new AlarmReciever(getActivity(),null, 15);
 			
@@ -177,6 +194,32 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 		switch(loader.getId()){
 			case GROUPS_LOADER: if(groupDataSource!=null) {groupDataSource.changeCursor(null);} break;
 			case MOODS_LOADER: if(moodDataSource!=null){ moodDataSource.changeCursor(null); }break;
+		}
+	}
+
+	@Override
+	public void onRepeatSelected(boolean[] repeats) {
+		repeatDays = repeats;
+		
+		boolean all = true;
+		boolean none = false;
+		for(boolean bool : repeats){
+			all&=bool;
+			none|=bool;
+		}
+		if(all){
+			repeatView.setText(getActivity().getResources().getString(R.string.cap_short_every_day));
+		}
+		else if(!none){
+			repeatView.setText(getActivity().getResources().getString(R.string.cap_short_none));
+		}
+		else{
+			String result = "";
+			for(int i = 0; i<7; i++){
+				if(repeats[i])
+					result+=days[i]+" ";
+			}
+			repeatView.setText(result);
 		}
 	}
 

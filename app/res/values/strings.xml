@@ -75,13 +75,6 @@
     <string name="group_intro">Group:</string>
     
     <string name="alarm_repeat">Repeat:</string>
-    <string name="cap_short_none"></string>
+    <string name="cap_short_none"> </string>
     <string name="cap_short_every_day">EVERY DAY</string>
-    <string name="cap_short_sunday">SUN</string>
-    <string name="cap_short_monday">MON</string>
-    <string name="cap_short_tuesday">TUE</string>
-    <string name="cap_short_wednesday">WED</string>
-    <string name="cap_short_thursday">THU</string>
-    <string name="cap_short_friday">FRI</string>
-    <string name="cap_short_saturday">SAT</string>
 </resources>
