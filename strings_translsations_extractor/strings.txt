@@ -10,11 +10,14 @@
     ,cap_bulbs",BULBS,
     ,groups",Groups,
     ,moods",Moods,
+	,mood_intro",Mood:,
+    ,group_intro",Group:,
+    
     
     ,accept",Okay,
     ,cancel",Cancel,
     ,register_success",Link successful,
-    ,register_fail",Cound not connect to bridge. Please make sure this device is connected to the same wifi as the hub and has internet access, then try again.,
+    ,register_fail",Could not connect to bridge. Please make sure this device is connected to the same wifi as the hub and has internet access, then try again.,
     ,link_prompt",Press the link button on your hub,
     ,manual_ip_prompt",Enter the hub IP address,
 	,advanced",Advanced,
@@ -26,6 +29,7 @@
     
     ,actionmenu_new_group",New Group,
 	,actionmenu_new_mood",New Mood,
+	,actionmenu_new_alarm",New Alarm,
 	,hint_mood_name",mood name,
 	,hint_group_name",group name,
     
@@ -35,7 +39,6 @@
     ,color_temp_initial_value",3200,
     ,add_color",Add Color,
     ,toggleColorLoop",Loop Colors :,
-    
     
     ,promp_first_view_setting",Default home screen,
     ,promp_second_view_setting",Default second screen,
@@ -49,18 +52,24 @@
     ,unlocks_exclusive_or_seperator",OR,
     ,buy_me_a_bulb",Donate the cost of a bulb,
 	,donation_prompt",Donating will help me work on HueMore. Thanks! -Eric,
-    
-	,group_selection_prompt",Pick a group,
-    ,mood_selection_prompt",Pick a mood,
-    
-    ,nfc",Alarms,
+	
+    ,nfc",Nfc,
     ,cap_nfc",NFC,
+    ,nfc_tag_detected",Tag Detected,
+    ,nfc_tag_not_detected",Tag Not Found,
+    ,nfc_tag_write_prompt",Write to Tag,
     ,nfc_tag_write_success",Saved to Tag,
     ,nfc_tag_write_fail",Save to Tag Failed,
+    ,nfc_disabled",NFC is not enabled. Turn it on in your device settings,
+    ,nfc_read_done",Done,
+    ,nfc_tag_read_success",NFC tag read,
     
     ,alarms",Alarms,
     ,cap_alarms",ALARMS,
     ,delay_prompt",Delay,
-    ,transition_prompt",Transition,
-    
+    ,transition_intro",Fade In:,
+    ,alarm_repeat",Repeat:,
+    ,cap_short_none", ,
+    ,cap_short_every_day",EVERY DAY,
+	
 </resources,

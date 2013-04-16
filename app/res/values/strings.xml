@@ -12,6 +12,9 @@
     <string name="cap_bulbs">BULBS</string>
     <string name="groups">Groups</string>
     <string name="moods">Moods</string>
+	<string name="mood_intro">Mood:</string>
+    <string name="group_intro">Group:</string>
+    
     
     <string name="accept">Okay</string>
     <string name="cancel">Cancel</string>
@@ -51,10 +54,7 @@
     <string name="unlocks_exclusive_or_seperator">OR</string>
     <string name="buy_me_a_bulb">Donate the cost of a bulb</string>
 	<string name="donation_prompt">Donating will help me work on HueMore. Thanks! -Eric</string>
-    
-	<string name="group_selection_prompt">Pick a group</string>
-    <string name="mood_selection_prompt">Pick a mood</string>
-    
+	
     <string name="nfc">Nfc</string>
     <string name="cap_nfc">NFC</string>
     <string name="nfc_tag_detected">Tag Detected</string>
@@ -70,11 +70,8 @@
     <string name="cap_alarms">ALARMS</string>
     <string name="delay_prompt">Delay</string>
     <string name="transition_intro">Fade In:</string>
-    
-    <string name="mood_intro">Mood:</string>
-    <string name="group_intro">Group:</string>
-    
     <string name="alarm_repeat">Repeat:</string>
     <string name="cap_short_none"> </string>
     <string name="cap_short_every_day">EVERY DAY</string>
+	
 </resources>
