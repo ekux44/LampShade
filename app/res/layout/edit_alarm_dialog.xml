@@ -44,10 +44,7 @@
 	                android:layout_height="wrap_content"
 	                android:paddingBottom="8dp" />
 			</LinearLayout>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:background="#33B5E5" />
+            
 			<LinearLayout
        	 	android:layout_width="match_parent"
         	android:layout_height="wrap_content"
@@ -67,10 +64,7 @@
 	                android:layout_height="wrap_content"
 	                android:paddingBottom="8dp" />
 			</LinearLayout>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:background="#33B5E5" />
+            
 
             <TextView
                 android:id="@+id/brightnessDescripterTextView"
@@ -89,10 +83,7 @@
                 android:paddingBottom="8dp"
                 android:progress="127" />
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:background="#33B5E5" />
+            
 
             <LinearLayout
        	 	android:layout_width="match_parent"
