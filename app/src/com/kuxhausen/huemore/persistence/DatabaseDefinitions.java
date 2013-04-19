@@ -27,12 +27,17 @@ public final class DatabaseDefinitions {
 				+ PATH_ALARMS);
 
 		/**
-		 * which alarm this is part of
+		 * which group to use
 		 */
-		public static final String ALARM = "Dalarm";
+		public static final String GROUP = "Dgroup";
 
 		/**
-		 * JSon'd HueState object
+		 * which group to use
+		 */
+		public static final String MOOD = "Dmood";
+		
+		/**
+		 * JSon'd HueState object of other state data to override mood
 		 */
 		public static final String STATE = "Dstate";
 
@@ -40,6 +45,12 @@ public final class DatabaseDefinitions {
 		 * time to go off
 		 */
 		public static final String TIME = "Dtime";
+		
+		/**
+		 * bits 0-6 flag the repeat of days Sunday - Saturday
+		 */
+		public static final String REPEAT_DAYS = "Drepeatdays";
+		
 		
 		/**
 		 * other data needed to delete and alarm

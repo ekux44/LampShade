@@ -6,6 +6,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import android.support.v4.app.FragmentActivity;
@@ -121,8 +123,8 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 			rdf.show(getFragmentManager(), "dialog");
 			break;
 		case R.id.okay:
-			new AlarmReciever(getActivity(),null, 15);
-			
+			//new AlarmReciever(getActivity(),null, 15);
+			onCreateAlarm();
 			this.dismiss();
 			break;
 		case R.id.cancel:
@@ -221,6 +223,44 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 			}
 			repeatView.setText(result);
 		}
+	}
+	
+	public void onCreateAlarm(){
+		String group = ((Cursor)groupSpinner.getSelectedItem()).getString(0);
+		String mood = ((Cursor)moodSpinner.getSelectedItem()).getString(0);
+		int transitionValue= transitionValues[ transitionSpinner.getSelectedItemPosition()];
+		int brightness = brightnessBar.getProgress();
+		//boolean[] repeatDays already done
+		//add time picker reference
+		
+		
+		
+		
+		
+		
+		
+		Uri mNewUri;
+
+		// Defines an object to contain the new values to
+		// insert
+		ContentValues mNewValues = new ContentValues();
+
+		/*
+		 * Sets the values of each column and inserts the word. The arguments to
+		 * the "put" method are "column name" and "value"
+		 */
+		
+		System.out.println();
+		//mNewValues.put(DatabaseDefinitions.AlarmColumns.GROUP, groupSpinner.getSelectedItem().toString());
+		//mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, gson.toJson(hs));
+		//mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
+
+		//mNewUri = getActivity().getContentResolver().insert(
+		//		DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
+																		// values
+																		// to
+																		// insert
+		//		);
 	}
 
 }
