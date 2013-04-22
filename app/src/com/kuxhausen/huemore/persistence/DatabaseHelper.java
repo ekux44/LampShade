@@ -210,8 +210,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " ("
 				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
-				+ AlarmColumns.GROUP + " TEXT," + AlarmColumns.MOOD + " TEXT," + AlarmColumns.STATE + " TEXT,"
-				+ AlarmColumns.TIME + " INTEGER," + AlarmColumns.REPEAT_DAYS + " INTEGER," + AlarmColumns.INTENT + " TEXT" + ");");
+				+ AlarmColumns.STATE + " TEXT,"
+				+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 	}
 
 	public void addBulbs(int first, int last) {

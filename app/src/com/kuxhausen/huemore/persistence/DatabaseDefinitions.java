@@ -27,35 +27,14 @@ public final class DatabaseDefinitions {
 				+ PATH_ALARMS);
 
 		/**
-		 * which group to use
-		 */
-		public static final String GROUP = "Dgroup";
-
-		/**
-		 * which group to use
-		 */
-		public static final String MOOD = "Dmood";
-		
-		/**
 		 * JSon'd HueState object of other state data to override mood
 		 */
 		public static final String STATE = "Dstate";
-
-		/**
-		 * time to go off
-		 */
-		public static final String TIME = "Dtime";
-		
-		/**
-		 * bits 0-6 flag the repeat of days Sunday - Saturday
-		 */
-		public static final String REPEAT_DAYS = "Drepeatdays";
-		
 		
 		/**
 		 * other data needed to delete and alarm
 		 */
-		public static final String INTENT = "Dintent";
+		public static final String INTENT_REQUEST_CODE = "Dintent_request_code";
 		
 		// This class cannot be instantiated
 		private AlarmColumns() {

@@ -1,5 +1,8 @@
 package com.kuxhausen.huemore.timing;
 
+import java.util.Calendar;
+
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.*;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -44,7 +47,7 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 	boolean[] repeatDays = new boolean[7];
 	TextView repeatView;
 	String[] days;
-
+	Gson gson = new Gson();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,7 +126,6 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 			rdf.show(getFragmentManager(), "dialog");
 			break;
 		case R.id.okay:
-			//new AlarmReciever(getActivity(),null, 15);
 			onCreateAlarm();
 			this.dismiss();
 			break;
@@ -226,21 +228,23 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 	}
 	
 	public void onCreateAlarm(){
-		String group = ((Cursor)groupSpinner.getSelectedItem()).getString(0);
-		String mood = ((Cursor)moodSpinner.getSelectedItem()).getString(0);
-		int transitionValue= transitionValues[ transitionSpinner.getSelectedItemPosition()];
-		int brightness = brightnessBar.getProgress();
-		//boolean[] repeatDays already done
-		//add time picker reference
+		Gson gson = new Gson();
+		AlarmState as = new AlarmState();
+		as.group = ((Cursor)groupSpinner.getSelectedItem()).getString(0);
+		as.mood = ((Cursor)moodSpinner.getSelectedItem()).getString(0);
+		as.transitiontime = transitionValues[ transitionSpinner.getSelectedItemPosition()];
+		as.brightness = brightnessBar.getProgress();
+		
+		
+		//repeatDays;
+		//replace with values from time picker reference
+		Calendar time = Calendar.getInstance();
+        time.setTimeInMillis(System.currentTimeMillis());
+        time.add(Calendar.SECOND, 30);
+		AlarmReciever.createAlarm(getActivity(),gson.toJson(as), time, 0);
 		
 		
 		
-		
-		
-		
-		
-		Uri mNewUri;
-
 		// Defines an object to contain the new values to
 		// insert
 		ContentValues mNewValues = new ContentValues();
@@ -249,18 +253,10 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		 * Sets the values of each column and inserts the word. The arguments to
 		 * the "put" method are "column name" and "value"
 		 */
+		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
 		
-		System.out.println();
-		//mNewValues.put(DatabaseDefinitions.AlarmColumns.GROUP, groupSpinner.getSelectedItem().toString());
-		//mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, gson.toJson(hs));
-		//mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
-
-		//mNewUri = getActivity().getContentResolver().insert(
-		//		DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
-																		// values
-																		// to
-																		// insert
-		//		);
+		Uri mNewUri = getActivity().getContentResolver().insert(
+				DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
 	}
 
 }
