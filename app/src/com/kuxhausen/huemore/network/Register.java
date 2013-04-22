@@ -44,9 +44,11 @@ public class Register extends AsyncTask<Void, Integer, String> {
 			OnRegisterListener resultListener, String userName,
 			String devicetype) {
 		cont = parrentActivity;
-		bridges = new Bridge[1];
-		bridges[0] = new Bridge();
-		bridges[0].internalipaddress=ip;
+		if(ip!=null && !ip.equals("")){
+			bridges = new Bridge[1];
+			bridges[0] = new Bridge();
+			bridges[0].internalipaddress=ip;
+		}
 		mResultListener = resultListener;
 		username = userName;
 		deviceType = devicetype;
@@ -80,7 +82,7 @@ public class Register extends AsyncTask<Void, Integer, String> {
 					builder.append(line);
 					jSon += line;
 				}
-
+				
 				Gson gson = new Gson();
 				try {
 					// autoselect first hub if multiple hubs
