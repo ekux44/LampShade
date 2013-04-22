@@ -20,7 +20,7 @@ public class HueMoreProvider extends ContentProvider {
 	 */
 	private static HashMap<String, String> sGroupsProjectionMap,
 			sMoodsProjectionMap, sGroupBulbsProjectionMap,
-			sMoodStatesProjectionMap;
+			sMoodStatesProjectionMap, sAlarmsProjectionMap;
 	/**
 	 * A UriMatcher instance
 	 */
@@ -31,7 +31,7 @@ public class HueMoreProvider extends ContentProvider {
 	 */
 	// The incoming URI matches the Groups URI pattern
 	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3,
-			MOODSTATES = 4;
+			MOODSTATES = 4, ALARMS=5;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -45,8 +45,7 @@ public class HueMoreProvider extends ContentProvider {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 		{
-			// Add a pattern that routes URIs terminated with "groups" to a
-			// GROUPS
+			
 			// operation
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groups", GROUPS);
 			// Creates a new projection map instance. The map returns a column
@@ -128,6 +127,24 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.MoodColumns.PRECEDENCE,
 					DatabaseDefinitions.MoodColumns.PRECEDENCE);
 		}
+		{
+			// Add a pattern that routes URIs terminated with "groups" to a
+			// GROUPS
+			// operation
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "alarms", ALARMS);
+			// Creates a new projection map instance. The map returns a column
+			// name
+			// given a string. The two are usually equal.
+			sAlarmsProjectionMap = new HashMap<String, String>();
+
+			// Maps the string "_ID" to the column name "_ID"
+			sAlarmsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+
+			sAlarmsProjectionMap.put(DatabaseDefinitions.AlarmColumns.STATE,
+					DatabaseDefinitions.AlarmColumns.STATE);
+			sAlarmsProjectionMap.put(DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE,
+					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE);
+		}
 	}
 
 	@Override
@@ -145,6 +162,10 @@ public class HueMoreProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		// If the incoming URI is for notes, chooses the Notes projection
 
+		case ALARMS:
+			table = (DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			toNotify = DatabaseDefinitions.AlarmColumns.ALARMS_URI;
+			break;
 		case GROUPBULBS:
 			table = (DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.GroupColumns.GROUPS_URI;
@@ -184,6 +205,11 @@ public class HueMoreProvider extends ContentProvider {
 		 */
 		switch (sUriMatcher.match(uri)) {
 		// If the incoming URI is for notes, chooses the Notes projection
+		case ALARMS:
+			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			qb.setProjectionMap(sAlarmsProjectionMap);
+			table = DatabaseDefinitions.AlarmColumns.TABLE_NAME;
+			break;
 		case GROUPS:
 			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
@@ -241,6 +267,11 @@ public class HueMoreProvider extends ContentProvider {
 		 */
 		switch (sUriMatcher.match(uri)) {
 		// If the incoming URI is for notes, chooses the Notes projection
+		case ALARMS:
+			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			qb.setProjectionMap(sAlarmsProjectionMap);
+			groupBy = null;
+			break;		
 		case GROUPS:
 			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
