@@ -15,7 +15,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -45,11 +47,11 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 				getLoaderManager().initLoader(ALARMS_LOADER, null, this);
 
 				String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-				dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
-						columns, new int[] { android.R.id.text1 }, 0);
-
+				dataSource = new SimpleCursorAdapter(this.getActivity(), R.layout.alarm_row, null,
+						columns, new int[] { R.id.subTextView }, 0);
+				
 				setListAdapter(dataSource);
-		
+				
 		
 		
 		
@@ -64,6 +66,18 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 			initializeActionBar(true);
 		}
 		return myView;
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		LinearLayout row = (LinearLayout)v;
+		CompoundButton onButton= (CompoundButton)row.getChildAt(1);
+		if(onButton.isChecked()){
+			//TODO make sure scheduled
+		}else{
+			//TODO make sure not scheduled
+		}
+
 	}
 	
 	
