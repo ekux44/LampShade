@@ -30,10 +30,7 @@ public class AlarmRow {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(aState.scheduledTimes[0]);
 		return DateFormat.getTimeInstance().format(cal.getTime());
-		//DateFormat df = DateFormat.getDateInstance();
-		
-		//df.setCalendar(cal);
-		//return df.getDateInstance(DateFormat.SHORT).toString();
+		//TODO find a way of getting rid of seconds
 	}
 	public String getSecondaryDescription(){
 		String result = aState.group+" -> "+aState.mood;
