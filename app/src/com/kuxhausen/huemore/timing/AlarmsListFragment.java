@@ -129,7 +129,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
+		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
 			//TODO
 			
 			//String moodSelect = MoodColumns.MOOD + "=?";
