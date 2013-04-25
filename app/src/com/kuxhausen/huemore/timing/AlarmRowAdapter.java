@@ -26,8 +26,8 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 	private ArrayList<AlarmRow> list = new ArrayList<AlarmRow>();
 	Gson gson = new Gson();
 	
-	public int getRowDBid(int position){
-		return list.get(position).getID();
+	public AlarmRow getRow(int position){
+		return list.get(position);
 	}
 	public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from,
 	        int[] to, int flags) {

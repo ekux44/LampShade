@@ -121,8 +121,12 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		switch (item.getItemId()) {
 
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
+			AlarmRow aRow = ((AlarmRowAdapter)this.getListAdapter()).getRow(selectedRow);
+			if(aRow.isScheduled())
+				aRow.toggle();
+			
 			String moodSelect = BaseColumns._ID + "=?";
-			String[] moodArg = { ""+((AlarmRowAdapter)this.getListAdapter()).getRowDBid(selectedRow) };
+			String[] moodArg = { ""+aRow.getID() };
 			getActivity().getContentResolver().delete(
 					AlarmColumns.ALARMS_URI, moodSelect,
 					moodArg);
