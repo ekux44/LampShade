@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.timing;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.*;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -47,11 +49,16 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 	Button repeatButton;
 	TextView repeatView;
 	Gson gson = new Gson();
+	Boolean[] repeats = new Boolean[7];
+	TimePicker timePick;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		for(int i=0; i<repeats.length;i++)
+			repeats[i]=false;
+		
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.edit_alarm_dialog, container, false);
 		Bundle args = getArguments();
@@ -77,7 +84,8 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		lm.initLoader(GROUPS_LOADER, null, this);
 		lm.initLoader(MOODS_LOADER, null, this);
 		
-
+		timePick = (TimePicker)myView.findViewById(R.id.alarmTimePicker);
+		
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		
 		repeatButton = (Button) myView.findViewById(R.id.repeatButton);
@@ -201,8 +209,10 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 	}
 
 	@Override
-	public void onRepeatSelected(boolean[] repeats) {
-		repeatView.setText(repeatsToString(getActivity(), repeats));
+	public void onRepeatSelected(boolean[] r) {
+		repeatView.setText(repeatsToString(getActivity(), r));
+		for(int i = 0; i<7; i++)
+			repeats[i] = r[i];
 	}
 	
 	public static String repeatsToString(Context c, boolean[] repeats){
@@ -237,16 +247,54 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		as.mood = ((Cursor)moodSpinner.getSelectedItem()).getString(0);
 		as.transitiontime = transitionValues[ transitionSpinner.getSelectedItemPosition()];
 		as.brightness = brightnessBar.getProgress();
+		as.repeats = repeats;
+		as.scheduledForFuture=true;
 		
 		
-		//repeatDays;
-		//replace with values from time picker reference
-		Calendar time = Calendar.getInstance();
-        time.setTimeInMillis(System.currentTimeMillis());
-        time.add(Calendar.SECOND, 30);
-		AlarmReciever.createAlarm(getActivity(),gson.toJson(as), time, 0);
+		boolean none = false;
+		for(boolean bool : repeats){
+			none|=bool;
+		}
+		none=!none;
 		
-		
+		Calendar projectedTime = Calendar.getInstance();
+		projectedTime.setLenient(true);
+        projectedTime.set(Calendar.HOUR_OF_DAY, timePick.getCurrentHour());
+        projectedTime.set(Calendar.MINUTE, timePick.getCurrentMinute());
+        projectedTime.set(Calendar.SECOND, 0);
+        if(none){
+			if(projectedTime.before(Calendar.getInstance())) //make sure this hour & minute is in the future
+				projectedTime.set(Calendar.DATE, projectedTime.get(Calendar.DATE)+1);
+			as.scheduledTimes = new Long[1];
+			as.scheduledTimes[0]=projectedTime.getTimeInMillis();
+		}else{
+			as.scheduledTimes = new Long[7];
+			for(int i = 0; i<7; i++){
+				if(repeats[i]){
+					Calendar copyForDayOfWeek = Calendar.getInstance();
+					copyForDayOfWeek.setLenient(true);
+					copyForDayOfWeek.setTimeInMillis(projectedTime.getTimeInMillis());
+					switch(i){
+					case 0: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); break;
+					case 1: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); break;
+					case 2: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY); break;
+					case 3: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY); break;
+					case 4: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY); break;
+					case 5: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY); break;
+					case 6: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY); break;
+					}
+					if(copyForDayOfWeek.before(Calendar.getInstance()))//if in past, choose that day next week
+						copyForDayOfWeek.set(Calendar.DATE, copyForDayOfWeek.get(Calendar.DATE)+7);
+					as.scheduledTimes[i]=copyForDayOfWeek.getTimeInMillis();
+				}
+			}
+		}
+        
+        for(Long t: as.scheduledTimes){
+        	Calendar setTime = Calendar.getInstance();
+        	setTime.setTimeInMillis(t);
+        	AlarmReciever.createAlarm(getActivity(),gson.toJson(as), setTime, 0);
+        }		
 		
 		// Defines an object to contain the new values to
 		// insert

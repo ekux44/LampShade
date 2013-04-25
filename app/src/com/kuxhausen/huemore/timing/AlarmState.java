@@ -7,6 +7,6 @@ public class AlarmState {
 	public Integer brightness;
 	public Boolean[] repeats;
 	public Boolean scheduledForFuture;
-	public Integer[] nextScheduledTimes;
+	public Long[] scheduledTimes;
 	public AlarmState(){}
 }
