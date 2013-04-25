@@ -66,7 +66,7 @@ public class AlarmRow {
 			AlarmReciever.createAlarms(c, aState, projectedHours);
 		}
 		
-		
+		aState.scheduledForFuture = !isScheduled();
 		//save change to db
 		String rowSelect = BaseColumns._ID + "=?";
 		String[] rowArg = { ""+id };
@@ -79,6 +79,6 @@ public class AlarmRow {
 				rowArg);
 		
 		
-		aState.scheduledForFuture = !isScheduled();
+		
 	}
 }

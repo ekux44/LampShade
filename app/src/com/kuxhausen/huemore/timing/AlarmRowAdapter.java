@@ -66,10 +66,9 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 			view.scheduledButton = (CompoundButton) rowView
 					.findViewById(R.id.alarmOnOffCompoundButton);
 			view.scheduledButton.setOnCheckedChangeListener(this);
-			view.scheduledButton.setTag(position);
 			view.time = (TextView) rowView
 					.findViewById(R.id.timeTextView);
-			rowView.findViewById(R.id.rowExcludingCompoundButton).setTag(position);
+			view.taggedView = rowView.findViewById(R.id.rowExcludingCompoundButton);
 			view.secondaryDescription = (TextView) rowView
 					.findViewById(R.id.subTextView);
 
@@ -81,6 +80,8 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 		/** Set data to your Views. */
 		
 		AlarmRow item = list.get(position);
+		view.taggedView.setTag(position);
+		view.scheduledButton.setTag(position);
 		view.scheduledButton.setChecked(item.isScheduled());
 		view.time.setText(item.getTime());
 		view.secondaryDescription.setText(item.getSecondaryDescription());
@@ -91,6 +92,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 		protected TextView time;
 		protected TextView secondaryDescription;
 		protected CompoundButton scheduledButton;
+		protected View taggedView;
 	}
 
 	@Override
