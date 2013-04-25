@@ -327,7 +327,9 @@ public class HueMoreProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		// TODO Auto-generated method stub
+		//TODO replace with better version at some point
+		delete(uri,selection,selectionArgs);
+		insert(uri,values);
 		return 0;
 	}
 

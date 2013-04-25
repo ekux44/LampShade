@@ -15,10 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AlarmRowAdapter extends SimpleCursorAdapter {
+public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedChangeListener {
 
 	private Cursor cursor;
 	private Context context;
@@ -61,6 +62,8 @@ public class AlarmRowAdapter extends SimpleCursorAdapter {
 
 			view.scheduledButton = (CompoundButton) rowView
 					.findViewById(R.id.alarmOnOffCompoundButton);
+			view.scheduledButton.setOnCheckedChangeListener(this);
+			view.scheduledButton.setTag(position);
 			view.time = (TextView) rowView
 					.findViewById(R.id.timeTextView);
 			view.secondaryDescription = (TextView) rowView
@@ -84,5 +87,13 @@ public class AlarmRowAdapter extends SimpleCursorAdapter {
 		protected TextView time;
 		protected TextView secondaryDescription;
 		protected CompoundButton scheduledButton;
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		AlarmRow ar = list.get((Integer)buttonView.getTag());
+		if(ar.isScheduled()!=isChecked){
+			ar.toggle();
+		}
 	}
 }

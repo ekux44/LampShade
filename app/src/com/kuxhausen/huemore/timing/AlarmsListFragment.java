@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,17 +71,6 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		return myView;
 	}
 	
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		LinearLayout row = (LinearLayout)v;
-		CompoundButton onButton= (CompoundButton)row.getChildAt(1);
-		AlarmRow thisRow = ((AlarmRow)this.dataSource.getItem(position));
-		if(onButton.isChecked()!=thisRow.isScheduled())
-			thisRow.toggle();
-
-	}
-	
-	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void initializeActionBar(Boolean value) {
 		try {
@@ -128,9 +118,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		switch (item.getItemId()) {
 
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
-			//TODO
-			
-			//String moodSelect = MoodColumns.MOOD + "=?";
+			//String moodSelect = AlarmColumns.STATE + "=?";
 			//String[] moodArg = { (String) (selected).getText() };
 			//getActivity().getContentResolver().delete(
 			//		DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
