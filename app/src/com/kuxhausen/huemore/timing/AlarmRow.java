@@ -1,5 +1,8 @@
 package com.kuxhausen.huemore.timing;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 
@@ -21,7 +24,16 @@ public class AlarmRow {
 		id = db_ID;
 	}
 	public String getTime(){
-		return "5:00 PM";
+		if(aState.scheduledTimes==null || aState.scheduledTimes[0]==null)
+			return "N/A";
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(aState.scheduledTimes[0]);
+		return DateFormat.getTimeInstance().format(cal.getTime());
+		//DateFormat df = DateFormat.getDateInstance();
+		
+		//df.setCalendar(cal);
+		//return df.getDateInstance(DateFormat.SHORT).toString();
 	}
 	public String getSecondaryDescription(){
 		String result = aState.group+" -> "+aState.mood;
