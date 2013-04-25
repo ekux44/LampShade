@@ -2,6 +2,8 @@ package com.kuxhausen.huemore.persistence;
 
 import java.util.HashMap;
 
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -328,9 +330,78 @@ public class HueMoreProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
 		//TODO replace with better version at some point
-		delete(uri,selection,selectionArgs);
-		insert(uri,values);
-		return 0;
+		//delete(uri,selection,selectionArgs);
+		//insert(uri,values);
+		//return 0;
+		
+		// Opens the database object in "write" mode.
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int count;
+        String finalWhere;
+
+        // Does the update based on the incoming URI pattern
+        switch (sUriMatcher.match(uri)) {
+
+            // If the incoming URI matches the general notes pattern, does the update based on
+            // the incoming data.
+            case ALARMS:
+
+                // Does the update and returns the number of rows updated.
+                count = db.update(
+                    AlarmColumns.TABLE_NAME, // The database table name.
+                    values,                   // A map of column names and new values to use.
+                    selection,                    // The where clause column names.
+                    selectionArgs                 // The where clause column values to select on.
+                );
+                break;
+
+            // If the incoming URI matches a single note ID, does the update based on the incoming
+            // data, but modifies the where clause to restrict it to the particular note ID.
+            /*case NOTE_ID:
+                // From the incoming URI, get the note ID
+                String noteId = uri.getPathSegments().get(NotePad.Notes.NOTE_ID_PATH_POSITION);
+
+                /*
+                 * Starts creating the final WHERE clause by restricting it to the incoming
+                 * note ID.
+                 *//*
+                finalWhere =
+                        NotePad.Notes._ID +                              // The ID column name
+                        " = " +                                          // test for equality
+                        uri.getPathSegments().                           // the incoming note ID
+                            get(NotePad.Notes.NOTE_ID_PATH_POSITION)
+                ;
+
+                // If there were additional selection criteria, append them to the final WHERE
+                // clause
+                if (where !=null) {
+                    finalWhere = finalWhere + " AND " + where;
+                }
+
+
+                // Does the update and returns the number of rows updated.
+                count = db.update(
+                    NotePad.Notes.TABLE_NAME, // The database table name.
+                    values,                   // A map of column names and new values to use.
+                    finalWhere,               // The final WHERE clause to use
+                                              // placeholders for whereArgs
+                    whereArgs                 // The where clause column values to select on, or
+                                              // null if the values are in the where argument.
+                );
+                break;*/
+            // If the incoming pattern is invalid, throws an exception.
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        /*Gets a handle to the content resolver object for the current context, and notifies it
+         * that the incoming URI changed. The object passes this along to the resolver framework,
+         * and observers that have registered themselves for the provider are notified.
+         */
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Returns the number of rows updated.
+        return count;
 	}
 
 }
