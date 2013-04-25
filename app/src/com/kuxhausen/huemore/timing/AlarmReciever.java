@@ -10,6 +10,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.BulbState;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -24,32 +25,106 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	private final static String ALARM_DETAILS = "alarmDetailsBundle";
 
-	public static boolean createAlarm(Context context, String alarmState,
-			Calendar cal, int requestCode) {
-
+	public static AlarmState createAlarms(Context context, String group, String mood, int transitiontime, int brightness, Boolean[] repeats, int currentHour, int currentMin){
+		Gson gson = new Gson();
+		AlarmState as = new AlarmState();
+		as.group = group;
+		as.mood = mood;
+		as.transitiontime = transitiontime;
+		as.brightness = brightness;
+		as.repeats = repeats;
+		as.scheduledForFuture=true;
+		
+		Calendar projectedTime = Calendar.getInstance();
+		projectedTime.setLenient(true);
+        projectedTime.set(Calendar.HOUR_OF_DAY, currentHour);
+        projectedTime.set(Calendar.MINUTE, currentMin);
+        projectedTime.set(Calendar.SECOND, 0);
+        
+        return createAlarms(context, as, projectedTime);
+        
+	}
+	public static AlarmState createAlarms(Context context, AlarmState as, Calendar timeAdjustedCal){
+		boolean none = false;
+		for(boolean bool : as.repeats){
+			none|=bool;
+		}
+		none=!none;
+		if(none){
+			if(timeAdjustedCal.before(Calendar.getInstance())) //make sure this hour & minute is in the future
+				timeAdjustedCal.set(Calendar.DATE, timeAdjustedCal.get(Calendar.DATE)+1);
+			as.scheduledTimes = new Long[1];
+			as.scheduledTimes[0]=timeAdjustedCal.getTimeInMillis();
+		}else{
+			as.scheduledTimes = new Long[7];
+			for(int i = 0; i<7; i++){
+				if(as.repeats[i]){
+					Calendar copyForDayOfWeek = Calendar.getInstance();
+					copyForDayOfWeek.setLenient(true);
+					copyForDayOfWeek.setTimeInMillis(timeAdjustedCal.getTimeInMillis());
+					switch(i){
+					case 0: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); break;
+					case 1: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); break;
+					case 2: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY); break;
+					case 3: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY); break;
+					case 4: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY); break;
+					case 5: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY); break;
+					case 6: copyForDayOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY); break;
+					}
+					if(copyForDayOfWeek.before(Calendar.getInstance()))//if in past, choose that day next week
+						copyForDayOfWeek.set(Calendar.DATE, copyForDayOfWeek.get(Calendar.DATE)+7);
+					as.scheduledTimes[i]=copyForDayOfWeek.getTimeInMillis();
+				}
+			}
+		}
+        
+        for(Long t: as.scheduledTimes){
+        	Calendar setTime = Calendar.getInstance();
+        	setTime.setTimeInMillis(t);
+        	AlarmReciever.createAlarm(context,as, setTime.getTimeInMillis());
+        }
+        return as;
+	}
+	
+	public static void createAlarm(Context context, AlarmState alarmState,
+			Long timeInMillis) {
+		Gson gson = new Gson();
+		String aState = gson.toJson(alarmState);
+		
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(ALARM_DETAILS, alarmState);
+		intent.putExtra(ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-				requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				generateRequestCode(aState), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis,
 				pendingIntent);
-		return false;
 	}
 
-	public static boolean cancelAlarm(Context context, String alarmState, Calendar cal, int requestCode) {
-
+	public static void cancelAlarm(Context context, AlarmState alarmState) {
+		Gson gson = new Gson();
+		String aState = gson.toJson(alarmState);
+		
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(ALARM_DETAILS, alarmState);
+		intent.putExtra(ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-				requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				generateRequestCode(aState), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		alarmMgr.cancel(pendingIntent);
-		return false;
+	}
+	public static int generateRequestCode(String aState){
+		Gson gson = new Gson();
+		AlarmState as = gson.fromJson(aState, AlarmState.class);
+		int code = 0; int bit = 1;
+		for(boolean b : as.repeats){
+			if(b)
+				code+=bit;
+			bit*=2;
+		}
+		return code;
 	}
 
 	@Override

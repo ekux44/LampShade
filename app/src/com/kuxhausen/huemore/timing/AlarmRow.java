@@ -51,6 +51,18 @@ public class AlarmRow {
 	public void toggle(){
 		aState.scheduledForFuture = !isScheduled();
 		
+		if(isScheduled()){
+			for(Long t : aState.scheduledTimes){
+				if(t!=null)
+					AlarmReciever.cancelAlarm(c, aState);
+			}
+		}else{
+			Calendar projectedHours =Calendar.getInstance();
+			projectedHours.setTimeInMillis(aState.scheduledTimes[0]);
+			AlarmReciever.createAlarms(c, aState, projectedHours);
+		}
+		
+		
 		//save change to db
 		String rowSelect = BaseColumns._ID + "=?";
 		String[] rowArg = { ""+id };

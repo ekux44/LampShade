@@ -74,11 +74,9 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		LinearLayout row = (LinearLayout)v;
 		CompoundButton onButton= (CompoundButton)row.getChildAt(1);
-		if(onButton.isChecked()){
-			//TODO make sure scheduled
-		}else{
-			//TODO make sure not scheduled
-		}
+		AlarmRow thisRow = ((AlarmRow)this.dataSource.getItem(position));
+		if(onButton.isChecked()!=thisRow.isScheduled())
+			thisRow.toggle();
 
 	}
 	
