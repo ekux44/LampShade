@@ -234,7 +234,7 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		else{
 			for(int i = 0; i<7; i++){
 				if(repeats[i])
-					result+=repeats[i]+" ";
+					result+=days[i]+" ";
 			}
 		}
 		return result;

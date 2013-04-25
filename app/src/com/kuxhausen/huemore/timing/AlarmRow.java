@@ -28,13 +28,19 @@ public class AlarmRow {
 	}
 	
 	public String getTime(){
-		if(aState.scheduledTimes==null || aState.scheduledTimes[0]==null)
+		if(aState.scheduledTimes==null)
 			return "N/A";
-		
+		long time =0;
+		loopFirst : for(Long milis : aState.scheduledTimes){
+			if(milis!=null){
+				time = milis;
+				break loopFirst;
+			}
+		}
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(aState.scheduledTimes[0]);
+		cal.setTimeInMillis(time);
 		return DateFormat.getTimeInstance().format(cal.getTime());
-		//TODO find a way of getting rid of seconds
+		
 	}
 	public String getSecondaryDescription(){
 		String result = aState.group+" -> "+aState.mood;
