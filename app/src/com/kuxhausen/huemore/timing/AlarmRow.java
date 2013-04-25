@@ -23,6 +23,10 @@ public class AlarmRow {
 		aState = as;
 		id = db_ID;
 	}
+	public int getID(){
+		return id;
+	}
+	
 	public String getTime(){
 		if(aState.scheduledTimes==null || aState.scheduledTimes[0]==null)
 			return "N/A";

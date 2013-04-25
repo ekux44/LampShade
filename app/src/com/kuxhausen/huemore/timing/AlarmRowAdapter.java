@@ -26,6 +26,9 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 	private ArrayList<AlarmRow> list = new ArrayList<AlarmRow>();
 	Gson gson = new Gson();
 	
+	public int getRowDBid(int position){
+		return list.get(position).getID();
+	}
 	public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from,
 	        int[] to, int flags) {
 	    super(context, layout, c, from, to, flags);
@@ -66,6 +69,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 			view.scheduledButton.setTag(position);
 			view.time = (TextView) rowView
 					.findViewById(R.id.timeTextView);
+			rowView.findViewById(R.id.rowExcludingCompoundButton).setTag(position);
 			view.secondaryDescription = (TextView) rowView
 					.findViewById(R.id.subTextView);
 

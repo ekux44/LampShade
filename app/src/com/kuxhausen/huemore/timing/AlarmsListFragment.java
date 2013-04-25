@@ -32,6 +32,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
 	public AlarmRowAdapter dataSource;
+	private int selectedRow;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +107,8 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
+		LinearLayout selected = (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		selectedRow = (Integer)selected.getChildAt(0).getTag();
 		MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_alarm, menu);
 	}
@@ -118,11 +121,11 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		switch (item.getItemId()) {
 
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
-			//String moodSelect = AlarmColumns.STATE + "=?";
-			//String[] moodArg = { (String) (selected).getText() };
-			//getActivity().getContentResolver().delete(
-			//		DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
-			//		moodArg);
+			String moodSelect = BaseColumns._ID + "=?";
+			String[] moodArg = { ""+((AlarmRowAdapter)this.getListAdapter()).getRowDBid(selectedRow) };
+			getActivity().getContentResolver().delete(
+					AlarmColumns.ALARMS_URI, moodSelect,
+					moodArg);
 			return true;
 
 		default:
