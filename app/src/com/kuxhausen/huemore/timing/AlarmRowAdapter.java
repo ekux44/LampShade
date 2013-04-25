@@ -32,11 +32,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter {
 	    this.context = context;
 	    
 	    list = new ArrayList<AlarmRow>();
-	    if(c!=null){
-	    while (cursor.moveToNext()) {
-			list.add(new AlarmRow(gson.fromJson(cursor.getString(0),AlarmState.class)));
-		}
-	    }
+	    changeCursor(c);
 	}
 	@Override
 	public void changeCursor(Cursor c){
@@ -44,7 +40,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter {
 		this.cursor=c;
 		if(c!=null){
 			while (cursor.moveToNext()) {
-				list.add(new AlarmRow(gson.fromJson(cursor.getString(0),AlarmState.class)));
+				list.add(new AlarmRow(context, gson.fromJson(cursor.getString(0),AlarmState.class),cursor.getInt(1)));
 			}
 		}
 	}

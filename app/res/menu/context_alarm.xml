@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/contextmoodmenu_delete"
+        android:orderInCategory="100"
+        android:title="@string/contextmenu_delete"/>
+
+</menu>

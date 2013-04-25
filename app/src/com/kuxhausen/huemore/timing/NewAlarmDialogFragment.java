@@ -26,6 +26,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import android.support.v4.app.FragmentActivity;
@@ -44,9 +45,7 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 	SimpleCursorAdapter groupDataSource, moodDataSource;
 	int[] transitionValues;
 	Button repeatButton;
-	boolean[] repeatDays = new boolean[7];
 	TextView repeatView;
-	String[] days;
 	Gson gson = new Gson();
 	
 	@Override
@@ -111,7 +110,7 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		
 		
 		transitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
-		days = getActivity().getResources().getStringArray(R.array.cap_short_repeat_days);
+		
 		
 		return myView;
 	}
@@ -203,7 +202,12 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 
 	@Override
 	public void onRepeatSelected(boolean[] repeats) {
-		repeatDays = repeats;
+		repeatView.setText(repeatsToString(getActivity(), repeats));
+	}
+	
+	public static String repeatsToString(Context c, boolean[] repeats){
+		String result = "";
+		String[] days = c.getResources().getStringArray(R.array.cap_short_repeat_days);
 		
 		boolean all = true;
 		boolean none = false;
@@ -212,19 +216,18 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 			none|=bool;
 		}
 		if(all){
-			repeatView.setText(getActivity().getResources().getString(R.string.cap_short_every_day));
+			result = c.getResources().getString(R.string.cap_short_every_day);
 		}
 		else if(!none){
-			repeatView.setText(getActivity().getResources().getString(R.string.cap_short_none));
+			result = c.getResources().getString(R.string.cap_short_none);
 		}
 		else{
-			String result = "";
 			for(int i = 0; i<7; i++){
 				if(repeats[i])
-					result+=days[i]+" ";
+					result+=repeats[i]+" ";
 			}
-			repeatView.setText(result);
 		}
+		return result;
 	}
 	
 	public void onCreateAlarm(){
@@ -248,11 +251,6 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		// Defines an object to contain the new values to
 		// insert
 		ContentValues mNewValues = new ContentValues();
-
-		/*
-		 * Sets the values of each column and inserts the word. The arguments to
-		 * the "put" method are "column name" and "value"
-		 */
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
 		
 		Uri mNewUri = getActivity().getContentResolver().insert(

@@ -9,12 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -111,7 +113,38 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		}
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
 
+		MenuInflater inflater = this.getActivity().getMenuInflater();
+		inflater.inflate(R.menu.context_alarm, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		switch (item.getItemId()) {
+
+		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
+			//TODO
+			
+			//String moodSelect = MoodColumns.MOOD + "=?";
+			//String[] moodArg = { (String) (selected).getText() };
+			//getActivity().getContentResolver().delete(
+			//		DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
+			//		moodArg);
+			return true;
+
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+	
+	
 	/**
 	 * Callback that's invoked when the system has initialized the Loader and is
 	 * ready to start the query. This usually happens when initLoader() is

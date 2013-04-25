@@ -16,14 +16,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alarms"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/subTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/alarms"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
