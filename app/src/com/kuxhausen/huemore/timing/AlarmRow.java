@@ -49,7 +49,7 @@ public class AlarmRow {
 		return aState.scheduledForFuture;
 	}
 	public void toggle(){
-		aState.scheduledForFuture = !isScheduled();
+		
 		
 		if(isScheduled()){
 			for(Long t : aState.scheduledTimes){
@@ -73,5 +73,8 @@ public class AlarmRow {
 		c.getContentResolver().update(
 				AlarmColumns.ALARMS_URI, mNewValues, rowSelect,
 				rowArg);
+		
+		
+		aState.scheduledForFuture = !isScheduled();
 	}
 }

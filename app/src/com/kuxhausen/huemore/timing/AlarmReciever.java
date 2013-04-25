@@ -89,7 +89,7 @@ public class AlarmReciever extends BroadcastReceiver {
         			soonestTime=setTime;
         	}
         }
-        Toast.makeText(context, context.getString(R.string.next_scheduled_intro)+DateUtils.getRelativeTimeSpanString(soonestTime.getTimeInMillis()),		
+        Toast.makeText(context, context.getString(R.string.next_scheduled_intro)+" "+DateUtils.getRelativeTimeSpanString(soonestTime.getTimeInMillis()),		
 				Toast.LENGTH_SHORT).show();
         return as;
 	}
