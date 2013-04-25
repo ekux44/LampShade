@@ -68,7 +68,14 @@ public class AlarmRow {
 			}
 		}else{
 			Calendar projectedHours =Calendar.getInstance();
-			projectedHours.setTimeInMillis(aState.scheduledTimes[0]);
+			long time =0;
+			loopFirst : for(Long milis : aState.scheduledTimes){
+				if(milis!=null){
+					time = milis;
+					break loopFirst;
+				}
+			}
+			projectedHours.setTimeInMillis(time);
 			AlarmReciever.createAlarms(c, aState, projectedHours);
 		}
 		
