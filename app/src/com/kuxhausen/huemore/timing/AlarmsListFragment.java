@@ -28,7 +28,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
-	public CursorAdapter dataSource;
+	public AlarmRowAdapter dataSource;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +47,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 				getLoaderManager().initLoader(ALARMS_LOADER, null, this);
 
 				String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-				dataSource = new SimpleCursorAdapter(this.getActivity(), R.layout.alarm_row, null,
+				dataSource = new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null,
 						columns, new int[] { R.id.subTextView }, 0);
 				
 				setListAdapter(dataSource);
