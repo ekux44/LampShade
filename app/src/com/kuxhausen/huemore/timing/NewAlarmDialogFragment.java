@@ -32,6 +32,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -52,10 +53,42 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 	Boolean[] repeats = new Boolean[7];
 	TimePicker timePick;
 	
+	public void onLoadLoaderManager(){
+		if(groupSpinner!=null && moodSpinner!=null)
+		{
+			/*
+			 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
+			 * passed to onCreateLoader().
+			 */
+			LoaderManager lm = getActivity().getSupportLoaderManager();
+			lm.restartLoader(GROUPS_LOADER, null, this);
+			lm.restartLoader(MOODS_LOADER, null, this);
+			//lm.initLoader(GROUPS_LOADER, null, this);
+			//lm.initLoader(MOODS_LOADER, null, this);
+			
+			
+			int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
+					: android.R.layout.simple_list_item_1;
+			
+			String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
+			groupDataSource = new SimpleCursorAdapter(getActivity(), layout, null,
+					gColumns, new int[] { android.R.id.text1 }, 0);
+			groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			groupSpinner.setAdapter(groupDataSource);
+			
+			
+			String[] mColumns = { MoodColumns.MOOD, BaseColumns._ID };
+			moodDataSource = new SimpleCursorAdapter(getActivity(), layout, null,
+					mColumns, new int[] { android.R.id.text1 }, 0);
+			moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			moodSpinner.setAdapter(moodDataSource);
+		}
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		
 		for(int i=0; i<repeats.length;i++)
 			repeats[i]=false;
 		
@@ -76,14 +109,6 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 				int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 						: android.R.layout.simple_list_item_1;
 		
-		/*
-		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
-		 * passed to onCreateLoader().
-		 */
-		LoaderManager lm = getActivity().getSupportLoaderManager();
-		lm.initLoader(GROUPS_LOADER, null, this);
-		lm.initLoader(MOODS_LOADER, null, this);
-		
 		timePick = (TimePicker)myView.findViewById(R.id.alarmTimePicker);
 		
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
@@ -93,19 +118,9 @@ OnClickListener, LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener
 		repeatView = (TextView)myView.findViewById(R.id.repeatVisualization);
 		
 		groupSpinner = (Spinner) myView.findViewById(R.id.groupSpinner);
-		String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
-		groupDataSource = new SimpleCursorAdapter(getActivity(), layout, null,
-				gColumns, new int[] { android.R.id.text1 }, 0);
-		groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		groupSpinner.setAdapter(groupDataSource);
-		
 		
 		moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
-		String[] mColumns = { MoodColumns.MOOD, BaseColumns._ID };
-		moodDataSource = new SimpleCursorAdapter(getActivity(), layout, null,
-				mColumns, new int[] { android.R.id.text1 }, 0);
-		moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		moodSpinner.setAdapter(moodDataSource);
+		onLoadLoaderManager();
 		
 		transitionSpinner = (Spinner) myView.findViewById(R.id.transitionSpinner);
 		// Create an ArrayAdapter using the string array and a default spinner layout

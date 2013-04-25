@@ -96,6 +96,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(), "dialog");
+			nadf.onLoadLoaderManager();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
