@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -18,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,12 +79,18 @@ public class AlarmReciever extends BroadcastReceiver {
 				}
 			}
 		}
-        
+        Calendar soonestTime =null;
         for(Long t: as.scheduledTimes){
-        	Calendar setTime = Calendar.getInstance();
-        	setTime.setTimeInMillis(t);
-        	AlarmReciever.createAlarm(context,as, setTime.getTimeInMillis());
+        	if(t!=null){
+        		Calendar setTime = Calendar.getInstance();
+        		setTime.setTimeInMillis(t);
+        		AlarmReciever.createAlarm(context,as, setTime.getTimeInMillis());
+        		if(soonestTime==null||setTime.before(soonestTime))
+        			soonestTime=setTime;
+        	}
         }
+        Toast.makeText(context, context.getString(R.string.next_scheduled_intro)+DateUtils.getRelativeTimeSpanString(soonestTime.getTimeInMillis()),		
+				Toast.LENGTH_SHORT).show();
         return as;
 	}
 	
