@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,7 +85,14 @@ public class AlarmReciever extends BroadcastReceiver {
         	if(t!=null){
         		Calendar setTime = Calendar.getInstance();
         		setTime.setTimeInMillis(t);
-        		AlarmReciever.createAlarm(context,as, setTime.getTimeInMillis());
+        		if(as.scheduledTimes.length==7){//repeating weekly alarm
+        			Log.e("asdf", "repeatingAlarm");
+        			AlarmReciever.createRepeatingAlarm(context,as, setTime.getTimeInMillis());
+        		}
+        		else{
+        			Log.e("asdf", "oneOffAlarm");
+        			AlarmReciever.createAlarm(context,as, setTime.getTimeInMillis());
+        		}
         		if(soonestTime==null||setTime.before(soonestTime))
         			soonestTime=setTime;
         	}
@@ -109,6 +117,22 @@ public class AlarmReciever extends BroadcastReceiver {
 		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis,
 				pendingIntent);
 	}
+	public static void createRepeatingAlarm(Context context, AlarmState alarmState,
+			Long timeInMillis) {
+
+		Gson gson = new Gson();
+		String aState = gson.toJson(alarmState);
+		
+		AlarmManager alarmMgr = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(context, AlarmReciever.class);
+		intent.putExtra(ALARM_DETAILS, aState);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+				generateRequestCode(aState), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	
+		alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,timeInMillis, AlarmManager.INTERVAL_DAY*7,
+				pendingIntent);
+		}
 
 	public static void cancelAlarm(Context context, AlarmState alarmState) {
 		Gson gson = new Gson();
