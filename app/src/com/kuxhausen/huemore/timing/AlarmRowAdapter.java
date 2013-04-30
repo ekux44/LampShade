@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,11 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 	private ArrayList<AlarmRow> list = new ArrayList<AlarmRow>();
 	Gson gson = new Gson();
 	
+	private ArrayList<AlarmRow> getList(){
+		return list;
+	}
 	public AlarmRow getRow(int position){
-		return list.get(position);
+		return getList().get(position);
 	}
 	public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from,
 	        int[] to, int flags) {
@@ -35,15 +39,17 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 	    this.cursor = c;
 	    this.context = context;
 	    
-	    list = new ArrayList<AlarmRow>();
 	    changeCursor(c);
 	}
 	@Override
 	public void changeCursor(Cursor c){
 		super.changeCursor(c);
+		Log.e("asdf", "changeCursor");
 		this.cursor=c;
+		list = new ArrayList<AlarmRow>();
 		if(c!=null){
 			while (cursor.moveToNext()) {
+				Log.e("asdf", gson.fromJson(cursor.getString(0),AlarmState.class).mood);
 				list.add(new AlarmRow(context, gson.fromJson(cursor.getString(0),AlarmState.class),cursor.getInt(1)));
 			}
 		}
@@ -79,9 +85,9 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 
 		/** Set data to your Views. */
 		
-		AlarmRow item = list.get(position);
-		view.taggedView.setTag(position);
-		view.scheduledButton.setTag(position);
+		AlarmRow item = getList().get(position);
+		view.taggedView.setTag(item);
+		view.scheduledButton.setTag(item);
 		view.scheduledButton.setChecked(item.isScheduled());
 		view.time.setText(item.getTime());
 		view.secondaryDescription.setText(item.getSecondaryDescription());
@@ -97,9 +103,13 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		AlarmRow ar = list.get((Integer)buttonView.getTag());
+		AlarmRow ar = (AlarmRow)buttonView.getTag();
 		if(ar.isScheduled()!=isChecked){
 			ar.toggle();
 		}
+	}
+	@Override
+	public int getCount(){
+		return (getList() != null)? getList().size() : 0;
 	}
 }

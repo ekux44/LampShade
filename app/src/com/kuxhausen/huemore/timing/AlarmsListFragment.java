@@ -32,7 +32,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
 	public AlarmRowAdapter dataSource;
-	private int selectedRow;
+	private AlarmRow selectedRow;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,7 +109,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		LinearLayout selected = (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		selectedRow = (Integer)selected.getChildAt(0).getTag();
+		selectedRow = ((AlarmRow)selected.getChildAt(0).getTag());
 		MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_alarm, menu);
 	}
@@ -122,12 +122,11 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		switch (item.getItemId()) {
 
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
-			AlarmRow aRow = ((AlarmRowAdapter)this.getListAdapter()).getRow(selectedRow);
-			if(aRow.isScheduled())
-				aRow.toggle();
+			if(selectedRow.isScheduled())
+				selectedRow.toggle();
 			
 			String moodSelect = BaseColumns._ID + "=?";
-			String[] moodArg = { ""+aRow.getID() };
+			String[] moodArg = { ""+selectedRow.getID() };
 			getActivity().getContentResolver().delete(
 					AlarmColumns.ALARMS_URI, moodSelect,
 					moodArg);
@@ -147,6 +146,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 	 */
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
+		Log.e("onLoaderFinished", ""+loaderID);
 		/*
 		 * Takes action based on the ID of the Loader that's being created
 		 */
@@ -169,6 +169,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+		Log.e("onLoaderFinished", arg0.toString());
 		/*
 		 * Moves the query results into the adapter, causing the ListView
 		 * fronting this adapter to re-display
@@ -179,6 +180,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
+		Log.e("onLoaderReset", arg0.toString());
 		/*
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
