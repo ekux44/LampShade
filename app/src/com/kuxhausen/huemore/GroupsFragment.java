@@ -200,7 +200,7 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
 		// Notify the parent activity of selected bulbs
-		mCallback.onGroupBulbSelected(bulbS);
+		mCallback.onGroupBulbSelected(bulbS, selected.getText().toString());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

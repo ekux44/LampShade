@@ -59,7 +59,9 @@ public class AlarmsListFragment extends ListFragment implements
 				.findViewById(R.id.showOnLandScape);
 		if (headingRow.getVisibility() == View.GONE)
 			setHasOptionsMenu(true);
+		
 		getActivity().setTitle(R.string.alarms);
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			initializeActionBar(true);
 		}

@@ -43,7 +43,7 @@ public class MoodManualPagingFragment extends Fragment implements
 	 */
 	ViewPager mViewPager;
 	SeekBar brightnessBar;
-	public Context parrentActivity;
+	public MainActivity parrentActivity;
 	int brightness;
 	boolean isTrackingTouch = false;
 	SharedPreferences settings;
@@ -66,7 +66,7 @@ public class MoodManualPagingFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		parrentActivity = this.getActivity();
+		parrentActivity = (MainActivity) this.getActivity();
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
 		// Inflate the layout for this fragment
@@ -101,7 +101,7 @@ public class MoodManualPagingFragment extends Fragment implements
 				Gson gs = new Gson();
 				String[] brightnessState = { gs.toJson(hs) };
 				// TODO deal with off?
-				((MainActivity) parrentActivity)
+				parrentActivity
 						.onBrightnessChanged(brightnessState);
 				isTrackingTouch = false;
 			}
@@ -121,11 +121,15 @@ public class MoodManualPagingFragment extends Fragment implements
 		return myView;
 	}
 
+	
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		parrentActivity.setTitle(parrentActivity.groupS);
+		
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
-				parrentActivity, ((MainActivity) parrentActivity).bulbS, this);
+				parrentActivity, parrentActivity.bulbS, this);
 		getBulbsAttributes.execute();
 
 	}

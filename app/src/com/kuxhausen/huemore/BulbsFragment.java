@@ -141,7 +141,7 @@ public class BulbsFragment extends ListFragment implements
 
 		// Notify the parent activity of selected item
 		Integer[] iPos = { position + 1 };
-		mCallback.onGroupBulbSelected(iPos);
+		mCallback.onGroupBulbSelected(iPos, selected.getText().toString());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(position, true);

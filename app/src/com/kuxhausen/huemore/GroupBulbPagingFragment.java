@@ -34,12 +34,13 @@ public class GroupBulbPagingFragment extends Fragment {
 	 */
 	ViewPager mViewPager;
 	SharedPreferences settings;
+	MainActivity parrentActivity;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
 	public interface OnBulbGroupSelectedListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onGroupBulbSelected(Integer[] bulbNum);
+		public void onGroupBulbSelected(Integer[] bulbNum, String name);
 
 	}
 
@@ -47,6 +48,8 @@ public class GroupBulbPagingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		parrentActivity = (MainActivity)this.getActivity();
+		
 		settings = PreferenceManager.getDefaultSharedPreferences(this
 				.getActivity());
 
@@ -70,6 +73,12 @@ public class GroupBulbPagingFragment extends Fragment {
 			mViewPager.setCurrentItem(GROUP_LOCATION);
 		}
 		return myView;
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		parrentActivity.setTitle(R.string.app_name);
 	}
 
 	/**

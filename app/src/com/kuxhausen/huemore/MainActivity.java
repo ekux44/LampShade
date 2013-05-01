@@ -48,6 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	Integer[] bulbS;
 	String mood;
+	String groupS;
 	IabHelper mPlayHelper;
 	MainActivity m;
 	Inventory lastQuerriedInventory;
@@ -293,9 +294,9 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onGroupBulbSelected(Integer[] bulb) {
+	public void onGroupBulbSelected(Integer[] bulb, String name) {
 		bulbS = bulb;
-
+		groupS = name;
 		// Capture the article fragment from the activity layout
 		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
