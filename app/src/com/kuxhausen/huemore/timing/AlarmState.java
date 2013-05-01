@@ -8,5 +8,7 @@ public class AlarmState {
 	public Boolean[] repeats;
 	public Boolean scheduledForFuture;
 	public Long[] scheduledTimes;
-	public AlarmState(){}
+
+	public AlarmState() {
+	}
 }

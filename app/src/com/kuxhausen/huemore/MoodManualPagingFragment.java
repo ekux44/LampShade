@@ -196,18 +196,16 @@ public class MoodManualPagingFragment extends Fragment implements
 
 			brightness = brightnessAverage;
 			brightnessBar.setProgress(brightnessAverage);
-			
-			if(nchf!=null){
-				//this button marking approach gets treated like real user input and modifies entire group. BAD
-				/*boolean colorLoopOn = false;
-				for (BulbAttributes ba : bulbsAttributes) {
-					if (ba != null && ba.state.effect.equals("colorloop")) 
-						colorLoopOn = true;
-				}
-				//if(colorLoopOn)
-					//nchf.colorLoop.setChecked(true);
-				
-				*/
+
+			if (nchf != null) {
+				// this button marking approach gets treated like real user
+				// input and modifies entire group. BAD
+				/*
+				 * boolean colorLoopOn = false; for (BulbAttributes ba :
+				 * bulbsAttributes) { if (ba != null &&
+				 * ba.state.effect.equals("colorloop")) colorLoopOn = true; }
+				 * //if(colorLoopOn) //nchf.colorLoop.setChecked(true);
+				 */
 			}
 		}
 	}

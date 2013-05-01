@@ -36,18 +36,17 @@ public class Register extends AsyncTask<Void, Integer, String> {
 	// deliver messages
 	public interface OnRegisterListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public void onRegisterResult(String bridge,
-				String username);
+		public void onRegisterResult(String bridge, String username);
 	}
 
 	public Register(Activity parrentActivity, String ip,
 			OnRegisterListener resultListener, String userName,
 			String devicetype) {
 		cont = parrentActivity;
-		if(ip!=null && !ip.equals("")){
+		if (ip != null && !ip.equals("")) {
 			bridges = new Bridge[1];
 			bridges[0] = new Bridge();
-			bridges[0].internalipaddress=ip;
+			bridges[0].internalipaddress = ip;
 		}
 		mResultListener = resultListener;
 		username = userName;
@@ -61,7 +60,7 @@ public class Register extends AsyncTask<Void, Integer, String> {
 		HttpGet httpGet = new HttpGet("http://" + "www.meethue.com/api/nupnp");
 		bridges = new Bridge[1];
 		bridges[0] = new Bridge();
-		bridges[0].internalipaddress="192.168.1.100";
+		bridges[0].internalipaddress = "192.168.1.100";
 
 		try {
 
@@ -75,14 +74,14 @@ public class Register extends AsyncTask<Void, Integer, String> {
 				InputStream content = entity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(content));
-				
+
 				String line;
 				String jSon = "";
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
 					jSon += line;
 				}
-				
+
 				Gson gson = new Gson();
 				try {
 					// autoselect first hub if multiple hubs
@@ -107,46 +106,48 @@ public class Register extends AsyncTask<Void, Integer, String> {
 	protected String doInBackground(Void... voids) {
 		if (bridges == null || bridges.equals(""))
 			getBridge();
-		for(Bridge b : bridges){
+		for (Bridge b : bridges) {
 			// Create a new HttpClient and Post Header
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost("http://" + b.internalipaddress + "/api/");
-	
+			HttpPost httppost = new HttpPost("http://" + b.internalipaddress
+					+ "/api/");
+
 			try {
 				RegistrationRequest request = new RegistrationRequest();
 				request.username = username;
 				request.devicetype = deviceType;
 				Gson gson = new Gson();
 				String registrationRequest = gson.toJson(request);
-	
+
 				StringEntity se = new StringEntity(registrationRequest);
-	
+
 				// sets the post request as the resulting string
 				httppost.setEntity(se);
 				// sets a request header so the page receiving the request
 				// will know what to do with it
 				httppost.setHeader("Accept", "application/json");
 				httppost.setHeader("Content-type", "application/json");
-	
+
 				// execute HTTP post request
 				HttpResponse response = httpclient.execute(httppost);
-	
+
 				// analyze the response
-				String responseString = EntityUtils.toString(response.getEntity());
+				String responseString = EntityUtils.toString(response
+						.getEntity());
 				responseString = responseString.substring(1,
 						responseString.length() - 1);// pull off the outer
 														// brackets
-	
-				RegistrationResponse responseObject = gson.fromJson(responseString,
-						RegistrationResponse.class);
+
+				RegistrationResponse responseObject = gson.fromJson(
+						responseString, RegistrationResponse.class);
 				if (responseObject.success != null)
 					return b.internalipaddress;
-	
+
 			} catch (ClientProtocolException e) {
-	
+
 				// TODO Auto-generated catch block
 			} catch (IOException e) {
-	
+
 				// TODO Auto-generated catch block
 			} catch (java.lang.IllegalArgumentException e) {
 				// TODO deal with null IP from getBridge

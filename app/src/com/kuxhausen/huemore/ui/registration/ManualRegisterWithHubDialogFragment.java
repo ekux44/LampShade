@@ -113,7 +113,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 	@Override
 	public void onRegisterResult(String bridgeIP, String username) {
 
-		if (bridgeIP!=null && isAdded()) {
+		if (bridgeIP != null && isAdded()) {
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();

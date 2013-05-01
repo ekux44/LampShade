@@ -2,55 +2,59 @@ package com.kuxhausen.huemore.timing;
 
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedChangeListener {
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.R;
+
+public class AlarmRowAdapter extends SimpleCursorAdapter implements
+		OnCheckedChangeListener {
 
 	private Cursor cursor;
 	private Context context;
 	private ArrayList<AlarmRow> list = new ArrayList<AlarmRow>();
 	Gson gson = new Gson();
-	
-	private ArrayList<AlarmRow> getList(){
+
+	private ArrayList<AlarmRow> getList() {
 		return list;
 	}
-	public AlarmRow getRow(int position){
+
+	public AlarmRow getRow(int position) {
 		return getList().get(position);
 	}
-	public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from,
-	        int[] to, int flags) {
-	    super(context, layout, c, from, to, flags);
-	    this.cursor = c;
-	    this.context = context;
-	    
-	    changeCursor(c);
+
+	public AlarmRowAdapter(Context context, int layout, Cursor c,
+			String[] from, int[] to, int flags) {
+		super(context, layout, c, from, to, flags);
+		this.cursor = c;
+		this.context = context;
+
+		changeCursor(c);
 	}
+
 	@Override
-	public void changeCursor(Cursor c){
+	public void changeCursor(Cursor c) {
 		super.changeCursor(c);
-		//Log.e("changeCursor", ""+c);
-		this.cursor=c;
+		// Log.e("changeCursor", ""+c);
+		this.cursor = c;
 		list = new ArrayList<AlarmRow>();
-		if(cursor!=null){
+		if (cursor != null) {
 			cursor.moveToFirst();
 			while (cursor.moveToNext()) {
-				//Log.e("changeCursor _row", gson.fromJson(cursor.getString(0),AlarmState.class).mood);
-				list.add(new AlarmRow(context, gson.fromJson(cursor.getString(0),AlarmState.class),cursor.getInt(1)));
+				// Log.e("changeCursor _row",
+				// gson.fromJson(cursor.getString(0),AlarmState.class).mood);
+				list.add(new AlarmRow(context, gson.fromJson(
+						cursor.getString(0), AlarmState.class), cursor
+						.getInt(1)));
 			}
 		}
 	}
@@ -72,9 +76,9 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 			view.scheduledButton = (CompoundButton) rowView
 					.findViewById(R.id.alarmOnOffCompoundButton);
 			view.scheduledButton.setOnCheckedChangeListener(this);
-			view.time = (TextView) rowView
-					.findViewById(R.id.timeTextView);
-			view.taggedView = rowView.findViewById(R.id.rowExcludingCompoundButton);
+			view.time = (TextView) rowView.findViewById(R.id.timeTextView);
+			view.taggedView = rowView
+					.findViewById(R.id.rowExcludingCompoundButton);
 			view.secondaryDescription = (TextView) rowView
 					.findViewById(R.id.subTextView);
 
@@ -84,7 +88,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 		}
 
 		/** Set data to your Views. */
-		
+
 		AlarmRow item = getList().get(position);
 		view.taggedView.setTag(item);
 		view.scheduledButton.setTag(item);
@@ -103,14 +107,15 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		AlarmRow ar = (AlarmRow)buttonView.getTag();
-		if(ar.isScheduled()!=isChecked){
+		AlarmRow ar = (AlarmRow) buttonView.getTag();
+		if (ar.isScheduled() != isChecked) {
 			ar.toggle();
 		}
 	}
+
 	@Override
-	public int getCount(){
-		//Log.e("getCount", ""+((getList() != null) ? getList().size() : 0));
+	public int getCount() {
+		// Log.e("getCount", ""+((getList() != null) ? getList().size() : 0));
 		return (getList() != null) ? getList().size() : 0;
 	}
 }

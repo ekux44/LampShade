@@ -121,7 +121,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	@Override
 	public void onRegisterResult(String bridgeIP, String username) {
 
-		if (bridgeIP!=null && isAdded()) {
+		if (bridgeIP != null && isAdded()) {
 			countDownTimer.cancel();
 
 			// Show the success dialog

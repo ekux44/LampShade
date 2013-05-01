@@ -1,14 +1,14 @@
 package com.kuxhausen.huemore.timing;
 
-import com.kuxhausen.huemore.*;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-
 import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,49 +17,44 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 
-public class AlarmsListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+
+public class AlarmsListFragment extends ListFragment implements
+		LoaderManager.LoaderCallbacks<Cursor> {
 
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
 	public AlarmRowAdapter dataSource;
 	private AlarmRow selectedRow;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// We need to use a different list item layout for devices older than
-				// Honeycomb
-				int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-						: android.R.layout.simple_list_item_1;
+		// Honeycomb
+		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
+				: android.R.layout.simple_list_item_1;
 
-				/*
-				 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
-				 * passed to onCreateLoader().
-				 */
-				getLoaderManager().initLoader(ALARMS_LOADER, null, this);
+		/*
+		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
+		 * passed to onCreateLoader().
+		 */
+		getLoaderManager().initLoader(ALARMS_LOADER, null, this);
 
-				String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-				dataSource = new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null,
-						columns, new int[] { R.id.subTextView }, 0);
-				
-				setListAdapter(dataSource);
-				
-		
-		
-		
+		String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
+		dataSource = new AlarmRowAdapter(this.getActivity(),
+				R.layout.alarm_row, null, columns,
+				new int[] { R.id.subTextView }, 0);
+
+		setListAdapter(dataSource);
+
 		View myView = inflater.inflate(R.layout.alarm_view, null);
-		
+
 		LinearLayout headingRow = (LinearLayout) myView
 				.findViewById(R.id.showOnLandScape);
 		if (headingRow.getVisibility() == View.GONE)
@@ -70,7 +65,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		}
 		return myView;
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void initializeActionBar(Boolean value) {
 		try {
@@ -78,7 +73,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		} catch (Error e) {
 		}
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.action_alarm, menu);
@@ -91,7 +86,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		case android.R.id.home:
 			getActivity().onBackPressed();
 			return true;
-		
+
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(), "dialog");
@@ -108,7 +103,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		LinearLayout selected = (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		selectedRow = ((AlarmRow)selected.getChildAt(0).getTag());
+		selectedRow = ((AlarmRow) selected.getChildAt(0).getTag());
 		MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_alarm, menu);
 	}
@@ -121,22 +116,20 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 		switch (item.getItemId()) {
 
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
-			if(selectedRow.isScheduled())
+			if (selectedRow.isScheduled())
 				selectedRow.toggle();
-			
+
 			String moodSelect = BaseColumns._ID + "=?";
-			String[] moodArg = { ""+selectedRow.getID() };
-			getActivity().getContentResolver().delete(
-					AlarmColumns.ALARMS_URI, moodSelect,
-					moodArg);
+			String[] moodArg = { "" + selectedRow.getID() };
+			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
+					moodSelect, moodArg);
 			return true;
 
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
-	
-	
+
 	/**
 	 * Callback that's invoked when the system has initialized the Loader and is
 	 * ready to start the query. This usually happens when initLoader() is
@@ -145,7 +138,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 	 */
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
-		//Log.e("onCreateLoader", ""+loaderID);
+		// Log.e("onCreateLoader", ""+loaderID);
 		/*
 		 * Takes action based on the ID of the Loader that's being created
 		 */
@@ -168,7 +161,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-		//Log.e("onLoaderFinished", arg0.toString());
+		// Log.e("onLoaderFinished", arg0.toString());
 		/*
 		 * Moves the query results into the adapter, causing the ListView
 		 * fronting this adapter to re-display
@@ -179,7 +172,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		//Log.e("onLoaderReset", arg0.toString());
+		// Log.e("onLoaderReset", arg0.toString());
 		/*
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.

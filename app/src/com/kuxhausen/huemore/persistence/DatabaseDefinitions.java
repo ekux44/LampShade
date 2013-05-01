@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
  * Convenience definitions for Database Hander and Preferences
  */
 public final class DatabaseDefinitions {
-	
+
 	public static final class AlarmColumns implements BaseColumns {
 		/**
 		 * The table name offered by this provider
@@ -30,17 +30,17 @@ public final class DatabaseDefinitions {
 		 * JSon'd HueState object of other state data to override mood
 		 */
 		public static final String STATE = "Dstate";
-		
+
 		/**
 		 * other data needed to delete and alarm
 		 */
 		public static final String INTENT_REQUEST_CODE = "Dintent_request_code";
-		
+
 		// This class cannot be instantiated
 		private AlarmColumns() {
 		}
 	}
-	
+
 	public static final class GroupColumns implements BaseColumns {
 		/**
 		 * The table name offered by this provider

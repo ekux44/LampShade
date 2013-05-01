@@ -53,76 +53,80 @@ public class MainActivity extends FragmentActivity implements
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	private NfcAdapter nfcAdapter;
-	
-	
-	public void tests(){
+
+	public void tests() {
 		/** bitSet to encoding test **/
 		{
 			BitSet b = new BitSet();
-			for(int i= 0; i<10000; i++){
-				if(Math.random()<.5)
+			for (int i = 0; i < 10000; i++) {
+				if (Math.random() < .5)
 					b.set(i);
 			}
-			byte[] intermediate= com.kuxhausen.huemore.nfc.HueNfcEncoder.fromBitSet(b, 10000);
-			BitSet b2 = com.kuxhausen.huemore.nfc.HueNfcEncoder.toBitSet(intermediate);
-			for(int i = 0; i<10000; i++)
-				if(b.get(i)!=b2.get(i))
-					System.out.println(i+" "+b.get(i)+" "+b2.get(i)+" "+intermediate[i/8]);
+			byte[] intermediate = com.kuxhausen.huemore.nfc.HueNfcEncoder
+					.fromBitSet(b, 10000);
+			BitSet b2 = com.kuxhausen.huemore.nfc.HueNfcEncoder
+					.toBitSet(intermediate);
+			for (int i = 0; i < 10000; i++)
+				if (b.get(i) != b2.get(i))
+					System.out.println(i + " " + b.get(i) + " " + b2.get(i)
+							+ " " + intermediate[i / 8]);
 			System.out.println("bitSet-Byte[] testComplete");
 		}
 		{
-			Integer[] bulbs = {1, 4, 8, 3, 43};
+			Integer[] bulbs = { 1, 4, 8, 3, 43 };
 			BulbState[] bsRay = new BulbState[4];
 			BulbState one = new BulbState();
-			one.on= true;
-			one.bri=1;
-			one.ct=2;
-			one.effect="none";
-			one.hue =4;
+			one.on = true;
+			one.bri = 1;
+			one.ct = 2;
+			one.effect = "none";
+			one.hue = 4;
 			one.sat = 5;
 			one.transitiontime = 6;
 			one.alert = "none";
-			bsRay[0]=one;
-			
+			bsRay[0] = one;
+
 			BulbState two = new BulbState();
-			two.on= false;
+			two.on = false;
 			two.effect = "none";
-			bsRay[1]=two;
-			
+			bsRay[1] = two;
+
 			BulbState three = new BulbState();
-			three.on= true;
-			three.sat=255;
-			three.bri=255;
-			three.hue=0;
-			bsRay[2]=three;
-			
+			three.on = true;
+			three.sat = 255;
+			three.bri = 255;
+			three.hue = 0;
+			bsRay[2] = three;
+
 			BulbState four = new BulbState();
-			four.on= false;
-			four.bri=1;
-			four.alert="select";
-			four.transitiontime=10;
-			four.effect="colorloop";
-			//four.transitiontime =0;
-			bsRay[3]=four;
-			
-			String interm = com.kuxhausen.huemore.nfc.HueNfcEncoder.encode(bulbs, bsRay);
+			four.on = false;
+			four.bri = 1;
+			four.alert = "select";
+			four.transitiontime = 10;
+			four.effect = "colorloop";
+			// four.transitiontime =0;
+			bsRay[3] = four;
+
+			String interm = com.kuxhausen.huemore.nfc.HueNfcEncoder.encode(
+					bulbs, bsRay);
 			System.out.println(interm);
-			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.nfc.HueNfcEncoder.decode(interm);
-			System.out.println("resultSize"+results.first.length+"  "+results.second.length);
-			
-			for(int i: results.first){
-				System.out.print(i+"  ");
+			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.nfc.HueNfcEncoder
+					.decode(interm);
+			System.out.println("resultSize" + results.first.length + "  "
+					+ results.second.length);
+
+			for (int i : results.first) {
+				System.out.print(i + "  ");
 			}
 			System.out.println();
-			for(BulbState j: results.second){
-				if(j!=null)
+			for (BulbState j : results.second) {
+				if (j != null)
 					System.out.println(j);
 				else
 					System.out.println("wtf-null ");
 			}
 		}
 	}
-	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -133,7 +137,7 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.hue_more);
 		m = this;
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-		
+
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -236,8 +240,8 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		});
-		//Protocol testing
-		//tests();
+		// Protocol testing
+		// tests();
 	}
 
 	// Listener that's called when we finish querying the items and
@@ -505,8 +509,8 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		if(nfcAdapter==null){
-			//hide nfc link if nfc not supported
+		if (nfcAdapter == null) {
+			// hide nfc link if nfc not supported
 			MenuItem menuItem = menu.findItem(R.id.action_nfc);
 			menuItem.setEnabled(false);
 			menuItem.setVisible(false);
@@ -534,15 +538,14 @@ public class MainActivity extends FragmentActivity implements
 			unlocks.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_nfc:
-			if(!nfcAdapter.isEnabled()){
-				//startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
-				Toast.makeText(this,
-						this.getString(R.string.nfc_disabled),
+			if (!nfcAdapter.isEnabled()) {
+				// startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+				Toast.makeText(this, this.getString(R.string.nfc_disabled),
 						Toast.LENGTH_SHORT).show();
-				
-			}else{
-			Intent i = new Intent(this, NfcWriterActivity.class);
-			this.startActivity(i);
+
+			} else {
+				Intent i = new Intent(this, NfcWriterActivity.class);
+				this.startActivity(i);
 			}
 			return true;
 		case R.id.action_alarms:

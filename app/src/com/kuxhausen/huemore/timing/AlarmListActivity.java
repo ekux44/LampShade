@@ -1,18 +1,21 @@
 package com.kuxhausen.huemore.timing;
 
-import com.kuxhausen.huemore.R;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-/** stupid list wrapper to work around the non-existence of a ListFragmentActivity **/
+import com.kuxhausen.huemore.R;
+
+/**
+ * stupid list wrapper to work around the non-existence of a
+ * ListFragmentActivity
+ **/
 public class AlarmListActivity extends FragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.edit_alarm_activity);
-		
+
 		// Check whether the activity is using the layout version with
 		// the fragment_container FrameLayout. If so, we must add the first
 		// fragment
@@ -39,8 +42,7 @@ public class AlarmListActivity extends FragmentActivity {
 				getSupportFragmentManager()
 						.beginTransaction()
 						.add(R.id.fragment_container, firstFragment,
-								AlarmsListFragment.class.getName())
-						.commit();
+								AlarmsListFragment.class.getName()).commit();
 			}
 
 		}

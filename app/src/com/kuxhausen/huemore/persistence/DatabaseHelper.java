@@ -205,9 +205,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 
 	}
-	public void updatedTwoPointOh(){
+
+	public void updatedTwoPointOh() {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
+
 		db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " ("
 				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 				+ AlarmColumns.STATE + " TEXT,"

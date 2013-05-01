@@ -110,7 +110,7 @@ public class GroupBulbPagingFragment extends Fragment {
 								// to strings.xml
 			case BULB_LOCATION:
 				return "BULBS";
-				
+
 			}
 			return "";
 		}
