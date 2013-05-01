@@ -128,6 +128,7 @@ public class NfcWriterActivity extends FragmentActivity implements
 			initializeActionBar(true);
 
 		}
+		setTitle(R.string.nfc);
 	}
 
 	@Override
