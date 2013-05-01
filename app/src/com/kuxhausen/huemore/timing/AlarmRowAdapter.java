@@ -10,7 +10,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +43,13 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 	@Override
 	public void changeCursor(Cursor c){
 		super.changeCursor(c);
-		Log.e("asdf", "changeCursor");
+		//Log.e("changeCursor", ""+c);
 		this.cursor=c;
 		list = new ArrayList<AlarmRow>();
-		if(c!=null){
+		if(cursor!=null){
+			cursor.moveToFirst();
 			while (cursor.moveToNext()) {
-				Log.e("asdf", gson.fromJson(cursor.getString(0),AlarmState.class).mood);
+				//Log.e("changeCursor _row", gson.fromJson(cursor.getString(0),AlarmState.class).mood);
 				list.add(new AlarmRow(context, gson.fromJson(cursor.getString(0),AlarmState.class),cursor.getInt(1)));
 			}
 		}
@@ -110,6 +110,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 	}
 	@Override
 	public int getCount(){
-		return (getList() != null)? getList().size() : 0;
+		//Log.e("getCount", ""+((getList() != null) ? getList().size() : 0));
+		return (getList() != null) ? getList().size() : 0;
 	}
 }

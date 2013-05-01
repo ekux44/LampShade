@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -146,7 +145,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 	 */
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
-		Log.e("onLoaderFinished", ""+loaderID);
+		//Log.e("onCreateLoader", ""+loaderID);
 		/*
 		 * Takes action based on the ID of the Loader that's being created
 		 */
@@ -169,7 +168,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-		Log.e("onLoaderFinished", arg0.toString());
+		//Log.e("onLoaderFinished", arg0.toString());
 		/*
 		 * Moves the query results into the adapter, causing the ListView
 		 * fronting this adapter to re-display
@@ -180,7 +179,7 @@ public class AlarmsListFragment extends ListFragment implements LoaderManager.Lo
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		Log.e("onLoaderReset", arg0.toString());
+		//Log.e("onLoaderReset", arg0.toString());
 		/*
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
