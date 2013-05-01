@@ -56,7 +56,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		}
 		none=!none;
 		if(none){
-			if(timeAdjustedCal.before(Calendar.getInstance())) //make sure this hour & minute is in the future
+			while(timeAdjustedCal.before(Calendar.getInstance())) //make sure this hour & minute is in the future
 				timeAdjustedCal.set(Calendar.DATE, timeAdjustedCal.get(Calendar.DATE)+1);
 			as.scheduledTimes = new Long[1];
 			as.scheduledTimes[0]=timeAdjustedCal.getTimeInMillis();

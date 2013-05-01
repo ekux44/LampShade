@@ -43,6 +43,12 @@
         <receiver android:name=".timing.AlarmReciever"></receiver>
         <activity android:name=".timing.AlarmListActivity" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
+        <receiver android:name=".timing.BootSetter" >
+    <intent-filter>
+        <action
+            android:name="android.intent.action.BOOT_COMPLETED" />
+    </intent-filter>
+</receiver>
     </application>
 
 </manifest>
