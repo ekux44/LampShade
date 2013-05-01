@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
@@ -35,6 +37,8 @@ public class NewColorHueFragment extends Fragment implements
 	Gson gson = new Gson();
 	SeekBar seekBar;
 	ToggleButton colorLoop;
+	Spinner transitionSpinner;
+	int[] transitionValues;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +72,23 @@ public class NewColorHueFragment extends Fragment implements
 				.findViewById(R.id.colorLoopToggleButton);
 		colorLoop.setOnCheckedChangeListener(this);
 
+		
+		transitionSpinner = (Spinner) groupDialogView
+				.findViewById(R.id.transitionSpinner);
+		// Create an ArrayAdapter using the string array and a default spinner
+		// layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				getActivity(), R.array.transition_names_array,
+				android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		transitionSpinner.setAdapter(adapter);
+
+		transitionValues = getActivity().getResources().getIntArray(
+				R.array.transition_values_array);
+		
+		
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
 
@@ -102,6 +123,8 @@ public class NewColorHueFragment extends Fragment implements
 
 	@Override
 	public Intent onCreateColor() {
+		if(transitionSpinner!=null)
+			hs.transitiontime =transitionValues[transitionSpinner.getSelectedItemPosition()];
 		hs.hue = cpv.getHue();
 		Intent i = new Intent();
 		i.putExtra("HueState", gson.toJson(hs));
