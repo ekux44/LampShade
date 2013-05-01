@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	private NfcAdapter nfcAdapter;
+	SharedPreferences settings;
 
 	public void tests() {
 		/** bitSet to encoding test **/
@@ -173,7 +174,7 @@ public class MainActivity extends FragmentActivity implements
 		// (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ?
 		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
 		// : System.out.println("wtf");
-		SharedPreferences settings = PreferenceManager
+		settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
@@ -495,8 +496,6 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
 		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS) {
 			//has pro version
 			
@@ -516,7 +515,7 @@ public class MainActivity extends FragmentActivity implements
 			nfcItem.setEnabled(false);
 			nfcItem.setVisible(false);
 			
-			MenuItem alarmItem = menu.findItem(R.id.action_add_alarm);
+			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
 			alarmItem.setEnabled(false);
 			alarmItem.setVisible(false);
 		}
