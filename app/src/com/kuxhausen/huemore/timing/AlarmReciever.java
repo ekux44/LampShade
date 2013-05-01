@@ -43,6 +43,8 @@ public class AlarmReciever extends BroadcastReceiver {
         projectedTime.set(Calendar.HOUR_OF_DAY, currentHour);
         projectedTime.set(Calendar.MINUTE, currentMin);
         projectedTime.set(Calendar.SECOND, 0);
+        //ensure transition starts ahead of time to culminate at the specified time
+        projectedTime.add(Calendar.SECOND, -transitiontime/10);
         
         return createAlarms(context, as, projectedTime);
         
