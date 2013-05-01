@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -39,6 +40,8 @@ public class NewColorHueFragment extends Fragment implements
 	ToggleButton colorLoop;
 	Spinner transitionSpinner;
 	int[] transitionValues;
+	LinearLayout colorLoopLayout, transitionLayout;
+	boolean colorLoopLayoutVisible = true, transitionLayoutVisible = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,11 +71,16 @@ public class NewColorHueFragment extends Fragment implements
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
 
+		if(colorLoopLayoutVisible){
 		colorLoop = (ToggleButton) groupDialogView
 				.findViewById(R.id.colorLoopToggleButton);
 		colorLoop.setOnCheckedChangeListener(this);
-
+		colorLoopLayout = (LinearLayout)groupDialogView.findViewById(R.id.colorLoopLayout);
+		}else{
+			groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(View.GONE);
+		}
 		
+		if(transitionLayoutVisible){
 		transitionSpinner = (Spinner) groupDialogView
 				.findViewById(R.id.transitionSpinner);
 		// Create an ArrayAdapter using the string array and a default spinner
@@ -87,7 +95,10 @@ public class NewColorHueFragment extends Fragment implements
 
 		transitionValues = getActivity().getResources().getIntArray(
 				R.array.transition_values_array);
-		
+		transitionLayout = (LinearLayout)groupDialogView.findViewById(R.id.transitionTimeLayout);
+		}else{
+			groupDialogView.findViewById(R.id.transitionTimeLayout).setVisibility(View.GONE);
+		}
 		
 		// builder.setView(new ColorPickerView(getActivity(), l,
 		// mInitialColor));
@@ -96,6 +107,19 @@ public class NewColorHueFragment extends Fragment implements
 		return groupDialogView;
 	}
 
+	public void hideColorLoop(){
+		colorLoopLayoutVisible = false;
+		colorLoop = null;
+		if(colorLoopLayout!=null)
+			colorLoopLayout.setVisibility(View.GONE);
+	}
+	public void hideTransitionTime(){
+		transitionLayoutVisible = false;
+		transitionSpinner = null;
+		if(transitionLayout!=null)
+			transitionLayout.setVisibility(View.GONE);
+	}
+	
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {

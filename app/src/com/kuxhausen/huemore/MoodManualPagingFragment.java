@@ -154,6 +154,7 @@ public class MoodManualPagingFragment extends Fragment implements
 				return new MoodsFragment();
 			case MANUAL_LOCATION:
 				nchf = new NewColorHueFragment();
+				nchf.hideTransitionTime();
 				return nchf;
 			default:
 				return null;
