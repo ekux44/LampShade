@@ -259,21 +259,7 @@ public class MainActivity extends FragmentActivity implements
 				lastQuerriedInventory = inventory;
 				int numUnlocked = PreferencesKeys.ALWAYS_FREE_BULBS;
 				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_2))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_3))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_4))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_5))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_6))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_7))
-					numUnlocked += 5;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_8))
-					numUnlocked += 5;
+					numUnlocked = Math.max(50, numUnlocked);
 				if (inventory.hasPurchase(PlayItems.BUY_ME_A_BULB_DONATION_1))
 					numUnlocked = Math.max(50, numUnlocked);
 				// update UI accordingly
@@ -509,12 +495,32 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		if (nfcAdapter == null) {
-			// hide nfc link if nfc not supported
-			MenuItem menuItem = menu.findItem(R.id.action_nfc);
-			menuItem.setEnabled(false);
-			menuItem.setVisible(false);
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS) {
+			//has pro version
+			
+			//hide unlocks button
+			MenuItem unlocksItem = menu.findItem(R.id.action_unlocks);
+			unlocksItem.setEnabled(false);
+			unlocksItem.setVisible(false);
+			
+			if (nfcAdapter == null) {
+				// hide nfc link if nfc not supported
+				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
+				nfcItem.setEnabled(false);
+				nfcItem.setVisible(false);
+			}
+		}else{
+			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
+			nfcItem.setEnabled(false);
+			nfcItem.setVisible(false);
+			
+			MenuItem alarmItem = menu.findItem(R.id.action_add_alarm);
+			alarmItem.setEnabled(false);
+			alarmItem.setVisible(false);
 		}
+		
 		return true;
 	}
 
