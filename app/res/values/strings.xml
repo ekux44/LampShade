@@ -47,7 +47,8 @@
     <string name="rate_on_google_play">Rate on Google Play</string> 
     
     <string name="unlock_pro_prompt">Unlock Pro Version!</string>
-    <string name="unlock_pro_descriptor">Pro version adds Alarms and Timers. More features added weekly.</string>
+    <string name="unlock_pro_already">You already have the Pro Version!</string>
+    <string name="unlock_pro_descriptor">Pro version adds Alarms and NFC support. More features added monthly.</string>
     <string name="bulbs_discovered_desciptor">Bulbs Discovered: </string>
     <string name="bulbs_unlocked_desciptor">Bulbs Unlocked: </string>
     <string name="unlock_more_bulbs_prompt">Unlock more bulbs</string>

@@ -8,76 +8,23 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center_vertical"
-	    android:layout_weight="1"
 	    android:orientation="vertical" >
-
-	    <TextView
-	        android:id="@+id/bulbsUnlockedText"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:padding="8dp"
-	        android:text="@string/bulbs_unlocked_desciptor" />
 
 	    <Button
 	        android:id="@+id/fiveMoreButton"
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@string/unlock_more_bulbs_prompt" />
-	</LinearLayout>
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center_horizontal"
-	    android:orientation="horizontal" >
-
-		<View
-		    android:layout_width="wrap_content"
-		    android:layout_height="2dip"
-		    android:layout_gravity="center_vertical"
-		    android:layout_weight="1"
-		    android:background="#33B5E5" />
-
-		<TextView
-		    android:id="@+id/textView2"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:padding="8dp"
-		    android:text="@string/unlocks_exclusive_or_seperator"
-		    android:textAppearance="?android:attr/textAppearanceLarge"
-		    android:textColor="#33B5E5"
-		    android:textStyle="bold" />
-
-		<View
-		    android:layout_width="wrap_content"
-		    android:layout_height="2dip"
-		    android:layout_gravity="center_vertical"
-		    android:layout_weight="1"
-		    android:background="#33B5E5" />
-
-	</LinearLayout>
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical" 
-	    android:layout_weight="1"
-	    android:layout_gravity="center_vertical">
-
-	    <Button
-	        android:id="@+id/donateButton"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:text="@string/buy_me_a_bulb" />
+	        android:text="@string/unlock_pro_prompt" />
 
 	    <TextView
 	        android:id="@+id/textView3"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:padding="8dp"
-	        android:text="@string/donation_prompt"
+	        android:text="@string/unlock_pro_descriptor"
 	        android:textSize="16sp"
 	        android:textStyle="italic" />
+
 	</LinearLayout>
 
 </LinearLayout>
