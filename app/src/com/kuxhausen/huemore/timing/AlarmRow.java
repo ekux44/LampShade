@@ -38,7 +38,7 @@ public class AlarmRow {
 			}
 		}
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
+		cal.setTimeInMillis(time + (aState.transitiontime/10));
 		return DateFormat.getTimeInstance().format(cal.getTime());
 		
 	}
