@@ -48,14 +48,8 @@
     
     <string name="unlock_pro_prompt">Unlock Pro Version!</string>
     <string name="unlock_pro_already">You already have the Pro Version!</string>
-    <string name="unlock_pro_descriptor">Pro version adds Alarms and NFC support. More features added monthly.</string>
-    <string name="bulbs_discovered_desciptor">Bulbs Discovered: </string>
-    <string name="bulbs_unlocked_desciptor">Bulbs Unlocked: </string>
-    <string name="unlock_more_bulbs_prompt">Unlock more bulbs</string>
-    <string name="unlocks_exclusive_or_seperator">OR</string>
-    <string name="buy_me_a_bulb">Donate the cost of a bulb</string>
-	<string name="donation_prompt">Donating will help me work on HueMore. Thanks! -Eric</string>
-	
+    <string name="unlock_pro_descriptor">Pro version enables Alarms and NFC features.</string>
+    	
     <string name="nfc">Nfc</string>
     <string name="cap_nfc">NFC</string>
     <string name="nfc_tag_detected">Tag Detected</string>
@@ -69,7 +63,6 @@
     
     <string name="alarms">Alarms</string>
     <string name="cap_alarms">ALARMS</string>
-    <string name="delay_prompt">Delay</string>
     <string name="transition_intro">Fade In:</string>
     <string name="alarm_repeat">Repeat:</string>
     <string name="cap_short_none"> </string>

@@ -45,14 +45,9 @@
     ,rate_on_google_play",Rate on Google Play, 
     
     ,unlock_pro_prompt",Unlock Pro Version!,
-    ,unlock_pro_descriptor",Pro version adds Alarms and Timers. More features added weekly.,
-    ,bulbs_discovered_desciptor",Bulbs Discovered: ,
-    ,bulbs_unlocked_desciptor",Bulbs Unlocked: ,
-    ,unlock_more_bulbs_prompt",Unlock more bulbs,
-    ,unlocks_exclusive_or_seperator",OR,
-    ,buy_me_a_bulb",Donate the cost of a bulb,
-	,donation_prompt",Donating will help me work on HueMore. Thanks! -Eric,
-	
+    ,unlock_pro_already",You already have the Pro Version!,
+    ,unlock_pro_descriptor",Pro version adds Alarms and NFC support. More features added monthly.,
+    	
     ,nfc",Nfc,
     ,cap_nfc",NFC,
     ,nfc_tag_detected",Tag Detected,
@@ -66,10 +61,9 @@
     
     ,alarms",Alarms,
     ,cap_alarms",ALARMS,
-    ,delay_prompt",Delay,
     ,transition_intro",Fade In:,
     ,alarm_repeat",Repeat:,
     ,cap_short_none", ,
     ,cap_short_every_day",EVERY DAY,
-	
+    ,next_scheduled_intro",Next alarm,
 </resources,
