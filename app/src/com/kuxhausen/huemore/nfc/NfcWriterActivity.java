@@ -41,7 +41,7 @@ import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NfcWriterActivity extends FragmentActivity implements
 		OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {

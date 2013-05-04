@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class MoodRow {
 

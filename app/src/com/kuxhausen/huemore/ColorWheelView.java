@@ -12,9 +12,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.kuxhausen.huemore.NewColorHueFragment.OnColorChangedListener;
+import com.kuxhausen.huemore.ColorWheelFragment.OnColorChangedListener;
 
-public class ColorPickerView extends View {
+public class ColorWheelView extends View {
 	private Paint mPaint;
 	private Paint mCenterPaint;
 	private final int[] mColors;
@@ -45,7 +45,7 @@ public class ColorPickerView extends View {
 		return hue;
 	}
 
-	public ColorPickerView(Context c, AttributeSet attrs) {
+	public ColorWheelView(Context c, AttributeSet attrs) {
 		super(c, attrs);
 		mColors = new int[] { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF,
 				0xFF00FF00, 0xFFFFFF00, 0xFFFF0000 };

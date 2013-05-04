@@ -5,6 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_register_with_hub">Register With Hub</string>
     <string name="action_unlocks">Unlocks</string>
+    <string name="settings">Settings</string>
+    <string name="unlocks">Unlocks</string>
     
     <string name="cap_moods">MOODS</string>
     <string name="cap_manual">MANUAL</string>

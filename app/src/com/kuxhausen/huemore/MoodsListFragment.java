@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
@@ -28,20 +26,27 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class GroupsFragment extends ListFragment implements OnClickListener,
+public class MoodsListFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
-	OnBulbGroupSelectedListener mCallback;
+	OnMoodSelectedListener mMoodCallback;
 
 	// Identifies a particular Loader being used in this component
-	private static final int GROUPS_LOADER = 0;
+	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
+
 	public TextView selected; // updated on long click
+	int selectedPos = -1;
+
+	// The container Activity must implement this interface so the frag can
+	// deliver messages
+	public interface OnMoodSelectedListener {
+		/** Called by HeadlinesFragment when a list item is selected */
+		public void onMoodSelected(String mood);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,20 +61,19 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
 		 */
-		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
+		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-		String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
-
+		String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
 				columns, new int[] { android.R.id.text1 }, 0);
 
 		setListAdapter(dataSource);
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.group_view, container, false);
+		View myView = inflater.inflate(R.layout.mood_view, container, false);
 
 		ImageButton newGroup = (ImageButton) myView
-				.findViewById(R.id.newGroupButton);
+				.findViewById(R.id.newMoodButton);
 		newGroup.setOnClickListener(this);
 
 		LinearLayout headingRow = (LinearLayout) myView
@@ -80,21 +84,8 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 	}
 
 	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.newGroupButton:
-
-			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
-			ngdf.show(getFragmentManager(), "dialog");
-
-			break;
-		}
-	}
-
-	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.action_group, menu);
+		inflater.inflate(R.menu.action_mood, menu);
 	}
 
 	@Override
@@ -103,11 +94,25 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		switch (item.getItemId()) {
 
 		case R.id.action_add:
-			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
-			ngdf.show(getFragmentManager(), "dialog");
+			NewMoodPagerDialogFragment nmdf = new NewMoodPagerDialogFragment();
+			nmdf.show(getFragmentManager(), "dialog");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			mMoodCallback = (MainActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
 
@@ -122,20 +127,15 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
 			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		}
+
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void updateGroupView() {
+		// Set the previous selected item as checked to be unhighlighted when in
+		// two-pane layout
+		if (selected != null && selectedPos > -1)
+			getListView().setItemChecked(selectedPos, false);
 
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception.
-		try {
-			mCallback = (MainActivity) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnHeadlineSelectedListener");
-		}
 	}
 
 	@Override
@@ -144,81 +144,44 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals(PreferencesKeys.ALL)) {
+		if (selected.getText().equals(PreferencesKeys.OFF)) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
-		inflater.inflate(R.menu.context_group, menu);
+		inflater.inflate(R.menu.context_mood, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		if (selected == null)
-			return false;
-
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
-			String groupSelect = GroupColumns.GROUP + "=?";
-			String[] groupArg = { (String) (selected).getText() };
+		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
+			String moodSelect = MoodColumns.MOOD + "=?";
+			String[] moodArg = { (String) (selected).getText() };
 			getActivity().getContentResolver().delete(
-					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-					groupSelect, groupArg);
+					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
+					moodArg);
 			return true;
-		case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
-			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
-			Bundle args = new Bundle();
-			args.putString(InternalArguments.GROUP_NAME, (String) (selected).getText());
-			ngdf.setArguments(args);
-			ngdf.show(getFragmentManager(), "dialog");
-			
-			
-			//String groupSelect = GroupColumns.GROUP + "=?";
-			//String[] groupArg = { (String) (selected).getText() };
-			//getActivity().getContentResolver().delete(
-			//		DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-			//		groupSelect, groupArg);
-			return true;
-			
+
 		default:
 			return super.onContextItemSelected(item);
 		}
 	}
 
 	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		selected = ((TextView) (v));
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.newMoodButton:
 
-		// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { (String) ((TextView) (v)).getText() };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
+			NewMoodPagerDialogFragment nmdf = new NewMoodPagerDialogFragment();
+			nmdf.show(getFragmentManager(), "dialog");
 
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (cursor.moveToNext()) {
-			groupStates.add(cursor.getInt(0));
+			break;
 		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-
-		// Notify the parent activity of selected bulbs
-		mCallback.onGroupBulbSelected(bulbS, selected.getText().toString());
-
-		// Set the item as checked to be highlighted when in two-pane layout
-		getListView().setItemChecked(position, true);
 	}
 
 	/**
@@ -233,11 +196,11 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		 * Takes action based on the ID of the Loader that's being created
 		 */
 		switch (loaderID) {
-		case GROUPS_LOADER:
+		case MOODS_LOADER:
 			// Returns a new CursorLoader
-			String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
+			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
-					DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+					DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
 					columns, // Projection to return
 					null, // No selection clause
 					null, // No selection arguments
@@ -268,4 +231,19 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 		// unregisterForContextMenu(getListView());
 		dataSource.changeCursor(null);
 	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+
+		selected = ((TextView) (v));
+		selectedPos = position;
+
+		// Set the item as checked to be highlighted when in two-pane layout
+		getListView().setItemChecked(position, true);
+
+		// Notify the parent activity of selected item
+		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
+
+	}
+
 }

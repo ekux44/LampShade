@@ -17,8 +17,8 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.BulbAttributes;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbAttributes;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class MoodManualPagingFragment extends Fragment implements
 		OnAttributeListReturnedListener {
@@ -47,7 +47,7 @@ public class MoodManualPagingFragment extends Fragment implements
 	int brightness;
 	boolean isTrackingTouch = false;
 	SharedPreferences settings;
-	static NewColorHueFragment nchf = null;
+	static ColorWheelFragment nchf = null;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -58,7 +58,7 @@ public class MoodManualPagingFragment extends Fragment implements
 	}
 
 	public void reset() {
-		((MoodsFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
+		((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
 				.updateGroupView();
 	}
 
@@ -151,9 +151,9 @@ public class MoodManualPagingFragment extends Fragment implements
 			switch (i) {
 			case MOOD_LOCATION:
 				// TODO cache somewhere
-				return new MoodsFragment();
+				return new MoodsListFragment();
 			case MANUAL_LOCATION:
-				nchf = new NewColorHueFragment();
+				nchf = new ColorWheelFragment();
 				nchf.hideTransitionTime();
 				return nchf;
 			default:

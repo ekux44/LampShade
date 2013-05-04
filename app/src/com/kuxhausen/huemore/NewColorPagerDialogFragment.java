@@ -100,8 +100,8 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 				return (Fragment) newColorFragments[i];
 			switch (i) {
 			case 0:
-				newColorFragments[i] = new NewColorHueFragment();
-				((NewColorHueFragment)newColorFragments[i]).hideColorLoop();
+				newColorFragments[i] = new ColorWheelFragment();
+				((ColorWheelFragment)newColorFragments[i]).hideColorLoop();
 				return (Fragment) newColorFragments[i];
 			case 1:
 				newColorFragments[i] = new NewColorTempFragment();

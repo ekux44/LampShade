@@ -20,7 +20,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.BulbAttributes;
+import com.kuxhausen.huemore.state.api.BulbAttributes;
 
 public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> {
 

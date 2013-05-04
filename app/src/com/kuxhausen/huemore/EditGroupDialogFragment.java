@@ -26,9 +26,9 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.Bulb;
+import com.kuxhausen.huemore.state.api.Bulb;
 
-public class NewGroupDialogFragment extends DialogFragment implements
+public class EditGroupDialogFragment extends DialogFragment implements
 		GetBulbList.OnBulbListReturnedListener {
 
 	ArrayList<String> bulbNameList;

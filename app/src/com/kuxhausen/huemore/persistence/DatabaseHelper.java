@@ -11,7 +11,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 

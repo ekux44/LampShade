@@ -17,7 +17,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NewMultiMoodFragment extends ListFragment implements
 		OnClickListener, OnCreateMoodListener {

@@ -31,12 +31,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.network.SynchronousTransmitGroupMood;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class AlarmReciever extends BroadcastReceiver {
 
@@ -279,71 +280,9 @@ public class AlarmReciever extends BroadcastReceiver {
 										// Group Mood
 		}
 
-		this.execute(context, bulbS, moodS);
+		SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
+		trasmitter.execute(context, bulbS, moodS);
 	}
 	
-	/**
-	 * synchronous version of TransmitGroupMood
-	 * @param cont
-	 * @param bulbs
-	 * @param moods
-	 * @return
-	 */
-	private Integer execute(Context cont, Integer[] bulbs, String[] moods){
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-		StrictMode.setThreadPolicy(policy); 
-		
-		if (cont == null || bulbs == null || moods == null)
-			return -1;
-
-		// Get username and IP from preferences cache
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(cont);
-		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
-				null);
-		String hash = settings.getString(PreferencesKeys.HASHED_USERNAME, "");
-
-		if (bridge == null)
-			return -1;
-
-		for (int i = 0; i < bulbs.length; i++) {
-
-			StringBuilder builder = new StringBuilder();
-			HttpClient client = new DefaultHttpClient();
-
-			HttpPut httpPut = new HttpPut("http://" + bridge + "/api/" + hash
-					+ "/lights/" + bulbs[i] + "/state");
-			try {
-
-				StringEntity se = new StringEntity(moods[i % moods.length]);
-
-				// sets the post request as the resulting string
-				httpPut.setEntity(se);
-
-				HttpResponse response = client.execute(httpPut);
-				StatusLine statusLine = response.getStatusLine();
-				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
-
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(content));
-					String line;
-					String debugOutput = "";
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-						debugOutput += line;
-					}
-				} else {
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return 1;
-	}
+	
 }

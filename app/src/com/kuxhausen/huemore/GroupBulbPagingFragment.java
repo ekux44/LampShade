@@ -98,7 +98,7 @@ public class GroupBulbPagingFragment extends Fragment {
 			switch (i) {
 			case GROUP_LOCATION:
 				// TODO cache somewhere
-				return new GroupsFragment();
+				return new GroupsListFragment();
 			case BULB_LOCATION:
 				return new BulbsFragment();
 			default:

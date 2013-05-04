@@ -6,7 +6,7 @@ import java.util.BitSet;
 import android.util.Base64;
 import android.util.Pair;
 
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueNfcEncoder {
 

@@ -105,7 +105,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 				return (Fragment) newMoodFragments[i];
 			switch (i) {
 			case 0:
-				NewColorHueFragment nchf = new NewColorHueFragment();
+				ColorWheelFragment nchf = new ColorWheelFragment();
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
 				args.putBoolean("ShowEditText", true);

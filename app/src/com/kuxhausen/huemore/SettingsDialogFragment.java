@@ -17,7 +17,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class Settings extends DialogFragment implements OnClickListener,
+public class SettingsDialogFragment extends DialogFragment implements OnClickListener,
 		OnCheckedChangeListener {
 
 	SharedPreferences settings;
@@ -29,7 +29,7 @@ public class Settings extends DialogFragment implements OnClickListener,
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.settings, container, false);
 		ma = (MainActivity) this.getActivity();
-		this.getDialog().setTitle("Settings");
+		this.getDialog().setTitle(R.string.settings);
 
 		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
 		rateButton.setOnClickListener(this);

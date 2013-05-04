@@ -21,9 +21,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.state.Bridge;
-import com.kuxhausen.huemore.state.RegistrationRequest;
-import com.kuxhausen.huemore.state.RegistrationResponse;
+import com.kuxhausen.huemore.state.api.Bridge;
+import com.kuxhausen.huemore.state.api.RegistrationRequest;
+import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class Register extends AsyncTask<Void, Integer, String> {
 

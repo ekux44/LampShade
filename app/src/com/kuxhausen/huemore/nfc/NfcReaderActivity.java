@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NfcReaderActivity extends Activity implements
 		OnCheckedChangeListener, OnClickListener {

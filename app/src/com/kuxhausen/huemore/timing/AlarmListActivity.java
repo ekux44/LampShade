@@ -30,7 +30,7 @@ public class AlarmListActivity extends FragmentActivity {
 
 				// Create an instance of ExampleFragment
 				AlarmsListFragment firstFragment = new AlarmsListFragment();
-				// GroupsFragment firstFragment = new GroupsFragment();
+				// GroupsListFragment firstFragment = new GroupsListFragment();
 
 				// In case this activity was started with special instructions
 				// from

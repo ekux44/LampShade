@@ -21,9 +21,9 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 
-public class NewColorHueFragment extends Fragment implements
+public class ColorWheelFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener,
 		OnCheckedChangeListener {
 
@@ -33,7 +33,7 @@ public class NewColorHueFragment extends Fragment implements
 
 	private OnColorChangedListener mListener;
 	private int mInitialColor;
-	private ColorPickerView cpv;
+	private ColorWheelView cpv;
 	private BulbState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
@@ -64,7 +64,7 @@ public class NewColorHueFragment extends Fragment implements
 		};
 
 		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
-		cpv = ((ColorPickerView) groupDialogView.findViewById(R.id.colorWheel));
+		cpv = ((ColorWheelView) groupDialogView.findViewById(R.id.colorWheel));
 		cpv.setOnColorChangedListener(mListener);
 
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.saturationBar);
@@ -100,7 +100,7 @@ public class NewColorHueFragment extends Fragment implements
 			groupDialogView.findViewById(R.id.transitionTimeLayout).setVisibility(View.GONE);
 		}
 		
-		// builder.setView(new ColorPickerView(getActivity(), l,
+		// builder.setView(new ColorWheelView(getActivity(), l,
 		// mInitialColor));
 
 		// Create the AlertDialog object and return it

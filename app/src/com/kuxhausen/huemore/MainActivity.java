@@ -33,7 +33,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
-import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
@@ -43,7 +43,7 @@ import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
  */
 public class MainActivity extends FragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
-		MoodsFragment.OnMoodSelectedListener {
+		MoodsListFragment.OnMoodSelectedListener {
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	Integer[] bulbS;
@@ -82,7 +82,7 @@ public class MainActivity extends FragmentActivity implements
 
 				// Create an instance of ExampleFragment
 				GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
-				// GroupsFragment firstFragment = new GroupsFragment();
+				// GroupsListFragment firstFragment = new GroupsListFragment();
 
 				// In case this activity was started with special instructions
 				// from
@@ -471,16 +471,16 @@ public class MainActivity extends FragmentActivity implements
 			rwhdf.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_settings:
-			Settings settings = new Settings();
+			SettingsDialogFragment settings = new SettingsDialogFragment();
 			settings.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_unlocks:
-			Unlocks unlocks = new Unlocks();
+			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
 			unlocks.show(getSupportFragmentManager(), "dialog");
 			return true;
 		case R.id.action_nfc:
 			if (!nfcAdapter.isEnabled()) {
-				// startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+				// startActivity(new Intent(SettingsDialogFragment.ACTION_NFC_SETTINGS));
 				Toast.makeText(this, this.getString(R.string.nfc_disabled),
 						Toast.LENGTH_SHORT).show();
 
