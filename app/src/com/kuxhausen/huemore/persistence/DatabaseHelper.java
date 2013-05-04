@@ -214,6 +214,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ AlarmColumns.STATE + " TEXT,"
 				+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 	}
+	public void updatedTwoPointOne() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		Gson gson = new Gson();
+		BulbState hs = new BulbState();
+		
+		
+		cv.put(MoodColumns.MOOD, PreferencesKeys.ON);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+	}
 
 	public void addBulbs(int first, int last) {
 		SQLiteDatabase db = this.getWritableDatabase();

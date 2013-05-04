@@ -130,7 +130,16 @@ public class MainActivity extends FragmentActivity implements
 			edit.putBoolean(PreferencesKeys.TWO_POINT_OH_UPDATE, false);
 			edit.commit();
 		}
+		if (!settings.contains(PreferencesKeys.TWO_POINT_ONE_UPDATE)) {
+			databaseHelper.updatedTwoPointOne();
+			// Mark no longer first update in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_UPDATE, false);
+			edit.commit();
+		}
 
+		
+		
 		if (!settings.contains(PreferencesKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false);
