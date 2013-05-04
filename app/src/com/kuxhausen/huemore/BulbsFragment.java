@@ -29,6 +29,7 @@ import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener
 import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
@@ -108,6 +109,8 @@ public class BulbsFragment extends ListFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
+		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		
 		MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_bulb, menu);
 	}
@@ -122,13 +125,13 @@ public class BulbsFragment extends ListFragment implements
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
-			String groupSelect = GroupColumns.GROUP + "=?";
-			String[] groupArg = { (String) (selected).getText() };
-			getActivity().getContentResolver().delete(
-					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-					groupSelect, groupArg);
-			return true;
+		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here
+			EditBulbDialogFragment ngdf = new EditBulbDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.BULB_NAME, (String) (selected).getText());
+			args.putInt(InternalArguments.BULB_NUMBER, 1+rayAdapter.getPosition((String) (selected).getText()));
+			ngdf.setArguments(args);
+			ngdf.show(getFragmentManager(), "dialog");
 
 		default:
 			return super.onContextItemSelected(item);
