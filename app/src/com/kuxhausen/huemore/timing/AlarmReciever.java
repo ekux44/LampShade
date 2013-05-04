@@ -42,11 +42,11 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class AlarmReciever extends BroadcastReceiver {
 
 	private final static String ALARM_DETAILS = "alarmDetailsBundle";
-
+	Gson gson = new Gson();
+	
 	public static AlarmState createAlarms(Context context, String group,
 			String mood, int transitiontime, int brightness, Boolean[] repeats,
 			int currentHour, int currentMin) {
-		Gson gson = new Gson();
 		AlarmState as = new AlarmState();
 		as.group = group;
 		as.mood = mood;
@@ -224,7 +224,6 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Gson gson = new Gson();
 		AlarmState as = gson.fromJson(
 				intent.getExtras().getString(ALARM_DETAILS), AlarmState.class);
 

@@ -31,7 +31,8 @@ public class Register extends AsyncTask<Void, Integer, String> {
 	private String username, deviceType;
 	private OnRegisterListener mResultListener;
 	private Bridge[] bridges;
-
+	Gson gson = new Gson();
+	
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
 	public interface OnRegisterListener {
@@ -82,7 +83,7 @@ public class Register extends AsyncTask<Void, Integer, String> {
 					jSon += line;
 				}
 
-				Gson gson = new Gson();
+				
 				try {
 					// autoselect first hub if multiple hubs
 					bridges = gson.fromJson(jSon, Bridge[].class);
@@ -116,7 +117,6 @@ public class Register extends AsyncTask<Void, Integer, String> {
 				RegistrationRequest request = new RegistrationRequest();
 				request.username = username;
 				request.devicetype = deviceType;
-				Gson gson = new Gson();
 				String registrationRequest = gson.toJson(request);
 
 				StringEntity se = new StringEntity(registrationRequest);

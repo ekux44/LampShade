@@ -27,6 +27,7 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 	private Context cont;
 	private Integer[] bulbs;
 	private OnAttributeListReturnedListener mResultListener;
+	Gson gson = new Gson();
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -49,7 +50,7 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 			return null;
 
 		BulbAttributes[] result = new BulbAttributes[bulbs.length];
-		Gson gson = new Gson();
+		
 
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager

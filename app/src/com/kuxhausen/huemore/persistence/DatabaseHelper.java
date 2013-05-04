@@ -17,7 +17,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
 	private static final int DATABASE_VERSION = 1;
-
+	Gson gson = new Gson();
+	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -40,7 +41,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues cv = new ContentValues();
-		Gson gson = new Gson();
 		BulbState hs = new BulbState();
 
 		cv.clear();
@@ -134,7 +134,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				gSelectionArgs);
 
 		ContentValues cv = new ContentValues();
-		Gson gson = new Gson();
 		BulbState hs = new BulbState();
 
 		cv.put(MoodColumns.MOOD, PreferencesKeys.OFF);
@@ -217,7 +216,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void updatedTwoPointOne() {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
-		Gson gson = new Gson();
 		BulbState hs = new BulbState();
 		
 		

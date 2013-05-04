@@ -48,6 +48,7 @@ public class MoodManualPagingFragment extends Fragment implements
 	boolean isTrackingTouch = false;
 	SharedPreferences settings;
 	static ColorWheelFragment nchf = null;
+	Gson gson = new Gson();
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -98,8 +99,8 @@ public class MoodManualPagingFragment extends Fragment implements
 				BulbState hs = new BulbState();
 				hs.bri = brightness;
 				hs.on = true;
-				Gson gs = new Gson();
-				String[] brightnessState = { gs.toJson(hs) };
+				
+				String[] brightnessState = { gson.toJson(hs) };
 				// TODO deal with off?
 				parrentActivity
 						.onBrightnessChanged(brightnessState);

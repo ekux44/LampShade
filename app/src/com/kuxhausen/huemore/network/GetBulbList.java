@@ -26,6 +26,7 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 
 	private Context cont;
 	private OnBulbListReturnedListener mResultListener;
+	Gson gson = new Gson();
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -85,7 +86,7 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 				jSon = "[" + jSon.substring(1, jSon.length() - 1) + "]";
 				jSon = jSon.replaceAll("\"[:digit:]+\":", "");
 
-				Gson gson = new Gson();
+				
 				returnOutput = gson.fromJson(jSon, Bulb[].class);
 			} else {
 
