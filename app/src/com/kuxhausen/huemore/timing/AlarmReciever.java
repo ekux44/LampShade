@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -279,10 +280,6 @@ public class AlarmReciever extends BroadcastReceiver {
 		}
 
 		this.execute(context, bulbS, moodS);
-
-		Toast.makeText(context,
-				"HueMore Alarm " + as.group + " " + as.mood + " went off",
-				Toast.LENGTH_SHORT).show();
 	}
 	
 	/**
@@ -293,6 +290,10 @@ public class AlarmReciever extends BroadcastReceiver {
 	 * @return
 	 */
 	private Integer execute(Context cont, Integer[] bulbs, String[] moods){
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+		StrictMode.setThreadPolicy(policy); 
+		
 		if (cont == null || bulbs == null || moods == null)
 			return -1;
 
