@@ -62,6 +62,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 
 		BulbState bs = new BulbState();
 		bs.alert = "lselect";
+		bs.on = true;
 		String[] moodS = {gson.toJson(bs)};
 		Integer[] bulbS = {bulbNumber};
 		TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS);
