@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
