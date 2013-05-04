@@ -60,6 +60,7 @@
     <string name="nfc_disabled">NFC is not enabled. Turn it on in your device settings</string>
     <string name="nfc_read_done">Done</string>
     <string name="nfc_tag_read_success">NFC tag read</string>
+    <string name="nfc_tag_not_supported">Your phone does not support writing data to this NFC tag!</string>
     
     <string name="alarms">Alarms</string>
     <string name="cap_alarms">ALARMS</string>

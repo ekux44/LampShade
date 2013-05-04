@@ -302,7 +302,7 @@ public class NfcWriterActivity extends FragmentActivity implements
 
 	private void write(String text, Tag tag) throws IOException,
 			FormatException {
-
+		try{
 		NdefRecord[] records = { createRecord(text) };
 		NdefMessage message = new NdefMessage(records);
 		// Get an instance of Ndef for the tag.
@@ -313,6 +313,11 @@ public class NfcWriterActivity extends FragmentActivity implements
 		ndef.writeNdefMessage(message);
 		// Close the connection
 		ndef.close();
+		} catch (java.lang.NullPointerException e){
+			Toast.makeText(context,
+					context.getString(R.string.nfc_tag_not_supported),
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	private NdefRecord createRecord(String text)
