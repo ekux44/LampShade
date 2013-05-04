@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class GroupsFragment extends ListFragment implements OnClickListener,
@@ -167,7 +168,21 @@ public class GroupsFragment extends ListFragment implements OnClickListener,
 					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
 					groupSelect, groupArg);
 			return true;
-
+		case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
+			NewGroupDialogFragment ngdf = new NewGroupDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.GROUP_NAME, (String) (selected).getText());
+			ngdf.setArguments(args);
+			ngdf.show(getFragmentManager(), "dialog");
+			
+			
+			//String groupSelect = GroupColumns.GROUP + "=?";
+			//String[] groupArg = { (String) (selected).getText() };
+			//getActivity().getContentResolver().delete(
+			//		DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
+			//		groupSelect, groupArg);
+			return true;
+			
 		default:
 			return super.onContextItemSelected(item);
 		}

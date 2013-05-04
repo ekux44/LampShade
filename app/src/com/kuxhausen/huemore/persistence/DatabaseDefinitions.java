@@ -136,6 +136,10 @@ public final class DatabaseDefinitions {
 		}
 	}
 
+	public static final class InternalArguments{
+		public static final String GROUP_NAME = "Group_Name";
+	}
+	
 	public static final class PreferencesKeys {
 		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
 		public static final String HASHED_USERNAME = "Hashed_Username";
