@@ -225,7 +225,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
-
+	public void updatedTwoPointOnePointOne() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		BulbState hs = new BulbState();
+		
+		cv.put(MoodColumns.MOOD, PreferencesKeys.RANDOM);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+	}
+	
 	public void addBulbs(int first, int last) {
 		SQLiteDatabase db = this.getWritableDatabase();
 

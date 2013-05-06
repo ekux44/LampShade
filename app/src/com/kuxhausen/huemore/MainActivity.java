@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
@@ -31,6 +32,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
+import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
@@ -52,7 +54,7 @@ public class MainActivity extends FragmentActivity implements
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	private NfcAdapter nfcAdapter;
 	SharedPreferences settings;
-
+	Gson gson = new Gson();
 	
 
 	/** Called when the activity is first created. */
@@ -132,6 +134,13 @@ public class MainActivity extends FragmentActivity implements
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_UPDATE, false);
+			edit.commit();
+		}
+		if (!settings.contains(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE)) {
+			databaseHelper.updatedTwoPointOnePointOne();
+			// Mark no longer first update in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE, false);
 			edit.commit();
 		}
 
@@ -399,7 +408,16 @@ public class MainActivity extends FragmentActivity implements
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
-
+		String[] moodS=null;
+		if(mood.equals(PreferencesKeys.RANDOM))
+		{
+			BulbState randomState = new BulbState();
+			randomState.on=true;
+			randomState.hue=(int)(65535*Math.random());
+			randomState.sat=(short)(255*(Math.random()*5.+.25));
+			moodS = new String[1];
+			moodS[0]=gson.toJson(randomState);
+		}else{
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { mood };
 		Cursor cursor = getContentResolver().query(
@@ -418,8 +436,10 @@ public class MainActivity extends FragmentActivity implements
 		while (cursor.moveToNext()) {
 			moodStates.add(cursor.getString(0));
 		}
-		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-
+		moodS = moodStates.toArray(new String[moodStates.size()]);
+		}
+		
+		
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
 				moodS);
 		pushGroupMood.execute();
