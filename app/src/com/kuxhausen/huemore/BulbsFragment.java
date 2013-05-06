@@ -69,12 +69,16 @@ public class BulbsFragment extends ListFragment implements
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
 				android.R.layout.simple_list_item_1, bulbNameList);
 		setListAdapter(rayAdapter);
-
+		
+		refreshList();
+		
+		((MainActivity) getActivity()).bulbListenerFragment = this;
+		return myView;
+	}
+	public void refreshList(){
 		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this);
 		pushGroupMood.execute();
 
-		((MainActivity) getActivity()).bulbListenerFragment = this;
-		return myView;
 	}
 
 	@Override
@@ -131,7 +135,9 @@ public class BulbsFragment extends ListFragment implements
 			args.putString(InternalArguments.BULB_NAME, (String) (selected).getText());
 			args.putInt(InternalArguments.BULB_NUMBER, 1+rayAdapter.getPosition((String) (selected).getText()));
 			ngdf.setArguments(args);
+			ngdf.setBulbsFragment(this);
 			ngdf.show(getFragmentManager(), "dialog");
+			
 
 		default:
 			return super.onContextItemSelected(item);

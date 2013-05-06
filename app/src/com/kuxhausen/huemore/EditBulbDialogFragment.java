@@ -38,7 +38,12 @@ public class EditBulbDialogFragment extends DialogFragment {
 	EditText nameEditText;
 	int bulbNumber;
 	Gson gson = new Gson();
-
+	BulbsFragment bulbF;
+	
+	public void setBulbsFragment(BulbsFragment bf){
+		bulbF=bf;
+	}
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
@@ -84,6 +89,8 @@ public class EditBulbDialogFragment extends DialogFragment {
 						Integer[] bulbS = {bulbNumber};
 						TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS);
 						tgm.execute();
+						
+						bulbF.refreshList();
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
