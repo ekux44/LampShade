@@ -115,11 +115,13 @@ public class ColorWheelFragment extends Fragment implements
 			BulbState bs = gson.fromJson(args.getString(InternalArguments.BULB_STATE), BulbState.class);
 			if(bs.hue!=null)
 				hs.hue=bs.hue;
-			if(bs.sat!=null)
+			if(bs.sat!=null){
 				hs.sat=bs.sat;
+				seekBar.setProgress(bs.sat);
+			}
 			cpv.setInitialHSV(hs.hue, hs.sat);
 			if(transitionLayoutVisible&&bs.transitiontime!=null){
-				bs.transitiontime=hs.transitiontime;
+				hs.transitiontime=bs.transitiontime;
 				int pos= 0;
 				for(int i=0; i<transitionValues.length; i++)
 					if(bs.transitiontime==transitionValues[i])
