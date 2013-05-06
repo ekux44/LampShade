@@ -19,7 +19,7 @@ public class ColorWheelView extends View {
 	private Paint mCenterPaint;
 	private final int[] mColors;
 	private OnColorChangedListener mListener;
-	private int hue;
+	private int hue, hue360;
 	private long lastColorChange;
 	private long colorChangeRateLimit = 200000000;// 5 times/sec
 	private int parentHeight;
@@ -29,12 +29,15 @@ public class ColorWheelView extends View {
 		mListener = l;
 	}
 
-	public void setInitialColor(int color) {
-		if (mPaint != null) {
+	public void setInitialHSV(int h, int s) {
+		hue = h;
+		hue360= (hue*360)/65535;
+		float[] hsv = {hue360, s, 1};
+		if(mCenterPaint==null){
 			mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			mCenterPaint.setStrokeWidth(5);
 		}
-		mCenterPaint.setColor(color);
+		mCenterPaint.setColor(Color.HSVToColor(hsv));
 	}
 
 	public int getColor() {
@@ -58,6 +61,7 @@ public class ColorWheelView extends View {
 
 		mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mCenterPaint.setStrokeWidth(5);
+		
 	}
 
 	private boolean mTrackingCenter;
@@ -200,8 +204,8 @@ public class ColorWheelView extends View {
 					unit += 1;
 				}
 				hue = (int) ((((-unit) < 0) ? 1 - unit : unit) * 65535);
-				mCenterPaint.setColor(interpColor(mColors, unit));
-				invalidate();
+				hue360 = (int) ((((-unit) < 0) ? 1 - unit : unit) * 360);
+				recalculateColor();
 			}
 			break;
 		case MotionEvent.ACTION_UP:
@@ -219,4 +223,9 @@ public class ColorWheelView extends View {
 		return true;
 	}
 
+	public void recalculateColor(){
+		float[] hsv = {hue360, mListener.getSaturation(), 1};
+		mCenterPaint.setColor(Color.HSVToColor(hsv));
+		invalidate();
+	}
 }

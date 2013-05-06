@@ -29,10 +29,10 @@ public class ColorWheelFragment extends Fragment implements
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
+		float getSaturation();
 	}
 
 	private OnColorChangedListener mListener;
-	private int mInitialColor;
 	private ColorWheelView cpv;
 	private BulbState hs;
 	Gson gson = new Gson();
@@ -53,13 +53,18 @@ public class ColorWheelFragment extends Fragment implements
 		hs = new BulbState();
 		hs.on = true;
 		hs.effect = "none";
-		mInitialColor = 0;
 
 		mListener = new OnColorChangedListener() {
 			@Override
 			public void colorChanged(int color, int hues) {
 				hs.hue = hues;
 				preview();
+			}
+
+			@Override
+			public float getSaturation() {
+				// TODO Auto-generated method stub
+				return seekBar.getProgress()/255f;
 			}
 		};
 
@@ -137,6 +142,7 @@ public class ColorWheelFragment extends Fragment implements
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		hs.sat = (short) seekBar.getProgress();
 		preview();
+		cpv.recalculateColor();
 	}
 
 	public void preview() {
