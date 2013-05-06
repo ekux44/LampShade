@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.api.BulbState;
 

@@ -1,5 +1,14 @@
 package com.kuxhausen.huemore;
 
+import java.util.ArrayList;
+
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.state.api.BulbState;
+
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -13,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class NewMoodPagerDialogFragment extends DialogFragment implements
+public class EditMoodPagerDialogFragment extends DialogFragment implements
 		OnClickListener {
 
 	/**
@@ -25,7 +34,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 	 * memory and is a best practice when allowing navigation between objects in
 	 * a potentially large collection.
 	 */
-	NewMoodPagerAdapter mNewMoodPagerAdapter;
+	EditMoodPagerAdapter mEditMoodPagerAdapter;
 	static OnCreateMoodListener[] newMoodFragments;
 
 	/**
@@ -37,6 +46,9 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 	static int currentPage;
 
 	EditText nameEditText;
+	
+	static BulbState[] priorMood;
+	static Gson gson = new Gson();
 
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
@@ -51,7 +63,7 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.mood_dialog_pager, container,
 				false);
-		Bundle args = getArguments();
+		//Bundle args = getArguments();
 
 		nameEditText = (EditText) myView.findViewById(R.id.editText1);
 
@@ -62,11 +74,11 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		// ViewPager and its adapters use support library fragments, so we must
 		// use
 		// getSupportFragmentManager.
-		mNewMoodPagerAdapter = new NewMoodPagerAdapter(this);
+		mEditMoodPagerAdapter = new EditMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-		mViewPager.setAdapter(mNewMoodPagerAdapter);
+		mViewPager.setAdapter(mEditMoodPagerAdapter);
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
 			@Override
@@ -82,8 +94,47 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 		cancelButton.setOnClickListener(this);
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
-
 		newMoodFragments = new OnCreateMoodListener[2];
+		
+		
+		Bundle args = this.getArguments();
+		if(args!=null && args.containsKey(InternalArguments.MOOD_NAME)){
+			String moodName = args.getString(InternalArguments.MOOD_NAME);
+			
+			
+			// Look up states for that mood from database
+			String[] moodColumns = { MoodColumns.STATE };
+			String[] mWhereClause = { moodName };
+			Cursor moodCursor = this.getActivity().getContentResolver().query(
+					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
+																	// default
+																	// content URI
+																	// for the
+																	// provider.
+					moodColumns, // Return the note ID and title for each note.
+					MoodColumns.MOOD + "=?", // selection clause
+					mWhereClause, // election clause args
+					null // Use the default sort order.
+					);
+
+			ArrayList<String> moodStates = new ArrayList<String>();
+			while (moodCursor.moveToNext()) {
+				moodStates.add(moodCursor.getString(0));
+			}
+			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+			priorMood = new BulbState[moodStates.size()];
+			for(int i = 0; i<priorMood.length;i++)
+				priorMood[i]=gson.fromJson(moodS[i], BulbState.class);
+			
+			if(priorMood.length==1 && priorMood[0].ct==null)
+			{
+				//show simple mood page
+				mViewPager.setCurrentItem(0);
+			}else{
+				//show multi mood page
+				mViewPager.setCurrentItem(1);
+			}
+		}
 		return myView;
 	}
 
@@ -91,9 +142,9 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
 	 */
-	public static class NewMoodPagerAdapter extends FragmentPagerAdapter {
+	public static class EditMoodPagerAdapter extends FragmentPagerAdapter {
 
-		public NewMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
+		public EditMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
 
 			// write your code here
@@ -109,11 +160,25 @@ public class NewMoodPagerDialogFragment extends DialogFragment implements
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
 				args.putBoolean("ShowEditText", true);
+				if(priorMood!=null && priorMood.length==1 && priorMood[0].ct==null)
+				{
+					args.putString(InternalArguments.BULB_STATE, gson.toJson(priorMood[0]));
+				}
 				nchf.setArguments(args);
 				newMoodFragments[i] = nchf;
 				return (Fragment) newMoodFragments[i];
 			case 1:
 				newMoodFragments[i] = new NewMultiMoodFragment();
+				
+				NewMultiMoodFragment nmmf = new NewMultiMoodFragment();
+				Bundle args2 = new Bundle();
+				args2.putBoolean("ShowEditText", true);
+				if(priorMood!=null && (priorMood.length>11 || priorMood[0].ct!=null))
+				{
+					args2.putString(InternalArguments.BULB_STATES, gson.toJson(priorMood));
+				}
+				nmmf.setArguments(args2);
+				newMoodFragments[i] = nmmf;
 				return (Fragment) newMoodFragments[i];
 			default:
 				return null;

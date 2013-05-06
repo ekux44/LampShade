@@ -19,8 +19,9 @@ import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.NewMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class ColorWheelFragment extends Fragment implements
@@ -48,12 +49,14 @@ public class ColorWheelFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle bundle = getArguments();
-
+		
+		
 		hs = new BulbState();
 		hs.on = true;
 		hs.effect = "none";
 
+		hs.hue=0;//todo poll existing saturation if there is one
+		
 		mListener = new OnColorChangedListener() {
 			@Override
 			public void colorChanged(int color, int hues) {
@@ -85,12 +88,13 @@ public class ColorWheelFragment extends Fragment implements
 			groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(View.GONE);
 		}
 		
+		ArrayAdapter<CharSequence> adapter;
 		if(transitionLayoutVisible){
 		transitionSpinner = (Spinner) groupDialogView
 				.findViewById(R.id.transitionSpinner);
 		// Create an ArrayAdapter using the string array and a default spinner
 		// layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+		adapter = ArrayAdapter.createFromResource(
 				getActivity(), R.array.transition_names_array,
 				android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
@@ -105,8 +109,24 @@ public class ColorWheelFragment extends Fragment implements
 			groupDialogView.findViewById(R.id.transitionTimeLayout).setVisibility(View.GONE);
 		}
 		
-		// builder.setView(new ColorWheelView(getActivity(), l,
-		// mInitialColor));
+		Bundle args = getArguments();
+		if(args!=null && args.containsKey(InternalArguments.BULB_STATE))
+		{
+			BulbState bs = gson.fromJson(args.getString(InternalArguments.BULB_STATE), BulbState.class);
+			if(bs.hue!=null)
+				hs.hue=bs.hue;
+			if(bs.sat!=null)
+				hs.sat=bs.sat;
+			cpv.setInitialHSV(hs.hue, hs.sat);
+			if(transitionLayoutVisible&&bs.transitiontime!=null){
+				bs.transitiontime=hs.transitiontime;
+				int pos= 0;
+				for(int i=0; i<transitionValues.length; i++)
+					if(bs.transitiontime==transitionValues[i])
+						pos=i;
+				transitionSpinner.setSelection(pos);
+			}
+		}
 
 		// Create the AlertDialog object and return it
 		return groupDialogView;

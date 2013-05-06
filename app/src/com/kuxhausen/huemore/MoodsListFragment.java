@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
@@ -94,7 +95,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		switch (item.getItemId()) {
 
 		case R.id.action_add:
-			NewMoodPagerDialogFragment nmdf = new NewMoodPagerDialogFragment();
+			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
 			nmdf.show(getFragmentManager(), "dialog");
 			return true;
 		default:
@@ -165,6 +166,12 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
 					moodArg);
 			return true;
+		case R.id.contextmoodmenu_edit: // <-- your custom menu item id here
+			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.MOOD_NAME, (String) (selected).getText());
+			nmdf.setArguments(args);
+			nmdf.show(getFragmentManager(), "dialog");
 
 		default:
 			return super.onContextItemSelected(item);
@@ -177,7 +184,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.newMoodButton:
 
-			NewMoodPagerDialogFragment nmdf = new NewMoodPagerDialogFragment();
+			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
 			nmdf.show(getFragmentManager(), "dialog");
 
 			break;
