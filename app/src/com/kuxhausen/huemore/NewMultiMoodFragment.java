@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NewMultiMoodFragment extends ListFragment implements
@@ -39,6 +41,28 @@ public class NewMultiMoodFragment extends ListFragment implements
 		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 
+		
+		
+		Bundle args = getArguments();
+		if(args!=null && args.containsKey(InternalArguments.BULB_STATES))
+		{
+			BulbState[] bsRay = gson.fromJson(args.getString(InternalArguments.BULB_STATES), BulbState[].class);
+			for(BulbState bs : bsRay){
+				MoodRow mr = new MoodRow();
+				mr.hs = bs;
+				if(bs.ct!=null){
+					mr.color = Color.WHITE;
+				}else{
+					float[] hsv = {(bs.hue*360)/65535, bs.sat/255f, 1};
+					mr.color = Color.HSVToColor(hsv);
+					
+				}
+				moodRowArray.add(mr);
+				rayAdapter.add(mr);
+			}
+		}
+		
+		
 		return groupView;
 	}
 

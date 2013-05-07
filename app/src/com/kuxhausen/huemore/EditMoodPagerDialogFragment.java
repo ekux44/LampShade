@@ -170,12 +170,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				newMoodFragments[i] = nchf;
 				return (Fragment) newMoodFragments[i];
 			case 1:
-				newMoodFragments[i] = new NewMultiMoodFragment();
-				
 				NewMultiMoodFragment nmmf = new NewMultiMoodFragment();
 				Bundle args2 = new Bundle();
 				args2.putBoolean("ShowEditText", true);
-				if(priorMood!=null && (priorMood.length>11 || priorMood[0].ct!=null))
+				if(priorMood!=null && (priorMood.length>1 || priorMood[0].ct!=null))
 				{
 					args2.putString(InternalArguments.BULB_STATES, gson.toJson(priorMood));
 				}
