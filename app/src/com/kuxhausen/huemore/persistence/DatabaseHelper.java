@@ -173,6 +173,72 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Deep Sea");
+		hs.sat = (253);
+		hs.hue = (45489);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Sunset");
+		hs.sat = (230);
+		hs.hue = (1111);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Deep Sea");
+		hs.sat = (253);
+		hs.hue = (45489);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Fruit");
+		hs.sat = (244);
+		hs.hue = (15483);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		cv.clear();
+		cv.put(MoodColumns.MOOD, "Fruit");
+		hs.sat = (254);
+		hs.hue = (25593);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		cv.put(MoodColumns.MOOD, "Fruit");
+		hs.sat = (173);
+		hs.hue = (64684);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		
+		cv.put(MoodColumns.MOOD, "Romantic");
+		hs.sat = (254);
+		hs.hue = (64799);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
+		cv.put(MoodColumns.MOOD, "Romantic");
+		hs.sat = (215);
+		hs.hue = (2064);
+		hs.on = true;
+		hs.effect = "none";
+		cv.put(MoodColumns.STATE, gson.toJson(hs));
+		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
 	
 	public void addBulbs(int first, int last) {
