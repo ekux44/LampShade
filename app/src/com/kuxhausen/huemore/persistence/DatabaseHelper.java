@@ -184,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 		cv.clear();
-		cv.put(MoodColumns.MOOD, "Sunset");
+		cv.put(MoodColumns.MOOD, "Deep Sea");
 		hs.sat = (230);
 		hs.hue = (1111);
 		hs.on = true;
