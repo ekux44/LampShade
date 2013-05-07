@@ -43,76 +43,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
 
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Red");
-		Double[] redPair = { 0.6472, 0.3316 };
-		hs.xy = redPair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Orange");
-		Double[] orangePair = { 0.5663, 0.3978 };
-		hs.xy = orangePair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Blue");
-		Double[] bluePair = { 0.1721, 0.0500 };
-		hs.xy = bluePair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Romantic");
-		Double[] pinkPair = { 0.3385, 0.1680 };
-		hs.xy = pinkPair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		hs.xy = redPair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Rainbow");
-		hs.xy = orangePair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		hs.xy = pinkPair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		Double[] greenPair = { 0.4020, 0.5041 };
-		hs.xy = greenPair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		hs.xy = bluePair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		hs.xy = redPair;
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
 	}
 
 	public void updatedPopulate() {
@@ -227,6 +157,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	public void updatedTwoPointOnePointOne() {
 		SQLiteDatabase db = this.getWritableDatabase();
+		
+		String[] mSelectionArgs = { "Red", "Orange", "Blue", "Romantic", "Rainbow" };
+		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
+		+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+		+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+		+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+		+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
+		
 		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
 		
