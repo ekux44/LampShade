@@ -46,6 +46,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	static int currentPage;
 
 	EditText nameEditText;
+	String priorName;
 	
 	static BulbState[] priorMood;
 	static Gson gson = new Gson();
@@ -88,7 +89,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle("New Mood");
+		this.getDialog().setTitle("New Mood");//TODO take from strings.xml
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
@@ -100,7 +101,8 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		Bundle args = this.getArguments();
 		if(args!=null && args.containsKey(InternalArguments.MOOD_NAME)){
 			String moodName = args.getString(InternalArguments.MOOD_NAME);
-			
+			priorName = moodName;
+			nameEditText.setText(moodName);
 			
 			// Look up states for that mood from database
 			String[] moodColumns = { MoodColumns.STATE };
@@ -209,6 +211,14 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
+			if(priorName!=null){
+				//delete old mood
+				String moodSelect = MoodColumns.MOOD + "=?";
+				String[] moodArg = { priorName };
+				getActivity().getContentResolver().delete(
+					DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
+					moodSelect, moodArg);
+			}
 			((OnCreateMoodListener) newMoodFragments[currentPage])
 					.onCreateMood(nameEditText.getText().toString());
 			this.dismiss();
