@@ -40,7 +40,7 @@ public class BootSetter extends BroadcastReceiver {
 				null // Use the default sort order.
 				);
 
-		cursor.moveToFirst();
+		cursor.moveToPosition(-1);//not the same as move to first!
 		while (cursor.moveToNext()) {
 			AlarmState as = gson
 					.fromJson(cursor.getString(0), AlarmState.class);
