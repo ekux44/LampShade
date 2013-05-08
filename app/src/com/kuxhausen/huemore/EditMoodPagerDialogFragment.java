@@ -195,9 +195,9 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				frag.getActivity().getString(R.string.cap_simple_mood);
+				return frag.getActivity().getString(R.string.cap_simple_mood);
 			case 1:
-				frag.getActivity().getString(R.string.cap_advanced_mood);
+				return frag.getActivity().getString(R.string.cap_advanced_mood);
 			}
 			return "";
 		}

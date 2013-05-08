@@ -116,9 +116,9 @@ public class GroupBulbPagingFragment extends Fragment {
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case GROUP_LOCATION:
-				frag.getActivity().getString(R.string.cap_groups);
+				return frag.getActivity().getString(R.string.cap_groups);
 			case BULB_LOCATION:
-				frag.getActivity().getString(R.string.cap_bulbs);
+				return frag.getActivity().getString(R.string.cap_bulbs);
 
 			}
 			return "";

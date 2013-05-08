@@ -171,9 +171,9 @@ public class MoodManualPagingFragment extends Fragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case MOOD_LOCATION:
-				frag.getActivity().getString(R.string.cap_moods);
+				return frag.getActivity().getString(R.string.cap_moods);
 			case MANUAL_LOCATION:
-				frag.getActivity().getString(R.string.cap_manual);
+				return frag.getActivity().getString(R.string.cap_manual);
 			}
 			return "";
 		}

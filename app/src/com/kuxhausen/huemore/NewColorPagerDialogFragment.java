@@ -123,9 +123,9 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				frag.getActivity().getString(R.string.cap_hue_sat_mode);
+				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
 			case 1:
-				frag.getActivity().getString(R.string.cap_color_temp_mode);
+				return frag.getActivity().getString(R.string.cap_color_temp_mode);
 			}
 			return "";
 		}
