@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HueMore</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_register_with_hub">Registriere mit Bridge</string>
+    <string name="action_unlocks">Entsperren</string>
+    <string name="settings">Settings</string>
+    <string name="unlocks">Unlocks</string>
+    <string name="cap_moods">SZENEN</string>
+    <string name="cap_manual">MANUELL</string>
+    <string name="cap_groups">GRUPPEN</string>
+    <string name="cap_bulbs">LAMPEN</string>
+    <string name="groups">Gruppen</string>
+    <string name="moods">Szenen</string>
+    <string name="mood_intro">Szene:</string>
+    <string name="group_intro">Gruppe:</string>
+    <string name="accept">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="register_success">Verbindung erfolgreich</string>
+    <string name="register_fail">Konnte nicht mit der Bridge verbunden werden. Stelle sicher dass dieses Gerät mit demselben WiFi verbunden ist wie die Bridge und Internetzugriff hat. Versuche es dann noch einmal.</string>
+    <string name="link_prompt">Drücke die Link Taste auf der Bridge.</string>
+    <string name="manual_ip_prompt">Gebe die Bridge IP Adresse ein</string>
+    <string name="advanced">Fortgeschritten</string>
+    <string name="auto_discover">Automatisch verbinden</string>
+    <string name="ip_address_v4_seperator">.</string>
+    <string name="contextmenu_delete">Löschen</string>
+    <string name="contextmenu_edit">Ändern</string>
+    <string name="contextmenu_rename">Rename</string>
+    <string name="actionmenu_new_group">Neue Gruppe</string>
+    <string name="actionmenu_new_mood">Neue Szene</string>
+    <string name="actionmenu_new_alarm">Neuer Alarm</string>
+    <string name="hint_mood_name">Szenenname</string>
+    <string name="hint_group_name">Gruppenname</string>
+    <string name="hint_bulb_name">bulb name</string>
+    <string name="brightness">Helligkeit</string>
+    <string name="saturation">Sättigung</string>
+    <string name="temperature">Farbtemperatur (K)</string>
+    <string name="color_temp_initial_value">3200</string>
+    <string name="add_color">Farbe hinzufügen</string>
+    <string name="toggleColorLoop">Farbschlaufe:</string>
+    <string name="promp_first_view_setting">Standard Startmenü</string>
+    <string name="promp_second_view_setting">Standard Einstellungsmenü</string>
+    <string name="rate_on_google_play">Bewerten in Google Play</string>
+    <string name="unlock_pro_prompt">Pro Version freischalten!</string>
+    <string name="unlock_pro_already">Du hast bereits die Pro Version!</string>
+    <string name="unlock_pro_descriptor">Die Pro Version schaltet Alarme und NFC Funktionalitäten frei.</string>
+    <string name="nfc">Nfc</string>
+    <string name="cap_nfc">NFC</string>
+    <string name="nfc_tag_detected">Tag erkannt</string>
+    <string name="nfc_tag_not_detected">Tag nicht gefunden</string>
+    <string name="nfc_tag_write_prompt">Auf Tag schreiben</string>
+    <string name="nfc_tag_write_success">Auf Tag gespeichert</string>
+    <string name="nfc_tag_write_fail">Speicherung auf Tag fehlgeschlagen</string>
+    <string name="nfc_disabled">NFC ist nicht eingeschalten. Aktiviere es in den Geräteeinstellungen.</string>
+    <string name="nfc_read_done">Fertig</string>
+    <string name="nfc_tag_read_success">NFC Tag gelesen</string>
+    <string name="nfc_tag_not_supported">Your phone does not support writing data to this NFC tag!</string>
+    <string name="alarms">Alarme (Beta)</string>
+    <string name="cap_alarms">ALARME</string>
+    <string name="transition_intro">Einblenden:</string>
+    <string name="alarm_repeat">Wiederholen:</string>
+    <string name="cap_short_none"></string>
+    <string name="cap_short_every_day">TÄGLICH</string>
+    <string name="next_scheduled_intro">Nächster Alarm</string>
+
+</resources>

@@ -18,7 +18,7 @@ public class reformatter
 		PrintWriter f= new PrintWriter(new FileWriter("results.xml"));
 		
 		while(file.hasNextLine()){	
-			f.println("<string name=\""+file.next()+"\">"+file.nextLine().substring(1)+"</string>");
+			f.println("\t<string name=\""+file.next()+"\">"+file.nextLine().substring(1)+"</string>");
 		}
 		f.close();
 	}
