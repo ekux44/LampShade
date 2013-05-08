@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -71,7 +73,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle("New Color");
+		this.getDialog().setTitle(getActivity().getString(R.string.actionmenu_new_color));
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
@@ -88,10 +90,11 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 	 */
 	public static class NewMoodPagerAdapter extends FragmentPagerAdapter {
 
+		android.support.v4.app.Fragment frag;
+		
 		public NewMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-
-			// write your code here
+			frag= fragment;
 		}
 
 		@Override
@@ -120,11 +123,9 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "HUE";// TODO figure out how to make static
-								// references
-								// to strings.xml
+				frag.getActivity().getString(R.string.cap_hue_sat_mode);
 			case 1:
-				return "TEMPERATURE";
+				frag.getActivity().getString(R.string.cap_color_temp_mode);
 			}
 			return "";
 		}
@@ -138,7 +139,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			Intent i = ((OnCreateColorListener) newColorFragments[currentPage])
 					.onCreateColor();
 			getTargetFragment().onActivityResult(getTargetRequestCode(),
-					i.getExtras().getInt("Color"), i);
+					i.getExtras().getInt(InternalArguments.COLOR), i);
 			this.dismiss();
 			break;
 		case R.id.cancel:

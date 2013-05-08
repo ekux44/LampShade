@@ -87,10 +87,11 @@ public class GroupBulbPagingFragment extends Fragment {
 	 */
 	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
+		android.support.v4.app.Fragment frag;
+		
 		public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-
-			// write your code here
+			frag= fragment;
 		}
 
 		@Override
@@ -115,10 +116,9 @@ public class GroupBulbPagingFragment extends Fragment {
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case GROUP_LOCATION:
-				return "GROUPS";// TODO figure out how to make static references
-								// to strings.xml
+				frag.getActivity().getString(R.string.cap_groups);
 			case BULB_LOCATION:
-				return "BULBS";
+				frag.getActivity().getString(R.string.cap_bulbs);
 
 			}
 			return "";

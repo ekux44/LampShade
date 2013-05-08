@@ -21,6 +21,7 @@ import android.widget.EditText;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class ManualRegisterWithHubDialogFragment extends DialogFragment
@@ -59,15 +60,15 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						String ip = IPV4part1.getText().toString() + "."
-								+ IPV4part2.getText().toString() + "."
-								+ IPV4part3.getText().toString() + "."
+						String ip = IPV4part1.getText().toString() + InternalArguments.IPV4dot
+								+ IPV4part2.getText().toString() + InternalArguments.IPV4dot
+								+ IPV4part3.getText().toString() + InternalArguments.IPV4dot
 								+ IPV4part4.getText().toString();
 						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 						Bundle args = new Bundle();
-						args.putString("IP", ip);
+						args.putString(InternalArguments.IP, ip);
 						rwhdf.setArguments(args);
-						rwhdf.show(getFragmentManager(), "dialog");
+						rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 						dismiss();
 					}
@@ -77,7 +78,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-						rfdf.show(getFragmentManager(), "dialog");
+						rfdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 						dismiss();
 					}
@@ -92,7 +93,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 		try {
 			MessageDigest md;
 			String serialID = Settings.Secure.ANDROID_ID;
-			md = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance(InternalArguments.MD5);
 			String resultString = new BigInteger(1, md.digest(serialID
 					.getBytes())).toString(16);
 
@@ -103,7 +104,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 		}
 
 		// fall back on hash of hueMore if android ID fails
-		return "f01623452466afd4eba5c1ed0a0a9395";
+		return InternalArguments.FALLBACK_USERNAME_HASH;
 	}
 
 	public String getDeviceType() {
@@ -117,7 +118,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
-			rsdf.show(getFragmentManager(), "dialog");
+			rsdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			// Add username and IP to preferences cache
 			SharedPreferences settings = PreferenceManager

@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class AlarmsListFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -91,7 +92,7 @@ public class AlarmsListFragment extends ListFragment implements
 
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
-			nadf.show(getFragmentManager(), "dialog");
+			nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			nadf.onLoadLoaderManager();
 			return true;
 		default:

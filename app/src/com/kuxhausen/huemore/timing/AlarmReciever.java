@@ -18,12 +18,12 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.SynchronousTransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class AlarmReciever extends BroadcastReceiver {
 
-	private final static String ALARM_DETAILS = "alarmDetailsBundle";
 	Gson gson = new Gson();
 	
 	public static AlarmState createAlarms(Context context, String group,
@@ -150,7 +150,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(ALARM_DETAILS, aState);
+		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				generateRequestCode(aState), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
@@ -167,7 +167,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(ALARM_DETAILS, aState);
+		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				generateRequestCode(aState), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
@@ -183,7 +183,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(ALARM_DETAILS, aState);
+		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				generateRequestCode(aState), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
@@ -207,7 +207,7 @@ public class AlarmReciever extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		AlarmState as = gson.fromJson(
-				intent.getExtras().getString(ALARM_DETAILS), AlarmState.class);
+				intent.getExtras().getString(InternalArguments.ALARM_DETAILS), AlarmState.class);
 
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };

@@ -89,7 +89,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle("New Mood");//TODO take from strings.xml
+		this.getDialog().setTitle(getActivity().getString(R.string.actionmenu_new_mood));
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
@@ -146,10 +146,11 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	 */
 	public static class EditMoodPagerAdapter extends FragmentPagerAdapter {
 
+		android.support.v4.app.Fragment frag;
+		
 		public EditMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-
-			// write your code here
+			frag= fragment;
 		}
 
 		@Override
@@ -161,7 +162,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				ColorWheelFragment nchf = new ColorWheelFragment();
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
-				args.putBoolean("ShowEditText", true);
+				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if(priorMood!=null && priorMood.length==1 && priorMood[0].ct==null)
 				{
 					args.putString(InternalArguments.BULB_STATE, gson.toJson(priorMood[0]));
@@ -172,7 +173,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			case 1:
 				NewMultiMoodFragment nmmf = new NewMultiMoodFragment();
 				Bundle args2 = new Bundle();
-				args2.putBoolean("ShowEditText", true);
+				args2.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if(priorMood!=null && (priorMood.length>1 || priorMood[0].ct!=null))
 				{
 					args2.putString(InternalArguments.BULB_STATES, gson.toJson(priorMood));
@@ -194,11 +195,9 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "SIMPLE";// TODO figure out how to make static
-								// references
-								// to strings.xml
+				frag.getActivity().getString(R.string.cap_advanced_mood);
 			case 1:
-				return "ADVANCED";
+				frag.getActivity().getString(R.string.cap_advanced_mood);
 			}
 			return "";
 		}

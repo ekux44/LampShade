@@ -11,6 +11,8 @@
     <string name="cap_manual">MANUELL</string>
     <string name="cap_groups">GRUPPEN</string>
     <string name="cap_bulbs">LAMPEN</string>
+    <string name="cap_simple_mood">SIMPLE</string>
+    <string name="cap_advanced_mood">ADVANCED</string>
     <string name="groups">Gruppen</string>
     <string name="moods">Szenen</string>
     <string name="mood_intro">Szene:</string>

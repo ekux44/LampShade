@@ -16,6 +16,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NewColorTempFragment extends Fragment implements
@@ -100,8 +101,8 @@ public class NewColorTempFragment extends Fragment implements
 	@Override
 	public Intent onCreateColor() {
 		Intent i = new Intent();
-		i.putExtra("HueState", gson.toJson(hs));
-		i.putExtra("Color", 0xffffffff);
+		i.putExtra(InternalArguments.COLOR, gson.toJson(hs));
+		i.putExtra(InternalArguments.HUE_STATE, 0xffffffff);
 		return i;
 	}
 

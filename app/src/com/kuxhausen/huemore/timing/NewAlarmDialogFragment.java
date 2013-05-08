@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
@@ -141,7 +142,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		case R.id.repeatButton:
 			RepeatDialogFragment rdf = new RepeatDialogFragment();
 			rdf.resultListener = this;
-			rdf.show(getFragmentManager(), "dialog");
+			rdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			break;
 		case R.id.okay:
 			onCreateAlarm();

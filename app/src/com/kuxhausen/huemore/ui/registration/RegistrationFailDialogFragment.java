@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class RegistrationFailDialogFragment extends DialogFragment {
 	@Override
@@ -17,7 +18,7 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-						rwhdf.show(getFragmentManager(), "dialog");
+						rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 						dismiss();
 					}
@@ -27,7 +28,7 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						ManualRegisterWithHubDialogFragment mrwhdf = new ManualRegisterWithHubDialogFragment();
-						mrwhdf.show(getFragmentManager(), "dialog");
+						mrwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 						dismiss();
 					}
 				});

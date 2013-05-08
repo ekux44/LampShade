@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class RegisterWithHubDialogFragment extends DialogFragment implements
@@ -40,7 +41,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		parrentActivity = this.getActivity();
 		me = this;
 		if (savedInstanceState != null) {
-			ip = savedInstanceState.getString("IP");
+			ip = savedInstanceState.getString(InternalArguments.IP);
 		}
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -77,7 +78,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-					rfdf.show(getFragmentManager(), "dialog");
+					rfdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 					dismiss();
 				}
@@ -100,7 +101,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		try {
 			MessageDigest md;
 			String serialID = Settings.Secure.ANDROID_ID;
-			md = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance(InternalArguments.MD5);
 			String resultString = new BigInteger(1, md.digest(serialID
 					.getBytes())).toString(16);
 
@@ -111,7 +112,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		}
 
 		// fall back on hash of hueMore if android ID fails
-		return "f01623452466afd4eba5c1ed0a0a9395";
+		return InternalArguments.FALLBACK_USERNAME_HASH;
 	}
 
 	public String getDeviceType() {
@@ -126,7 +127,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
-			rsdf.show(getFragmentManager(), "dialog");
+			rsdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			// Add username and IP to preferences cache
 			SharedPreferences settings = PreferenceManager

@@ -86,7 +86,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		case R.id.newGroupButton:
 
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
-			ngdf.show(getFragmentManager(), "dialog");
+			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			break;
 		}
@@ -104,7 +104,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 
 		case R.id.action_add:
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
-			ngdf.show(getFragmentManager(), "dialog");
+			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -133,8 +133,6 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		try {
 			mCallback = (MainActivity) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
 
@@ -173,14 +171,8 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 			Bundle args = new Bundle();
 			args.putString(InternalArguments.GROUP_NAME, (String) (selected).getText());
 			ngdf.setArguments(args);
-			ngdf.show(getFragmentManager(), "dialog");
+			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			
-			
-			//String groupSelect = GroupColumns.GROUP + "=?";
-			//String[] groupArg = { (String) (selected).getText() };
-			//getActivity().getContentResolver().delete(
-			//		DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-			//		groupSelect, groupArg);
 			return true;
 			
 		default:

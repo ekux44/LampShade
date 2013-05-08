@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.ExternalArguments;
 
 public class AlarmRow {
 
@@ -29,7 +30,7 @@ public class AlarmRow {
 
 	public String getTime() {
 		if (aState.scheduledTimes == null)
-			return "N/A";
+			return ExternalArguments.NA;
 		long time = 0;
 		loopFirst: for (Long milis : aState.scheduledTimes) {
 			if (milis != null) {

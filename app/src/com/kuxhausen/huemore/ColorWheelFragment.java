@@ -179,8 +179,8 @@ public class ColorWheelFragment extends Fragment implements
 			hs.transitiontime =transitionValues[transitionSpinner.getSelectedItemPosition()];
 		hs.hue = cpv.getHue();
 		Intent i = new Intent();
-		i.putExtra("HueState", gson.toJson(hs));
-		i.putExtra("Color", cpv.getColor());
+		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
+		i.putExtra(InternalArguments.COLOR, cpv.getColor());
 		return i;
 	}
 

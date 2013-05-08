@@ -103,8 +103,6 @@ public class BulbsFragment extends ListFragment implements
 		try {
 			mCallback = (MainActivity) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
 
@@ -136,7 +134,7 @@ public class BulbsFragment extends ListFragment implements
 			args.putInt(InternalArguments.BULB_NUMBER, 1+rayAdapter.getPosition((String) (selected).getText()));
 			ngdf.setArguments(args);
 			ngdf.setBulbsFragment(this);
-			ngdf.show(getFragmentManager(), "dialog");
+			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			
 
 		default:

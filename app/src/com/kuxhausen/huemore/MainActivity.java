@@ -28,6 +28,7 @@ import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
@@ -61,8 +62,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("asdf", "onCreate");
-
+		
 		setContentView(R.layout.hue_more);
 		m = this;
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -101,7 +101,6 @@ public class MainActivity extends FragmentActivity implements
 
 		// (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ?
 		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
-		// : System.out.println("wtf");
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
@@ -160,7 +159,7 @@ public class MainActivity extends FragmentActivity implements
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-			rwhdf.show(this.getSupportFragmentManager(), "dialog");
+			rwhdf.show(this.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
 		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
@@ -301,7 +300,6 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.d("asdf", "onDestroy");
 		if (mPlayHelper != null)
 			mPlayHelper.dispose();
 		mPlayHelper = null;
@@ -485,15 +483,15 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		case R.id.action_register_with_hub:
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-			rwhdf.show(getSupportFragmentManager(), "dialog");
+			rwhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:
 			SettingsDialogFragment settings = new SettingsDialogFragment();
-			settings.show(getSupportFragmentManager(), "dialog");
+			settings.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_unlocks:
 			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(), "dialog");
+			unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_nfc:
 			if (!nfcAdapter.isEnabled()) {

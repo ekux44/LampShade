@@ -77,7 +77,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
 		// cpdf.setPreviewGroups(bulbS);//TODO fix
 		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
-		cpdf.show(getFragmentManager(), "dialog");
+		cpdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 		rayAdapter.getItem(requestCode).color = resultCode;
 		rayAdapter.notifyDataSetChanged();
 		rayAdapter.getItem(requestCode).hs = gson.fromJson(
-				data.getStringExtra("HueState"), BulbState.class);
+				data.getStringExtra(InternalArguments.HUE_STATE), BulbState.class);
 
 		String[] states = new String[moodRowArray.size()];
 		for (int i = 0; i < moodRowArray.size(); i++) {
@@ -140,7 +140,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 
 		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
 		Bundle args = new Bundle();
-		args.putString("PreviousState",
+		args.putString(InternalArguments.PREVIOUS_STATE,
 				gson.toJson(moodRowArray.get(position).hs));
 		cpdf.setArguments(args);
 		// cpdf.show(getFragmentManager(), "dialog");

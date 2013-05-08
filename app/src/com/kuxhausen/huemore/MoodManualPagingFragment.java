@@ -140,10 +140,11 @@ public class MoodManualPagingFragment extends Fragment implements
 	 */
 	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
+		android.support.v4.app.Fragment frag;
+		
 		public MoodManualPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-
-			// write your code here
+			frag= fragment;
 		}
 
 		@Override
@@ -170,10 +171,9 @@ public class MoodManualPagingFragment extends Fragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case MOOD_LOCATION:
-				return "MOODS";// TODO figure out how to make static references
-								// to strings.xml
+				frag.getActivity().getString(R.string.cap_moods);
 			case MANUAL_LOCATION:
-				return "MANUAL";
+				frag.getActivity().getString(R.string.cap_manual);
 			}
 			return "";
 		}

@@ -96,7 +96,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 
 		case R.id.action_add:
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
-			nmdf.show(getFragmentManager(), "dialog");
+			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -112,8 +112,6 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		try {
 			mMoodCallback = (MainActivity) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnHeadlineSelectedListener");
 		}
 	}
 
@@ -171,7 +169,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 			Bundle args = new Bundle();
 			args.putString(InternalArguments.MOOD_NAME, (String) (selected).getText());
 			nmdf.setArguments(args);
-			nmdf.show(getFragmentManager(), "dialog");
+			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 		default:
 			return super.onContextItemSelected(item);
@@ -185,7 +183,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		case R.id.newMoodButton:
 
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
-			nmdf.show(getFragmentManager(), "dialog");
+			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			break;
 		}

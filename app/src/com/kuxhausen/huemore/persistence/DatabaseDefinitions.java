@@ -143,6 +143,20 @@ public final class DatabaseDefinitions {
 		public static final String MOOD_NAME = "Mood_Name";
 		public static final String BULB_STATE = "Bulb_State";
 		public static final String BULB_STATES = "Bulb_States";
+		public static final String IP = "IP";
+		public static final String MD5 = "MD5";
+		public static final String FRAG_MANAGER_DIALOG_TAG = "dialog";
+		public static final String IPV4dot = ".";
+		public static final String FALLBACK_USERNAME_HASH = "f01623452466afd4eba5c1ed0a0a9395";
+		public final static String ALARM_DETAILS = "alarmDetailsBundle";
+		public final static String HUE_STATE = "HueState";
+		public final static String COLOR = "Color";
+		public final static String SHOW_EDIT_TEXT = "ShowEditText";
+		public final static String PREVIOUS_STATE = "PreviousState";
+	}
+	
+	public static final class ExternalArguments{
+		public static final String NA = "N/A";
 	}
 	
 	public static final class PreferencesKeys {
