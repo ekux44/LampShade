@@ -22,9 +22,9 @@ public class extractor
 		while(file.hasNextLine()){
 			//output+= file.nextLine()+", ";
 			String line = file.nextLine();
-			line = line.replaceAll("<string name=\"",",");
-			line = line.replaceAll("</string>",",");
-			line = line.replaceAll(">",",");
+			line = line.replaceAll("<string name=\"","");
+			line = line.replaceAll("</string>","");
+			line = line.replaceAll(">","\t");
 			f.println(line);
 		}
 		f.close();
