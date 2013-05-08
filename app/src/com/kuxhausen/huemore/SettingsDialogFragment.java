@@ -29,7 +29,7 @@ public class SettingsDialogFragment extends DialogFragment implements OnClickLis
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.settings, container, false);
 		ma = (MainActivity) this.getActivity();
-		this.getDialog().setTitle(R.string.settings);
+		this.getDialog().setTitle(R.string.action_settings);
 
 		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
 		rateButton.setOnClickListener(this);

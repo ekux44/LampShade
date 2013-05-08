@@ -30,7 +30,7 @@ public class UnlocksDialogFragment extends DialogFragment implements OnClickList
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.unlocks, container, false);
 		ma = (MainActivity) this.getActivity();
-		this.getDialog().setTitle(R.string.unlocks);
+		this.getDialog().setTitle(R.string.action_unlocks);
 
 		settings = PreferenceManager.getDefaultSharedPreferences(ma);
 
