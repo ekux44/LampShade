@@ -3,7 +3,7 @@
 
     <string name="app_name">HueMore</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="action_register_with_hub">Registriere mit Bridge</string>
+    <string name="action_register_with_hub">Mit Bridge registrieren</string>
     <string name="action_unlocks">Entsperren</string>
     <string name="cap_moods">SZENEN</string>
     <string name="cap_manual">MANUELL</string>
@@ -12,7 +12,7 @@
     <string name="cap_simple_mood">SIMPLE</string>
     <string name="cap_advanced_mood">ADVANCED</string>
     <string name="cap_hue_sat_mode">HUE</string>
-    <string name="cap_color_temp_mode">TEMPERATURE</string>
+    <string name="cap_color_temp_mode">TEMPERATUR</string>
     <string name="groups">Gruppen</string>
     <string name="moods">Szenen</string>
     <string name="mood_intro">Szene:</string>
@@ -44,7 +44,7 @@
     <string name="toggleColorLoop">Farbschlaufe:</string>
     <string name="promp_first_view_setting">Standard Startmenü</string>
     <string name="promp_second_view_setting">Standard Einstellungsmenü</string>
-    <string name="rate_on_google_play">In Google Play Bewerten</string>
+    <string name="rate_on_google_play">In Google Play bewerten</string>
     <string name="unlock_pro_prompt">Pro Version freischalten!</string>
     <string name="unlock_pro_already">Du hast bereits die Pro Version!</string>
     <string name="unlock_pro_descriptor">Die Pro Version schaltet Alarme und NFC Funktionalitäten frei.</string>
