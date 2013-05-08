@@ -13,6 +13,8 @@
     <string name="cap_bulbs">LAMPEN</string>
     <string name="cap_simple_mood">SIMPLE</string>
     <string name="cap_advanced_mood">ADVANCED</string>
+    <string name="cap_hue_sat_mode">HUE</string>
+    <string name="cap_color_temp_mode">TEMPERATURE</string>
     <string name="groups">Gruppen</string>
     <string name="moods">Szenen</string>
     <string name="mood_intro">Szene:</string>
@@ -31,6 +33,7 @@
     <string name="contextmenu_rename">Rename</string>
     <string name="actionmenu_new_group">Neue Gruppe</string>
     <string name="actionmenu_new_mood">Neue Szene</string>
+    <string name="actionmenu_new_color">New Color</string>
     <string name="actionmenu_new_alarm">Neuer Alarm</string>
     <string name="hint_mood_name">Szenenname</string>
     <string name="hint_group_name">Gruppenname</string>
