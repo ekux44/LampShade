@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="transition_names_array">
+        <item>Geen</item>
+        <item>1 seconde</item>
+        <item>10 seconden</item>
+        <item>1 minuut</item>
+        <item>10 minuten</item>
+    </string-array>
+    <integer-array name="transition_values_array">
+        <item>4</item>
+        <item>10</item>
+        <item>100</item>
+        <item>600</item>
+        <item>6000</item>
+    </integer-array>
+    <string-array name="repeat_days">
+        <item>Zondag</item>
+        <item>Maandag</item>
+        <item>Dinsdag</item>
+        <item>Woensdag</item>
+        <item>Donderdag</item>
+        <item>Vrijdag</item>
+        <item>Zaterdag</item>
+    </string-array>
+    <string-array name="cap_short_repeat_days">
+        <item>ZON</item>
+        <item>MAA</item>
+        <item>DIN</item>
+        <item>WOE</item>
+        <item>DON</item>
+        <item>VRI</item>
+        <item>ZAT</item>
+    </string-array>
+    <string-array name="major_update_history">
+        <item>2.1: Longclick to rename bulbs, edit groups and moods</item>
+        <item>2.0: Can change mood fade-in rate, pro version unlocks NFC and Alarms (beta)</item>
+        <item>1.6: Smart brigthness bar, moods support color temperature mode</item>
+        <item>1.5: Can use indvididual bulbs and use manual control</item>
+        <item>1.0: Can use and create groups and moods</item>
+    </string-array>
+</resources>
