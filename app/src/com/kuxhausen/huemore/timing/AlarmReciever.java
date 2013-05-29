@@ -25,7 +25,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class AlarmReciever extends BroadcastReceiver {
 
 	Gson gson = new Gson();
-	
+
 	public static AlarmState createAlarms(Context context, String group,
 			String mood, int transitiontime, int brightness, Boolean[] repeats,
 			int currentHour, int currentMin) {
@@ -102,7 +102,12 @@ public class AlarmReciever extends BroadcastReceiver {
 								Calendar.SATURDAY);
 						break;
 					}
-					if (copyForDayOfWeek.before(Calendar.getInstance()))// if in
+					
+					//decrement to ensure not ahead by a full week
+					copyForDayOfWeek.set(Calendar.DATE,
+							copyForDayOfWeek.get(Calendar.DATE) - 7);
+					
+					while (copyForDayOfWeek.before(Calendar.getInstance()))// if in
 																		// past,
 																		// choose
 																		// that
@@ -144,6 +149,11 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	public static void createAlarm(Context context, AlarmState alarmState,
 			Long timeInMillis) {
+
+		Log.d("asdf",
+				"createAlarm"
+						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
+
 		Gson gson = new Gson();
 		String aState = gson.toJson(alarmState);
 
@@ -160,6 +170,10 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	public static void createRepeatingAlarm(Context context,
 			AlarmState alarmState, Long timeInMillis) {
+
+		Log.d("asdf",
+				"createRepeatingAlarm"
+						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
 		Gson gson = new Gson();
 		String aState = gson.toJson(alarmState);
@@ -207,7 +221,8 @@ public class AlarmReciever extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		AlarmState as = gson.fromJson(
-				intent.getExtras().getString(InternalArguments.ALARM_DETAILS), AlarmState.class);
+				intent.getExtras().getString(InternalArguments.ALARM_DETAILS),
+				AlarmState.class);
 
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
@@ -264,6 +279,5 @@ public class AlarmReciever extends BroadcastReceiver {
 		SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
 		trasmitter.execute(context, bulbS, moodS);
 	}
-	
-	
+
 }
