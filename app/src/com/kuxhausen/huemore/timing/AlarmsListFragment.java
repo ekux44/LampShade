@@ -9,6 +9,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -30,7 +32,7 @@ public class AlarmsListFragment extends ListFragment implements
 	private static final int ALARMS_LOADER = 0;
 	public AlarmRowAdapter dataSource;
 	private AlarmRow selectedRow;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -93,7 +95,7 @@ public class AlarmsListFragment extends ListFragment implements
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			nadf.onLoadLoaderManager();
+			nadf.onLoadLoaderManager(null);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -118,6 +120,24 @@ public class AlarmsListFragment extends ListFragment implements
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
+		
+		case R.id.contextalarmmenu_edit: // <-- your custom menu item id here
+			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
+			nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			Log.e("asdf", "edit has state"+(selectedRow.getAlarmState()!=null));
+			nadf.onLoadLoaderManager(selectedRow.getAlarmState());
+			
+			//also delete
+			if (selectedRow.isScheduled())
+				selectedRow.toggle();
+
+			String moodSelect2 = BaseColumns._ID + "=?";
+			String[] moodArg2 = { "" + selectedRow.getID() };
+			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
+					moodSelect2, moodArg2);
+
+			return true;
+		
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
 			if (selectedRow.isScheduled())
 				selectedRow.toggle();

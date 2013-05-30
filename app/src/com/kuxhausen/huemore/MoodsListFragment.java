@@ -170,7 +170,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 			args.putString(InternalArguments.MOOD_NAME, (String) (selected).getText());
 			nmdf.setArguments(args);
 			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-
+			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}

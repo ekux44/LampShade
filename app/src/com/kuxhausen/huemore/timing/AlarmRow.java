@@ -24,6 +24,10 @@ public class AlarmRow {
 		id = db_ID;
 	}
 
+	public AlarmState getAlarmState(){
+		return aState;
+	}
+	
 	public int getID() {
 		return id;
 	}
