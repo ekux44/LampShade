@@ -221,7 +221,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			// Returns a new CursorLoader
 			String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
-					DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+					DatabaseDefinitions.GroupColumns.GROUPS_URI, //Table
 					gColumns, // Projection to return
 					null, // No selection clause
 					null, // No selection arguments
@@ -283,7 +283,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			}
 			groupSpinner.setSelection(groupPos);
 		}
-		// registerForContextMenu(getListView());
 	}
 
 	@Override
@@ -292,7 +291,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		 * Clears out the adapter's reference to the Cursor. This prevents
 		 * memory leaks.
 		 */
-		// unregisterForContextMenu(getListView());
 		switch (loader.getId()) {
 		case GROUPS_LOADER:
 			if (groupDataSource != null) {

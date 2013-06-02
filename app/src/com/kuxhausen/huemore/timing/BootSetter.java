@@ -13,32 +13,13 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 
 public class BootSetter extends BroadcastReceiver {
 
-	Context context;
 	Gson gson = new Gson();
 
 	@Override
-	public void onReceive(Context c, Intent intent) {
-		// Do your stuff
-		context = c;
-		/*
-		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
-		 * passed to onCreateLoader().
-		 */
-		// getLoaderManager().initLoader(ALARMS_LOADER, null, this);
+	public void onReceive(Context context, Intent intent) {
 		String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-		Cursor cursor = c.getContentResolver().query(AlarmColumns.ALARMS_URI, // Use
-																				// the
-																				// default
-																				// content
-																				// URI
-																				// for
-																				// the
-																				// provider.
-				columns, // Return the note ID and title for each note.
-				null, // No where clause, return all records.
-				null, // No where clause, therefore no where column values.
-				null // Use the default sort order.
-				);
+		Cursor cursor = context.getContentResolver().query(AlarmColumns.ALARMS_URI, 
+				columns, null, null, null);
 
 		cursor.moveToPosition(-1);//not the same as move to first!
 		while (cursor.moveToNext()) {

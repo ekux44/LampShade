@@ -103,7 +103,7 @@ public class AlarmReciever extends BroadcastReceiver {
 				setTime.setTimeInMillis(t);
 				if (as.scheduledTimes.length == 7) {// repeating weekly alarm
 					Log.e("asdf", "repeatingAlarm");
-					AlarmReciever.createRepeatingAlarm(context, as,
+					AlarmReciever.createWeeklyAlarm(context, as,
 							setTime.getTimeInMillis());
 				} else {
 					Log.e("asdf", "oneOffAlarm");
@@ -136,7 +136,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
 	}
 
-	public static void createRepeatingAlarm(Context context,
+	public static void createWeeklyAlarm(Context context,
 			AlarmState alarmState, Long timeInMillis) {
 
 		Log.d("asdf",
@@ -193,16 +193,11 @@ public class AlarmReciever extends BroadcastReceiver {
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { as.group };
 		Cursor groupCursor = context.getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
+				groupColumns,
+				GroupColumns.GROUP + "=?",
+				gWhereClause, 
+				null
 				);
 
 		ArrayList<Integer> groupStates = new ArrayList<Integer>();
@@ -214,15 +209,11 @@ public class AlarmReciever extends BroadcastReceiver {
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { as.mood };
 		Cursor moodCursor = context.getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
+				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, 
+				moodColumns,
+				MoodColumns.MOOD + "=?",
+				mWereClause,
+				null
 				);
 
 		ArrayList<String> moodStates = new ArrayList<String>();
@@ -237,8 +228,7 @@ public class AlarmReciever extends BroadcastReceiver {
 			BulbState bs = gson.fromJson(moodS[i], BulbState.class);
 			bs.bri = brightness;
 			bs.transitiontime = transitiontime;
-			moodS[i] = gson.toJson(bs);// put back into json string for Transmit
-										// Group Mood
+			moodS[i] = gson.toJson(bs);// back into json for TransmitGroupMood
 		}
 
 		SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
