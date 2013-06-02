@@ -30,7 +30,7 @@ public class AlarmsListFragment extends ListFragment implements
 
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
-	public AlarmRowAdapter dataSource;
+	private AlarmRowAdapter dataSource;
 	private AlarmRow selectedRow;
 	
 	@Override

@@ -42,16 +42,16 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
 
-	SeekBar brightnessBar;
-	Spinner groupSpinner, moodSpinner, transitionSpinner;
-	SimpleCursorAdapter groupDataSource, moodDataSource;
-	int[] transitionValues;
-	Button repeatButton;
-	TextView repeatView;
-	Gson gson = new Gson();
-	Boolean[] repeats = new Boolean[7];
-	TimePicker timePick;
-	AlarmState priorState;
+	private SeekBar brightnessBar;
+	private Spinner groupSpinner, moodSpinner, transitionSpinner;
+	private SimpleCursorAdapter groupDataSource, moodDataSource;
+	private int[] transitionValues;
+	private Button repeatButton;
+	private TextView repeatView;
+	private Gson gson = new Gson();
+	private Boolean[] repeats = new Boolean[7];
+	private TimePicker timePick;
+	private AlarmState priorState;
 
 	public void onLoadLoaderManager(AlarmState optionalState) {
 		if(optionalState!=null){
@@ -339,14 +339,26 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	}
 
 	public void onCreateAlarm() {
-		AlarmState as = AlarmReciever.createAlarms(getActivity(),
-				((Cursor) groupSpinner.getSelectedItem()).getString(0),
-				((Cursor) moodSpinner.getSelectedItem()).getString(0),
-				transitionValues[transitionSpinner.getSelectedItemPosition()],
-				brightnessBar.getProgress(), repeats,
-				timePick.getCurrentHour(), timePick.getCurrentMinute());
-		// Defines an object to contain the new values to
-		// insert
+		AlarmState as = new AlarmState();
+		as.group = ((Cursor) groupSpinner.getSelectedItem()).getString(0);
+		as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
+		as.transitiontime = transitionValues[transitionSpinner.getSelectedItemPosition()];
+		as.brightness = brightnessBar.getProgress();
+		as.repeats = repeats;
+		as.scheduledForFuture = true;
+
+		Calendar projectedTime = Calendar.getInstance();
+		projectedTime.setLenient(true);
+		projectedTime.set(Calendar.HOUR_OF_DAY, timePick.getCurrentHour());
+		projectedTime.set(Calendar.MINUTE, timePick.getCurrentMinute());
+		projectedTime.set(Calendar.SECOND, 0);
+		// ensure transition starts ahead to culminate at the specified time
+		projectedTime.add(Calendar.SECOND, -as.transitiontime / 10);
+
+		AlarmReciever.createAlarms(getActivity(), as, projectedTime);
+		
+		
+		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
 
@@ -368,8 +380,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		
 		AlarmState as = AlarmReciever.createAlarms(getActivity(),
 				priorState, time);
-		// Defines an object to contain the new values to
-		// insert
+		
+		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
 

@@ -11,8 +11,8 @@ import com.kuxhausen.huemore.R;
 public class RepeatDialogFragment extends DialogFragment implements
 		DialogInterface.OnMultiChoiceClickListener {
 
-	boolean[] checkedItems = new boolean[7];
-	public OnRepeatSelectedListener resultListener;
+	private boolean[] checkedItems = new boolean[7];
+	OnRepeatSelectedListener resultListener;
 
 	public interface OnRepeatSelectedListener {
 		public void onRepeatSelected(boolean[] repeats);

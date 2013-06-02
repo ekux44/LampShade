@@ -26,30 +26,6 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	Gson gson = new Gson();
 
-	public static AlarmState createAlarms(Context context, String group,
-			String mood, int transitiontime, int brightness, Boolean[] repeats,
-			int currentHour, int currentMin) {
-		AlarmState as = new AlarmState();
-		as.group = group;
-		as.mood = mood;
-		as.transitiontime = transitiontime;
-		as.brightness = brightness;
-		as.repeats = repeats;
-		as.scheduledForFuture = true;
-
-		Calendar projectedTime = Calendar.getInstance();
-		projectedTime.setLenient(true);
-		projectedTime.set(Calendar.HOUR_OF_DAY, currentHour);
-		projectedTime.set(Calendar.MINUTE, currentMin);
-		projectedTime.set(Calendar.SECOND, 0);
-		// ensure transition starts ahead of time to culminate at the specified
-		// time
-		projectedTime.add(Calendar.SECOND, -transitiontime / 10);
-
-		return createAlarms(context, as, projectedTime);
-
-	}
-
 	public static AlarmState createAlarms(Context context, AlarmState as,
 			Calendar timeAdjustedCal) {
 		boolean none = false;
@@ -154,18 +130,10 @@ public class AlarmReciever extends BroadcastReceiver {
 				"createAlarm"
 						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
-		Gson gson = new Gson();
-		String aState = gson.toJson(alarmState);
-
+		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-				generateRequestCode(aState), intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
+		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
 	}
 
 	public static void createRepeatingAlarm(Context context,
@@ -175,37 +143,34 @@ public class AlarmReciever extends BroadcastReceiver {
 				"createRepeatingAlarm"
 						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
-		Gson gson = new Gson();
-		String aState = gson.toJson(alarmState);
-
+		
+		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-				generateRequestCode(aState), intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
 		alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis,
-				AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+				AlarmManager.INTERVAL_DAY * 7, pIntent);
 	}
 
-	public static void cancelAlarm(Context context, AlarmState alarmState) {
+	public static void cancelAlarm(Context context, AlarmState alarmState) {	
+		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
+		AlarmManager alarmMgr = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.cancel(pIntent);
+	}
+
+	private static PendingIntent calculatePendingIntent(Context context, AlarmState alarmState){
 		Gson gson = new Gson();
 		String aState = gson.toJson(alarmState);
 
-		AlarmManager alarmMgr = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(context, AlarmReciever.class);
 		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				generateRequestCode(aState), intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		alarmMgr.cancel(pendingIntent);
+		return pendingIntent;
 	}
-
-	public static int generateRequestCode(String aState) {
+	
+	private static int generateRequestCode(String aState) {
 		Gson gson = new Gson();
 		AlarmState as = gson.fromJson(aState, AlarmState.class);
 		int code = 0;
