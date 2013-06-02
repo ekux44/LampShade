@@ -18,10 +18,10 @@ public class BootSetter extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-		Cursor cursor = context.getContentResolver().query(AlarmColumns.ALARMS_URI, 
-				columns, null, null, null);
+		Cursor cursor = context.getContentResolver().query(
+				AlarmColumns.ALARMS_URI, columns, null, null, null);
 
-		cursor.moveToPosition(-1);//not the same as move to first!
+		cursor.moveToPosition(-1);// not the same as move to first!
 		while (cursor.moveToNext()) {
 			AlarmState as = gson
 					.fromJson(cursor.getString(0), AlarmState.class);

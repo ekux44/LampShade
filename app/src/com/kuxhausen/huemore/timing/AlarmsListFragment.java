@@ -32,7 +32,7 @@ public class AlarmsListFragment extends ListFragment implements
 	private static final int ALARMS_LOADER = 0;
 	private AlarmRowAdapter dataSource;
 	private AlarmRow selectedRow;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -62,9 +62,9 @@ public class AlarmsListFragment extends ListFragment implements
 				.findViewById(R.id.showOnLandScape);
 		if (headingRow.getVisibility() == View.GONE)
 			setHasOptionsMenu(true);
-		
+
 		getActivity().setTitle(R.string.alarms);
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			initializeActionBar(true);
 		}
@@ -94,7 +94,8 @@ public class AlarmsListFragment extends ListFragment implements
 
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
-			nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			nadf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			nadf.onLoadLoaderManager(null);
 			return true;
 		default:
@@ -120,14 +121,15 @@ public class AlarmsListFragment extends ListFragment implements
 				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		
 		case R.id.contextalarmmenu_edit: // <-- your custom menu item id here
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
-			nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			Log.e("asdf", "edit has state"+(selectedRow.getAlarmState()!=null));
+			nadf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			Log.e("asdf", "edit has state"
+					+ (selectedRow.getAlarmState() != null));
 			nadf.onLoadLoaderManager(selectedRow.getAlarmState());
-			
-			//also delete
+
+			// also delete
 			if (selectedRow.isScheduled())
 				selectedRow.toggle();
 
@@ -137,7 +139,7 @@ public class AlarmsListFragment extends ListFragment implements
 					moodSelect2, moodArg2);
 
 			return true;
-		
+
 		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
 			if (selectedRow.isScheduled())
 				selectedRow.toggle();

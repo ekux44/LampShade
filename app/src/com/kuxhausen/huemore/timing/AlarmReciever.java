@@ -78,18 +78,19 @@ public class AlarmReciever extends BroadcastReceiver {
 								Calendar.SATURDAY);
 						break;
 					}
-					
-					//decrement to ensure not ahead by a full week
+
+					// decrement to ensure not ahead by a full week
 					copyForDayOfWeek.set(Calendar.DATE,
 							copyForDayOfWeek.get(Calendar.DATE) - 7);
-					
-					while (copyForDayOfWeek.before(Calendar.getInstance()))// if in
-																		// past,
-																		// choose
-																		// that
-																		// day
-																		// next
-																		// week
+
+					while (copyForDayOfWeek.before(Calendar.getInstance()))
+						// if in
+						// past,
+						// choose
+						// that
+						// day
+						// next
+						// week
 						copyForDayOfWeek.set(Calendar.DATE,
 								copyForDayOfWeek.get(Calendar.DATE) + 7);
 					as.scheduledTimes[i] = copyForDayOfWeek.getTimeInMillis();
@@ -143,7 +144,6 @@ public class AlarmReciever extends BroadcastReceiver {
 				"createRepeatingAlarm"
 						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
-		
 		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
@@ -151,14 +151,15 @@ public class AlarmReciever extends BroadcastReceiver {
 				AlarmManager.INTERVAL_DAY * 7, pIntent);
 	}
 
-	public static void cancelAlarm(Context context, AlarmState alarmState) {	
+	public static void cancelAlarm(Context context, AlarmState alarmState) {
 		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.cancel(pIntent);
 	}
 
-	private static PendingIntent calculatePendingIntent(Context context, AlarmState alarmState){
+	private static PendingIntent calculatePendingIntent(Context context,
+			AlarmState alarmState) {
 		Gson gson = new Gson();
 		String aState = gson.toJson(alarmState);
 
@@ -169,7 +170,7 @@ public class AlarmReciever extends BroadcastReceiver {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pendingIntent;
 	}
-	
+
 	private static int generateRequestCode(String aState) {
 		Gson gson = new Gson();
 		AlarmState as = gson.fromJson(aState, AlarmState.class);
@@ -193,12 +194,8 @@ public class AlarmReciever extends BroadcastReceiver {
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { as.group };
 		Cursor groupCursor = context.getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-				groupColumns,
-				GroupColumns.GROUP + "=?",
-				gWhereClause, 
-				null
-				);
+				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, groupColumns,
+				GroupColumns.GROUP + "=?", gWhereClause, null);
 
 		ArrayList<Integer> groupStates = new ArrayList<Integer>();
 		while (groupCursor.moveToNext()) {
@@ -209,12 +206,8 @@ public class AlarmReciever extends BroadcastReceiver {
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { as.mood };
 		Cursor moodCursor = context.getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, 
-				moodColumns,
-				MoodColumns.MOOD + "=?",
-				mWereClause,
-				null
-				);
+				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodColumns,
+				MoodColumns.MOOD + "=?", mWereClause, null);
 
 		ArrayList<String> moodStates = new ArrayList<String>();
 		while (moodCursor.moveToNext()) {

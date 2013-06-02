@@ -48,7 +48,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 		this.cursor = c;
 		list = new ArrayList<AlarmRow>();
 		if (cursor != null) {
-			cursor.moveToPosition(-1);//not the same as move to first!
+			cursor.moveToPosition(-1);// not the same as move to first!
 			while (cursor.moveToNext()) {
 				// Log.e("changeCursor _row",
 				// gson.fromJson(cursor.getString(0),AlarmState.class).mood);

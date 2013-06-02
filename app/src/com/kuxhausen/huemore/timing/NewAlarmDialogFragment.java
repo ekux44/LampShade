@@ -54,7 +54,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private AlarmState priorState;
 
 	public void onLoadLoaderManager(AlarmState optionalState) {
-		if(optionalState!=null){
+		if (optionalState != null) {
 			this.priorState = optionalState;
 		}
 		if (groupSpinner != null && moodSpinner != null) {
@@ -84,47 +84,45 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			moodDataSource
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			moodSpinner.setAdapter(moodDataSource);
-			
-			
-			if(optionalState!=null){
-				
-				//apply initial state
-				Log.e("asdf", ""+moodDataSource.getCount());
+
+			if (optionalState != null) {
+
+				// apply initial state
+				Log.e("asdf", "" + moodDataSource.getCount());
 				int moodPos = 0;
-				for(int i=0; i< moodDataSource.getCount(); i++){
-					if(moodDataSource.getItem(i).equals(optionalState.mood))
-						moodPos=i;
-					Log.e("asdf", moodDataSource.getItem(i)+"");
-					Log.e("asdf", optionalState.mood+"");
+				for (int i = 0; i < moodDataSource.getCount(); i++) {
+					if (moodDataSource.getItem(i).equals(optionalState.mood))
+						moodPos = i;
+					Log.e("asdf", moodDataSource.getItem(i) + "");
+					Log.e("asdf", optionalState.mood + "");
 				}
 				moodSpinner.setSelection(moodPos);
-				
+
 				int groupPos = 0;
-				for(int i=0; i< groupDataSource.getCount(); i++){
-					if(groupDataSource.getItem(i).equals(optionalState.group))
-						groupPos=i;
+				for (int i = 0; i < groupDataSource.getCount(); i++) {
+					if (groupDataSource.getItem(i).equals(optionalState.group))
+						groupPos = i;
 				}
 				groupSpinner.setSelection(groupPos);
-				
-				
+
 				int transitionPos = 0;
-				for(int i= 0; i<transitionValues.length; i++)
-					if(optionalState.transitiontime==transitionValues[i])
+				for (int i = 0; i < transitionValues.length; i++)
+					if (optionalState.transitiontime == transitionValues[i])
 						transitionPos = i;
 				transitionSpinner.setSelection(transitionPos);
-				
+
 				brightnessBar.setProgress(optionalState.brightness);
-				
+
 				boolean[] repeats = new boolean[optionalState.repeats.length];
-				for(int i=0; i<repeats.length; i++)
-					repeats[i]=optionalState.repeats[i];
+				for (int i = 0; i < repeats.length; i++)
+					repeats[i] = optionalState.repeats[i];
 				onRepeatSelected(repeats);
-				
+
 				Log.e("asdf", "apply prior state");
 			}
 		}
-		Log.e("asdf", "loaderManager has priorState"+(priorState!=null));
-		
+		Log.e("asdf", "loaderManager has priorState" + (priorState != null));
+
 	}
 
 	@Override
@@ -179,7 +177,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 				R.array.transition_values_array);
 
 		onLoadLoaderManager(priorState);
-		
+
 		return myView;
 	}
 
@@ -190,20 +188,20 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		case R.id.repeatButton:
 			RepeatDialogFragment rdf = new RepeatDialogFragment();
 			rdf.resultListener = this;
-			rdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			rdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			break;
 		case R.id.okay:
 			onCreateAlarm();
 			this.dismiss();
 			break;
 		case R.id.cancel:
-			if(priorState!=null)
+			if (priorState != null)
 				reCreateAlarm();
 			this.dismiss();
 			break;
 		}
 	}
-
 
 	/**
 	 * Callback that's invoked when the system has initialized the Loader and is
@@ -221,7 +219,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			// Returns a new CursorLoader
 			String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
-					DatabaseDefinitions.GroupColumns.GROUPS_URI, //Table
+					DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
 					gColumns, // Projection to return
 					null, // No selection clause
 					null, // No selection arguments
@@ -262,24 +260,26 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			break;
 		}
 
-		
-		if(priorState!=null){
-			
-			//apply initial state
-			Log.e("asdf", ""+moodDataSource.getCount());
+		if (priorState != null) {
+
+			// apply initial state
+			Log.e("asdf", "" + moodDataSource.getCount());
 			int moodPos = 0;
-			for(int i=0; i< moodDataSource.getCount(); i++){
-				if(((Cursor)moodDataSource.getItem(i)).getString(0).equals(priorState.mood))
-					moodPos=i;
-				Log.e("asdf", ((Cursor)moodDataSource.getItem(i)).getString(0)+"");
-				Log.e("asdf", priorState.mood+"");
+			for (int i = 0; i < moodDataSource.getCount(); i++) {
+				if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
+						priorState.mood))
+					moodPos = i;
+				Log.e("asdf", ((Cursor) moodDataSource.getItem(i)).getString(0)
+						+ "");
+				Log.e("asdf", priorState.mood + "");
 			}
 			moodSpinner.setSelection(moodPos);
-			
+
 			int groupPos = 0;
-			for(int i=0; i< groupDataSource.getCount(); i++){
-				if(((Cursor)groupDataSource.getItem(i)).getString(0).equals(priorState.group))
-					groupPos=i;
+			for (int i = 0; i < groupDataSource.getCount(); i++) {
+				if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(
+						priorState.group))
+					groupPos = i;
 			}
 			groupSpinner.setSelection(groupPos);
 		}
@@ -340,7 +340,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		AlarmState as = new AlarmState();
 		as.group = ((Cursor) groupSpinner.getSelectedItem()).getString(0);
 		as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
-		as.transitiontime = transitionValues[transitionSpinner.getSelectedItemPosition()];
+		as.transitiontime = transitionValues[transitionSpinner
+				.getSelectedItemPosition()];
 		as.brightness = brightnessBar.getProgress();
 		as.repeats = repeats;
 		as.scheduledForFuture = true;
@@ -354,8 +355,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		projectedTime.add(Calendar.SECOND, -as.transitiontime / 10);
 
 		AlarmReciever.createAlarms(getActivity(), as, projectedTime);
-		
-		
+
 		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
@@ -363,23 +363,22 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		Uri mNewUri = getActivity().getContentResolver().insert(
 				DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
 	}
-
 
 	private void reCreateAlarm() {
 		Calendar time = Calendar.getInstance();
 		long soonestTime = Long.MAX_VALUE;
-		
-		Log.e("asdf", "scheduled times"+(priorState.scheduledTimes!=null));
-		
+
+		Log.e("asdf", "scheduled times" + (priorState.scheduledTimes != null));
+
 		for (Long l : priorState.scheduledTimes)
-			if(l!=null && ((long)l)<soonestTime)
-				soonestTime=l;
+			if (l != null && ((long) l) < soonestTime)
+				soonestTime = l;
 		time.setTimeInMillis(soonestTime);
-		
-		AlarmState as = AlarmReciever.createAlarms(getActivity(),
-				priorState, time);
-		as.scheduledForFuture=true;
-		
+
+		AlarmState as = AlarmReciever.createAlarms(getActivity(), priorState,
+				time);
+		as.scheduledForFuture = true;
+
 		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
@@ -387,5 +386,5 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		Uri mNewUri = getActivity().getContentResolver().insert(
 				DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
 	}
-	
+
 }

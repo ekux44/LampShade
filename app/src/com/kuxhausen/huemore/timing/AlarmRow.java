@@ -24,10 +24,10 @@ public class AlarmRow {
 		id = db_ID;
 	}
 
-	public AlarmState getAlarmState(){
+	public AlarmState getAlarmState() {
 		return aState;
 	}
-	
+
 	public int getID() {
 		return id;
 	}
@@ -64,14 +64,14 @@ public class AlarmRow {
 	public boolean isScheduled() {
 		if (aState.scheduledForFuture == null)
 			aState.scheduledForFuture = false;
-		
-		//if it's a non repeating alarm in the past, mark as unchecked
-		if(aState.scheduledForFuture && aState.scheduledTimes.length==1){
+
+		// if it's a non repeating alarm in the past, mark as unchecked
+		if (aState.scheduledForFuture && aState.scheduledTimes.length == 1) {
 			Calendar scheduledTime = Calendar.getInstance();
 			scheduledTime.setTimeInMillis(aState.scheduledTimes[0]);
-			if(scheduledTime.before(Calendar.getInstance()))
+			if (scheduledTime.before(Calendar.getInstance()))
 				return false;
-			//TODO save back to database, maybe move this logic out
+			// TODO save back to database, maybe move this logic out
 		}
 		return aState.scheduledForFuture;
 	}
