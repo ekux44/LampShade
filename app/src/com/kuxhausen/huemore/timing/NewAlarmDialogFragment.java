@@ -378,6 +378,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		
 		AlarmState as = AlarmReciever.createAlarms(getActivity(),
 				priorState, time);
+		as.scheduledForFuture=true;
 		
 		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
