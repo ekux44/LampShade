@@ -4,65 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-       	 	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:orientation="horizontal" >
-	            <TextView
-	                android:id="@+id/groupTextView"
-	                style="@style/AppTheme"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:padding="8dp"
-	                android:layout_gravity="center_vertical"
-	                android:text="@string/group_intro" />
-	
-	            <Spinner
-	                android:id="@+id/groupSpinner"
-	                android:layout_width="match_parent"
-	                android:layout_height="wrap_content"
-	                android:padding="8dp" />
-			</LinearLayout>
-            
-			<LinearLayout
-       	 	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:orientation="horizontal" >
-	            <TextView
-	                android:id="@+id/moodsPromptTextView"
-	                style="@style/AppTheme"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:padding="8dp"
-	                android:layout_gravity="center_vertical"
-	                android:text="@string/mood_intro" />
-	
-	            <Spinner
-	                android:id="@+id/moodSpinner"
-	                android:layout_width="match_parent"
-	                android:layout_height="wrap_content"
-	                android:padding="8dp" />
-			</LinearLayout>
-    
-   
-    
-    <TextView
-        android:id="@+id/brightnessDescripterTextView"
-        style="@style/AppTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="8dp"
-        android:text="@string/brightness" />
+	<include layout="@layout/serialized_editor"/>
 
-    <SeekBar
-        android:id="@+id/brightnessBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="255"
-        android:paddingBottom="8dp"
-        android:progress="127" />
-
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#33B5E5" />
+	
     <Button
         android:id="@+id/writeToTagButton"
         android:layout_width="match_parent"
