@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	    <string name="twofortyfouram_locale_breadcrumb_format">%1$s%2$s%3$s</string>
+    <string name="twofortyfouram_locale_breadcrumb_separator">\u0020&gt;\u0020</string>
+    
     <string name="app_name">HueMore</string>
     <string name="action_settings">Instellingen</string>
     <string name="action_register_with_hub">Registeren bij Hub</string>

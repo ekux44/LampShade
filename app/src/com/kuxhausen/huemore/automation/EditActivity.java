@@ -13,9 +13,7 @@ import android.widget.Button;
 
 public class EditActivity extends SerializedEditorActivity implements OnClickListener {
 
-	private static final String EXTRA_BUNDLE = "com.twofortyfouram.locale.intent.extra.BUNDLE";
-	private static final String EXTRA_STRING_BLURB = "com.twofortyfouram.locale.intent.extra.BLURB";
-	private static final String NFC_ENCODED = "NFC_ENCODED";
+	protected static final String EXTRA_BUNDLE_ENCODED_MESSAGE = "com.kuxhausen.huemore.ENCODED_MESSAGE";
 	
 	private Button okayButton, cancelButton;
 	
@@ -40,10 +38,10 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 		switch (v.getId()) {
 		case R.id.okay:
 			Intent i = new Intent();
-			i.putExtra(EXTRA_STRING_BLURB, getMessage());
+			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, getMessage());
 			Bundle b = new Bundle();
-			b.putString(NFC_ENCODED, getMessage());
-			i.putExtra(EXTRA_BUNDLE, b);
+			b.putString(EXTRA_BUNDLE_ENCODED_MESSAGE, getMessage());
+			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, b);
 			setResult(Activity.RESULT_OK, i);
 			super.finish();
 			break;
