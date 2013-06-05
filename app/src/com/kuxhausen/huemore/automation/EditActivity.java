@@ -13,6 +13,7 @@ import android.widget.Button;
 
 public class EditActivity extends SerializedEditorActivity implements OnClickListener {
 
+	//don't change value
 	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.EXTRA_BUNDLE_SERIALIZED_BY_NAME";
 	
 	private Button okayButton, cancelButton;
