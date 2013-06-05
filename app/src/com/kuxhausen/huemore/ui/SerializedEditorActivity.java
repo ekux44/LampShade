@@ -58,6 +58,8 @@ public class SerializedEditorActivity extends FragmentActivity implements
 	private SeekBar brightnessBar;
 	private Spinner groupSpinner, moodSpinner;
 	private SimpleCursorAdapter groupDataSource, moodDataSource;
+	
+	private GroupMoodBrightness priorGMB;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +204,10 @@ public class SerializedEditorActivity extends FragmentActivity implements
 		return gmb.group +" -> "+gmb.mood+" @ "+((gmb.brightness*100)/255)+"%";
 	}
 	
+	public void setSerializedByName(String s){
+		priorGMB = gson.fromJson(s, GroupMoodBrightness.class);
+				
+	}
 	public String getSerializedByName(){
 		GroupMoodBrightness gmb = new GroupMoodBrightness();
 		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
@@ -327,7 +333,26 @@ public class SerializedEditorActivity extends FragmentActivity implements
 			break;
 		}
 
-		// registerForContextMenu(getListView());
+		if (priorGMB != null) {
+
+			// apply prior state
+			int moodPos = 0;
+			for (int i = 0; i < moodDataSource.getCount(); i++) {
+				if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
+						priorGMB.mood))
+					moodPos = i;
+			}
+			moodSpinner.setSelection(moodPos);
+
+			int groupPos = 0;
+			for (int i = 0; i < groupDataSource.getCount(); i++) {
+				if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(
+						priorGMB.group))
+					groupPos = i;
+			}
+			groupSpinner.setSelection(groupPos);
+			brightnessBar.setProgress(priorGMB.brightness);
+		}
 	}
 
 	@Override

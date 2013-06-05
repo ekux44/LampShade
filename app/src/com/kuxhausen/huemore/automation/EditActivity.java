@@ -13,7 +13,7 @@ import android.widget.Button;
 
 public class EditActivity extends SerializedEditorActivity implements OnClickListener {
 
-	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.ENCODED_MESSAGE";
+	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.EXTRA_BUNDLE_SERIALIZED_BY_NAME";
 	
 	private Button okayButton, cancelButton;
 	
@@ -21,6 +21,11 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Bundle b = this.getIntent().getExtras();
+		if(b!=null && b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)&&b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).containsKey(EXTRA_BUNDLE_SERIALIZED_BY_NAME))
+		{
+			setSerializedByName(b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(EXTRA_BUNDLE_SERIALIZED_BY_NAME));
+		}
 		setContentView(R.layout.edit_automation);
 		super.onCreate(savedInstanceState);
 		
@@ -29,7 +34,6 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 		
 		cancelButton = (Button) this.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
-	
 	}
 
 
