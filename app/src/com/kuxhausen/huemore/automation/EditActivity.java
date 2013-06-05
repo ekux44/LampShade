@@ -30,7 +30,6 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		//check full version unlocked
-		if(settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS){
 			Bundle b = this.getIntent().getExtras();
 			if(b!=null && b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)&&b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).containsKey(EXTRA_BUNDLE_SERIALIZED_BY_NAME))
 			{
@@ -44,11 +43,11 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 			
 			cancelButton = (Button) this.findViewById(R.id.cancel);
 			cancelButton.setOnClickListener(this);
-		}else{
-			//else redirect
+		if(settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)<=PreferencesKeys.ALWAYS_FREE_BULBS){
 			Intent i = new Intent(this, MainActivity.class);
 			i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
 			startActivity(i);
+			setResult(Activity.RESULT_CANCELED);
 		}
 	}
 
