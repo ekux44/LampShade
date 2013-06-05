@@ -42,6 +42,7 @@ import com.kuxhausen.huemore.nfc.HueNfcEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SerializedEditorActivity extends FragmentActivity implements
@@ -192,8 +193,24 @@ public class SerializedEditorActivity extends FragmentActivity implements
 		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, moodS);
 		tgm.execute();
 	}
-
-	public String getMessage() {
+	
+	public String getSerializedByNamePreview(){
+		GroupMoodBrightness gmb = new GroupMoodBrightness();
+		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
+		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString(); 
+		gmb.brightness = brightnessBar.getProgress();
+		return gmb.group +" -> "+gmb.mood+" @ "+((gmb.brightness*100)/255)+"%";
+	}
+	
+	public String getSerializedByName(){
+		GroupMoodBrightness gmb = new GroupMoodBrightness();
+		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
+		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString(); 
+		gmb.brightness = brightnessBar.getProgress();
+		return gson.toJson(gmb);	
+	}
+	
+	public String getSerializedByValue() {
 		String url = "kuxhausen.com/HueMore/nfc?";
 
 		// Look up bulbs for that mood from database

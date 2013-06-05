@@ -84,7 +84,7 @@ public class NfcWriterActivity extends SerializedEditorActivity implements OnCli
 							context.getString(R.string.nfc_tag_not_detected),
 							Toast.LENGTH_SHORT).show();
 				} else {
-					write(getMessage(), myTag);
+					write(getSerializedByValue(), myTag);
 					Toast.makeText(context,
 							context.getString(R.string.nfc_tag_write_success),
 							Toast.LENGTH_SHORT).show();
