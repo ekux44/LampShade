@@ -153,6 +153,7 @@ public final class DatabaseDefinitions {
 		public final static String COLOR = "Color";
 		public final static String SHOW_EDIT_TEXT = "ShowEditText";
 		public final static String PREVIOUS_STATE = "PreviousState";
+		public final static String PROMPT_UPGRADE = "PromptUpgrade";
 	}
 	
 	public static final class ExternalArguments{

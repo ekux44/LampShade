@@ -1,12 +1,17 @@
 package com.kuxhausen.huemore.automation;
 
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.ui.SerializedEditorActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -22,19 +27,29 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Bundle b = this.getIntent().getExtras();
-		if(b!=null && b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)&&b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).containsKey(EXTRA_BUNDLE_SERIALIZED_BY_NAME))
-		{
-			setSerializedByName(b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(EXTRA_BUNDLE_SERIALIZED_BY_NAME));
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		//check full version unlocked
+		if(settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS){
+			Bundle b = this.getIntent().getExtras();
+			if(b!=null && b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)&&b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).containsKey(EXTRA_BUNDLE_SERIALIZED_BY_NAME))
+			{
+				setSerializedByName(b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(EXTRA_BUNDLE_SERIALIZED_BY_NAME));
+			}
+			setContentView(R.layout.edit_automation);
+			super.onCreate(savedInstanceState);
+			
+			okayButton = (Button) this.findViewById(R.id.okay);
+			okayButton.setOnClickListener(this);
+			
+			cancelButton = (Button) this.findViewById(R.id.cancel);
+			cancelButton.setOnClickListener(this);
+		}else{
+			//else redirect
+			Intent i = new Intent(this, MainActivity.class);
+			i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
+			startActivity(i);
 		}
-		setContentView(R.layout.edit_automation);
-		super.onCreate(savedInstanceState);
-		
-		okayButton = (Button) this.findViewById(R.id.okay);
-		okayButton.setOnClickListener(this);
-		
-		cancelButton = (Button) this.findViewById(R.id.cancel);
-		cancelButton.setOnClickListener(this);
 	}
 
 

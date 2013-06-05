@@ -184,6 +184,12 @@ public class MainActivity extends FragmentActivity implements
 				}
 			}
 		});
+		
+		Bundle b = this.getIntent().getExtras();
+		if(b!=null && b.containsKey(InternalArguments.PROMPT_UPGRADE)&&b.getBoolean(InternalArguments.PROMPT_UPGRADE)){
+			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
+			unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		}
 	}
 
 	// Listener that's called when we finish querying the items and
