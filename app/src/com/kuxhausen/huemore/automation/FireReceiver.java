@@ -7,6 +7,7 @@ import com.kuxhausen.huemore.network.SynchronousTransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -30,6 +31,7 @@ public class FireReceiver extends BroadcastReceiver {
 			
 			/** Cut down verison of Alarm Reciver code **/ //TODO merge
 			
+			
 			// Look up bulbs for that mood from database
 			String[] groupColumns = { GroupColumns.BULB };
 			String[] gWhereClause = { gmb.group };
@@ -43,18 +45,29 @@ public class FireReceiver extends BroadcastReceiver {
 			}
 			Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWereClause = {gmb.mood };
-			Cursor moodCursor = context.getContentResolver().query(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodColumns,
-					MoodColumns.MOOD + "=?", mWereClause, null);
-
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (moodCursor.moveToNext()) {
-				moodStates.add(moodCursor.getString(0));
+			String[] moodS = null;
+			if(gmb.mood.equals(PreferencesKeys.RANDOM))
+			{
+				//random only handled here (automation & alarms) and main activity's transmit mood group
+				BulbState randomState = new BulbState();
+				randomState.on=true;
+				randomState.hue=(int)(65535*Math.random());
+				randomState.sat=(short)(255*(Math.random()*5.+.25));
+				 moodS = new String[1];
+				moodS[0]=gson.toJson(randomState);
+			}else{
+				String[] moodColumns = { MoodColumns.STATE };
+				String[] mWereClause = {gmb.mood };
+				Cursor moodCursor = context.getContentResolver().query(
+						DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodColumns,
+						MoodColumns.MOOD + "=?", mWereClause, null);
+	
+				ArrayList<String> moodStates = new ArrayList<String>();
+				while (moodCursor.moveToNext()) {
+					moodStates.add(moodCursor.getString(0));
+				}
+				moodS = moodStates.toArray(new String[moodStates.size()]);
 			}
-			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-
 			int brightness = gmb.brightness;
 			for (int i = 0; i < moodS.length; i++) {
 				BulbState bs = gson.fromJson(moodS[i], BulbState.class);
