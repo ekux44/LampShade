@@ -49,7 +49,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private Button repeatButton;
 	private TextView repeatView;
 	private Gson gson = new Gson();
-	private Boolean[] repeats = new Boolean[7];
+	private boolean[] repeats = new boolean[7];
 	private TimePicker timePick;
 	private AlarmState priorState;
 
@@ -113,10 +113,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 
 				brightnessBar.setProgress(optionalState.brightness);
 
-				boolean[] repeats = new boolean[optionalState.repeats.length];
-				for (int i = 0; i < repeats.length; i++)
-					repeats[i] = optionalState.repeats[i];
-				onRepeatSelected(repeats);
+				onRepeatSelected(optionalState.getRepeatingDays());
 
 				Log.e("asdf", "apply prior state");
 			}
@@ -308,8 +305,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	@Override
 	public void onRepeatSelected(boolean[] r) {
 		repeatView.setText(repeatsToString(getActivity(), r));
-		for (int i = 0; i < 7; i++)
-			repeats[i] = r[i];
+		repeats = r;
 	}
 
 	public static String repeatsToString(Context c, boolean[] repeats) {
@@ -343,7 +339,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		as.transitiontime = transitionValues[transitionSpinner
 				.getSelectedItemPosition()];
 		as.brightness = brightnessBar.getProgress();
-		as.repeats = repeats;
+		as.setRepeatingDays(repeats);
 		as.scheduledForFuture = true;
 
 		Calendar projectedTime = Calendar.getInstance();

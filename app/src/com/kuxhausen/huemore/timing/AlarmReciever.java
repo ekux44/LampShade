@@ -29,12 +29,7 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	public static AlarmState createAlarms(Context context, AlarmState as,
 			Calendar timeAdjustedCal) {
-		boolean none = false;
-		for (boolean bool : as.repeats) {
-			none |= bool;
-		}
-		none = !none;
-		if (none) {
+		if (!as.isRepeating()) {
 			while (timeAdjustedCal.before(Calendar.getInstance()))
 				// make sure this hour & minute is in the future
 				timeAdjustedCal.set(Calendar.DATE,
@@ -44,7 +39,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		} else {
 			as.scheduledTimes = new Long[7];
 			for (int i = 0; i < 7; i++) {
-				if (as.repeats[i]) {
+				if (as.getRepeatingDays()[i]) {
 					Calendar copyForDayOfWeek = Calendar.getInstance();
 					copyForDayOfWeek.setLenient(true);
 					copyForDayOfWeek.setTimeInMillis(timeAdjustedCal
@@ -103,7 +98,7 @@ public class AlarmReciever extends BroadcastReceiver {
 			if (t != null) {
 				Calendar setTime = Calendar.getInstance();
 				setTime.setTimeInMillis(t);
-				if (as.scheduledTimes.length == 7) {// repeating weekly alarm
+				if (as.isRepeating()) {// repeating weekly alarm
 					Log.e("asdf", "repeatingAlarm");
 					AlarmReciever.createWeeklyAlarm(context, as,
 							setTime.getTimeInMillis());
@@ -177,7 +172,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		AlarmState as = gson.fromJson(aState, AlarmState.class);
 		int code = 0;
 		int bit = 1;
-		for (boolean b : as.repeats) {
+		for (boolean b : as.getRepeatingDays()) {
 			if (b)
 				code += bit;
 			bit *= 2;

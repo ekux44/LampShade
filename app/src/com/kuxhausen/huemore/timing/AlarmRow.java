@@ -51,12 +51,8 @@ public class AlarmRow {
 	public String getSecondaryDescription() {
 		String result = aState.group + " -> " + aState.mood;
 
-		if (aState.repeats != null) {
-			boolean[] repeats = new boolean[7];
-			for (int i = 0; i < repeats.length; i++)
-				repeats[i] = aState.repeats[i];
-			result += "   "
-					+ NewAlarmDialogFragment.repeatsToString(c, repeats);
+		if (aState.isRepeating()) {
+			result += "   "+ NewAlarmDialogFragment.repeatsToString(c, aState.getRepeatingDays());
 		}
 		return result;
 	}
