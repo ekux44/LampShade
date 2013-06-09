@@ -27,38 +27,38 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	Gson gson = new Gson();
 
+	/** when this method is called, AlarmState as must have the correct hour and minute for each time the alarm is to be scheduled for **/
 	public static AlarmState createAlarms(Context context, AlarmState as) {
-		Calendar timeAdjustedCal = Calendar.getInstance();
 		Calendar soonestTime = null;
 		
 		if (!as.isRepeating()) {
+			Calendar timeAdjustedCal = Calendar.getInstance();
 			timeAdjustedCal.setTimeInMillis(as.getTime());
-			while (timeAdjustedCal.before(Calendar.getInstance()))
+			timeAdjustedCal.setLenient(true);
+			while (timeAdjustedCal.before(Calendar.getInstance())){
 				// make sure this hour & minute is in the future
 				timeAdjustedCal.set(Calendar.DATE,
 						timeAdjustedCal.get(Calendar.DATE) + 1);
+			}
 			as.setTime(timeAdjustedCal.getTimeInMillis());
 			
 			Log.e("asdf", "oneOffAlarm");
 			
-			Calendar setTime = Calendar.getInstance();
-			setTime.setTimeInMillis(as.getTime());
-			
 			AlarmReciever.scheduleAlarm(context, as,
-					setTime.getTimeInMillis());
-			soonestTime = setTime;
-		} else {
-			for(int i = 0; i< 7; i++){
-				if(as.getRepeatingDays()[i])
-					timeAdjustedCal.setTimeInMillis(as.getRepeatingTimes()[i]);
-			}
+					timeAdjustedCal.getTimeInMillis());
+			soonestTime = timeAdjustedCal;
+		} 
+		else {
 			long[] scheduledTimes = new long[7];
 			for (int i = 0; i < 7; i++) {
 				if (as.getRepeatingDays()[i]) {
+					Calendar existingTimeCal = Calendar.getInstance();
+					existingTimeCal.setTimeInMillis(as.getRepeatingTimes()[i]);
+					
 					Calendar copyForDayOfWeek = Calendar.getInstance();
 					copyForDayOfWeek.setLenient(true);
-					copyForDayOfWeek.setTimeInMillis(timeAdjustedCal
-							.getTimeInMillis());
+					copyForDayOfWeek.set(Calendar.HOUR_OF_DAY, existingTimeCal.get(Calendar.HOUR_OF_DAY));
+					copyForDayOfWeek.set(Calendar.MINUTE, existingTimeCal.get(Calendar.MINUTE));
 					switch (i) {
 					case 0:
 						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY);
@@ -87,10 +87,11 @@ public class AlarmReciever extends BroadcastReceiver {
 					copyForDayOfWeek.set(Calendar.DATE,
 							copyForDayOfWeek.get(Calendar.DATE) - 7);
 
-					while (copyForDayOfWeek.before(Calendar.getInstance()))
+					while (copyForDayOfWeek.before(Calendar.getInstance())){
 						// if in past, choose that day next week
 						copyForDayOfWeek.set(Calendar.DATE,
 								copyForDayOfWeek.get(Calendar.DATE) + 7);
+					}
 					scheduledTimes[i] = copyForDayOfWeek.getTimeInMillis();
 				}
 			}
