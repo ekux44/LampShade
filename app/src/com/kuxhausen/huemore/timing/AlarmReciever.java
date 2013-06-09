@@ -29,22 +29,29 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	public static AlarmState createAlarms(Context context, AlarmState as) {
 		Calendar timeAdjustedCal = Calendar.getInstance();
-		if(as.isRepeating()){
-			for(int i = 0; i< 7; i++){
-				if(as.getRepeatingDays()[i])
-					timeAdjustedCal.setTimeInMillis(as.getRepeatingTimes()[i]);
-			}
-		}else{
-			timeAdjustedCal.setTimeInMillis(as.getTime());
-		}
+		Calendar soonestTime = null;
 		
 		if (!as.isRepeating()) {
+			timeAdjustedCal.setTimeInMillis(as.getTime());
 			while (timeAdjustedCal.before(Calendar.getInstance()))
 				// make sure this hour & minute is in the future
 				timeAdjustedCal.set(Calendar.DATE,
 						timeAdjustedCal.get(Calendar.DATE) + 1);
 			as.setTime(timeAdjustedCal.getTimeInMillis());
+			
+			Log.e("asdf", "oneOffAlarm");
+			
+			Calendar setTime = Calendar.getInstance();
+			setTime.setTimeInMillis(as.getTime());
+			
+			AlarmReciever.scheduleAlarm(context, as,
+					setTime.getTimeInMillis());
+			soonestTime = setTime;
 		} else {
+			for(int i = 0; i< 7; i++){
+				if(as.getRepeatingDays()[i])
+					timeAdjustedCal.setTimeInMillis(as.getRepeatingTimes()[i]);
+			}
 			long[] scheduledTimes = new long[7];
 			for (int i = 0; i < 7; i++) {
 				if (as.getRepeatingDays()[i]) {
@@ -54,32 +61,25 @@ public class AlarmReciever extends BroadcastReceiver {
 							.getTimeInMillis());
 					switch (i) {
 					case 0:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.SUNDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY);
 						break;
 					case 1:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.MONDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
 						break;
 					case 2:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.TUESDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.TUESDAY);
 						break;
 					case 3:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.WEDNESDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.WEDNESDAY);
 						break;
 					case 4:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.THURSDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.THURSDAY);
 						break;
 					case 5:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.FRIDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
 						break;
 					case 6:
-						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,
-								Calendar.SATURDAY);
+						copyForDayOfWeek.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY);
 						break;
 					}
 
@@ -88,23 +88,14 @@ public class AlarmReciever extends BroadcastReceiver {
 							copyForDayOfWeek.get(Calendar.DATE) - 7);
 
 					while (copyForDayOfWeek.before(Calendar.getInstance()))
-						// if in
-						// past,
-						// choose
-						// that
-						// day
-						// next
-						// week
+						// if in past, choose that day next week
 						copyForDayOfWeek.set(Calendar.DATE,
 								copyForDayOfWeek.get(Calendar.DATE) + 7);
 					scheduledTimes[i] = copyForDayOfWeek.getTimeInMillis();
 				}
 			}
 			as.setRepeatingTimes(scheduledTimes);
-		}
-		Calendar soonestTime = null;
-		
-		if(as.isRepeating()){
+			
 			
 			for(int i = 0; i< 7; i++){
 				long t =as.getRepeatingTimes()[i];
@@ -113,7 +104,7 @@ public class AlarmReciever extends BroadcastReceiver {
 					setTime.setTimeInMillis(t);
 					if (as.isRepeating()) {// repeating weekly alarm
 						Log.e("asdf", "repeatingAlarm");
-						AlarmReciever.createWeeklyAlarm(context, as,
+						AlarmReciever.scheduleWeeklyAlarm(context, as,
 								setTime.getTimeInMillis());
 					} else {
 						
@@ -122,15 +113,6 @@ public class AlarmReciever extends BroadcastReceiver {
 						soonestTime = setTime;
 				}
 			}
-		}else{
-			Log.e("asdf", "oneOffAlarm");
-			
-			Calendar setTime = Calendar.getInstance();
-			setTime.setTimeInMillis(as.getTime());
-			
-			AlarmReciever.createAlarm(context, as,
-					setTime.getTimeInMillis());
-			soonestTime = setTime;
 		}
 		
 		Toast.makeText(
@@ -142,7 +124,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		return as;
 	}
 
-	public static void createAlarm(Context context, AlarmState alarmState,
+	private static void scheduleAlarm(Context context, AlarmState alarmState,
 			Long timeInMillis) {
 
 		Log.d("asdf",
@@ -155,7 +137,7 @@ public class AlarmReciever extends BroadcastReceiver {
 		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
 	}
 
-	public static void createWeeklyAlarm(Context context,
+	private static void scheduleWeeklyAlarm(Context context,
 			AlarmState alarmState, Long timeInMillis) {
 
 		Log.d("asdf",
