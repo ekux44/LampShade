@@ -103,30 +103,36 @@ public class AlarmReciever extends BroadcastReceiver {
 			as.setRepeatingTimes(scheduledTimes);
 		}
 		Calendar soonestTime = null;
-		long[] times;
+		
 		if(as.isRepeating()){
-			times = as.getRepeatingTimes();
-		}else{
-			times = new long[1];
-			times[0]= as.getTime();
-		}
-		for (Long t : times) {
-			if (t != null) {
-				Calendar setTime = Calendar.getInstance();
-				setTime.setTimeInMillis(t);
-				if (as.isRepeating()) {// repeating weekly alarm
-					Log.e("asdf", "repeatingAlarm");
-					AlarmReciever.createWeeklyAlarm(context, as,
-							setTime.getTimeInMillis());
-				} else {
-					Log.e("asdf", "oneOffAlarm");
-					AlarmReciever.createAlarm(context, as,
-							setTime.getTimeInMillis());
+			
+			for(int i = 0; i< 7; i++){
+				long t =as.getRepeatingTimes()[i];
+				if (as.getRepeatingDays()[i]) {
+					Calendar setTime = Calendar.getInstance();
+					setTime.setTimeInMillis(t);
+					if (as.isRepeating()) {// repeating weekly alarm
+						Log.e("asdf", "repeatingAlarm");
+						AlarmReciever.createWeeklyAlarm(context, as,
+								setTime.getTimeInMillis());
+					} else {
+						
+					}
+					if (soonestTime == null || setTime.before(soonestTime))
+						soonestTime = setTime;
 				}
-				if (soonestTime == null || setTime.before(soonestTime))
-					soonestTime = setTime;
 			}
+		}else{
+			Log.e("asdf", "oneOffAlarm");
+			
+			Calendar setTime = Calendar.getInstance();
+			setTime.setTimeInMillis(as.getTime());
+			
+			AlarmReciever.createAlarm(context, as,
+					setTime.getTimeInMillis());
+			soonestTime = setTime;
 		}
+		
 		Toast.makeText(
 				context,
 				context.getString(R.string.next_scheduled_intro)
