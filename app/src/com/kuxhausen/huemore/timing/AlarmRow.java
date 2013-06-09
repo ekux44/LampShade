@@ -33,15 +33,16 @@ public class AlarmRow {
 	}
 
 	public String getTime() {
-		if (aState.scheduledTimes == null)
-			return ExternalArguments.NA;
+		/** only hour and minute are valid **/
 		long time = 0;
-		loopFirst: for (Long milis : aState.scheduledTimes) {
-			if (milis != null) {
-				time = milis;
-				break loopFirst;
-			}
+		if(aState.isRepeating()){
+			for(int i = 0; i< 7; i++)
+				if(aState.getRepeatingDays()[i])
+					time = aState.getRepeatingTimes()[i];
+		}else{
+			time = aState.getTime();
 		}
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time + (aState.transitiontime * 100));
 		return DateFormat.getTimeInstance().format(cal.getTime());
@@ -61,12 +62,15 @@ public class AlarmRow {
 		if (aState.scheduledForFuture == null)
 			aState.scheduledForFuture = false;
 
+		
 		// if it's a non repeating alarm in the past, mark as unchecked
-		if (aState.scheduledForFuture && aState.scheduledTimes.length == 1) {
+		if (!aState.isRepeating()) {
 			Calendar scheduledTime = Calendar.getInstance();
-			scheduledTime.setTimeInMillis(aState.scheduledTimes[0]);
-			if (scheduledTime.before(Calendar.getInstance()))
+			scheduledTime.setTimeInMillis(aState.getTime());
+			if (scheduledTime.before(Calendar.getInstance())){
+				aState.scheduledForFuture = false;
 				return false;
+			}
 			// TODO save back to database, maybe move this logic out
 		}
 		return aState.scheduledForFuture;
@@ -75,21 +79,9 @@ public class AlarmRow {
 	public void toggle() {
 
 		if (isScheduled()) {
-			for (Long t : aState.scheduledTimes) {
-				if (t != null)
-					AlarmReciever.cancelAlarm(c, aState);
-			}
+			AlarmReciever.cancelAlarm(c, aState);
 		} else {
-			Calendar projectedHours = Calendar.getInstance();
-			long time = 0;
-			loopFirst: for (Long milis : aState.scheduledTimes) {
-				if (milis != null) {
-					time = milis;
-					break loopFirst;
-				}
-			}
-			projectedHours.setTimeInMillis(time);
-			AlarmReciever.createAlarms(c, aState, projectedHours);
+			AlarmReciever.createAlarms(c, aState);
 		}
 
 		aState.scheduledForFuture = !isScheduled();

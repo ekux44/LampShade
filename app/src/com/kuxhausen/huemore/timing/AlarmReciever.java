@@ -27,17 +27,25 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	Gson gson = new Gson();
 
-	public static AlarmState createAlarms(Context context, AlarmState as,
-			Calendar timeAdjustedCal) {
+	public static AlarmState createAlarms(Context context, AlarmState as) {
+		Calendar timeAdjustedCal = Calendar.getInstance();
+		if(as.isRepeating()){
+			for(int i = 0; i< 7; i++){
+				if(as.getRepeatingDays()[i])
+					timeAdjustedCal.setTimeInMillis(as.getRepeatingTimes()[i]);
+			}
+		}else{
+			timeAdjustedCal.setTimeInMillis(as.getTime());
+		}
+		
 		if (!as.isRepeating()) {
 			while (timeAdjustedCal.before(Calendar.getInstance()))
 				// make sure this hour & minute is in the future
 				timeAdjustedCal.set(Calendar.DATE,
 						timeAdjustedCal.get(Calendar.DATE) + 1);
-			as.scheduledTimes = new Long[1];
-			as.scheduledTimes[0] = timeAdjustedCal.getTimeInMillis();
+			as.setTime(timeAdjustedCal.getTimeInMillis());
 		} else {
-			as.scheduledTimes = new Long[7];
+			long[] scheduledTimes = new long[7];
 			for (int i = 0; i < 7; i++) {
 				if (as.getRepeatingDays()[i]) {
 					Calendar copyForDayOfWeek = Calendar.getInstance();
@@ -89,12 +97,20 @@ public class AlarmReciever extends BroadcastReceiver {
 						// week
 						copyForDayOfWeek.set(Calendar.DATE,
 								copyForDayOfWeek.get(Calendar.DATE) + 7);
-					as.scheduledTimes[i] = copyForDayOfWeek.getTimeInMillis();
+					scheduledTimes[i] = copyForDayOfWeek.getTimeInMillis();
 				}
 			}
+			as.setRepeatingTimes(scheduledTimes);
 		}
 		Calendar soonestTime = null;
-		for (Long t : as.scheduledTimes) {
+		long[] times;
+		if(as.isRepeating()){
+			times = as.getRepeatingTimes();
+		}else{
+			times = new long[1];
+			times[0]= as.getTime();
+		}
+		for (Long t : times) {
 			if (t != null) {
 				Calendar setTime = Calendar.getInstance();
 				setTime.setTimeInMillis(t);

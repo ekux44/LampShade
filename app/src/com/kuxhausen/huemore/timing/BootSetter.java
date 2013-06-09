@@ -26,16 +26,7 @@ public class BootSetter extends BroadcastReceiver {
 			AlarmState as = gson
 					.fromJson(cursor.getString(0), AlarmState.class);
 
-			Long time = null;
-			findFirst: for (Long t : as.scheduledTimes) {
-				if (t != null) {
-					time = t;
-					break findFirst;
-				}
-			}
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(time);
-			AlarmReciever.createAlarms(context, as, cal);
+			AlarmReciever.createAlarms(context, as);
 		}
 
 	}

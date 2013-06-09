@@ -350,7 +350,15 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		// ensure transition starts ahead to culminate at the specified time
 		projectedTime.add(Calendar.SECOND, -as.transitiontime / 10);
 
-		AlarmReciever.createAlarms(getActivity(), as, projectedTime);
+		if(as.isRepeating()){
+			long[] l = new long[7];
+			for(int i = 0; i<7; i++)
+				l[i]= projectedTime.getTimeInMillis();
+			as.setRepeatingTimes(l);
+		}else{
+			as.setTime(projectedTime.getTimeInMillis());
+		}
+		AlarmReciever.createAlarms(getActivity(), as);
 
 		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
@@ -361,18 +369,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	}
 
 	private void reCreateAlarm() {
-		Calendar time = Calendar.getInstance();
-		long soonestTime = Long.MAX_VALUE;
-
-		Log.e("asdf", "scheduled times" + (priorState.scheduledTimes != null));
-
-		for (Long l : priorState.scheduledTimes)
-			if (l != null && ((long) l) < soonestTime)
-				soonestTime = l;
-		time.setTimeInMillis(soonestTime);
-
-		AlarmState as = AlarmReciever.createAlarms(getActivity(), priorState,
-				time);
+		AlarmState as = AlarmReciever.createAlarms(getActivity(), priorState);
 		as.scheduledForFuture = true;
 
 		// Defines an object to contain the new values to insert

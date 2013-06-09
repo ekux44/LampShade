@@ -5,16 +5,10 @@ public class AlarmState {
 	public String group;
 	public Integer transitiontime;
 	public Integer brightness;
+	public Boolean scheduledForFuture;
 	
 	/** 7 booleans which days {Sunday, ... ,Saturday} to repeat on } **/
 	private Boolean[] repeats;
-	public Boolean scheduledForFuture;
-	
-	/** if nonrepeating, size = 1. If repeating, size = 7**/
-	public Long[] scheduledTimes;
-
-	public AlarmState() {
-	}
 	
 	public boolean isRepeating(){
 		boolean result = false;
@@ -41,4 +35,40 @@ public class AlarmState {
 		for(int i =0; i<7; i++)
 			repeats[i] = day[i];
 	}
+	
+	/** if nonrepeating, size = 1. If repeating, size = 7**/
+	private Long[] scheduledTimes;
+
+	/** only valid if isRepeating == false **/
+	public long getTime(){
+		if(scheduledTimes==null || scheduledTimes.length!=1 || scheduledTimes[0] == null)
+			return -1; //TODO better error handling
+		return scheduledTimes[0];
+	}
+	/** only valid if isRepeating == false **/
+	public void setTime(long time){
+		scheduledTimes = new Long[1];
+		scheduledTimes[0]=time;
+	}
+	/** only valid if isRepeating == true. If getRepeatingDays[i] is false, getRepeatingScheduledTimes[i] is undefined **/
+	public long[] getRepeatingTimes(){
+		long[] result = new long[7];
+		if(scheduledTimes==null || scheduledTimes.length!=7){
+			return result;
+		}
+		for(int i = 0; i<7; i++)
+			if(scheduledTimes[i]!=null)
+				result[i]=scheduledTimes[i];
+		return result;
+	}
+	/** only valid if isRepeating == true **/
+	public void setRepeatingTimes(long[] repeatingTimes){
+		scheduledTimes = new Long[7];
+		for(int i = 0; i< 7 ;i++)
+			scheduledTimes[i]=repeatingTimes[i];
+	}
+	
+	public AlarmState() {
+	}
+	
 }
