@@ -35,6 +35,7 @@ public class AlarmReciever extends BroadcastReceiver {
 			Calendar timeAdjustedCal = Calendar.getInstance();
 			timeAdjustedCal.setTimeInMillis(as.getTime());
 			timeAdjustedCal.setLenient(true);
+			
 			while (timeAdjustedCal.before(Calendar.getInstance())){
 				// make sure this hour & minute is in the future
 				timeAdjustedCal.add(Calendar.DATE, 1);
@@ -59,7 +60,8 @@ public class AlarmReciever extends BroadcastReceiver {
 					copyForDayOfWeek.setLenient(true);
 					copyForDayOfWeek.set(Calendar.HOUR_OF_DAY, existingTimeCal.get(Calendar.HOUR_OF_DAY));
 					copyForDayOfWeek.set(Calendar.MINUTE, existingTimeCal.get(Calendar.MINUTE));
-					copyForDayOfWeek.set(Calendar.MILLISECOND, 0);
+					copyForDayOfWeek.set(Calendar.SECOND, existingTimeCal.get(Calendar.SECOND));
+					
 					
 					/** 7+ desired day of week (+1 to convert to java calendar number) - current day of week %7 **/
 					copyForDayOfWeek.add(Calendar.DATE, (7 + (1+i) - rightNow.get(Calendar.DAY_OF_WEEK))%7);
