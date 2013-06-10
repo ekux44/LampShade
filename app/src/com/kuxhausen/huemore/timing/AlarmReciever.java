@@ -80,7 +80,7 @@ public class AlarmReciever extends BroadcastReceiver {
 				long t =as.getRepeatingTimes()[i];
 				if (as.getRepeatingDays()[i]) {
 					Log.e("asdf", "repeatingAlarm");
-					AlarmReciever.scheduleWeeklyAlarm(context, as, t);
+					AlarmReciever.scheduleWeeklyAlarm(context, as, t, i+1);
 					
 					Calendar setTime = Calendar.getInstance();
 					setTime.setTimeInMillis(t);
@@ -106,20 +106,20 @@ public class AlarmReciever extends BroadcastReceiver {
 				"createAlarm"
 						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
-		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
+		PendingIntent pIntent = calculatePendingIntent(context, alarmState, 0);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
 	}
 
 	private static void scheduleWeeklyAlarm(Context context,
-			AlarmState alarmState, Long timeInMillis) {
+			AlarmState alarmState, Long timeInMillis, int dayOfWeek) {
 
 		Log.d("asdf",
 				"createRepeatingAlarm"
 						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
-		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
+		PendingIntent pIntent = calculatePendingIntent(context, alarmState, dayOfWeek);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis,
@@ -127,36 +127,25 @@ public class AlarmReciever extends BroadcastReceiver {
 	}
 
 	public static void cancelAlarm(Context context, AlarmState alarmState) {
-		PendingIntent pIntent = calculatePendingIntent(context, alarmState);
-		AlarmManager alarmMgr = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.cancel(pIntent);
+		for(int i = 0; i< 8; i++){
+			PendingIntent pIntent = calculatePendingIntent(context, alarmState,8);
+			AlarmManager alarmMgr = (AlarmManager) context
+					.getSystemService(Context.ALARM_SERVICE);
+			alarmMgr.cancel(pIntent);
+		}
 	}
-
+	/** day of week Sunday = 1, Saturday = 7, 0=not repeating so we don't care **/
 	private static PendingIntent calculatePendingIntent(Context context,
-			AlarmState alarmState) {
+			AlarmState alarmState, int dayOfWeek) {
 		Gson gson = new Gson();
 		String aState = gson.toJson(alarmState);
 
 		Intent intent = new Intent(context, AlarmReciever.class);
+		intent.setAction("com.kuxhausen.huemore."+aState);
 		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-				generateRequestCode(aState), intent,
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, dayOfWeek, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 		return pendingIntent;
-	}
-
-	private static int generateRequestCode(String aState) {
-		Gson gson = new Gson();
-		AlarmState as = gson.fromJson(aState, AlarmState.class);
-		int code = 0;
-		int bit = 1;
-		for (boolean b : as.getRepeatingDays()) {
-			if (b)
-				code += bit;
-			bit *= 2;
-		}
-		return code;
 	}
 
 	@Override
