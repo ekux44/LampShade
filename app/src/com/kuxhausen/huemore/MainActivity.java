@@ -373,6 +373,13 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
+	public void onPause(){
+		super.onPause();
+		//make sure moved back to group bulb when we come back to the app
+		moveToGroupBulb();
+	}
+	
+	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
