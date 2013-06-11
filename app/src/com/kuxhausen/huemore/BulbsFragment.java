@@ -89,9 +89,9 @@ public class BulbsFragment extends ListFragment implements
 		// list item
 		// (We do this during onStart because at the point the listview is
 		// available.)
-		if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
+		//if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
 			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		}
+		//}
 	}
 
 	@Override

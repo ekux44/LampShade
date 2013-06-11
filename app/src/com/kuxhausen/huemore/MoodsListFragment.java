@@ -39,8 +39,8 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
 
-	public TextView selected; // updated on long click
-	int selectedPos = -1;
+	public TextView selected, contextSelected; // updated on long click
+	private int selectedPos = -1;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -123,18 +123,17 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		// list item
 		// (We do this during onStart because at the point the listview is
 		// available.)
-		if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
+		//if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
 			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		}
+		//}
 
 	}
 
-	public void updateGroupView() {
+	public void invalidateSelection() {
 		// Set the previous selected item as checked to be unhighlighted when in
 		// two-pane layout
 		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
-
 	}
 
 	@Override
@@ -142,8 +141,8 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals(PreferencesKeys.OFF)||selected.getText().equals(PreferencesKeys.ON)||selected.getText().equals(PreferencesKeys.RANDOM)) {
+		contextSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		if (contextSelected.getText().equals(PreferencesKeys.OFF)||contextSelected.getText().equals(PreferencesKeys.ON)||contextSelected.getText().equals(PreferencesKeys.RANDOM)) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
@@ -159,7 +158,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 
 		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
 			String moodSelect = MoodColumns.MOOD + "=?";
-			String[] moodArg = { (String) (selected).getText() };
+			String[] moodArg = { (String) (contextSelected).getText() };
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
 					moodArg);
@@ -167,7 +166,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		case R.id.contextmoodmenu_edit: // <-- your custom menu item id here
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.MOOD_NAME, (String) (selected).getText());
+			args.putString(InternalArguments.MOOD_NAME, (String) (contextSelected).getText());
 			nmdf.setArguments(args);
 			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
@@ -242,9 +241,9 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 
 		selected = ((TextView) (v));
 		selectedPos = position;
-
+		
 		// Set the item as checked to be highlighted when in two-pane layout
-		getListView().setItemChecked(position, true);
+		getListView().setItemChecked(selectedPos, true);
 
 		// Notify the parent activity of selected item
 		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());

@@ -36,6 +36,10 @@ public class MoodManualPagingFragment extends Fragment implements
 	private static final int MOOD_LOCATION = 1;
 	private static final int MANUAL_LOCATION = 0;
 
+	private static MoodsListFragment moodsListFragment;
+	private static ColorWheelFragment colorWheelFragment;
+	
+	
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
@@ -46,7 +50,6 @@ public class MoodManualPagingFragment extends Fragment implements
 	int brightness;
 	boolean isTrackingTouch = false;
 	SharedPreferences settings;
-	static ColorWheelFragment nchf = null;
 	Gson gson = new Gson();
 
 	// The container Activity must implement this interface so the frag can
@@ -57,9 +60,9 @@ public class MoodManualPagingFragment extends Fragment implements
 
 	}
 
-	public void reset() {
+	public void invalidateSelection() {
 		((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
-				.updateGroupView();
+				.invalidateSelection();
 	}
 
 	@Override
@@ -151,12 +154,15 @@ public class MoodManualPagingFragment extends Fragment implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case MOOD_LOCATION:
-				// TODO cache somewhere
-				return new MoodsListFragment();
+				if(moodsListFragment == null)
+					moodsListFragment = new MoodsListFragment();
+				return moodsListFragment;
 			case MANUAL_LOCATION:
-				nchf = new ColorWheelFragment();
-				nchf.hideTransitionTime();
-				return nchf;
+				if(colorWheelFragment == null){
+					colorWheelFragment = new ColorWheelFragment();
+					colorWheelFragment.hideTransitionTime();
+				}
+				return colorWheelFragment;
 			default:
 				return null;
 			}
@@ -201,17 +207,6 @@ public class MoodManualPagingFragment extends Fragment implements
 
 			brightness = brightnessAverage;
 			brightnessBar.setProgress(brightnessAverage);
-
-			if (nchf != null) {
-				// this button marking approach gets treated like real user
-				// input and modifies entire group. BAD
-				/*
-				 * boolean colorLoopOn = false; for (BulbAttributes ba :
-				 * bulbsAttributes) { if (ba != null &&
-				 * ba.state.effect.equals("colorloop")) colorLoopOn = true; }
-				 * //if(colorLoopOn) //nchf.colorLoop.setChecked(true);
-				 */
-			}
 		}
 	}
 

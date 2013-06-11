@@ -115,9 +115,7 @@ public class MainActivity extends FragmentActivity implements
 			edit.putBoolean(PreferencesKeys.TWO_POINT_TWO_UPDATE, false);
 			edit.commit();
 		}
-		
-		
-		
+				
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 
@@ -339,7 +337,7 @@ public class MainActivity extends FragmentActivity implements
 			// If article frag is available, we're in two-pane layout...
 
 			// Call a method in the ArticleFragment to update its content
-			moodFrag.reset();
+			moodFrag.invalidateSelection();
 
 		} else {
 			// If the frag is not available, we're in the one-pane layout and
