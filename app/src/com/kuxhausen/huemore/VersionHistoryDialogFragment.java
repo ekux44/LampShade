@@ -13,13 +13,15 @@ public class VersionHistoryDialogFragment extends DialogFragment{
 		
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Major Update History");
+		builder.setTitle(R.string.update_welcome_title);
+		builder.setMessage(R.string.update_welcome_message);;
+		/*builder.setTitle("Major Update History");
 		builder.setItems(R.array.major_update_history, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             // The 'which' argument contains the index position
             // of the selected item
         }
-		});
+		});*/
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {

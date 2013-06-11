@@ -103,6 +103,21 @@ public class MainActivity extends FragmentActivity implements
 		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
+		if (!settings.contains(PreferencesKeys.TWO_POINT_TWO_UPDATE)) {
+			databaseHelper.updatedTwoPointOnePointOne();
+			// Run this before all the other updates, as it launches the update dialog, which needs to know update history
+			if(settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE) &&( settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS)){
+				VersionHistoryDialogFragment vhdf = new VersionHistoryDialogFragment();
+				vhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			}
+			// Mark no longer update two point two in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.TWO_POINT_TWO_UPDATE, false);
+			edit.commit();
+		}
+		
+		
+		
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 
