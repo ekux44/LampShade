@@ -61,7 +61,7 @@
     <string name="nfc_read_done">Fertig</string>
     <string name="nfc_tag_read_success">NFC Tag gelesen</string>
     <string name="nfc_tag_not_supported">Dein Gerät unterstützt das schreiben auf diesen NFC Tag nicht!</string>
-    <string name="alarms">Alarme (Beta)</string>
+    <string name="alarms">Alarme</string>
     <string name="cap_alarms">ALARME</string>
     <string name="transition_intro">Einblenden:</string>
     <string name="alarm_repeat">Wiederholen:</string>
