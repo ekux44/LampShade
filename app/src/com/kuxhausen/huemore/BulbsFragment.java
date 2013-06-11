@@ -41,8 +41,9 @@ public class BulbsFragment extends ListFragment implements
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	// public CursorAdapter dataSource;
-	public TextView selected; // updated on long click
-
+	public TextView selected, longSelected; // updated on long click
+	private int selectedPos = -1;
+	
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
 	Bulb[] bulbArray;
@@ -94,6 +95,13 @@ public class BulbsFragment extends ListFragment implements
 		//}
 	}
 
+	public void invalidateSelection() {
+		// Set the previous selected item as checked to be unhighlighted when in
+		// two-pane layout
+		if (selected != null && selectedPos > -1)
+			getListView().setItemChecked(selectedPos, false);
+	}
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -111,7 +119,7 @@ public class BulbsFragment extends ListFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 		
 		MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_bulb, menu);
@@ -120,7 +128,7 @@ public class BulbsFragment extends ListFragment implements
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		if (selected == null)
+		if (longSelected == null)
 			return false;
 
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
@@ -130,8 +138,8 @@ public class BulbsFragment extends ListFragment implements
 		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here
 			EditBulbDialogFragment ngdf = new EditBulbDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.BULB_NAME, (String) (selected).getText());
-			args.putInt(InternalArguments.BULB_NUMBER, 1+rayAdapter.getPosition((String) (selected).getText()));
+			args.putString(InternalArguments.BULB_NAME, (String) (longSelected).getText());
+			args.putInt(InternalArguments.BULB_NUMBER, 1+rayAdapter.getPosition((String) (longSelected).getText()));
 			ngdf.setArguments(args);
 			ngdf.setBulbsFragment(this);
 			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -145,13 +153,14 @@ public class BulbsFragment extends ListFragment implements
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		selected = ((TextView) (v));
-
+		selectedPos = position;
+		
 		// Notify the parent activity of selected item
 		Integer[] iPos = { position + 1 };
 		mCallback.onGroupBulbSelected(iPos, selected.getText().toString());
 
 		// Set the item as checked to be highlighted when in two-pane layout
-		getListView().setItemChecked(position, true);
+		getListView().setItemChecked(selectedPos, true);
 	}
 
 	/**

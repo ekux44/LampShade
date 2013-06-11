@@ -41,8 +41,9 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	public CursorAdapter dataSource;
-	public TextView selected; // updated on long click
-
+	public TextView selected, longSelected; // updated on long click
+	public int selectedPos = -1;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -124,6 +125,13 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		//}
 	}
 
+	public void invalidateSelection() {
+		// Set the previous selected item as checked to be unhighlighted when in
+		// two-pane layout
+		if (selected != null && selectedPos > -1)
+			getListView().setItemChecked(selectedPos, false);
+	}
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -141,8 +149,8 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		selected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (selected.getText().equals(PreferencesKeys.ALL)) {
+		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		if (longSelected.getText().equals(PreferencesKeys.ALL)) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
@@ -152,7 +160,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		if (selected == null)
+		if (longSelected == null)
 			return false;
 
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
@@ -161,7 +169,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 
 		case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
 			String groupSelect = GroupColumns.GROUP + "=?";
-			String[] groupArg = { (String) (selected).getText() };
+			String[] groupArg = { (String) (longSelected).getText() };
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
 					groupSelect, groupArg);
@@ -169,7 +177,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.GROUP_NAME, (String) (selected).getText());
+			args.putString(InternalArguments.GROUP_NAME, (String) (longSelected).getText());
 			ngdf.setArguments(args);
 			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			
@@ -183,7 +191,8 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		selected = ((TextView) (v));
-
+		selectedPos = position;
+		
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { (String) ((TextView) (v)).getText() };
@@ -210,7 +219,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		mCallback.onGroupBulbSelected(bulbS, selected.getText().toString());
 
 		// Set the item as checked to be highlighted when in two-pane layout
-		getListView().setItemChecked(position, true);
+		getListView().setItemChecked(selectedPos, true);
 	}
 
 	/**

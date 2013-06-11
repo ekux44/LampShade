@@ -28,6 +28,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	private static final int GROUP_LOCATION = 1;
 	private static final int BULB_LOCATION = 0;
 
+	private static GroupsListFragment groupsListFragment;
+	private static BulbsFragment bulbsFragment;
+	
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
@@ -98,10 +101,13 @@ public class GroupBulbPagingFragment extends Fragment {
 		public Fragment getItem(int i) {
 			switch (i) {
 			case GROUP_LOCATION:
-				// TODO cache somewhere
-				return new GroupsListFragment();
+				if(groupsListFragment==null)
+					groupsListFragment = new GroupsListFragment();
+				return groupsListFragment;
 			case BULB_LOCATION:
-				return new BulbsFragment();
+				if(bulbsFragment == null)
+					bulbsFragment = new BulbsFragment();
+				return bulbsFragment;
 			default:
 				return null;
 			}

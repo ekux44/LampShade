@@ -39,7 +39,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
 
-	public TextView selected, contextSelected; // updated on long click
+	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
 
 	// The container Activity must implement this interface so the frag can
@@ -141,8 +141,8 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		contextSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (contextSelected.getText().equals(PreferencesKeys.OFF)||contextSelected.getText().equals(PreferencesKeys.ON)||contextSelected.getText().equals(PreferencesKeys.RANDOM)) {
+		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		if (longSelected.getText().equals(PreferencesKeys.OFF)||longSelected.getText().equals(PreferencesKeys.ON)||longSelected.getText().equals(PreferencesKeys.RANDOM)) {
 			return;
 		}
 		MenuInflater inflater = this.getActivity().getMenuInflater();
@@ -158,7 +158,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 
 		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
 			String moodSelect = MoodColumns.MOOD + "=?";
-			String[] moodArg = { (String) (contextSelected).getText() };
+			String[] moodArg = { (String) (longSelected).getText() };
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
 					moodArg);
@@ -166,7 +166,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		case R.id.contextmoodmenu_edit: // <-- your custom menu item id here
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.MOOD_NAME, (String) (contextSelected).getText());
+			args.putString(InternalArguments.MOOD_NAME, (String) (longSelected).getText());
 			nmdf.setArguments(args);
 			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
