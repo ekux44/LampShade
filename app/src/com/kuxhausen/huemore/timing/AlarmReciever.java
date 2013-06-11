@@ -150,57 +150,58 @@ public class AlarmReciever extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		AlarmState as = gson.fromJson(
-				intent.getExtras().getString(InternalArguments.ALARM_DETAILS),
-				AlarmState.class);
-
-		// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { as.group };
-		Cursor groupCursor = context.getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, groupColumns,
-				GroupColumns.GROUP + "=?", gWhereClause, null);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (groupCursor.moveToNext()) {
-			groupStates.add(groupCursor.getInt(0));
-		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-
-		String[] moodS = null;
-		if(as.mood.equals(PreferencesKeys.RANDOM))
-		{
-			//random only handled here (automation & alarms) and main activity's transmit mood group
-			BulbState randomState = new BulbState();
-			randomState.on=true;
-			randomState.hue=(int)(65535*Math.random());
-			randomState.sat=(short)(255*(Math.random()*5.+.25));
-			 moodS = new String[1];
-			moodS[0]=gson.toJson(randomState);
-		}else{
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWereClause = {as.mood };
-			Cursor moodCursor = context.getContentResolver().query(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodColumns,
-					MoodColumns.MOOD + "=?", mWereClause, null);
-
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (moodCursor.moveToNext()) {
-				moodStates.add(moodCursor.getString(0));
+		if( intent.getAction() != null){ 
+			AlarmState as = gson.fromJson(
+					intent.getExtras().getString(InternalArguments.ALARM_DETAILS),
+					AlarmState.class);
+	
+			// Look up bulbs for that mood from database
+			String[] groupColumns = { GroupColumns.BULB };
+			String[] gWhereClause = { as.group };
+			Cursor groupCursor = context.getContentResolver().query(
+					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, groupColumns,
+					GroupColumns.GROUP + "=?", gWhereClause, null);
+	
+			ArrayList<Integer> groupStates = new ArrayList<Integer>();
+			while (groupCursor.moveToNext()) {
+				groupStates.add(groupCursor.getInt(0));
 			}
-			moodS = moodStates.toArray(new String[moodStates.size()]);
+			Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+	
+			String[] moodS = null;
+			if(as.mood.equals(PreferencesKeys.RANDOM))
+			{
+				//random only handled here (automation & alarms) and main activity's transmit mood group
+				BulbState randomState = new BulbState();
+				randomState.on=true;
+				randomState.hue=(int)(65535*Math.random());
+				randomState.sat=(short)(255*(Math.random()*5.+.25));
+				 moodS = new String[1];
+				moodS[0]=gson.toJson(randomState);
+			}else{
+				String[] moodColumns = { MoodColumns.STATE };
+				String[] mWereClause = {as.mood };
+				Cursor moodCursor = context.getContentResolver().query(
+						DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodColumns,
+						MoodColumns.MOOD + "=?", mWereClause, null);
+	
+				ArrayList<String> moodStates = new ArrayList<String>();
+				while (moodCursor.moveToNext()) {
+					moodStates.add(moodCursor.getString(0));
+				}
+				moodS = moodStates.toArray(new String[moodStates.size()]);
+			}
+			int brightness = as.brightness;
+			int transitiontime = as.transitiontime;
+			for (int i = 0; i < moodS.length; i++) {
+				BulbState bs = gson.fromJson(moodS[i], BulbState.class);
+				bs.bri = brightness;
+				bs.transitiontime = transitiontime;
+				moodS[i] = gson.toJson(bs);// back into json for TransmitGroupMood
+			}
+	
+			SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
+			trasmitter.execute(context, bulbS, moodS);
 		}
-		int brightness = as.brightness;
-		int transitiontime = as.transitiontime;
-		for (int i = 0; i < moodS.length; i++) {
-			BulbState bs = gson.fromJson(moodS[i], BulbState.class);
-			bs.bri = brightness;
-			bs.transitiontime = transitiontime;
-			moodS[i] = gson.toJson(bs);// back into json for TransmitGroupMood
-		}
-
-		SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
-		trasmitter.execute(context, bulbS, moodS);
 	}
-
 }
