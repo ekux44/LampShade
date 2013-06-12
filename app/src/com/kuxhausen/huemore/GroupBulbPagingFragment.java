@@ -130,7 +130,7 @@ public class GroupBulbPagingFragment extends Fragment {
 			case BULB_LOCATION:
 				if(bulbsFragment == null){
 					bulbsFragment = new BulbsFragment();
-					groupsListFragment.setSelectionListener(frag);
+					bulbsFragment.setSelectionListener(frag);
 				}
 				return bulbsFragment;
 			default:
