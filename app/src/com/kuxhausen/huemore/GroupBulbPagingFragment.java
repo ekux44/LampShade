@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -46,13 +47,20 @@ public class GroupBulbPagingFragment extends Fragment {
 		public void onGroupBulbSelected(Integer[] bulbNum, String name);
 
 	}
+	
+	public void onSelected(Integer[] bulbNum, String name, GroupsListFragment groups, BulbsFragment bulbs){
+		if(groups == groupsListFragment)
+			bulbsFragment.invalidateSelection();
+		else if(bulbs == bulbsFragment)
+			groupsListFragment.invalidateSelection();
+		
+		((MainActivity)this.getActivity()).onGroupBulbSelected(bulbNum, name);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		parrentActivity = (MainActivity)this.getActivity();
-		
 		settings = PreferenceManager.getDefaultSharedPreferences(this
 				.getActivity());
 
@@ -83,6 +91,19 @@ public class GroupBulbPagingFragment extends Fragment {
 		super.onResume();
 		parrentActivity.setTitle(R.string.app_name);
 	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			parrentActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+		}
+	}
+
 
 	/**
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
@@ -90,9 +111,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	 */
 	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
-		android.support.v4.app.Fragment frag;
+		GroupBulbPagingFragment frag;
 		
-		public GroupBulbPagerAdapter(android.support.v4.app.Fragment fragment) {
+		public GroupBulbPagerAdapter(GroupBulbPagingFragment fragment) {
 			super(fragment.getChildFragmentManager());
 			frag= fragment;
 		}
@@ -101,12 +122,16 @@ public class GroupBulbPagingFragment extends Fragment {
 		public Fragment getItem(int i) {
 			switch (i) {
 			case GROUP_LOCATION:
-				if(groupsListFragment==null)
+				if(groupsListFragment==null){
 					groupsListFragment = new GroupsListFragment();
+					groupsListFragment.setSelectionListener(frag);
+				}
 				return groupsListFragment;
 			case BULB_LOCATION:
-				if(bulbsFragment == null)
+				if(bulbsFragment == null){
 					bulbsFragment = new BulbsFragment();
+					groupsListFragment.setSelectionListener(frag);
+				}
 				return bulbsFragment;
 			default:
 				return null;

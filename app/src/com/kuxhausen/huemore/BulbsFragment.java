@@ -36,13 +36,13 @@ import com.kuxhausen.huemore.state.api.Bulb;
 public class BulbsFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor>,
 		GetBulbList.OnBulbListReturnedListener {
-	OnBulbGroupSelectedListener mCallback;
-
+	
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	// public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
+	private GroupBulbPagingFragment gbpfCallback;
 	
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
@@ -95,6 +95,10 @@ public class BulbsFragment extends ListFragment implements
 		//}
 	}
 
+	public void setSelectionListener(GroupBulbPagingFragment gbpf){
+		gbpfCallback = gbpf;
+	}
+	
 	public void invalidateSelection() {
 		// Set the previous selected item as checked to be unhighlighted when in
 		// two-pane layout
@@ -102,18 +106,6 @@ public class BulbsFragment extends ListFragment implements
 			getListView().setItemChecked(selectedPos, false);
 	}
 	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception.
-		try {
-			mCallback = (MainActivity) activity;
-		} catch (ClassCastException e) {
-		}
-	}
-
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
@@ -157,7 +149,7 @@ public class BulbsFragment extends ListFragment implements
 		
 		// Notify the parent activity of selected item
 		Integer[] iPos = { position + 1 };
-		mCallback.onGroupBulbSelected(iPos, selected.getText().toString());
+		gbpfCallback.onSelected(iPos, selected.getText().toString(),null, this);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);

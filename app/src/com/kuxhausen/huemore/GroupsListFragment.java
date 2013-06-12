@@ -36,13 +36,14 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class GroupsListFragment extends ListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
-	OnBulbGroupSelectedListener mCallback;
-
+	
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	public int selectedPos = -1;
+	private GroupBulbPagingFragment gbpfCallback;
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,6 +126,9 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		//}
 	}
 
+	public void setSelectionListener(GroupBulbPagingFragment gbpf){
+		gbpfCallback = gbpf;
+	}
 	public void invalidateSelection() {
 		// Set the previous selected item as checked to be unhighlighted when in
 		// two-pane layout
@@ -132,18 +136,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 			getListView().setItemChecked(selectedPos, false);
 	}
 	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception.
-		try {
-			mCallback = (MainActivity) activity;
-		} catch (ClassCastException e) {
-		}
-	}
-
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
@@ -216,7 +209,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
 		// Notify the parent activity of selected bulbs
-		mCallback.onGroupBulbSelected(bulbS, selected.getText().toString());
+		gbpfCallback.onSelected(bulbS, selected.getText().toString(), this, null);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);
