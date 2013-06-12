@@ -43,6 +43,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		if (savedInstanceState != null) {
 			ip = savedInstanceState.getString(InternalArguments.IP);
 		}
+		if(this.getArguments()!=null)
+		{
+			ip = savedInstanceState.getString(InternalArguments.IP);
+		}
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
