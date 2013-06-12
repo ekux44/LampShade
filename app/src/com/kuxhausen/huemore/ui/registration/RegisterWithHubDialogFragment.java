@@ -40,12 +40,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
 		me = this;
-		if (savedInstanceState != null) {
-			ip = savedInstanceState.getString(InternalArguments.IP);
-		}
 		if(this.getArguments()!=null)
 		{
-			ip = savedInstanceState.getString(InternalArguments.IP);
+			ip = this.getArguments().getString(InternalArguments.IP);
 		}
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
