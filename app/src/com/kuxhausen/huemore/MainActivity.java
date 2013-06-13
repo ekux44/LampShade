@@ -35,6 +35,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
+import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
 /**
@@ -508,8 +509,10 @@ public class MainActivity extends FragmentActivity implements
 			moveToGroupBulb();
 			return true;
 		case R.id.action_register_with_hub:
-			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-			rwhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			//RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
+			//rwhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
+			dhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:
 			SettingsDialogFragment settings = new SettingsDialogFragment();
