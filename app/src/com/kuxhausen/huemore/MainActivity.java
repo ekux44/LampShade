@@ -172,8 +172,8 @@ public class MainActivity extends FragmentActivity implements
 
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
-			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-			rwhdf.show(this.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
+			dhdf.show(this.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
 		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";

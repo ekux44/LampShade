@@ -62,6 +62,12 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 		onDestroyView();
 	}
 
+	@Override
+	public void onStop(){
+		super.onStop();
+		if(hubSearch!=null)
+			hubSearch.cancel(false);
+	}
 
 	@Override
 	public void onHubFoundResult(Bridge[] bridges) {
@@ -69,6 +75,7 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			Bundle args = new Bundle();
 			args.putString(InternalArguments.BRIDGES, gson.toJson(bridges));
+			Log.e("asdf", gson.toJson(bridges));
 			rwhdf.setArguments(args);
 			rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 

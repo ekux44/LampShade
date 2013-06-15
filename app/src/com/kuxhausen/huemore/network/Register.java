@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.state.api.Bridge;
@@ -44,9 +45,8 @@ public class Register extends AsyncTask<Void, Integer, String> {
 			OnRegisterListener resultListener, String userName,
 			String devicetype) {
 		cont = parrentActivity;
-		if (bridges != null) {
-			this.bridges = bRidges;
-		}
+		this.bridges = bRidges;
+	
 		mResultListener = resultListener;
 		username = userName;
 		deviceType = devicetype;
@@ -62,6 +62,7 @@ public class Register extends AsyncTask<Void, Integer, String> {
 			HttpPost httppost = new HttpPost("http://" + b.internalipaddress
 					+ "/api/");
 
+			Log.e("asdf", "registrationAttempt:"+b.internalipaddress);
 			try {
 				RegistrationRequest request = new RegistrationRequest();
 				request.username = username;
@@ -83,13 +84,12 @@ public class Register extends AsyncTask<Void, Integer, String> {
 				// analyze the response
 				String responseString = EntityUtils.toString(response
 						.getEntity());
-				responseString = responseString.substring(1,
-						responseString.length() - 1);// pull off the outer
-														// brackets
-
-				RegistrationResponse responseObject = gson.fromJson(
-						responseString, RegistrationResponse.class);
-				if (responseObject.success != null)
+				
+				Log.e("asdf", "responseString"+responseString);
+				
+				RegistrationResponse[] responseObject = gson.fromJson(
+						responseString, RegistrationResponse[].class);
+				if (responseObject.length >0 && responseObject[0].success != null)
 					return b.internalipaddress;
 
 			} catch (ClientProtocolException e) {

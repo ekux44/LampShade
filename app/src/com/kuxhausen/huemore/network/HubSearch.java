@@ -115,39 +115,42 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 		if(result!=null)
 			return result;
 		ArrayList<Bridge> results = new ArrayList<Bridge>();
+		
+		HttpParams httpParameters = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutConnection = 120;
+		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+		// Set the default socket timeout (SO_TIMEOUT) 
+		// in milliseconds which is the timeout for waiting for data.
+		int timeoutSocket = 200;
+		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		
 		for(int i = 0; i<256; i++){
 			Log.e("asdf",""+i);
 			
-			Bridge possible = checkIP((i+100)%256);
+			if(this.isCancelled())
+				i=256;
+			
+			Bridge possible = checkIP((i+100)%256, client);
 			if(possible!=null)
 				results.add(possible);
 		}
 		result = results.toArray(new Bridge[0]);
-		Log.e("asdf", "numResults"+results.size());
 		return result;
 		
 		
 	}
 	
 	//TODO rewrite
-	private Bridge checkIP(int local){
+	private Bridge checkIP(int local, HttpClient client){
 		String username = "asdf";
 		
 		Bridge candidate = new Bridge();
 		candidate.internalipaddress= "192.168.1."+local;
 		
 		StringBuilder builder = new StringBuilder();
-		
-		HttpParams httpParameters = new BasicHttpParams();
-		// Set the timeout in milliseconds until a connection is established.
-		// The default value is zero, that means the timeout is not used. 
-		int timeoutConnection = 300;
-		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-		// Set the default socket timeout (SO_TIMEOUT) 
-		// in milliseconds which is the timeout for waiting for data.
-		int timeoutSocket = 500;
-		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 		
 		HttpGet httpGet = new HttpGet("http://" + candidate.internalipaddress
 				+ "/api/"+username+"/lights/1");
