@@ -70,4 +70,5 @@
     <string name="next_scheduled_intro">Volgende alarm</string>
 	<string name="update_welcome_title">Welcome to HueMore 2.2 Pro</string>
 	<string name="update_welcome_message">Alarms now work! However, you must <b>restart your phone</b> for this bug fix to take effect. Also, HueMore now supports Tasker and Locale.</string>
+	<string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
 </resources>
