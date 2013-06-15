@@ -143,7 +143,7 @@ public final class DatabaseDefinitions {
 		public static final String MOOD_NAME = "Mood_Name";
 		public static final String BULB_STATE = "Bulb_State";
 		public static final String BULB_STATES = "Bulb_States";
-		public static final String IP = "IP";
+		public static final String BRIDGES = "Bridges";
 		public static final String MD5 = "MD5";
 		public static final String FRAG_MANAGER_DIALOG_TAG = "dialog";
 		public static final String IPV4dot = ".";

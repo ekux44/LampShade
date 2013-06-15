@@ -40,73 +40,22 @@ public class Register extends AsyncTask<Void, Integer, String> {
 		public void onRegisterResult(String bridge, String username);
 	}
 
-	public Register(Activity parrentActivity, String ip,
+	public Register(Activity parrentActivity, Bridge[] bRidges,
 			OnRegisterListener resultListener, String userName,
 			String devicetype) {
 		cont = parrentActivity;
-		if (ip != null && !ip.equals("")) {
-			bridges = new Bridge[1];
-			bridges[0] = new Bridge();
-			bridges[0].internalipaddress = ip;
+		if (bridges != null) {
+			this.bridges = bRidges;
 		}
 		mResultListener = resultListener;
 		username = userName;
 		deviceType = devicetype;
 	}
-
-	public void getBridge() {
-
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet("http://" + "www.meethue.com/api/nupnp");
-		bridges = new Bridge[1];
-		bridges[0] = new Bridge();
-		bridges[0].internalipaddress = "192.168.1.100";
-
-		try {
-
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-
-			if (statusCode == 200) {
-
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-
-				String line;
-				String jSon = "";
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-					jSon += line;
-				}
-
-				
-				try {
-					// autoselect first hub if multiple hubs
-					bridges = gson.fromJson(jSon, Bridge[].class);
-				} catch (NullPointerException e) {
-
-				}
-
-			} else {
-
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
-			// TODO deal with null IP from getBridge
-		}
-	}
-
+	
 	@Override
 	protected String doInBackground(Void... voids) {
-		if (bridges == null || bridges.equals(""))
-			getBridge();
+		if (bridges == null)
+			return null;
 		for (Bridge b : bridges) {
 			// Create a new HttpClient and Post Header
 			HttpClient httpclient = new DefaultHttpClient();

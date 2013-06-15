@@ -68,15 +68,15 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 		if(bridges!=null && bridges.length>0){
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			Bundle args = new Bundle();
-			//args.putString(InternalArguments.IP, gson.toJson(bridges));
-			//TODO make other part gson ready
+			args.putString(InternalArguments.BRIDGES, gson.toJson(bridges));
 			rwhdf.setArguments(args);
 			rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			dismiss();
 
 		}else{
-			//TODO
+			RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
+			rfdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			dismiss();
 		}
 	}

@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.api.Bridge;
 
 public class RegisterWithHubDialogFragment extends DialogFragment implements
 		OnRegisterListener {
@@ -34,7 +36,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	public Register networkRegister;
 	public Activity parrentActivity;
 	public OnRegisterListener me;
-	String ip = null;
+	Bridge[] bridges = null;
+	Gson gson = new Gson();
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		me = this;
 		if(this.getArguments()!=null)
 		{
-			ip = this.getArguments().getString(InternalArguments.IP);
+			bridges = gson.fromJson(this.getArguments().getString(InternalArguments.BRIDGES), Bridge[].class);
 		}
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -63,7 +66,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 				if (isAdded()) {
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					networkRegister = new Register(parrentActivity, ip, me,
+					networkRegister = new Register(parrentActivity, bridges, me,
 							getUserName(), getDeviceType());
 					networkRegister.execute();
 				}
@@ -73,7 +76,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 			public void onFinish() {
 				if (isAdded()) {
 					// try one last time
-					networkRegister = new Register(parrentActivity, ip, me,
+					networkRegister = new Register(parrentActivity, bridges, me,
 							getUserName(), getDeviceType());
 					networkRegister.execute();
 

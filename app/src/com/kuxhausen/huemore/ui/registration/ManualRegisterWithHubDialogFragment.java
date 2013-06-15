@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.Register;
 import com.kuxhausen.huemore.network.Register.OnRegisterListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.api.Bridge;
 
 public class ManualRegisterWithHubDialogFragment extends DialogFragment
 		implements OnRegisterListener {
@@ -34,6 +36,7 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 	public EditText IPV4part2;
 	public EditText IPV4part3;
 	public EditText IPV4part4;
+	Gson gson = new Gson();
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -66,7 +69,10 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 								+ IPV4part4.getText().toString();
 						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 						Bundle args = new Bundle();
-						args.putString(InternalArguments.IP, ip);
+						Bridge b = new Bridge();
+						b.internalipaddress = ip;
+						Bridge[] bRay = {b};
+						args.putString(InternalArguments.BRIDGES, gson.toJson(bRay));
 						rwhdf.setArguments(args);
 						rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
