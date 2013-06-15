@@ -27,7 +27,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 public class RegisterWithHubDialogFragment extends DialogFragment implements
 		OnRegisterListener {
 
-	public final long length_in_milliseconds = 15000;
+	public final long length_in_milliseconds = 30000;
 	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;

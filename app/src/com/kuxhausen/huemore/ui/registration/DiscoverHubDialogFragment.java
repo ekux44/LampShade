@@ -14,6 +14,7 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -49,7 +50,7 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 				.findViewById(R.id.progressBar1);
 		hubSearch = new HubSearch(this.getActivity(), this);
 		hubSearch.execute();
-		
+		Log.e("asdf", "hubSearchStarted");
 		
 		// Create the AlertDialog object and return it
 		return builder.create();
@@ -76,6 +77,7 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 
 		}else{
 			//TODO
+			dismiss();
 		}
 	}
 

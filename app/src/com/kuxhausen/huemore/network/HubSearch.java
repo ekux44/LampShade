@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -13,8 +14,12 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
@@ -49,7 +54,18 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 		Bridge[] result = null;
 		
 		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
+		
+		HttpParams httpParameters = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutConnection = 3000;
+		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+		// Set the default socket timeout (SO_TIMEOUT) 
+		// in milliseconds which is the timeout for waiting for data.
+		int timeoutSocket = 5000;
+		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		
 		HttpGet httpGet = new HttpGet("http://" + "www.meethue.com/api/nupnp");
 		
 		try {
@@ -84,24 +100,30 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
 			// TODO deal with null IP from getBridge
 		}
+		if(result != null && result.length<1)
+			result = null;
 		return result;
 	}
 
 	@Override
 	protected Bridge[] doInBackground(Void... voids) {
-		Bridge[] result = null;
+		Log.e("asdf","doInBackground");
+		
+		Bridge[] result = new Bridge[0];
 		result = getBridgesAPI();
+		Log.e("asdf", "getBridgeAPI");
 		if(result!=null)
 			return result;
 		ArrayList<Bridge> results = new ArrayList<Bridge>();
-		int local = 0;
-		while(result!=null && local<256){
-			Bridge possible = checkIP(local);
+		for(int i = 0; i<256; i++){
+			Log.e("asdf",""+i);
+			
+			Bridge possible = checkIP((i+100)%256);
 			if(possible!=null)
 				results.add(possible);
-			local++;
 		}
-		result = (Bridge[]) results.toArray();
+		result = results.toArray(new Bridge[0]);
+		Log.e("asdf", "numResults"+results.size());
 		return result;
 		
 		
@@ -109,57 +131,49 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 	
 	//TODO rewrite
 	private Bridge checkIP(int local){
+		String username = "asdf";
+		
 		Bridge candidate = new Bridge();
 		candidate.internalipaddress= "192.168.1."+local;
 		
-		// Create a new HttpClient and Post Header
-		HttpClient httpclient = new DefaultHttpClient();
+		StringBuilder builder = new StringBuilder();
 		
-		//TODO use different api
-		HttpPost httppost = new HttpPost("http://" + candidate.internalipaddress
-				+ "/api/");
+		HttpParams httpParameters = new BasicHttpParams();
+		// Set the timeout in milliseconds until a connection is established.
+		// The default value is zero, that means the timeout is not used. 
+		int timeoutConnection = 300;
+		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+		// Set the default socket timeout (SO_TIMEOUT) 
+		// in milliseconds which is the timeout for waiting for data.
+		int timeoutSocket = 500;
+		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		
+		HttpGet httpGet = new HttpGet("http://" + candidate.internalipaddress
+				+ "/api/"+username+"/lights/1");
 
 		try {
-			
-			RegistrationRequest request = new RegistrationRequest();
-			request.username = "asdf";//username; 
-			request.devicetype = "asdf";//deviceType;
-			String registrationRequest = gson.toJson(request);
+			HttpResponse response = client.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
 
-			StringEntity se = new StringEntity(registrationRequest);
-
-			// sets the post request as the resulting string
-			httppost.setEntity(se);
-			// sets a request header so the page receiving the request
-			// will know what to do with it
-			httppost.setHeader("Accept", "application/json");
-			httppost.setHeader("Content-type", "application/json");
-
-			// execute HTTP post request
-			HttpResponse response = httpclient.execute(httppost);
-
-			// analyze the response
-			String responseString = EntityUtils.toString(response
-					.getEntity());
-			responseString = responseString.substring(1,
-					responseString.length() - 1);// pull off the outer
-													// brackets
-
-			RegistrationResponse responseObject = gson.fromJson(
-					responseString, RegistrationResponse.class);
-			if (responseObject.success != null)
+			Log.e("api discovery response code:", ""+statusCode);
+			if (statusCode == 200) {
 				return candidate;
-
-		} catch (ClientProtocolException e) {
-
-			// TODO Auto-generated catch block
+			}
+		} catch (SocketTimeoutException e){
+		    e.printStackTrace();
+		}
+		catch (ConnectTimeoutException e){
+		    e.printStackTrace();
+		}catch (ClientProtocolException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
-
-			// TODO Auto-generated catch block
-		} catch (java.lang.IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (java.lang.ArrayIndexOutOfBoundsException e) {
 			// TODO deal with null IP from getBridge
 		}
-		
+
 		return null;
 	}
 
