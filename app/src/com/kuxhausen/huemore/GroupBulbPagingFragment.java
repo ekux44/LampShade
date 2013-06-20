@@ -49,9 +49,9 @@ public class GroupBulbPagingFragment extends Fragment {
 	}
 	
 	public void onSelected(Integer[] bulbNum, String name, GroupsListFragment groups, BulbsFragment bulbs){
-		if(groups == groupsListFragment)
+		if(groups == groupsListFragment && bulbsFragment !=null && groupsListFragment!=null)
 			bulbsFragment.invalidateSelection();
-		else if(bulbs == bulbsFragment)
+		else if(bulbs == bulbsFragment && bulbsFragment !=null && groupsListFragment!=null)
 			groupsListFragment.invalidateSelection();
 		
 		((MainActivity)this.getActivity()).onGroupBulbSelected(bulbNum, name);

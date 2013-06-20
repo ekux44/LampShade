@@ -328,6 +328,8 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void onGroupBulbSelected(Integer[] bulb, String name) {
+		if(bulb == null || name ==null)
+			return;
 		bulbS = bulb;
 		groupS = name;
 		// Capture the article fragment from the activity layout
