@@ -25,7 +25,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.state.api.Bridge;
@@ -34,7 +33,6 @@ import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
-	private Context cont;
 	private OnHubFoundListener mResultListener;
 	Gson gson = new Gson();
 	
@@ -45,8 +43,7 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 		public void onHubFoundResult(Bridge[] bridges);
 	}
 
-	public HubSearch(Activity parrentActivity,	OnHubFoundListener resultListener) {
-		cont = parrentActivity;
+	public HubSearch(OnHubFoundListener resultListener) {
 		mResultListener = resultListener;
 	}
 
@@ -73,9 +70,7 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
 
-			Log.e("api discovery response code:", ""+statusCode);
 			if (statusCode == 200) {
-
 				HttpEntity entity = response.getEntity();
 				InputStream content = entity.getContent();
 				BufferedReader reader = new BufferedReader(
@@ -107,11 +102,9 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
 	@Override
 	protected Bridge[] doInBackground(Void... voids) {
-		Log.e("asdf","doInBackground");
 		
 		Bridge[] result = new Bridge[0];
 		result = getBridgesAPI();
-		Log.e("asdf", "getBridgeAPI");
 		if(result!=null)
 			return result;
 		ArrayList<Bridge> results = new ArrayList<Bridge>();
@@ -123,12 +116,11 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 		// Set the default socket timeout (SO_TIMEOUT) 
 		// in milliseconds which is the timeout for waiting for data.
-		int timeoutSocket = 200;
+		int timeoutSocket = 160;
 		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 		
 		for(int i = 0; i<256; i++){
-			Log.e("asdf",""+i);
 			
 			if(this.isCancelled())
 				i=256;
@@ -139,7 +131,6 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 		}
 		result = results.toArray(new Bridge[0]);
 		return result;
-		
 		
 	}
 	
@@ -160,7 +151,6 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
 
-			Log.e("api discovery response code:", ""+statusCode);
 			if (statusCode == 200) {
 				return candidate;
 			}
@@ -179,7 +169,8 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
 		return null;
 	}
-
+	
+	
 	@Override
 	protected void onPostExecute(Bridge[] bridges) {
 		mResultListener.onHubFoundResult(bridges);

@@ -4,11 +4,14 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -48,14 +51,25 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 		builder.setView(discoverHubView);
 		progressBar = (ProgressBar) discoverHubView
 				.findViewById(R.id.progressBar1);
-		hubSearch = new HubSearch(this.getActivity(), this);
-		hubSearch.execute();
+		
+		startDiscovery();
 		Log.e("asdf", "hubSearchStarted");
 		
 		// Create the AlertDialog object and return it
 		return builder.create();
 	}
 
+	 @TargetApi(11)
+	 public void startDiscovery() {
+		 hubSearch = new HubSearch(this);
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    	hubSearch.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	    }
+	    else {
+	      hubSearch.execute();
+	    }
+	  }
+	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -71,6 +85,7 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onHubFoundResult(Bridge[] bridges) {
+		Log.e("asdf", "onHubFoundResult");
 		if(bridges!=null && bridges.length>0){
 			RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 			Bundle args = new Bundle();
@@ -78,14 +93,11 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 			Log.e("asdf", gson.toJson(bridges));
 			rwhdf.setArguments(args);
 			rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-
-			dismiss();
-
 		}else{
 			RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
 			rfdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			dismiss();
 		}
+		dismiss();
 	}
 
 }
