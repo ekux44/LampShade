@@ -10,10 +10,16 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class GroupBulbPagingFragment extends Fragment {
+public class GroupBulbPagingFragment extends SherlockFragment {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -24,7 +30,7 @@ public class GroupBulbPagingFragment extends Fragment {
 	 * memory and is a best practice when allowing navigation between objects in
 	 * a potentially large collection.
 	 */
-	GroupBulbPagerAdapter mGroupMoodPagerAdapter;
+	GroupBulbPagerAdapter mGroupBulbPagerAdapter;
 
 	private static final int GROUP_LOCATION = 1;
 	private static final int BULB_LOCATION = 0;
@@ -75,21 +81,38 @@ public class GroupBulbPagingFragment extends Fragment {
 		// ViewPager and its adapters use support library fragments, so we must
 		// use
 		// getSupportFragmentManager.
-		mGroupMoodPagerAdapter = new GroupBulbPagerAdapter(this);
+		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-		mViewPager.setAdapter(mGroupMoodPagerAdapter);
+		mViewPager.setAdapter(mGroupBulbPagerAdapter);
 		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)) {
-			mViewPager.setCurrentItem(GROUP_LOCATION);
+			if (mViewPager.getCurrentItem() != GROUP_LOCATION)
+				mViewPager.setCurrentItem(GROUP_LOCATION);
+		} else {
+			if (mViewPager.getCurrentItem() != BULB_LOCATION)
+				mViewPager.setCurrentItem(BULB_LOCATION);
 		}
+	
+		setHasOptionsMenu(true);
 		return myView;
 	}
 	
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		((SherlockListFragment)mGroupBulbPagerAdapter.getItem(mViewPager.getCurrentItem())).onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return ((SherlockListFragment)mGroupBulbPagerAdapter.getItem(mViewPager.getCurrentItem())).onOptionsItemSelected(item);
+	}
+	
+	
+	@Override
 	public void onResume(){
 		super.onResume();
-		parrentActivity.setTitle(R.string.app_name);
+		getSherlockActivity().getSupportActionBar().setTitle(R.string.app_name);
 	}
 	
 	@Override

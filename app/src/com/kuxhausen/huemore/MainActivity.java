@@ -14,11 +14,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
@@ -42,7 +44,7 @@ import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
  * @author Eric Kuxhausen
  * 
  */
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends SherlockFragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsListFragment.OnMoodSelectedListener {
 
@@ -57,6 +59,8 @@ public class MainActivity extends FragmentActivity implements
 	private NfcAdapter nfcAdapter;
 	SharedPreferences settings;
 	Gson gson = new Gson();
+	
+	
 	
 
 	/** Called when the activity is first created. */
@@ -260,14 +264,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 	};
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void initializeActionBar(Boolean value) {
-		try {
-			this.getActionBar().setDisplayHomeAsUpEnabled(value);
-		} catch (Error e) {
-		}
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + ","
@@ -364,11 +360,8 @@ public class MainActivity extends FragmentActivity implements
 			transaction.commit();
 			transaction
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				initializeActionBar(true);
-
-			}
+			
+			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
 	}
@@ -383,9 +376,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			initializeActionBar(false);
-		}
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 
 	private void moveToGroupBulb() {
@@ -474,7 +465,7 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main, menu);
 		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS) {
 			//has pro version

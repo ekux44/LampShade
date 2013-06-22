@@ -3,7 +3,7 @@
     <item
         android:id="@+id/action_add"
         android:icon="@drawable/content_new"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/actionmenu_new_group"/>
 
 </menu>

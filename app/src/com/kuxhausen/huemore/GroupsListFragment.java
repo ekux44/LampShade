@@ -15,9 +15,10 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,13 +29,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.kuxhausen.huemore.GroupBulbPagingFragment.OnBulbGroupSelectedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class GroupsListFragment extends ListFragment implements OnClickListener,
+public class GroupsListFragment extends SherlockListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
 	// Identifies a particular Loader being used in this component
@@ -43,8 +45,7 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 	public TextView selected, longSelected; // updated on long click
 	public int selectedPos = -1;
 	private GroupBulbPagingFragment gbpfCallback;
-	
-	
+		
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -76,11 +77,15 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 
 		LinearLayout headingRow = (LinearLayout) myView
 				.findViewById(R.id.showOnLandScape);
-		if (headingRow.getVisibility() == View.GONE)
-			setHasOptionsMenu(true);
+		setHasOptionsMenu(true);	
 		return myView;
 	}
-
+	@Override
+	public void onResume(){
+		super.onResume();
+		this.setHasOptionsMenu(true);
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -93,12 +98,13 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 			break;
 		}
 	}
-
+	
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.action_group, menu);
-	}
-
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.action_group, menu);
+    }
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -146,12 +152,12 @@ public class GroupsListFragment extends ListFragment implements OnClickListener,
 		if (longSelected.getText().equals(PreferencesKeys.ALL)) {
 			return;
 		}
-		MenuInflater inflater = this.getActivity().getMenuInflater();
+		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_group, menu);
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(android.view.MenuItem item) {
 
 		if (longSelected == null)
 			return false;

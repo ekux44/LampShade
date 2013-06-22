@@ -13,9 +13,10 @@ import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -26,12 +27,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class MoodsListFragment extends ListFragment implements OnClickListener,
+public class MoodsListFragment extends SherlockListFragment implements OnClickListener,
 		LoaderManager.LoaderCallbacks<Cursor> {
 	OnMoodSelectedListener mMoodCallback;
 
@@ -79,8 +81,7 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 
 		LinearLayout headingRow = (LinearLayout) myView
 				.findViewById(R.id.showOnLandScape);
-		if (headingRow.getVisibility() == View.GONE)
-			setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 		return myView;
 	}
 
@@ -135,22 +136,23 @@ public class MoodsListFragment extends ListFragment implements OnClickListener,
 		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
 	}
-
+	
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
+		
 		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 		if (longSelected.getText().equals(PreferencesKeys.OFF)||longSelected.getText().equals(PreferencesKeys.ON)||longSelected.getText().equals(PreferencesKeys.RANDOM)) {
 			return;
 		}
-		MenuInflater inflater = this.getActivity().getMenuInflater();
+		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_mood, menu);
 	}
-
+	
 	@Override
-	public boolean onContextItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(android.view.MenuItem item) {
 
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();

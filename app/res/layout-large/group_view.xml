@@ -18,7 +18,6 @@
 
         <TextView
             android:id="@+id/TextView01"
-            style="@style/AppTheme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

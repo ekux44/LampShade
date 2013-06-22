@@ -11,7 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
@@ -19,7 +25,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class MoodManualPagingFragment extends Fragment implements
+public class MoodManualPagingFragment extends SherlockFragment implements
 		OnAttributeListReturnedListener {
 
 	/**
@@ -120,16 +126,29 @@ public class MoodManualPagingFragment extends Fragment implements
 				brightness = progress;
 			}
 		});
-
+		setHasOptionsMenu(true);
 		return myView;
 	}
 
 	
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		if(mViewPager.getCurrentItem()==MOOD_LOCATION)
+			((SherlockListFragment)mMoodManualPagerAdapter.getItem(MOOD_LOCATION)).onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(mViewPager.getCurrentItem()==MOOD_LOCATION)
+			return ((SherlockListFragment)mMoodManualPagerAdapter.getItem(mViewPager.getCurrentItem())).onOptionsItemSelected(item);
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
 		
-		parrentActivity.setTitle(parrentActivity.groupS);
+		getSherlockActivity().getSupportActionBar().setTitle(parrentActivity.groupS);
 		
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
 				parrentActivity, parrentActivity.bulbS, this);
