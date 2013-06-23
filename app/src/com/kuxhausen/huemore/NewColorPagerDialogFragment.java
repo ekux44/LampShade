@@ -73,7 +73,8 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle(getActivity().getString(R.string.actionmenu_new_color));
+		this.getDialog().setTitle(
+				getActivity().getString(R.string.actionmenu_new_color));
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
@@ -91,10 +92,10 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 	public static class NewMoodPagerAdapter extends FragmentPagerAdapter {
 
 		android.support.v4.app.Fragment frag;
-		
+
 		public NewMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-			frag= fragment;
+			frag = fragment;
 		}
 
 		@Override
@@ -104,7 +105,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			switch (i) {
 			case 0:
 				newColorFragments[i] = new ColorWheelFragment();
-				((ColorWheelFragment)newColorFragments[i]).hideColorLoop();
+				((ColorWheelFragment) newColorFragments[i]).hideColorLoop();
 				return (Fragment) newColorFragments[i];
 			case 1:
 				newColorFragments[i] = new NewColorTempFragment();
@@ -125,7 +126,8 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			case 0:
 				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
 			case 1:
-				return frag.getActivity().getString(R.string.cap_color_temp_mode);
+				return frag.getActivity().getString(
+						R.string.cap_color_temp_mode);
 			}
 			return "";
 		}

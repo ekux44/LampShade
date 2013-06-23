@@ -54,7 +54,6 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 			return null;
 
 		BulbAttributes[] result = new BulbAttributes[bulbs.length];
-		
 
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager

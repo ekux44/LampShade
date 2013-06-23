@@ -29,12 +29,13 @@ public class TransmitGroupMood extends AsyncTask<Void, Void, Integer> {
 	private String[] moods;
 	private MainActivity tracker;
 
-	public TransmitGroupMood(Context context, Integer[] bulbS, String[] moodS, MainActivity ma) {
+	public TransmitGroupMood(Context context, Integer[] bulbS, String[] moodS,
+			MainActivity ma) {
 		cont = context;
 		bulbs = bulbS;
 		moods = moodS;
-		
-		if(ma!=null){
+
+		if (ma != null) {
 			tracker = ma;
 			tracker.inFlight.add(this);
 		}
@@ -98,7 +99,7 @@ public class TransmitGroupMood extends AsyncTask<Void, Void, Integer> {
 
 	@Override
 	protected void onPostExecute(Integer result) {
-		if(tracker!=null)
+		if (tracker != null)
 			tracker.inFlight.remove(this);
 	}
 

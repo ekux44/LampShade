@@ -38,8 +38,9 @@ public class EditGroupDialogFragment extends DialogFragment implements
 	EditText nameEditText;
 	Bulb[] bulbArray;
 	HashMap<String, Integer> nameToBulb;
-	Boolean[] preChecked; String initialName;
-	
+	Boolean[] preChecked;
+	String initialName;
+
 	private MainActivity parrentActivity;
 
 	@Override
@@ -53,12 +54,12 @@ public class EditGroupDialogFragment extends DialogFragment implements
 		} catch (ClassCastException e) {
 		}
 	}
-	
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		bulbNameList = new ArrayList<String>();
 		nameToBulb = new HashMap<String, Integer>();
-		
+
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -75,38 +76,43 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
-		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this, parrentActivity);
+		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this,
+				parrentActivity);
 		pushGroupMood.execute();
-		
+
 		Bundle args = this.getArguments();
-		if(args!=null && args.containsKey(InternalArguments.GROUP_NAME)){
+		if (args != null && args.containsKey(InternalArguments.GROUP_NAME)) {
 			String groupName = args.getString(InternalArguments.GROUP_NAME);
-			
-			
+
 			// Look up bulbs for that mood from database
 			String[] groupColumns = { GroupColumns.BULB };
 			String[] gWhereClause = { groupName };
-			Cursor groupCursor = this.getActivity().getContentResolver().query(
-					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																		// default
-																		// content
-																		// URI
-																		// for the
-																		// provider.
-					groupColumns, // Return the note ID and title for each note.
-					GroupColumns.GROUP + "=?", // selection clause
-					gWhereClause, // selection clause args
-					null // Use the default sort order.
+			Cursor groupCursor = this.getActivity().getContentResolver()
+					.query(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use
+																			// the
+																			// default
+																			// content
+																			// URI
+																			// for
+																			// the
+																			// provider.
+							groupColumns, // Return the note ID and title for
+											// each note.
+							GroupColumns.GROUP + "=?", // selection clause
+							gWhereClause, // selection clause args
+							null // Use the default sort order.
 					);
 
 			ArrayList<Integer> groupStates = new ArrayList<Integer>();
 			while (groupCursor.moveToNext()) {
 				groupStates.add(groupCursor.getInt(0));
 			}
-			Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+			Integer[] bulbS = groupStates.toArray(new Integer[groupStates
+					.size()]);
 			preChecked = new Boolean[50];
-			for(int checkedSpot : bulbS){
-				preChecked[checkedSpot-1]=true;//have to account by the off by one in bulb Numbers
+			for (int checkedSpot : bulbS) {
+				preChecked[checkedSpot - 1] = true;// have to account by the off
+													// by one in bulb Numbers
 			}
 			nameEditText.setText(groupName);
 			initialName = groupName;
@@ -117,23 +123,23 @@ public class EditGroupDialogFragment extends DialogFragment implements
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
-						//if there was a previous mood we're editing, remove it
-						if(initialName!=null){
+						// if there was a previous mood we're editing, remove it
+						if (initialName != null) {
 							String groupSelect = GroupColumns.GROUP + "=?";
 							String[] groupArg = { initialName };
-							getActivity().getContentResolver().delete(
-								DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-								groupSelect, groupArg);
+							getActivity()
+									.getContentResolver()
+									.delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
+											groupSelect, groupArg);
 						}
-						
-						
+
 						ArrayList<Integer> checkedBulbs = new ArrayList<Integer>();
 						SparseBooleanArray set = bulbsListView
 								.getCheckedItemPositions();
 						for (int i = 0; i < rayAdapter.getCount(); i++) {
 							if (set.get(i)) {
-								checkedBulbs.add(nameToBulb.get(
-										(rayAdapter.getItem(i))));
+								checkedBulbs.add(nameToBulb.get((rayAdapter
+										.getItem(i))));
 							}
 						}
 
@@ -205,9 +211,10 @@ public class EditGroupDialogFragment extends DialogFragment implements
 			bulb.number = i + 1;
 			nameToBulb.put(bulb.name, bulb.number);
 			rayAdapter.add(bulb.name);
-			if(preChecked!=null&&preChecked[i]!=null && preChecked[i]==true)
+			if (preChecked != null && preChecked[i] != null
+					&& preChecked[i] == true)
 				bulbsListView.setItemChecked(i, true);
-				
+
 		}
 
 	}

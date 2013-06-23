@@ -90,7 +90,6 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 				jSon = "[" + jSon.substring(1, jSon.length() - 1) + "]";
 				jSon = jSon.replaceAll("\"[:digit:]+\":", "");
 
-				
 				returnOutput = gson.fromJson(jSon, Bulb[].class);
 			} else {
 

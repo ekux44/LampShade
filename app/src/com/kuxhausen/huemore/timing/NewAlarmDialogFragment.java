@@ -350,12 +350,12 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		// ensure transition starts ahead to culminate at the specified time
 		projectedTime.add(Calendar.SECOND, -as.transitiontime / 10);
 
-		if(as.isRepeating()){
+		if (as.isRepeating()) {
 			long[] l = new long[7];
-			for(int i = 0; i<7; i++)
-				l[i]= projectedTime.getTimeInMillis();
+			for (int i = 0; i < 7; i++)
+				l[i] = projectedTime.getTimeInMillis();
 			as.setRepeatingTimes(l);
-		}else{
+		} else {
 			as.setTime(projectedTime.getTimeInMillis());
 		}
 		AlarmReciever.createAlarms(getActivity(), as);

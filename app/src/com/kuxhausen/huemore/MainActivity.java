@@ -52,9 +52,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsListFragment.OnMoodSelectedListener {
 
-	public ArrayList<AsyncTask<?,?,?>> inFlight = new ArrayList<AsyncTask<?,?,?>>();
-	
-	
+	public ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
+
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	Integer[] bulbS;
 	String mood;
@@ -66,15 +65,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private NfcAdapter nfcAdapter;
 	SharedPreferences settings;
 	Gson gson = new Gson();
-	
-	
-	
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.hue_more);
 		m = this;
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -110,24 +106,27 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 
 		}
-		
+
 		// (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ?
 		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
-		settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (!settings.contains(PreferencesKeys.TWO_POINT_TWO_UPDATE)) {
 			databaseHelper.updatedTwoPointOnePointOne();
-			// Run this before all the other updates, as it launches the update dialog, which needs to know update history
-			if(settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE) &&( settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS)){
+			// Run this before all the other updates, as it launches the update
+			// dialog, which needs to know update history
+			if (settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE)
+					&& (settings.getInt(PreferencesKeys.BULBS_UNLOCKED,
+							PreferencesKeys.ALWAYS_FREE_BULBS) > PreferencesKeys.ALWAYS_FREE_BULBS)) {
 				VersionHistoryDialogFragment vhdf = new VersionHistoryDialogFragment();
-				vhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+				vhdf.show(getSupportFragmentManager(),
+						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			}
 			// Mark no longer update two point two in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_TWO_UPDATE, false);
 			edit.commit();
 		}
-				
+
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			databaseHelper.initialPopulate();// initialize database
 
@@ -164,12 +163,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			databaseHelper.updatedTwoPointOnePointOne();
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE, false);
+			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE,
+					false);
 			edit.commit();
 		}
 
-		
-		
 		if (!settings.contains(PreferencesKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false);
@@ -184,7 +182,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
 			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-			dhdf.show(this.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			dhdf.show(this.getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
 		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
@@ -209,11 +208,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 				}
 			}
 		});
-		
+
 		Bundle b = this.getIntent().getExtras();
-		if(b!=null && b.containsKey(InternalArguments.PROMPT_UPGRADE)&&b.getBoolean(InternalArguments.PROMPT_UPGRADE)){
+		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
+				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
 			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			unlocks.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 	}
 
@@ -322,7 +323,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onDestroy() {
-		for(AsyncTask<?,?,?> task : inFlight)
+		for (AsyncTask<?, ?, ?> task : inFlight)
 			task.cancel(true);
 		if (mPlayHelper != null)
 			mPlayHelper.dispose();
@@ -364,22 +365,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 			transaction.addToBackStack(null);
 
 			// Commit the transaction
-			transaction.commitAllowingStateLoss();//wtf, why can't I use .commit() w/o error every other launch?
+			transaction.commitAllowingStateLoss();// wtf, why can't I use
+													// .commit() w/o error every
+													// other launch?
 			transaction
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-			
+
 			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
 	}
 
 	@Override
-	public void onPause(){
+	public void onPause() {
 		super.onPause();
-		//make sure moved back to group bulb when we come back to the app
+		// make sure moved back to group bulb when we come back to the app
 		moveToGroupBulb();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
@@ -421,38 +424,37 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
-		String[] moodS=null;
-		if(mood.equals(PreferencesKeys.RANDOM))
-		{
+		String[] moodS = null;
+		if (mood.equals(PreferencesKeys.RANDOM)) {
 			BulbState randomState = new BulbState();
-			randomState.on=true;
-			randomState.hue=(int)(65535*Math.random());
-			randomState.sat=(short)(255*(Math.random()*5.+.25));
+			randomState.on = true;
+			randomState.hue = (int) (65535 * Math.random());
+			randomState.sat = (short) (255 * (Math.random() * 5. + .25));
 			moodS = new String[1];
-			moodS[0]=gson.toJson(randomState);
-		}else{
-		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { mood };
-		Cursor cursor = getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
-				);
+			moodS[0] = gson.toJson(randomState);
+		} else {
+			String[] moodColumns = { MoodColumns.STATE };
+			String[] mWereClause = { mood };
+			Cursor cursor = getContentResolver().query(
+					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
+																	// default
+																	// content
+																	// URI
+																	// for the
+																	// provider.
+					moodColumns, // Return the note ID and title for each note.
+					MoodColumns.MOOD + "=?", // selection clause
+					mWereClause, // election clause args
+					null // Use the default sort order.
+					);
 
-		ArrayList<String> moodStates = new ArrayList<String>();
-		while (cursor.moveToNext()) {
-			moodStates.add(cursor.getString(0));
+			ArrayList<String> moodStates = new ArrayList<String>();
+			while (cursor.moveToNext()) {
+				moodStates.add(cursor.getString(0));
+			}
+			moodS = moodStates.toArray(new String[moodStates.size()]);
 		}
-		moodS = moodStates.toArray(new String[moodStates.size()]);
-		}
-		
-		
+
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
 				moodS, this);
 		pushGroupMood.execute();
@@ -466,33 +468,34 @@ public class MainActivity extends SherlockFragmentActivity implements
 			MenuItem unlocksItem = menu.findItem(R.id.action_add_both);
 			unlocksItem.setEnabled(false);
 			unlocksItem.setVisible(false);
-			
+
 		}
-		
-		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS) {
-			//has pro version
-			
-			//hide unlocks button
+
+		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED,
+				PreferencesKeys.ALWAYS_FREE_BULBS) > PreferencesKeys.ALWAYS_FREE_BULBS) {
+			// has pro version
+
+			// hide unlocks button
 			MenuItem unlocksItem = menu.findItem(R.id.action_unlocks);
 			unlocksItem.setEnabled(false);
 			unlocksItem.setVisible(false);
-			
+
 			if (nfcAdapter == null) {
 				// hide nfc link if nfc not supported
 				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
 				nfcItem.setEnabled(false);
 				nfcItem.setVisible(false);
 			}
-		}else{
+		} else {
 			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
 			nfcItem.setEnabled(false);
 			nfcItem.setVisible(false);
-			
+
 			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
 			alarmItem.setEnabled(false);
 			alarmItem.setVisible(false);
 		}
-		
+
 		return true;
 	}
 
@@ -504,26 +507,33 @@ public class MainActivity extends SherlockFragmentActivity implements
 			moveToGroupBulb();
 			return true;
 		case R.id.action_register_with_hub:
-			//RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
-			//rwhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			// RegisterWithHubDialogFragment rwhdf = new
+			// RegisterWithHubDialogFragment();
+			// rwhdf.show(getSupportFragmentManager(),
+			// InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-			dhdf.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			dhdf.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:
 			SettingsDialogFragment settings = new SettingsDialogFragment();
-			settings.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			settings.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_add_both:
 			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
-			addBoth.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			addBoth.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_unlocks:
 			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			unlocks.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_nfc:
 			if (!nfcAdapter.isEnabled()) {
-				// startActivity(new Intent(SettingsDialogFragment.ACTION_NFC_SETTINGS));
+				// startActivity(new
+				// Intent(SettingsDialogFragment.ACTION_NFC_SETTINGS));
 				Toast.makeText(this, this.getString(R.string.nfc_disabled),
 						Toast.LENGTH_SHORT).show();
 

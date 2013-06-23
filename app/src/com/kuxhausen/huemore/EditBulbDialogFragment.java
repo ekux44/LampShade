@@ -40,13 +40,13 @@ public class EditBulbDialogFragment extends DialogFragment {
 	int bulbNumber;
 	Gson gson = new Gson();
 	BulbsFragment bulbF;
-	
+
 	private MainActivity parrentActivity;
-	
-	public void setBulbsFragment(BulbsFragment bf){
-		bulbF=bf;
+
+	public void setBulbsFragment(BulbsFragment bf) {
+		bulbF = bf;
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -58,23 +58,24 @@ public class EditBulbDialogFragment extends DialogFragment {
 		} catch (ClassCastException e) {
 		}
 	}
-	
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		
+
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View editBulbDialogView = inflater.inflate(R.layout.edit_bulb_dialog,
 				null);
-		
+
 		builder.setView(editBulbDialogView);
 
-		nameEditText = (EditText) editBulbDialogView.findViewById(R.id.editText1);
+		nameEditText = (EditText) editBulbDialogView
+				.findViewById(R.id.editText1);
 
 		Bundle args = this.getArguments();
-		if(args!=null && args.containsKey(InternalArguments.BULB_NAME)){
+		if (args != null && args.containsKey(InternalArguments.BULB_NAME)) {
 			String groupName = args.getString(InternalArguments.BULB_NAME);
 			bulbNumber = args.getInt(InternalArguments.BULB_NUMBER);
 			nameEditText.setText(groupName);
@@ -83,11 +84,12 @@ public class EditBulbDialogFragment extends DialogFragment {
 		BulbState bs = new BulbState();
 		bs.alert = "lselect";
 		bs.on = true;
-		String[] moodS = {gson.toJson(bs)};
-		Integer[] bulbS = {bulbNumber};
-		TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS, parrentActivity);
+		String[] moodS = { gson.toJson(bs) };
+		Integer[] bulbS = { bulbNumber };
+		TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS,
+				moodS, parrentActivity);
 		tgm.execute();
-		
+
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					@Override
@@ -95,16 +97,18 @@ public class EditBulbDialogFragment extends DialogFragment {
 
 						BulbAttributes bAttrs = new BulbAttributes();
 						bAttrs.name = nameEditText.getText().toString();
-						SetBulbAttributes sba = new SetBulbAttributes(getActivity(), bulbNumber, bAttrs);
+						SetBulbAttributes sba = new SetBulbAttributes(
+								getActivity(), bulbNumber, bAttrs);
 						sba.execute();
-						
+
 						BulbState bs = new BulbState();
 						bs.alert = "none";
-						String[] moodS = {gson.toJson(bs)};
-						Integer[] bulbS = {bulbNumber};
-						TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS, parrentActivity);
+						String[] moodS = { gson.toJson(bs) };
+						Integer[] bulbS = { bulbNumber };
+						TransmitGroupMood tgm = new TransmitGroupMood(
+								getActivity(), bulbS, moodS, parrentActivity);
 						tgm.execute();
-						
+
 						bulbF.refreshList();
 					}
 				}).setNegativeButton(R.string.cancel,

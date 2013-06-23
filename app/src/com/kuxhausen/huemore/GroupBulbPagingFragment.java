@@ -37,7 +37,7 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 
 	private static GroupsListFragment groupsListFragment;
 	private static BulbsFragment bulbsFragment;
-	
+
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
@@ -53,16 +53,19 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 		public void onGroupBulbSelected(Integer[] bulbNum, String name);
 
 	}
-	
-	public void onSelected(Integer[] bulbNum, String name, GroupsListFragment groups, BulbsFragment bulbs){
-		if(groups == groupsListFragment && bulbsFragment !=null && groupsListFragment!=null)
+
+	public void onSelected(Integer[] bulbNum, String name,
+			GroupsListFragment groups, BulbsFragment bulbs) {
+		if (groups == groupsListFragment && bulbsFragment != null
+				&& groupsListFragment != null)
 			bulbsFragment.invalidateSelection();
-		else if(bulbs == bulbsFragment && bulbsFragment !=null && groupsListFragment!=null)
+		else if (bulbs == bulbsFragment && bulbsFragment != null
+				&& groupsListFragment != null)
 			groupsListFragment.invalidateSelection();
-		
-		if(parrentActivity!=null)
-		parrentActivity.onGroupBulbSelected(bulbNum, name);
-		
+
+		if (parrentActivity != null)
+			parrentActivity.onGroupBulbSelected(bulbNum, name);
+
 	}
 
 	@Override
@@ -95,28 +98,30 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 			if (mViewPager.getCurrentItem() != BULB_LOCATION)
 				mViewPager.setCurrentItem(BULB_LOCATION);
 		}
-	
+
 		setHasOptionsMenu(true);
 		return myView;
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		((SherlockListFragment)mGroupBulbPagerAdapter.getItem(mViewPager.getCurrentItem())).onCreateOptionsMenu(menu, inflater);
+		((SherlockListFragment) mGroupBulbPagerAdapter.getItem(mViewPager
+				.getCurrentItem())).onCreateOptionsMenu(menu, inflater);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return ((SherlockListFragment)mGroupBulbPagerAdapter.getItem(mViewPager.getCurrentItem())).onOptionsItemSelected(item);
+		return ((SherlockListFragment) mGroupBulbPagerAdapter
+				.getItem(mViewPager.getCurrentItem()))
+				.onOptionsItemSelected(item);
 	}
-	
-	
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		getSherlockActivity().getSupportActionBar().setTitle(R.string.app_name);
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -129,7 +134,6 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 		}
 	}
 
-
 	/**
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
@@ -137,23 +141,23 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
 		GroupBulbPagingFragment frag;
-		
+
 		public GroupBulbPagerAdapter(GroupBulbPagingFragment fragment) {
 			super(fragment.getChildFragmentManager());
-			frag= fragment;
+			frag = fragment;
 		}
 
 		@Override
 		public Fragment getItem(int i) {
 			switch (i) {
 			case GROUP_LOCATION:
-				if(groupsListFragment==null){
+				if (groupsListFragment == null) {
 					groupsListFragment = new GroupsListFragment();
 					groupsListFragment.setSelectionListener(frag);
 				}
 				return groupsListFragment;
 			case BULB_LOCATION:
-				if(bulbsFragment == null){
+				if (bulbsFragment == null) {
 					bulbsFragment = new BulbsFragment();
 					bulbsFragment.setSelectionListener(frag);
 				}

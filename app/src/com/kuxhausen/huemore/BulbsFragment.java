@@ -39,16 +39,16 @@ import com.kuxhausen.huemore.state.api.Bulb;
 public class BulbsFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor>,
 		GetBulbList.OnBulbListReturnedListener {
-	
+
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	// public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
 	private GroupBulbPagingFragment gbpfCallback;
-	
+
 	private MainActivity parrentActivity;
-	
+
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
 	Bulb[] bulbArray;
@@ -75,14 +75,16 @@ public class BulbsFragment extends SherlockListFragment implements
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
 				android.R.layout.simple_list_item_1, bulbNameList);
 		setListAdapter(rayAdapter);
-		
+
 		refreshList();
-		
+
 		((MainActivity) getActivity()).bulbListenerFragment = this;
 		return myView;
 	}
-	public void refreshList(){
-		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this, parrentActivity);
+
+	public void refreshList() {
+		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this,
+				parrentActivity);
 		pushGroupMood.execute();
 
 	}
@@ -98,7 +100,7 @@ public class BulbsFragment extends SherlockListFragment implements
 		} catch (ClassCastException e) {
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -107,30 +109,32 @@ public class BulbsFragment extends SherlockListFragment implements
 		// list item
 		// (We do this during onStart because at the point the listview is
 		// available.)
-		//if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
-			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		//}
+		// if (getFragmentManager().findFragmentById(R.id.groups_fragment) !=
+		// null) {
+		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		// }
 	}
 
-	public void setSelectionListener(GroupBulbPagingFragment gbpf){
+	public void setSelectionListener(GroupBulbPagingFragment gbpf) {
 		gbpfCallback = gbpf;
 	}
-	
+
 	public void invalidateSelection() {
 		// Set the previous selected item as checked to be unhighlighted when in
 		// two-pane layout
 		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
 	}
-	
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		
-		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
+
+		android.view.MenuInflater inflater = this.getActivity()
+				.getMenuInflater();
 		inflater.inflate(R.menu.context_bulb, menu);
 	}
 
@@ -147,12 +151,14 @@ public class BulbsFragment extends SherlockListFragment implements
 		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here
 			EditBulbDialogFragment ngdf = new EditBulbDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.BULB_NAME, (String) (longSelected).getText());
-			args.putInt(InternalArguments.BULB_NUMBER, 1+rayAdapter.getPosition((String) (longSelected).getText()));
+			args.putString(InternalArguments.BULB_NAME,
+					(String) (longSelected).getText());
+			args.putInt(InternalArguments.BULB_NUMBER, 1 + rayAdapter
+					.getPosition((String) (longSelected).getText()));
 			ngdf.setArguments(args);
 			ngdf.setBulbsFragment(this);
-			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			
+			ngdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 		default:
 			return super.onContextItemSelected(item);
@@ -163,10 +169,11 @@ public class BulbsFragment extends SherlockListFragment implements
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		selected = ((TextView) (v));
 		selectedPos = position;
-		
+
 		// Notify the parent activity of selected item
 		Integer[] iPos = { position + 1 };
-		gbpfCallback.onSelected(iPos, selected.getText().toString(),null, this);
+		gbpfCallback
+				.onSelected(iPos, selected.getText().toString(), null, this);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);

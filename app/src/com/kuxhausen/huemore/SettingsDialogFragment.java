@@ -17,8 +17,8 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class SettingsDialogFragment extends DialogFragment implements OnClickListener,
-		OnCheckedChangeListener {
+public class SettingsDialogFragment extends DialogFragment implements
+		OnClickListener, OnCheckedChangeListener {
 
 	SharedPreferences settings;
 	MainActivity ma;

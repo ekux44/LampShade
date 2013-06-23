@@ -63,18 +63,23 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						String ip = IPV4part1.getText().toString() + InternalArguments.IPV4dot
-								+ IPV4part2.getText().toString() + InternalArguments.IPV4dot
-								+ IPV4part3.getText().toString() + InternalArguments.IPV4dot
+						String ip = IPV4part1.getText().toString()
+								+ InternalArguments.IPV4dot
+								+ IPV4part2.getText().toString()
+								+ InternalArguments.IPV4dot
+								+ IPV4part3.getText().toString()
+								+ InternalArguments.IPV4dot
 								+ IPV4part4.getText().toString();
 						RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
 						Bundle args = new Bundle();
 						Bridge b = new Bridge();
 						b.internalipaddress = ip;
-						Bridge[] bRay = {b};
-						args.putString(InternalArguments.BRIDGES, gson.toJson(bRay));
+						Bridge[] bRay = { b };
+						args.putString(InternalArguments.BRIDGES,
+								gson.toJson(bRay));
 						rwhdf.setArguments(args);
-						rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+						rwhdf.show(getFragmentManager(),
+								InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 						dismiss();
 					}
@@ -84,7 +89,8 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-						rfdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+						rfdf.show(getFragmentManager(),
+								InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 						dismiss();
 					}
@@ -124,7 +130,8 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
-			rsdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			rsdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			// Add username and IP to preferences cache
 			SharedPreferences settings = PreferenceManager

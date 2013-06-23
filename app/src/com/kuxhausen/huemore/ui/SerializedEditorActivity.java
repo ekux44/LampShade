@@ -46,9 +46,8 @@ import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SerializedEditorActivity extends FragmentActivity implements
-	LoaderManager.LoaderCallbacks<Cursor> {
-	
-	
+		LoaderManager.LoaderCallbacks<Cursor> {
+
 	Context context;
 	Gson gson = new Gson();
 
@@ -58,14 +57,14 @@ public class SerializedEditorActivity extends FragmentActivity implements
 	private SeekBar brightnessBar;
 	private Spinner groupSpinner, moodSpinner;
 	private SimpleCursorAdapter groupDataSource, moodDataSource;
-	
+
 	private GroupMoodBrightness priorGMB;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = this;
-		
+
 		// We need to use a different list item layout for devices older than
 		// Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
@@ -195,27 +194,33 @@ public class SerializedEditorActivity extends FragmentActivity implements
 		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, moodS, null);
 		tgm.execute();
 	}
-	
-	public String getSerializedByNamePreview(){
+
+	public String getSerializedByNamePreview() {
 		GroupMoodBrightness gmb = new GroupMoodBrightness();
-		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
-		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString(); 
+		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText()
+				.toString();
+		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText()
+				.toString();
 		gmb.brightness = brightnessBar.getProgress();
-		return gmb.group +" -> "+gmb.mood+" @ "+((gmb.brightness*100)/255)+"%";
+		return gmb.group + " -> " + gmb.mood + " @ "
+				+ ((gmb.brightness * 100) / 255) + "%";
 	}
-	
-	public void setSerializedByName(String s){
+
+	public void setSerializedByName(String s) {
 		priorGMB = gson.fromJson(s, GroupMoodBrightness.class);
-				
+
 	}
-	public String getSerializedByName(){
+
+	public String getSerializedByName() {
 		GroupMoodBrightness gmb = new GroupMoodBrightness();
-		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
-		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString(); 
+		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText()
+				.toString();
+		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText()
+				.toString();
 		gmb.brightness = brightnessBar.getProgress();
-		return gson.toJson(gmb);	
+		return gson.toJson(gmb);
 	}
-	
+
 	public String getSerializedByValue() {
 		String url = "kuxhausen.com/HueMore/nfc?";
 

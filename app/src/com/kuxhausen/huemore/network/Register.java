@@ -33,7 +33,7 @@ public class Register extends AsyncTask<Void, Integer, String> {
 	private OnRegisterListener mResultListener;
 	private Bridge[] bridges;
 	Gson gson = new Gson();
-	
+
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
 	public interface OnRegisterListener {
@@ -46,12 +46,12 @@ public class Register extends AsyncTask<Void, Integer, String> {
 			String devicetype) {
 		cont = parrentActivity;
 		this.bridges = bRidges;
-	
+
 		mResultListener = resultListener;
 		username = userName;
 		deviceType = devicetype;
 	}
-	
+
 	@Override
 	protected String doInBackground(Void... voids) {
 		if (bridges == null)
@@ -62,7 +62,7 @@ public class Register extends AsyncTask<Void, Integer, String> {
 			HttpPost httppost = new HttpPost("http://" + b.internalipaddress
 					+ "/api/");
 
-			Log.e("asdf", "registrationAttempt:"+b.internalipaddress);
+			Log.e("asdf", "registrationAttempt:" + b.internalipaddress);
 			try {
 				RegistrationRequest request = new RegistrationRequest();
 				request.username = username;
@@ -84,12 +84,13 @@ public class Register extends AsyncTask<Void, Integer, String> {
 				// analyze the response
 				String responseString = EntityUtils.toString(response
 						.getEntity());
-				
-				Log.e("asdf", "responseString"+responseString);
-				
+
+				Log.e("asdf", "responseString" + responseString);
+
 				RegistrationResponse[] responseObject = gson.fromJson(
 						responseString, RegistrationResponse[].class);
-				if (responseObject.length >0 && responseObject[0].success != null)
+				if (responseObject.length > 0
+						&& responseObject[0].success != null)
 					return b.internalipaddress;
 
 			} catch (ClientProtocolException e) {

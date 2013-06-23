@@ -16,34 +16,40 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class EditActivity extends SerializedEditorActivity implements OnClickListener {
+public class EditActivity extends SerializedEditorActivity implements
+		OnClickListener {
 
-	//don't change value
+	// don't change value
 	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.EXTRA_BUNDLE_SERIALIZED_BY_NAME";
-	
+
 	private Button okayButton, cancelButton;
-	
+
 	Context context;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		//check full version unlocked
-			Bundle b = this.getIntent().getExtras();
-			if(b!=null && b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)&&b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).containsKey(EXTRA_BUNDLE_SERIALIZED_BY_NAME))
-			{
-				setSerializedByName(b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(EXTRA_BUNDLE_SERIALIZED_BY_NAME));
-			}
-			setContentView(R.layout.edit_automation);
-			super.onCreate(savedInstanceState);
-			
-			okayButton = (Button) this.findViewById(R.id.okay);
-			okayButton.setOnClickListener(this);
-			
-			cancelButton = (Button) this.findViewById(R.id.cancel);
-			cancelButton.setOnClickListener(this);
-		if(settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)<=PreferencesKeys.ALWAYS_FREE_BULBS){
+		// check full version unlocked
+		Bundle b = this.getIntent().getExtras();
+		if (b != null
+				&& b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)
+				&& b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)
+						.containsKey(EXTRA_BUNDLE_SERIALIZED_BY_NAME)) {
+			setSerializedByName(b.getBundle(
+					com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(
+					EXTRA_BUNDLE_SERIALIZED_BY_NAME));
+		}
+		setContentView(R.layout.edit_automation);
+		super.onCreate(savedInstanceState);
+
+		okayButton = (Button) this.findViewById(R.id.okay);
+		okayButton.setOnClickListener(this);
+
+		cancelButton = (Button) this.findViewById(R.id.cancel);
+		cancelButton.setOnClickListener(this);
+		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED,
+				PreferencesKeys.ALWAYS_FREE_BULBS) <= PreferencesKeys.ALWAYS_FREE_BULBS) {
 			Intent i = new Intent(this, MainActivity.class);
 			i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
 			startActivity(i);
@@ -51,13 +57,13 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 		}
 	}
 
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.okay:
 			Intent i = new Intent();
-			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, getSerializedByNamePreview());
+			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB,
+					getSerializedByNamePreview());
 			Bundle b = new Bundle();
 			b.putString(EXTRA_BUNDLE_SERIALIZED_BY_NAME, getSerializedByName());
 			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, b);
@@ -70,5 +76,5 @@ public class EditActivity extends SerializedEditorActivity implements OnClickLis
 			break;
 		}
 	}
-	
+
 }

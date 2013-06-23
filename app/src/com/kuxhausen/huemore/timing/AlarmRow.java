@@ -35,14 +35,14 @@ public class AlarmRow {
 	public String getTime() {
 		/** only hour and minute are valid **/
 		long time = 0;
-		if(aState.isRepeating()){
-			for(int i = 0; i< 7; i++)
-				if(aState.getRepeatingDays()[i])
+		if (aState.isRepeating()) {
+			for (int i = 0; i < 7; i++)
+				if (aState.getRepeatingDays()[i])
 					time = aState.getRepeatingTimes()[i];
-		}else{
+		} else {
 			time = aState.getTime();
 		}
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
 		// remember transition starts ahead to culminate at the specified time
@@ -55,7 +55,9 @@ public class AlarmRow {
 		String result = aState.group + " -> " + aState.mood;
 
 		if (aState.isRepeating()) {
-			result += "   "+ NewAlarmDialogFragment.repeatsToString(c, aState.getRepeatingDays());
+			result += "   "
+					+ NewAlarmDialogFragment.repeatsToString(c,
+							aState.getRepeatingDays());
 		}
 		return result;
 	}
@@ -64,12 +66,11 @@ public class AlarmRow {
 		if (aState.scheduledForFuture == null)
 			aState.scheduledForFuture = false;
 
-		
 		// if it's a non repeating alarm in the past, mark as unchecked
 		if (!aState.isRepeating()) {
 			Calendar scheduledTime = Calendar.getInstance();
 			scheduledTime.setTimeInMillis(aState.getTime());
-			if (scheduledTime.before(Calendar.getInstance())){
+			if (scheduledTime.before(Calendar.getInstance())) {
 				aState.scheduledForFuture = false;
 				return false;
 			}

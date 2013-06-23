@@ -30,6 +30,7 @@ public class ColorWheelFragment extends Fragment implements
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
+
 		float getSaturation();
 	}
 
@@ -49,14 +50,12 @@ public class ColorWheelFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
-		
 		hs = new BulbState();
 		hs.on = true;
 		hs.effect = "none";
 
-		hs.hue=0;//todo poll existing saturation if there is one
-		
+		hs.hue = 0;// todo poll existing saturation if there is one
+
 		mListener = new OnColorChangedListener() {
 			@Override
 			public void colorChanged(int color, int hues) {
@@ -67,7 +66,7 @@ public class ColorWheelFragment extends Fragment implements
 			@Override
 			public float getSaturation() {
 				// TODO Auto-generated method stub
-				return seekBar.getProgress()/255f;
+				return seekBar.getProgress() / 255f;
 			}
 		};
 
@@ -79,53 +78,59 @@ public class ColorWheelFragment extends Fragment implements
 		seekBar.setOnSeekBarChangeListener(this);
 		hs.sat = (short) seekBar.getProgress();
 
-		if(colorLoopLayoutVisible){
-		colorLoop = (ToggleButton) groupDialogView
-				.findViewById(R.id.colorLoopToggleButton);
-		colorLoop.setOnCheckedChangeListener(this);
-		colorLoopLayout = (LinearLayout)groupDialogView.findViewById(R.id.colorLoopLayout);
-		}else{
-			groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(View.GONE);
+		if (colorLoopLayoutVisible) {
+			colorLoop = (ToggleButton) groupDialogView
+					.findViewById(R.id.colorLoopToggleButton);
+			colorLoop.setOnCheckedChangeListener(this);
+			colorLoopLayout = (LinearLayout) groupDialogView
+					.findViewById(R.id.colorLoopLayout);
+		} else {
+			groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(
+					View.GONE);
 		}
-		
-		ArrayAdapter<CharSequence> adapter;
-		if(transitionLayoutVisible){
-		transitionSpinner = (Spinner) groupDialogView
-				.findViewById(R.id.transitionSpinner);
-		// Create an ArrayAdapter using the string array and a default spinner
-		// layout
-		adapter = ArrayAdapter.createFromResource(
-				getActivity(), R.array.transition_names_array,
-				android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		transitionSpinner.setAdapter(adapter);
 
-		transitionValues = getActivity().getResources().getIntArray(
-				R.array.transition_values_array);
-		transitionLayout = (LinearLayout)groupDialogView.findViewById(R.id.transitionTimeLayout);
-		}else{
-			groupDialogView.findViewById(R.id.transitionTimeLayout).setVisibility(View.GONE);
+		ArrayAdapter<CharSequence> adapter;
+		if (transitionLayoutVisible) {
+			transitionSpinner = (Spinner) groupDialogView
+					.findViewById(R.id.transitionSpinner);
+			// Create an ArrayAdapter using the string array and a default
+			// spinner
+			// layout
+			adapter = ArrayAdapter.createFromResource(getActivity(),
+					R.array.transition_names_array,
+					android.R.layout.simple_spinner_item);
+			// Specify the layout to use when the list of choices appears
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			// Apply the adapter to the spinner
+			transitionSpinner.setAdapter(adapter);
+
+			transitionValues = getActivity().getResources().getIntArray(
+					R.array.transition_values_array);
+			transitionLayout = (LinearLayout) groupDialogView
+					.findViewById(R.id.transitionTimeLayout);
+		} else {
+			groupDialogView.findViewById(R.id.transitionTimeLayout)
+					.setVisibility(View.GONE);
 		}
-		
+
 		Bundle args = getArguments();
-		if(args!=null && args.containsKey(InternalArguments.BULB_STATE))
-		{
-			BulbState bs = gson.fromJson(args.getString(InternalArguments.BULB_STATE), BulbState.class);
-			if(bs.hue!=null)
-				hs.hue=bs.hue;
-			if(bs.sat!=null){
-				hs.sat=bs.sat;
+		if (args != null && args.containsKey(InternalArguments.BULB_STATE)) {
+			BulbState bs = gson.fromJson(
+					args.getString(InternalArguments.BULB_STATE),
+					BulbState.class);
+			if (bs.hue != null)
+				hs.hue = bs.hue;
+			if (bs.sat != null) {
+				hs.sat = bs.sat;
 				seekBar.setProgress(bs.sat);
 			}
 			cpv.setInitialHSV(hs.hue, hs.sat);
-			if(transitionLayoutVisible&&bs.transitiontime!=null){
-				hs.transitiontime=bs.transitiontime;
-				int pos= 0;
-				for(int i=0; i<transitionValues.length; i++)
-					if(bs.transitiontime==transitionValues[i])
-						pos=i;
+			if (transitionLayoutVisible && bs.transitiontime != null) {
+				hs.transitiontime = bs.transitiontime;
+				int pos = 0;
+				for (int i = 0; i < transitionValues.length; i++)
+					if (bs.transitiontime == transitionValues[i])
+						pos = i;
 				transitionSpinner.setSelection(pos);
 			}
 		}
@@ -134,19 +139,20 @@ public class ColorWheelFragment extends Fragment implements
 		return groupDialogView;
 	}
 
-	public void hideColorLoop(){
+	public void hideColorLoop() {
 		colorLoopLayoutVisible = false;
 		colorLoop = null;
-		if(colorLoopLayout!=null)
+		if (colorLoopLayout != null)
 			colorLoopLayout.setVisibility(View.GONE);
 	}
-	public void hideTransitionTime(){
+
+	public void hideTransitionTime() {
 		transitionLayoutVisible = false;
 		transitionSpinner = null;
-		if(transitionLayout!=null)
+		if (transitionLayout != null)
 			transitionLayout.setVisibility(View.GONE);
 	}
-	
+
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
@@ -175,8 +181,9 @@ public class ColorWheelFragment extends Fragment implements
 
 	@Override
 	public Intent onCreateColor() {
-		if(transitionSpinner!=null)
-			hs.transitiontime =transitionValues[transitionSpinner.getSelectedItemPosition()];
+		if (transitionSpinner != null)
+			hs.transitiontime = transitionValues[transitionSpinner
+					.getSelectedItemPosition()];
 		hs.hue = cpv.getHue();
 		Intent i = new Intent();
 		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));

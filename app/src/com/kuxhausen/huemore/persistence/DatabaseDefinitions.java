@@ -136,7 +136,7 @@ public final class DatabaseDefinitions {
 		}
 	}
 
-	public static final class InternalArguments{
+	public static final class InternalArguments {
 		public static final String GROUP_NAME = "Group_Name";
 		public static final String BULB_NAME = "Bulb_Name";
 		public static final String BULB_NUMBER = "Bulb_Number";
@@ -155,11 +155,11 @@ public final class DatabaseDefinitions {
 		public final static String PREVIOUS_STATE = "PreviousState";
 		public final static String PROMPT_UPGRADE = "PromptUpgrade";
 	}
-	
-	public static final class ExternalArguments{
+
+	public static final class ExternalArguments {
 		public static final String NA = "N/A";
 	}
-	
+
 	public static final class PreferencesKeys {
 		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
 		public static final String HASHED_USERNAME = "Hashed_Username";

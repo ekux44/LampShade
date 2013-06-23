@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "huemore.db";
 	private static final int DATABASE_VERSION = 1;
 	Gson gson = new Gson();
-	
+
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -143,38 +143,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ AlarmColumns.STATE + " TEXT,"
 				+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 	}
+
 	public void updatedTwoPointOne() {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
-		
-		
+
 		cv.put(MoodColumns.MOOD, PreferencesKeys.ON);
 		hs.on = true;
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
+
 	public void updatedTwoPointOnePointOne() {
 		SQLiteDatabase db = this.getWritableDatabase();
-		
-		String[] mSelectionArgs = { "Red", "Orange", "Blue", "Romantic", "Rainbow" };
+
+		String[] mSelectionArgs = { "Red", "Orange", "Blue", "Romantic",
+				"Rainbow" };
 		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
-		+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-		+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-		+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-		+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
-		
+				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
+
 		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
-		
+
 		cv.put(MoodColumns.MOOD, PreferencesKeys.RANDOM);
 		hs.on = true;
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		
-		
+
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Deep Sea");
 		hs.sat = (253);
@@ -199,8 +200,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		
-		
+
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Fruit");
 		hs.sat = (244);
@@ -224,7 +224,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		
+
 		cv.put(MoodColumns.MOOD, "Romantic");
 		hs.sat = (254);
 		hs.hue = (64799);
@@ -240,7 +240,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
-	
+
 	public void addBulbs(int first, int last) {
 		SQLiteDatabase db = this.getWritableDatabase();
 

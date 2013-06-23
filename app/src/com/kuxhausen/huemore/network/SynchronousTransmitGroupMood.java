@@ -24,16 +24,18 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 public class SynchronousTransmitGroupMood {
 	/**
 	 * synchronous version of TransmitGroupMood
+	 * 
 	 * @param cont
 	 * @param bulbs
 	 * @param moods
 	 * @return
 	 */
-	public Integer execute(Context cont, Integer[] bulbs, String[] moods){
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+	public Integer execute(Context cont, Integer[] bulbs, String[] moods) {
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+				.permitAll().build();
 
-		StrictMode.setThreadPolicy(policy); 
-		
+		StrictMode.setThreadPolicy(policy);
+
 		if (cont == null || bulbs == null || moods == null)
 			return -1;
 

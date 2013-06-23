@@ -43,9 +43,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
 		me = this;
-		if(this.getArguments()!=null)
-		{
-			bridges = gson.fromJson(this.getArguments().getString(InternalArguments.BRIDGES), Bridge[].class);
+		if (this.getArguments() != null) {
+			bridges = gson.fromJson(
+					this.getArguments().getString(InternalArguments.BRIDGES),
+					Bridge[].class);
 		}
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -66,8 +67,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 				if (isAdded()) {
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					networkRegister = new Register(parrentActivity, bridges, me,
-							getUserName(), getDeviceType());
+					networkRegister = new Register(parrentActivity, bridges,
+							me, getUserName(), getDeviceType());
 					networkRegister.execute();
 				}
 			}
@@ -76,13 +77,14 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 			public void onFinish() {
 				if (isAdded()) {
 					// try one last time
-					networkRegister = new Register(parrentActivity, bridges, me,
-							getUserName(), getDeviceType());
+					networkRegister = new Register(parrentActivity, bridges,
+							me, getUserName(), getDeviceType());
 					networkRegister.execute();
 
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
-					rfdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+					rfdf.show(getFragmentManager(),
+							InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 					dismiss();
 				}
@@ -131,7 +133,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 
 			// Show the success dialog
 			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
-			rsdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			rsdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 			// Add username and IP to preferences cache
 			SharedPreferences settings = PreferenceManager

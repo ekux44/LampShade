@@ -47,7 +47,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 
 	EditText nameEditText;
 	String priorName;
-	
+
 	static BulbState[] priorMood;
 	static Gson gson = new Gson();
 
@@ -64,7 +64,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.mood_dialog_pager, container,
 				false);
-		//Bundle args = getArguments();
+		// Bundle args = getArguments();
 
 		nameEditText = (EditText) myView.findViewById(R.id.editText1);
 
@@ -89,34 +89,38 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle(getActivity().getString(R.string.actionmenu_new_mood));
+		this.getDialog().setTitle(
+				getActivity().getString(R.string.actionmenu_new_mood));
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 		newMoodFragments = new OnCreateMoodListener[2];
-		
-		
+
 		Bundle args = this.getArguments();
-		if(args!=null && args.containsKey(InternalArguments.MOOD_NAME)){
+		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
 			String moodName = args.getString(InternalArguments.MOOD_NAME);
 			priorName = moodName;
 			nameEditText.setText(moodName);
-			
+
 			// Look up states for that mood from database
 			String[] moodColumns = { MoodColumns.STATE };
 			String[] mWhereClause = { moodName };
-			Cursor moodCursor = this.getActivity().getContentResolver().query(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																	// default
-																	// content URI
-																	// for the
-																	// provider.
-					moodColumns, // Return the note ID and title for each note.
-					MoodColumns.MOOD + "=?", // selection clause
-					mWhereClause, // election clause args
-					null // Use the default sort order.
+			Cursor moodCursor = this.getActivity().getContentResolver()
+					.query(DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use
+																			// the
+																			// default
+																			// content
+																			// URI
+																			// for
+																			// the
+																			// provider.
+							moodColumns, // Return the note ID and title for
+											// each note.
+							MoodColumns.MOOD + "=?", // selection clause
+							mWhereClause, // election clause args
+							null // Use the default sort order.
 					);
 
 			ArrayList<String> moodStates = new ArrayList<String>();
@@ -125,15 +129,14 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			}
 			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
 			priorMood = new BulbState[moodStates.size()];
-			for(int i = 0; i<priorMood.length;i++)
-				priorMood[i]=gson.fromJson(moodS[i], BulbState.class);
-			
-			if(priorMood.length==1 && priorMood[0].ct==null)
-			{
-				//show simple mood page
+			for (int i = 0; i < priorMood.length; i++)
+				priorMood[i] = gson.fromJson(moodS[i], BulbState.class);
+
+			if (priorMood.length == 1 && priorMood[0].ct == null) {
+				// show simple mood page
 				mViewPager.setCurrentItem(0);
-			}else{
-				//show multi mood page
+			} else {
+				// show multi mood page
 				mViewPager.setCurrentItem(1);
 			}
 		}
@@ -147,10 +150,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	public static class EditMoodPagerAdapter extends FragmentPagerAdapter {
 
 		android.support.v4.app.Fragment frag;
-		
+
 		public EditMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-			frag= fragment;
+			frag = fragment;
 		}
 
 		@Override
@@ -163,9 +166,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
 				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if(priorMood!=null && priorMood.length==1 && priorMood[0].ct==null)
-				{
-					args.putString(InternalArguments.BULB_STATE, gson.toJson(priorMood[0]));
+				if (priorMood != null && priorMood.length == 1
+						&& priorMood[0].ct == null) {
+					args.putString(InternalArguments.BULB_STATE,
+							gson.toJson(priorMood[0]));
 				}
 				nchf.setArguments(args);
 				newMoodFragments[i] = nchf;
@@ -174,9 +178,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				NewMultiMoodFragment nmmf = new NewMultiMoodFragment();
 				Bundle args2 = new Bundle();
 				args2.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if(priorMood!=null && (priorMood.length>1 || priorMood[0].ct!=null))
-				{
-					args2.putString(InternalArguments.BULB_STATES, gson.toJson(priorMood));
+				if (priorMood != null
+						&& (priorMood.length > 1 || priorMood[0].ct != null)) {
+					args2.putString(InternalArguments.BULB_STATES,
+							gson.toJson(priorMood));
 				}
 				nmmf.setArguments(args2);
 				newMoodFragments[i] = nmmf;
@@ -208,13 +213,13 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			if(priorName!=null){
-				//delete old mood
+			if (priorName != null) {
+				// delete old mood
 				String moodSelect = MoodColumns.MOOD + "=?";
 				String[] moodArg = { priorName };
 				getActivity().getContentResolver().delete(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
-					moodSelect, moodArg);
+						DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
+						moodSelect, moodArg);
 			}
 			((OnCreateMoodListener) newMoodFragments[currentPage])
 					.onCreateMood(nameEditText.getText().toString());

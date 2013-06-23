@@ -41,28 +41,26 @@ public class NewMultiMoodFragment extends ListFragment implements
 		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 
-		
-		
 		Bundle args = getArguments();
-		if(args!=null && args.containsKey(InternalArguments.BULB_STATES))
-		{
-			BulbState[] bsRay = gson.fromJson(args.getString(InternalArguments.BULB_STATES), BulbState[].class);
-			for(BulbState bs : bsRay){
+		if (args != null && args.containsKey(InternalArguments.BULB_STATES)) {
+			BulbState[] bsRay = gson.fromJson(
+					args.getString(InternalArguments.BULB_STATES),
+					BulbState[].class);
+			for (BulbState bs : bsRay) {
 				MoodRow mr = new MoodRow();
 				mr.hs = bs;
-				if(bs.ct!=null){
+				if (bs.ct != null) {
 					mr.color = Color.WHITE;
-				}else{
-					float[] hsv = {(bs.hue*360)/65535, bs.sat/255f, 1};
+				} else {
+					float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
 					mr.color = Color.HSVToColor(hsv);
-					
+
 				}
 				moodRowArray.add(mr);
 				rayAdapter.add(mr);
 			}
 		}
-		
-		
+
 		return groupView;
 	}
 
@@ -77,7 +75,8 @@ public class NewMultiMoodFragment extends ListFragment implements
 		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
 		// cpdf.setPreviewGroups(bulbS);//TODO fix
 		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
-		cpdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		cpdf.show(getFragmentManager(),
+				InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 	}
 
 	@Override
@@ -85,7 +84,8 @@ public class NewMultiMoodFragment extends ListFragment implements
 		rayAdapter.getItem(requestCode).color = resultCode;
 		rayAdapter.notifyDataSetChanged();
 		rayAdapter.getItem(requestCode).hs = gson.fromJson(
-				data.getStringExtra(InternalArguments.HUE_STATE), BulbState.class);
+				data.getStringExtra(InternalArguments.HUE_STATE),
+				BulbState.class);
 
 		String[] states = new String[moodRowArray.size()];
 		for (int i = 0; i < moodRowArray.size(); i++) {

@@ -39,14 +39,14 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class GroupsListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
-	
+
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 	public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	public int selectedPos = -1;
 	private GroupBulbPagingFragment gbpfCallback;
-		
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -74,28 +74,29 @@ public class GroupsListFragment extends SherlockListFragment implements
 
 		LinearLayout headingRow = (LinearLayout) myView
 				.findViewById(R.id.showOnLandScape);
-		setHasOptionsMenu(true);	
+		setHasOptionsMenu(true);
 		return myView;
 	}
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 		this.setHasOptionsMenu(true);
 	}
-	
+
 	@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.action_group, menu);
-        
-        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.action_group, menu);
+
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
 			MenuItem unlocksItem = menu.findItem(R.id.action_add_group);
 			unlocksItem.setEnabled(false);
 			unlocksItem.setVisible(false);
-			
+
 		}
-    }
-	
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -103,7 +104,8 @@ public class GroupsListFragment extends SherlockListFragment implements
 
 		case R.id.action_add_group:
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
-			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			ngdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -118,22 +120,23 @@ public class GroupsListFragment extends SherlockListFragment implements
 		// list item
 		// (We do this during onStart because at the point the listview is
 		// available.)
-		//if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
-			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		//}
+		// if (getFragmentManager().findFragmentById(R.id.groups_fragment) !=
+		// null) {
+		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		// }
 	}
 
-	public void setSelectionListener(GroupBulbPagingFragment gbpf){
+	public void setSelectionListener(GroupBulbPagingFragment gbpf) {
 		gbpfCallback = gbpf;
 	}
+
 	public void invalidateSelection() {
 		// Set the previous selected item as checked to be unhighlighted when in
 		// two-pane layout
 		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
 	}
-	
-	
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
@@ -143,7 +146,8 @@ public class GroupsListFragment extends SherlockListFragment implements
 		if (longSelected.getText().equals(PreferencesKeys.ALL)) {
 			return;
 		}
-		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
+		android.view.MenuInflater inflater = this.getActivity()
+				.getMenuInflater();
 		inflater.inflate(R.menu.context_group, menu);
 	}
 
@@ -167,12 +171,14 @@ public class GroupsListFragment extends SherlockListFragment implements
 		case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.GROUP_NAME, (String) (longSelected).getText());
+			args.putString(InternalArguments.GROUP_NAME,
+					(String) (longSelected).getText());
 			ngdf.setArguments(args);
-			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			
+			ngdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+
 			return true;
-			
+
 		default:
 			return super.onContextItemSelected(item);
 		}
@@ -182,7 +188,7 @@ public class GroupsListFragment extends SherlockListFragment implements
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		selected = ((TextView) (v));
 		selectedPos = position;
-		
+
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { (String) ((TextView) (v)).getText() };
@@ -206,7 +212,8 @@ public class GroupsListFragment extends SherlockListFragment implements
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
 		// Notify the parent activity of selected bulbs
-		gbpfCallback.onSelected(bulbS, selected.getText().toString(), this, null);
+		gbpfCallback.onSelected(bulbS, selected.getText().toString(), this,
+				null);
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);

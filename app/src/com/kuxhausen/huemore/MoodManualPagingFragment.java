@@ -46,8 +46,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 
 	private static MoodsListFragment moodsListFragment;
 	private static ColorWheelFragment colorWheelFragment;
-	
-	
+
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
 	 * object collection.
@@ -109,11 +108,10 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 				BulbState hs = new BulbState();
 				hs.bri = brightness;
 				hs.on = true;
-				
+
 				String[] brightnessState = { gson.toJson(hs) };
 				// TODO deal with off?
-				parrentActivity
-						.onBrightnessChanged(brightnessState);
+				parrentActivity.onBrightnessChanged(brightnessState);
 				isTrackingTouch = false;
 			}
 
@@ -132,27 +130,33 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		return myView;
 	}
 
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		//if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-		//MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
-		//unlocksItem.setEnabled(false);
-		//unlocksItem.setVisible(false);
-		
-	//}
-		
-		if(mViewPager.getCurrentItem()==MOOD_LOCATION &&((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE))
-			((SherlockListFragment)mMoodManualPagerAdapter.getItem(MOOD_LOCATION)).onCreateOptionsMenu(menu, inflater);
+		// if ((getResources().getConfiguration().screenLayout &
+		// Configuration.SCREENLAYOUT_SIZE_MASK) >=
+		// Configuration.SCREENLAYOUT_SIZE_LARGE) {
+		// MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
+		// unlocksItem.setEnabled(false);
+		// unlocksItem.setVisible(false);
+
+		// }
+
+		if (mViewPager.getCurrentItem() == MOOD_LOCATION
+				&& ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE))
+			((SherlockListFragment) mMoodManualPagerAdapter
+					.getItem(MOOD_LOCATION))
+					.onCreateOptionsMenu(menu, inflater);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(mViewPager.getCurrentItem()==MOOD_LOCATION&&((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE))
-			return ((SherlockListFragment)mMoodManualPagerAdapter.getItem(mViewPager.getCurrentItem())).onOptionsItemSelected(item);
+		if (mViewPager.getCurrentItem() == MOOD_LOCATION
+				&& ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE))
+			return ((SherlockListFragment) mMoodManualPagerAdapter
+					.getItem(mViewPager.getCurrentItem()))
+					.onOptionsItemSelected(item);
 		return super.onOptionsItemSelected(item);
 	}
-	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -165,15 +169,17 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		} catch (ClassCastException e) {
 		}
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		getSherlockActivity().getSupportActionBar().setTitle(parrentActivity.groupS);
-		
+
+		getSherlockActivity().getSupportActionBar().setTitle(
+				parrentActivity.groupS);
+
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
-				parrentActivity, parrentActivity.bulbS, this, this.parrentActivity);
+				parrentActivity, parrentActivity.bulbS, this,
+				this.parrentActivity);
 		getBulbsAttributes.execute();
 
 	}
@@ -185,21 +191,21 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
 		android.support.v4.app.Fragment frag;
-		
+
 		public MoodManualPagerAdapter(android.support.v4.app.Fragment fragment) {
 			super(fragment.getChildFragmentManager());
-			frag= fragment;
+			frag = fragment;
 		}
 
 		@Override
 		public Fragment getItem(int i) {
 			switch (i) {
 			case MOOD_LOCATION:
-				if(moodsListFragment == null)
+				if (moodsListFragment == null)
 					moodsListFragment = new MoodsListFragment();
 				return moodsListFragment;
 			case MANUAL_LOCATION:
-				if(colorWheelFragment == null){
+				if (colorWheelFragment == null) {
 					colorWheelFragment = new ColorWheelFragment();
 					colorWheelFragment.hideTransitionTime();
 				}

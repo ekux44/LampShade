@@ -39,7 +39,7 @@ public class SetBulbAttributes extends AsyncTask<Void, Void, Integer> {
 	@Override
 	protected Integer doInBackground(Void... voids) {
 
-		if (cont == null || bulbAtt == null )
+		if (cont == null || bulbAtt == null)
 			return -1;
 
 		// Get username and IP from preferences cache
@@ -51,8 +51,6 @@ public class SetBulbAttributes extends AsyncTask<Void, Void, Integer> {
 
 		if (bridge == null)
 			return -1;
-
-		
 
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
@@ -88,7 +86,7 @@ public class SetBulbAttributes extends AsyncTask<Void, Void, Integer> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+
 		return 1;
 	}
 

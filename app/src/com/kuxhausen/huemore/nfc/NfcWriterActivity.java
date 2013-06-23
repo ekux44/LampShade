@@ -44,7 +44,8 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.ui.SerializedEditorActivity;
 
-public class NfcWriterActivity extends SerializedEditorActivity implements OnClickListener{
+public class NfcWriterActivity extends SerializedEditorActivity implements
+		OnClickListener {
 	private Button sendButton;
 	private NfcAdapter nfcAdapter;
 	PendingIntent pendingIntent;
@@ -52,7 +53,7 @@ public class NfcWriterActivity extends SerializedEditorActivity implements OnCli
 	boolean writeMode;
 	Tag myTag;
 	Context context;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.nfc_writer);
@@ -104,21 +105,20 @@ public class NfcWriterActivity extends SerializedEditorActivity implements OnCli
 		}
 	}
 
-	
 	private void write(String text, Tag tag) throws IOException,
 			FormatException {
-		try{
-		NdefRecord[] records = { createRecord(text) };
-		NdefMessage message = new NdefMessage(records);
-		// Get an instance of Ndef for the tag.
-		Ndef ndef = Ndef.get(tag);
-		// Enable I/O
-		ndef.connect();
-		// Write the message
-		ndef.writeNdefMessage(message);
-		// Close the connection
-		ndef.close();
-		} catch (java.lang.NullPointerException e){
+		try {
+			NdefRecord[] records = { createRecord(text) };
+			NdefMessage message = new NdefMessage(records);
+			// Get an instance of Ndef for the tag.
+			Ndef ndef = Ndef.get(tag);
+			// Enable I/O
+			ndef.connect();
+			// Write the message
+			ndef.writeNdefMessage(message);
+			// Close the connection
+			ndef.close();
+		} catch (java.lang.NullPointerException e) {
 			Toast.makeText(context,
 					context.getString(R.string.nfc_tag_not_supported),
 					Toast.LENGTH_LONG).show();

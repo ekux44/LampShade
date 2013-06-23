@@ -18,7 +18,8 @@ import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class UnlocksDialogFragment extends DialogFragment implements OnClickListener {
+public class UnlocksDialogFragment extends DialogFragment implements
+		OnClickListener {
 
 	SharedPreferences settings;
 	MainActivity ma;

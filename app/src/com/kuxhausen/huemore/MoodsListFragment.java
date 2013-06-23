@@ -85,13 +85,15 @@ public class MoodsListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.action_mood, menu);
-		
-		//if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-		//	MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
-		//	unlocksItem.setEnabled(false);
-		//	unlocksItem.setVisible(false);
-			
-		//}
+
+		// if ((getResources().getConfiguration().screenLayout &
+		// Configuration.SCREENLAYOUT_SIZE_MASK) >=
+		// Configuration.SCREENLAYOUT_SIZE_LARGE) {
+		// MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
+		// unlocksItem.setEnabled(false);
+		// unlocksItem.setVisible(false);
+
+		// }
 	}
 
 	@Override
@@ -101,7 +103,8 @@ public class MoodsListFragment extends SherlockListFragment implements
 
 		case R.id.action_add_mood:
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
-			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			nmdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -128,9 +131,10 @@ public class MoodsListFragment extends SherlockListFragment implements
 		// list item
 		// (We do this during onStart because at the point the listview is
 		// available.)
-		//if (getFragmentManager().findFragmentById(R.id.groups_fragment) != null) {
-			getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		//}
+		// if (getFragmentManager().findFragmentById(R.id.groups_fragment) !=
+		// null) {
+		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		// }
 
 	}
 
@@ -140,21 +144,23 @@ public class MoodsListFragment extends SherlockListFragment implements
 		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
 	}
-	
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		
 		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (longSelected.getText().equals(PreferencesKeys.OFF)||longSelected.getText().equals(PreferencesKeys.ON)||longSelected.getText().equals(PreferencesKeys.RANDOM)) {
+		if (longSelected.getText().equals(PreferencesKeys.OFF)
+				|| longSelected.getText().equals(PreferencesKeys.ON)
+				|| longSelected.getText().equals(PreferencesKeys.RANDOM)) {
 			return;
 		}
-		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
+		android.view.MenuInflater inflater = this.getActivity()
+				.getMenuInflater();
 		inflater.inflate(R.menu.context_mood, menu);
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 
@@ -172,9 +178,11 @@ public class MoodsListFragment extends SherlockListFragment implements
 		case R.id.contextmoodmenu_edit: // <-- your custom menu item id here
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.MOOD_NAME, (String) (longSelected).getText());
+			args.putString(InternalArguments.MOOD_NAME,
+					(String) (longSelected).getText());
 			nmdf.setArguments(args);
-			nmdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			nmdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -234,7 +242,7 @@ public class MoodsListFragment extends SherlockListFragment implements
 
 		selected = ((TextView) (v));
 		selectedPos = position;
-		
+
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);
 

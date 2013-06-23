@@ -85,8 +85,9 @@ public class NfcReaderActivity extends Activity implements
 				TransmitGroupMood transmitter = new TransmitGroupMood(this,
 						bulbS, stateS, null);
 				transmitter.execute();
-				if(gson.fromJson(stateS[0],BulbState.class)!=null)
-					onButton.setChecked(gson.fromJson(stateS[0],BulbState.class).on);
+				if (gson.fromJson(stateS[0], BulbState.class) != null)
+					onButton.setChecked(gson.fromJson(stateS[0],
+							BulbState.class).on);
 			}
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

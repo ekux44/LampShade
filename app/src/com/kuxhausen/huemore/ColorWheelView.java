@@ -31,9 +31,9 @@ public class ColorWheelView extends View {
 
 	public void setInitialHSV(int h, int s) {
 		hue = h;
-		hue360= (hue*360)/65535;
-		float[] hsv = {hue360, s, 1};
-		if(mCenterPaint==null){
+		hue360 = (hue * 360) / 65535;
+		float[] hsv = { hue360, s, 1 };
+		if (mCenterPaint == null) {
 			mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			mCenterPaint.setStrokeWidth(5);
 		}
@@ -61,7 +61,7 @@ public class ColorWheelView extends View {
 
 		mCenterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mCenterPaint.setStrokeWidth(5);
-		
+
 	}
 
 	private boolean mTrackingCenter;
@@ -223,8 +223,8 @@ public class ColorWheelView extends View {
 		return true;
 	}
 
-	public void recalculateColor(){
-		float[] hsv = {hue360, mListener.getSaturation(), 1};
+	public void recalculateColor() {
+		float[] hsv = { hue360, mListener.getSaturation(), 1 };
 		mCenterPaint.setColor(Color.HSVToColor(hsv));
 		invalidate();
 	}
