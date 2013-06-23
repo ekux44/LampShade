@@ -60,7 +60,9 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 		else if(bulbs == bulbsFragment && bulbsFragment !=null && groupsListFragment!=null)
 			groupsListFragment.invalidateSelection();
 		
-		((MainActivity)this.getActivity()).onGroupBulbSelected(bulbNum, name);
+		if(parrentActivity!=null)
+		parrentActivity.onGroupBulbSelected(bulbNum, name);
+		
 	}
 
 	@Override
