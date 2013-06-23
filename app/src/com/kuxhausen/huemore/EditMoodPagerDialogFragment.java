@@ -221,7 +221,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 						DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
 						moodSelect, moodArg);
 			}
-			((OnCreateMoodListener) newMoodFragments[currentPage])
+			newMoodFragments[currentPage]
 					.onCreateMood(nameEditText.getText().toString());
 			this.dismiss();
 			break;

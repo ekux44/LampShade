@@ -550,7 +550,7 @@ public class HueNfcEncoder {
 					temp |= mask;
 				mask = (byte) (mask << 1);
 			}
-			bytes[i] = (byte) (temp);
+			bytes[i] = (temp);
 		}
 
 		return bytes;

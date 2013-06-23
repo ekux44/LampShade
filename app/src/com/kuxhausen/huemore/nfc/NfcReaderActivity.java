@@ -47,6 +47,7 @@ public class NfcReaderActivity extends Activity implements
 
 	}
 
+	@Override
 	public void onResume() {
 		super.onResume();
 

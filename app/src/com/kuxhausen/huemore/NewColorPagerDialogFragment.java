@@ -138,7 +138,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			Intent i = ((OnCreateColorListener) newColorFragments[currentPage])
+			Intent i = newColorFragments[currentPage]
 					.onCreateColor();
 			getTargetFragment().onActivityResult(getTargetRequestCode(),
 					i.getExtras().getInt(InternalArguments.COLOR), i);

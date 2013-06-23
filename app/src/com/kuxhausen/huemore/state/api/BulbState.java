@@ -61,6 +61,7 @@ public class BulbState {
 	public BulbState() {
 	}
 
+	@Override
 	public String toString() {
 		String result = "";
 		result += "on:" + (on ? "true" : "false") + " ";

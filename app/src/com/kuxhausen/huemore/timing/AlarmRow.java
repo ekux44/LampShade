@@ -9,7 +9,6 @@ import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.ExternalArguments;
 
 public class AlarmRow {
 

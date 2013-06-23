@@ -2,7 +2,6 @@ package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -10,18 +9,14 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -42,7 +37,6 @@ import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
-import com.kuxhausen.huemore.ui.registration.RegisterWithHubDialogFragment;
 
 /**
  * @author Eric Kuxhausen
@@ -192,6 +186,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
 		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
 		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			@Override
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
 					// Oh noes, there was a problem.
@@ -221,6 +216,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	// Listener that's called when we finish querying the items and
 	// subscriptions we own
 	IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+		@Override
 		public void onQueryInventoryFinished(IabResult result,
 				Inventory inventory) {
 

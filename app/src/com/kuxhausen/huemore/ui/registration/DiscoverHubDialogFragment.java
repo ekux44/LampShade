@@ -1,21 +1,11 @@
 package com.kuxhausen.huemore.ui.registration;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,10 +16,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.HubSearch;
 import com.kuxhausen.huemore.network.HubSearch.OnHubFoundListener;
-import com.kuxhausen.huemore.network.Register;
-import com.kuxhausen.huemore.network.Register.OnRegisterListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bridge;
 
 public class DiscoverHubDialogFragment extends DialogFragment implements

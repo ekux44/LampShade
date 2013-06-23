@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.timing;
 
-import java.util.Calendar;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

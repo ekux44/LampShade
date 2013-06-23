@@ -52,6 +52,7 @@ public class IabResult {
 		return !isSuccess();
 	}
 
+	@Override
 	public String toString() {
 		return "IabResult: " + getMessage();
 	}

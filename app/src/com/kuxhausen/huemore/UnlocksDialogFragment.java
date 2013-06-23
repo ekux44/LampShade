@@ -64,12 +64,14 @@ public class UnlocksDialogFragment extends DialogFragment implements
 	}
 
 	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+		@Override
 		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 			ma.mPlayHelper.queryInventoryAsync(ma.mGotInventoryListener);
 		}
 	};
 
 	IabHelper.OnIabPurchaseFinishedListener mDonatePurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+		@Override
 		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
 
 			if (result.isFailure()) {

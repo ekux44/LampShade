@@ -13,23 +13,15 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.state.api.Bridge;
-import com.kuxhausen.huemore.state.api.RegistrationRequest;
-import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
