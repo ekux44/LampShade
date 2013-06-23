@@ -364,7 +364,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			transaction.addToBackStack(null);
 
 			// Commit the transaction
-			transaction.commit();
+			transaction.commitAllowingStateLoss();//wtf, why can't I use .commit() w/o error every other launch?
 			transaction
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 			
@@ -406,17 +406,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 				brightnessState, this);
 		pushGroupMood.execute();
 	}
-
-	/*
-	 * test mood by applying to json states array to these bulbs
-	 * 
-	 * @param states
-	 */
-	/*
-	 * public void testMood(Integer[] bulbs, String[] states) {
-	 * TransmitGroupMood pushGroupMood = new TransmitGroupMood();
-	 * pushGroupMood.execute(this, bulbs, states); }
-	 */
 
 	/**
 	 * test mood by applying to json states array to previously selected moods
