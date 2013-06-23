@@ -33,6 +33,7 @@
     <string name="contextmenu_delete">Delete</string>
     <string name="contextmenu_edit">Edit</string>
     <string name="contextmenu_rename">Rename</string>
+    <string name="actionmenu_new">New</string>
     <string name="actionmenu_new_group">New Group</string>
     <string name="actionmenu_new_mood">New Mood</string>
     <string name="actionmenu_new_color">New Color</string>

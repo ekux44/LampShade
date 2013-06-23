@@ -25,4 +25,10 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/alarms"/>
+    <item
+        android:id="@+id/action_add_both"
+        android:orderInCategory="1"
+        android:icon="@drawable/content_new"
+        android:showAsAction="ifRoom"
+        android:title="@string/actionmenu_new_mood"/>
 </menu>

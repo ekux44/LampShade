@@ -31,6 +31,7 @@
     <string name="contextmenu_delete">Verwijderen</string>
     <string name="contextmenu_edit">Wijzigen</string>
     <string name="contextmenu_rename">Hernoemen</string>
+    <string name="actionmenu_new">Nieuwe</string>
     <string name="actionmenu_new_group">Nieuwe groep</string>
     <string name="actionmenu_new_mood">Nieuwe sfeer</string>
     <string name="actionmenu_new_color">Nieuwe kleur</string>

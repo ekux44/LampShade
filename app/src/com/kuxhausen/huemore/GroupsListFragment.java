@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,7 +37,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
-public class GroupsListFragment extends SherlockListFragment implements OnClickListener,
+public class GroupsListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	
 	// Identifies a particular Loader being used in this component
@@ -71,10 +72,6 @@ public class GroupsListFragment extends SherlockListFragment implements OnClickL
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
-		ImageButton newGroup = (ImageButton) myView
-				.findViewById(R.id.newGroupButton);
-		newGroup.setOnClickListener(this);
-
 		LinearLayout headingRow = (LinearLayout) myView
 				.findViewById(R.id.showOnLandScape);
 		setHasOptionsMenu(true);	
@@ -87,22 +84,16 @@ public class GroupsListFragment extends SherlockListFragment implements OnClickL
 	}
 	
 	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.newGroupButton:
-
-			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
-			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-
-			break;
-		}
-	}
-	
-	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.action_group, menu);
+        
+        if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			MenuItem unlocksItem = menu.findItem(R.id.action_add_group);
+			unlocksItem.setEnabled(false);
+			unlocksItem.setVisible(false);
+			
+		}
     }
 	
 	@Override
@@ -110,7 +101,7 @@ public class GroupsListFragment extends SherlockListFragment implements OnClickL
 		// Handle item selection
 		switch (item.getItemId()) {
 
-		case R.id.action_add:
+		case R.id.action_add_group:
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
 			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;

@@ -31,6 +31,7 @@
     <string name="contextmenu_delete">Löschen</string>
     <string name="contextmenu_edit">Ändern</string>
     <string name="contextmenu_rename">Umbenennen</string>
+    <string name="actionmenu_new">Neue</string>
     <string name="actionmenu_new_group">Neue Gruppe</string>
     <string name="actionmenu_new_mood">Neue Szene</string>
     <string name="actionmenu_new_color">New Color</string>

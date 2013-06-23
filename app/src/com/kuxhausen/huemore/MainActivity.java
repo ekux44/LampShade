@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.nfc.NfcAdapter;
 import android.os.Build;
@@ -103,7 +104,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 
 		}
-
+		
 		// (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ?
 		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
 		settings = PreferenceManager
@@ -467,6 +468,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main, menu);
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			MenuItem unlocksItem = menu.findItem(R.id.action_add_both);
+			unlocksItem.setEnabled(false);
+			unlocksItem.setVisible(false);
+			
+		}
+		
 		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED, PreferencesKeys.ALWAYS_FREE_BULBS)>PreferencesKeys.ALWAYS_FREE_BULBS) {
 			//has pro version
 			
@@ -510,6 +518,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.action_settings:
 			SettingsDialogFragment settings = new SettingsDialogFragment();
 			settings.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			return true;
+		case R.id.action_add_both:
+			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
+			addBoth.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_unlocks:
 			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();

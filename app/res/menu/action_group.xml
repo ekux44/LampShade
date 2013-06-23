@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_add"
+        android:id="@+id/action_add_group"
         android:icon="@drawable/content_new"
         android:showAsAction="always"
         android:title="@string/actionmenu_new_group"/>

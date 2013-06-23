@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -133,13 +134,20 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(mViewPager.getCurrentItem()==MOOD_LOCATION)
+		//if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+		//MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
+		//unlocksItem.setEnabled(false);
+		//unlocksItem.setVisible(false);
+		
+	//}
+		
+		if(mViewPager.getCurrentItem()==MOOD_LOCATION &&((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE))
 			((SherlockListFragment)mMoodManualPagerAdapter.getItem(MOOD_LOCATION)).onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(mViewPager.getCurrentItem()==MOOD_LOCATION)
+		if(mViewPager.getCurrentItem()==MOOD_LOCATION&&((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE))
 			return ((SherlockListFragment)mMoodManualPagerAdapter.getItem(mViewPager.getCurrentItem())).onOptionsItemSelected(item);
 		return super.onOptionsItemSelected(item);
 	}

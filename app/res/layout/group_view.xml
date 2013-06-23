@@ -5,30 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone" 
-        android:id="@+id/showOnLandScape">
-
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:text="@string/groups" />
-
-        <ImageButton
-            android:id="@+id/newGroupButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:padding="8dp"
-            android:src="@drawable/content_new" />
-    </LinearLayout>
-
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
