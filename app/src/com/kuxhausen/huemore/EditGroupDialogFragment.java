@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -38,7 +39,21 @@ public class EditGroupDialogFragment extends DialogFragment implements
 	Bulb[] bulbArray;
 	HashMap<String, Integer> nameToBulb;
 	Boolean[] preChecked; String initialName;
+	
+	private MainActivity parrentActivity;
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			parrentActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+		}
+	}
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		bulbNameList = new ArrayList<String>();
@@ -60,7 +75,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
-		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this);
+		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this, parrentActivity);
 		pushGroupMood.execute();
 		
 		Bundle args = this.getArguments();

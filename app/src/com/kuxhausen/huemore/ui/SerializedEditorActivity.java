@@ -192,7 +192,7 @@ public class SerializedEditorActivity extends FragmentActivity implements
 										// Group Mood
 		}
 
-		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, moodS);
+		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, moodS, null);
 		tgm.execute();
 	}
 	

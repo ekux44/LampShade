@@ -83,7 +83,7 @@ public class NfcReaderActivity extends Activity implements
 					System.out.println(bulbS[i]);
 				}
 				TransmitGroupMood transmitter = new TransmitGroupMood(this,
-						bulbS, stateS);
+						bulbS, stateS, null);
 				transmitter.execute();
 				if(gson.fromJson(stateS[0],BulbState.class)!=null)
 					onButton.setChecked(gson.fromJson(stateS[0],BulbState.class).on);
@@ -122,7 +122,7 @@ public class NfcReaderActivity extends Activity implements
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
 		String[] bsRay = new String[] { gson.toJson(bs) };
-		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, bsRay);
+		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, bsRay, null);
 		tgm.execute();
 	}
 

@@ -47,6 +47,8 @@ public class BulbsFragment extends SherlockListFragment implements
 	private int selectedPos = -1;
 	private GroupBulbPagingFragment gbpfCallback;
 	
+	private MainActivity parrentActivity;
+	
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
 	Bulb[] bulbArray;
@@ -80,11 +82,23 @@ public class BulbsFragment extends SherlockListFragment implements
 		return myView;
 	}
 	public void refreshList(){
-		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this);
+		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this, parrentActivity);
 		pushGroupMood.execute();
 
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			parrentActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+		}
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();

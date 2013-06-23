@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -40,8 +41,22 @@ public class EditBulbDialogFragment extends DialogFragment {
 	Gson gson = new Gson();
 	BulbsFragment bulbF;
 	
+	private MainActivity parrentActivity;
+	
 	public void setBulbsFragment(BulbsFragment bf){
 		bulbF=bf;
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			parrentActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+		}
 	}
 	
 	@Override
@@ -70,7 +85,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		bs.on = true;
 		String[] moodS = {gson.toJson(bs)};
 		Integer[] bulbS = {bulbNumber};
-		TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS);
+		TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS, parrentActivity);
 		tgm.execute();
 		
 		builder.setPositiveButton(R.string.accept,
@@ -87,7 +102,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 						bs.alert = "none";
 						String[] moodS = {gson.toJson(bs)};
 						Integer[] bulbS = {bulbNumber};
-						TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS);
+						TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS, moodS, parrentActivity);
 						tgm.execute();
 						
 						bulbF.refreshList();

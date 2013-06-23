@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -152,6 +153,19 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		return super.onOptionsItemSelected(item);
 	}
 	
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception.
+		try {
+			parrentActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+		}
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -159,7 +173,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		getSherlockActivity().getSupportActionBar().setTitle(parrentActivity.groupS);
 		
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
-				parrentActivity, parrentActivity.bulbS, this);
+				parrentActivity, parrentActivity.bulbS, this, this.parrentActivity);
 		getBulbsAttributes.execute();
 
 	}

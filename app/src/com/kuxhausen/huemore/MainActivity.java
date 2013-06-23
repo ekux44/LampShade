@@ -9,6 +9,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,6 +20,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -49,6 +52,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsListFragment.OnMoodSelectedListener {
 
+	public ArrayList<AsyncTask<?,?,?>> inFlight = new ArrayList<AsyncTask<?,?,?>>();
+	
+	
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	Integer[] bulbS;
 	String mood;
@@ -197,7 +203,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
 					if (m.bulbListenerFragment != null) {
 						GetBulbList pushGroupMood = new GetBulbList(m,
-								m.bulbListenerFragment);
+								m.bulbListenerFragment, m);
 						pushGroupMood.execute();
 					}
 				}
@@ -316,11 +322,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onDestroy() {
-		super.onDestroy();
+		for(AsyncTask<?,?,?> task : inFlight)
+			task.cancel(true);
 		if (mPlayHelper != null)
 			mPlayHelper.dispose();
 		mPlayHelper = null;
 		Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
+		super.onDestroy();
 	}
 
 	@Override
@@ -384,7 +392,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		if (moodFrag == null || !moodFrag.isVisible()) {
 			this.onBackPressed();
-
 		}
 	}
 
@@ -396,7 +403,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	public void onBrightnessChanged(String brightnessState[]) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				brightnessState);
+				brightnessState, this);
 		pushGroupMood.execute();
 	}
 
@@ -418,7 +425,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 */
 	public void testMood(String[] states) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				states);
+				states, this);
 		pushGroupMood.execute();
 	}
 
@@ -458,7 +465,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		
 		
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				moodS);
+				moodS, this);
 		pushGroupMood.execute();
 	}
 
