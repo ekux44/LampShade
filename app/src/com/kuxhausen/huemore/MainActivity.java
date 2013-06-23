@@ -367,6 +367,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			transaction
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 
+			this.getSupportActionBar().setTitle(name);
 			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 

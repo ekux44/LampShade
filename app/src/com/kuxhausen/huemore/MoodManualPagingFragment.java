@@ -173,9 +173,6 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	public void onResume() {
 		super.onResume();
 
-		getSherlockActivity().getSupportActionBar().setTitle(
-				parrentActivity.groupS);
-
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
 				parrentActivity, parrentActivity.bulbS, this,
 				this.parrentActivity);
