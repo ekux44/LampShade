@@ -65,7 +65,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		public void onMoodManualSelected(String jSon);
 
 	}
-
+	
 	public void invalidateSelection() {
 		((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
 				.invalidateSelection();
@@ -169,15 +169,17 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		}
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-
+	public void pollBrightness(){
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
 				parrentActivity, parrentActivity.bulbS, this,
 				this.parrentActivity);
 		getBulbsAttributes.execute();
-
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		pollBrightness();
 	}
 
 	/**

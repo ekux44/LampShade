@@ -341,6 +341,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			// Call a method in the ArticleFragment to update its content
 			moodFrag.invalidateSelection();
+			moodFrag.pollBrightness();
 
 		} else {
 			// If the frag is not available, we're in the one-pane layout and
