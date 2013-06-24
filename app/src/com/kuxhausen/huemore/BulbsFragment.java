@@ -31,7 +31,6 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
 public class BulbsFragment extends SherlockListFragment implements
-		LoaderManager.LoaderCallbacks<Cursor>,
 		GetBulbList.OnBulbListReturnedListener {
 
 	// Identifies a particular Loader being used in this component
@@ -56,23 +55,15 @@ public class BulbsFragment extends SherlockListFragment implements
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
-		/*
-		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
-		 * passed to onCreateLoader().
-		 */
-		getLoaderManager().initLoader(GROUPS_LOADER, null, this);
-
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.bulb_view, container, false);
 
 		bulbNameList = new ArrayList<String>();
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
-				android.R.layout.simple_list_item_1, bulbNameList);
+				layout, bulbNameList);
 		setListAdapter(rayAdapter);
-
+		parrentActivity.bulbListenerFragment = this;
 		refreshList();
-
-		((MainActivity) getActivity()).bulbListenerFragment = this;
 		return myView;
 	}
 
@@ -173,77 +164,21 @@ public class BulbsFragment extends SherlockListFragment implements
 		getListView().setItemChecked(selectedPos, true);
 	}
 
-	/**
-	 * Callback that's invoked when the system has initialized the Loader and is
-	 * ready to start the query. This usually happens when initLoader() is
-	 * called. The loaderID argument contains the ID value passed to the
-	 * initLoader() call.
-	 */
-	@Override
-	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
-		/*
-		 * Takes action based on the ID of the Loader that's being created
-		 */
-		switch (loaderID) {
-		case GROUPS_LOADER:
-			// Returns a new CursorLoader
-			String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
-			return new CursorLoader(getActivity(), // Parent activity context
-					DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
-					columns, // Projection to return
-					null, // No selection clause
-					null, // No selection arguments
-					null // Default sort order
-			);
-		default:
-			// An invalid id was passed in
-			return null;
-		}
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-		/*
-		 * Moves the query results into the adapter, causing the ListView
-		 * fronting this adapter to re-display
-		 */
-		// dataSource.changeCursor(cursor);
-		registerForContextMenu(getListView());
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
-		/*
-		 * Clears out the adapter's reference to the Cursor. This prevents
-		 * memory leaks.
-		 */
-		// unregisterForContextMenu(getListView());
-		// dataSource.changeCursor(null);
-	}
-
 	@Override
 	public void onListReturned(Bulb[] result) {
 		if (result == null)
 			return;
 		bulbArray = result;
-
-		// Get username and IP from preferences cache
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
-		int numberBulbsUnlocked = settings.getInt(
-				PreferencesKeys.BULBS_UNLOCKED,
-				PreferencesKeys.ALWAYS_FREE_BULBS);
-		if (bulbArray.length > numberBulbsUnlocked) {
-			// tell user to upgrade
-
-		}
+		
 		rayAdapter.clear();
-		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
+		for (int i = 0; i < bulbArray.length; i++) {
 			// bulbNameList.add(bulb.name);
 			Bulb bulb = bulbArray[i];
 			bulb.number = i + 1;
 			rayAdapter.add(bulb.name);
 		}
 
+		registerForContextMenu(getListView());
+		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 	}
 }

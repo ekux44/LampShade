@@ -96,7 +96,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						.beginTransaction()
 						.add(R.id.fragment_container, firstFragment,
 								GroupBulbPagingFragment.class.getName())
-						.commit();
+						.commitAllowingStateLoss();
 			}
 
 		}

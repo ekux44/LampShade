@@ -66,8 +66,6 @@ public class GroupsListFragment extends SherlockListFragment implements
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.group_view, container, false);
 
-		LinearLayout headingRow = (LinearLayout) myView
-				.findViewById(R.id.showOnLandScape);
 		setHasOptionsMenu(true);
 		return myView;
 	}

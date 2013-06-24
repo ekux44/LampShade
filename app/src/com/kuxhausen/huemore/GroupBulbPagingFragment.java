@@ -55,10 +55,10 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 
 	public void onSelected(Integer[] bulbNum, String name,
 			GroupsListFragment groups, BulbsFragment bulbs) {
-		if (groups == groupsListFragment && bulbsFragment != null
-				&& groupsListFragment != null)
+		if (groups == groupsListFragment && groups != null
+				&& bulbsFragment != null)
 			bulbsFragment.invalidateSelection();
-		else if (bulbs == bulbsFragment && bulbsFragment != null
+		if (bulbs == bulbsFragment && bulbs != null
 				&& groupsListFragment != null)
 			groupsListFragment.invalidateSelection();
 
