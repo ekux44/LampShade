@@ -462,38 +462,44 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
-			MenuItem unlocksItem = menu.findItem(R.id.action_add_both);
-			unlocksItem.setEnabled(false);
-			unlocksItem.setVisible(false);
-
-		}
-
-		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED,
+		if (PreferenceManager.getDefaultSharedPreferences(this).getInt(PreferencesKeys.BULBS_UNLOCKED,
 				PreferencesKeys.ALWAYS_FREE_BULBS) > PreferencesKeys.ALWAYS_FREE_BULBS) {
 			// has pro version
 
 			// hide unlocks button
 			MenuItem unlocksItem = menu.findItem(R.id.action_unlocks);
-			unlocksItem.setEnabled(false);
-			unlocksItem.setVisible(false);
-
+			if(unlocksItem!=null){
+				unlocksItem.setEnabled(false);
+				unlocksItem.setVisible(false);
+			}
 			if (nfcAdapter == null) {
 				// hide nfc link if nfc not supported
 				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-				nfcItem.setEnabled(false);
-				nfcItem.setVisible(false);
+				if(nfcItem!=null){
+					nfcItem.setEnabled(false);
+					nfcItem.setVisible(false);
+				}
 			}
 		} else {
 			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-			nfcItem.setEnabled(false);
-			nfcItem.setVisible(false);
-
+			if(nfcItem!=null){
+				nfcItem.setEnabled(false);
+				nfcItem.setVisible(false);
+			}
 			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
-			alarmItem.setEnabled(false);
-			alarmItem.setVisible(false);
+			if(alarmItem!=null){
+				alarmItem.setEnabled(false);
+				alarmItem.setVisible(false);
+			}
 		}
 
+		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			MenuItem bothItem = menu.findItem(R.id.action_add_both);
+			if(bothItem!=null){
+				bothItem.setEnabled(false);
+				bothItem.setVisible(false);
+			}
+		}
 		return true;
 	}
 
