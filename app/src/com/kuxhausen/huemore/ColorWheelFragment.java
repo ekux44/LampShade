@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
-import android.widget.ToggleButton;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
@@ -42,7 +41,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 	private BulbState hs;
 	Gson gson = new Gson();
 	SeekBar seekBar;
-	ToggleButton colorLoop;
+	CompoundButton colorLoop;
 	Spinner transitionSpinner;
 	int[] transitionValues;
 	LinearLayout colorLoopLayout, transitionLayout;
@@ -99,8 +98,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 		hs.sat = (short) seekBar.getProgress();
 
 		if (colorLoopLayoutVisible) {
-			colorLoop = (ToggleButton) groupDialogView
-					.findViewById(R.id.colorLoopToggleButton);
+			colorLoop = (CompoundButton) groupDialogView
+					.findViewById(R.id.colorLoopCompoundButton);
 			colorLoop.setOnCheckedChangeListener(this);
 			colorLoopLayout = (LinearLayout) groupDialogView
 					.findViewById(R.id.colorLoopLayout);
