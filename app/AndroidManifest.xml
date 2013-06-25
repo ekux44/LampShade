@@ -80,7 +80,7 @@
         <activity
             android:name=".timing.AlarmListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" android:theme="@style/Theme.Sherlock">
         </activity>
 
         <receiver android:name=".timing.BootSetter" >

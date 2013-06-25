@@ -1,15 +1,15 @@
 package com.kuxhausen.huemore.timing;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 
 /**
  * stupid list wrapper to work around the non-existence of a
  * ListFragmentActivity
  **/
-public class AlarmListActivity extends FragmentActivity {
+public class AlarmListActivity extends SherlockFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
