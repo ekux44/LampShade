@@ -139,20 +139,44 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 
 	@Override
 	public void onDestroy() {
-	if (groupsListFragment.isResumed()) {
-	getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
-	}
-	if (bulbsFragment.isResumed()) {
-		getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
-	}
-	groupsListFragment = null;
-	bulbsFragment = null;
-	super.onDestroy();
+		if (groupsListFragment!=null && groupsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
+		}
+		if (bulbsFragment!=null && bulbsFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
+		}
+		groupsListFragment = null;
+		bulbsFragment = null;
+		
+		super.onDestroy();
 	}
 	
 	@Override
+    public void onSaveInstanceState(Bundle outState) {
+		if (groupsListFragment!=null && groupsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
+		}
+		if (bulbsFragment!=null && bulbsFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
+		}
+		groupsListFragment = null;
+		bulbsFragment = null;
+	 
+		super.onSaveInstanceState(outState);
+     }
+	
+	@Override
 	public void onDetach() {
-	    super.onDetach();
+		if (groupsListFragment!=null && groupsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
+		}
+		if (bulbsFragment!=null && bulbsFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
+		}
+		groupsListFragment = null;
+		bulbsFragment = null;
+	
+		super.onDetach();
 
 	    try {
 	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");

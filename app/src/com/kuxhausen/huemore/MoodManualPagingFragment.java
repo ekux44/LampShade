@@ -187,20 +187,46 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	
 	@Override
 	public void onDestroy() {
-	if (moodsListFragment.isResumed()) {
-	getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
-	}
-	if (colorWheelFragment.isResumed()) {
-		getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
-	}
-	moodsListFragment = null;
-	colorWheelFragment = null;
-	super.onDestroy();
+		if (moodsListFragment!=null && moodsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+		}
+		if (colorWheelFragment!=null && colorWheelFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+		}
+		moodsListFragment = null;
+		colorWheelFragment = null;
+		
+		super.onDestroy();
 	}
 	
 	@Override
+    public void onSaveInstanceState(Bundle outState) {
+		if (moodsListFragment!=null && moodsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+		}
+		if (colorWheelFragment!=null && colorWheelFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+		}
+		moodsListFragment = null;
+		colorWheelFragment = null;
+		
+		super.onSaveInstanceState(outState);
+	}
+
+	
+	@Override
 	public void onDetach() {
-	    super.onDetach();
+		if (moodsListFragment!=null && moodsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+		}
+		if (colorWheelFragment!=null && colorWheelFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+		}
+		moodsListFragment = null;
+		colorWheelFragment = null;
+		
+		
+		super.onDetach();
 
 	    try {
 	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
