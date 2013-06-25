@@ -64,9 +64,10 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 				&& groupsListFragment != null)
 			groupsListFragment.invalidateSelection();
 
-		if (parrentActivity != null || bulbNum ==null || name == null)
+		if (parrentActivity != null || bulbNum == null || name == null)
 			parrentActivity.onGroupBulbSelected(bulbNum, name);
-		//((MainActivity)this.getSherlockActivity()).onGroupBulbSelected(bulbNum, name);
+		// ((MainActivity)this.getSherlockActivity()).onGroupBulbSelected(bulbNum,
+		// name);
 
 	}
 
@@ -139,57 +140,64 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 
 	@Override
 	public void onDestroy() {
-		if (groupsListFragment!=null && groupsListFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
+		if (groupsListFragment != null && groupsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(groupsListFragment)
+					.commit();
 		}
-		if (bulbsFragment!=null && bulbsFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
+		if (bulbsFragment != null && bulbsFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(bulbsFragment)
+					.commit();
 		}
 		groupsListFragment = null;
 		bulbsFragment = null;
-		
+
 		super.onDestroy();
 	}
-	
+
 	@Override
-    public void onSaveInstanceState(Bundle outState) {
-		if (groupsListFragment!=null && groupsListFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
+	public void onSaveInstanceState(Bundle outState) {
+		if (groupsListFragment != null && groupsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(groupsListFragment)
+					.commit();
 		}
-		if (bulbsFragment!=null && bulbsFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
+		if (bulbsFragment != null && bulbsFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(bulbsFragment)
+					.commit();
 		}
 		groupsListFragment = null;
 		bulbsFragment = null;
-	 
+
 		super.onSaveInstanceState(outState);
-     }
-	
+	}
+
 	@Override
 	public void onDetach() {
-		if (groupsListFragment!=null && groupsListFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(groupsListFragment).commit();
+		if (groupsListFragment != null && groupsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(groupsListFragment)
+					.commit();
 		}
-		if (bulbsFragment!=null && bulbsFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(bulbsFragment).commit();
+		if (bulbsFragment != null && bulbsFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(bulbsFragment)
+					.commit();
 		}
 		groupsListFragment = null;
 		bulbsFragment = null;
-	
+
 		super.onDetach();
 
-	    try {
-	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-	        childFragmentManager.setAccessible(true);
-	        childFragmentManager.set(this, null);
+		try {
+			Field childFragmentManager = Fragment.class
+					.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
 
-	    } catch (NoSuchFieldException e) {
-	        throw new RuntimeException(e);
-	    } catch (IllegalAccessException e) {
-	        throw new RuntimeException(e);
-	    }
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
+
 	/**
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.

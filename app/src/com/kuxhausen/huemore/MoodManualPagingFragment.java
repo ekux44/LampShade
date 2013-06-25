@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
@@ -67,7 +67,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		public void onMoodManualSelected(String jSon);
 
 	}
-	
+
 	public void invalidateSelection() {
 		((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
 				.invalidateSelection();
@@ -172,72 +172,77 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		}
 	}
 
-	public void pollBrightness(){
+	public void pollBrightness() {
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
 				parrentActivity, parrentActivity.bulbS, this,
 				this.parrentActivity);
 		getBulbsAttributes.execute();
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		pollBrightness();
 	}
-	
+
 	@Override
 	public void onDestroy() {
-		if (moodsListFragment!=null && moodsListFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+		if (moodsListFragment != null && moodsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(moodsListFragment)
+					.commit();
 		}
-		if (colorWheelFragment!=null && colorWheelFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+		if (colorWheelFragment != null && colorWheelFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(colorWheelFragment)
+					.commit();
 		}
 		moodsListFragment = null;
 		colorWheelFragment = null;
-		
+
 		super.onDestroy();
 	}
-	
+
 	@Override
-    public void onSaveInstanceState(Bundle outState) {
-		if (moodsListFragment!=null && moodsListFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+	public void onSaveInstanceState(Bundle outState) {
+		if (moodsListFragment != null && moodsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(moodsListFragment)
+					.commit();
 		}
-		if (colorWheelFragment!=null && colorWheelFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+		if (colorWheelFragment != null && colorWheelFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(colorWheelFragment)
+					.commit();
 		}
 		moodsListFragment = null;
 		colorWheelFragment = null;
-		
+
 		super.onSaveInstanceState(outState);
 	}
 
-	
 	@Override
 	public void onDetach() {
-		if (moodsListFragment!=null && moodsListFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+		if (moodsListFragment != null && moodsListFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(moodsListFragment)
+					.commit();
 		}
-		if (colorWheelFragment!=null && colorWheelFragment.isResumed()) {
-			getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+		if (colorWheelFragment != null && colorWheelFragment.isResumed()) {
+			getFragmentManager().beginTransaction().remove(colorWheelFragment)
+					.commit();
 		}
 		moodsListFragment = null;
 		colorWheelFragment = null;
-		
-		
+
 		super.onDetach();
 
-	    try {
-	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-	        childFragmentManager.setAccessible(true);
-	        childFragmentManager.set(this, null);
+		try {
+			Field childFragmentManager = Fragment.class
+					.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
 
-	    } catch (NoSuchFieldException e) {
-	        throw new RuntimeException(e);
-	    } catch (IllegalAccessException e) {
-	        throw new RuntimeException(e);
-	    }
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

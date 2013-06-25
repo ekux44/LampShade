@@ -61,8 +61,8 @@ public class BulbsFragment extends SherlockListFragment implements
 		View myView = inflater.inflate(R.layout.bulb_view, container, false);
 
 		bulbNameList = new ArrayList<String>();
-		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
-				layout, bulbNameList);
+		rayAdapter = new ArrayAdapter<String>(this.getActivity(), layout,
+				bulbNameList);
 		setListAdapter(rayAdapter);
 		parrentActivity.bulbListenerFragment = this;
 		refreshList();
@@ -90,20 +90,21 @@ public class BulbsFragment extends SherlockListFragment implements
 
 	@Override
 	public void onDetach() {
-	    super.onDetach();
+		super.onDetach();
 
-	    try {
-	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
-	        childFragmentManager.setAccessible(true);
-	        childFragmentManager.set(this, null);
+		try {
+			Field childFragmentManager = Fragment.class
+					.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
 
-	    } catch (NoSuchFieldException e) {
-	        throw new RuntimeException(e);
-	    } catch (IllegalAccessException e) {
-	        throw new RuntimeException(e);
-	    }
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -187,7 +188,7 @@ public class BulbsFragment extends SherlockListFragment implements
 		if (result == null)
 			return;
 		bulbArray = result;
-		
+
 		rayAdapter.clear();
 		for (int i = 0; i < bulbArray.length; i++) {
 			// bulbNameList.add(bulb.name);
