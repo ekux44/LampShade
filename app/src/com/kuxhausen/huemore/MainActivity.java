@@ -321,8 +321,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onDestroy() {
 		for (AsyncTask<?, ?, ?> task : inFlight)
 			task.cancel(true);
-		if (mPlayHelper != null)
-			mPlayHelper.dispose();
+		if (mPlayHelper != null){
+			try{
+				mPlayHelper.dispose();
+			}catch (IllegalArgumentException e){
+			}
+		}
 		mPlayHelper = null;
 		Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
 		super.onDestroy();
