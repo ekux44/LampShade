@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import java.lang.reflect.Field;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -126,6 +128,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 			}
 		});
 		setHasOptionsMenu(true);
+		this.setRetainInstance(false);
 		return myView;
 	}
 
@@ -180,6 +183,35 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	public void onResume() {
 		super.onResume();
 		pollBrightness();
+	}
+	
+	@Override
+	public void onDestroy() {
+	if (moodsListFragment.isResumed()) {
+	getFragmentManager().beginTransaction().remove(moodsListFragment).commit();
+	}
+	if (colorWheelFragment.isResumed()) {
+		getFragmentManager().beginTransaction().remove(colorWheelFragment).commit();
+	}
+	moodsListFragment = null;
+	colorWheelFragment = null;
+	super.onDestroy();
+	}
+	
+	@Override
+	public void onDetach() {
+	    super.onDetach();
+
+	    try {
+	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+	        childFragmentManager.setAccessible(true);
+	        childFragmentManager.set(this, null);
+
+	    } catch (NoSuchFieldException e) {
+	        throw new RuntimeException(e);
+	    } catch (IllegalAccessException e) {
+	        throw new RuntimeException(e);
+	    }
 	}
 
 	/**

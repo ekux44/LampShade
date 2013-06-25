@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import java.lang.reflect.Field;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
@@ -24,7 +27,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class ColorWheelFragment extends Fragment implements
+public class ColorWheelFragment extends SherlockFragment implements
 		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener,
 		OnCheckedChangeListener {
 
@@ -45,6 +48,22 @@ public class ColorWheelFragment extends Fragment implements
 	LinearLayout colorLoopLayout, transitionLayout;
 	boolean colorLoopLayoutVisible = true, transitionLayoutVisible = true;
 
+	@Override
+	public void onDetach() {
+	    super.onDetach();
+
+	    try {
+	        Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+	        childFragmentManager.setAccessible(true);
+	        childFragmentManager.set(this, null);
+
+	    } catch (NoSuchFieldException e) {
+	        throw new RuntimeException(e);
+	    } catch (IllegalAccessException e) {
+	        throw new RuntimeException(e);
+	    }
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
