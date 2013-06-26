@@ -2,6 +2,11 @@ package com.kuxhausen.huemore.automation;
 
 import java.util.ArrayList;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.SynchronousTransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
@@ -10,11 +15,6 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.api.BulbState;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 
 public class FireReceiver extends BroadcastReceiver {
 

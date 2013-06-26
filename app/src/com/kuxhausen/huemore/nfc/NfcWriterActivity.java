@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.nfc;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;

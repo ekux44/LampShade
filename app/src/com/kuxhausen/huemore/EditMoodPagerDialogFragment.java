@@ -2,12 +2,6 @@ package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.state.api.BulbState;
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -21,6 +15,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditMoodPagerDialogFragment extends DialogFragment implements
 		OnClickListener {

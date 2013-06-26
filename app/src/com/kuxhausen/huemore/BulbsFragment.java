@@ -3,15 +3,8 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +17,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.kuxhausen.huemore.network.GetBulbList;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
 public class BulbsFragment extends SherlockListFragment implements

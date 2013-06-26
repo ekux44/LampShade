@@ -12,11 +12,11 @@
 
 package com.twofortyfouram.locale;
 
-import com.kuxhausen.huemore.R;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.kuxhausen.huemore.R;
 
 /**
  * Utility class to generate a breadcrumb title string for {@code Activity}
