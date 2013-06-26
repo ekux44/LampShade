@@ -41,7 +41,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 	Boolean[] preChecked;
 	String initialName;
 
-	private MainActivity parrentActivity;
+	private GodObject parrentActivity;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -50,7 +50,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (MainActivity) activity;
+			parrentActivity = (GodObject) activity;
 		} catch (ClassCastException e) {
 		}
 	}

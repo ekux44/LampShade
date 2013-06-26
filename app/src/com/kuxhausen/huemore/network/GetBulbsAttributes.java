@@ -19,7 +19,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 
@@ -29,7 +29,7 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 	private Integer[] bulbs;
 	private OnAttributeListReturnedListener mResultListener;
 	Gson gson = new Gson();
-	private MainActivity tracker;
+	private GodObject tracker;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -39,12 +39,12 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 	}
 
 	public GetBulbsAttributes(Context context, Integer[] bulbS,
-			OnAttributeListReturnedListener resultListener, MainActivity ma) {
+			OnAttributeListReturnedListener resultListener, GodObject ma) {
 		cont = context;
 		bulbs = bulbS;
 		mResultListener = resultListener;
 		tracker = ma;
-		tracker.inFlight.add(this);
+		tracker.getInFlight().add(this);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 
 	@Override
 	protected void onPostExecute(BulbAttributes[] result) {
-		tracker.inFlight.remove(this);
+		tracker.getInFlight().remove(this);
 		mResultListener.onListReturned(result);
 
 	}

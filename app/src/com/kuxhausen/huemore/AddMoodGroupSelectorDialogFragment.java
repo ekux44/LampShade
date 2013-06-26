@@ -14,7 +14,6 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 public class AddMoodGroupSelectorDialogFragment extends DialogFragment
 		implements OnClickListener {
 
-	MainActivity ma;
 	Button newGroup, newMood;
 
 	@Override
@@ -23,7 +22,6 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.add_new_selector, container,
 				false);
-		ma = (MainActivity) this.getActivity();
 		// this.getDialog().setTitle(R.string.);
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 

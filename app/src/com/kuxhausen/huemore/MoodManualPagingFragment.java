@@ -54,7 +54,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	 */
 	ViewPager mViewPager;
 	SeekBar brightnessBar;
-	public MainActivity parrentActivity;
+	public GodObject parrentActivity;
 	int brightness;
 	boolean isTrackingTouch = false;
 	SharedPreferences settings;
@@ -77,7 +77,7 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		parrentActivity = (MainActivity) this.getActivity();
+		parrentActivity = (GodObject) this.getActivity();
 		settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
 		// Inflate the layout for this fragment
@@ -167,14 +167,14 @@ public class MoodManualPagingFragment extends SherlockFragment implements
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (MainActivity) activity;
+			parrentActivity = (GodObject) activity;
 		} catch (ClassCastException e) {
 		}
 	}
 
 	public void pollBrightness() {
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
-				parrentActivity, parrentActivity.bulbS, this,
+				parrentActivity, parrentActivity.getBulbs(), this,
 				this.parrentActivity);
 		getBulbsAttributes.execute();
 	}

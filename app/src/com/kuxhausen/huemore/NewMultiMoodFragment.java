@@ -91,7 +91,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 		for (int i = 0; i < moodRowArray.size(); i++) {
 			states[i] = gson.toJson(moodRowArray.get(i).hs);
 		}
-		((MainActivity) getActivity()).testMood(states);
+		((GodObject) getActivity()).testMood(states);
 
 	}
 

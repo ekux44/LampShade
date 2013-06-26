@@ -30,7 +30,7 @@ public class BulbsFragment extends SherlockListFragment implements
 	private int selectedPos = -1;
 	private GroupBulbPagingFragment gbpfCallback;
 
-	private MainActivity parrentActivity;
+	private GodObject parrentActivity;
 
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
@@ -52,7 +52,7 @@ public class BulbsFragment extends SherlockListFragment implements
 		rayAdapter = new ArrayAdapter<String>(this.getActivity(), layout,
 				bulbNameList);
 		setListAdapter(rayAdapter);
-		parrentActivity.bulbListenerFragment = this;
+		parrentActivity.setBulbListenerFragment(this);
 		refreshList();
 		return myView;
 	}
@@ -71,7 +71,7 @@ public class BulbsFragment extends SherlockListFragment implements
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (MainActivity) activity;
+			parrentActivity = (GodObject) activity;
 		} catch (ClassCastException e) {
 		}
 	}

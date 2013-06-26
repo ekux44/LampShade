@@ -113,7 +113,7 @@ public class MoodsListFragment extends SherlockListFragment implements
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			mMoodCallback = (MainActivity) activity;
+			mMoodCallback = (GodObject) activity;
 		} catch (ClassCastException e) {
 		}
 	}

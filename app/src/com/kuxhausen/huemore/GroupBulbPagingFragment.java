@@ -45,7 +45,7 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 	 */
 	ViewPager mViewPager;
 	SharedPreferences settings;
-	MainActivity parrentActivity;
+	GodObject parrentActivity;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -66,7 +66,7 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 
 		if (parrentActivity != null || bulbNum == null || name == null)
 			parrentActivity.onGroupBulbSelected(bulbNum, name);
-		// ((MainActivity)this.getSherlockActivity()).onGroupBulbSelected(bulbNum,
+		// ((GodObject)this.getSherlockActivity()).onGroupBulbSelected(bulbNum,
 		// name);
 
 	}
@@ -133,7 +133,7 @@ public class GroupBulbPagingFragment extends SherlockFragment {
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (MainActivity) activity;
+			parrentActivity = (GodObject) activity;
 		} catch (ClassCastException e) {
 		}
 	}

@@ -174,7 +174,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	public void preview() {
 		String[] states = { gson.toJson(hs) };
-		((MainActivity) getActivity()).testMood(states);
+		((GodObject) getActivity()).testMood(states);
 
 	}
 

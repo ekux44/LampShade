@@ -21,14 +21,14 @@ public class SettingsDialogFragment extends DialogFragment implements
 		OnClickListener, OnCheckedChangeListener {
 
 	SharedPreferences settings;
-	MainActivity ma;
+	GodObject ma;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.settings, container, false);
-		ma = (MainActivity) this.getActivity();
+		ma = (GodObject) this.getActivity();
 		this.getDialog().setTitle(R.string.action_settings);
 
 		Button rateButton = (Button) myView.findViewById(R.id.rateButton);

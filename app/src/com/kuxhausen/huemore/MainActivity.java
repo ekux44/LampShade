@@ -41,24 +41,38 @@ import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
  * @author Eric Kuxhausen
  * 
  */
-public class MainActivity extends SherlockFragmentActivity implements
+public class MainActivity extends GodObject implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsListFragment.OnMoodSelectedListener {
 
-	public ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
+	private ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
-	Integer[] bulbS;
-	String mood;
-	String groupS;
+	private Integer[] bulbS;
+	private String mood;
+	private String groupS;
 	IabHelper mPlayHelper;
-	MainActivity m;
+	private MainActivity m;
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	private NfcAdapter nfcAdapter;
 	SharedPreferences settings;
 	Gson gson = new Gson();
 
+	public Integer[] getBulbs(){
+		return bulbS;
+	}
+	
+	public ArrayList<AsyncTask<?, ?, ?>> getInFlight(){
+		return inFlight;
+	}
+	public void setBulbListenerFragment(GetBulbList.OnBulbListReturnedListener frag){
+		bulbListenerFragment = frag;
+	}
+	public GetBulbList.OnBulbListReturnedListener getBulbListenerFragment(){
+		return bulbListenerFragment;
+	}
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

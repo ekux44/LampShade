@@ -19,7 +19,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class TransmitGroupMood extends AsyncTask<Void, Void, Integer> {
@@ -27,17 +27,17 @@ public class TransmitGroupMood extends AsyncTask<Void, Void, Integer> {
 	private Context cont;
 	private Integer[] bulbs;
 	private String[] moods;
-	private MainActivity tracker;
+	private GodObject tracker;
 
 	public TransmitGroupMood(Context context, Integer[] bulbS, String[] moodS,
-			MainActivity ma) {
+			GodObject ma) {
 		cont = context;
 		bulbs = bulbS;
 		moods = moodS;
 
 		if (ma != null) {
 			tracker = ma;
-			tracker.inFlight.add(this);
+			tracker.getInFlight().add(this);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class TransmitGroupMood extends AsyncTask<Void, Void, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 		if (tracker != null)
-			tracker.inFlight.remove(this);
+			tracker.getInFlight().remove(this);
 	}
 
 }
