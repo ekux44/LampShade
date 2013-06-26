@@ -1,39 +1,29 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.nfc.NfcAdapter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.GetBulbList;
-import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
-import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 
@@ -45,27 +35,13 @@ public class MainActivity extends GodObject implements
 		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsListFragment.OnMoodSelectedListener {
 
-	private ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
-
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
-	private Integer[] bulbS;
-	private String mood;
-	private String groupS;
 	IabHelper mPlayHelper;
 	private MainActivity m;
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	private NfcAdapter nfcAdapter;
-	SharedPreferences settings;
-	Gson gson = new Gson();
-
-	public Integer[] getBulbs(){
-		return bulbS;
-	}
 	
-	public ArrayList<AsyncTask<?, ?, ?>> getInFlight(){
-		return inFlight;
-	}
 	public void setBulbListenerFragment(GetBulbList.OnBulbListReturnedListener frag){
 		bulbListenerFragment = frag;
 	}
@@ -114,9 +90,47 @@ public class MainActivity extends GodObject implements
 
 		}
 
+		
+		runDatabaseInitializationChecks();
 		// (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ?
 		// this.getActionBar().setDisplayHomeAsUpEnabled(true)
-		settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
+		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
+		String base64EncodedPublicKey = firstChunk + secondChunk;
+		// compute your public key and store it in base64EncodedPublicKey
+		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
+		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
+		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			@Override
+			public void onIabSetupFinished(IabResult result) {
+				if (!result.isSuccess()) {
+					// Oh noes, there was a problem.
+					// Log.d("asdf", "Problem setting up In-app Billing: "+
+					// result);
+				} else {
+					// Hooray, IAB is fully set up!
+					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
+					if (m.bulbListenerFragment != null) {
+						GetBulbList pushGroupMood = new GetBulbList(m,
+								m.bulbListenerFragment, m);
+						pushGroupMood.execute();
+					}
+				}
+			}
+		});
+
+		Bundle b = this.getIntent().getExtras();
+		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
+				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
+			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
+			unlocks.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		}
+	}
+	
+	private void runDatabaseInitializationChecks(){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (!settings.contains(PreferencesKeys.TWO_POINT_TWO_UPDATE)) {
 			databaseHelper.updatedTwoPointOnePointOne();
 			// Run this before all the other updates, as it launches the update
@@ -190,38 +204,6 @@ public class MainActivity extends GodObject implements
 		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
 			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
 			dhdf.show(this.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-		}
-		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
-		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
-		String base64EncodedPublicKey = firstChunk + secondChunk;
-		// compute your public key and store it in base64EncodedPublicKey
-		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
-		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			@Override
-			public void onIabSetupFinished(IabResult result) {
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					// Log.d("asdf", "Problem setting up In-app Billing: "+
-					// result);
-				} else {
-					// Hooray, IAB is fully set up!
-					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-					if (m.bulbListenerFragment != null) {
-						GetBulbList pushGroupMood = new GetBulbList(m,
-								m.bulbListenerFragment, m);
-						pushGroupMood.execute();
-					}
-				}
-			}
-		});
-
-		Bundle b = this.getIntent().getExtras();
-		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
-				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
-			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 	}
@@ -332,8 +314,6 @@ public class MainActivity extends GodObject implements
 
 	@Override
 	public void onDestroy() {
-		for (AsyncTask<?, ?, ?> task : inFlight)
-			task.cancel(true);
 		if (mPlayHelper != null) {
 			try {
 				mPlayHelper.dispose();
@@ -347,8 +327,8 @@ public class MainActivity extends GodObject implements
 
 	@Override
 	public void onGroupBulbSelected(Integer[] bulb, String name) {
-		bulbS = bulb;
-		groupS = name;
+		setGroupS(name);
+		setBulbS(bulb);
 		// Capture the article fragment from the activity layout
 		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
@@ -413,67 +393,7 @@ public class MainActivity extends GodObject implements
 		}
 	}
 
-	@Override
-	public void onMoodSelected(String moodParam) {
-		mood = moodParam;
-		pushMoodGroup();
-	}
 
-	public void onBrightnessChanged(String brightnessState[]) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				brightnessState, this);
-		pushGroupMood.execute();
-	}
-
-	/**
-	 * test mood by applying to json states array to previously selected moods
-	 * 
-	 * @param states
-	 */
-	public void testMood(String[] states) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				states, this);
-		pushGroupMood.execute();
-	}
-
-	private void pushMoodGroup() {
-		if (bulbS == null || mood == null)
-			return;
-		String[] moodS = null;
-		if (mood.equals(PreferencesKeys.RANDOM)) {
-			BulbState randomState = new BulbState();
-			randomState.on = true;
-			randomState.hue = (int) (65535 * Math.random());
-			randomState.sat = (short) (255 * (Math.random() * 5. + .25));
-			moodS = new String[1];
-			moodS[0] = gson.toJson(randomState);
-		} else {
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWereClause = { mood };
-			Cursor cursor = getContentResolver().query(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-					moodColumns, // Return the note ID and title for each note.
-					MoodColumns.MOOD + "=?", // selection clause
-					mWereClause, // election clause args
-					null // Use the default sort order.
-					);
-
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (cursor.moveToNext()) {
-				moodStates.add(cursor.getString(0));
-			}
-			moodS = moodStates.toArray(new String[moodStates.size()]);
-		}
-
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				moodS, this);
-		pushGroupMood.execute();
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
