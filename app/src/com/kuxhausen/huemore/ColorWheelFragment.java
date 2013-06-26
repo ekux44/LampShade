@@ -1,12 +1,9 @@
 package com.kuxhausen.huemore;
 
-import java.lang.reflect.Field;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,23 +43,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 	int[] transitionValues;
 	LinearLayout colorLoopLayout, transitionLayout;
 	boolean colorLoopLayoutVisible = true, transitionLayoutVisible = true;
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-
-		try {
-			Field childFragmentManager = Fragment.class
-					.getDeclaredField("mChildFragmentManager");
-			childFragmentManager.setAccessible(true);
-			childFragmentManager.set(this, null);
-
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
