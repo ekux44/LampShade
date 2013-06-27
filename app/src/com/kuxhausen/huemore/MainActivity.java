@@ -95,6 +95,7 @@ public class MainActivity extends GodObject implements
 		setBulbS(bulb);
 		
 		Intent i = new Intent(this, SecondActivity.class);
+		i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, this.getSerialized());
 		this.startActivity(i);
 
 		// Capture the article fragment from the activity layout

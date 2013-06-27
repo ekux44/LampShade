@@ -62,7 +62,9 @@ public class SecondActivity extends GodObject implements
 
 		setContentView(R.layout.second_activity);
 		m = this;
-
+		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
+		this.getSupportActionBar().setTitle(this.getGroupS());
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
 		parrentActivity = this;
@@ -107,75 +109,10 @@ public class SecondActivity extends GodObject implements
 
 	@Override
 	public void onGroupBulbSelected(Integer[] bulb, String name) {
-		setGroupS(name);
-		setBulbS(bulb);
-		// Capture the article fragment from the activity layout
-/*		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.moods_fragment);
-
-		if (moodFrag != null) {
-			// If article frag is available, we're in two-pane layout...
-
-			// Call a method in the ArticleFragment to update its content
-			moodFrag.invalidateSelection();
-			moodFrag.pollBrightness();
-
-		} else {
-			// If the frag is not available, we're in the one-pane layout and
-			// must swap frags...
-
-			// Create fragment and give it an argument for the selected article
-			MoodManualPagingFragment newFragment = new MoodManualPagingFragment();
-			FragmentTransaction transaction = getSupportFragmentManager()
-					.beginTransaction();
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-			// Replace whatever is in the fragment_container view with this
-			// fragment,
-			// and add the transaction to the back stack so the user can
-			// navigate back
-			transaction.replace(R.id.fragment_container, newFragment,
-					MoodManualPagingFragment.class.getName());
-			transaction.addToBackStack(null);
-
-			// Commit the transaction
-			transaction.commitAllowingStateLoss();// wtf, why can't I use
-													// .commit() w/o error every
-													// other launch?
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-
-			this.getSupportActionBar().setTitle(name);
-			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-*/
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		// make sure moved back to group bulb when we come back to the app
-		moveToGroupBulb();
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-	}
-
-	private void moveToGroupBulb() {
-//		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
-//				.findFragmentById(R.id.moods_fragment);
-//
-//		if (moodFrag == null || !moodFrag.isVisible()) {
-//			this.onBackPressed();
-//		}
+		throw new RuntimeException("Not implemented here");
 	}
 
 	
-	
-
 
 	SeekBar brightnessBar;
 	int brightness;
@@ -333,7 +270,7 @@ public class SecondActivity extends GodObject implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			moveToGroupBulb();
+			this.onBackPressed();
 			return true;
 		case R.id.action_register_with_hub:
 			// RegisterWithHubDialogFragment rwhdf = new

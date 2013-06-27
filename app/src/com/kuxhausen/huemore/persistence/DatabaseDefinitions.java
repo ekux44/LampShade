@@ -154,6 +154,7 @@ public final class DatabaseDefinitions {
 		public final static String SHOW_EDIT_TEXT = "ShowEditText";
 		public final static String PREVIOUS_STATE = "PreviousState";
 		public final static String PROMPT_UPGRADE = "PromptUpgrade";
+		public final static String SERIALIZED_GOD_OBJECT = "SerializedGodObject";
 	}
 
 	public static final class ExternalArguments {

@@ -24,12 +24,38 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	private Integer[] bulbS;
 	private String mood;
 	
+	class SerializedGodObjectForTransport{
+		public SerializedGodObjectForTransport(){
+		}
+		public String group;
+		public Integer[] bulb;
+		public String moo;
+	}
+	
+	public String getSerialized(){
+		SerializedGodObjectForTransport sgoft = new SerializedGodObjectForTransport();
+		sgoft.group = groupS;
+		sgoft.bulb = bulbS;
+		sgoft.moo = mood;
+		return gson.toJson(sgoft);
+	}
+	public void restoreSerialized(String serializedForTransport){
+		SerializedGodObjectForTransport sgoft = gson.fromJson(serializedForTransport, SerializedGodObjectForTransport.class);
+		groupS = sgoft.group;
+		bulbS = sgoft.bulb;
+		mood = sgoft.moo;
+	}
+	
 	public void setBulbS(Integer[] newBulbS){
 		bulbS = newBulbS;
 	}
 	public void setGroupS(String newGroupS){
 		groupS = newGroupS;
 	}
+	public String getGroupS(){
+		return groupS;
+	}
+	
 	
 	public ArrayList<AsyncTask<?, ?, ?>> getInFlight(){
 		return inFlight;
