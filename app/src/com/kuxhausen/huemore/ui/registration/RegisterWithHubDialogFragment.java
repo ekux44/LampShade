@@ -4,11 +4,14 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -62,6 +65,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 				period_in_milliseconds) {
 			private boolean warned = false;
 
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void onTick(long millisUntilFinished) {
 				if (isAdded()) {
@@ -69,7 +73,11 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
 					networkRegister = new Register(parrentActivity, bridges,
 							me, getUserName(), getDeviceType());
-					networkRegister.execute();
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						networkRegister.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					} else {
+						networkRegister.execute();
+					}
 				}
 			}
 
