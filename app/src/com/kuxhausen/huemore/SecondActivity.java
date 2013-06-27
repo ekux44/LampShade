@@ -1,10 +1,13 @@
 package com.kuxhausen.huemore;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -178,11 +181,16 @@ public class SecondActivity extends GodObject implements
 			return "";
 		}
 	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void pollBrightness() {
 		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
 				parrentActivity, parrentActivity.getBulbs(), this,
 				this.parrentActivity);
-		getBulbsAttributes.execute();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			getBulbsAttributes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			getBulbsAttributes.execute();
+		}
 	}
 	public void invalidateSelection() {
 		((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))

@@ -1,10 +1,13 @@
 package com.kuxhausen.huemore;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -279,6 +282,7 @@ public class MainActivity extends GodObject implements
 			return "";
 		}
 	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void pollBrightness() {
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
@@ -286,7 +290,11 @@ public class MainActivity extends GodObject implements
 			GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
 					parrentActivity, parrentActivity.getBulbs(), this,
 					this.parrentActivity);
-			getBulbsAttributes.execute();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				getBulbsAttributes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			} else {
+				getBulbsAttributes.execute();
+			}
 		}
 	}
 	public void invalidateSelection() {
@@ -547,6 +555,7 @@ public class MainActivity extends GodObject implements
 		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
 		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
 		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			public void onIabSetupFinished(IabResult result) {
 				if (!result.isSuccess()) {
@@ -559,7 +568,11 @@ public class MainActivity extends GodObject implements
 					if (m.bulbListenerFragment != null) {
 						GetBulbList pushGroupMood = new GetBulbList(m,
 								m.bulbListenerFragment, m);
-						pushGroupMood.execute();
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+							pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						} else {
+							pushGroupMood.execute();
+						}
 					}
 				}
 			}

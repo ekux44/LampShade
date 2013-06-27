@@ -2,8 +2,10 @@ package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
@@ -90,10 +92,15 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 		pushMoodGroup();
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void onBrightnessChanged(String brightnessState[]) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
 				brightnessState, this);
-		pushGroupMood.execute();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			pushGroupMood.execute();
+		}
 	}
 
 	/**
@@ -101,12 +108,18 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	 * 
 	 * @param states
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
 				states, this);
-		pushGroupMood.execute();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			pushGroupMood.execute();
+		}
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
@@ -143,7 +156,11 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 
 		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
 				moodS, this);
-		pushGroupMood.execute();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} else {
+			pushGroupMood.execute();
+		}
 	}
 	
 }
