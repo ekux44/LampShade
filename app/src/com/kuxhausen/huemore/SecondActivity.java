@@ -69,13 +69,13 @@ public class SecondActivity extends GodObject implements
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
 		parrentActivity = this;
 		// Set up the ViewPager, attaching the adapter.
-		mViewPager = (ViewPager) this.findViewById(R.id.pager);
-		mViewPager.setAdapter(mMoodManualPagerAdapter);
+		mViewPager2 = (ViewPager) this.findViewById(R.id.mood_pager);
+		mViewPager2.setAdapter(mMoodManualPagerAdapter);
 		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
 		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)) {
-			mViewPager.setCurrentItem(MOOD_LOCATION);
+			mViewPager2.setCurrentItem(MOOD_LOCATION);
 		}
 		brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
 		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -126,20 +126,15 @@ public class SecondActivity extends GodObject implements
 	private static MoodsListFragment moodsListFragment;
 	private static ColorWheelFragment colorWheelFragment;
 
-	ViewPager mViewPager;
+	ViewPager mViewPager2;
 	GodObject parrentActivity;
 	
 	@Override
 	public void onSelected(Integer[] bulbNum, String name,
 			GroupsListFragment groups, BulbsFragment bulbs) {
-		// TODO Auto-generated method stub
-		//throw not implimented exception
+		throw new RuntimeException("Not implemented here");
 	}
 	
-	/**
-	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
-	 * fragment representing an object in the collection.
-	 */
 	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
 		GodObject frag;

@@ -12,22 +12,27 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.SecondActivity.MoodManualPagerAdapter;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
+import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 
@@ -62,18 +67,59 @@ public class MainActivity extends GodObject implements
 		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
 		parrentActivity = this;
 		// Set up the ViewPager, attaching the adapter.
-		mViewPager = (ViewPager) this.findViewById(R.id.pager);
-		mViewPager.setAdapter(mGroupBulbPagerAdapter);
+		mViewPager1 = (ViewPager) this.findViewById(R.id.group_pager);
+		mViewPager1.setAdapter(mGroupBulbPagerAdapter);
 		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
 		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)) {
-			if (mViewPager.getCurrentItem() != GROUP_LOCATION)
-				mViewPager.setCurrentItem(GROUP_LOCATION);
+			if (mViewPager1.getCurrentItem() != GROUP_LOCATION)
+				mViewPager1.setCurrentItem(GROUP_LOCATION);
 		} else {
-			if (mViewPager.getCurrentItem() != BULB_LOCATION)
-				mViewPager.setCurrentItem(BULB_LOCATION);
+			if (mViewPager1.getCurrentItem() != BULB_LOCATION)
+				mViewPager1.setCurrentItem(BULB_LOCATION);
 		}
+		
+		if ((getResources().getConfiguration().screenLayout &
+				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+				 Configuration.SCREENLAYOUT_SIZE_LARGE){
+					
+			mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
+			parrentActivity = this;
+			// Set up the ViewPager, attaching the adapter.
+			mViewPager2 = (ViewPager) this.findViewById(R.id.mood_pager);
+			mViewPager2.setAdapter(mMoodManualPagerAdapter);
+			
+			if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)) {
+				mViewPager2.setCurrentItem(MOOD_LOCATION);
+			}
+			brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+			brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					BulbState hs = new BulbState();
+					hs.bri = brightness;
+					hs.on = true;
+
+					String[] brightnessState = { gson.toJson(hs) };
+					// TODO deal with off?
+					parrentActivity.onBrightnessChanged(brightnessState);
+					isTrackingTouch = false;
+				}
+
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					isTrackingTouch = true;
+				}
+
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+					brightness = progress;
+				}
+			});
+		 }
 		
 		
 		initializationDatabaseChecks();
@@ -93,75 +139,17 @@ public class MainActivity extends GodObject implements
 	public void onGroupBulbSelected(Integer[] bulb, String name) {
 		setGroupS(name);
 		setBulbS(bulb);
-		
-		Intent i = new Intent(this, SecondActivity.class);
-		i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, this.getSerialized());
-		this.startActivity(i);
-
-		// Capture the article fragment from the activity layout
-/*		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.moods_fragment);
-
-		if (moodFrag != null) {
-			// If article frag is available, we're in two-pane layout...
-
-			// Call a method in the ArticleFragment to update its content
-			moodFrag.invalidateSelection();
-			moodFrag.pollBrightness();
-
-		} else {
-			// If the frag is not available, we're in the one-pane layout and
-			// must swap frags...
-
-			// Create fragment and give it an argument for the selected article
-			MoodManualPagingFragment newFragment = new MoodManualPagingFragment();
-			FragmentTransaction transaction = getSupportFragmentManager()
-					.beginTransaction();
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-			// Replace whatever is in the fragment_container view with this
-			// fragment,
-			// and add the transaction to the back stack so the user can
-			// navigate back
-			transaction.replace(R.id.fragment_container, newFragment,
-					MoodManualPagingFragment.class.getName());
-			transaction.addToBackStack(null);
-
-			// Commit the transaction
-			transaction.commitAllowingStateLoss();// wtf, why can't I use
-													// .commit() w/o error every
-													// other launch?
-			transaction
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-
-			this.getSupportActionBar().setTitle(name);
-			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-*/
+		if ((getResources().getConfiguration().screenLayout &
+				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+				 Configuration.SCREENLAYOUT_SIZE_LARGE){
+			invalidateSelection();
+			pollBrightness();
+		 }else{
+			Intent i = new Intent(this, SecondActivity.class);
+			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, this.getSerialized());
+			this.startActivity(i);
+		 }
 	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		// make sure moved back to group bulb when we come back to the app
-		moveToGroupBulb();
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-	}
-
-	private void moveToGroupBulb() {
-//		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
-//				.findFragmentById(R.id.moods_fragment);
-//
-//		if (moodFrag == null || !moodFrag.isVisible()) {
-//			this.onBackPressed();
-//		}
-	}
-
 	
 	GroupBulbPagerAdapter mGroupBulbPagerAdapter;
 
@@ -171,7 +159,7 @@ public class MainActivity extends GodObject implements
 	private static GroupsListFragment groupsListFragment;
 	private static BulbsFragment bulbsFragment;
 
-	ViewPager mViewPager;
+	ViewPager mViewPager1;
 	GodObject parrentActivity;
 	
 	public void onSelected(Integer[] bulbNum, String name,
@@ -233,10 +221,118 @@ public class MainActivity extends GodObject implements
 			return "";
 		}
 	}
+	
+	SeekBar brightnessBar;
+	int brightness;
+	boolean isTrackingTouch = false;
+	
+	MoodManualPagerAdapter mMoodManualPagerAdapter;
+
+	private static final int MOOD_LOCATION = 1;
+	private static final int MANUAL_LOCATION = 0;
+
+	private static MoodsListFragment moodsListFragment;
+	private static ColorWheelFragment colorWheelFragment;
+
+	ViewPager mViewPager2;
+	
+	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
+
+		GodObject frag;
+		
+		public MoodManualPagerAdapter(GodObject godObject) {
+			super(godObject.getSupportFragmentManager());
+			frag = godObject;
+		}
+
+		@Override
+		public Fragment getItem(int i) {
+			switch (i) {
+			case MOOD_LOCATION:
+				if (moodsListFragment == null)
+					moodsListFragment = new MoodsListFragment();
+				return moodsListFragment;
+			case MANUAL_LOCATION:
+				if (colorWheelFragment == null) {
+					colorWheelFragment = new ColorWheelFragment();
+					colorWheelFragment.hideTransitionTime();
+				}
+				return colorWheelFragment;
+			default:
+				return null;
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case MOOD_LOCATION:
+				return frag.getString(R.string.cap_moods);
+			case MANUAL_LOCATION:
+				return frag.getString(R.string.cap_manual);
+			}
+			return "";
+		}
+	}
+	public void pollBrightness() {
+		if ((getResources().getConfiguration().screenLayout &
+				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+				 Configuration.SCREENLAYOUT_SIZE_LARGE){
+			GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
+					parrentActivity, parrentActivity.getBulbs(), this,
+					this.parrentActivity);
+			getBulbsAttributes.execute();
+		}
+	}
+	public void invalidateSelection() {
+		if ((getResources().getConfiguration().screenLayout &
+				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+				 Configuration.SCREENLAYOUT_SIZE_LARGE){
+			((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
+					.invalidateSelection();
+		}
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		if ((getResources().getConfiguration().screenLayout &
+				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+				 Configuration.SCREENLAYOUT_SIZE_LARGE){
+			pollBrightness();
+		}
+	}
 	@Override
 	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		// TODO Auto-generated method stub
-		//unused by GroupBulbPaginAdapter
+		if ((getResources().getConfiguration().screenLayout &
+				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+				 Configuration.SCREENLAYOUT_SIZE_LARGE){
+			if (!isTrackingTouch && bulbsAttributes != null
+					&& bulbsAttributes.length > 0) {
+				int brightnessSum = 0;
+				int brightnessPool = 0;
+				for (BulbAttributes ba : bulbsAttributes) {
+					if (ba != null) {
+						if (ba.state.on == false)
+							brightnessPool++;
+						else {
+							brightnessSum += ba.state.bri;
+							brightnessPool++;
+						}
+					}
+				}
+				if (brightnessPool == 0)
+					return;
+				int brightnessAverage = brightnessSum / brightnessPool;
+	
+				brightness = brightnessAverage;
+				brightnessBar.setProgress(brightnessAverage);
+			}
+		}
 	}
 
 	@Override
@@ -289,9 +385,6 @@ public class MainActivity extends GodObject implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			moveToGroupBulb();
-			return true;
 		case R.id.action_register_with_hub:
 			// RegisterWithHubDialogFragment rwhdf = new
 			// RegisterWithHubDialogFragment();
