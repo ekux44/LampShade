@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -81,14 +82,13 @@ public class MoodsListFragment extends SherlockListFragment implements
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.action_mood, menu);
 
-		// if ((getResources().getConfiguration().screenLayout &
-		// Configuration.SCREENLAYOUT_SIZE_MASK) >=
-		// Configuration.SCREENLAYOUT_SIZE_LARGE) {
-		// MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
-		// unlocksItem.setEnabled(false);
-		// unlocksItem.setVisible(false);
-
-		// }
+		if ((getResources().getConfiguration().screenLayout &
+					Configuration.SCREENLAYOUT_SIZE_MASK) >=
+					Configuration.SCREENLAYOUT_SIZE_LARGE) {
+			MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
+			unlocksItem.setEnabled(false);
+			unlocksItem.setVisible(false);
+		}
 	}
 
 	@Override
