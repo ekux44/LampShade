@@ -38,7 +38,7 @@ public class GroupsListFragment extends SherlockListFragment implements
 	public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	public int selectedPos = -1;
-	private GroupBulbPagingFragment gbpfCallback;
+	private GodObject gbpfCallback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +117,7 @@ public class GroupsListFragment extends SherlockListFragment implements
 		// }
 	}
 
-	public void setSelectionListener(GroupBulbPagingFragment gbpf) {
+	public void setSelectionListener(GodObject gbpf) {
 		gbpfCallback = gbpf;
 	}
 

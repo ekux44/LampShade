@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_register_with_hub"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_register_with_hub"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_nfc"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/cap_nfc"/>
+    <item
+        android:id="@+id/action_alarms"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/alarms"/>
+    <item
+        android:id="@+id/action_add_both"
+        android:orderInCategory="1"
+        android:icon="@drawable/content_new"
+        android:showAsAction="ifRoom"
+        android:title="@string/actionmenu_new_mood"/>
+</menu>

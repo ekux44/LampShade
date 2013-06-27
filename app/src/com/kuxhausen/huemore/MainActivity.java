@@ -7,7 +7,10 @@ import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +27,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
+import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 
@@ -32,7 +36,6 @@ import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
  * 
  */
 public class MainActivity extends GodObject implements
-		GroupBulbPagingFragment.OnBulbGroupSelectedListener,
 		MoodsListFragment.OnMoodSelectedListener {
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
@@ -55,38 +58,23 @@ public class MainActivity extends GodObject implements
 
 		setContentView(R.layout.hue_more);
 		m = this;
-		// Check whether the activity is using the layout version with
-		// the fragment_container FrameLayout. If so, we must add the first
-		// fragment
-		if (findViewById(R.id.fragment_container) != null) {
-
-			// However, if we're being restored from a previous state,
-			// then we don't need to do anything and should return or else
-			// we could end up with overlapping fragments.
-			if (savedInstanceState != null) {
-				// return;
-			} else {
-
-				// Create an instance of ExampleFragment
-				GroupBulbPagingFragment firstFragment = new GroupBulbPagingFragment();
-				// GroupsListFragment firstFragment = new GroupsListFragment();
-
-				// In case this activity was started with special instructions
-				// from
-				// an Intent,
-				// pass the Intent's extras to the fragment as arguments
-				firstFragment.setArguments(getIntent().getExtras());
-
-				// Add the fragment to the 'fragment_container' FrameLayout
-				getSupportFragmentManager()
-						.beginTransaction()
-						.add(R.id.fragment_container, firstFragment,
-								GroupBulbPagingFragment.class.getName())
-						.commitAllowingStateLoss();
-			}
-
+		
+		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
+		parrentActivity = this;
+		// Set up the ViewPager, attaching the adapter.
+		mViewPager = (ViewPager) this.findViewById(R.id.pager);
+		mViewPager.setAdapter(mGroupBulbPagerAdapter);
+		
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(parrentActivity);
+		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)) {
+			if (mViewPager.getCurrentItem() != GROUP_LOCATION)
+				mViewPager.setCurrentItem(GROUP_LOCATION);
+		} else {
+			if (mViewPager.getCurrentItem() != BULB_LOCATION)
+				mViewPager.setCurrentItem(BULB_LOCATION);
 		}
-
+		
 		
 		initializationDatabaseChecks();
 		initializeBillingCode();
@@ -105,8 +93,12 @@ public class MainActivity extends GodObject implements
 	public void onGroupBulbSelected(Integer[] bulb, String name) {
 		setGroupS(name);
 		setBulbS(bulb);
+		
+		Intent i = new Intent(this, SecondActivity.class);
+		this.startActivity(i);
+
 		// Capture the article fragment from the activity layout
-		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
+/*		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.moods_fragment);
 
 		if (moodFrag != null) {
@@ -144,7 +136,7 @@ public class MainActivity extends GodObject implements
 			this.getSupportActionBar().setTitle(name);
 			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-
+*/
 	}
 
 	@Override
@@ -161,15 +153,90 @@ public class MainActivity extends GodObject implements
 	}
 
 	private void moveToGroupBulb() {
-		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.moods_fragment);
-
-		if (moodFrag == null || !moodFrag.isVisible()) {
-			this.onBackPressed();
-		}
+//		MoodManualPagingFragment moodFrag = (MoodManualPagingFragment) getSupportFragmentManager()
+//				.findFragmentById(R.id.moods_fragment);
+//
+//		if (moodFrag == null || !moodFrag.isVisible()) {
+//			this.onBackPressed();
+//		}
 	}
 
+	
+	GroupBulbPagerAdapter mGroupBulbPagerAdapter;
 
+	private static final int GROUP_LOCATION = 1;
+	private static final int BULB_LOCATION = 0;
+
+	private static GroupsListFragment groupsListFragment;
+	private static BulbsFragment bulbsFragment;
+
+	ViewPager mViewPager;
+	GodObject parrentActivity;
+	
+	public void onSelected(Integer[] bulbNum, String name,
+			GroupsListFragment groups, BulbsFragment bulbs) {
+		if (groups == groupsListFragment && groups != null
+				&& bulbsFragment != null)
+			bulbsFragment.invalidateSelection();
+		if (bulbs == bulbsFragment && bulbs != null
+				&& groupsListFragment != null)
+			groupsListFragment.invalidateSelection();
+
+		if (parrentActivity != null || bulbNum == null || name == null)
+			parrentActivity.onGroupBulbSelected(bulbNum, name);
+	}
+		
+	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
+
+		GodObject frag;
+
+		public GroupBulbPagerAdapter(GodObject godObject) {
+			super(godObject.getSupportFragmentManager());
+			frag = godObject;
+		}
+
+		@Override
+		public Fragment getItem(int i) {
+			switch (i) {
+			case GROUP_LOCATION:
+				if (groupsListFragment == null) {
+					groupsListFragment = new GroupsListFragment();
+					groupsListFragment.setSelectionListener(frag);
+				}
+				return groupsListFragment;
+			case BULB_LOCATION:
+				if (bulbsFragment == null) {
+					bulbsFragment = new BulbsFragment();
+					bulbsFragment.setSelectionListener(frag);
+				}
+				return bulbsFragment;
+			default:
+				return null;
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case GROUP_LOCATION:
+				return frag.getString(R.string.cap_groups);
+			case BULB_LOCATION:
+				return frag.getString(R.string.cap_bulbs);
+
+			}
+			return "";
+		}
+	}
+	@Override
+	public void onListReturned(BulbAttributes[] bulbsAttributes) {
+		// TODO Auto-generated method stub
+		//unused by GroupBulbPaginAdapter
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

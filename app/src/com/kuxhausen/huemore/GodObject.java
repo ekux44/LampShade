@@ -9,15 +9,16 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodsListFragment.OnMoodSelectedListener;
 import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
 import com.kuxhausen.huemore.network.TransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public abstract class GodObject extends SherlockFragmentActivity implements OnMoodSelectedListener{
+public abstract class GodObject extends SherlockFragmentActivity implements OnMoodSelectedListener, OnAttributeListReturnedListener{
 
-	private Gson gson = new Gson();
+	public Gson gson = new Gson();
 	private ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
 	private String groupS;	
 	private Integer[] bulbS;
@@ -36,9 +37,9 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	
 	@Override
 	public void onDestroy() {
-		for (AsyncTask<?, ?, ?> task : inFlight){
-			task.cancel(true);
-			inFlight.remove(task);
+		for(int i = 0; i< inFlight.size(); i++){
+			inFlight.get(i).cancel(true);
+			inFlight.remove(i);
 		}
 		super.onDestroy();
 	}
@@ -49,6 +50,9 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	public abstract void setBulbListenerFragment(GetBulbList.OnBulbListReturnedListener frag);
 	
 	public abstract GetBulbList.OnBulbListReturnedListener getBulbListenerFragment();
+	
+	public abstract void onSelected(Integer[] bulbNum, String name,
+			GroupsListFragment groups, BulbsFragment bulbs);
 	
 	public Integer[] getBulbs(){
 		return bulbS;

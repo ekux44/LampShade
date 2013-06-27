@@ -28,7 +28,7 @@ public class BulbsFragment extends SherlockListFragment implements
 	// public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
-	private GroupBulbPagingFragment gbpfCallback;
+	private GodObject gbpfCallback;
 
 	private GodObject parrentActivity;
 
@@ -90,7 +90,7 @@ public class BulbsFragment extends SherlockListFragment implements
 		// }
 	}
 
-	public void setSelectionListener(GroupBulbPagingFragment gbpf) {
+	public void setSelectionListener(GodObject gbpf) {
 		gbpfCallback = gbpf;
 	}
 

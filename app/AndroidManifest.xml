@@ -30,7 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+		<activity
+            android:name="com.kuxhausen.huemore.SecondActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" android:theme="@style/Theme.Sherlock">
+        </activity>
         <provider
             android:name=".persistence.HueMoreProvider"
             android:authorities="com.kuxhausen.provider.huemore.database"
