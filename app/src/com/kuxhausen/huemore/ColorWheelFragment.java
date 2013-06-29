@@ -1,9 +1,14 @@
 package com.kuxhausen.huemore;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +27,12 @@ import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
+import com.larswerkman.colorpicker.ColorPicker;
+import com.larswerkman.colorpicker.SaturationBar;
 
 public class ColorWheelFragment extends SherlockFragment implements
-		OnSeekBarChangeListener, OnCreateColorListener, OnCreateMoodListener,
-		OnCheckedChangeListener {
+		OnCreateColorListener, OnCreateMoodListener,
+		OnCheckedChangeListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -33,11 +40,11 @@ public class ColorWheelFragment extends SherlockFragment implements
 		float getSaturation();
 	}
 
-	private OnColorChangedListener mListener;
-	private ColorWheelView cpv;
+	ColorPicker picker;
+	SaturationBar saturationBar;
 	private BulbState hs;
 	Gson gson = new Gson();
-	SeekBar seekBar;
+
 	CompoundButton colorLoop;
 	Spinner transitionSpinner;
 	int[] transitionValues;
@@ -55,27 +62,12 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 		hs.hue = 0;// todo poll existing saturation if there is one
 
-		mListener = new OnColorChangedListener() {
-			@Override
-			public void colorChanged(int color, int hues) {
-				hs.hue = hues;
-				preview();
-			}
-
-			@Override
-			public float getSaturation() {
-				// TODO Auto-generated method stub
-				return seekBar.getProgress() / 255f;
-			}
-		};
-
 		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
-		cpv = ((ColorWheelView) groupDialogView.findViewById(R.id.colorWheel));
-		cpv.setOnColorChangedListener(mListener);
 
-		seekBar = (SeekBar) groupDialogView.findViewById(R.id.saturationBar);
-		seekBar.setOnSeekBarChangeListener(this);
-		hs.sat = (short) seekBar.getProgress();
+		picker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
+		picker.setOnColorChangedListener(this);
+		saturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);
+		picker.addSaturationBar(saturationBar);
 
 		if (colorLoopLayoutVisible) {
 			colorLoop = (CompoundButton) groupDialogView
@@ -121,9 +113,10 @@ public class ColorWheelFragment extends SherlockFragment implements
 				hs.hue = bs.hue;
 			if (bs.sat != null) {
 				hs.sat = bs.sat;
-				seekBar.setProgress(bs.sat);
 			}
-			cpv.setInitialHSV(hs.hue, hs.sat);
+			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+			picker.setColor(Color.HSVToColor(hsv));
+			saturationBar.setSaturation(hsv[1]);
 			if (transitionLayoutVisible && bs.transitiontime != null) {
 				hs.transitiontime = bs.transitiontime;
 				int pos = 0;
@@ -133,11 +126,11 @@ public class ColorWheelFragment extends SherlockFragment implements
 				transitionSpinner.setSelection(pos);
 			}
 		}
-
+		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
 	}
-
+	
 	public void hideColorLoop() {
 		colorLoopLayoutVisible = false;
 		colorLoop = null;
@@ -152,30 +145,12 @@ public class ColorWheelFragment extends SherlockFragment implements
 			transitionLayout.setVisibility(View.GONE);
 	}
 
-	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
-		hs.sat = (short) seekBar.getProgress();
-		preview();
-		cpv.recalculateColor();
-	}
-
 	public void preview() {
-		String[] states = { gson.toJson(hs) };
-		((GodObject) getActivity()).testMood(states);
-
+		Log.e("preview", "preview");
+		if(isAdded()){
+			Log.e("preview", "isAdded");
+			((GodObject)this.getActivity()).updatePreview(hs);
+		}
 	}
 
 	@Override
@@ -183,10 +158,10 @@ public class ColorWheelFragment extends SherlockFragment implements
 		if (transitionSpinner != null)
 			hs.transitiontime = transitionValues[transitionSpinner
 					.getSelectedItemPosition()];
-		hs.hue = cpv.getHue();
+		//hs.hue = cpv.getHue();
 		Intent i = new Intent();
 		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
-		i.putExtra(InternalArguments.COLOR, cpv.getColor());
+		//i.putExtra(InternalArguments.COLOR, cpv.getColor());
 		return i;
 	}
 
@@ -224,6 +199,16 @@ public class ColorWheelFragment extends SherlockFragment implements
 			hs.effect = "colorloop";
 		else
 			hs.effect = "none";
+		preview();
+	}
+
+	@Override
+	public void onColorChanged(int color) {
+		picker.setOldCenterColor(color);
+		float[] hsv = new float[3];
+		Color.colorToHSV(color, hsv);
+		hs.hue = (int)((hsv[0] * 65535) / 360);
+		hs.sat = (short)(hsv[1] * 255);
 		preview();
 	}
 }

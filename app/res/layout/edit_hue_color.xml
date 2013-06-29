@@ -15,40 +15,22 @@
             android:layout_height="2dip"
             android:background="#33B5E5" />
 
-        <TextView
-            android:id="@+id/saturationDescripterTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="8dp"
-            android:text="@string/saturation" />
-
-        <SeekBar
-            android:id="@+id/saturationBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="255"
-            android:paddingBottom="8dp"
-            android:progress="127" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="#33B5E5" />
-
-        <com.kuxhausen.huemore.ColorWheelView
-            android:id="@+id/colorWheel"
+        <com.larswerkman.colorpicker.ColorPicker
+            android:id="@+id/picker"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:minHeight="320dp"
-            android:minWidth="320dp" />
+            android:layout_weight="1" />
+        
+        <com.larswerkman.colorpicker.SaturationBar
+    		android:id="@+id/saturationbar"
+    		android:layout_width="match_parent"
+    		android:layout_height="wrap_content"/>
+        
 
         <LinearLayout
             android:id="@+id/colorLoopLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal" >
@@ -65,28 +47,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/transitionTimeLayout"
-       	 	android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:orientation="horizontal" >
-	            <TextView
-	                android:id="@+id/transitionPromptTextView"
-	                style="@style/AppTheme"
-	                android:layout_width="0dp"
-	                android:layout_height="wrap_content"
-	                android:padding="8dp"
-	                android:layout_gravity="center_vertical"
-	                android:text="@string/transition_intro"
-	                android:layout_weight="1" />
-	
-	            <Spinner
-	                android:id="@+id/transitionSpinner"
-	                android:layout_width="0dp"
-	                android:layout_height="wrap_content"
-	                android:padding="8dp" 
-	                android:layout_weight="2"/>
-            </LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/transitionPromptTextView"
+                style="@style/AppTheme"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:text="@string/transition_intro" />
+
+            <Spinner
+                android:id="@+id/transitionSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:padding="8dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

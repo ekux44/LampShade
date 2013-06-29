@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
@@ -25,6 +26,63 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	private String groupS;	
 	private Integer[] bulbS;
 	private String mood;
+	
+	private CountDownTimer countDownTimer;
+	private boolean hasChanged = false;
+	private BulbState previewStates;
+	
+	public void restartCountDownTimer(){
+		if(countDownTimer!=null)
+			countDownTimer.cancel();
+		
+		int numBulbs = 1;
+		if(getBulbs()!=null)
+			numBulbs = getBulbs().length;
+		
+		//runs at the rate to execute 20 op/sec
+		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
+				50*(numBulbs)) {
+			private boolean warned = false;
+
+			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+			@Override
+			public void onTick(long millisUntilFinished) {
+				if(hasChanged){
+					String[] states = { gson.toJson(previewStates) };
+					testMood(states);
+					hasChanged = false;	
+				}
+			}
+
+			@Override
+			public void onFinish() {
+				// try one last time
+				if(hasChanged){
+					String[] states = { gson.toJson(previewStates) };
+					testMood(states);
+					hasChanged = false;
+				}
+			}
+		};
+		countDownTimer.start();
+
+	}
+	@Override
+	public void onStart(){
+		super.onResume();
+		restartCountDownTimer();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onPause();
+		countDownTimer.cancel();
+	}
+	
+	public void updatePreview(BulbState hs){
+		previewStates = hs;
+		hasChanged = true;
+	}
 	
 	class SerializedGodObjectForTransport{
 		public SerializedGodObjectForTransport(){
