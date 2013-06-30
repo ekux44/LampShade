@@ -65,20 +65,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
 
 		picker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
-		picker.setOnColorChangedListener(this);
 		saturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);
 		picker.addSaturationBar(saturationBar);
-
-		if (colorLoopLayoutVisible) {
-			colorLoop = (CompoundButton) groupDialogView
-					.findViewById(R.id.colorLoopCompoundButton);
-			colorLoop.setOnCheckedChangeListener(this);
-			colorLoopLayout = (LinearLayout) groupDialogView
-					.findViewById(R.id.colorLoopLayout);
-		} else {
-			groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(
-					View.GONE);
-		}
 
 		ArrayAdapter<CharSequence> adapter;
 		if (transitionLayoutVisible) {
@@ -126,6 +114,20 @@ public class ColorWheelFragment extends SherlockFragment implements
 				transitionSpinner.setSelection(pos);
 			}
 		}
+		
+		if (colorLoopLayoutVisible) {
+			colorLoop = (CompoundButton) groupDialogView
+					.findViewById(R.id.colorLoopCompoundButton);
+			colorLoop.setOnCheckedChangeListener(this);
+			colorLoopLayout = (LinearLayout) groupDialogView
+					.findViewById(R.id.colorLoopLayout);
+		} else {
+			groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(
+					View.GONE);
+		}
+		
+		picker.setOnColorChangedListener(this);
+		
 		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
