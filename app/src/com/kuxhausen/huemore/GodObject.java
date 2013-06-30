@@ -29,7 +29,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	
 	private CountDownTimer countDownTimer;
 	private boolean hasChanged = false;
-	private BulbState previewStates;
+	private String[] previewStates;
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
@@ -48,8 +48,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 			@Override
 			public void onTick(long millisUntilFinished) {
 				if(hasChanged){
-					String[] states = { gson.toJson(previewStates) };
-					testMood(states);
+					testMood(previewStates);
 					hasChanged = false;	
 				}
 			}
@@ -58,8 +57,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 			public void onFinish() {
 				// try one last time
 				if(hasChanged){
-					String[] states = { gson.toJson(previewStates) };
-					testMood(states);
+					testMood(previewStates);
 					hasChanged = false;
 				}
 			}
@@ -79,8 +77,8 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 		countDownTimer.cancel();
 	}
 	
-	public void updatePreview(BulbState hs){
-		previewStates = hs;
+	public void updatePreview(String[] states){
+		previewStates = states;
 		hasChanged = true;
 	}
 	

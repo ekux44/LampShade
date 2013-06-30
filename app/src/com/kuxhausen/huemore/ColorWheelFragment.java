@@ -146,10 +146,9 @@ public class ColorWheelFragment extends SherlockFragment implements
 	}
 
 	public void preview() {
-		Log.e("preview", "preview");
 		if(isAdded()){
-			Log.e("preview", "isAdded");
-			((GodObject)this.getActivity()).updatePreview(hs);
+			String[] states = { gson.toJson(hs) };
+			((GodObject)this.getActivity()).updatePreview(states);
 		}
 	}
 
