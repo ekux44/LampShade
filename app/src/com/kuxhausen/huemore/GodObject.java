@@ -39,9 +39,9 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 		if(getBulbs()!=null)
 			numBulbs = getBulbs().length;
 		
-		//runs at the rate to execute 20 op/sec
+		//runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
-				50*(numBulbs)) {
+				66*(numBulbs)) {
 			private boolean warned = false;
 
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
