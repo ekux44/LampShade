@@ -86,12 +86,10 @@ public class SecondActivity extends GodObject implements
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				BulbState hs = new BulbState();
-				hs.bri = brightness;
 				hs.on = true;
 
 				String[] brightnessState = { gson.toJson(hs) };
-				// TODO deal with off?
-				parrentActivity.onBrightnessChanged(brightnessState);
+				parrentActivity.updatePreview(brightnessState);
 				isTrackingTouch = false;
 			}
 
@@ -103,7 +101,12 @@ public class SecondActivity extends GodObject implements
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				brightness = progress;
+				BulbState hs = new BulbState();
+				hs.bri = progress;
+				hs.on = true;
+				String[] brightnessState = { gson.toJson(hs) };
+				parrentActivity.updatePreview(brightnessState);
+				
 			}
 		});
 
@@ -118,7 +121,6 @@ public class SecondActivity extends GodObject implements
 	
 
 	SeekBar brightnessBar;
-	int brightness;
 	boolean isTrackingTouch = false;
 	
 	MoodManualPagerAdapter mMoodManualPagerAdapter;
@@ -221,7 +223,6 @@ public class SecondActivity extends GodObject implements
 				return;
 			int brightnessAverage = brightnessSum / brightnessPool;
 
-			brightness = brightnessAverage;
 			brightnessBar.setProgress(brightnessAverage);
 		}
 	}
