@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Pair;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,13 +18,15 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.TransmitGroupMood;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class NfcReaderActivity extends Activity implements
+public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements
 		OnCheckedChangeListener, OnClickListener {
 
 	Gson gson = new Gson();
@@ -83,9 +84,7 @@ public class NfcReaderActivity extends Activity implements
 					stateS[i] = gson.toJson(result.second[i]);
 					System.out.println(bulbS[i]);
 				}
-				TransmitGroupMood transmitter = new TransmitGroupMood(this,
-						bulbS, stateS, null);
-				transmitter.execute();
+				NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, stateS);
 				if (gson.fromJson(stateS[0], BulbState.class) != null)
 					onButton.setChecked(gson.fromJson(stateS[0],
 							BulbState.class).on);
@@ -124,8 +123,7 @@ public class NfcReaderActivity extends Activity implements
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
 		String[] bsRay = new String[] { gson.toJson(bs) };
-		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, bsRay, null);
-		tgm.execute();
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, bsRay);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.SetBulbAttributes;
-import com.kuxhausen.huemore.network.TransmitGroupMood;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -69,10 +69,8 @@ public class EditBulbDialogFragment extends DialogFragment {
 		bs.on = true;
 		String[] moodS = { gson.toJson(bs) };
 		Integer[] bulbS = { bulbNumber };
-		TransmitGroupMood tgm = new TransmitGroupMood(getActivity(), bulbS,
-				moodS, parrentActivity);
-		tgm.execute();
-
+		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, moodS);
+		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					@Override
@@ -88,10 +86,8 @@ public class EditBulbDialogFragment extends DialogFragment {
 						bs.alert = "none";
 						String[] moodS = { gson.toJson(bs) };
 						Integer[] bulbS = { bulbNumber };
-						TransmitGroupMood tgm = new TransmitGroupMood(
-								getActivity(), bulbS, moodS, parrentActivity);
-						tgm.execute();
-
+						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, moodS);
+						
 						bulbF.refreshList();
 					}
 				}).setNegativeButton(R.string.cancel,

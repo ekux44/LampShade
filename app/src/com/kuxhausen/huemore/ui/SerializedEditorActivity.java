@@ -13,15 +13,16 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.TransmitGroupMood;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.nfc.HueNfcEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -29,7 +30,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class SerializedEditorActivity extends FragmentActivity implements
+public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActivity implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
 	Context context;
@@ -175,8 +176,7 @@ public class SerializedEditorActivity extends FragmentActivity implements
 										// Group Mood
 		}
 
-		TransmitGroupMood tgm = new TransmitGroupMood(this, bulbS, moodS, null);
-		tgm.execute();
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
 	}
 
 	public String getSerializedByNamePreview() {

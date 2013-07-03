@@ -15,13 +15,13 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodsListFragment.OnMoodSelectedListener;
 import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
-import com.kuxhausen.huemore.network.TransmitGroupMood;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public abstract class GodObject extends SherlockFragmentActivity implements OnMoodSelectedListener, OnAttributeListReturnedListener{
+public abstract class GodObject extends NetworkManagedSherlockFragmentActivity implements OnMoodSelectedListener, OnAttributeListReturnedListener{
 
 	public Gson gson = new Gson();
 	private ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
@@ -32,7 +32,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	private CountDownTimer countDownTimer;
 	private boolean hasChanged = false;
 	private String[] previewStates;
-	private RequestQueue volleyRQ;
+	
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
@@ -72,17 +72,14 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	public void onStart(){
 		super.onResume();
 		restartCountDownTimer();
-
-		volleyRQ = Volley.newRequestQueue(this);
 	}
 	
 	@Override
 	public void onStop() {
 		super.onPause();
 		countDownTimer.cancel();
-		
-		volleyRQ.cancelAll(this);
-		}
+
+	}
 	
 	public void updatePreview(String[] states){
 		previewStates = states;
@@ -157,7 +154,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void onBrightnessChanged(String brightnessState[]) {
-		TransmitGroupMood.PreformTransmitGroupMood(volleyRQ, this, bulbS, brightnessState);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, brightnessState);
 	}
 
 	/**
@@ -167,8 +164,8 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
-		volleyRQ.cancelAll(this);
-		TransmitGroupMood.PreformTransmitGroupMood(volleyRQ, this, bulbS, states);
+		getRequestQueue().cancelAll(this);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -206,7 +203,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 			moodS = moodStates.toArray(new String[moodStates.size()]);
 		}
 
-		TransmitGroupMood.PreformTransmitGroupMood(volleyRQ, this, bulbS, moodS);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
 	}
 	
 }
