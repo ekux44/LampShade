@@ -71,13 +71,13 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	}
 	@Override
 	public void onStart(){
-		super.onResume();
+		super.onStart();
 		restartCountDownTimer();
 	}
 	
 	@Override
 	public void onStop() {
-		super.onPause();
+		super.onStop();
 		countDownTimer.cancel();
 
 	}
@@ -165,7 +165,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
-		getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
 	}
 

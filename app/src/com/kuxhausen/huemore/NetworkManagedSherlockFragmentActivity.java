@@ -16,15 +16,13 @@ public class NetworkManagedSherlockFragmentActivity extends
 
 	@Override
 	public void onStart() {
-		super.onResume();
-
+		super.onStart();
 		volleyRQ = Volley.newRequestQueue(this);
 	}
 
 	@Override
 	public void onStop() {
-		super.onPause();
-
+		super.onStop();
 		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 	}
 }
