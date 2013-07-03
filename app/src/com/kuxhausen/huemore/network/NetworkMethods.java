@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.LightsPutResponse;
 
@@ -36,7 +37,7 @@ public class NetworkMethods {
 		
 		GsonRequest req = new GsonRequest<LightsPutResponse>(Method.PUT, url,moods[i % moods.length], LightsPutResponse.class, null,
 				requestListener, null);
-		req.setTag(cont);
+		req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
 		}
 	}

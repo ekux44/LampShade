@@ -17,6 +17,7 @@ import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -164,7 +165,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
-		getRequestQueue().cancelAll(this);
+		getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
 	}
 

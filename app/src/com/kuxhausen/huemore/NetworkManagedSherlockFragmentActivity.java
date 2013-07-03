@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class NetworkManagedSherlockFragmentActivity extends
 		SherlockFragmentActivity {
@@ -24,6 +25,6 @@ public class NetworkManagedSherlockFragmentActivity extends
 	public void onStop() {
 		super.onPause();
 
-		volleyRQ.cancelAll(this);
+		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 	}
 }
