@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.CountDownTimer;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodsListFragment.OnMoodSelectedListener;
 import com.kuxhausen.huemore.network.GetBulbList;
@@ -30,6 +32,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	private CountDownTimer countDownTimer;
 	private boolean hasChanged = false;
 	private String[] previewStates;
+	private RequestQueue volleyRQ;
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
@@ -69,13 +72,17 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	public void onStart(){
 		super.onResume();
 		restartCountDownTimer();
+
+		volleyRQ = Volley.newRequestQueue(this);
 	}
 	
 	@Override
 	public void onStop() {
 		super.onPause();
 		countDownTimer.cancel();
-	}
+		
+		volleyRQ.cancelAll(this);
+		}
 	
 	public void updatePreview(String[] states){
 		previewStates = states;
@@ -150,13 +157,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void onBrightnessChanged(String brightnessState[]) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				brightnessState, this);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			pushGroupMood.execute();
-		}
+		TransmitGroupMood.PreformTransmitGroupMood(volleyRQ, this, bulbS, brightnessState);
 	}
 
 	/**
@@ -166,13 +167,8 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				states, this);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			pushGroupMood.execute();
-		}
+		volleyRQ.cancelAll(this);
+		TransmitGroupMood.PreformTransmitGroupMood(volleyRQ, this, bulbS, states);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -210,13 +206,7 @@ public abstract class GodObject extends SherlockFragmentActivity implements OnMo
 			moodS = moodStates.toArray(new String[moodStates.size()]);
 		}
 
-		TransmitGroupMood pushGroupMood = new TransmitGroupMood(this, bulbS,
-				moodS, this);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			pushGroupMood.execute();
-		}
+		TransmitGroupMood.PreformTransmitGroupMood(volleyRQ, this, bulbS, moodS);
 	}
 	
 }
