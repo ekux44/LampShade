@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.network.SetBulbAttributes;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
@@ -78,10 +77,9 @@ public class EditBulbDialogFragment extends DialogFragment {
 
 						BulbAttributes bAttrs = new BulbAttributes();
 						bAttrs.name = nameEditText.getText().toString();
-						SetBulbAttributes sba = new SetBulbAttributes(
-								getActivity(), bulbNumber, bAttrs);
-						sba.execute();
-
+						
+						NetworkMethods.PreformSetBulbAttributes(parrentActivity.getRequestQueue(), parrentActivity, bulbNumber, bAttrs);
+						
 						BulbState bs = new BulbState();
 						bs.alert = "none";
 						String[] moodS = { gson.toJson(bs) };
