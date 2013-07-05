@@ -8,10 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -20,18 +17,12 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.Register;
-import com.kuxhausen.huemore.network.Register.OnRegisterListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bridge;
 
-public class ManualRegisterWithHubDialogFragment extends DialogFragment
-		implements OnRegisterListener {
+public class ManualRegisterWithHubDialogFragment extends DialogFragment{
 
-	public Register networkRegister;
 	public Activity parrentActivity;
-	public OnRegisterListener me;
 	public EditText IPV4part1;
 	public EditText IPV4part2;
 	public EditText IPV4part3;
@@ -41,7 +32,6 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		parrentActivity = this.getActivity();
-		me = this;
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -122,30 +112,4 @@ public class ManualRegisterWithHubDialogFragment extends DialogFragment
 	public String getDeviceType() {
 		return getString(R.string.app_name);
 	}
-
-	@Override
-	public void onRegisterResult(String bridgeIP, String username) {
-
-		if (bridgeIP != null && isAdded()) {
-
-			// Show the success dialog
-			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
-			rsdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-
-			// Add username and IP to preferences cache
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(parrentActivity);
-
-			Editor edit = settings.edit();
-			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridgeIP);
-			edit.putString(PreferencesKeys.HASHED_USERNAME, username);
-			edit.commit();
-
-			// done with registration dialog
-			dismiss();
-		}
-
-	}
-
 }

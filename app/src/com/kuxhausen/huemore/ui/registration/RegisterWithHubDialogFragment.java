@@ -21,31 +21,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.Register;
-import com.kuxhausen.huemore.network.Register.OnRegisterListener;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bridge;
+import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
-public class RegisterWithHubDialogFragment extends DialogFragment implements
-		OnRegisterListener {
+public class RegisterWithHubDialogFragment extends DialogFragment {
 
 	public final long length_in_milliseconds = 30000;
 	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
-	public Register networkRegister;
-	public Activity parrentActivity;
-	public OnRegisterListener me;
+	public GodObject parrentActivity;
 	Bridge[] bridges = null;
 	Gson gson = new Gson();
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		parrentActivity = this.getActivity();
-		me = this;
+		parrentActivity = (GodObject) this.getActivity();
 		if (this.getArguments() != null) {
 			bridges = gson.fromJson(
 					this.getArguments().getString(InternalArguments.BRIDGES),
@@ -71,13 +69,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 				if (isAdded()) {
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					networkRegister = new Register(parrentActivity, bridges,
-							me, getUserName(), getDeviceType());
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						networkRegister.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-					} else {
-						networkRegister.execute();
-					}
+					NetworkMethods.PreformRegister(parrentActivity.getRequestQueue(), parrentActivity, getListeners(getUserName()), bridges, getUserName(), getDeviceType());
 				}
 			}
 
@@ -85,10 +77,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 			public void onFinish() {
 				if (isAdded()) {
 					// try one last time
-					networkRegister = new Register(parrentActivity, bridges,
-							me, getUserName(), getDeviceType());
-					networkRegister.execute();
-
+					NetworkMethods.PreformRegister(parrentActivity.getRequestQueue(), parrentActivity, getListeners(getUserName()), bridges, getUserName(), getDeviceType());
+					
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
 					rfdf.show(getFragmentManager(),
@@ -101,6 +91,16 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		countDownTimer.start();
 		// Create the AlertDialog object and return it
 		return builder.create();
+	}
+
+	protected Listener<RegistrationResponse[]>[] getListeners(String username) {
+		Listener<RegistrationResponse[]>[] listeners = new Listener[bridges.length];
+		for(int i = 0; i< bridges.length; i++){
+			if(bridges[i]!=null && bridges[i].internalipaddress!=null){
+				listeners[i] = new RegistrationListener(bridges[i].internalipaddress, username);
+			}
+		}
+		return listeners;
 	}
 
 	@Override
@@ -133,30 +133,38 @@ public class RegisterWithHubDialogFragment extends DialogFragment implements
 		return getString(R.string.app_name);
 	}
 
-	@Override
-	public void onRegisterResult(String bridgeIP, String username) {
-
-		if (bridgeIP != null && isAdded()) {
-			countDownTimer.cancel();
-
-			// Show the success dialog
-			RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
-			rsdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-
-			// Add username and IP to preferences cache
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(parrentActivity);
-
-			Editor edit = settings.edit();
-			edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridgeIP);
-			edit.putString(PreferencesKeys.HASHED_USERNAME, username);
-			edit.commit();
-
-			// done with registration dialog
-			dismiss();
+	class RegistrationListener implements Listener<RegistrationResponse[]>{
+		
+		public String bridgeIP;
+		public String username;
+		
+		public RegistrationListener(String ip, String userName){
+			bridgeIP = ip;
+			username = userName;
 		}
+		
+		@Override
+		public void onResponse(RegistrationResponse[] response) {
+			if (response[0].success!=null) {
+				countDownTimer.cancel();
 
+				// Show the success dialog
+				RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
+				rsdf.show(getFragmentManager(),
+						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+
+				// Add username and IP to preferences cache
+				SharedPreferences settings = PreferenceManager
+						.getDefaultSharedPreferences(parrentActivity);
+
+				Editor edit = settings.edit();
+				edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridgeIP);
+				edit.putString(PreferencesKeys.HASHED_USERNAME, username);
+				edit.commit();
+
+				// done with registration dialog
+				dismiss();
+			}
+		}
 	}
-
 }

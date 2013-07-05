@@ -10,8 +10,11 @@ import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.api.Bridge;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.LightsPutResponse;
+import com.kuxhausen.huemore.state.api.RegistrationRequest;
+import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class NetworkMethods {
 	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, Context cont, Integer[] bulbs, String[] moods){
@@ -70,5 +73,25 @@ public class NetworkMethods {
 				requestListener, null);
 		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
+	}
+	
+	public static void PreformRegister(RequestQueue mRequestQueue, Context cont, Listener<RegistrationResponse[]>[] listeners, Bridge[] bridges, String username, String deviceType){
+		if (bridges == null)
+			return;
+		Gson gson = new Gson();
+		RegistrationRequest request = new RegistrationRequest();
+		request.username = username;
+		request.devicetype = deviceType;
+		String registrationRequest = gson.toJson(request);
+		
+		for (int i = 0; i< bridges.length; i++) {
+		
+			String url = "http://" + bridges[i].internalipaddress+ "/api/";
+			
+			GsonRequest req = new GsonRequest<RegistrationResponse[]>(Method.POST, url, registrationRequest, RegistrationResponse[].class, null,
+					listeners[i], null);
+			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+			mRequestQueue.add(req);
+		}
 	}
 }
