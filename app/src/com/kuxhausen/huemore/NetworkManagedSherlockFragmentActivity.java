@@ -25,4 +25,11 @@ public class NetworkManagedSherlockFragmentActivity extends
 		super.onStop();
 		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 	}
+	
+	@Override
+	public void onDestroy() {
+		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		super.onDestroy();
+	}
 }
