@@ -28,7 +28,7 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						ManualRegisterWithHubDialogFragment mrwhdf = new ManualRegisterWithHubDialogFragment();
+						ManualDiscoverHubDialogFragment mrwhdf = new ManualDiscoverHubDialogFragment();
 						mrwhdf.show(getFragmentManager(),
 								InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 						dismiss();

@@ -20,7 +20,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.Bridge;
 
-public class ManualRegisterWithHubDialogFragment extends DialogFragment{
+public class ManualDiscoverHubDialogFragment extends DialogFragment{
 
 	public Activity parrentActivity;
 	public EditText IPV4part1;
