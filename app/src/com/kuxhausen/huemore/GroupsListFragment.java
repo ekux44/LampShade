@@ -2,6 +2,7 @@ package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
@@ -117,8 +118,10 @@ public class GroupsListFragment extends SherlockListFragment implements
 		// }
 	}
 
-	public void setSelectionListener(GodObject gbpf) {
-		gbpfCallback = gbpf;
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		gbpfCallback = (GodObject) activity;
 	}
 
 	public void invalidateSelection() {

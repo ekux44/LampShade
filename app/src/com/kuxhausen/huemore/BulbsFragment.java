@@ -67,13 +67,8 @@ public class BulbsFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception.
-		try {
-			parrentActivity = (GodObject) activity;
-		} catch (ClassCastException e) {
-		}
+		gbpfCallback = (GodObject) activity;
+		parrentActivity = (GodObject) activity;
 	}
 
 	@Override
@@ -88,10 +83,6 @@ public class BulbsFragment extends SherlockListFragment implements
 		// null) {
 		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		// }
-	}
-
-	public void setSelectionListener(GodObject gbpf) {
-		gbpfCallback = gbpf;
 	}
 
 	public void invalidateSelection() {

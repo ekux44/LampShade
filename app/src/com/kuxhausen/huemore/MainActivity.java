@@ -196,13 +196,11 @@ public class MainActivity extends GodObject implements
 			case GROUP_LOCATION:
 				if (groupsListFragment == null) {
 					groupsListFragment = new GroupsListFragment();
-					groupsListFragment.setSelectionListener(frag);
 				}
 				return groupsListFragment;
 			case BULB_LOCATION:
 				if (bulbsFragment == null) {
 					bulbsFragment = new BulbsFragment();
-					bulbsFragment.setSelectionListener(frag);
 				}
 				return bulbsFragment;
 			default:
