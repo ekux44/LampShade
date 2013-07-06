@@ -131,7 +131,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 		return groupDialogView;
 	}
 	
-	public void onResume(){
+	public void onStart(){
+		super.onStart();
 		picker.setOnColorChangedListener(this);
 		if (colorLoopLayoutVisible)
 			colorLoop.setOnCheckedChangeListener(this);
