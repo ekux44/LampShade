@@ -101,12 +101,13 @@ public class SecondActivity extends GodObject implements
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				BulbState hs = new BulbState();
-				hs.bri = progress;
-				hs.on = true;
-				String[] brightnessState = { gson.toJson(hs) };
-				parrentActivity.updatePreview(brightnessState);
-				
+				if(fromUser){
+					BulbState hs = new BulbState();
+					hs.bri = progress;
+					hs.on = true;
+					String[] brightnessState = { gson.toJson(hs) };
+					parrentActivity.updatePreview(brightnessState);
+				}
 			}
 		});
 
