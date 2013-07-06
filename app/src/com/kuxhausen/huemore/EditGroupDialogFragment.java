@@ -10,7 +10,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -146,10 +145,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 						String groupname = nameEditText.getText().toString();
 
 						for (int i = 0; i < checkedBulbs.size(); i++) {
-							// Defines a new Uri object that receives the result
-							// of the insertion
-							Uri mNewUri;
-
+							
 							// Defines an object to contain the new values to
 							// insert
 							ContentValues mNewValues = new ContentValues();
@@ -169,8 +165,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 									.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,
 											i);
 
-							mNewUri = getActivity()
-									.getContentResolver()
+							getActivity().getContentResolver()
 									.insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
 											mNewValues // the values to insert
 									);

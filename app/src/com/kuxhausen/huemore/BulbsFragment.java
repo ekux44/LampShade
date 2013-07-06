@@ -23,9 +23,6 @@ import com.kuxhausen.huemore.state.api.Bulb;
 public class BulbsFragment extends SherlockListFragment implements
 		GetBulbList.OnBulbListReturnedListener {
 
-	// Identifies a particular Loader being used in this component
-	private static final int GROUPS_LOADER = 0;
-	// public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
 	private GodObject gbpfCallback;
@@ -110,8 +107,6 @@ public class BulbsFragment extends SherlockListFragment implements
 		if (longSelected == null)
 			return false;
 
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
 		switch (item.getItemId()) {
 
 		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here

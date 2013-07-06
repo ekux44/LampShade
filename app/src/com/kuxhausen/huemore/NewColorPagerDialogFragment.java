@@ -50,15 +50,10 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.dialog_pager, container, false);
-		Bundle args = getArguments();
 
 		// Create an adapter that when requested, will return a fragment
 		// representing an object in
 		// the collection.
-		//
-		// ViewPager and its adapters use support library fragments, so we must
-		// use
-		// getSupportFragmentManager.
 		mNewColorPagerAdapter = new NewMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.

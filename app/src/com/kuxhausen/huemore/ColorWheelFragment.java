@@ -1,14 +1,9 @@
 package com.kuxhausen.huemore;
 
-import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -125,8 +118,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 					View.GONE);
 		}
 		
-		
-		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
 	}
@@ -174,9 +165,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 	@Override
 	public void onCreateMood(String groupname) {
 		onCreateColor();
-		// Defines a new Uri object that receives the result
-		// of the insertion
-		Uri mNewUri;
 
 		// Defines an object to contain the new values to
 		// insert
@@ -190,7 +178,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, gson.toJson(hs));
 		mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
 
-		mNewUri = getActivity().getContentResolver().insert(
+		getActivity().getContentResolver().insert(
 				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
 																		// values
 																		// to

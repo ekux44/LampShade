@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -72,8 +71,6 @@ public class MoodsListFragment extends SherlockListFragment implements
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.mood_view, container, false);
 
-		LinearLayout headingRow = (LinearLayout) myView
-				.findViewById(R.id.showOnLandScape);
 		setHasOptionsMenu(true);
 		return myView;
 	}
@@ -109,28 +106,13 @@ public class MoodsListFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception.
-		try {
-			mMoodCallback = (GodObject) activity;
-		} catch (ClassCastException e) {
-		}
+		mMoodCallback = (GodObject) activity;
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		// When in two-pane layout, set the listview to highlight the selected
-		// list item
-		// (We do this during onStart because at the point the listview is
-		// available.)
-		// if (getFragmentManager().findFragmentById(R.id.groups_fragment) !=
-		// null) {
 		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		// }
-
 	}
 
 	public void invalidateSelection() {
@@ -159,18 +141,16 @@ public class MoodsListFragment extends SherlockListFragment implements
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextmoodmenu_delete: // <-- your custom menu item id here
+		case R.id.contextmoodmenu_delete:
 			String moodSelect = MoodColumns.MOOD + "=?";
 			String[] moodArg = { (String) (longSelected).getText() };
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
 					moodArg);
 			return true;
-		case R.id.contextmoodmenu_edit: // <-- your custom menu item id here
+		case R.id.contextmoodmenu_edit:
 			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
 			Bundle args = new Bundle();
 			args.putString(InternalArguments.MOOD_NAME,

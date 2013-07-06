@@ -47,7 +47,6 @@ public class SecondActivity extends GodObject implements
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	IabHelper mPlayHelper;
-	private SecondActivity m;
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	
@@ -64,7 +63,6 @@ public class SecondActivity extends GodObject implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.second_activity);
-		m = this;
 		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
 		this.getSupportActionBar().setTitle(this.getGroupS());
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -278,10 +276,6 @@ public class SecondActivity extends GodObject implements
 			this.onBackPressed();
 			return true;
 		case R.id.action_register_with_hub:
-			// RegisterWithHubDialogFragment rwhdf = new
-			// RegisterWithHubDialogFragment();
-			// rwhdf.show(getSupportFragmentManager(),
-			// InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
 			dhdf.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -298,11 +292,8 @@ public class SecondActivity extends GodObject implements
 			return true;
 		case R.id.action_nfc:
 			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
-				// startActivity(new
-				// Intent(SettingsDialogFragment.ACTION_NFC_SETTINGS));
 				Toast.makeText(this, this.getString(R.string.nfc_disabled),
 						Toast.LENGTH_SHORT).show();
-
 			} else {
 				Intent i = new Intent(this, NfcWriterActivity.class);
 				this.startActivity(i);

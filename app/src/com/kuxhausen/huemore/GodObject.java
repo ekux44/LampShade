@@ -8,9 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodsListFragment.OnMoodSelectedListener;
 import com.kuxhausen.huemore.network.GetBulbList;
@@ -46,7 +43,6 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		//runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
 				66*(numBulbs)) {
-			private boolean warned = false;
 
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override

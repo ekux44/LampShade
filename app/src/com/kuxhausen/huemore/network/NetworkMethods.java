@@ -40,7 +40,7 @@ public class NetworkMethods {
 				
 			}};
 		
-		GsonRequest req = new GsonRequest<LightsPutResponse>(Method.PUT, url,moods[i % moods.length], LightsPutResponse.class, null,
+		GsonRequest<LightsPutResponse> req = new GsonRequest<LightsPutResponse>(Method.PUT, url,moods[i % moods.length], LightsPutResponse.class, null,
 				requestListener, null);
 		req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
@@ -69,7 +69,7 @@ public class NetworkMethods {
 				
 			}};
 		
-		GsonRequest req = new GsonRequest<LightsPutResponse>(Method.PUT, url,gson.toJson(bulbAtt), LightsPutResponse.class, null,
+		GsonRequest<LightsPutResponse> req = new GsonRequest<LightsPutResponse>(Method.PUT, url,gson.toJson(bulbAtt), LightsPutResponse.class, null,
 				requestListener, null);
 		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
@@ -88,7 +88,7 @@ public class NetworkMethods {
 		
 			String url = "http://" + bridges[i].internalipaddress+ "/api/";
 			
-			GsonRequest req = new GsonRequest<RegistrationResponse[]>(Method.POST, url, registrationRequest, RegistrationResponse[].class, null,
+			GsonRequest<RegistrationResponse[]> req = new GsonRequest<RegistrationResponse[]>(Method.POST, url, registrationRequest, RegistrationResponse[].class, null,
 					listeners[i], null);
 			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 			mRequestQueue.add(req);

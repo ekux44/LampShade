@@ -34,8 +34,6 @@ public class NewColorTempFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle bundle = getArguments();
-
 		hs = new BulbState();
 		hs.on = true;
 		hs.effect = "none";

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.SeekBar;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.kuxhausen.huemore.SecondActivity.MoodManualPagerAdapter;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
@@ -394,10 +392,6 @@ public class MainActivity extends GodObject implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_register_with_hub:
-			// RegisterWithHubDialogFragment rwhdf = new
-			// RegisterWithHubDialogFragment();
-			// rwhdf.show(getSupportFragmentManager(),
-			// InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
 			dhdf.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -419,11 +413,8 @@ public class MainActivity extends GodObject implements
 			return true;
 		case R.id.action_nfc:
 			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
-				// startActivity(new
-				// Intent(SettingsDialogFragment.ACTION_NFC_SETTINGS));
 				Toast.makeText(this, this.getString(R.string.nfc_disabled),
 						Toast.LENGTH_SHORT).show();
-
 			} else {
 				Intent i = new Intent(this, NfcWriterActivity.class);
 				this.startActivity(i);

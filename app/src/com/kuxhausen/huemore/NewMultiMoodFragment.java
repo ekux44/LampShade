@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -97,7 +96,6 @@ public class NewMultiMoodFragment extends ListFragment implements
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.addColor:
 			addState();
@@ -109,9 +107,6 @@ public class NewMultiMoodFragment extends ListFragment implements
 	public void onCreateMood(String groupname) {
 
 		for (int i = 0; i < moodRowArray.size(); i++) {
-			// Defines a new Uri object that receives the result
-			// of the insertion
-			Uri mNewUri;
 
 			// Defines an object to contain the new values to
 			// insert
@@ -126,7 +121,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 					gson.toJson(moodRowArray.get(i).hs));
 			mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, i);
 
-			mNewUri = getActivity().getContentResolver().insert(
+			getActivity().getContentResolver().insert(
 					DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
 																			// values
 																			// to
