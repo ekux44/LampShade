@@ -118,7 +118,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 		if (colorLoopLayoutVisible) {
 			colorLoop = (CompoundButton) groupDialogView
 					.findViewById(R.id.colorLoopCompoundButton);
-			colorLoop.setOnCheckedChangeListener(this);
 			colorLoopLayout = (LinearLayout) groupDialogView
 					.findViewById(R.id.colorLoopLayout);
 		} else {
@@ -126,11 +125,16 @@ public class ColorWheelFragment extends SherlockFragment implements
 					View.GONE);
 		}
 		
-		picker.setOnColorChangedListener(this);
 		
 		
 		// Create the AlertDialog object and return it
 		return groupDialogView;
+	}
+	
+	public void onResume(){
+		picker.setOnColorChangedListener(this);
+		if (colorLoopLayoutVisible)
+			colorLoop.setOnCheckedChangeListener(this);
 	}
 	
 	public void hideColorLoop() {
