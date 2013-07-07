@@ -39,7 +39,7 @@
         <provider
             android:name=".persistence.HueMoreProvider"
             android:authorities="com.kuxhausen.provider.huemore.database"
-            android:exported="false" >
+            android:exported="true" >
         </provider>
 
         <!-- Listen for the "edit" action -->
@@ -93,6 +93,20 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name=".widget.WeatherWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data android:name="android.appwidget.provider"
+                    android:resource="@xml/widgetinfo" />
+        </receiver>
+
+        <service android:name=".widget.WeatherWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+                
     </application>
 
 </manifest>
