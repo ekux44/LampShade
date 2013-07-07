@@ -31,8 +31,6 @@
         android:ems="10"
         android:inputType="number"
         android:text="@string/color_temp_initial_value" >
-
-        <requestFocus />
     </EditText>
 
 </LinearLayout>
