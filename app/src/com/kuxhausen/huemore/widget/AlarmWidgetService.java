@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.timing.AlarmRow;
 import com.kuxhausen.huemore.timing.AlarmState;
 
@@ -85,12 +86,16 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // Get the data for this position from the content provider
         String timeText = "0:00 AM";
         String subText = "Error";
+        String json = "";
+        int rowID = -1;
         boolean alarmOn = false;
     	if (mCursor.moveToPosition(position)) {
-           AlarmRow aRow = new AlarmRow(mContext, gson.fromJson(mCursor.getString(0), AlarmState.class), mCursor.getInt(1));
-           timeText = aRow.getTime();
-           subText = aRow.getSecondaryDescription();
-           alarmOn = aRow.isScheduled();
+    		json = mCursor.getString(0);
+    		AlarmRow aRow = new AlarmRow(mContext, gson.fromJson(json, AlarmState.class), mCursor.getInt(1));
+    		timeText = aRow.getTime();
+        	subText = aRow.getSecondaryDescription();
+        	alarmOn = aRow.isScheduled();
+        	rowID = aRow.getID();
         }
 
         // Return a proper item with the proper day and temperature
@@ -107,12 +112,13 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         
         
         // Set the click intent so that we can handle it and show a toast message
- /*       final Intent fillInIntent = new Intent();
+        final Intent fillInIntent = new Intent();
         final Bundle extras = new Bundle();
-        extras.putString(WeatherWidgetProvider.EXTRA_DAY_ID, day);
+        extras.putInt(InternalArguments.ALARM_ID, rowID);
+        extras.putString(InternalArguments.ALARM_JSON, json);
         fillInIntent.putExtras(extras);
-        rv.setOnClickFillInIntent(R.id.rowExcludingCompoundButton, fillInIntent);
-*/
+        rv.setOnClickFillInIntent(R.id.alarmOnOffImageButton, fillInIntent);
+
         return rv;
     }
     public RemoteViews getLoadingView() {

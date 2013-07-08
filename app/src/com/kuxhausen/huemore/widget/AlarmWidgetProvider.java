@@ -38,8 +38,12 @@ import android.widget.Toast;
 
 import java.util.Random;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.timing.AlarmRow;
+import com.kuxhausen.huemore.timing.AlarmState;
 
 /**
  * Our data observer just notifies an update for all weather widgets when it detects a change.
@@ -80,6 +84,8 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
 
     private int mHeaderWeatherState = 0;
 
+    Gson gson = new Gson();
+    
     public AlarmWidgetProvider() {
         // Start the worker thread
         sWorkerThread = new HandlerThread("AlarmWidgetProvider-worker");
@@ -144,12 +150,11 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         } else*/ if (action.equals(CLICK_ACTION)) {
-            // Show a toast
-            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-            final String day = intent.getStringExtra(EXTRA_DAY_ID);
-            final String formatStr = ctx.getResources().getString(R.string.toast_format_string);
-            Toast.makeText(ctx, String.format(formatStr, day), Toast.LENGTH_SHORT).show();
+            
+        	String json = intent.getStringExtra(InternalArguments.ALARM_JSON);
+        	int id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
+        	AlarmRow aRow = new AlarmRow(ctx, gson.fromJson(json, AlarmState.class), id);
+        	aRow.toggle();
         }
 
         super.onReceive(ctx, intent);

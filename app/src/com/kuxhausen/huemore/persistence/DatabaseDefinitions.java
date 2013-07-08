@@ -157,6 +157,8 @@ public final class DatabaseDefinitions {
 		public final static String SERIALIZED_GOD_OBJECT = "SerializedGodObject";
 		public final static String TRANSIENT_NETWORK_REQUEST = "TransienteNetworkRequest";
 		public final static String PERMANENT_NETWORK_REQUEST = "PermanentNetworkRequest";
+		public final static String ALARM_ID = "AlarmId";
+		public final static String ALARM_JSON = "AlarmJson";
 	}
 
 	public static final class ExternalArguments {
