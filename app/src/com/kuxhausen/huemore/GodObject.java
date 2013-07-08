@@ -152,7 +152,6 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		pushMoodGroup();
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void onBrightnessChanged(String brightnessState[]) {
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, brightnessState);
 	}
@@ -162,13 +161,11 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 * 
 	 * @param states
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
 	//	this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
