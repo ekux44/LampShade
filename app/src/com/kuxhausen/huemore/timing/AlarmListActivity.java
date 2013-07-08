@@ -1,9 +1,16 @@
 package com.kuxhausen.huemore.timing;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 /**
  * stupid list wrapper to work around the non-existence of a
@@ -45,6 +52,15 @@ public class AlarmListActivity extends SherlockFragmentActivity {
 								AlarmsListFragment.class.getName()).commit();
 			}
 
+		}
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		if (settings.getInt(PreferencesKeys.BULBS_UNLOCKED,
+				PreferencesKeys.ALWAYS_FREE_BULBS) <= PreferencesKeys.ALWAYS_FREE_BULBS) {
+			Intent i = new Intent(this, MainActivity.class);
+			i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
+			startActivity(i);
+			setResult(Activity.RESULT_CANCELED);
 		}
 	}
 }
