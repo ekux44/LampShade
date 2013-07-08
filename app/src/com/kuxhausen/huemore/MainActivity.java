@@ -602,8 +602,6 @@ public class MainActivity extends GodObject implements
 					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
 					edit.commit();
 
-					databaseHelper.addBulbs(previousMax, numUnlocked);// initialize
-																		// database
 				}
 			}
 			/*

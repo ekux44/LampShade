@@ -125,14 +125,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		for (int i = 1; i <= PreferencesKeys.ALWAYS_FREE_BULBS; i++) {
-			cv.clear();
-			cv.put(GroupColumns.GROUP, PreferencesKeys.ALL);
-			cv.put(GroupColumns.BULB, i);
-			cv.put(GroupColumns.PRECEDENCE, i);
-			db.insert(GroupColumns.TABLE_NAME, null, cv);
-		}
-
 	}
 
 	public void updatedTwoPointOh() {
@@ -241,19 +233,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
 
-	public void addBulbs(int first, int last) {
-		SQLiteDatabase db = this.getWritableDatabase();
-
-		ContentValues cv = new ContentValues();
-
-		for (int i = first; i <= last; i++) {
-			cv.clear();
-			cv.put(GroupColumns.GROUP, PreferencesKeys.ALL);
-			cv.put(GroupColumns.BULB, i);
-			cv.put(GroupColumns.PRECEDENCE, i);
-			db.insert(GroupColumns.TABLE_NAME, null, cv);
-		}
-	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

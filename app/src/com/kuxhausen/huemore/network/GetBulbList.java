@@ -13,13 +13,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
@@ -109,5 +110,24 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 		tracker.getInFlight().remove(this);
 		mResultListener.onListReturned(result);
 
+		if(result!=null && result.length>0){
+			String groupSelect = GroupColumns.GROUP + "=?";
+			String[] groupArg = { PreferencesKeys.ALL };
+			cont.getContentResolver().delete(
+					GroupColumns.GROUPBULBS_URI,
+					groupSelect, groupArg);
+
+			for(int i = 1; i< (result.length+1); i++){
+				
+				ContentValues mNewValues = new ContentValues();
+
+				mNewValues.put(GroupColumns.GROUP, PreferencesKeys.ALL);
+				mNewValues.put(GroupColumns.BULB, i);
+				mNewValues.put(GroupColumns.PRECEDENCE,i);
+
+				cont.getContentResolver().insert(GroupColumns.GROUPS_URI, mNewValues);
+
+			}
+		}
 	}
 }

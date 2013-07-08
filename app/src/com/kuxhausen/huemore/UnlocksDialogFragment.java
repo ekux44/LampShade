@@ -88,7 +88,6 @@ public class UnlocksDialogFragment extends DialogFragment implements
 					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
 					edit.commit();
 
-					ma.databaseHelper.addBulbs(previousMax, numUnlocked);
 				}
 			}
 
