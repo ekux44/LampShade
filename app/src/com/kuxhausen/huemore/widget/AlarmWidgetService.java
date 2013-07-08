@@ -29,6 +29,7 @@ import com.kuxhausen.huemore.timing.AlarmState;
 
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ContentUris;
@@ -37,6 +38,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -140,17 +142,18 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public void onDataSetChanged() {
-        // Refresh the cursor
+       Log.e("asdf-widget", "onDataSetChanged");
+    	
+    	// Refresh the cursor
         if (mCursor != null) {
             mCursor.close();
         }
         //mCursor = mContext.getContentResolver().query(WeatherDataProvider.CONTENT_URI, null, null,
         //        null, null);
         
-        
+        ContentResolver r = mContext.getContentResolver();
         String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-		mCursor = mContext.getContentResolver()
-				.query(AlarmColumns.ALARMS_URI,
+		mCursor = r.query(AlarmColumns.ALARMS_URI,
 						columns, null, null, null);
 
     }

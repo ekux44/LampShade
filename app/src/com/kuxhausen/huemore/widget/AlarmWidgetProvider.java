@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -80,9 +81,6 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
     private static HandlerThread sWorkerThread;
     private static Handler sWorkerQueue;
     private static AlarmDataProviderObserver sDataObserver;
-    private static final int sMaxDegrees = 96;
-
-    private int mHeaderWeatherState = 0;
 
     Gson gson = new Gson();
     
@@ -97,7 +95,8 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Register for external updates to the data to trigger an update of the widget.  When using
+    	Log.e("asdf-widget", "onEnabled");
+    	// Register for external updates to the data to trigger an update of the widget.  When using
         // content providers, the data is often updated via a background service, or in response to
         // user interaction in the main app.  To ensure that the widget always reflects the current
         // state of the data, we must listen for changes and update ourselves accordingly.
@@ -107,12 +106,14 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             final ComponentName cn = new ComponentName(context, AlarmWidgetProvider.class);
             sDataObserver = new AlarmDataProviderObserver(mgr, cn, sWorkerQueue);
             r.registerContentObserver(AlarmColumns.ALARMS_URI, true, sDataObserver);
+            Log.e("asdf-widget", "onEnabled created new data observer");
         }
     }
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
         final String action = intent.getAction();
+        Log.e("asdf=widget", "OnRecieve "+action);
         /*if (action.equals(REFRESH_ACTION)) {
             // BroadcastReceivers have a limited amount of time to do work, so for this sample, we
             // are triggering an update of the data on another thread.  In practice, this update
@@ -207,6 +208,9 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             appWidgetManager.updateAppWidget(appWidgetIds[i], layout);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+        
+        //wtf another google bug?
+        this.onEnabled(context);
     }
 
     @Override

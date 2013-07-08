@@ -97,6 +97,9 @@
         <receiver android:name=".widget.AlarmWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+    			<action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+    			<action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+    			<action android:name="android.appwidget.action.APPWIDGET_DISABLED" /> 
             </intent-filter>
             <!-- This specifies the widget provider info -->
             <meta-data android:name="android.appwidget.provider"
