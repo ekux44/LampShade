@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
-import java.text.DateFormat;
+import android.text.format.DateFormat;
 import java.util.Calendar;
 
 import android.content.ContentValues;
@@ -44,10 +44,10 @@ public class AlarmRow {
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
+		
 		// remember transition starts ahead to culminate at the specified time
 		cal.add(Calendar.SECOND, aState.transitiontime / 10);
-		return DateFormat.getTimeInstance().format(cal.getTime());
-
+		return DateFormat.getTimeFormat(c).format(cal.getTime());
 	}
 
 	public String getSecondaryDescription() {
