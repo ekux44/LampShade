@@ -22,7 +22,7 @@
     android:layout_marginRight="@dimen/widget_margin_right"
     android:layout_marginTop="@dimen/widget_margin_top"
     android:background="#8F000000"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <!-- We define separate margins to allow for flexibility in twiddling the margins
          depending on device form factor and target SDK version. -->
@@ -31,23 +31,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <ImageView
+            android:padding="8dp"
             android:id="@+id/huemore_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:scaleType="fitStart"
             android:adjustViewBounds="true"
-            android:src="@drawable/huemore" />
+            android:scaleType="fitStart"
+            android:src="@drawable/preview" />
 
         <TextView
             android:id="@+id/alarms_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:text="@string/alarms"
             android:textAllCaps="true"
             android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/alarms_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:padding="8dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/device_access_alarms" />
 
     </LinearLayout>
     <ImageView

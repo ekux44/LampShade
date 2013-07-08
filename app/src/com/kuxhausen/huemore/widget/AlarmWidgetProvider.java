@@ -17,9 +17,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.widget.RemoteViews;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.timing.AlarmRow;
 import com.kuxhausen.huemore.timing.AlarmState;
 
@@ -122,14 +124,15 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
                     onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setPendingIntentTemplate(R.id.alarm_list, onClickPendingIntent);
 
-            // Bind the click intent for the refresh button on the widget
- /*          final Intent refreshIntent = new Intent(context, WeatherWidgetProvider.class);
-            refreshIntent.setAction(WeatherWidgetProvider.REFRESH_ACTION);
-            final PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, 0,
-                    refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setOnClickPendingIntent(R.id.refresh, refreshPendingIntent);
-*/
-      
+           final Intent openAlarmsIntent = new Intent(context, AlarmListActivity.class);
+           final PendingIntent openAlarmsPendingIntent = PendingIntent.getActivity(context, 0,
+                    openAlarmsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            rv.setOnClickPendingIntent(R.id.alarms_icon, openAlarmsPendingIntent);
+            
+            final Intent openHueMoreIntent = new Intent(context, MainActivity.class);
+            final PendingIntent openHueMorePendingIntent = PendingIntent.getActivity(context, 0,
+            		openHueMoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
     	return rv;
     }
 
