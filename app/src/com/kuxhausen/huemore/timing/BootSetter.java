@@ -23,8 +23,8 @@ public class BootSetter extends BroadcastReceiver {
 		while (cursor.moveToNext()) {
 			AlarmState as = gson
 					.fromJson(cursor.getString(0), AlarmState.class);
-
-			AlarmReciever.createAlarms(context, as);
+			if(as.scheduledForFuture)
+				AlarmReciever.createAlarms(context, as);
 		}
 
 	}
