@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodsListFragment.OnMoodSelectedListener;
@@ -40,6 +41,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		if(getBulbs()!=null)
 			numBulbs = getBulbs().length;
 		
+		Log.e("asdf", "count down timer interval rate = "+50*numBulbs);
 		//runs at the rate to execute 20 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
 				50*(numBulbs)) {
@@ -107,6 +109,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	
 	public void setBulbS(Integer[] newBulbS){
 		bulbS = newBulbS;
+		restartCountDownTimer();
 	}
 	public void setGroupS(String newGroupS){
 		groupS = newGroupS;
@@ -161,7 +164,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void testMood(String[] states) {
-		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+	//	this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
 	}
 
