@@ -2,7 +2,7 @@
 
     <item
         android:id="@+id/action_add_alarm"
-        android:icon="@drawable/add_alarm"
+        android:icon="@drawable/device_access_add_alarm"
         android:showAsAction="ifRoom"
         android:title="@string/actionmenu_new_alarm"/>
 

@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:padding="8dp"
-            android:src="@drawable/add_alarm" />
+            android:src="@drawable/device_access_add_alarm" />
     </LinearLayout>
     
     <View
