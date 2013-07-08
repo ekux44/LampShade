@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import java.util.Calendar;
+
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -129,6 +131,17 @@ public class MainActivity extends GodObject implements
 		
 		initializationDatabaseChecks();
 		initializeBillingCode();
+		
+		
+		Calendar currentTime = Calendar.getInstance();
+		Calendar updateTime = Calendar.getInstance();
+		updateTime.set(Calendar.MONTH, Calendar.AUGUST); //TODO remember to change this when releasing new versions
+		
+		if(currentTime.after(updateTime) && !settings.getBoolean(PreferencesKeys.UPDATE_OPT_OUT, false)){
+			UpdateDialogFragment updates = new UpdateDialogFragment();
+			updates.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		}
 		
 
 		Bundle b = this.getIntent().getExtras();
