@@ -94,7 +94,7 @@
             </intent-filter>
         </receiver>
         
-        <receiver android:name=".widget.AlarmWidgetProvider">
+        <receiver android:name=".widget.AlarmWidgetProvider" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
     			<action android:name="android.appwidget.action.APPWIDGET_ENABLED" />

@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.kuxhausen.huemore.widget;
 
@@ -23,22 +8,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.database.Cursor;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
-
-import java.util.Random;
-
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
@@ -66,7 +43,7 @@ class AlarmDataProviderObserver extends ContentObserver {
         // In response, the factory's onDataSetChanged() will be called which will requery the
         // cursor for the new data.
         mAppWidgetManager.notifyAppWidgetViewDataChanged(
-                mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.weather_list);
+                mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.alarm_list);
     }
 }
 
@@ -76,7 +53,6 @@ class AlarmDataProviderObserver extends ContentObserver {
 public class AlarmWidgetProvider extends AppWidgetProvider {
     public static String CLICK_ACTION = "com.example.android.weatherlistwidget.CLICK";
     public static String REFRESH_ACTION = "com.example.android.weatherlistwidget.REFRESH";
-    public static String EXTRA_DAY_ID = "com.example.android.weatherlistwidget.day";
 
     private static HandlerThread sWorkerThread;
     private static Handler sWorkerQueue;
@@ -91,11 +67,8 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         sWorkerQueue = new Handler(sWorkerThread.getLooper());
     }
 
-    // XXX: clear the worker queue if we are destroyed?
-
-    @Override
+   @Override
     public void onEnabled(Context context) {
-    	Log.e("asdf-widget", "onEnabled");
     	// Register for external updates to the data to trigger an update of the widget.  When using
         // content providers, the data is often updated via a background service, or in response to
         // user interaction in the main app.  To ensure that the widget always reflects the current
@@ -106,51 +79,13 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             final ComponentName cn = new ComponentName(context, AlarmWidgetProvider.class);
             sDataObserver = new AlarmDataProviderObserver(mgr, cn, sWorkerQueue);
             r.registerContentObserver(AlarmColumns.ALARMS_URI, true, sDataObserver);
-            Log.e("asdf-widget", "onEnabled created new data observer");
         }
     }
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
         final String action = intent.getAction();
-        Log.e("asdf=widget", "OnRecieve "+action);
-        /*if (action.equals(REFRESH_ACTION)) {
-            // BroadcastReceivers have a limited amount of time to do work, so for this sample, we
-            // are triggering an update of the data on another thread.  In practice, this update
-            // can be triggered from a background service, or perhaps as a result of user actions
-            // inside the main application.
-            final Context context = ctx;
-            sWorkerQueue.removeMessages(0);
-            sWorkerQueue.post(new Runnable() {
-                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-				@Override
-                public void run() {
-                    final ContentResolver r = context.getContentResolver();
-                    final Cursor c = r.query(AlarmColumns.ALARMS_URI, null, null, null, 
-                            null);
-                    final int count = c.getCount();
-
-                    // We disable the data changed observer temporarily since each of the updates
-                    // will trigger an onChange() in our data observer.
-                    r.unregisterContentObserver(sDataObserver);
-                    for (int i = 0; i < count; ++i) {
-                        final Uri uri = ContentUris.withAppendedId(WAlarmColumns.ALARMS_URI, i);
-                        final ContentValues values = new ContentValues();
-                        values.put(WeatherDataProvider.Columns.TEMPERATURE,
-                                new Random().nextInt(sMaxDegrees));
-                        r.update(uri, values, null, null);
-                    }
-                    r.registerContentObserver(WeatherDataProvider.CONTENT_URI, true, sDataObserver);
-
-                    final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-                    final ComponentName cn = new ComponentName(context, WeatherWidgetProvider.class);
-                    mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.weather_list);
-                }
-            });
-
-            final int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-        } else*/ if (action.equals(CLICK_ACTION)) {
+        if (action.equals(CLICK_ACTION)) {
             
         	String json = intent.getStringExtra(InternalArguments.ALARM_JSON);
         	int id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
@@ -170,11 +105,11 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            rv.setRemoteAdapter(appWidgetId, R.id.weather_list, intent);
+            rv.setRemoteAdapter(appWidgetId, R.id.alarm_list, intent);
 
             // Set the empty view to be displayed if the collection is empty.  It must be a sibling
             // view of the collection view.
-            rv.setEmptyView(R.id.weather_list, R.id.empty_view);
+            rv.setEmptyView(R.id.alarm_list, R.id.empty_view);
 
             // Bind a click listener template for the contents of the weather list.  Note that we
             // need to update the intent's data if we set an extra, since the extras will be
@@ -185,7 +120,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
             final PendingIntent onClickPendingIntent = PendingIntent.getBroadcast(context, 0,
                     onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setPendingIntentTemplate(R.id.weather_list, onClickPendingIntent);
+            rv.setPendingIntentTemplate(R.id.alarm_list, onClickPendingIntent);
 
             // Bind the click intent for the refresh button on the widget
  /*          final Intent refreshIntent = new Intent(context, WeatherWidgetProvider.class);
@@ -194,9 +129,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
                     refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setOnClickPendingIntent(R.id.refresh, refreshPendingIntent);
 */
-            // Restore the minimal header
-//            rv.setTextViewText(R.id.city_name, context.getString(R.string.city_name));
-         
+      
     	return rv;
     }
 
