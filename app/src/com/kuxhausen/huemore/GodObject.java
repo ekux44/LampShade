@@ -40,9 +40,9 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		if(getBulbs()!=null)
 			numBulbs = getBulbs().length;
 		
-		//runs at the rate to execute 15 op/sec
+		//runs at the rate to execute 20 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
-				66*(numBulbs)) {
+				50*(numBulbs)) {
 
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
