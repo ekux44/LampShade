@@ -94,7 +94,7 @@
             </intent-filter>
         </receiver>
         
-        <receiver android:name=".widget.WeatherWidgetProvider">
+        <receiver android:name=".widget.AlarmWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -103,7 +103,7 @@
                     android:resource="@xml/widgetinfo" />
         </receiver>
 
-        <service android:name=".widget.WeatherWidgetService"
+        <service android:name=".widget.AlarmWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
                 

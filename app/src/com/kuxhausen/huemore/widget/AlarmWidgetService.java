@@ -85,10 +85,12 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // Get the data for this position from the content provider
         String timeText = "0:00 AM";
         String subText = "Error";
+        boolean alarmOn = false;
     	if (mCursor.moveToPosition(position)) {
            AlarmRow aRow = new AlarmRow(mContext, gson.fromJson(mCursor.getString(0), AlarmState.class), mCursor.getInt(1));
            timeText = aRow.getTime();
            subText = aRow.getSecondaryDescription();
+           alarmOn = aRow.isScheduled();
         }
 
         // Return a proper item with the proper day and temperature
@@ -97,7 +99,13 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
         rv.setTextViewText(R.id.timeTextView, timeText);
         rv.setTextViewText(R.id.subTextView, subText);
-
+        if(alarmOn){
+        	rv.setImageViewResource(R.id.alarmOnOffImageButton, R.drawable.on);
+        }else{
+        	rv.setImageViewResource(R.id.alarmOnOffImageButton, R.drawable.off);
+        }
+        
+        
         // Set the click intent so that we can handle it and show a toast message
  /*       final Intent fillInIntent = new Intent();
         final Bundle extras = new Bundle();

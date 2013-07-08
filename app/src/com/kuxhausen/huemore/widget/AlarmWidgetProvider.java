@@ -44,11 +44,11 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 /**
  * Our data observer just notifies an update for all weather widgets when it detects a change.
  */
-class WeatherDataProviderObserver extends ContentObserver {
+class AlarmDataProviderObserver extends ContentObserver {
     private AppWidgetManager mAppWidgetManager;
     private ComponentName mComponentName;
 
-    WeatherDataProviderObserver(AppWidgetManager mgr, ComponentName cn, Handler h) {
+    AlarmDataProviderObserver(AppWidgetManager mgr, ComponentName cn, Handler h) {
         super(h);
         mAppWidgetManager = mgr;
         mComponentName = cn;
@@ -75,14 +75,14 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
 
     private static HandlerThread sWorkerThread;
     private static Handler sWorkerQueue;
-    private static WeatherDataProviderObserver sDataObserver;
+    private static AlarmDataProviderObserver sDataObserver;
     private static final int sMaxDegrees = 96;
 
     private int mHeaderWeatherState = 0;
 
     public AlarmWidgetProvider() {
         // Start the worker thread
-        sWorkerThread = new HandlerThread("WeatherWidgetProvider-worker");
+        sWorkerThread = new HandlerThread("AlarmWidgetProvider-worker");
         sWorkerThread.start();
         sWorkerQueue = new Handler(sWorkerThread.getLooper());
     }
@@ -99,7 +99,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
         if (sDataObserver == null) {
             final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             final ComponentName cn = new ComponentName(context, AlarmWidgetProvider.class);
-            sDataObserver = new WeatherDataProviderObserver(mgr, cn, sWorkerQueue);
+            sDataObserver = new AlarmDataProviderObserver(mgr, cn, sWorkerQueue);
             r.registerContentObserver(AlarmColumns.ALARMS_URI, true, sDataObserver);
         }
     }
