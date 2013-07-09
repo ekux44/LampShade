@@ -37,6 +37,7 @@ import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
+import com.kuxhausen.huemore.ui.registration.ConnectionStatusDialogFragment;
 import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 
 /**
@@ -429,13 +430,13 @@ public class MainActivity extends GodObject implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_connected_with_hub:
-			DiscoverHubDialogFragment dhdf1 = new DiscoverHubDialogFragment();
-			dhdf1.show(getSupportFragmentManager(),
+			ConnectionStatusDialogFragment csdf1 = new ConnectionStatusDialogFragment();
+			csdf1.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_register_with_hub:
-			DiscoverHubDialogFragment dhdf2 = new DiscoverHubDialogFragment();
-			dhdf2.show(getSupportFragmentManager(),
+			ConnectionStatusDialogFragment csdf2 = new ConnectionStatusDialogFragment();
+			csdf2.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:
