@@ -69,8 +69,7 @@
     <string name="cap_short_none"></string>
     <string name="cap_short_every_day">TÄGLICH</string>
     <string name="next_scheduled_intro">Nächster Alarm</string>
-	<string name="update_welcome_title">Welcome to HueMore 2.2 Pro</string>
-	<string name="update_welcome_message">Alarms now work! However, you must <b>restart your phone</b> for this bug fix to take effect. Also, HueMore now supports Tasker and Locale.</string>
+	<string name="update_welcome_title">New in HueMore 2.3</string>
 	<string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
 	<string name="update_message">Please update HueMore to the newest version.</string>
 	<string name="update_opt_out">Disable update reminders</string>
