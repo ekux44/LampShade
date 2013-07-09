@@ -79,16 +79,8 @@
 	<string name="update">Update</string>
 	<string name="action_hub_status">Hub Status</string>
 	<string name="reset_hub_connection">Reset Hub Connection</string>
-	<string name="hub_connection">Connected to hub with network address </string>
+	<string name="hub_connection">Connected to hub with network address</string>
 	<string name="hub_connection_error">Not connected to hub!</string>
-	
-	
-	<!-- ============================ -->
-    <!--  AppWidget examples strings     -->
-    <!-- ============================ -->
-    <string name="empty_view_text">No alarms found...</string>
-    <string name="toast_format_string">%1$s!</string>
-    <string name="item_format_string">%1$d\u00B0 on %2$s</string>
-    <string name="header_format_string">%1$d\u00B0 in %2$s</string>	
-	
+    <string name="empty_view_text">No alarms found…</string>
+    
 </resources>

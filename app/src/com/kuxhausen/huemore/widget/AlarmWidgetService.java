@@ -77,8 +77,6 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         	rowID = aRow.getID();
         }
 
-        // Return a proper item with the proper day and temperature
-        final String formatStr = mContext.getResources().getString(R.string.item_format_string);
         final int itemId = R.layout.widget_alarm_row;
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), itemId);
         rv.setTextViewText(R.id.timeTextView, timeText);

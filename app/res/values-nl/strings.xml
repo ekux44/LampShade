@@ -72,4 +72,13 @@
 	<string name="update_welcome_title">Welcome to HueMore 2.2 Pro</string>
 	<string name="update_welcome_message">Alarms now work! However, you must <b>restart your phone</b> for this bug fix to take effect. Also, HueMore now supports Tasker and Locale.</string>
 	<string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
+	<string name="update_message">Please update HueMore to the newest version.</string>
+	<string name="update_opt_out">Disable update reminders</string>
+	<string name="update">Update</string>
+	<string name="action_hub_status">Hub Status</string>
+	<string name="reset_hub_connection">Reset Hub Connection</string>
+	<string name="hub_connection">Connected to hub with network address</string>
+	<string name="hub_connection_error">Not connected to hub!</string>
+    <string name="empty_view_text">No alarms found…</string>
+    
 </resources>
