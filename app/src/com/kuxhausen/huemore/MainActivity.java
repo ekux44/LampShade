@@ -59,6 +59,11 @@ public class MainActivity extends GodObject implements
 		return bulbListenerFragment;
 	}
 	
+	@Override
+	public void onConnectionStatusChanged(){
+		this.supportInvalidateOptionsMenu();
+	}
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -395,6 +400,20 @@ public class MainActivity extends GodObject implements
 			if (bothItem != null) {
 				bothItem.setEnabled(false);
 				bothItem.setVisible(false);
+			}
+		}
+		
+		if(this.hasHubConnection()){
+			MenuItem connectionErrorItem = menu.findItem(R.id.action_register_with_hub);
+			if (connectionErrorItem != null) {
+				connectionErrorItem.setEnabled(false);
+				connectionErrorItem.setVisible(false);
+			}
+		}else{
+			MenuItem connectionItem = menu.findItem(R.id.action_connected_with_hub);
+			if (connectionItem != null) {
+				connectionItem.setEnabled(false);
+				connectionItem.setVisible(false);
 			}
 		}
 		return true;

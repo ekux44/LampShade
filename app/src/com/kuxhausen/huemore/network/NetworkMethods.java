@@ -6,8 +6,11 @@ import android.preference.PreferenceManager;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.Bridge;
@@ -17,7 +20,7 @@ import com.kuxhausen.huemore.state.api.RegistrationRequest;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class NetworkMethods {
-	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, Context cont, Integer[] bulbs, String[] moods){
+	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, Integer[] bulbs, String[] moods){
 		if (cont == null || bulbs == null || moods == null)
 			return;
 
@@ -35,19 +38,14 @@ public class NetworkMethods {
 		String url = "http://" + bridge + "/api/" + hash
 				+ "/lights/" + bulbs[i] + "/state";
 		
-		Listener<LightsPutResponse> requestListener = new Listener<LightsPutResponse>() {
-			public void onResponse(LightsPutResponse response) {
-				
-			}};
-		
-		GsonRequest<LightsPutResponse> req = new GsonRequest<LightsPutResponse>(Method.PUT, url,moods[i % moods.length], LightsPutResponse.class, null,
-				requestListener, null);
+		GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,moods[i % moods.length], LightsPutResponse[].class, null,
+				new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
 		req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
 		}
 	}
 	
-	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, Context cont, int bulbNum, BulbAttributes bulbAtt){
+	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, int bulbNum, BulbAttributes bulbAtt){
 		if (cont == null || bulbAtt == null)
 			return;
 
@@ -64,13 +62,8 @@ public class NetworkMethods {
 		Gson gson = new Gson();
 		String url = "http://" + bridge + "/api/" + hash + "/lights/" + bulbNum;
 		
-		Listener<LightsPutResponse> requestListener = new Listener<LightsPutResponse>() {
-			public void onResponse(LightsPutResponse response) {
-				
-			}};
-		
-		GsonRequest<LightsPutResponse> req = new GsonRequest<LightsPutResponse>(Method.PUT, url,gson.toJson(bulbAtt), LightsPutResponse.class, null,
-				requestListener, null);
+		GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(bulbAtt), LightsPutResponse[].class, null,
+				new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
 		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
 	}
@@ -93,5 +86,5 @@ public class NetworkMethods {
 			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 			mRequestQueue.add(req);
 		}
-	}
+	}	
 }

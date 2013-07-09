@@ -77,7 +77,7 @@
 	<string name="update_message">Please update HueMore to the newest version.</string>
 	<string name="update_opt_out">Disable update reminders</string>
 	<string name="update">Update</string>
-	
+	<string name="action_hub_status">Hub Status</string>
 	
 	<!-- ============================ -->
     <!--  AppWidget examples strings     -->

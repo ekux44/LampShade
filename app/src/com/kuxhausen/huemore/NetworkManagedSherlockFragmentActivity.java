@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import android.util.Log;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -10,6 +12,23 @@ public class NetworkManagedSherlockFragmentActivity extends
 
 	private RequestQueue volleyRQ;
 
+	private boolean hasHubConnection = false;
+	
+	public void setHubConnectionState(boolean connected){
+		if(hasHubConnection!=connected){
+			hasHubConnection = connected;
+			onConnectionStatusChanged();
+		}
+		Log.e("setHubConnection", ""+connected);
+	}
+	public boolean hasHubConnection(){
+		return hasHubConnection;
+	}
+	
+	public void onConnectionStatusChanged(){
+		//Override in subclasses that want to listen to this
+	}
+	
 	public RequestQueue getRequestQueue() {
 		return volleyRQ;
 	}
