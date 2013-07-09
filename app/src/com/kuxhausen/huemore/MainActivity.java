@@ -116,6 +116,11 @@ public class MainActivity extends GodObject implements
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
+					BulbState hs = new BulbState();
+					hs.bri = seekBar.getProgress();
+					hs.on = true;
+					String[] brightnessState = { gson.toJson(hs) };
+					parrentActivity.updatePreview(brightnessState);
 					isTrackingTouch = true;
 				}
 
@@ -423,9 +428,14 @@ public class MainActivity extends GodObject implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
+		case R.id.action_connected_with_hub:
+			DiscoverHubDialogFragment dhdf1 = new DiscoverHubDialogFragment();
+			dhdf1.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			return true;
 		case R.id.action_register_with_hub:
-			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-			dhdf.show(getSupportFragmentManager(),
+			DiscoverHubDialogFragment dhdf2 = new DiscoverHubDialogFragment();
+			dhdf2.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:

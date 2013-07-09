@@ -128,6 +128,9 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 				cont.getContentResolver().insert(GroupColumns.GROUPS_URI, mNewValues);
 
 			}
+			tracker.setHubConnectionState(true);
+		} else{
+			tracker.setHubConnectionState(false);
 		}
 	}
 }

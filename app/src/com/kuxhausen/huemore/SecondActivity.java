@@ -84,8 +84,8 @@ public class SecondActivity extends GodObject implements
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				BulbState hs = new BulbState();
+				hs.bri = seekBar.getProgress();
 				hs.on = true;
-
 				String[] brightnessState = { gson.toJson(hs) };
 				parrentActivity.updatePreview(brightnessState);
 				isTrackingTouch = false;
@@ -93,6 +93,11 @@ public class SecondActivity extends GodObject implements
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
+				BulbState hs = new BulbState();
+				hs.bri = seekBar.getProgress();
+				hs.on = true;
+				String[] brightnessState = { gson.toJson(hs) };
+				parrentActivity.updatePreview(brightnessState);
 				isTrackingTouch = true;
 			}
 
@@ -274,11 +279,6 @@ public class SecondActivity extends GodObject implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			this.onBackPressed();
-			return true;
-		case R.id.action_register_with_hub:
-			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-			dhdf.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:
 			SettingsDialogFragment settings = new SettingsDialogFragment();
