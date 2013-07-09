@@ -41,11 +41,13 @@ class AlarmDataProviderObserver extends ContentObserver {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
     public void onChange(boolean selfChange) {
-        // The data has changed, so notify the widget that the collection view needs to be updated.
-        // In response, the factory's onDataSetChanged() will be called which will requery the
-        // cursor for the new data.
-        mAppWidgetManager.notifyAppWidgetViewDataChanged(
-                mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.alarm_list);
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    		// The data has changed, so notify the widget that the collection view needs to be updated.
+	        // In response, the factory's onDataSetChanged() will be called which will requery the
+	        // cursor for the new data.
+	        mAppWidgetManager.notifyAppWidgetViewDataChanged(
+	                mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.alarm_list);
+    	}
     }
 }
 
@@ -99,14 +101,16 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private RemoteViews buildLayout(Context context, int appWidgetId) {
+    private RemoteViews buildLayout(Context context, int appWidgetId) {
         RemoteViews rv;
-            // Specify the service to provide data for the collection widget.  Note that we need to
-            // embed the appWidgetId via the data otherwise it will be ignored.
-            final Intent intent = new Intent(context, AlarmWidgetService.class);
+    	// Specify the service to provide data for the collection widget.  Note that we need to
+        // embed the appWidgetId via the data otherwise it will be ignored.
+        rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	final Intent intent = new Intent(context, AlarmWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+                
             rv.setRemoteAdapter(appWidgetId, R.id.alarm_list, intent);
 
             // Set the empty view to be displayed if the collection is empty.  It must be a sibling
@@ -133,6 +137,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
             final PendingIntent openHueMorePendingIntent = PendingIntent.getActivity(context, 0,
             		openHueMoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
+        }
     	return rv;
     }
 
