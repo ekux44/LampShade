@@ -102,8 +102,8 @@ public class MainActivity extends GodObject implements
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
 					BulbState hs = new BulbState();
+					hs.bri = seekBar.getProgress();
 					hs.on = true;
-
 					String[] brightnessState = { gson.toJson(hs) };
 					parrentActivity.updatePreview(brightnessState);
 					isTrackingTouch = false;
