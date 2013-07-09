@@ -152,17 +152,13 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		pushMoodGroup();
 	}
 
-	public void onBrightnessChanged(String brightnessState[]) {
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, brightnessState);
-	}
-
 	/**
 	 * test mood by applying to json states array to previously selected moods
 	 * 
 	 * @param states
 	 */
 	public void testMood(String[] states) {
-	//	this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
 	}
 
@@ -199,7 +195,8 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 			}
 			moodS = moodStates.toArray(new String[moodStates.size()]);
 		}
-
+		
+		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
 	}
 	
