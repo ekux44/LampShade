@@ -2,7 +2,8 @@
 
     <item
         android:id="@+id/action_register_with_hub"
-        android:orderInCategory="100"
+        android:icon="@drawable/content_import_export"
+        android:orderInCategory="5"
         android:showAsAction="never"
         android:title="@string/action_register_with_hub"/>
     <item
@@ -22,13 +23,15 @@
         android:title="@string/cap_nfc"/>
     <item
         android:id="@+id/action_alarms"
-        android:orderInCategory="100"
-        android:showAsAction="never"
+        android:icon="@drawable/device_access_alarms"
+        android:orderInCategory="10"
+        android:showAsAction="ifRoom"
         android:title="@string/alarms"/>
     <item
         android:id="@+id/action_add_both"
-        android:orderInCategory="1"
         android:icon="@drawable/content_new"
-        android:showAsAction="ifRoom"
+        android:orderInCategory="1"
+        android:showAsAction="always"
         android:title="@string/actionmenu_new_mood"/>
-</menu>
+
+</menu>
