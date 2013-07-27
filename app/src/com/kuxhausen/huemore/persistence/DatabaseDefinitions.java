@@ -177,13 +177,11 @@ public final class DatabaseDefinitions {
 		public static final String TWO_POINT_ONE_POINT_ONE_UPDATE = "Two_Point_One_Point_One";
 		public static final String TWO_POINT_TWO_UPDATE = "Two_Point_Two";
 		public static final String TWO_POINT_THREE_UPDATE = "Two_Point_Three";
+		public static final String TWO_POINT_FOUR_UPDATE = "Two_Point_Four";
 		public static final String UPDATE_OPT_OUT = "Update_Opt_Out";
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
 		public static final String ALL = ((char) 8) + "ALL";
-		public static final String OFF = ((char) 8) + "OFF";
-		public static final String ON = ((char) 8) + "ON";
-		public static final String RANDOM = ((char) 8) + "RANDOM";
 	}
 
 	public static final class PlayItems {

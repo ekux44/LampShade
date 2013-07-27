@@ -556,10 +556,16 @@ public class MainActivity extends GodObject implements
 					false);
 			edit.commit();
 		}
-		
 		if (!settings.contains(PreferencesKeys.TWO_POINT_TWO_UPDATE)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_TWO_UPDATE, false);
+			edit.commit();
+		}
+		if (!settings.contains(PreferencesKeys.TWO_POINT_FOUR_UPDATE)) {
+			databaseHelper.updatedTwoPointFour();
+			// Mark no longer first update in preferences cache
+			Editor edit = settings.edit();
+			edit.putBoolean(PreferencesKeys.TWO_POINT_FOUR_UPDATE, false);
 			edit.commit();
 		}
 		

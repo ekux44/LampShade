@@ -66,12 +66,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
 
-		cv.put(MoodColumns.MOOD, PreferencesKeys.OFF);
-		hs.on = false;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Reading");
 		hs.sat = (144);
@@ -137,15 +131,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public void updatedTwoPointOne() {
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-		BulbState hs = new BulbState();
-
-		cv.put(MoodColumns.MOOD, PreferencesKeys.ON);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
 
 	public void updatedTwoPointOnePointOne() {
@@ -161,12 +146,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
-
-		cv.put(MoodColumns.MOOD, PreferencesKeys.RANDOM);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Deep Sea");
@@ -231,6 +210,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		hs.effect = "none";
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
+	}
+	public void updatedTwoPointFour() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String[] mSelectionArgs = {((char) 8) + "OFF", ((char) 8) + "ON", ((char) 8) + "RANDOM"};
+		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
+				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
+				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
 	}
 
 

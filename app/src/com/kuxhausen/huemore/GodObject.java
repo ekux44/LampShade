@@ -165,36 +165,28 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
-		String[] moodS = null;
-		if (mood.equals(PreferencesKeys.RANDOM)) {
-			BulbState randomState = new BulbState();
-			randomState.on = true;
-			randomState.hue = (int) (65535 * Math.random());
-			randomState.sat = (short) (255 * (Math.random() * 5. + .25));
-			moodS = new String[1];
-			moodS[0] = gson.toJson(randomState);
-		} else {
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWereClause = { mood };
-			Cursor cursor = getContentResolver().query(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-					moodColumns, // Return the note ID and title for each note.
-					MoodColumns.MOOD + "=?", // selection clause
-					mWereClause, // election clause args
-					null // Use the default sort order.
-					);
+		
+		String[] moodColumns = { MoodColumns.STATE };
+		String[] mWereClause = { mood };
+		Cursor cursor = getContentResolver().query(
+				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
+																// default
+																// content
+																// URI
+																// for the
+																// provider.
+				moodColumns, // Return the note ID and title for each note.
+				MoodColumns.MOOD + "=?", // selection clause
+				mWereClause, // election clause args
+				null // Use the default sort order.
+				);
 
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (cursor.moveToNext()) {
-				moodStates.add(cursor.getString(0));
-			}
-			moodS = moodStates.toArray(new String[moodStates.size()]);
+		ArrayList<String> moodStates = new ArrayList<String>();
+		while (cursor.moveToNext()) {
+			moodStates.add(cursor.getString(0));
 		}
+		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+		
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);

@@ -128,9 +128,9 @@ public class MoodsListFragment extends SherlockListFragment implements
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (longSelected.getText().equals(PreferencesKeys.OFF)
-				|| longSelected.getText().equals(PreferencesKeys.ON)
-				|| longSelected.getText().equals(PreferencesKeys.RANDOM)) {
+		if (longSelected.getText().equals("OFF")
+				|| longSelected.getText().equals("ON")
+				|| longSelected.getText().equals("RANDOM")) {
 			return;
 		}
 		android.view.MenuInflater inflater = this.getActivity()

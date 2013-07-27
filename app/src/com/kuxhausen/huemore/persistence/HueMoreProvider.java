@@ -6,16 +6,21 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
-
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueMoreProvider extends ContentProvider {
 
 	DatabaseHelper mOpenHelper;
+	Gson gson = new Gson();
 
 	/**
 	 * A projection map used to select columns from the database
@@ -292,9 +297,35 @@ public class HueMoreProvider extends ContentProvider {
 			groupBy = null;
 			break;
 		case MOODSTATES:
+			if(selectionArgs[0].equals("RANDOM")||selectionArgs[0].equals("ON")||selectionArgs[0].equals("OFF")){
+				BulbState resultState = new BulbState();
+					
+				if (selectionArgs[0].equals("RANDOM")) {
+					// random only handled here 
+					resultState.on = true;
+					resultState.effect = "none";
+					resultState.hue = (int) (65535 * Math.random());
+					resultState.sat = (short) (255 * (Math.random() * 5. + .25));
+					
+				} else if(selectionArgs[0].equals("ON")){
+					resultState.on = true;
+					resultState.effect = "none";
+				} else if(selectionArgs[0].equals("OFF")){
+					resultState.on = false;
+					resultState.effect = "none";
+				}
+				String[] moodColumns = { MoodColumns.STATE };
+				MatrixCursor mc = new MatrixCursor(moodColumns);
+				Object[] tempRow = {gson.toJson(resultState)};
+				mc.addRow(tempRow);
+				mc.setNotificationUri(getContext().getContentResolver(), uri);
+				return mc;
+			}
+			else {
 			qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
 			qb.setProjectionMap(sMoodsProjectionMap);
 			groupBy = null;
+			}
 			break;
 		default:
 			// If the URI doesn't match any of the known patterns, throw an
@@ -312,7 +343,7 @@ public class HueMoreProvider extends ContentProvider {
 		 * contains null. If no records were selected, then the Cursor object is
 		 * empty, and Cursor.getCount() returns 0.
 		 */
-		Cursor c = qb.query(db, // The database to query
+		Cursor c2 = qb.query(db, // The database to query
 				projection, // The columns to return from the query
 				selection, // The columns for the where clause
 				selectionArgs, // The values for the where clause
@@ -320,7 +351,28 @@ public class HueMoreProvider extends ContentProvider {
 				null, // don't filter by row groups
 				sortOrder // The sort order
 				);
-
+		Cursor[] cRay;
+		if(sUriMatcher.match(uri) == MOODS){
+			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
+			MatrixCursor c1 = new MatrixCursor(columns);
+			Object[] tempCol0 = {"OFF",0};
+			c1.addRow(tempCol0);
+			Object[] tempCol1 = {"ON",0};
+			c1.addRow(tempCol1);
+			Object[] tempCol2 = {"RANDOM",0};
+			c1.addRow(tempCol2);
+			Object[] tempCol3 = {"LOL",0};
+			c1.addRow(tempCol3);
+			
+			Cursor[] tempC = {c1,c2};
+			cRay = tempC;
+		}else{
+			Cursor[] tempC = {c2};
+			cRay = tempC;
+		}
+		MergeCursor c = new MergeCursor(cRay);
+		
+		
 		// Tells the Cursor what URI to watch, so it knows when its source data
 		// changes
 		c.setNotificationUri(getContext().getContentResolver(), uri);
