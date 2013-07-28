@@ -3,11 +3,14 @@ package com.kuxhausen.huemore.timing;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 
 public class BootSetter extends BroadcastReceiver {
 
@@ -15,18 +18,20 @@ public class BootSetter extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
-		Cursor cursor = context.getContentResolver().query(
-				AlarmColumns.ALARMS_URI, columns, null, null, null);
-
-		cursor.moveToPosition(-1);// not the same as move to first!
-		while (cursor.moveToNext()) {
-			AlarmState as = gson
-					.fromJson(cursor.getString(0), AlarmState.class);
-			if(as.scheduledForFuture)
-				AlarmReciever.createAlarms(context, as);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		if (settings.contains(PreferencesKeys.FIRST_RUN)) {
+			String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
+			Cursor cursor = context.getContentResolver().query(
+					AlarmColumns.ALARMS_URI, columns, null, null, null);
+	
+			cursor.moveToPosition(-1);// not the same as move to first!
+			while (cursor.moveToNext()) {
+				AlarmState as = gson
+						.fromJson(cursor.getString(0), AlarmState.class);
+				if(as.scheduledForFuture)
+					AlarmReciever.createAlarms(context, as);
+			}
 		}
-
 	}
 
 }
