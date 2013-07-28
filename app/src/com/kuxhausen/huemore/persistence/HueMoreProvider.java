@@ -364,8 +364,6 @@ public class HueMoreProvider extends ContentProvider {
 			c1.addRow(tempCol1);
 			Object[] tempCol2 = {this.getContext().getString(R.string.cap_random),0};
 			c1.addRow(tempCol2);
-			Object[] tempCol3 = {"LOL",0};
-			c1.addRow(tempCol3);
 			
 			Cursor[] tempC = {c1,c2};
 			cRay = tempC;
