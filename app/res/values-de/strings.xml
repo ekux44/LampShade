@@ -79,5 +79,8 @@
 	<string name="hub_connection">Connected to hub with network address</string>
 	<string name="hub_connection_error">Not connected to hub!</string>
     <string name="empty_view_text">No alarms found…</string>
-    
+    <string name="cap_all">ALL</string>
+    <string name="cap_on">ON</string>
+    <string name="cap_off">OFF</string>
+    <string name="cap_random">RANDOM</string>
 </resources>

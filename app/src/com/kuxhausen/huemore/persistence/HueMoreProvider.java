@@ -2,6 +2,7 @@ package com.kuxhausen.huemore.persistence;
 
 import java.util.HashMap;
 
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.R;
 
 public class HueMoreProvider extends ContentProvider {
 
@@ -297,20 +299,22 @@ public class HueMoreProvider extends ContentProvider {
 			groupBy = null;
 			break;
 		case MOODSTATES:
-			if(selectionArgs[0].equals("RANDOM")||selectionArgs[0].equals("ON")||selectionArgs[0].equals("OFF")){
+			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
+					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
+					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))){
 				BulbState resultState = new BulbState();
 					
-				if (selectionArgs[0].equals("RANDOM")) {
+				if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))) {
 					// random only handled here 
 					resultState.on = true;
 					resultState.effect = "none";
 					resultState.hue = (int) (65535 * Math.random());
 					resultState.sat = (short) (255 * (Math.random() * 5. + .25));
 					
-				} else if(selectionArgs[0].equals("ON")){
+				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))){
 					resultState.on = true;
 					resultState.effect = "none";
-				} else if(selectionArgs[0].equals("OFF")){
+				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))){
 					resultState.on = false;
 					resultState.effect = "none";
 				}
@@ -336,7 +340,6 @@ public class HueMoreProvider extends ContentProvider {
 		// Opens the database object in "read" mode, since no writes need to be
 		// done.
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-
 		/*
 		 * Performs the query. If no problems occur trying to read the database,
 		 * then a Cursor object is returned; otherwise, the cursor variable
@@ -355,11 +358,11 @@ public class HueMoreProvider extends ContentProvider {
 		if(sUriMatcher.match(uri) == MOODS){
 			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 			MatrixCursor c1 = new MatrixCursor(columns);
-			Object[] tempCol0 = {"OFF",0};
+			Object[] tempCol0 = {this.getContext().getString(R.string.cap_off),0};
 			c1.addRow(tempCol0);
-			Object[] tempCol1 = {"ON",0};
+			Object[] tempCol1 = {this.getContext().getString(R.string.cap_on),0};
 			c1.addRow(tempCol1);
-			Object[] tempCol2 = {"RANDOM",0};
+			Object[] tempCol2 = {this.getContext().getString(R.string.cap_random),0};
 			c1.addRow(tempCol2);
 			Object[] tempCol3 = {"LOL",0};
 			c1.addRow(tempCol3);
