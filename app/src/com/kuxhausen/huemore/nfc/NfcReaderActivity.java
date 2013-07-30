@@ -24,6 +24,7 @@ import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements
@@ -75,7 +76,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				// System.out.println(data);
 				data = data.substring(data.indexOf('?') + 1);
 				// System.out.println(data);
-				Pair<Integer[], BulbState[]> result = HueNfcEncoder
+				Pair<Integer[], BulbState[]> result = HueUrlEncoder
 						.decode(data);
 				bulbS = result.first;
 				stateS = new String[result.second.length];

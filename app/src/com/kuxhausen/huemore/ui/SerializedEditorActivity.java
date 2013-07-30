@@ -23,8 +23,8 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
-import com.kuxhausen.huemore.nfc.HueNfcEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
@@ -261,7 +261,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 			System.out.println(bsRay[i]);
 		}
 
-		String data = HueNfcEncoder.encode(bulbS, bsRay);
+		String data = HueUrlEncoder.encode(bulbS, bsRay);
 		return url + data;
 	}
 

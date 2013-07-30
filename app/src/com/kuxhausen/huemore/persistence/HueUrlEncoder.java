@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.nfc;
+package com.kuxhausen.huemore.persistence;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -8,7 +8,7 @@ import android.util.Pair;
 
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class HueNfcEncoder {
+public class HueUrlEncoder {
 
 	/**
 	 * 4 bit version header.
@@ -42,7 +42,7 @@ public class HueNfcEncoder {
 	 * 16 bit transitiontime
 	 * <p>
 	 */
-	public HueNfcEncoder() {
+	public HueUrlEncoder() {
 
 	}
 

@@ -15,9 +15,9 @@ public class Tests {
 				if (Math.random() < .5)
 					b.set(i);
 			}
-			byte[] intermediate = com.kuxhausen.huemore.nfc.HueNfcEncoder
+			byte[] intermediate = com.kuxhausen.huemore.persistence.HueUrlEncoder
 					.fromBitSet(b, 10000);
-			BitSet b2 = com.kuxhausen.huemore.nfc.HueNfcEncoder
+			BitSet b2 = com.kuxhausen.huemore.persistence.HueUrlEncoder
 					.toBitSet(intermediate);
 			for (int i = 0; i < 10000; i++)
 				if (b.get(i) != b2.get(i))
@@ -60,10 +60,10 @@ public class Tests {
 			// four.transitiontime =0;
 			bsRay[3] = four;
 
-			String interm = com.kuxhausen.huemore.nfc.HueNfcEncoder.encode(
+			String interm = com.kuxhausen.huemore.persistence.HueUrlEncoder.encode(
 					bulbs, bsRay);
 			System.out.println(interm);
-			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.nfc.HueNfcEncoder
+			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.persistence.HueUrlEncoder
 					.decode(interm);
 			System.out.println("resultSize" + results.first.length + "  "
 					+ results.second.length);
