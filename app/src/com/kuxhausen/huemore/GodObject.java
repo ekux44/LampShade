@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -190,6 +191,13 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
+		
+		// TODO clean up after development
+		/*
+		Intent intent = new Intent(this, MoodExecuter.class);
+        startService(intent);
+		*/
+		
 	}
 	
 }
