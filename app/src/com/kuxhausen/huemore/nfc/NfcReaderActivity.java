@@ -77,7 +77,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				data = data.substring(data.indexOf('?') + 1);
 				// System.out.println(data);
 				Pair<Integer[], BulbState[]> result = HueUrlEncoder
-						.decode(data);
+						.legacyDecode(data);
 				bulbS = result.first;
 				stateS = new String[result.second.length];
 

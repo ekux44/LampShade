@@ -60,11 +60,11 @@ public class Tests {
 			// four.transitiontime =0;
 			bsRay[3] = four;
 
-			String interm = com.kuxhausen.huemore.persistence.HueUrlEncoder.encode(
+			String interm = com.kuxhausen.huemore.persistence.HueUrlEncoder.legacyEncode(
 					bulbs, bsRay);
 			System.out.println(interm);
 			Pair<Integer[], BulbState[]> results = com.kuxhausen.huemore.persistence.HueUrlEncoder
-					.decode(interm);
+					.legacyDecode(interm);
 			System.out.println("resultSize" + results.first.length + "  "
 					+ results.second.length);
 

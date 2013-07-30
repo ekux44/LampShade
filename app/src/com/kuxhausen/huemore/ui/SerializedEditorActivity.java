@@ -261,7 +261,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 			System.out.println(bsRay[i]);
 		}
 
-		String data = HueUrlEncoder.encode(bulbS, bsRay);
+		String data = HueUrlEncoder.legacyEncode(bulbS, bsRay);
 		return url + data;
 	}
 

@@ -46,7 +46,7 @@ public class HueUrlEncoder {
 
 	}
 
-	public static String encode(Integer[] bulbS, BulbState[] bsRay) {
+	public static String legacyEncode(Integer[] bulbS, BulbState[] bsRay) {
 		if (bulbS != null && bsRay != null) {
 			BitSet set = new BitSet();
 			int index = 0;// points to the next spot
@@ -318,7 +318,7 @@ public class HueUrlEncoder {
 		return "";
 	}
 
-	public static Pair<Integer[], BulbState[]> decode(String encoded) {
+	public static Pair<Integer[], BulbState[]> legacyDecode(String encoded) {
 		ArrayList<Integer> bList = null;
 		BulbState[] bsRay = null;
 		try {
