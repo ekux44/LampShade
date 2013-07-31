@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.persistence;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,12 +65,13 @@ public class HueUrlEncoder {
 		
 		addTimingRepeatPolicy(set, index, mood);
 		
-		Integer[] timeArray = generateTimesArray(mood);
+		ArrayList<Integer> timeArray = generateTimesArray(mood);
 		/** Set 6 bit number of timestamps **/
-		addNumber(set,index,timeArray.length,6);
-		
-		addListOfTimestamps(set, index, timeArray);
-		
+		addNumber(set,index,timeArray.size(),6);
+		/** Set variable size list of 20 bit timestamps **/
+		for(Integer i : timeArray)
+			addNumber(set,index,i,20);
+
 		BulbState[] stateArray = generateStatesArray(mood);
 		/** Set 6 bit number of states **/
 		addNumber(set,index,stateArray.length,6);
@@ -82,7 +84,8 @@ public class HueUrlEncoder {
 		
 		addListOfEvents(set, index, mood, timeArray, stateArray);		
 		
-		return "";
+		byte[] intermediaryResult = fromBitSet(set, index);
+		return Base64.encodeToString(intermediaryResult, Base64.URL_SAFE);
 	}
 	
 	/** Set 4 bit protocol version **/
@@ -103,10 +106,6 @@ public class HueUrlEncoder {
 		//TODO
 	}
 	
-	/** Set variable length list of 20 bit timestamps **/
-	private static void addListOfTimestamps(BitSet set, Integer index, Integer[] timestamps){
-		//TODO
-	}
 	
 	/** Set variable length state **/
 	private static void addState(BitSet set, Integer index, BulbState bs){
@@ -329,16 +328,38 @@ public class HueUrlEncoder {
 	}
 	
 	/** Set variable length list of variable length events **/
-	private static void addListOfEvents(BitSet set, Integer index, Mood mood, Integer[] timeArray, BulbState[] stateArray){
-		//TODO
+	private static void addListOfEvents(BitSet set, Integer index, Mood mood, ArrayList<Integer> timeArray, BulbState[] stateArray){
+		String[] bulbStateToStringArray = new String[stateArray.length];
+		for(int i = 0; i< stateArray.length; i++){
+			bulbStateToStringArray[i] = stateArray[i].toString();
+		}
+		ArrayList<String> bulbStateToStringList = new ArrayList<String>(Arrays.asList(bulbStateToStringArray));
+		for(Event e: mood.events){
+			
+			// add channel number
+			addNumber(set, index, e.channel, getBitLength(mood.numChannels));
+			
+			
+			//add timestamp lookup number
+			addNumber(set, index, timeArray.indexOf(e.time), getBitLength(timeArray.size()));
+			
+			//add mood lookup number
+			addNumber(set, index, bulbStateToStringList.indexOf(e.state.toString()), getBitLength(stateArray.length));
+		}
 	}
 	
-	private static Integer[] generateTimesArray(Mood mood){
+	/** calulate number of bits needed to address this many addresses **/
+	private static int getBitLength(int i){
+		//TODO
+		return 0;
+	}
+	
+	private static ArrayList<Integer> generateTimesArray(Mood mood){
 		HashSet<Integer> timeset = new HashSet<Integer>();
 		for(Event e : mood.events){
 			timeset.add(e.time);
 		}
-		return (Integer[])timeset.toArray();
+		return new ArrayList<Integer>(Arrays.asList((Integer[])timeset.toArray()));
 	}
 	
 	private static BulbState[] generateStatesArray(Mood mood){
@@ -349,6 +370,12 @@ public class HueUrlEncoder {
 		return (BulbState[])statemap.values().toArray();
 	}
 	
+	/**
+	 * @param set
+	 * @param index
+	 * @param value
+	 * @param length
+	 */
 	private static void addNumber(BitSet set, Integer index, int value, int length){
 		int bitMask = 1;
 		for (int i = 0; i < length; i++) {
