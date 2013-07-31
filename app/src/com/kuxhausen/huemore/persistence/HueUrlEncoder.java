@@ -2,10 +2,13 @@ package com.kuxhausen.huemore.persistence;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.HashMap;
 
 import android.util.Base64;
 import android.util.Pair;
 
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueUrlEncoder {
@@ -46,6 +49,75 @@ public class HueUrlEncoder {
 
 	}
 
+	public static String encode(Mood mood){
+		if (mood == null)
+			return "";
+		
+		BitSet set = new BitSet();
+		Integer index = 0;// points to the next spot
+		
+		addVersionNumber(set, index);
+		addNumberOfChannels(set, index, mood);
+		addTimingRepeatPolicy(set, index, mood);
+		addNumberOfTimestamps(set, index, mood);
+		addListOfTimestamps(set, index, mood);
+		addNumberOfStates(set, index, mood);
+		addListOfStates(set, index, mood);
+		addNumberOfEvents(set, index, mood);
+		addListOfEvents(set, index, mood);		
+		
+		return "";
+	}
+	
+	/** Set 4 bit protocol version **/
+	private static void addVersionNumber(BitSet set, Integer index){
+		set.set(index, false);
+		index++;
+		set.set(index, false);
+		index++;
+		set.set(index, false);
+		index++;
+		set.set(index, true);
+		index++;
+	}
+	
+	/** Set 6 bit number of channels **/
+	private static void addNumberOfChannels(BitSet set, Integer index, Mood mood){	
+	}
+	
+	/** Set 6 bit timing repeat policy **/
+	private static void addTimingRepeatPolicy(BitSet set, Integer index, Mood mood){	
+	}
+	
+	/** Set 6 bit number of timestamps **/
+	private static void addNumberOfTimestamps(BitSet set, Integer index, Mood mood){	
+	}
+	
+	/** Set variable length list of 16 bit timestamps **/
+	private static void addListOfTimestamps(BitSet set, Integer index, Mood mood){	
+	}
+	
+	/** Set 6 bit number of states **/
+	private static void addNumberOfStates(BitSet set, Integer index, Mood mood){	
+	}
+	
+	/** Set variable length list of variable length states **/
+	private static void addListOfStates(BitSet set, Integer index, Mood mood){	
+	}
+	/** Set 8 bit number of events **/
+	private static void addNumberOfEvents(BitSet set, Integer index, Mood mood){	
+	}
+	
+	/** Set variable length list of variable length events **/
+	private static void addListOfEvents(BitSet set, Integer index, Mood mood){	
+	}
+	
+		
+	
+	public static Pair<Integer[], Mood> decode(String code){
+		return null;
+	}
+	
 	public static String legacyEncode(Integer[] bulbS, BulbState[] bsRay) {
 		if (bulbS != null && bsRay != null) {
 			BitSet set = new BitSet();

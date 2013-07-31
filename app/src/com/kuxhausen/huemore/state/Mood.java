@@ -1,9 +1,9 @@
 package com.kuxhausen.huemore.state;
 
 public class Mood {
-	Event[] events;
-	Boolean timingElement;
-	Boolean infiniteLooping;
-	Integer numLoops;
-	int numChannels;
+	public Event[] events;
+	public Boolean timingElement;
+	public Boolean infiniteLooping;
+	public Integer numLoops;
+	public int numChannels;
 }

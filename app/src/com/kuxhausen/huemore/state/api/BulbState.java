@@ -61,6 +61,9 @@ public class BulbState {
 	public BulbState() {
 	}
 
+	/**
+	 * Must ensure uniqueness for HueUrlEncoder
+	 */
 	@Override
 	public String toString() {
 		String result = "";
