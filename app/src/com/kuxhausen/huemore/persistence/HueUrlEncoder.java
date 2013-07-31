@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.persistence;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import android.util.Base64;
 import android.util.Pair;
@@ -57,14 +58,20 @@ public class HueUrlEncoder {
 		Integer index = 0;// points to the next spot
 		
 		addVersionNumber(set, index);
-		addNumberOfChannels(set, index, mood);
+		addNumberOfChannels(set, index, mood.numChannels);
+		
 		addTimingRepeatPolicy(set, index, mood);
-		addNumberOfTimestamps(set, index, mood);
-		addListOfTimestamps(set, index, mood);
-		addNumberOfStates(set, index, mood);
-		addListOfStates(set, index, mood);
-		addNumberOfEvents(set, index, mood);
-		addListOfEvents(set, index, mood);		
+		
+		Integer[] timeArray = generateTimesArray(mood);
+		addNumberOfTimestamps(set, index, timeArray.length);
+		addListOfTimestamps(set, index, timeArray);
+		
+		BulbState[] stateArray = generateStatesArray(mood);
+		addNumberOfStates(set, index, stateArray.length);
+		addListOfStates(set, index, stateArray);
+		
+		addNumberOfEvents(set, index, mood.events.length);
+		addListOfEvents(set, index, mood, timeArray, stateArray);		
 		
 		return "";
 	}
@@ -82,7 +89,7 @@ public class HueUrlEncoder {
 	}
 	
 	/** Set 6 bit number of channels **/
-	private static void addNumberOfChannels(BitSet set, Integer index, Mood mood){	
+	private static void addNumberOfChannels(BitSet set, Integer index, int numChannels){	
 	}
 	
 	/** Set 6 bit timing repeat policy **/
@@ -90,29 +97,44 @@ public class HueUrlEncoder {
 	}
 	
 	/** Set 6 bit number of timestamps **/
-	private static void addNumberOfTimestamps(BitSet set, Integer index, Mood mood){	
+	private static void addNumberOfTimestamps(BitSet set, Integer index, int numTimestamps){	
 	}
 	
 	/** Set variable length list of 16 bit timestamps **/
-	private static void addListOfTimestamps(BitSet set, Integer index, Mood mood){	
+	private static void addListOfTimestamps(BitSet set, Integer index, Integer[] timestamps){	
 	}
 	
 	/** Set 6 bit number of states **/
-	private static void addNumberOfStates(BitSet set, Integer index, Mood mood){	
+	private static void addNumberOfStates(BitSet set, Integer index, int numStates){	
 	}
 	
 	/** Set variable length list of variable length states **/
-	private static void addListOfStates(BitSet set, Integer index, Mood mood){	
+	private static void addListOfStates(BitSet set, Integer index, BulbState[] states){	
 	}
+	
 	/** Set 8 bit number of events **/
-	private static void addNumberOfEvents(BitSet set, Integer index, Mood mood){	
+	private static void addNumberOfEvents(BitSet set, Integer index, int numEvents){	
 	}
 	
 	/** Set variable length list of variable length events **/
-	private static void addListOfEvents(BitSet set, Integer index, Mood mood){	
+	private static void addListOfEvents(BitSet set, Integer index, Mood mood, Integer[] timeArray, BulbState[] stateArray){	
 	}
 	
-		
+	private static Integer[] generateTimesArray(Mood mood){
+		HashSet<Integer> timeset = new HashSet<Integer>();
+		for(Event e : mood.events){
+			timeset.add(e.time);
+		}
+		return (Integer[])timeset.toArray();
+	}
+	
+	private static BulbState[] generateStatesArray(Mood mood){
+		HashMap<String, BulbState> statemap = new HashMap<String, BulbState>();
+		for(Event e : mood.events){
+			statemap.put(e.state.toString(), e.state);
+		}
+		return (BulbState[])statemap.values().toArray();
+	}
 	
 	public static Pair<Integer[], Mood> decode(String code){
 		return null;
