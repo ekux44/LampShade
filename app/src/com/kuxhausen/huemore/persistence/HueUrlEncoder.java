@@ -103,7 +103,7 @@ public class HueUrlEncoder {
 		//TODO
 	}
 	
-	/** Set variable length list of 16 bit timestamps **/
+	/** Set variable length list of 20 bit timestamps **/
 	private static void addListOfTimestamps(BitSet set, Integer index, Integer[] timestamps){
 		//TODO
 	}
