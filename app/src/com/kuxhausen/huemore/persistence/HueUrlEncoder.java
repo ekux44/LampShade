@@ -58,19 +58,27 @@ public class HueUrlEncoder {
 		Integer index = 0;// points to the next spot
 		
 		addVersionNumber(set, index);
-		addNumberOfChannels(set, index, mood.numChannels);
+		
+		/** Set 6 bit number of channels **/
+		addNumber(set,index,mood.numChannels,6);
 		
 		addTimingRepeatPolicy(set, index, mood);
 		
 		Integer[] timeArray = generateTimesArray(mood);
-		addNumberOfTimestamps(set, index, timeArray.length);
+		/** Set 6 bit number of timestamps **/
+		addNumber(set,index,timeArray.length,6);
+		
 		addListOfTimestamps(set, index, timeArray);
 		
 		BulbState[] stateArray = generateStatesArray(mood);
-		addNumberOfStates(set, index, stateArray.length);
+		/** Set 6 bit number of states **/
+		addNumber(set,index,stateArray.length,6);
+		
 		addListOfStates(set, index, stateArray);
 		
-		addNumberOfEvents(set, index, mood.events.length);
+		/** Set 8 bit number of events **/
+		addNumber(set,index,mood.events.length,8);
+		
 		addListOfEvents(set, index, mood, timeArray, stateArray);		
 		
 		return "";
@@ -88,32 +96,17 @@ public class HueUrlEncoder {
 		index++;
 	}
 	
-	/** Set 6 bit number of channels **/
-	private static void addNumberOfChannels(BitSet set, Integer index, int numChannels){	
-	}
 	
 	/** Set 6 bit timing repeat policy **/
 	private static void addTimingRepeatPolicy(BitSet set, Integer index, Mood mood){	
-	}
-	
-	/** Set 6 bit number of timestamps **/
-	private static void addNumberOfTimestamps(BitSet set, Integer index, int numTimestamps){	
 	}
 	
 	/** Set variable length list of 16 bit timestamps **/
 	private static void addListOfTimestamps(BitSet set, Integer index, Integer[] timestamps){	
 	}
 	
-	/** Set 6 bit number of states **/
-	private static void addNumberOfStates(BitSet set, Integer index, int numStates){	
-	}
-	
 	/** Set variable length list of variable length states **/
 	private static void addListOfStates(BitSet set, Integer index, BulbState[] states){	
-	}
-	
-	/** Set 8 bit number of events **/
-	private static void addNumberOfEvents(BitSet set, Integer index, int numEvents){	
 	}
 	
 	/** Set variable length list of variable length events **/
@@ -134,6 +127,20 @@ public class HueUrlEncoder {
 			statemap.put(e.state.toString(), e.state);
 		}
 		return (BulbState[])statemap.values().toArray();
+	}
+	
+	private static void addNumber(BitSet set, Integer index, int value, int length){
+		int bitMask = 1;
+		for (int i = 0; i < length; i++) {
+			if ((value & bitMask) > 0) {
+				set.set(index, true);
+				index++;
+			} else {
+				set.set(index, false);
+				index++;
+			}
+			bitMask *= 2;
+		}
 	}
 	
 	public static Pair<Integer[], Mood> decode(String code){
