@@ -99,11 +99,13 @@ public class HueUrlEncoder {
 	
 	
 	/** Set 6 bit timing repeat policy **/
-	private static void addTimingRepeatPolicy(BitSet set, Integer index, Mood mood){	
+	private static void addTimingRepeatPolicy(BitSet set, Integer index, Mood mood){
+		//TODO
 	}
 	
 	/** Set variable length list of 16 bit timestamps **/
-	private static void addListOfTimestamps(BitSet set, Integer index, Integer[] timestamps){	
+	private static void addListOfTimestamps(BitSet set, Integer index, Integer[] timestamps){
+		//TODO
 	}
 	
 	/** Set variable length state **/
@@ -212,7 +214,6 @@ public class HueUrlEncoder {
 		}
 		/** Put 64 bit xy **/
 		{
-			// TODO implement xy mode
 			if (bs.xy != null) {
 				int x = Float
 						.floatToIntBits((float) ((double) bs.xy[0]));
@@ -328,7 +329,8 @@ public class HueUrlEncoder {
 	}
 	
 	/** Set variable length list of variable length events **/
-	private static void addListOfEvents(BitSet set, Integer index, Mood mood, Integer[] timeArray, BulbState[] stateArray){	
+	private static void addListOfEvents(BitSet set, Integer index, Mood mood, Integer[] timeArray, BulbState[] stateArray){
+		//TODO
 	}
 	
 	private static Integer[] generateTimesArray(Mood mood){
@@ -362,6 +364,7 @@ public class HueUrlEncoder {
 	}
 	
 	public static Pair<Integer[], Mood> decode(String code){
+		//TODO		
 		return null;
 	}
 	
