@@ -62,9 +62,8 @@ public class HueUrlEncoder {
 			//if infinite looping, write max value
 			addNumber(mBitSet,127,7);
 		}else
-			addNumber(mBitSet,mood.numLoops,6);
+			addNumber(mBitSet,mood.numLoops,7);
 	}
-	
 	
 	/** Set variable length state **/
 	private static void addState(ManagedBitSet mBitSet, BulbState bs){
@@ -227,10 +226,49 @@ public class HueUrlEncoder {
 			bitMask /= 2;
 		}
 	}
+	private static int extractNumber(ManagedBitSet mBitSet, int length){
+		int result = 0;
+		int bitMask = (int)Math.pow(2, length-1);
+		for (int i = length-1; i >= 0; i--) {
+			if(mBitSet.incrementingGet())
+				result+=bitMask;
+			bitMask /= 2;
+		}
+		return result;
+	}
 	
 	public static Pair<Integer[], Mood> decode(String code){
+		Mood mood = new Mood();
+		ManagedBitSet mBitSet = new ManagedBitSet(code);
+		
+		int encodingVersion = extractNumber(mBitSet,4);
+		
+		if(encodingVersion==1){
+			legacyDecode(code);
+		}else if(encodingVersion ==2){
+			int numChannels = extractNumber(mBitSet,6);
+			mood.numChannels=numChannels;
+			
+			//1 bit timing addressing reference mode
+			mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
+			
+			//7 bit timing repeat number
+			mood.numLoops = extractNumber(mBitSet,7);
+			//flag infinite looping if max numLoops
+			mood.infiniteLooping = (mood.numLoops == 127);
+			
+			
+			
+			
+			
+		}else{
+			//TODO
+			//Please update your app to open this mood
+		}
+		
+		//int encodingVersion 
 		//TODO		
-		return null;
+		return new Pair<Integer[], Mood>(null, mood);
 	}
 	
 	/**
@@ -276,7 +314,7 @@ public class HueUrlEncoder {
 		try {
 			byte[] intermediaryReverse = Base64
 					.decode(encoded, Base64.URL_SAFE);
-			BitSet set = toBitSet(intermediaryReverse);
+			BitSet set = ManagedBitSet.toBitSet(intermediaryReverse);
 			bList = new ArrayList<Integer>();
 
 			int index = 0;// points to the next spot
@@ -486,19 +524,5 @@ public class HueUrlEncoder {
 
 		return new Pair<Integer[], BulbState[]>(bList.toArray(new Integer[bList
 				.size()]), bsRay);
-	}
-
-	public static BitSet toBitSet(byte[] bytes) {
-		BitSet bits = new BitSet();
-		for (int i = 0; i < bytes.length; i++) {
-			byte mask = 1;
-			byte temp = bytes[i];
-			for (int j = 0; j < 8; j++) {
-				if ((temp & mask) != 0)
-					bits.set(8 * i + j, true);
-				mask = (byte) (mask << 1);
-			}
-		}
-		return bits;
 	}
 }

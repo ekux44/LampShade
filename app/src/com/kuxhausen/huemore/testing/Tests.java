@@ -34,15 +34,20 @@ public class Tests {
 		Event[] eRay = {e1,e2,e1,e1,e1,e3};
 		Mood m = new Mood();
 		m.events = eRay;
-		m.infiniteLooping=false;
-		m.numChannels=3;
-		m.numLoops=0;
-		m.timeAddressingRepeatPolicy=false;
+		m.infiniteLooping=true;
+		m.numChannels=51;
+		m.numLoops=98;
+		m.timeAddressingRepeatPolicy=true;
 		m.usesTiming=false;
 		
 		
 		
 		Log.e("test1",HueUrlEncoder.encode(m));
+		Mood output = HueUrlEncoder.decode(HueUrlEncoder.encode(m)).second;
+		Log.e("test1","numChannels:"+output.numChannels);
+		Log.e("test1","timeAddressingRepeatPolicy:"+output.timeAddressingRepeatPolicy);
+		Log.e("test1","numLoops:"+output.numLoops);
+		Log.e("test1","output.infiniteLooping:"+output.infiniteLooping);
 		
 		
 		/** bitSet to encoding test **/

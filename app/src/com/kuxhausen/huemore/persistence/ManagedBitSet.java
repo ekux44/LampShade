@@ -12,6 +12,13 @@ public class ManagedBitSet {
 		set = new BitSet();
 		index = 0;
 	}
+	public ManagedBitSet(String base64Encoded){
+		byte[] intermediaryReverse = Base64
+				.decode(base64Encoded, Base64.URL_SAFE);
+		
+		set = toBitSet(intermediaryReverse);
+		index = 0;
+	}
 	
 	public void incrementingSet(boolean value){
 		set.set(index,value);
@@ -41,5 +48,21 @@ public class ManagedBitSet {
 
 		return bytes;
 	}
-
+	public boolean incrementingGet(){
+		return set.get(index++);
+	}
+	
+	public static BitSet toBitSet(byte[] bytes) {
+		BitSet bits = new BitSet();
+		for (int i = 0; i < bytes.length; i++) {
+			byte mask = 1;
+			byte temp = bytes[i];
+			for (int j = 0; j < 8; j++) {
+				if ((temp & mask) != 0)
+					bits.set(8 * i + j, true);
+				mask = (byte) (mask << 1);
+			}
+		}
+		return bits;
+	}
 }
