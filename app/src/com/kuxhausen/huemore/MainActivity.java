@@ -162,6 +162,9 @@ public class MainActivity extends GodObject implements
 			unlocks.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
+		
+		//TODO turn off before relase
+		com.kuxhausen.huemore.testing.Tests.tests();
 	}
 
 	@Override

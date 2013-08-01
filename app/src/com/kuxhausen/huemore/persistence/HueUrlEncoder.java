@@ -38,9 +38,9 @@ public class HueUrlEncoder {
 		for(Integer i : timeArray)
 			addNumber(mBitSet,i,20);
 
-		BulbState[] stateArray = generateStatesArray(mood);
+		ArrayList<BulbState> stateArray = generateStatesArray(mood);
 		// Set 6 bit number of states
-		addNumber(mBitSet,stateArray.length,6);
+		addNumber(mBitSet,stateArray.size(),6);
 		
 		for(BulbState state : stateArray)
 			addState(mBitSet, state);
@@ -165,10 +165,10 @@ public class HueUrlEncoder {
 	}
 	
 	/** Set variable length list of variable length events **/
-	private static void addListOfEvents(ManagedBitSet mBitSet, Mood mood, ArrayList<Integer> timeArray, BulbState[] stateArray){
-		String[] bulbStateToStringArray = new String[stateArray.length];
-		for(int i = 0; i< stateArray.length; i++){
-			bulbStateToStringArray[i] = stateArray[i].toString();
+	private static void addListOfEvents(ManagedBitSet mBitSet, Mood mood, ArrayList<Integer> timeArray, ArrayList<BulbState> stateArray){
+		String[] bulbStateToStringArray = new String[stateArray.size()];
+		for(int i = 0; i< stateArray.size(); i++){
+			bulbStateToStringArray[i] = stateArray.get(i).toString();
 		}
 		ArrayList<String> bulbStateToStringList = new ArrayList<String>(Arrays.asList(bulbStateToStringArray));
 		for(Event e: mood.events){
@@ -180,7 +180,7 @@ public class HueUrlEncoder {
 			addNumber(mBitSet, timeArray.indexOf(e.time), getBitLength(timeArray.size()));
 			
 			//add mood lookup number
-			addNumber(mBitSet, bulbStateToStringList.indexOf(e.state.toString()), getBitLength(stateArray.length));
+			addNumber(mBitSet, bulbStateToStringList.indexOf(e.state.toString()), getBitLength(stateArray.size()));
 		}
 	}
 	
@@ -199,15 +199,19 @@ public class HueUrlEncoder {
 		for(Event e : mood.events){
 			timeset.add(e.time);
 		}
-		return new ArrayList<Integer>(Arrays.asList((Integer[])timeset.toArray()));
+		ArrayList<Integer> timesArray = new ArrayList<Integer>();
+		timesArray.addAll(timeset);
+		return timesArray;
 	}
 	
-	private static BulbState[] generateStatesArray(Mood mood){
+	private static ArrayList<BulbState> generateStatesArray(Mood mood){
 		HashMap<String, BulbState> statemap = new HashMap<String, BulbState>();
 		for(Event e : mood.events){
 			statemap.put(e.state.toString(), e.state);
 		}
-		return (BulbState[])statemap.values().toArray();
+		ArrayList<BulbState> statesArray = new ArrayList<BulbState>();
+		statesArray.addAll(statemap.values());
+		return statesArray;
 	}
 	
 	/**

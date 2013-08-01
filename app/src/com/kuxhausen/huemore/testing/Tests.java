@@ -2,14 +2,51 @@ package com.kuxhausen.huemore.testing;
 
 import java.util.BitSet;
 
+import android.util.Log;
 import android.util.Pair;
 
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Tests {
-	public void tests() {
+	public static void tests() {
+		BulbState bs = new BulbState();
+		bs.on=true;
+		bs.bri=80;
+		
+		Event e1 = new Event();
+		e1.state = bs;
+		e1.channel = 0;
+		e1.time=0;
+		
+		Event e2 = new Event();
+		e2.state = bs;
+		e2.channel = 1;
+		e2.time=0;
+		
+		Event e3 = new Event();
+		e3.state = bs;
+		e3.channel = 2;
+		e3.time=0;
+		
+		Event[] eRay = {e1,e2,e1,e1,e1,e3};
+		Mood m = new Mood();
+		m.events = eRay;
+		m.infiniteLooping=false;
+		m.numChannels=3;
+		m.numLoops=0;
+		m.timeAddressingRepeatPolicy=false;
+		m.usesTiming=false;
+		
+		
+		
+		Log.e("test1",HueUrlEncoder.encode(m));
+		
+		
 		/** bitSet to encoding test **/
-		{
+		/*{
 			BitSet b = new BitSet();
 			for (int i = 0; i < 10000; i++) {
 				if (Math.random() < .5)
@@ -78,6 +115,6 @@ public class Tests {
 				else
 					System.out.println("wtf-null ");
 			}
-		}
+		}*/
 	}
 }
