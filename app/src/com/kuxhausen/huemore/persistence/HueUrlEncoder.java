@@ -17,38 +17,6 @@ public class HueUrlEncoder {
 
 	public final static Integer PROTOCOL_VERSION_NUMBER = 2;
 	
-	/**
-	 * 4 bit version header.
-	 * <p>
-	 * 50 bit bulbs included flags.
-	 * <p>
-	 * 7 bit number of states.
-	 * <p>
-	 * STATE
-	 * <p>
-	 * Each state contains:
-	 * <p>
-	 * 9 bit properties flagging inclusion of this order of properties:
-	 * <p>
-	 * 1 bit on.
-	 * <p>
-	 * 8 bit bri.
-	 * <p>
-	 * 16 bit hue.
-	 * <p>
-	 * 8 bit sat.
-	 * <p>
-	 * 64 bit xy.
-	 * <p>
-	 * 9 bit ct.
-	 * <p>
-	 * 2 bit alert.
-	 * <p>
-	 * 4 bit effect //three more bits than needed, reserved for future.
-	 * <p>
-	 * 16 bit transitiontime
-	 * <p>
-	 */
 	public HueUrlEncoder() {
 
 	}
@@ -60,29 +28,29 @@ public class HueUrlEncoder {
 		BitSet set = new BitSet();
 		Integer index = 0;// points to the next spot
 		
-		/** Set 4 bit protocol version **/
+		// Set 4 bit protocol version
 		addNumber(set,index,PROTOCOL_VERSION_NUMBER,4);
 		
-		/** Set 6 bit number of channels **/
+		// Set 6 bit number of channels
 		addNumber(set,index,mood.numChannels,6);
 		
 		addTimingRepeatPolicy(set, index, mood);
 		
 		ArrayList<Integer> timeArray = generateTimesArray(mood);
-		/** Set 6 bit number of timestamps **/
+		// Set 6 bit number of timestamps
 		addNumber(set,index,timeArray.size(),6);
-		/** Set variable size list of 20 bit timestamps **/
+		// Set variable size list of 20 bit timestamps
 		for(Integer i : timeArray)
 			addNumber(set,index,i,20);
 
 		BulbState[] stateArray = generateStatesArray(mood);
-		/** Set 6 bit number of states **/
+		// Set 6 bit number of states
 		addNumber(set,index,stateArray.length,6);
 		
 		for(BulbState state : stateArray)
 			addState(set, index, state);
 		
-		/** Set 8 bit number of events **/
+		// Set 8 bit number of events
 		addNumber(set,index,mood.events.length,8);
 		
 		addListOfEvents(set, index, mood, timeArray, stateArray);		
@@ -114,43 +82,35 @@ public class HueUrlEncoder {
 			index++;
 
 			// Put bri flag
-			if (bs.bri != null)
-				set.set(index, true);
+			set.set(index, (bs.bri != null));
 			index++;
 
 			// Put hue flag
-			if (bs.hue != null)
-				set.set(index, true);
+			set.set(index, (bs.hue != null));
 			index++;
 
 			// Put sat flag
-			if (bs.sat != null)
-				set.set(index, true);
+			set.set(index, (bs.sat != null));
 			index++;
 
 			// Put xy flag
-			if (bs.xy != null)
-				set.set(index, true);
+			set.set(index, (bs.xy != null));
 			index++;
 
 			// Put ct flag
-			if (bs.ct != null)
-				set.set(index, true);
+			set.set(index, (bs.ct != null));
 			index++;
 
 			// Put alert flag
-			if (bs.alert != null)
-				set.set(index, true);
+			set.set(index, (bs.alert != null));
 			index++;
 
 			// Put effect flag
-			if (bs.effect != null)
-				set.set(index, true);
+			set.set(index, (bs.effect != null));
 			index++;
 
 			// Put transitiontime flag
-			if (bs.transitiontime != null)
-				set.set(index, true);
+			set.set(index, (bs.transitiontime != null));
 			index++;
 
 		}
@@ -321,6 +281,38 @@ public class HueUrlEncoder {
 		return null;
 	}
 	
+	/**
+	 * 4 bit version header.
+	 * <p>
+	 * 50 bit bulbs included flags.
+	 * <p>
+	 * 7 bit number of states.
+	 * <p>
+	 * STATE
+	 * <p>
+	 * Each state contains:
+	 * <p>
+	 * 9 bit properties flagging inclusion of this order of properties:
+	 * <p>
+	 * 1 bit on.
+	 * <p>
+	 * 8 bit bri.
+	 * <p>
+	 * 16 bit hue.
+	 * <p>
+	 * 8 bit sat.
+	 * <p>
+	 * 64 bit xy.
+	 * <p>
+	 * 9 bit ct.
+	 * <p>
+	 * 2 bit alert.
+	 * <p>
+	 * 4 bit effect //three more bits than needed, reserved for future.
+	 * <p>
+	 * 16 bit transitiontime
+	 * <p>
+	 */
 	public static String legacyEncode(Integer[] bulbS, BulbState[] bsRay) {
 		if (bulbS != null && bsRay != null) {
 			BitSet set = new BitSet();
