@@ -101,9 +101,17 @@ public class HueUrlEncoder {
 	}
 	
 	
-	/** Set 6 bit timing repeat policy **/
+	/** Set 7 bit timing repeat policy **/
 	private static void addTimingRepeatPolicy(BitSet set, Integer index, Mood mood){
-		//TODO
+		//1 bit timing addressing reference mode
+		set.set(index, mood.timeAddressingRepeatPolicy);
+		index++;
+		//6 bit timing repeat number (max value specialcased to infinity)
+		if(mood.infiniteLooping){
+			//if infinite looping, write max value
+			addNumber(set,index,63,6);
+		}else
+			addNumber(set,index,mood.numLoops,6);
 	}
 	
 	

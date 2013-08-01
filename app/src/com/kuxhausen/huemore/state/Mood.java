@@ -6,7 +6,7 @@ public class Mood {
 	public Boolean usesTiming;
 	public Boolean infiniteLooping;
 	/** if true, timestamps in events are offsets from beginning of the day, otherwise they are offsets from mood start time **/
-	public Boolean midnightReferenceTime;
+	public Boolean timeAddressingRepeatPolicy;
 	public Integer numLoops;
 	
 }
