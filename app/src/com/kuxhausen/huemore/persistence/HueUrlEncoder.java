@@ -15,6 +15,8 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueUrlEncoder {
 
+	public final static Integer PROTOCOL_VERSION_NUMBER = 2;
+	
 	/**
 	 * 4 bit version header.
 	 * <p>
@@ -58,7 +60,8 @@ public class HueUrlEncoder {
 		BitSet set = new BitSet();
 		Integer index = 0;// points to the next spot
 		
-		addVersionNumber(set, index);
+		/** Set 4 bit protocol version **/
+		addNumber(set,index,PROTOCOL_VERSION_NUMBER,4);
 		
 		/** Set 6 bit number of channels **/
 		addNumber(set,index,mood.numChannels,6);
@@ -87,19 +90,6 @@ public class HueUrlEncoder {
 		byte[] intermediaryResult = fromBitSet(set, index);
 		return Base64.encodeToString(intermediaryResult, Base64.URL_SAFE);
 	}
-	
-	/** Set 4 bit protocol version **/
-	private static void addVersionNumber(BitSet set, Integer index){
-		set.set(index, false);
-		index++;
-		set.set(index, false);
-		index++;
-		set.set(index, false);
-		index++;
-		set.set(index, true);
-		index++;
-	}
-	
 	
 	/** Set 8 bit timing repeat policy **/
 	private static void addTimingRepeatPolicy(BitSet set, Integer index, Mood mood){
@@ -173,50 +163,20 @@ public class HueUrlEncoder {
 		/** Put 8 bit bri **/
 		{
 			if (bs.bri != null) {
-				int bitMask = 1;
-				for (int i = 0; i < 8; i++) {
-					if ((bs.bri & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,bs.bri,8);
 			}
 		}
 		/** Put 16 bit hue **/
 		{
 			if (bs.hue != null) {
-				int bitMask = 1;
-				for (int i = 0; i < 16; i++) {
-					if ((bs.hue & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,bs.hue,16);
 			}
 		}
 
 		/** Put 8 bit sat **/
 		{
 			if (bs.sat != null) {
-				int bitMask = 1;
-				for (int i = 0; i < 8; i++) {
-					if ((bs.sat & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,bs.sat,8);
 			}
 		}
 		/** Put 64 bit xy **/
@@ -224,49 +184,17 @@ public class HueUrlEncoder {
 			if (bs.xy != null) {
 				int x = Float
 						.floatToIntBits((float) ((double) bs.xy[0]));
-
-				int bitMask = 1;
-				for (int i = 0; i < 32; i++) {
-					if ((x & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,x,32);
 
 				int y = Float
 						.floatToIntBits((float) ((double) bs.xy[1]));
-
-				bitMask = 1;
-				for (int i = 0; i < 32; i++) {
-					if ((y & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,y,32);
 			}
 		}
 		/** Put 9 bit ct **/
 		{
 			if (bs.ct != null) {
-				int bitMask = 1;
-				for (int i = 0; i < 9; i++) {
-					if ((bs.ct & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,bs.ct,9);
 			}
 		}
 		/** Put 2 bit alert **/
@@ -320,17 +248,7 @@ public class HueUrlEncoder {
 		/** Put 16 bit transitiontime **/
 		{
 			if (bs.transitiontime != null) {
-				int bitMask = 1;
-				for (int i = 0; i < 16; i++) {
-					if ((bs.transitiontime & bitMask) > 0) {
-						set.set(index, true);
-						index++;
-					} else {
-						set.set(index, false);
-						index++;
-					}
-					bitMask *= 2;
-				}
+				addNumber(set,index,bs.transitiontime,16);
 			}
 		}
 	}
