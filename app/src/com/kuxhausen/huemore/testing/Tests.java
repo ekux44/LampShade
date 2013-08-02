@@ -33,7 +33,7 @@ public class Tests {
 					return false;
 				}
 		}
-		if(m1.infiniteLooping!=m2.infiniteLooping){
+		if(m1.isInfiniteLooping()!=m2.isInfiniteLooping()){
 			Log.e("tests",tNum+"infiniteLoopingNotEqual");
 			return false;
 		}
@@ -108,7 +108,7 @@ public class Tests {
 		m.numLoops=98;
 		Log.e("tests","3"+test(3,m,null));
 		m.numLoops=127;
-		m.infiniteLooping=true;
+		m.setInfiniteLooping(true);
 		Log.e("tests","4"+test(4,m,null));
 		m.timeAddressingRepeatPolicy=true;
 		Log.e("tests","5"+test(5,m,null));

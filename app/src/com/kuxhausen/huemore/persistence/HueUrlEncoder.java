@@ -77,11 +77,7 @@ public class HueUrlEncoder {
 		mBitSet.incrementingSet(mood.timeAddressingRepeatPolicy);
 		
 		//7 bit timing repeat number (max value specialcased to infinity)
-		if(mood.infiniteLooping){
-			//if infinite looping, write max value
-			mBitSet.addNumber(127,7);
-		}else
-			mBitSet.addNumber(mood.numLoops,7);
+		mBitSet.addNumber(mood.numLoops,7);
 	}
 	
 	/** Set variable length state **/
@@ -342,7 +338,7 @@ public class HueUrlEncoder {
 			//7 bit timing repeat number
 			mood.numLoops = mBitSet.extractNumber(7);
 			//flag infinite looping if max numLoops
-			mood.infiniteLooping = (mood.numLoops == 127);
+			mood.setInfiniteLooping(mood.numLoops == 127);
 			mood.usesTiming = (mood.numLoops!=0);
 			
 			//6 bit number of timestamps
