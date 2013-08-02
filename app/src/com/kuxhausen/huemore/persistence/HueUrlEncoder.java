@@ -249,9 +249,86 @@ public class HueUrlEncoder {
 	}
 	
 	private static BulbState extractState(ManagedBitSet mBitSet){
+		BulbState bs = new BulbState();
 		
-		//TODO
-		return null;
+		/**
+		 * On, Bri, Hue, Sat, XY, CT, Alert, Effect, Transitiontime
+		 */
+		boolean[] propertiesFlags = new boolean[9];
+		/** Get 9 bit properties flags **/		
+		for (int j = 0; j < 9; j++) {
+			propertiesFlags[j] = mBitSet.incrementingGet();
+		}
+
+		/** Get on bit **/
+		bs.on = mBitSet.incrementingGet();
+		
+		/** Get 8 bit bri **/	
+		if (propertiesFlags[1]) {
+			bs.bri = extractNumber(mBitSet, 8);
+		}
+	
+		/** Get 16 bit hue **/
+		if (propertiesFlags[2]) {
+			bs.hue = extractNumber(mBitSet, 16);
+		}
+		
+
+		/** Get 8 bit sat **/
+		if (propertiesFlags[3]) {
+			bs.sat = (short) extractNumber(mBitSet, 8);
+		}
+		
+		/** Get 64 bit xy **/
+		if (propertiesFlags[4]) {
+			Double x = (double) Float.intBitsToFloat(extractNumber(mBitSet,32));
+			Double y = (double) Float.intBitsToFloat(extractNumber(mBitSet,32));
+			bs.xy = new Double[] { x, y };
+		}
+		
+		/** Get 9 bit ct **/
+		if (propertiesFlags[5]) {
+			bs.ct = extractNumber(mBitSet, 9);
+		}
+		
+		/** Get 2 bit alert **/
+		if (propertiesFlags[6]) {
+			int value =extractNumber(mBitSet, 2);
+			switch (value) {
+			case 0:
+				bs.alert = "none";
+				break;
+			case 1:
+				bs.alert = "select";
+				break;
+			case 2:
+				bs.alert = "lselect";
+				break;
+			}
+		}
+		
+		/** Get 4 bit effect **/
+		// three more bits than needed, reserved for future API
+		// functionality
+		if (propertiesFlags[7]) {
+			int value = extractNumber(mBitSet,4);
+			switch (value) {
+			case 0:
+				bs.effect = "none";
+				break;
+			case 1:
+				bs.effect = "colorloop";
+				break;
+			}
+		}
+		
+		/** Get 16 bit transitiontime **/
+		if (propertiesFlags[8]) {
+			int value = extractNumber(mBitSet,16);
+			bs.transitiontime = value;
+		}
+		
+		return bs;
 	}
 	
 	public static Pair<Integer[], Mood> decode(String code){
@@ -285,27 +362,31 @@ public class HueUrlEncoder {
 			
 			//6 bit number of states
 			int numStates = extractNumber(mBitSet,6);
-			BulbState[] bsArray = new BulbState[numStates];
+			BulbState[] stateArray = new BulbState[numStates];
 			for(int i = 0; i<numStates; i++){
 				//state
-				bsArray[i] = extractState(mBitSet);
+				stateArray[i] = extractState(mBitSet);
 			}
 			
 			int numEvents = extractNumber(mBitSet,8);
-			Event[] e = new Event[numEvents];
+			Event[] eList = new Event[numEvents];
 			
 			for(int i =0; i<numEvents; i++){
-				//TODO
+				Event e = new Event();
+				e.channel = extractNumber(mBitSet,getBitLength(mood.numChannels));
+				
+				e.time = timeArray[extractNumber(mBitSet,getBitLength(numTimestamps))];
+				
+				e.state = stateArray[extractNumber(mBitSet,getBitLength(numStates))];
 			}
-			mood.events=e;
+			mood.events=eList;
 			
 		}else{
 			//TODO
 			//Please update your app to open this mood
 		}
 		
-		//int encodingVersion 
-		//TODO		
+		//TODO deal with bulb[] if present		
 		return new Pair<Integer[], Mood>(null, mood);
 	}
 	
