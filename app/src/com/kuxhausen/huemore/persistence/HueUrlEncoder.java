@@ -15,7 +15,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueUrlEncoder {
 
-	public final static Integer PROTOCOL_VERSION_NUMBER = 2;
+	public final static Integer PROTOCOL_VERSION_NUMBER = 1;
 	
 	
 	public static String encode(Mood mood)
@@ -28,9 +28,13 @@ public class HueUrlEncoder {
 		
 		ManagedBitSet mBitSet = new ManagedBitSet();
 		
-		// Set 4 bit protocol version
-		mBitSet.addNumber(PROTOCOL_VERSION_NUMBER,4);
+		// Set 3 bit protocol version
+		mBitSet.addNumber(PROTOCOL_VERSION_NUMBER,3);
 		
+		//Flag if optional bulblist included
+		mBitSet.incrementingSet(bulbsAffected!=null);
+		
+		//50 bit optional bulb inclusion flags
 		if(bulbsAffected!=null){
 			boolean[] bulbs = new boolean[50];
 			for(Integer i: bulbsAffected){
@@ -316,16 +320,18 @@ public class HueUrlEncoder {
 		ArrayList<Integer> bList = new ArrayList<Integer>();
 		ManagedBitSet mBitSet = new ManagedBitSet(code);
 		
-		int encodingVersion = mBitSet.extractNumber(4);
+		//3 bit encoding version
+		int encodingVersion = mBitSet.extractNumber(3);
 		
-		if(expectBulbs){
-			/** Set bulbs flags version **/
+		//1 bit optional bulb inclusion flags flag
+		if(mBitSet.incrementingGet()){
+			//50 bits of optional bulb inclusion flags
 			for (int i = 0; i < 50; i++)
 				if (mBitSet.incrementingGet())
 					bList.add(i + 1);
 		}
 		
-		if(encodingVersion == 2){
+		if(encodingVersion == 1){
 			int numChannels = mBitSet.extractNumber(6);
 			mood.numChannels=numChannels;
 			
@@ -367,7 +373,7 @@ public class HueUrlEncoder {
 			}
 			mood.events=eList;
 			
-		} if(encodingVersion==1){
+		} if(encodingVersion==0){
 			mBitSet.useLittleEndianEncoding(true);
 
 			//7 bit number of states
