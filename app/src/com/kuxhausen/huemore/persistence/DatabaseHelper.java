@@ -1,7 +1,10 @@
 package com.kuxhausen.huemore.persistence;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -218,6 +221,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
 				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
+		
+		/*
+		String[] moodColumns = {MoodColumns.MOOD, MoodColumns.STATE};
+		Cursor cursor = db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null, null, null);
+		
+		ArrayList<String> moodStates = new ArrayList<String>();
+		while (cursor.moveToNext()) {
+			moodStates.add(cursor.getString(0));
+		}
+		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+		*/
 	}
 
 
