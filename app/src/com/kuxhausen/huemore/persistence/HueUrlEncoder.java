@@ -226,6 +226,7 @@ public class HueUrlEncoder {
 			bitMask /= 2;
 		}
 	}
+	
 	private static int extractNumber(ManagedBitSet mBitSet, int length){
 		int result = 0;
 		int bitMask = (int)Math.pow(2, length-1);
@@ -235,6 +236,22 @@ public class HueUrlEncoder {
 			bitMask /= 2;
 		}
 		return result;
+	}
+	private static int littleEndienExtractNumber(ManagedBitSet mBitSet, int length){
+		int result = 0;
+		int bitMask = 1;
+		for (int i = 0; i <length; i++) {
+			if(mBitSet.incrementingGet())
+				result+=bitMask;
+			bitMask *= 2;
+		}
+		return result;
+	}
+	
+	private static BulbState extractState(ManagedBitSet mBitSet){
+		
+		//TODO
+		return null;
 	}
 	
 	public static Pair<Integer[], Mood> decode(String code){
@@ -256,10 +273,31 @@ public class HueUrlEncoder {
 			mood.numLoops = extractNumber(mBitSet,7);
 			//flag infinite looping if max numLoops
 			mood.infiniteLooping = (mood.numLoops == 127);
+			mood.usesTiming = (mood.numLoops!=0);
 			
+			//6 bit number of timestamps
+			int numTimestamps = extractNumber(mBitSet,6);
+			int[] timeArray = new int[numTimestamps];
+			for(int i = 0; i<numTimestamps; i++){
+				//20 bit timestamp
+				timeArray[i]=extractNumber(mBitSet,20);
+			}
 			
+			//6 bit number of states
+			int numStates = extractNumber(mBitSet,6);
+			BulbState[] bsArray = new BulbState[numStates];
+			for(int i = 0; i<numStates; i++){
+				//state
+				bsArray[i] = extractState(mBitSet);
+			}
 			
+			int numEvents = extractNumber(mBitSet,8);
+			Event[] e = new Event[numEvents];
 			
+			for(int i =0; i<numEvents; i++){
+				//TODO
+			}
+			mood.events=e;
 			
 		}else{
 			//TODO
