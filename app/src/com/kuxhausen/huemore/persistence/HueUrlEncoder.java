@@ -24,29 +24,29 @@ public class HueUrlEncoder {
 		ManagedBitSet mBitSet = new ManagedBitSet();
 		
 		// Set 4 bit protocol version
-		addNumber(mBitSet,PROTOCOL_VERSION_NUMBER,4);
+		mBitSet.addNumber(PROTOCOL_VERSION_NUMBER,4);
 		
 		// Set 6 bit number of channels
-		addNumber(mBitSet,mood.numChannels,6);
+		mBitSet.addNumber(mood.numChannels,6);
 		
 		addTimingRepeatPolicy(mBitSet, mood);
 		
 		ArrayList<Integer> timeArray = generateTimesArray(mood);
 		// Set 6 bit number of timestamps
-		addNumber(mBitSet,timeArray.size(),6);
+		mBitSet.addNumber(timeArray.size(),6);
 		// Set variable size list of 20 bit timestamps
 		for(Integer i : timeArray)
-			addNumber(mBitSet,i,20);
+			mBitSet.addNumber(i,20);
 
 		ArrayList<BulbState> stateArray = generateStatesArray(mood);
 		// Set 6 bit number of states
-		addNumber(mBitSet,stateArray.size(),6);
+		mBitSet.addNumber(stateArray.size(),6);
 		
 		for(BulbState state : stateArray)
 			addState(mBitSet, state);
 		
 		// Set 8 bit number of events
-		addNumber(mBitSet,mood.events.length,8);
+		mBitSet.addNumber(mood.events.length,8);
 		
 		addListOfEvents(mBitSet, mood, timeArray, stateArray);		
 		return mBitSet.getBase64Encoding();
@@ -60,9 +60,9 @@ public class HueUrlEncoder {
 		//7 bit timing repeat number (max value specialcased to infinity)
 		if(mood.infiniteLooping){
 			//if infinite looping, write max value
-			addNumber(mBitSet,127,7);
+			mBitSet.addNumber(127,7);
 		}else
-			addNumber(mBitSet,mood.numLoops,7);
+			mBitSet.addNumber(mood.numLoops,7);
 	}
 	
 	/** Set variable length state **/
@@ -102,33 +102,33 @@ public class HueUrlEncoder {
 		
 		/** Put 8 bit bri **/	
 		if (bs.bri != null) {
-			addNumber(mBitSet,bs.bri,8);
+			mBitSet.addNumber(bs.bri,8);
 		}
 		
 		/** Put 16 bit hue **/
 		if (bs.hue != null) {
-			addNumber(mBitSet,bs.hue,16);
+			mBitSet.addNumber(bs.hue,16);
 		}
 
 		/** Put 8 bit sat **/
 		if (bs.sat != null) {
-			addNumber(mBitSet,bs.sat,8);
+			mBitSet.addNumber(bs.sat,8);
 		}
 		
 		/** Put 64 bit xy **/
 		if (bs.xy != null) {
 			int x = Float
 					.floatToIntBits((float) ((double) bs.xy[0]));
-			addNumber(mBitSet,x,32);
+			mBitSet.addNumber(x,32);
 
 			int y = Float
 					.floatToIntBits((float) ((double) bs.xy[1]));
-			addNumber(mBitSet,y,32);
+			mBitSet.addNumber(y,32);
 		}
 		
 		/** Put 9 bit ct **/
 		if (bs.ct != null) {
-			addNumber(mBitSet,bs.ct,9);
+			mBitSet.addNumber(bs.ct,9);
 		}
 		
 		/** Put 2 bit alert **/
@@ -141,7 +141,7 @@ public class HueUrlEncoder {
 			else if (bs.alert.equals("lselect"))
 				value = 2;
 
-			addNumber(mBitSet,value,2);
+			mBitSet.addNumber(value,2);
 		}
 		
 		/** Put 4 bit effect **/
@@ -154,12 +154,12 @@ public class HueUrlEncoder {
 			else if (bs.effect.equals("colorloop"))
 				value = 1;
 			
-			addNumber(mBitSet,value,4);
+			mBitSet.addNumber(value,4);
 		}
 		
 		/** Put 16 bit transitiontime **/
 		if (bs.transitiontime != null) {
-			addNumber(mBitSet,bs.transitiontime,16);
+			mBitSet.addNumber(bs.transitiontime,16);
 		}
 	}
 	
@@ -173,13 +173,13 @@ public class HueUrlEncoder {
 		for(Event e: mood.events){
 			
 			// add channel number
-			addNumber(mBitSet, e.channel, getBitLength(mood.numChannels));
+			mBitSet.addNumber(e.channel, getBitLength(mood.numChannels));
 			
 			//add timestamp lookup number
-			addNumber(mBitSet, timeArray.indexOf(e.time), getBitLength(timeArray.size()));
+			mBitSet.addNumber(timeArray.indexOf(e.time), getBitLength(timeArray.size()));
 			
 			//add mood lookup number
-			addNumber(mBitSet, bulbStateToStringList.indexOf(e.state.toString()), getBitLength(stateArray.size()));
+			mBitSet.addNumber(bulbStateToStringList.indexOf(e.state.toString()), getBitLength(stateArray.size()));
 		}
 	}
 	
@@ -213,41 +213,6 @@ public class HueUrlEncoder {
 		return statesArray;
 	}
 	
-	/**
-	 * @param set
-	 * @param index
-	 * @param value
-	 * @param length
-	 */
-	private static void addNumber(ManagedBitSet mBitSet, int value, int length){
-		int bitMask = (int)Math.pow(2, length-1);
-		for (int i = length-1; i >= 0; i--) {
-			mBitSet.incrementingSet(((value & bitMask) > 0));
-			bitMask /= 2;
-		}
-	}
-	
-	private static int extractNumber(ManagedBitSet mBitSet, int length){
-		int result = 0;
-		int bitMask = (int)Math.pow(2, length-1);
-		for (int i = length-1; i >= 0; i--) {
-			if(mBitSet.incrementingGet())
-				result+=bitMask;
-			bitMask /= 2;
-		}
-		return result;
-	}
-	private static int littleEndienExtractNumber(ManagedBitSet mBitSet, int length){
-		int result = 0;
-		int bitMask = 1;
-		for (int i = 0; i <length; i++) {
-			if(mBitSet.incrementingGet())
-				result+=bitMask;
-			bitMask *= 2;
-		}
-		return result;
-	}
-	
 	private static BulbState extractState(ManagedBitSet mBitSet){
 		BulbState bs = new BulbState();
 		
@@ -265,35 +230,35 @@ public class HueUrlEncoder {
 		
 		/** Get 8 bit bri **/	
 		if (propertiesFlags[1]) {
-			bs.bri = extractNumber(mBitSet, 8);
+			bs.bri = mBitSet.extractNumber(8);
 		}
 	
 		/** Get 16 bit hue **/
 		if (propertiesFlags[2]) {
-			bs.hue = extractNumber(mBitSet, 16);
+			bs.hue = mBitSet.extractNumber(16);
 		}
 		
 
 		/** Get 8 bit sat **/
 		if (propertiesFlags[3]) {
-			bs.sat = (short) extractNumber(mBitSet, 8);
+			bs.sat = (short) mBitSet.extractNumber(8);
 		}
 		
 		/** Get 64 bit xy **/
 		if (propertiesFlags[4]) {
-			Double x = (double) Float.intBitsToFloat(extractNumber(mBitSet,32));
-			Double y = (double) Float.intBitsToFloat(extractNumber(mBitSet,32));
+			Double x = (double) Float.intBitsToFloat(mBitSet.extractNumber(32));
+			Double y = (double) Float.intBitsToFloat(mBitSet.extractNumber(32));
 			bs.xy = new Double[] { x, y };
 		}
 		
 		/** Get 9 bit ct **/
 		if (propertiesFlags[5]) {
-			bs.ct = extractNumber(mBitSet, 9);
+			bs.ct = mBitSet.extractNumber(9);
 		}
 		
 		/** Get 2 bit alert **/
 		if (propertiesFlags[6]) {
-			int value =extractNumber(mBitSet, 2);
+			int value = mBitSet.extractNumber(2);
 			switch (value) {
 			case 0:
 				bs.alert = "none";
@@ -311,7 +276,7 @@ public class HueUrlEncoder {
 		// three more bits than needed, reserved for future API
 		// functionality
 		if (propertiesFlags[7]) {
-			int value = extractNumber(mBitSet,4);
+			int value = mBitSet.extractNumber(4);
 			switch (value) {
 			case 0:
 				bs.effect = "none";
@@ -324,7 +289,7 @@ public class HueUrlEncoder {
 		
 		/** Get 16 bit transitiontime **/
 		if (propertiesFlags[8]) {
-			int value = extractNumber(mBitSet,16);
+			int value = mBitSet.extractNumber(16);
 			bs.transitiontime = value;
 		}
 		
@@ -335,53 +300,72 @@ public class HueUrlEncoder {
 		Mood mood = new Mood();
 		ManagedBitSet mBitSet = new ManagedBitSet(code);
 		
-		int encodingVersion = extractNumber(mBitSet,4);
+		int encodingVersion = mBitSet.extractNumber(4);
 		
-		if(encodingVersion==1){
-			legacyDecode(code);
-		}else if(encodingVersion ==2){
-			int numChannels = extractNumber(mBitSet,6);
+		if(encodingVersion == 2){
+			int numChannels = mBitSet.extractNumber(6);
 			mood.numChannels=numChannels;
 			
 			//1 bit timing addressing reference mode
 			mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
 			
 			//7 bit timing repeat number
-			mood.numLoops = extractNumber(mBitSet,7);
+			mood.numLoops = mBitSet.extractNumber(7);
 			//flag infinite looping if max numLoops
 			mood.infiniteLooping = (mood.numLoops == 127);
 			mood.usesTiming = (mood.numLoops!=0);
 			
 			//6 bit number of timestamps
-			int numTimestamps = extractNumber(mBitSet,6);
+			int numTimestamps = mBitSet.extractNumber(6);
 			int[] timeArray = new int[numTimestamps];
 			for(int i = 0; i<numTimestamps; i++){
 				//20 bit timestamp
-				timeArray[i]=extractNumber(mBitSet,20);
+				timeArray[i]= mBitSet.extractNumber(20);
 			}
 			
 			//6 bit number of states
-			int numStates = extractNumber(mBitSet,6);
+			int numStates = mBitSet.extractNumber(6);
 			BulbState[] stateArray = new BulbState[numStates];
 			for(int i = 0; i<numStates; i++){
-				//state
+				//decode each state
 				stateArray[i] = extractState(mBitSet);
 			}
 			
-			int numEvents = extractNumber(mBitSet,8);
+			int numEvents = mBitSet.extractNumber(8);
 			Event[] eList = new Event[numEvents];
 			
 			for(int i =0; i<numEvents; i++){
 				Event e = new Event();
-				e.channel = extractNumber(mBitSet,getBitLength(mood.numChannels));
+				e.channel = mBitSet.extractNumber(getBitLength(mood.numChannels));
 				
-				e.time = timeArray[extractNumber(mBitSet,getBitLength(numTimestamps))];
+				e.time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
 				
-				e.state = stateArray[extractNumber(mBitSet,getBitLength(numStates))];
+				e.state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
 			}
 			mood.events=eList;
 			
-		}else{
+		} if(encodingVersion==1){
+			mBitSet.useLittleEndianEncoding(true);
+			ArrayList<Integer> bList = null;
+			BulbState[] stateArray = null;
+			bList = new ArrayList<Integer>();
+
+			/** Set bulbs flags version **/
+			for (int i = 0; i < 50; i++)
+				if (mBitSet.incrementingGet())
+					bList.add(i + 1);
+
+			//7 bit number of states
+			int numStates = mBitSet.extractNumber(7);
+				stateArray = new BulbState[numStates];
+
+			/** Decode each state **/	
+			for(int i = 0; i<numStates; i++){
+				//decode each state
+				stateArray[i] = extractState(mBitSet);
+			}			
+		}
+		else{
 			//TODO
 			//Please update your app to open this mood
 		}
@@ -428,220 +412,7 @@ public class HueUrlEncoder {
 	}
 
 	public static Pair<Integer[], BulbState[]> legacyDecode(String encoded) {
-		ArrayList<Integer> bList = null;
-		BulbState[] bsRay = null;
-		try {
-			byte[] intermediaryReverse = Base64
-					.decode(encoded, Base64.URL_SAFE);
-			BitSet set = ManagedBitSet.toBitSet(intermediaryReverse);
-			bList = new ArrayList<Integer>();
-
-			int index = 0;// points to the next spot
-			/** Get protocol version **/
-			{
-				// Make sure the protocol is version 1 (0001)
-				if (set.get(0) || set.get(1) || set.get(2) || !set.get(3)) {
-					// Unsupported protocol version
-					return new Pair(null, null);
-				}
-				index += 4;
-			}
-			/** Set bulbs flags version **/
-			{
-
-				for (int i = 0; i < 50; i++)
-					if (set.get(index + i))
-						bList.add(i + 1);
-				index += 50;
-			}
-			/** Set num states **/
-			{
-				int numStates = 0;
-				int bitMask = 1;
-				for (int i = 0; i < 7; i++) {
-					if (set.get(index))
-						numStates |= bitMask;
-					index++;
-					bitMask *= 2;
-				}
-				bsRay = new BulbState[numStates];
-			}
-
-			/** Decode each state **/
-			{
-				for (int i = 0; i < bsRay.length; i++) {
-
-					/**
-					 * On, Bri, Hue, Sat, XY, CT, Alert, Effect, Transitiontime
-					 */
-					boolean[] propertiesFlags = new boolean[9];
-					BulbState bs = new BulbState();
-					/** Get 9 bit properties flags **/
-					{
-						for (int j = 0; j < 9; j++) {
-							propertiesFlags[j] = set.get(index);
-							index++;
-						}
-
-					}
-					/** Get on bit **/
-					{
-						bs.on = set.get(index);
-						index++;
-					}
-					/** Get 8 bit bri **/
-					{
-						if (propertiesFlags[1]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 8; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							bs.bri = value;
-						}
-					}
-					/** Get 16 bit hue **/
-					{
-						if (propertiesFlags[2]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 16; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							bs.hue = value;
-						}
-					}
-
-					/** Get 8 bit sat **/
-					{
-						if (propertiesFlags[3]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 8; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							bs.sat = (short) value;
-						}
-					}
-					/** Get 64 bit xy **/
-					{
-						if (propertiesFlags[4]) {
-
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 32; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							Double x = (double) Float.intBitsToFloat(value);
-							value = 0;
-							bitMask = 1;
-							for (int j = 0; j < 32; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							Double y = (double) Float.intBitsToFloat(value);
-							bs.xy = new Double[] { x, y };
-						}
-					}
-					/** Get 9 bit ct **/
-					{
-						if (propertiesFlags[5]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 9; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							bs.ct = value;
-						}
-					}
-					/** Get 2 bit alert **/
-					{
-						if (propertiesFlags[6]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 2; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							switch (value) {
-							case 0:
-								bs.alert = "none";
-								break;
-							case 1:
-								bs.alert = "select";
-								break;
-							case 2:
-								bs.alert = "lselect";
-								break;
-							}
-						}
-					}
-					/** Get 4 bit effect **/
-					{
-						// three more bits than needed, reserved for future API
-						// functionality
-						if (propertiesFlags[7]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 4; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							switch (value) {
-							case 0:
-								bs.effect = "none";
-								break;
-							case 1:
-								bs.effect = "colorloop";
-								break;
-							}
-						}
-					}
-					/** Get 16 bit transitiontime **/
-					{
-						if (propertiesFlags[8]) {
-							int value = 0;
-							int bitMask = 1;
-							for (int j = 0; j < 16; j++) {
-								if (set.get(index))
-									value |= bitMask;
-								index++;
-								bitMask *= 2;
-							}
-							bs.transitiontime = value;
-						}
-					}
-					bsRay[i] = bs;
-				}
-			}
-
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return new Pair<Integer[], BulbState[]>(bList.toArray(new Integer[bList
-				.size()]), bsRay);
+		//TODO remove
+		return null;
 	}
 }

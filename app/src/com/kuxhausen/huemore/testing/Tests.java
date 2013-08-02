@@ -47,8 +47,9 @@ public class Tests {
 		Log.e("test1","numChannels:"+output.numChannels);
 		Log.e("test1","timeAddressingRepeatPolicy:"+output.timeAddressingRepeatPolicy);
 		Log.e("test1","numLoops:"+output.numLoops);
-		Log.e("test1","output.infiniteLooping:"+output.infiniteLooping);
-		
+		Log.e("test1","infiniteLooping:"+output.infiniteLooping);
+		Log.e("test1", "usesTiming:"+output.usesTiming);
+		Log.e("test1","numEvents:"+output.events.length);
 		
 		/** bitSet to encoding test **/
 		/*{

@@ -7,6 +7,7 @@ import android.util.Base64;
 public class ManagedBitSet {
 	private BitSet set;
 	private int index;
+	private boolean littleEndian = false;
 	
 	public ManagedBitSet(){
 		set = new BitSet();
@@ -64,5 +65,45 @@ public class ManagedBitSet {
 			}
 		}
 		return bits;
+	}
+	
+	/**
+	 * @param set
+	 * @param index
+	 * @param value
+	 * @param length
+	 */
+	public void addNumber(int value, int length){
+		if(!littleEndian){
+			int bitMask = (int)Math.pow(2, length-1);
+			for (int i = length-1; i >= 0; i--) {
+				this.incrementingSet(((value & bitMask) > 0));
+				bitMask /= 2;
+			}
+		}
+	}
+	
+	public int extractNumber(int length){
+		int result = 0;
+		if(littleEndian){
+			int bitMask = 1;
+			for (int i = 0; i <length; i++) {
+				if(this.incrementingGet())
+					result+=bitMask;
+				bitMask *= 2;
+			}
+		}
+		else{
+			int bitMask = (int)Math.pow(2, length-1);
+			for (int i = length-1; i >= 0; i--) {
+				if(this.incrementingGet())
+					result+=bitMask;
+				bitMask /= 2;
+			}
+		}
+		return result;
+	}
+	public void useLittleEndianEncoding(boolean little){
+		littleEndian = little;
 	}
 }
