@@ -17,7 +17,12 @@ public class HueUrlEncoder {
 
 	public final static Integer PROTOCOL_VERSION_NUMBER = 2;
 	
-	public static String encode(Mood mood){
+	
+	public static String encode(Mood mood)
+	{
+		return encode(mood, null);
+	}
+	public static String encode(Mood mood, Integer[] bulbsAffected){
 		if (mood == null)
 			return "";
 		
@@ -25,6 +30,16 @@ public class HueUrlEncoder {
 		
 		// Set 4 bit protocol version
 		mBitSet.addNumber(PROTOCOL_VERSION_NUMBER,4);
+		
+		if(bulbsAffected!=null){
+			boolean[] bulbs = new boolean[50];
+			for(Integer i: bulbsAffected){
+				if(i!=null)
+					bulbs[i-1]=true;
+			}
+			for(int i = 0; i<bulbs.length; i++)
+				mBitSet.incrementingSet(bulbs[i]);
+		}
 		
 		// Set 6 bit number of channels
 		mBitSet.addNumber(mood.numChannels,6);
@@ -296,11 +311,19 @@ public class HueUrlEncoder {
 		return bs;
 	}
 	
-	public static Pair<Integer[], Mood> decode(String code){
+	public static Pair<Integer[], Mood> decode(String code, boolean expectBulbs){
 		Mood mood = new Mood();
+		ArrayList<Integer> bList = new ArrayList<Integer>();
 		ManagedBitSet mBitSet = new ManagedBitSet(code);
 		
 		int encodingVersion = mBitSet.extractNumber(4);
+		
+		if(expectBulbs){
+			/** Set bulbs flags version **/
+			for (int i = 0; i < 50; i++)
+				if (mBitSet.incrementingGet())
+					bList.add(i + 1);
+		}
 		
 		if(encodingVersion == 2){
 			int numChannels = mBitSet.extractNumber(6);
@@ -346,18 +369,10 @@ public class HueUrlEncoder {
 			
 		} if(encodingVersion==1){
 			mBitSet.useLittleEndianEncoding(true);
-			ArrayList<Integer> bList = null;
-			BulbState[] stateArray = null;
-			bList = new ArrayList<Integer>();
-
-			/** Set bulbs flags version **/
-			for (int i = 0; i < 50; i++)
-				if (mBitSet.incrementingGet())
-					bList.add(i + 1);
 
 			//7 bit number of states
 			int numStates = mBitSet.extractNumber(7);
-				stateArray = new BulbState[numStates];
+			BulbState[]	stateArray = new BulbState[numStates];
 
 			/** Decode each state **/	
 			for(int i = 0; i<numStates; i++){
@@ -370,44 +385,19 @@ public class HueUrlEncoder {
 			//Please update your app to open this mood
 		}
 		
-		//TODO deal with bulb[] if present		
-		return new Pair<Integer[], Mood>(null, mood);
+		Integer[] bulbs=null;
+		if(expectBulbs){
+			bulbs = new Integer[bList.size()];
+			for(int i = 0; i<bList.size(); i++)
+				bulbs[i]=bList.get(i);
+		}
+				
+		return new Pair<Integer[], Mood>(bulbs, mood);
 	}
 	
-	/**
-	 * 4 bit version header.
-	 * <p>
-	 * 50 bit bulbs included flags.
-	 * <p>
-	 * 7 bit number of states.
-	 * <p>
-	 * STATE
-	 * <p>
-	 * Each state contains:
-	 * <p>
-	 * 9 bit properties flagging inclusion of this order of properties:
-	 * <p>
-	 * 1 bit on.
-	 * <p>
-	 * 8 bit bri.
-	 * <p>
-	 * 16 bit hue.
-	 * <p>
-	 * 8 bit sat.
-	 * <p>
-	 * 64 bit xy.
-	 * <p>
-	 * 9 bit ct.
-	 * <p>
-	 * 2 bit alert.
-	 * <p>
-	 * 4 bit effect //three more bits than needed, reserved for future.
-	 * <p>
-	 * 16 bit transitiontime
-	 * <p>
-	 */
 	public static String legacyEncode(Integer[] bulbS, BulbState[] bsRay) {
-		//TODO replace
+		Mood m = new Mood();
+		
 		return "";
 	}
 
