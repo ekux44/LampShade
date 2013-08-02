@@ -7,7 +7,7 @@ public class Mood {
 	/** if true, timestamps in events are offsets from beginning of the day, otherwise they are offsets from mood start time **/
 	public Boolean timeAddressingRepeatPolicy;
 	/** max value 126 (127 special cased to infinity) **/
-	public Integer numLoops;
+	private Integer numLoops;
 	
 	public Mood(){
 		timeAddressingRepeatPolicy = false;
@@ -25,5 +25,8 @@ public class Mood {
 	}
 	public void setNumLoops(int num){
 		numLoops = Math.max(0, Math.min(127, num));
+	}
+	public int getNumLoops(){
+		return numLoops;
 	}
 }

@@ -49,7 +49,7 @@ public class Tests {
 			Log.e("tests",tNum+"numChannelsNotEqual");
 			return false;
 		}
-		if(m1.numLoops!=m2.numLoops){
+		if(m1.getNumLoops()!=m2.getNumLoops()){
 			Log.e("tests",tNum+"numLoopsNotEqual");
 			return false;
 		}
@@ -104,16 +104,17 @@ public class Tests {
 		m.numChannels=3;
 		m.events = eRay;
 		Log.e("tests","2"+test(2,m,null));
+		e3.time = 2;
 		m.usesTiming=true;
-		m.numLoops=98;
 		Log.e("tests","3"+test(3,m,null));
-		m.numLoops=127;
-		m.setInfiniteLooping(true);
+		m.setNumLoops(98);
 		Log.e("tests","4"+test(4,m,null));
-		m.timeAddressingRepeatPolicy=true;
+		m.setInfiniteLooping(true);
 		Log.e("tests","5"+test(5,m,null));
+		m.timeAddressingRepeatPolicy=true;
+		Log.e("tests","6"+test(6,m,null));
 		Integer[] bulbs = {1, 3, 14};
-		Log.e("tests","6"+test(6,m,bulbs));
+		Log.e("tests","7"+test(7,m,bulbs));
 		
 		/** bitSet to encoding test **/
 		/*{
