@@ -11,6 +11,70 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Tests {
+	
+	public static Boolean test(int tNum, Mood m1, Integer[] b1){
+		
+		Mood m2 = null;
+		Integer[] b2 = null;
+		if(b1!=null){
+			m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).second;
+			b2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).first;
+		}
+		else
+			m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1)).second;
+		
+		if(b1!=null){
+			if(b1.length!=b2.length){
+				Log.e("tests",tNum+"bulbLengthNotEqual");
+			}
+			for(int i = 0; i<b1.length; i++)
+				if(b1[i]!=b2[i]){
+					Log.e("tests",tNum+"bulb@spot"+i+" FlagNotEqual");
+					return false;
+				}
+		}
+		if(m1.infiniteLooping!=m2.infiniteLooping){
+			Log.e("tests",tNum+"infiniteLoopingNotEqual");
+			return false;
+		}
+		if(m1.timeAddressingRepeatPolicy!=m2.timeAddressingRepeatPolicy){
+			Log.e("tests",tNum+"timeAddressingRepeatPolicyNotEqual");
+			return false;
+		}
+		if(m1.usesTiming!=m2.usesTiming){
+			Log.e("tests",tNum+"usesTimingNotEqual");
+			return false;
+		}
+		if(m1.numChannels!=m2.numChannels){
+			Log.e("tests",tNum+"numChannelsNotEqual");
+			return false;
+		}
+		if(m1.numLoops!=m2.numLoops){
+			Log.e("tests",tNum+"numLoopsNotEqual");
+			return false;
+		}
+		if(m1.events.length!=m2.events.length){
+			Log.e("tests",tNum+"numEventsNotEqual");
+			return false;
+		}
+		for(int i = 0; i<m1.events.length; i++){
+			if(m1.events[i].channel!=m2.events[i].channel){
+				Log.e("tests",tNum+"event"+i+"ChannelNotEqual");
+				return false;
+			}
+			if(m1.events[i].time!=m2.events[i].time){
+				Log.e("tests",tNum+"event"+i+"TimeNotEqual");
+				return false;
+			}
+			if(m1.events[i].state.toString()!=m2.events[i].state.toString()){
+				Log.e("tests",tNum+"event"+i+"StateNotEqual");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 	public static void tests() {
 		BulbState bs = new BulbState();
 		bs.on=true;

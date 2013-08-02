@@ -315,7 +315,7 @@ public class HueUrlEncoder {
 		return bs;
 	}
 	
-	public static Pair<Integer[], Mood> decode(String code, boolean expectBulbs){
+	public static Pair<Integer[], Mood> decode(String code){
 		Mood mood = new Mood();
 		ArrayList<Integer> bList = new ArrayList<Integer>();
 		ManagedBitSet mBitSet = new ManagedBitSet(code);
@@ -324,7 +324,8 @@ public class HueUrlEncoder {
 		int encodingVersion = mBitSet.extractNumber(3);
 		
 		//1 bit optional bulb inclusion flags flag
-		if(mBitSet.incrementingGet()){
+		boolean hasBulbs = mBitSet.incrementingGet();
+		if(hasBulbs){
 			//50 bits of optional bulb inclusion flags
 			for (int i = 0; i < 50; i++)
 				if (mBitSet.incrementingGet())
@@ -392,7 +393,7 @@ public class HueUrlEncoder {
 		}
 		
 		Integer[] bulbs=null;
-		if(expectBulbs){
+		if(hasBulbs){
 			bulbs = new Integer[bList.size()];
 			for(int i = 0; i<bList.size(); i++)
 				bulbs[i]=bList.get(i);
@@ -402,8 +403,7 @@ public class HueUrlEncoder {
 	}
 	
 	public static String legacyEncode(Integer[] bulbS, BulbState[] bsRay) {
-		Mood m = new Mood();
-		
+		//TODO replace
 		return "";
 	}
 
