@@ -10,4 +10,12 @@ public class Mood {
 	/** max value 126 (127 special cased to infinity) **/
 	public Integer numLoops;
 	
+	public Mood(){
+		timeAddressingRepeatPolicy = false;
+		usesTiming = false;
+		infiniteLooping = false;
+		numChannels = 0;
+		numLoops = 0;
+		events = new Event[0];
+	}
 }

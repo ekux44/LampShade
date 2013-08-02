@@ -371,6 +371,8 @@ public class HueUrlEncoder {
 				e.time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
 				
 				e.state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
+				
+				eList[i] = e;
 			}
 			mood.events=eList;
 			

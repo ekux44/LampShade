@@ -66,7 +66,9 @@ public class Tests {
 				Log.e("tests",tNum+"event"+i+"TimeNotEqual");
 				return false;
 			}
-			if(m1.events[i].state.toString()!=m2.events[i].state.toString()){
+			if(!m1.events[i].state.toString().equals(m2.events[i].state.toString())){
+				Log.e("tests",m1.events[i].state.toString());
+				Log.e("tests",m2.events[i].state.toString());
 				Log.e("tests",tNum+"event"+i+"StateNotEqual");
 				return false;
 			}
@@ -76,6 +78,7 @@ public class Tests {
 	}
 	
 	public static void tests() {
+		
 		BulbState bs = new BulbState();
 		bs.on=true;
 		bs.bri=80;
@@ -95,25 +98,22 @@ public class Tests {
 		e3.channel = 2;
 		e3.time=0;
 		
-		Event[] eRay = {e1,e2,e1,e1,e1,e3};
+		Event[] eRay = {e1,e2,e3,e1,e1,e3, e2};
 		Mood m = new Mood();
+		Log.e("tests","1"+test(1,m,null));
+		m.numChannels=3;
 		m.events = eRay;
-		m.infiniteLooping=true;
-		m.numChannels=51;
+		Log.e("tests","2"+test(2,m,null));
+		m.usesTiming=true;
 		m.numLoops=98;
+		Log.e("tests","3"+test(3,m,null));
+		m.numLoops=127;
+		m.infiniteLooping=true;
+		Log.e("tests","4"+test(4,m,null));
 		m.timeAddressingRepeatPolicy=true;
-		m.usesTiming=false;
-		
-		
-		
-		Log.e("test1",HueUrlEncoder.encode(m));
-		Mood output = HueUrlEncoder.decode(HueUrlEncoder.encode(m)).second;
-		Log.e("test1","numChannels:"+output.numChannels);
-		Log.e("test1","timeAddressingRepeatPolicy:"+output.timeAddressingRepeatPolicy);
-		Log.e("test1","numLoops:"+output.numLoops);
-		Log.e("test1","infiniteLooping:"+output.infiniteLooping);
-		Log.e("test1", "usesTiming:"+output.usesTiming);
-		Log.e("test1","numEvents:"+output.events.length);
+		Log.e("tests","5"+test(5,m,null));
+		Integer[] bulbs = {1, 3, 14};
+		Log.e("tests","6"+test(6,m,bulbs));
 		
 		/** bitSet to encoding test **/
 		/*{
