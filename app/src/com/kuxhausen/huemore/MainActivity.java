@@ -520,8 +520,6 @@ public class MainActivity extends GodObject implements
 		}
 		
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
-			databaseHelper.initialPopulate();// initialize database
-
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.FIRST_RUN, false);
@@ -545,7 +543,6 @@ public class MainActivity extends GodObject implements
 			edit.commit();
 		}
 		if (!settings.contains(PreferencesKeys.TWO_POINT_ONE_UPDATE)) {
-			databaseHelper.updatedTwoPointOne();
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_UPDATE, false);

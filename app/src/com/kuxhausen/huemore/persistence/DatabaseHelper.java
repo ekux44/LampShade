@@ -40,14 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
 	}
 
-	public void initialPopulate() {
-		SQLiteDatabase db = this.getWritableDatabase();
-
-		ContentValues cv = new ContentValues();
-		BulbState hs = new BulbState();
-
-	}
-
+	
 	public void updatedPopulate() {
 
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -131,9 +124,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 				+ AlarmColumns.STATE + " TEXT,"
 				+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
-	}
-
-	public void updatedTwoPointOne() {
 	}
 
 	public void updatedTwoPointOnePointOne() {
@@ -237,7 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS notes");
+		//db.execSQL("DROP TABLE IF EXISTS notes");
 		onCreate(db);
 	}
 }
