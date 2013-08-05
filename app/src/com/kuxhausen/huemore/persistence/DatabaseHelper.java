@@ -189,20 +189,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		cv.put(MoodColumns.STATE, gson.toJson(hs));
 		db.insert(MoodColumns.TABLE_NAME, null, cv);
 
-		cv.put(MoodColumns.MOOD, "Romantic");
-		hs.sat = (254);
-		hs.hue = (64799);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
-		cv.put(MoodColumns.MOOD, "Romantic");
-		hs.sat = (215);
-		hs.hue = (2064);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		db.insert(MoodColumns.TABLE_NAME, null, cv);
 	}
 	public void updatedTwoPointFour() {
 		SQLiteDatabase db = this.getWritableDatabase();
