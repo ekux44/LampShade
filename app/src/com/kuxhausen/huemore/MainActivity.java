@@ -529,14 +529,12 @@ public class MainActivity extends GodObject implements
 			edit.commit();
 		}
 		if (!settings.contains(PreferencesKeys.THIRD_UPDATE)) {
-			databaseHelper.updatedPopulate();
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.THIRD_UPDATE, false);
 			edit.commit();
 		}
 		if (!settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE)) {
-			databaseHelper.updatedTwoPointOh();
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_OH_UPDATE, false);
@@ -549,7 +547,6 @@ public class MainActivity extends GodObject implements
 			edit.commit();
 		}
 		if (!settings.contains(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE)) {
-			databaseHelper.updatedTwoPointOnePointOne();
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE,
@@ -562,7 +559,6 @@ public class MainActivity extends GodObject implements
 			edit.commit();
 		}
 		if (!settings.contains(PreferencesKeys.TWO_POINT_FOUR_UPDATE)) {
-			databaseHelper.updatedTwoPointFour();
 			// Mark no longer first update in preferences cache
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.TWO_POINT_FOUR_UPDATE, false);
