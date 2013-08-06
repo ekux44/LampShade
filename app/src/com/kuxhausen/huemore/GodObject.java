@@ -19,6 +19,8 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public abstract class GodObject extends NetworkManagedSherlockFragmentActivity implements OnMoodSelectedListener, OnAttributeListReturnedListener{
@@ -31,7 +33,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	
 	private CountDownTimer countDownTimer;
 	private boolean hasChanged = false;
-	private String[] previewStates;
+	private Mood previewStates;
 	
 	
 	public void restartCountDownTimer(){
@@ -81,8 +83,8 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 
 	}
 	
-	public void updatePreview(String[] states){
-		previewStates = states;
+	public void updatePreview(Mood mood){
+		previewStates = mood;
 		hasChanged = true;
 	}
 	
@@ -158,9 +160,9 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 * 
 	 * @param states
 	 */
-	public void testMood(String[] states) {
+	public void testMood(Mood m) {
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, states);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
 	}
 
 	private void pushMoodGroup() {
@@ -169,7 +171,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { mood };
-		Cursor cursor = getContentResolver().query(
+		Cursor moodCursor = getContentResolver().query(
 				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
 																// default
 																// content
@@ -182,15 +184,10 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 				null // Use the default sort order.
 				);
 
-		ArrayList<String> moodStates = new ArrayList<String>();
-		while (cursor.moveToNext()) {
-			moodStates.add(cursor.getString(0));
-		}
-		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-		
+		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
 		
 		// TODO clean up after development
 		/*

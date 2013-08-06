@@ -25,13 +25,14 @@ import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements
 		OnCheckedChangeListener, OnClickListener {
 
 	Gson gson = new Gson();
-	String[] stateS = null;
 	Integer[] bulbS = null;
 	ToggleButton onButton;
 	Button doneButton;
@@ -76,19 +77,11 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				// System.out.println(data);
 				data = data.substring(data.indexOf('?') + 1);
 				// System.out.println(data);
-				Pair<Integer[], BulbState[]> result = HueUrlEncoder
-						.legacyDecode(data);
+				Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
 				bulbS = result.first;
-				stateS = new String[result.second.length];
-
-				for (int i = 0; i < result.second.length; i++) {
-					stateS[i] = gson.toJson(result.second[i]);
-					System.out.println(bulbS[i]);
-				}
-				NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, stateS);
-				if (gson.fromJson(stateS[0], BulbState.class) != null)
-					onButton.setChecked(gson.fromJson(stateS[0],
-							BulbState.class).on);
+				Mood m = result.second;
+				NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
+				onButton.setChecked(m.events[0].state.on);
 			}
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -123,8 +116,20 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
-		String[] bsRay = new String[] { gson.toJson(bs) };
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, bsRay);
+		
+		//boilerplate
+		Event e = new Event();
+		e.channel=0;
+		e.time=0;
+		e.state=bs;
+		Event[] eRay = {e};
+		//more boilerplate
+		Mood m = new Mood();
+		m.numChannels=1;
+		m.usesTiming = false;
+		m.events = eRay;		
+		
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
 	}
 
 	@Override

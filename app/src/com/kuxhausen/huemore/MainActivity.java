@@ -34,6 +34,8 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
@@ -110,8 +112,20 @@ public class MainActivity extends GodObject implements
 					BulbState hs = new BulbState();
 					hs.bri = seekBar.getProgress();
 					hs.on = true;
-					String[] brightnessState = { gson.toJson(hs) };
-					parrentActivity.updatePreview(brightnessState);
+					
+					//boilerplate
+					Event e = new Event();
+					e.channel=0;
+					e.time=0;
+					e.state=hs;
+					Event[] eRay = {e};
+					//more boilerplate
+					Mood m = new Mood();
+					m.numChannels=1;
+					m.usesTiming = false;
+					m.events = eRay;
+					
+					parrentActivity.updatePreview(m);
 					isTrackingTouch = false;
 				}
 
@@ -120,8 +134,20 @@ public class MainActivity extends GodObject implements
 					BulbState hs = new BulbState();
 					hs.bri = seekBar.getProgress();
 					hs.on = true;
-					String[] brightnessState = { gson.toJson(hs) };
-					parrentActivity.updatePreview(brightnessState);
+					
+					//boilerplate
+					Event e = new Event();
+					e.channel=0;
+					e.time=0;
+					e.state=hs;
+					Event[] eRay = {e};
+					//more boilerplate
+					Mood m = new Mood();
+					m.numChannels=1;
+					m.usesTiming = false;
+					m.events = eRay;
+					
+					parrentActivity.updatePreview(m);
 					isTrackingTouch = true;
 				}
 
@@ -132,8 +158,20 @@ public class MainActivity extends GodObject implements
 						BulbState hs = new BulbState();
 						hs.bri = progress;
 						hs.on = true;
-						String[] brightnessState = { gson.toJson(hs) };
-						parrentActivity.updatePreview(brightnessState);
+						
+						//boilerplate
+						Event e = new Event();
+						e.channel=0;
+						e.time=0;
+						e.state=hs;
+						Event[] eRay = {e};
+						//more boilerplate
+						Mood m = new Mood();
+						m.numChannels=1;
+						m.usesTiming = false;
+						m.events = eRay;
+						
+						parrentActivity.updatePreview(m);
 					}
 				}
 			});

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.Bridge;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.LightsPutResponse;
@@ -20,11 +21,11 @@ import com.kuxhausen.huemore.state.api.RegistrationRequest;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class NetworkMethods {
-	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, Integer[] bulbs, String[] moods){
-		if (cont == null || bulbs == null || moods == null)
+	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, Integer[] bulbs, Mood mood){
+		if (cont == null || bulbs == null || mood == null)
 			return;
-
-		
+		//TODO reimplement with support for Moods
+		/*
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(cont);
 		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
@@ -42,7 +43,7 @@ public class NetworkMethods {
 				new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
 		req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
-		}
+		}*/
 	}
 	
 	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, int bulbNum, BulbAttributes bulbAtt){

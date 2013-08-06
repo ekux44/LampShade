@@ -28,6 +28,7 @@ import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActivity implements
@@ -147,6 +148,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		}
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
+		//Look up mood from database
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { ((TextView) moodSpinner.getSelectedView())
 				.getText().toString() };
@@ -162,21 +164,15 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				null // Use the default sort order.
 				);
 
-		ArrayList<String> moodStates = new ArrayList<String>();
-		while (moodCursor.moveToNext()) {
-			moodStates.add(moodCursor.getString(0));
-		}
-		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-
+		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		
 		int brightness = brightnessBar.getProgress();
-		for (int i = 0; i < moodS.length; i++) {
-			BulbState bs = gson.fromJson(moodS[i], BulbState.class);
-			bs.bri = brightness;
-			moodS[i] = gson.toJson(bs);// put back into json string for Transmit
-										// Group Mood
+		for (int i = 0; i < m.events.length; i++) {
+			//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
+			m.events[i].state.bri = brightness;
 		}
 
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
 	}
 
 	public String getSerializedByNamePreview() {

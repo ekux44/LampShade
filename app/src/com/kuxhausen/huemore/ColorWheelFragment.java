@@ -19,6 +19,8 @@ import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.SaturationBar;
@@ -145,8 +147,20 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	public void preview() {
 		if(isAdded()){
-			String[] states = { gson.toJson(hs) };
-			((GodObject)this.getActivity()).updatePreview(states);
+			
+			//boilerplate
+			Event e = new Event();
+			e.channel=0;
+			e.time=0;
+			e.state=hs;
+			Event[] eRay = {e};
+			//more boilerplate
+			Mood m = new Mood();
+			m.numChannels=1;
+			m.usesTiming = false;
+			m.events = eRay;
+			
+			((GodObject)this.getActivity()).updatePreview(m);
 		}
 	}
 

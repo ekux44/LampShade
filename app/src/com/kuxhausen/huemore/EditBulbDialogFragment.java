@@ -13,6 +13,8 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -62,13 +64,24 @@ public class EditBulbDialogFragment extends DialogFragment {
 			bulbNumber = args.getInt(InternalArguments.BULB_NUMBER);
 			nameEditText.setText(groupName);
 		}
-
+		
 		BulbState bs = new BulbState();
 		bs.alert = "lselect";
 		bs.on = true;
-		String[] moodS = { gson.toJson(bs) };
+		//boilerplate
+		Event e = new Event();
+		e.channel=0;
+		e.time=0;
+		e.state=bs;
+		Event[] eRay = {e};
+		//more boilerplate
+		Mood m = new Mood();
+		m.numChannels=1;
+		m.usesTiming = false;
+		m.events = eRay;
+		
 		Integer[] bulbS = { bulbNumber };
-		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, moodS);
+		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, m);
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -82,9 +95,20 @@ public class EditBulbDialogFragment extends DialogFragment {
 						
 						BulbState bs = new BulbState();
 						bs.alert = "none";
-						String[] moodS = { gson.toJson(bs) };
+						//boilerplate
+						Event e = new Event();
+						e.channel=0;
+						e.time=0;
+						e.state=bs;
+						Event[] eRay = {e};
+						//more boilerplate
+						Mood m = new Mood();
+						m.numChannels=1;
+						m.usesTiming = false;
+						m.events = eRay;
+						
 						Integer[] bulbS = { bulbNumber };
-						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, moodS);
+						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, m);
 						
 						bulbF.refreshList();
 					}
