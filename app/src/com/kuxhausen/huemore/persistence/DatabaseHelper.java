@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.persistence;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -14,12 +15,14 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	Gson gson = new Gson();
 
 	public DatabaseHelper(Context context) {
@@ -46,17 +49,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch(oldVersion){
 		case 1:
+			SQLiteDatabase writableDB = this.getWritableDatabase();
 			/**updatedPopulate()**/
 			String[] mSelectionArgs = { "OFF", "Reading", "Relax", "Concentrate",
 					"Energize" };
-			db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
+			writableDB.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
 					+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
 			String[] gSelectionArgs = { "ALL",
 					DatabaseDefinitions.PreferencesKeys.ALL };
-			db.delete(GroupColumns.TABLE_NAME,
+			writableDB.delete(GroupColumns.TABLE_NAME,
 					DatabaseDefinitions.GroupColumns.GROUP + "=? or "
 							+ DatabaseDefinitions.GroupColumns.GROUP + "=?",
 					gSelectionArgs);
@@ -71,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Energize");
@@ -80,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Relax");
@@ -89,7 +93,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Concentrate");
@@ -98,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Sunset");
@@ -107,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Sunset");
 			hs.sat = (202);
@@ -115,10 +119,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 			
 			/**updatedTwoPointOh**/
-			db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " ("
+			writableDB.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " ("
 					+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 					+ AlarmColumns.STATE + " TEXT,"
 					+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
@@ -127,7 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			String[] temp = { "Red", "Orange", "Blue", "Romantic",
 			"Rainbow" };
 			mSelectionArgs = temp;
-			db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
+			writableDB.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
 					+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
@@ -141,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Deep Sea");
 			hs.sat = (230);
@@ -149,7 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Deep Sea");
 			hs.sat = (253);
@@ -157,7 +161,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 		
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Fruit");
@@ -166,7 +170,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 			cv.clear();
 			cv.put(MoodColumns.MOOD, "Fruit");
 			hs.sat = (254);
@@ -174,32 +178,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 			cv.put(MoodColumns.MOOD, "Fruit");
 			hs.sat = (173);
 			hs.hue = (64684);
 			hs.on = true;
 			hs.effect = "none";
 			cv.put(MoodColumns.STATE, gson.toJson(hs));
-			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 
 			/**updatedTwoPointFour**/
 			String[] temp2 = {((char) 8) + "OFF", ((char) 8) + "ON", ((char) 8) + "RANDOM"};
 			mSelectionArgs = temp2;
-			db.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
+			writableDB.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
 					+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
 			
-			/*
+			
+			
+			/** update 2.4/2.5/switch to serialized b64 **/
+			
 			String[] moodColumns = {MoodColumns.MOOD, MoodColumns.STATE};
 			Cursor cursor = db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null, null, null);
 			
-			ArrayList<String> moodStates = new ArrayList<String>();
+			HashMap<String,ArrayList<String>> moodStateMap = new HashMap<String,ArrayList<String>>();
+			
 			while (cursor.moveToNext()) {
-				moodStates.add(cursor.getString(0));
+				String mood = cursor.getString(0);
+				String state = cursor.getString(1);
+				if(mood!=null && state!=null && !mood.equals("") && !state.equals("") && !state.equals("{}")){
+					ArrayList<String> states;
+					if(moodStateMap.containsKey(mood))
+						states = moodStateMap.get(mood);
+					else
+						states =  new ArrayList<String>();
+					states.add(state);
+					moodStateMap.put(mood, states);
+				}
 			}
-			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-			*/
+			db.execSQL("DROP TABLE " + MoodColumns.TABLE_NAME);
+			
+			db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
+					+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
+					+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
+					+ MoodColumns.STATE + " TEXT" + ");");
+
+			
+			for(String key : moodStateMap.keySet()){
+				ArrayList<String> stateStrings = moodStateMap.get(key);
+				Event[] events = new Event[stateStrings.size()];
+				for(int i = 0; i< stateStrings.size(); i++){
+					Event e = new Event();
+					e.state = gson.fromJson(stateStrings.get(i), BulbState.class);
+					e.time=0;
+					e.channel=i;
+				}
+				Mood m = new Mood();
+				m.usesTiming=false;
+				m.timeAddressingRepeatPolicy=false;
+				m.numChannels = stateStrings.size();
+				m.events = events;
+				
+				cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
+				db.insert(MoodColumns.TABLE_NAME, null, cv);
+			}
 		}
 
 	}
