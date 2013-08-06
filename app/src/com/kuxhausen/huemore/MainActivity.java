@@ -622,7 +622,7 @@ public class MainActivity extends GodObject implements
 		}
 		if (!settings.contains(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS)) {
 			Editor edit = settings.edit();
-			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,0);
+			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,1);
 			edit.commit();
 		}
 	}

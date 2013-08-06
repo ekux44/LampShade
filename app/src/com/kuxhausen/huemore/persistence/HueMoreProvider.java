@@ -301,13 +301,15 @@ public class HueMoreProvider extends ContentProvider {
 			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_all))){
 				
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-				int numBulbs = settings.getInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS, 0);
+				int numBulbs = settings.getInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS, 1);
 				
-				String[] groupColumns = { GroupColumns.GROUP, GroupColumns.BULB };
+				//TODO dynamically handle columns to return
+				//String[] groupColumns = { GroupColumns.GROUP, GroupColumns.BULB };
+				String[] groupColumns = { GroupColumns.BULB };
 				MatrixCursor mc = new MatrixCursor(groupColumns);
 				
 				for(int i = 0; i< numBulbs; i++){
-					Object[] tempRow = {this.getContext().getString(R.string.cap_all), i +1};
+					Object[] tempRow = {i +1};
 					mc.addRow(tempRow);
 				}
 				
