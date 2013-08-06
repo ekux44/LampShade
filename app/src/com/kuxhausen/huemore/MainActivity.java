@@ -582,6 +582,11 @@ public class MainActivity extends GodObject implements
 			dhdf.show(this.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
+		if (!settings.contains(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS)) {
+			Editor edit = settings.edit();
+			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,0);
+			edit.commit();
+		}
 	}
 
 	private void initializeBillingCode(){

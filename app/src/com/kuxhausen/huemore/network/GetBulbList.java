@@ -16,6 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import com.google.gson.Gson;
@@ -111,23 +112,11 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 		mResultListener.onListReturned(result);
 
 		if(result!=null && result.length>0){
-			String groupSelect = GroupColumns.GROUP + "=?";
-			String[] groupArg = { PreferencesKeys.ALL };
-			cont.getContentResolver().delete(
-					GroupColumns.GROUPBULBS_URI,
-					groupSelect, groupArg);
-
-			for(int i = 1; i< (result.length+1); i++){
-				
-				ContentValues mNewValues = new ContentValues();
-
-				mNewValues.put(GroupColumns.GROUP, PreferencesKeys.ALL);
-				mNewValues.put(GroupColumns.BULB, i);
-				mNewValues.put(GroupColumns.PRECEDENCE,i);
-
-				cont.getContentResolver().insert(GroupColumns.GROUPS_URI, mNewValues);
-
-			}
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(cont);
+			Editor edit = settings.edit();
+			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,result.length);
+			edit.commit();
+			
 			tracker.setHubConnectionState(true);
 		} else{
 			tracker.setHubConnectionState(false);

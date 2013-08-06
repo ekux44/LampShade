@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -12,10 +13,13 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.R;
 
@@ -294,6 +298,22 @@ public class HueMoreProvider extends ContentProvider {
 			break;
 
 		case GROUPBULBS:
+			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_all))){
+				
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+				int numBulbs = settings.getInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS, 0);
+				
+				String[] groupColumns = { GroupColumns.GROUP, GroupColumns.BULB };
+				MatrixCursor mc = new MatrixCursor(groupColumns);
+				
+				for(int i = 0; i< numBulbs; i++){
+					Object[] tempRow = {this.getContext().getString(R.string.cap_all), i +1};
+					mc.addRow(tempRow);
+				}
+				
+				mc.setNotificationUri(getContext().getContentResolver(), uri);
+				return mc;
+			}
 			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
 			groupBy = null;
@@ -364,6 +384,14 @@ public class HueMoreProvider extends ContentProvider {
 			c1.addRow(tempCol1);
 			Object[] tempCol2 = {this.getContext().getString(R.string.cap_random),0};
 			c1.addRow(tempCol2);
+			
+			Cursor[] tempC = {c1,c2};
+			cRay = tempC;
+		}else if(sUriMatcher.match(uri) == GROUPS){
+			String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
+			MatrixCursor c1 = new MatrixCursor(columns);
+			Object[] tempCol0 = {this.getContext().getString(R.string.cap_all),0};
+			c1.addRow(tempCol0);
 			
 			Cursor[] tempC = {c1,c2};
 			cRay = tempC;

@@ -58,8 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
 					+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
-			String[] gSelectionArgs = { "ALL",
-					DatabaseDefinitions.PreferencesKeys.ALL };
+			String[] gSelectionArgs = { "ALL", ((char) 8) + "ALL" };
 			writableDB.delete(GroupColumns.TABLE_NAME,
 					DatabaseDefinitions.GroupColumns.GROUP + "=? or "
 							+ DatabaseDefinitions.GroupColumns.GROUP + "=?",

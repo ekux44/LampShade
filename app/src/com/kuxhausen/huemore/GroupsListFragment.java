@@ -129,7 +129,7 @@ public class GroupsListFragment extends SherlockListFragment implements
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (longSelected.getText().equals(PreferencesKeys.ALL)) {
+		if (longSelected.getText().equals(this.getActivity().getString(R.string.cap_all))) {
 			return;
 		}
 		android.view.MenuInflater inflater = this.getActivity()
