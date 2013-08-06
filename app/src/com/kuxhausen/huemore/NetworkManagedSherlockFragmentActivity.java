@@ -19,7 +19,7 @@ public class NetworkManagedSherlockFragmentActivity extends
 			hasHubConnection = connected;
 			onConnectionStatusChanged();
 		}
-		Log.e("setHubConnection", ""+connected);
+		//Log.e("setHubConnection", ""+connected);
 	}
 	public boolean hasHubConnection(){
 		return hasHubConnection;
