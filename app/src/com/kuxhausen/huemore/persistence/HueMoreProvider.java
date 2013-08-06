@@ -20,13 +20,14 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.R;
 
 public class HueMoreProvider extends ContentProvider {
 
 	DatabaseHelper mOpenHelper;
-	Gson gson = new Gson();
 
 	/**
 	 * A projection map used to select columns from the database
@@ -340,9 +341,23 @@ public class HueMoreProvider extends ContentProvider {
 					resultState.on = false;
 					resultState.effect = "none";
 				}
+				//boilerplate
+				Event e = new Event();
+				e.channel=0;
+				e.time=0;
+				e.state=resultState;
+				Event[] eRay = {e};
+				//more boilerplate
+				Mood m = new Mood();
+				m.numChannels=1;
+				m.usesTiming = false;
+				m.events = eRay;
+				
+				
+				
 				String[] moodColumns = { MoodColumns.STATE };
 				MatrixCursor mc = new MatrixCursor(moodColumns);
-				Object[] tempRow = {gson.toJson(resultState)};
+				Object[] tempRow = {HueUrlEncoder.encode(m)};
 				mc.addRow(tempRow);
 				mc.setNotificationUri(getContext().getContentResolver(), uri);
 				return mc;
