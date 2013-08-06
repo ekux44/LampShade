@@ -399,14 +399,4 @@ public class HueUrlEncoder {
 				
 		return new Pair<Integer[], Mood>(bulbs, mood);
 	}
-	
-	public static String legacyEncode(Integer[] bulbS, BulbState[] bsRay) {
-		//TODO replace
-		return "";
-	}
-
-	public static Pair<Integer[], BulbState[]> legacyDecode(String encoded) {
-		//TODO remove
-		return null;
-	}
 }

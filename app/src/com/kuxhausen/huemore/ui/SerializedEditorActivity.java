@@ -227,6 +227,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		}
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
+		
+		//Look up mood from database
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWereClause = { ((TextView) moodSpinner.getSelectedView())
 				.getText().toString() };
@@ -241,23 +243,16 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				mWereClause, // election clause args
 				null // Use the default sort order.
 				);
-
-		ArrayList<String> moodStates = new ArrayList<String>();
-		while (moodCursor.moveToNext()) {
-			moodStates.add(moodCursor.getString(0));
-		}
-		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-		BulbState[] bsRay = new BulbState[moodS.length];
-
+		moodCursor.moveToFirst();
+		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		
 		int brightness = brightnessBar.getProgress();
-		for (int i = 0; i < moodS.length; i++) {
-			System.out.println(moodS[i]);
-			bsRay[i] = gson.fromJson(moodS[i], BulbState.class);
-			bsRay[i].bri = brightness;
-			System.out.println(bsRay[i]);
+		for (int i = 0; i < m.events.length; i++) {
+			//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
+			m.events[i].state.bri = brightness;
 		}
-
-		String data = HueUrlEncoder.legacyEncode(bulbS, bsRay);
+		
+		String data = HueUrlEncoder.encode(m, bulbS);
 		return url + data;
 	}
 
