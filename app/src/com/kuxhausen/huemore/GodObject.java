@@ -183,7 +183,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 				mWereClause, // election clause args
 				null // Use the default sort order.
 				);
-
+		moodCursor.moveToFirst();
 		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);

@@ -163,7 +163,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				mWereClause, // election clause args
 				null // Use the default sort order.
 				);
-
+		moodCursor.moveToFirst();
 		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
 		
 		int brightness = brightnessBar.getProgress();
