@@ -12,7 +12,7 @@ public class Mood {
 	public Mood(){
 		timeAddressingRepeatPolicy = false;
 		usesTiming = false;
-		numChannels = 0;
+		numChannels = 1;
 		numLoops = 0;
 		events = new Event[0];
 	}

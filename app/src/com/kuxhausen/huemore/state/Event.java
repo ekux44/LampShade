@@ -4,8 +4,9 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Event {
 	public BulbState state;
-	/*in units of 1/10 of a second */
+	/**in units of 1/10 of a second */
 	public Integer time;
+	/** 0 indexed **/
 	public Integer channel;
 	
 }
