@@ -25,7 +25,7 @@ public class NetworkMethods {
 		if (cont == null || bulbs == null || mood == null)
 			return;
 		//TODO reimplement with support for Moods
-		/*
+		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(cont);
 		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
@@ -35,15 +35,16 @@ public class NetworkMethods {
 		if (bridge == null)
 			return;
 		
+		Gson gson = new Gson();
 		for (int i = 0; i < bulbs.length; i++) {
-		String url = "http://" + bridge + "/api/" + hash
-				+ "/lights/" + bulbs[i] + "/state";
-		
-		GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,moods[i % moods.length], LightsPutResponse[].class, null,
-				new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
-		req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		mRequestQueue.add(req);
-		}*/
+			String url = "http://" + bridge + "/api/" + hash
+					+ "/lights/" + bulbs[i] + "/state";
+			
+			GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(mood.events[i % mood.events.length].state), LightsPutResponse[].class, null,
+					new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
+			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+			mRequestQueue.add(req);
+		}
 	}
 	
 	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, int bulbNum, BulbAttributes bulbAtt){
