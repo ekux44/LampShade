@@ -377,13 +377,22 @@ public class HueUrlEncoder {
 
 			//7 bit number of states
 			int numStates = mBitSet.extractNumber(7);
-			BulbState[]	stateArray = new BulbState[numStates];
+			Event[]	eventArray = new Event[numStates];
 
 			/** Decode each state **/	
 			for(int i = 0; i<numStates; i++){
+				Event e = new Event();
 				//decode each state
-				stateArray[i] = extractState(mBitSet);
-			}			
+				e.state = extractState(mBitSet);
+				e.channel = i;
+				e.time = 0;
+				eventArray[i] = e;
+			}
+			mood.events = eventArray;
+			mood.numChannels = numStates;
+			mood.timeAddressingRepeatPolicy = false;
+			mood.usesTiming = false;
+			
 		}
 		else{
 			//TODO
