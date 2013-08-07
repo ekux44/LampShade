@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
@@ -62,44 +63,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ DatabaseDefinitions.GroupColumns.GROUP + "=?",
 				gSelectionArgs);
 
-		ContentValues cv = new ContentValues();
 		BulbState hs = new BulbState();
+		
+		//boilerplate
+		Event e = new Event();
+		e.channel=0;
+		e.time=0;
+		e.state=hs;
+		Event[] eRay = {e};
+		//more boilerplate
+		Mood m = new Mood();
+		m.numChannels=1;
+		m.usesTiming = false;
+		m.events = eRay;
+		
+		ContentValues cv = new ContentValues();
+		
 
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Reading");
-		hs.sat = (144);
-		hs.hue = (15331);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Energize");
-		hs.sat = (232);
-		hs.hue = (34495);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Relax");
-		hs.sat = (211);
-		hs.hue = (13122);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Concentrate");
-		hs.sat = (49);
-		hs.hue = (33863);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
 
 		cv.clear();
 		cv.put(MoodColumns.MOOD, "Sunset");
@@ -225,22 +205,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
 					+ MoodColumns.STATE + " TEXT" + ");");
 
+			//remove standard moods that are no longer correct
+			String[] moodsToRemove = {"OFF", "Reading", "Relax", "Concentrate",
+					"Energize", "Red", "Orange", "Blue", "Romantic",
+					"Rainbow", ((char) 8) + "OFF", ((char) 8) + "ON", ((char) 8) + "RANDOM"};
+			
+			for(String removeKey : moodsToRemove){
+				moodStateMap.remove(removeKey);
+			}
+			
+			
+			String[] simpleNames = {"Reading","Relax","Concentrate","Energize"};
+			int[] simpleSat = {144, 211 ,49, 232};
+			int[] simpleHue = {15331, 13122, 33863, 34495};
+			
+			for(int i = 0; i< simpleNames.length; i++){
+				BulbState hs = new BulbState();
+				hs.sat=(short)simpleSat[i];
+				hs.hue=simpleHue[i];
+				hs.on=true;
+				hs.effect="none";
+			
+				ArrayList<String> states = new ArrayList<String>();
+				states.add(gson.toJson(hs));
+				moodStateMap.put(simpleNames[i], states);
+			}
+						
 			
 			for(String key : moodStateMap.keySet()){
-				ArrayList<String> stateStrings = moodStateMap.get(key);
-				Event[] events = new Event[stateStrings.size()];
-				for(int i = 0; i< stateStrings.size(); i++){
+				
+				ArrayList<String> stateJson = moodStateMap.get(key);
+				Event[] events = new Event[stateJson.size()];
+				for(int i = 0; i< stateJson.size(); i++){
 					Event e = new Event();
-					e.state = gson.fromJson(stateStrings.get(i), BulbState.class);
+					e.state = gson.fromJson(stateJson.get(i), BulbState.class);
 					e.time=0;
 					e.channel=i;
+					events[i]=e;
 				}
 				Mood m = new Mood();
 				m.usesTiming=false;
 				m.timeAddressingRepeatPolicy=false;
-				m.numChannels = stateStrings.size();
+				m.numChannels = stateJson.size();
 				m.events = events;
 				
+				cv.put(MoodColumns.MOOD, key);
 				cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
 				db.insert(MoodColumns.TABLE_NAME, null, cv);
 			}
