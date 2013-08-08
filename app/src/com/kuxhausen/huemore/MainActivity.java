@@ -557,6 +557,12 @@ public class MainActivity extends GodObject implements
 			}
 		}
 		
+		/*{ debug mode only
+			Editor edit = settings.edit();
+			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, 50);
+			edit.commit();
+		}*/
+		
 		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
