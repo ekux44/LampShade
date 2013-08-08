@@ -158,7 +158,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 			m.events[i].state.bri = brightness;
 		}
 
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
 	}
 
 	public String getSerializedByNamePreview() {

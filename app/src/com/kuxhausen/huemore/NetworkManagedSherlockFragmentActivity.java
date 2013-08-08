@@ -5,15 +5,17 @@ import android.util.Log;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class NetworkManagedSherlockFragmentActivity extends
-		SherlockFragmentActivity {
+		SherlockFragmentActivity implements ConnectionMonitor{
 
 	private RequestQueue volleyRQ;
 
 	private boolean hasHubConnection = false;
 	
+	@Override
 	public void setHubConnectionState(boolean connected){
 		if(hasHubConnection!=connected){
 			hasHubConnection = connected;

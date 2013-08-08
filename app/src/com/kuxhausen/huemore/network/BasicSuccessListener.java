@@ -5,9 +5,9 @@ import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 
 public class BasicSuccessListener<T> implements Listener<T>{
 	
-	NetworkManagedSherlockFragmentActivity parrent;
+	ConnectionMonitor parrent;
 
-	public BasicSuccessListener(NetworkManagedSherlockFragmentActivity parrentA){
+	public BasicSuccessListener(ConnectionMonitor parrentA){
 		parrent = parrentA;
 	}
 

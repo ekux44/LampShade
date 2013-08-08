@@ -21,7 +21,7 @@ import com.kuxhausen.huemore.state.api.RegistrationRequest;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class NetworkMethods {
-	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, Integer[] bulbs, Mood mood){
+	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, Context cont, ConnectionMonitor monitor, Integer[] bulbs, Mood mood){
 		if (cont == null || bulbs == null || mood == null)
 			return;
 		//TODO reimplement with support for Moods
@@ -41,13 +41,13 @@ public class NetworkMethods {
 					+ "/lights/" + bulbs[i] + "/state";
 			
 			GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(mood.events[i % mood.events.length].state), LightsPutResponse[].class, null,
-					new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
+					new BasicSuccessListener<LightsPutResponse[]>(monitor), new BasicErrorListener(monitor));
 			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 			mRequestQueue.add(req);
 		}
 	}
 	
-	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, NetworkManagedSherlockFragmentActivity cont, int bulbNum, BulbAttributes bulbAtt){
+	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, Context cont, ConnectionMonitor monitor, int bulbNum, BulbAttributes bulbAtt){
 		if (cont == null || bulbAtt == null)
 			return;
 
@@ -65,7 +65,7 @@ public class NetworkMethods {
 		String url = "http://" + bridge + "/api/" + hash + "/lights/" + bulbNum;
 		
 		GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(bulbAtt), LightsPutResponse[].class, null,
-				new BasicSuccessListener<LightsPutResponse[]>(cont), new BasicErrorListener(cont));
+				new BasicSuccessListener<LightsPutResponse[]>(monitor), new BasicErrorListener(monitor));
 		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		mRequestQueue.add(req);
 	}

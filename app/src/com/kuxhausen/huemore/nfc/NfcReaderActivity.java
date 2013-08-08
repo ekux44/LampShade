@@ -80,7 +80,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
 				bulbS = result.first;
 				Mood m = result.second;
-				NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
+				NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
 				onButton.setChecked(m.events[0].state.on);
 			}
 		}
@@ -129,7 +129,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		m.usesTiming = false;
 		m.events = eRay;		
 		
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
 	}
 
 	@Override

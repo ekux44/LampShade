@@ -163,7 +163,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 */
 	public void testMood(Mood m) {
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, this, bulbS, m);
 	}
 
 	private void pushMoodGroup() {
@@ -173,7 +173,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		Mood m = Utils.getMoodFromDatabase(mood, this);
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, this, bulbS, m);
 		
 		// TODO clean up after development
 		/*

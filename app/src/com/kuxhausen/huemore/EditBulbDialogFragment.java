@@ -72,7 +72,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		Mood m = Utils.generateSimpleMood(bs);
 		
 		Integer[] bulbS = { bulbNumber };
-		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, m);
+		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, parrentActivity, bulbS, m);
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -82,7 +82,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 						BulbAttributes bAttrs = new BulbAttributes();
 						bAttrs.name = nameEditText.getText().toString();
 						
-						NetworkMethods.PreformSetBulbAttributes(parrentActivity.getRequestQueue(), parrentActivity, bulbNumber, bAttrs);
+						NetworkMethods.PreformSetBulbAttributes(parrentActivity.getRequestQueue(), parrentActivity, parrentActivity, bulbNumber, bAttrs);
 						
 						BulbState bs = new BulbState();
 						bs.alert = "none";
@@ -90,7 +90,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 						Mood m = Utils.generateSimpleMood(bs);
 						
 						Integer[] bulbS = { bulbNumber };
-						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, m);
+						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, parrentActivity, bulbS, m);
 						
 						bulbF.refreshList();
 					}

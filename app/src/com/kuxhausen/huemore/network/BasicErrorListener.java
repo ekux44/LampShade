@@ -8,9 +8,9 @@ import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 
 public class BasicErrorListener implements ErrorListener{
 	
-	NetworkManagedSherlockFragmentActivity parrent;
+	ConnectionMonitor parrent;
 
-	public BasicErrorListener(NetworkManagedSherlockFragmentActivity parrentA){
+	public BasicErrorListener(ConnectionMonitor parrentA){
 		parrent = parrentA;
 	}
 	
