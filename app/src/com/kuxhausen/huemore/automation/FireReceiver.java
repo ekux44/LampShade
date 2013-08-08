@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.network.SynchronousTransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
@@ -53,8 +52,8 @@ public class FireReceiver extends BroadcastReceiver {
 
 			Mood m = Utils.getMoodFromDatabase(gmb.mood, context);
 			
-//TODO rewrite			
-			int brightness = gmb.brightness;
+//TODO rewrite/renable			
+/*			int brightness = gmb.brightness;
 			for (int i = 0; i < moodS.length; i++) {
 				BulbState bs = gson.fromJson(moodS[i], BulbState.class);
 				bs.bri = brightness;
@@ -64,7 +63,7 @@ public class FireReceiver extends BroadcastReceiver {
 
 			SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
 			trasmitter.execute(context, bulbS, moodS);
-		}
+		*/}
 	}
 
 }

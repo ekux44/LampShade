@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.SynchronousTransmitGroupMood;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -187,7 +186,7 @@ public class AlarmReciever extends BroadcastReceiver {
 			Mood m = Utils.getMoodFromDatabase(as.mood, context);
 			
 //TODO rewrite			
-			int brightness = as.brightness;
+/*			int brightness = as.brightness;
 			int transitiontime = as.transitiontime;
 			for (int i = 0; i < moodS.length; i++) {
 				BulbState bs = gson.fromJson(moodS[i], BulbState.class);
@@ -199,6 +198,6 @@ public class AlarmReciever extends BroadcastReceiver {
 
 			SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
 			trasmitter.execute(context, bulbS, moodS);
-		}
+*/		}
 	}
 }
