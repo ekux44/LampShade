@@ -32,61 +32,8 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	private Integer[] bulbS;
 	private String mood;
 	
-	private CountDownTimer countDownTimer;
-	private boolean hasChanged = false;
-	private Mood previewStates;
-	
-	
-	public void restartCountDownTimer(){
-		if(countDownTimer!=null)
-			countDownTimer.cancel();
-		
-		int numBulbs = 1;
-		if(getBulbs()!=null)
-			numBulbs = getBulbs().length;
-		
-		Log.e("asdf", "count down timer interval rate = "+50*numBulbs);
-		//runs at the rate to execute 20 op/sec
-		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
-				50*(numBulbs)) {
-
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-			@Override
-			public void onTick(long millisUntilFinished) {
-				if(hasChanged){
-					testMood(previewStates);
-					hasChanged = false;	
-				}
-			}
-
-			@Override
-			public void onFinish() {
-				// try one last time
-				if(hasChanged){
-					testMood(previewStates);
-					hasChanged = false;
-				}
-			}
-		};
-		countDownTimer.start();
-
-	}
-	@Override
-	public void onStart(){
-		super.onStart();
-		restartCountDownTimer();
-	}
-	
-	@Override
-	public void onStop() {
-		super.onStop();
-		countDownTimer.cancel();
-
-	}
-	
 	public void updatePreview(Mood mood){
-		previewStates = mood;
-		hasChanged = true;
+		testMood(mood);
 	}
 	
 	class SerializedGodObjectForTransport{
@@ -113,7 +60,6 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	
 	public void setBulbS(Integer[] newBulbS){
 		bulbS = newBulbS;
-		restartCountDownTimer();
 	}
 	public void setGroupS(String newGroupS){
 		groupS = newGroupS;
@@ -162,8 +108,9 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 * @param states
 	 */
 	public void testMood(Mood m) {
-		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, this, bulbS, m);
+		Intent intent = new Intent(this, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+        startService(intent);
 	}
 
 	private void pushMoodGroup() {
@@ -172,14 +119,10 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		
 		Mood m = Utils.getMoodFromDatabase(mood, this);
 		
-		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, this, bulbS, m);
-		
-		// TODO clean up after development
-		/*
-		Intent intent = new Intent(this, MoodExecuter.class);
+		Intent intent = new Intent(this, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
         startService(intent);
-		*/
+		
 		
 	}
 	

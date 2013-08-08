@@ -19,6 +19,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.util.Log;
+import android.util.Pair;
 
 public class MoodExecuterService extends Service {
 
@@ -31,6 +33,7 @@ public class MoodExecuterService extends Service {
 	public void onCreate(){
 		super.onCreate();
 		volleyRQ = Volley.newRequestQueue(this);
+		restartCountDownTimer();
 		
 		Notification notification = new Notification(R.drawable.huemore, "placeholder text",
 		        System.currentTimeMillis());
@@ -49,12 +52,22 @@ public class MoodExecuterService extends Service {
 	
 	@Override
 	public int onStartCommand (Intent intent, int flags, int startId){
+		
+		String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
+		if(encodedMood != null){
+			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedMood);
+			previewStates = decodedValues.second;
+			bulbS = decodedValues.first;
+			hasChanged = true;
+			
+		}
 		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
 	@Override
 	public void onDestroy() {
+		countDownTimer.cancel();
 		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		super.onDestroy();
@@ -65,47 +78,46 @@ public class MoodExecuterService extends Service {
 	
 	
 	private CountDownTimer countDownTimer;
+	private boolean hasChanged = false;
+	private Mood previewStates;
+	private Integer[] bulbS;
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
 			countDownTimer.cancel();
 		
+		int numBulbs = 1;
+		if(bulbS!=null)
+			numBulbs = bulbS.length;
+		
+		Log.e("asdf", "count down timer interval rate = "+50*numBulbs);
 		//runs at the rate to execute 20 op/sec
-		countDownTimer = new CountDownTimer(5000,
-				5000) {
+		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
+				50*(numBulbs)) {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				
+				if(hasChanged){
+					testMood(previewStates);
+					hasChanged = false;	
+				}
 			}
 
 			@Override
 			public void onFinish() {
-				stopSelf();
+				// try one last time
+				if(hasChanged){
+					testMood(previewStates);
+					hasChanged = false;
+				}
 			}
 		};
 		countDownTimer.start();
 
-	}
+	}	
 	
-	private String groupS;	
-	private Integer[] bulbS;
-	private String mood;
-	
-	private void pushMoodGroup() {
-		if (bulbS == null || mood == null)
-			return;
-		
-		Mood m = Utils.getMoodFromDatabase(mood, this);
-		
+	public void testMood(Mood m) {
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-//		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);
-		
-		// TODO clean up after development
-		
-		Intent intent = new Intent(this, MoodExecuterService.class);
-        startService(intent);
-		
-		
+		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
 	}
 }
