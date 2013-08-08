@@ -20,11 +20,11 @@ import android.database.Cursor;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
-public class MoodExecuter extends Service {
+public class MoodExecuterService extends Service {
 
 	private RequestQueue volleyRQ;
 	
-	public MoodExecuter() {
+	public MoodExecuterService() {
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class MoodExecuter extends Service {
 		
 		// TODO clean up after development
 		
-		Intent intent = new Intent(this, MoodExecuter.class);
+		Intent intent = new Intent(this, MoodExecuterService.class);
         startService(intent);
 		
 		

@@ -123,7 +123,7 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
-            android:name="com.kuxhausen.huemore.MoodExecuter"
+            android:name="com.kuxhausen.huemore.MoodExecuterService"
             android:enabled="true"
             android:exported="false" >
         </service>
