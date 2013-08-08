@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
@@ -68,17 +69,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		BulbState bs = new BulbState();
 		bs.alert = "lselect";
 		bs.on = true;
-		//boilerplate
-		Event e = new Event();
-		e.channel=0;
-		e.time=0;
-		e.state=bs;
-		Event[] eRay = {e};
-		//more boilerplate
-		Mood m = new Mood();
-		m.numChannels=1;
-		m.usesTiming = false;
-		m.events = eRay;
+		Mood m = Utils.generateSimpleMood(bs);
 		
 		Integer[] bulbS = { bulbNumber };
 		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, m);
@@ -95,17 +86,8 @@ public class EditBulbDialogFragment extends DialogFragment {
 						
 						BulbState bs = new BulbState();
 						bs.alert = "none";
-						//boilerplate
-						Event e = new Event();
-						e.channel=0;
-						e.time=0;
-						e.state=bs;
-						Event[] eRay = {e};
-						//more boilerplate
-						Mood m = new Mood();
-						m.numChannels=1;
-						m.usesTiming = false;
-						m.events = eRay;
+
+						Mood m = Utils.generateSimpleMood(bs);
 						
 						Integer[] bulbS = { bulbNumber };
 						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, bulbS, m);

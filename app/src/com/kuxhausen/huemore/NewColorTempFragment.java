@@ -17,6 +17,7 @@ import android.widget.TextView.OnEditorActionListener;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -93,17 +94,7 @@ public class NewColorTempFragment extends Fragment implements
 	}
 
 	public void preview() {
-		//boilerplate
-		Event e = new Event();
-		e.channel=0;
-		e.time=0;
-		e.state=hs;
-		Event[] eRay = {e};
-		//more boilerplate
-		Mood m = new Mood();
-		m.numChannels=1;
-		m.usesTiming = false;
-		m.events = eRay;
+		Mood m = Utils.generateSimpleMood(hs);
 		
 		((GodObject) getActivity()).testMood(m);
 

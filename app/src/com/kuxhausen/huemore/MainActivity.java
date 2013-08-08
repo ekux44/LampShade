@@ -34,6 +34,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
@@ -113,18 +114,7 @@ public class MainActivity extends GodObject implements
 					hs.bri = seekBar.getProgress();
 					hs.on = true;
 					
-					//boilerplate
-					Event e = new Event();
-					e.channel=0;
-					e.time=0;
-					e.state=hs;
-					Event[] eRay = {e};
-					//more boilerplate
-					Mood m = new Mood();
-					m.numChannels=1;
-					m.usesTiming = false;
-					m.events = eRay;
-					
+					Mood m = Utils.generateSimpleMood(hs);
 					parrentActivity.updatePreview(m);
 					isTrackingTouch = false;
 				}
@@ -135,18 +125,7 @@ public class MainActivity extends GodObject implements
 					hs.bri = seekBar.getProgress();
 					hs.on = true;
 					
-					//boilerplate
-					Event e = new Event();
-					e.channel=0;
-					e.time=0;
-					e.state=hs;
-					Event[] eRay = {e};
-					//more boilerplate
-					Mood m = new Mood();
-					m.numChannels=1;
-					m.usesTiming = false;
-					m.events = eRay;
-					
+					Mood m = Utils.generateSimpleMood(hs);
 					parrentActivity.updatePreview(m);
 					isTrackingTouch = true;
 				}
@@ -159,18 +138,7 @@ public class MainActivity extends GodObject implements
 						hs.bri = progress;
 						hs.on = true;
 						
-						//boilerplate
-						Event e = new Event();
-						e.channel=0;
-						e.time=0;
-						e.state=hs;
-						Event[] eRay = {e};
-						//more boilerplate
-						Mood m = new Mood();
-						m.numChannels=1;
-						m.usesTiming = false;
-						m.events = eRay;
-						
+						Mood m = Utils.generateSimpleMood(hs);
 						parrentActivity.updatePreview(m);
 					}
 				}
