@@ -205,6 +205,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
 					+ MoodColumns.STATE + " TEXT" + ");");
 
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + AlarmColumns.TABLE_NAME + " ("
+					+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+					+ AlarmColumns.STATE + " TEXT,"
+					+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
+			
+			
 			//remove standard moods that are no longer correct
 			String[] moodsToRemove = {"OFF", "Reading", "Relax", "Concentrate",
 					"Energize", "Red", "Orange", "Blue", "Romantic",
