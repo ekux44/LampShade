@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditMoodPagerDialogFragment extends DialogFragment implements
@@ -48,7 +50,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	EditText nameEditText;
 	String priorName;
 
-	static BulbState[] priorMood;
+	static Mood priorMood;
 	static Gson gson = new Gson();
 
 	public interface OnCreateMoodListener {
@@ -123,16 +125,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 							null // Use the default sort order.
 					);
 
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (moodCursor.moveToNext()) {
-				moodStates.add(moodCursor.getString(0));
-			}
-			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-			priorMood = new BulbState[moodStates.size()];
-			for (int i = 0; i < priorMood.length; i++)
-				priorMood[i] = gson.fromJson(moodS[i], BulbState.class);
-
-			if (priorMood.length == 1 && priorMood[0].ct == null) {
+			moodCursor.moveToFirst();
+			priorMood = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+			
+			if (!priorMood.usesTiming && priorMood.events.length == 1 && priorMood.events[0].state.ct == null) {
 				// show simple mood page
 				mViewPager.setCurrentItem(0);
 			} else {
@@ -166,10 +162,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
 				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (priorMood != null && priorMood.length == 1
-						&& priorMood[0].ct == null) {
+				if (priorMood != null && !priorMood.usesTiming && priorMood.events.length == 1
+						&& priorMood.events[0].state.ct == null) {
 					args.putString(InternalArguments.BULB_STATE,
-							gson.toJson(priorMood[0]));
+							gson.toJson(priorMood.events[0].state));
 				}
 				nchf.setArguments(args);
 				newMoodFragments[i] = nchf;
@@ -178,10 +174,9 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				NewMultiMoodFragment nmmf = new NewMultiMoodFragment();
 				Bundle args2 = new Bundle();
 				args2.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (priorMood != null
-						&& (priorMood.length > 1 || priorMood[0].ct != null)) {
-					args2.putString(InternalArguments.BULB_STATES,
-							gson.toJson(priorMood));
+				if (priorMood != null && !priorMood.usesTiming) {
+					args2.putString(InternalArguments.ENCODED_MOOD,
+							HueUrlEncoder.encode(priorMood));
 				}
 				nmmf.setArguments(args2);
 				newMoodFragments[i] = nmmf;

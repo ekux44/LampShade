@@ -17,7 +17,10 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NewMultiMoodFragment extends ListFragment implements
@@ -41,17 +44,15 @@ public class NewMultiMoodFragment extends ListFragment implements
 		addColor.setOnClickListener(this);
 
 		Bundle args = getArguments();
-		if (args != null && args.containsKey(InternalArguments.BULB_STATES)) {
-			BulbState[] bsRay = gson.fromJson(
-					args.getString(InternalArguments.BULB_STATES),
-					BulbState[].class);
-			for (BulbState bs : bsRay) {
+		if (args != null && args.containsKey(InternalArguments.ENCODED_MOOD)) {
+			Mood mood = HueUrlEncoder.decode(args.getString(InternalArguments.ENCODED_MOOD)).second;
+			for (Event e : mood.events) {
 				MoodRow mr = new MoodRow();
-				mr.hs = bs;
-				if (bs.ct != null) {
+				mr.hs = e.state;
+				if (e.state.ct != null) {
 					mr.color = Color.WHITE;
 				} else {
-					float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+					float[] hsv = { (e.state.hue * 360) / 65535, e.state.sat / 255f, 1 };
 					mr.color = Color.HSVToColor(hsv);
 
 				}
