@@ -18,7 +18,9 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -148,17 +150,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 	public void preview() {
 		if(isAdded()){
 			
-			//boilerplate
-			Event e = new Event();
-			e.channel=0;
-			e.time=0;
-			e.state=hs;
-			Event[] eRay = {e};
-			//more boilerplate
-			Mood m = new Mood();
-			m.numChannels=1;
-			m.usesTiming = false;
-			m.events = eRay;
+			Mood m = Utils.generateSimpleMood(hs);
 			
 			((GodObject)this.getActivity()).updatePreview(m);
 		}
@@ -184,14 +176,9 @@ public class ColorWheelFragment extends SherlockFragment implements
 		// insert
 		ContentValues mNewValues = new ContentValues();
 
-		/*
-		 * Sets the values of each column and inserts the word. The arguments to
-		 * the "put" method are "column name" and "value"
-		 */
 		mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
-		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, gson.toJson(hs));
-		mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, 0);
-
+		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(Utils.generateSimpleMood(hs)));
+		
 		getActivity().getContentResolver().insert(
 				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
 																		// values
