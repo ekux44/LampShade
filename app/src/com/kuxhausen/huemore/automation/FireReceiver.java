@@ -13,7 +13,10 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class FireReceiver extends BroadcastReceiver {
@@ -48,19 +51,9 @@ public class FireReceiver extends BroadcastReceiver {
 			Integer[] bulbS = groupStates.toArray(new Integer[groupStates
 					.size()]);
 
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWereClause = { gmb.mood };
-			Cursor moodCursor = context.getContentResolver()
-					.query(DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
-							moodColumns, MoodColumns.MOOD + "=?",
-							mWereClause, null);
-
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (moodCursor.moveToNext()) {
-				moodStates.add(moodCursor.getString(0));
-			}
-			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+			Mood m = Utils.getMoodFromDatabase(gmb.mood, context);
 			
+//TODO rewrite			
 			int brightness = gmb.brightness;
 			for (int i = 0; i < moodS.length; i++) {
 				BulbState bs = gson.fromJson(moodS[i], BulbState.class);

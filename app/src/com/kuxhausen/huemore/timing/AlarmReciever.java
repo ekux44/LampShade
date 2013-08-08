@@ -21,6 +21,9 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class AlarmReciever extends BroadcastReceiver {
@@ -181,19 +184,9 @@ public class AlarmReciever extends BroadcastReceiver {
 			Integer[] bulbS = groupStates.toArray(new Integer[groupStates
 					.size()]);
 
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWereClause = { as.mood };
-			Cursor moodCursor = context.getContentResolver()
-					.query(DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
-							moodColumns, MoodColumns.MOOD + "=?",
-							mWereClause, null);
-
-			ArrayList<String> moodStates = new ArrayList<String>();
-			while (moodCursor.moveToNext()) {
-				moodStates.add(moodCursor.getString(0));
-			}
-			String[] moodS = moodStates.toArray(new String[moodStates.size()]);
+			Mood m = Utils.getMoodFromDatabase(as.mood, context);
 			
+//TODO rewrite			
 			int brightness = as.brightness;
 			int transitiontime = as.transitiontime;
 			for (int i = 0; i < moodS.length; i++) {

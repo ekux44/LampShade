@@ -6,8 +6,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Mood;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -93,27 +96,7 @@ public class MoodExecuter extends Service {
 		if (bulbS == null || mood == null)
 			return;
 		
-		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { mood };
-		Cursor cursor = getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content
-																// URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<String> moodStates = new ArrayList<String>();
-		while (cursor.moveToNext()) {
-			moodStates.add(cursor.getString(0));
-		}
-		String[] moodS = moodStates.toArray(new String[moodStates.size()]);
-		
+		Mood m = Utils.getMoodFromDatabase(mood, this);
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 //		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, moodS);

@@ -20,6 +20,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -169,22 +170,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		if (bulbS == null || mood == null)
 			return;
 		
-		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { mood };
-		Cursor moodCursor = getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content
-																// URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
-				);
-		moodCursor.moveToFirst();
-		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		Mood m = Utils.getMoodFromDatabase(mood, this);
 		
 		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, bulbS, m);

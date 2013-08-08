@@ -27,6 +27,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -148,23 +149,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		}
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
-		//Look up mood from database
-		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { ((TextView) moodSpinner.getSelectedView())
-				.getText().toString() };
-		Cursor moodCursor = getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
-				);
-		moodCursor.moveToFirst();
-		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		Mood m = Utils.getMoodFromDatabase(((TextView) moodSpinner.getSelectedView())
+				.getText().toString(), this);
 		
 		int brightness = brightnessBar.getProgress();
 		for (int i = 0; i < m.events.length; i++) {
@@ -227,24 +213,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		}
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
-		
-		//Look up mood from database
-		String[] moodColumns = { MoodColumns.STATE };
-		String[] mWereClause = { ((TextView) moodSpinner.getSelectedView())
-				.getText().toString() };
-		Cursor moodCursor = getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use the
-																// default
-																// content URI
-																// for the
-																// provider.
-				moodColumns, // Return the note ID and title for each note.
-				MoodColumns.MOOD + "=?", // selection clause
-				mWereClause, // election clause args
-				null // Use the default sort order.
-				);
-		moodCursor.moveToFirst();
-		Mood m = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		Mood m = Utils.getMoodFromDatabase( ((TextView) moodSpinner.getSelectedView())
+				.getText().toString(), this);
 		
 		int brightness = brightnessBar.getProgress();
 		for (int i = 0; i < m.events.length; i++) {

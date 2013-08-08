@@ -21,6 +21,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -105,28 +106,8 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			String moodName = args.getString(InternalArguments.MOOD_NAME);
 			priorName = moodName;
 			nameEditText.setText(moodName);
-
-			// Look up states for that mood from database
-			String[] moodColumns = { MoodColumns.STATE };
-			String[] mWhereClause = { moodName };
-			Cursor moodCursor = this.getActivity().getContentResolver()
-					.query(DatabaseDefinitions.MoodColumns.MOODSTATES_URI, // Use
-																			// the
-																			// default
-																			// content
-																			// URI
-																			// for
-																			// the
-																			// provider.
-							moodColumns, // Return the note ID and title for
-											// each note.
-							MoodColumns.MOOD + "=?", // selection clause
-							mWhereClause, // election clause args
-							null // Use the default sort order.
-					);
-
-			moodCursor.moveToFirst();
-			priorMood = HueUrlEncoder.decode(moodCursor.getString(0)).second;
+			
+			priorMood = Utils.getMoodFromDatabase(moodName, this.getActivity());
 			
 			if (!priorMood.usesTiming && priorMood.events.length == 1 && priorMood.events[0].state.ct == null) {
 				// show simple mood page

@@ -107,29 +107,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 
 	@Override
 	public void onCreateMood(String groupname) {
-
-		for (int i = 0; i < moodRowArray.size(); i++) {
-
-			// Defines an object to contain the new values to
-			// insert
-			ContentValues mNewValues = new ContentValues();
-
-			/*
-			 * Sets the values of each column and inserts the word. The
-			 * arguments to the "put" method are "column name" and "value"
-			 */
-			mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
-			mNewValues.put(DatabaseDefinitions.MoodColumns.STATE,
-					gson.toJson(moodRowArray.get(i).hs));
-			mNewValues.put(DatabaseDefinitions.MoodColumns.PRECEDENCE, i);
-
-			getActivity().getContentResolver().insert(
-					DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
-																			// values
-																			// to
-																			// insert
-					);
-		}
+		//TODO implement
 	}
 
 	@Override
