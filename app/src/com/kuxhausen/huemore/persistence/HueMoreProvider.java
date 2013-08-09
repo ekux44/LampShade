@@ -15,12 +15,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
-import com.google.gson.Gson;
+
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.R;
@@ -290,9 +289,9 @@ public class HueMoreProvider extends ContentProvider {
 			groupBy = null;
 			break;
 		case MOODS:
-			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
+			if((selection!=null) && (selectionArgs.length>0 && selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
 					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
-					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))){
+					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off)))){
 				BulbState resultState = new BulbState();
 					
 				if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))) {
