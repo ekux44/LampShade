@@ -194,7 +194,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				String moodSelect = MoodColumns.MOOD + "=?";
 				String[] moodArg = { priorName };
 				getActivity().getContentResolver().delete(
-						DatabaseDefinitions.MoodColumns.MOODSTATES_URI,
+						DatabaseDefinitions.MoodColumns.MOODS_URI,
 						moodSelect, moodArg);
 			}
 			newMoodFragments[currentPage].onCreateMood(nameEditText.getText()

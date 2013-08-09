@@ -14,7 +14,7 @@ public class Utils {
 		String[] moodColumns = { MoodColumns.STATE };
 		String[] mWhereClause = { moodName };
 		Cursor moodCursor = ctx.getContentResolver().query(
-				DatabaseDefinitions.MoodColumns.MOODSTATES_URI, 
+				DatabaseDefinitions.MoodColumns.MOODS_URI, 
 				moodColumns,
 				MoodColumns.MOOD + "=?",
 				mWhereClause,

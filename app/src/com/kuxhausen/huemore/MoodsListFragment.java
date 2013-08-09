@@ -147,7 +147,7 @@ public class MoodsListFragment extends SherlockListFragment implements
 			String moodSelect = MoodColumns.MOOD + "=?";
 			String[] moodArg = { (String) (longSelected).getText() };
 			getActivity().getContentResolver().delete(
-					DatabaseDefinitions.MoodColumns.MOODSTATES_URI, moodSelect,
+					DatabaseDefinitions.MoodColumns.MOODS_URI, moodSelect,
 					moodArg);
 			return true;
 		case R.id.contextmoodmenu_edit:

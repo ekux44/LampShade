@@ -33,8 +33,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * A projection map used to select columns from the database
 	 */
 	private static HashMap<String, String> sGroupsProjectionMap,
-			sMoodsProjectionMap, sGroupBulbsProjectionMap,
-			sMoodStatesProjectionMap, sAlarmsProjectionMap;
+			sMoodsProjectionMap, sGroupBulbsProjectionMap, sAlarmsProjectionMap;
 	/**
 	 * A UriMatcher instance
 	 */
@@ -44,8 +43,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * pattern of the incoming URI
 	 */
 	// The incoming URI matches the Groups URI pattern
-	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3,
-			MOODSTATES = 4, ALARMS = 5;
+	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -119,24 +117,6 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.GroupColumns.PRECEDENCE);
 		}
 		{
-			// Add a pattern that routes URIs terminated with "moods" to a MOODS
-			// operation
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moodstates",
-					MOODSTATES);
-			// Creates a new projection map instance. The map returns a column
-			// name
-			// given a string. The two are usually equal.
-			sMoodStatesProjectionMap = new HashMap<String, String>();
-
-			// Maps the string "_ID" to the column name "_ID"
-			sMoodStatesProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-
-			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
-					DatabaseDefinitions.MoodColumns.MOOD);
-			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
-					DatabaseDefinitions.MoodColumns.STATE);
-		}
-		{
 			// Add a pattern that routes URIs terminated with "groups" to a
 			// GROUPS
 			// operation
@@ -180,7 +160,7 @@ public class HueMoreProvider extends ContentProvider {
 			table = (DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.GroupColumns.GROUPS_URI;
 			break;
-		case MOODSTATES:
+		case MOODS:
 			table = (DatabaseDefinitions.MoodColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.MoodColumns.MOODS_URI;
 			break;
@@ -287,12 +267,6 @@ public class HueMoreProvider extends ContentProvider {
 			qb.setProjectionMap(sGroupsProjectionMap);
 			groupBy = DatabaseDefinitions.GroupColumns.GROUP;
 			break;
-		case MOODS:
-			qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
-			qb.setProjectionMap(sMoodsProjectionMap);
-			groupBy = DatabaseDefinitions.MoodColumns.MOOD;
-			break;
-
 		case GROUPBULBS:
 			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_all))){
 				
@@ -316,7 +290,7 @@ public class HueMoreProvider extends ContentProvider {
 			qb.setProjectionMap(sGroupsProjectionMap);
 			groupBy = null;
 			break;
-		case MOODSTATES:
+		case MOODS:
 			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
 					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
 					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))){

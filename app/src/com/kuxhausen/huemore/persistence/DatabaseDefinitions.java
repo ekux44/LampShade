@@ -108,14 +108,6 @@ public final class DatabaseDefinitions {
 		public static final Uri MOODS_URI = Uri.parse(SCHEME + AUTHORITY
 				+ PATH_MOODS);
 
-		public static final String PATH_MOODSTATES = "/moodstates";
-
-		/**
-		 * The content:// style URL for this table
-		 */
-		public static final Uri MOODSTATES_URI = Uri.parse(SCHEME + AUTHORITY
-				+ PATH_MOODSTATES);
-
 		/**
 		 * which mood this state row is part of
 		 */
