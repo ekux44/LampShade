@@ -122,11 +122,6 @@ public final class DatabaseDefinitions {
 		public static final String MOOD = "Dmood";
 
 		/**
-		 * order in which bulb configurations should be used when applying mood
-		 */
-		public static final String PRECEDENCE = "Dprecedence";
-
-		/**
 		 * JSon'd HueState object
 		 */
 		public static final String STATE = "Dstate";

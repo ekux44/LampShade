@@ -94,8 +94,6 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.MoodColumns.MOOD);
 			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
 					DatabaseDefinitions.MoodColumns.STATE);
-			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.PRECEDENCE,
-					DatabaseDefinitions.MoodColumns.PRECEDENCE);
 		}
 		{
 			// Add a pattern that routes URIs terminated with "groups" to a
@@ -137,9 +135,6 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.MoodColumns.MOOD);
 			sMoodStatesProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
 					DatabaseDefinitions.MoodColumns.STATE);
-			sMoodStatesProjectionMap.put(
-					DatabaseDefinitions.MoodColumns.PRECEDENCE,
-					DatabaseDefinitions.MoodColumns.PRECEDENCE);
 		}
 		{
 			// Add a pattern that routes URIs terminated with "groups" to a

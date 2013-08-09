@@ -35,8 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
 				+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
-				+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
-				+ MoodColumns.STATE + " TEXT" + ");");
+				+ " TEXT," + MoodColumns.STATE + " TEXT" + ");");
 
 		db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
 				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
@@ -76,8 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			
 			db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
 					+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
-					+ " TEXT," + MoodColumns.PRECEDENCE + " INTEGER,"
-					+ MoodColumns.STATE + " TEXT" + ");");
+					+ " TEXT," + MoodColumns.STATE + " TEXT" + ");");
 
 			db.execSQL("CREATE TABLE IF NOT EXISTS " + AlarmColumns.TABLE_NAME + " ("
 					+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
