@@ -1,6 +1,9 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -10,6 +13,7 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
 import android.app.Notification;
@@ -56,10 +60,7 @@ public class MoodExecuterService extends Service {
 		String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
 		if(encodedMood != null){
 			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedMood);
-			previewStates = decodedValues.second;
-			bulbS = decodedValues.first;
-			hasChanged = true;
-			
+			bulbS = decodedValues.first;			
 		}
 		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
@@ -78,9 +79,11 @@ public class MoodExecuterService extends Service {
 	
 	
 	private CountDownTimer countDownTimer;
-	private boolean hasChanged = false;
-	private Mood previewStates;
 	private Integer[] bulbS;
+	int numSkips = 0;
+	int time;
+	
+	PriorityQueue<Event> queue = new PriorityQueue<Event>();
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
@@ -97,19 +100,28 @@ public class MoodExecuterService extends Service {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				if(hasChanged){
-					testMood(previewStates);
-					hasChanged = false;	
+				if(numSkips>0){
+					numSkips--;
+				}else{
+					if(queue.peek().time<=time){
+						//remove all events occuring at the same time
+						//combine any events effecting same channel
+						//execute all lists
+						//skip num cycles according to num events executed
+						ArrayList<Event> eList = new ArrayList<Event>();
+						eList.add(queue.poll());
+						while(queue.peek().compareTo(eList.get(0)) == 0){
+							eList.add(queue.poll());
+						}
+						
+						
+					}
 				}
 			}
 
 			@Override
 			public void onFinish() {
-				// try one last time
-				if(hasChanged){
-					testMood(previewStates);
-					hasChanged = false;
-				}
+				
 			}
 		};
 		countDownTimer.start();
