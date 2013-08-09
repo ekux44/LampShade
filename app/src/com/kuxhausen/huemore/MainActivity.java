@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
@@ -514,17 +515,6 @@ public class MainActivity extends GodObject implements
 	private void initializationDatabaseChecks(){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (!settings.contains(PreferencesKeys.TWO_POINT_THREE_UPDATE)) {
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_THREE_UPDATE, false);
-			edit.commit();
-			if (settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE)) {
-				VersionHistoryDialogFragment vhdf = new VersionHistoryDialogFragment();
-				vhdf.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			}
-		}
-		
 		/*{ debug mode only
 			Editor edit = settings.edit();
 			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, 50);
@@ -538,42 +528,6 @@ public class MainActivity extends GodObject implements
 			edit.putInt(PreferencesKeys.BULBS_UNLOCKED,
 					PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
 			// google store
-			edit.commit();
-		}
-		if (!settings.contains(PreferencesKeys.THIRD_UPDATE)) {
-			// Mark no longer first update in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.THIRD_UPDATE, false);
-			edit.commit();
-		}
-		if (!settings.contains(PreferencesKeys.TWO_POINT_OH_UPDATE)) {
-			// Mark no longer first update in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_OH_UPDATE, false);
-			edit.commit();
-		}
-		if (!settings.contains(PreferencesKeys.TWO_POINT_ONE_UPDATE)) {
-			// Mark no longer first update in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_UPDATE, false);
-			edit.commit();
-		}
-		if (!settings.contains(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE)) {
-			// Mark no longer first update in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_ONE_POINT_ONE_UPDATE,
-					false);
-			edit.commit();
-		}
-		if (!settings.contains(PreferencesKeys.TWO_POINT_TWO_UPDATE)) {
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_TWO_UPDATE, false);
-			edit.commit();
-		}
-		if (!settings.contains(PreferencesKeys.TWO_POINT_FOUR_UPDATE)) {
-			// Mark no longer first update in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.TWO_POINT_FOUR_UPDATE, false);
 			edit.commit();
 		}
 		
@@ -599,6 +553,13 @@ public class MainActivity extends GodObject implements
 			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,1);
 			edit.commit();
 		}
+		
+		Editor edit = settings.edit();
+		try {
+			edit.putInt(PreferencesKeys.VERSION_NUMBER, this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
+		} catch (NameNotFoundException e) {
+		}
+		edit.commit();
 	}
 
 	private void initializeBillingCode(){

@@ -175,14 +175,7 @@ public final class DatabaseDefinitions {
 		public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
 		public static final int ALWAYS_FREE_BULBS = 10;
 		public static final String NUMBER_OF_CONNECTED_BULBS = "Number_Of_Connected_Bulbs";
-		
-		public static final String THIRD_UPDATE = "Third_Update";
-		public static final String TWO_POINT_OH_UPDATE = "Two_Point_Oh";
-		public static final String TWO_POINT_ONE_UPDATE = "Two_Point_One";
-		public static final String TWO_POINT_ONE_POINT_ONE_UPDATE = "Two_Point_One_Point_One";
-		public static final String TWO_POINT_TWO_UPDATE = "Two_Point_Two";
-		public static final String TWO_POINT_THREE_UPDATE = "Two_Point_Three";
-		public static final String TWO_POINT_FOUR_UPDATE = "Two_Point_Four";
+		public static final String VERSION_NUMBER = "Version_Number";
 	}
 
 	public static final class PlayItems {
