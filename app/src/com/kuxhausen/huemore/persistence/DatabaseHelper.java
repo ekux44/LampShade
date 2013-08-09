@@ -43,133 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
 				+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
 		
-		//legacy();
 		this.onUpgrade(db, 1, DATABASE_VERSION);
-	}
-	
-	public void legacy(){
-		SQLiteDatabase writableDB = this.getWritableDatabase();
-		/**updatedPopulate()**/
-		String[] mSelectionArgs = { "OFF", "Reading", "Relax", "Concentrate",
-				"Energize" };
-		writableDB.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
-				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
-		String[] gSelectionArgs = { "ALL", ((char) 8) + "ALL" };
-		writableDB.delete(GroupColumns.TABLE_NAME,
-				DatabaseDefinitions.GroupColumns.GROUP + "=? or "
-						+ DatabaseDefinitions.GroupColumns.GROUP + "=?",
-				gSelectionArgs);
-
-		BulbState hs = new BulbState();
-		
-		//boilerplate
-		Event e = new Event();
-		e.channel=0;
-		e.time=0;
-		e.state=hs;
-		Event[] eRay = {e};
-		//more boilerplate
-		Mood m = new Mood();
-		m.numChannels=1;
-		m.usesTiming = false;
-		m.events = eRay;
-		
-		ContentValues cv = new ContentValues();
-		
-
-
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Sunset");
-		hs.sat = (200);
-		hs.hue = (8027);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Sunset");
-		hs.sat = (202);
-		hs.hue = (12327);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-		
-		/**updatedTwoPointOh**/
-		writableDB.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " ("
-				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
-				+ AlarmColumns.STATE + " TEXT,"
-				+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
-		
-		/** updatedTwoPointOnePointOne() **/
-		String[] temp = { "Red", "Orange", "Blue", "Romantic",
-		"Rainbow" };
-		mSelectionArgs = temp;
-		writableDB.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
-				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
-	
-		
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Deep Sea");
-		hs.sat = (253);
-		hs.hue = (45489);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Deep Sea");
-		hs.sat = (230);
-		hs.hue = (1111);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Deep Sea");
-		hs.sat = (253);
-		hs.hue = (45489);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-	
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Fruit");
-		hs.sat = (244);
-		hs.hue = (15483);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-		cv.clear();
-		cv.put(MoodColumns.MOOD, "Fruit");
-		hs.sat = (254);
-		hs.hue = (25593);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-		cv.put(MoodColumns.MOOD, "Fruit");
-		hs.sat = (173);
-		hs.hue = (64684);
-		hs.on = true;
-		hs.effect = "none";
-		cv.put(MoodColumns.STATE, gson.toJson(hs));
-		writableDB.insert(MoodColumns.TABLE_NAME, null, cv);
-
-		/**updatedTwoPointFour**/
-		String[] temp2 = {((char) 8) + "OFF", ((char) 8) + "ON", ((char) 8) + "RANDOM"};
-		mSelectionArgs = temp2;
-		writableDB.delete(MoodColumns.TABLE_NAME, DatabaseDefinitions.MoodColumns.MOOD
-				+ "=? or " + DatabaseDefinitions.MoodColumns.MOOD + "=? or "
-				+ DatabaseDefinitions.MoodColumns.MOOD + "=?", mSelectionArgs);
 	}
 
 	@Override
@@ -210,6 +84,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					+ AlarmColumns.STATE + " TEXT,"
 					+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 			
+			String[] gSelectionArgs = { "ALL", ((char) 8) + "ALL" };
+			db.delete(GroupColumns.TABLE_NAME,
+					DatabaseDefinitions.GroupColumns.GROUP + "=? or "
+							+ DatabaseDefinitions.GroupColumns.GROUP + "=?",
+					gSelectionArgs);
+
 			
 			//remove standard moods that are no longer correct
 			String[] moodsToRemove = {"OFF", "Reading", "Relax", "Concentrate",
@@ -221,9 +101,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 			
 			
-			String[] simpleNames = {"Reading","Relax","Concentrate","Energize"};
-			int[] simpleSat = {144, 211 ,49, 232};
-			int[] simpleHue = {15331, 13122, 33863, 34495};
+			String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Sunset", "Sunset", "Deep Sea", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
+			int[] simpleSat = {144, 211 ,49, 232, 200, 202, 253, 230, 253, 244, 254, 173};
+			int[] simpleHue = {15331, 13122, 33863, 34495, 8027, 12327, 45489, 1111, 45489, 15483, 25593, 64684};
 			
 			for(int i = 0; i< simpleNames.length; i++){
 				BulbState hs = new BulbState();
@@ -232,11 +112,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				hs.on=true;
 				hs.effect="none";
 			
-				ArrayList<String> states = new ArrayList<String>();
+				ArrayList<String> states;
+				if(moodStateMap.containsKey(simpleNames[i]))
+					states = moodStateMap.get(simpleNames[i]);
+				else
+					states =  new ArrayList<String>();
 				states.add(gson.toJson(hs));
 				moodStateMap.put(simpleNames[i], states);
 			}
-						
 			
 			for(String key : moodStateMap.keySet()){
 				
