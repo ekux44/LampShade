@@ -28,7 +28,7 @@ import android.util.Pair;
 
 public class MoodExecuterService extends Service {
 
-	Service cont = this;
+	MoodExecuterService me = this;
 	private RequestQueue volleyRQ;
 	
 	public MoodExecuterService() {
@@ -61,7 +61,10 @@ public class MoodExecuterService extends Service {
 		String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
 		if(encodedMood != null){
 			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedMood);
-			bulbS = decodedValues.first;			
+			bulbS = decodedValues.first;
+			Mood m = decodedValues.second;
+			for(Event e : m.events)
+				queue.add(e);
 		}
 		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
@@ -103,24 +106,26 @@ public class MoodExecuterService extends Service {
 			public void onTick(long millisUntilFinished) {
 				if(numSkips>0){
 					numSkips--;
-				}else{
-					if(queue.peek().time<=time){
-						//remove all events occuring at the same time
-						//combine any events effecting same channel
-						//execute all lists
-						//skip num cycles according to num events executed
-						ArrayList<Event> eList = new ArrayList<Event>();
-						eList.add(queue.poll());
-						while(queue.peek().compareTo(eList.get(0)) == 0){
-							Event e = queue.poll();
-							eList.add(e);
-						}
-						
-						for(Event e : eList)
-							NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), cont, null, bulbS, e.state);
-						
-						numSkips += eList.size();
+				} else if(queue.peek()==null){
+					me.stopSelf();
+				}
+				else if(queue.peek().time<=time){
+					//remove all events occuring at the same time
+					//combine any events effecting same channel
+					//execute all lists
+					//skip num cycles according to num events executed
+					ArrayList<Event> eList = new ArrayList<Event>();
+					eList.add(queue.poll());
+					while(queue.peek()!=null && queue.peek().compareTo(eList.get(0)) == 0){
+						Event e = queue.poll();
+						eList.add(e);
 					}
+					
+					for(Event e : eList)
+						NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, bulbS, e.state);
+					
+					numSkips += eList.size();
+				
 				}
 			}
 
