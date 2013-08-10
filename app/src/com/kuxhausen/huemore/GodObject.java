@@ -32,10 +32,6 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	private Integer[] bulbS;
 	private String mood;
 	
-	public void updatePreview(Mood mood){
-		testMood(mood);
-	}
-	
 	class SerializedGodObjectForTransport{
 		public SerializedGodObjectForTransport(){
 		}
@@ -107,9 +103,14 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	 * 
 	 * @param states
 	 */
-	public void testMood(Mood m) {
+	public void pushMood(Mood m) {
 		Intent intent = new Intent(this, MoodExecuterService.class);
 		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+        startService(intent);
+	}
+	public void pushTransientMood(Mood m) {
+		Intent intent = new Intent(this, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
         startService(intent);
 	}
 

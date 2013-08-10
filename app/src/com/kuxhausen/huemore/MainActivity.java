@@ -116,7 +116,7 @@ public class MainActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					parrentActivity.updatePreview(m);
+					parrentActivity.pushTransientMood(m);
 					isTrackingTouch = false;
 				}
 
@@ -127,7 +127,7 @@ public class MainActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					parrentActivity.updatePreview(m);
+					parrentActivity.pushTransientMood(m);
 					isTrackingTouch = true;
 				}
 
@@ -140,7 +140,7 @@ public class MainActivity extends GodObject implements
 						hs.on = true;
 						
 						Mood m = Utils.generateSimpleMood(hs);
-						parrentActivity.updatePreview(m);
+						parrentActivity.pushTransientMood(m);
 					}
 				}
 			});

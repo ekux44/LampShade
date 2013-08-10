@@ -61,6 +61,8 @@ public class MoodExecuterService extends Service {
 	public int onStartCommand (Intent intent, int flags, int startId){
 		
 		String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
+		String encodedTransientMood = intent.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
+		
 		if(encodedMood != null){
 			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedMood);
 			Integer[] bulbS = decodedValues.first;
@@ -83,7 +85,32 @@ public class MoodExecuterService extends Service {
 					queue.add(qe);
 				}
 			}
+		}else if (encodedTransientMood!= null){
+			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedTransientMood);
+			Integer[] bulbS = decodedValues.first;
+			Mood m = decodedValues.second;
+			
+			ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+			for(int i = 0; i<channels.length; i++)
+				channels[i] = new ArrayList<Integer>();
+			
+			for(int i = 0; i<bulbS.length; i++){
+				channels[i%m.numChannels].add(bulbS[i]);
+			}
+			
+			
+			for(Event e : m.events){
+				for(Integer bNum : channels[e.channel]){
+					BulbState toModify = transientStateChanges[bNum-1];
+					toModify.merge(e.state);
+					if(toModify.toString()!=e.state.toString())
+						flagTransientChanges[bNum-1] = true;
+				}
+			}
+			
+			
 		}
+		
 		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -101,7 +128,19 @@ public class MoodExecuterService extends Service {
 	
 	
 	private BulbState[] transientStateChanges = new BulbState[50];
-	private boolean[] flagTransientChagnes = new boolean[50];
+	{
+		for(int i = 0; i<transientStateChanges.length; i++)
+			transientStateChanges[i] = new BulbState();
+	}
+	//TODO use a datastructure that know if it has any set/true bits
+	private boolean[] flagTransientChanges = new boolean[50];
+	
+	private boolean hasTransientChanges(){
+		boolean result = false;
+		for(boolean b : flagTransientChanges)
+			result |= b;
+		return result;
+	}
 	
 	private CountDownTimer countDownTimer;
 	int numSkips = 0;
@@ -123,7 +162,15 @@ public class MoodExecuterService extends Service {
 			public void onTick(long millisUntilFinished) {
 				if(numSkips>0){
 					numSkips--;
-				} else if(queue.peek()==null){
+				} else if(hasTransientChanges()){
+					int numTransientChanges = 0;
+					for(int i = 0; i<50; i++)
+						if(flagTransientChanges[i]){
+							NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, i+1, transientStateChanges[i]);
+							numTransientChanges++;
+						}
+					numSkips += numTransientChanges;
+				}else if(queue.peek()==null){
 				//	me.stopSelf();
 				}
 				else if(queue.peek().time<=time){

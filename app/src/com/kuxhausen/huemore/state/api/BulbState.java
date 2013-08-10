@@ -86,4 +86,17 @@ public class BulbState {
 			result += "transitiontime:" + transitiontime + " ";
 		return result;
 	}
+	
+	/* when in doubt, override **/
+	public void merge(BulbState other){
+		on = other.on;
+		bri = (other.bri!=null) ? other.bri : bri;
+		hue = (other.hue!=null) ? other.hue : hue;
+		sat = (other.sat!=null) ? other.sat : sat;
+		xy = (other.xy!=null) ? other.xy : xy;
+		ct = (other.ct!=null) ? other.ct : ct;
+		alert = (other.alert!=null) ? other.alert : alert;
+		effect = (other.effect!=null) ? other.effect : effect;
+		transitiontime = (other.transitiontime!=null) ? other.transitiontime : transitiontime;
+	}
 }

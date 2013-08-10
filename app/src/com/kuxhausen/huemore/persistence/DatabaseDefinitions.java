@@ -129,6 +129,7 @@ public final class DatabaseDefinitions {
 		public static final String BULB_NUMBER = "Bulb_Number";
 		public static final String MOOD_NAME = "Mood_Name";
 		public static final String ENCODED_MOOD = "Encoded_Mood";
+		public static final String ENCODED_TRANSIENT_MOOD = "Encoded_Transient_Mood";
 		public static final String BULB_STATE = "Bulb_State";
 		public static final String BRIDGES = "Bridges";
 		public static final String MD5 = "MD5";
