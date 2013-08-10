@@ -347,7 +347,7 @@ public class HueMoreProvider extends ContentProvider {
 				sortOrder // The sort order
 				);
 		Cursor[] cRay;
-		if(sUriMatcher.match(uri) == MOODS){
+		if(sUriMatcher.match(uri) == MOODS && selectionArgs==null){
 			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 			MatrixCursor c1 = new MatrixCursor(columns);
 			Object[] tempCol0 = {this.getContext().getString(R.string.cap_off),0};
