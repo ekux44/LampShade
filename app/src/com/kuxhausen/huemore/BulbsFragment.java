@@ -143,7 +143,7 @@ public class BulbsFragment extends SherlockListFragment implements
 	@Override
 	public void onListReturned(Bulb[] result) {
 		if (result == null){
-			refreshList();
+//			refreshList();
 			return;
 		}
 		bulbArray = result;
