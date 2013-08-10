@@ -151,8 +151,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 		if(isAdded()){
 			
 			Mood m = Utils.generateSimpleMood(hs);
-			
-			((GodObject)this.getActivity()).pushTransientMood(m);
+			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject)this.getActivity()).getBulbs());
 		}
 	}
 

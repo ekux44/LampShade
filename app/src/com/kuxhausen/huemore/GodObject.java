@@ -78,7 +78,6 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		super.onDestroy();
 	}
 	
-	
 	public abstract void onGroupBulbSelected(Integer[] bulb, String name);
 	
 	public abstract void setBulbListenerFragment(GetBulbList.OnBulbListReturnedListener frag);
@@ -98,33 +97,13 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		pushMoodGroup();
 	}
 
-	/**
-	 * test mood by applying to json states array to previously selected moods
-	 * 
-	 * @param states
-	 */
-	public void pushMood(Mood m) {
-		Intent intent = new Intent(this, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
-        startService(intent);
-	}
-	public void pushTransientMood(Mood m) {
-		Intent intent = new Intent(this, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
-        startService(intent);
-	}
-
 	private void pushMoodGroup() {
 		if (bulbS == null || mood == null)
 			return;
 		
 		Mood m = Utils.getMoodFromDatabase(mood, this);
 		
-		Intent intent = new Intent(this, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
-        startService(intent);
-		
-		
+		Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS);
 	}
 	
 }

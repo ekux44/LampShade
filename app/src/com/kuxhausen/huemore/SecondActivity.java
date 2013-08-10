@@ -48,6 +48,8 @@ import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 public class SecondActivity extends GodObject implements
 		MoodsListFragment.OnMoodSelectedListener {
 
+	public SecondActivity me = this;
+	
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	IabHelper mPlayHelper;
 	Inventory lastQuerriedInventory;
@@ -91,7 +93,7 @@ public class SecondActivity extends GodObject implements
 				hs.on = true;
 				
 				Mood m = Utils.generateSimpleMood(hs);
-				parrentActivity.pushTransientMood(m);
+				Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
 				isTrackingTouch = false;
 			}
 
@@ -102,7 +104,7 @@ public class SecondActivity extends GodObject implements
 				hs.on = true;
 				
 				Mood m = Utils.generateSimpleMood(hs);
-				parrentActivity.pushTransientMood(m);
+				Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
 				isTrackingTouch = true;
 			}
 
@@ -115,7 +117,7 @@ public class SecondActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					parrentActivity.pushTransientMood(m);
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
 				}
 			}
 		});

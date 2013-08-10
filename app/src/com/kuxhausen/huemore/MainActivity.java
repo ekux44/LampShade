@@ -53,7 +53,7 @@ public class MainActivity extends GodObject implements
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	IabHelper mPlayHelper;
-	private MainActivity m;
+	private MainActivity me;
 	Inventory lastQuerriedInventory;
 	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
 	
@@ -75,7 +75,7 @@ public class MainActivity extends GodObject implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.hue_more);
-		m = this;
+		me = this;
 		
 		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
 		parrentActivity = this;
@@ -116,7 +116,7 @@ public class MainActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					parrentActivity.pushTransientMood(m);
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
 					isTrackingTouch = false;
 				}
 
@@ -127,7 +127,7 @@ public class MainActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					parrentActivity.pushTransientMood(m);
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
 					isTrackingTouch = true;
 				}
 
@@ -140,7 +140,7 @@ public class MainActivity extends GodObject implements
 						hs.on = true;
 						
 						Mood m = Utils.generateSimpleMood(hs);
-						parrentActivity.pushTransientMood(m);
+						Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
 					}
 				}
 			});
@@ -580,9 +580,9 @@ public class MainActivity extends GodObject implements
 				} else {
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-					if (m.bulbListenerFragment != null) {
-						GetBulbList pushGroupMood = new GetBulbList(m,
-								m.bulbListenerFragment, m);
+					if (me.bulbListenerFragment != null) {
+						GetBulbList pushGroupMood = new GetBulbList(me,
+								me.bulbListenerFragment, me);
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 							pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						} else {
@@ -616,7 +616,7 @@ public class MainActivity extends GodObject implements
 
 				// Get preferences cache
 				SharedPreferences settings = PreferenceManager
-						.getDefaultSharedPreferences(m);
+						.getDefaultSharedPreferences(me);
 				int previousMax = settings.getInt(
 						PreferencesKeys.BULBS_UNLOCKED,
 						PreferencesKeys.ALWAYS_FREE_BULBS);

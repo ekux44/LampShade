@@ -96,8 +96,7 @@ public class NewColorTempFragment extends Fragment implements
 	public void preview() {
 		Mood m = Utils.generateSimpleMood(hs);
 		
-		((GodObject) getActivity()).pushTransientMood(m);
-
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject) getActivity()).getBulbs());
 	}
 
 	@Override

@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
@@ -161,9 +160,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 			m.events[i].state.bri = brightness;
 		}
 		
-		Intent intent = new Intent(context, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
-        context.startService(intent);
+		Utils.transmit(context, InternalArguments.ENCODED_MOOD, m, bulbS);
 	}
 
 	public String getSerializedByNamePreview() {

@@ -74,9 +74,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		Mood m = Utils.generateSimpleMood(bs);
 		
 		Integer[] bulbS = { bulbNumber };
-		Intent intent = new Intent(parrentActivity, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
-        parrentActivity.startService(intent);
+		Utils.transmit(parrentActivity, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS);
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -94,9 +92,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 						Mood m = Utils.generateSimpleMood(bs);
 						
 						Integer[] bulbS = { bulbNumber };
-						Intent intent = new Intent(parrentActivity, MoodExecuterService.class);
-						intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
-				        parrentActivity.startService(intent);
+						Utils.transmit(parrentActivity, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS);
 						
 						bulbF.refreshList();
 					}

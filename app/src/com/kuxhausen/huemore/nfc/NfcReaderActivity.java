@@ -27,6 +27,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -83,9 +84,8 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				bulbS = result.first;
 				Mood m = result.second;
 				
-				Intent intent = new Intent(this, MoodExecuterService.class);
-				intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
-		        startService(intent);
+				Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS);
+				
 				onButton.setChecked(m.events[0].state.on);
 			}
 		}
@@ -134,9 +134,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		m.usesTiming = false;
 		m.events = eRay;		
 		
-		Intent intent = new Intent(this, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
-        startService(intent);;
+		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS);
 	}
 
 	@Override
