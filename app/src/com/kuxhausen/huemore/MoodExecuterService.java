@@ -173,7 +173,7 @@ public class MoodExecuterService extends Service {
 				}else if(queue.peek()==null){
 				//	me.stopSelf();
 				}
-				else if(queue.peek().time<=time){
+				else if(queue.peek().time<=System.nanoTime()/1000000){
 					//remove all events occuring at the same time
 					//combine any events effecting same channel
 					//execute all lists
