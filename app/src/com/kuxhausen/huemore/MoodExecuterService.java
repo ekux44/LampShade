@@ -28,6 +28,7 @@ import android.util.Pair;
 
 public class MoodExecuterService extends Service {
 
+	Service cont = this;
 	private RequestQueue volleyRQ;
 	
 	public MoodExecuterService() {
@@ -111,10 +112,14 @@ public class MoodExecuterService extends Service {
 						ArrayList<Event> eList = new ArrayList<Event>();
 						eList.add(queue.poll());
 						while(queue.peek().compareTo(eList.get(0)) == 0){
-							eList.add(queue.poll());
+							Event e = queue.poll();
+							eList.add(e);
 						}
 						
+						for(Event e : eList)
+							NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), cont, null, bulbS, e.state);
 						
+						numSkips += eList.size();
 					}
 				}
 			}
@@ -128,8 +133,4 @@ public class MoodExecuterService extends Service {
 
 	}	
 	
-	public void testMood(Mood m) {
-		this.getRequestQueue().cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
-	}
 }
