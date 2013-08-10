@@ -15,6 +15,8 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.state.QueueEvent;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -61,10 +63,26 @@ public class MoodExecuterService extends Service {
 		String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
 		if(encodedMood != null){
 			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedMood);
-			bulbS = decodedValues.first;
+			Integer[] bulbS = decodedValues.first;
 			Mood m = decodedValues.second;
-			for(Event e : m.events)
-				queue.add(e);
+			
+			ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+			for(int i = 0; i<channels.length; i++)
+				channels[i] = new ArrayList<Integer>();
+			
+			for(int i = 0; i<bulbS.length; i++){
+				channels[i%m.numChannels].add(bulbS[i]);
+			}
+			
+			
+			for(Event e : m.events){
+				e.time += (int)System.nanoTime()/1000000;//divide by 1 million to convert to millis
+				for(Integer bNum : channels[e.channel]){
+					QueueEvent qe = new QueueEvent(e);
+					qe.bulb = bNum;
+					queue.add(qe);
+				}
+			}
 		}
 		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
@@ -82,47 +100,46 @@ public class MoodExecuterService extends Service {
 	}
 	
 	
+	private BulbState[] transientStateChanges = new BulbState[50];
+	private boolean[] flagTransientChagnes = new boolean[50];
+	
 	private CountDownTimer countDownTimer;
-	private Integer[] bulbS;
 	int numSkips = 0;
 	int time;
 	
-	PriorityQueue<Event> queue = new PriorityQueue<Event>();
+	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
 			countDownTimer.cancel();
 		
-		int numBulbs = 1;
-		if(bulbS!=null)
-			numBulbs = bulbS.length;
 		
-		Log.e("asdf", "count down timer interval rate = "+50*numBulbs);
-		//runs at the rate to execute 20 op/sec
+		Log.e("asdf", "count down timer interval rate = "+(1000/15));
+		//runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE,
-				50*(numBulbs)) {
+				(1000/15)) {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
 				if(numSkips>0){
 					numSkips--;
 				} else if(queue.peek()==null){
-					me.stopSelf();
+				//	me.stopSelf();
 				}
 				else if(queue.peek().time<=time){
 					//remove all events occuring at the same time
 					//combine any events effecting same channel
 					//execute all lists
 					//skip num cycles according to num events executed
-					ArrayList<Event> eList = new ArrayList<Event>();
+					ArrayList<QueueEvent> eList = new ArrayList<QueueEvent>();
 					eList.add(queue.poll());
 					while(queue.peek()!=null && queue.peek().compareTo(eList.get(0)) == 0){
-						Event e = queue.poll();
+						QueueEvent e = queue.poll();
 						eList.add(e);
 					}
 					
-					for(Event e : eList)
-						NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, bulbS, e.state);
+					for(QueueEvent e : eList)
+						NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, e.bulb, e.state);
 					
 					numSkips += eList.size();
 				

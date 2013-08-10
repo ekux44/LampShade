@@ -22,9 +22,11 @@ import com.kuxhausen.huemore.state.api.RegistrationRequest;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class NetworkMethods {
-	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, Context cont, ConnectionMonitor monitor, Integer[] bulbs, BulbState bs){
-		if (cont == null || bulbs == null || bs == null)
+	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, Context cont, ConnectionMonitor monitor, Integer bulb, BulbState bs){
+		if (cont == null || bulb == null || bs == null)
 			return;
+		
+		Integer[] bulbs = {bulb};
 		//TODO reimplement with support for Moods
 		
 		SharedPreferences settings = PreferenceManager
