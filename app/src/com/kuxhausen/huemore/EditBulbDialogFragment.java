@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -72,7 +74,9 @@ public class EditBulbDialogFragment extends DialogFragment {
 		Mood m = Utils.generateSimpleMood(bs);
 		
 		Integer[] bulbS = { bulbNumber };
-		NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, parrentActivity, bulbS, m);
+		Intent intent = new Intent(parrentActivity, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
+        parrentActivity.startService(intent);
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -90,7 +94,9 @@ public class EditBulbDialogFragment extends DialogFragment {
 						Mood m = Utils.generateSimpleMood(bs);
 						
 						Integer[] bulbS = { bulbNumber };
-						NetworkMethods.PreformTransmitGroupMood(parrentActivity.getRequestQueue(), parrentActivity, parrentActivity, bulbS, m);
+						Intent intent = new Intent(parrentActivity, MoodExecuterService.class);
+						intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
+				        parrentActivity.startService(intent);
 						
 						bulbF.refreshList();
 					}

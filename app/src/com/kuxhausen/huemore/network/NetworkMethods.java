@@ -50,32 +50,6 @@ public class NetworkMethods {
 		}
 	}
 	
-	public static void PreformTransmitGroupMood(RequestQueue mRequestQueue, Context cont, ConnectionMonitor monitor, Integer[] bulbs, Mood mood){
-		if (cont == null || bulbs == null || mood == null)
-			return;
-		//TODO reimplement with support for Moods
-		
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(cont);
-		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
-				null);
-		String hash = settings.getString(PreferencesKeys.HASHED_USERNAME, "");
-
-		if (bridge == null)
-			return;
-		
-		Gson gson = new Gson();
-		for (int i = 0; i < bulbs.length; i++) {
-			String url = "http://" + bridge + "/api/" + hash
-					+ "/lights/" + bulbs[i] + "/state";
-			
-			GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(mood.events[i % mood.events.length].state), LightsPutResponse[].class, null, new BasicSuccessListener<LightsPutResponse[]>(monitor), new BasicErrorListener(monitor));
-
-			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-			mRequestQueue.add(req);
-		}
-	}
-	
 	public static void PreformSetBulbAttributes(RequestQueue mRequestQueue, Context cont, ConnectionMonitor monitor, int bulbNum, BulbAttributes bulbAtt){
 		if (cont == null || bulbAtt == null)
 			return;

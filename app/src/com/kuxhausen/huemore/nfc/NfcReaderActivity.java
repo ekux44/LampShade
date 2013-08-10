@@ -21,9 +21,11 @@ import android.widget.ToggleButton;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -80,7 +82,10 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
 				bulbS = result.first;
 				Mood m = result.second;
-				NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
+				
+				Intent intent = new Intent(this, MoodExecuterService.class);
+				intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+		        startService(intent);
 				onButton.setChecked(m.events[0].state.on);
 			}
 		}
@@ -129,7 +134,9 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		m.usesTiming = false;
 		m.events = eRay;		
 		
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
+		Intent intent = new Intent(this, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_TRANSIENT_MOOD, HueUrlEncoder.encode(m,bulbS));
+        startService(intent);;
 	}
 
 	@Override

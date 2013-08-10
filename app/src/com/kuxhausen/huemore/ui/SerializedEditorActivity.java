@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,10 +21,12 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
@@ -157,8 +160,10 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 			//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
 			m.events[i].state.bri = brightness;
 		}
-
-		NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), this, null, bulbS, m);
+		
+		Intent intent = new Intent(context, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+        context.startService(intent);
 	}
 
 	public String getSerializedByNamePreview() {
