@@ -116,7 +116,7 @@ public class MainActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null);
 					isTrackingTouch = false;
 				}
 
@@ -127,7 +127,7 @@ public class MainActivity extends GodObject implements
 					hs.on = true;
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null);
 					isTrackingTouch = true;
 				}
 
@@ -140,7 +140,7 @@ public class MainActivity extends GodObject implements
 						hs.on = true;
 						
 						Mood m = Utils.generateSimpleMood(hs);
-						Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs());
+						Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null);
 					}
 				}
 			});

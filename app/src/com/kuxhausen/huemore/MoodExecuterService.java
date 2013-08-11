@@ -19,13 +19,17 @@ import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.util.Pair;
 
@@ -33,6 +37,7 @@ public class MoodExecuterService extends Service {
 
 	MoodExecuterService me = this;
 	private RequestQueue volleyRQ;
+	int notificationId = 1337;
 	
 	public MoodExecuterService() {
 	}
@@ -63,13 +68,37 @@ public class MoodExecuterService extends Service {
 		volleyRQ = Volley.newRequestQueue(this);
 		restartCountDownTimer();
 		
-		Notification notification = new Notification(R.drawable.huemore, "placeholder text",
-		        System.currentTimeMillis());
-		Intent notificationIntent = new Intent(this, MainActivity.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		notification.setLatestEventInfo(this, "other placeholder",
-		        "3rd placeholder", pendingIntent);
-		startForeground(-1, notification);
+		//TODO make forground like music player
+		
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.huemore)
+		        .setContentTitle(this.getResources().getString(R.string.app_name))
+		        .setContentText("");
+		// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(this, MainActivity.class);
+
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		mBuilder.setContentIntent(resultPendingIntent);
+		NotificationManager mNotificationManager =
+		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(notificationId, mBuilder.build());
+		
+		
 	}
 	
 	@Override
@@ -100,6 +129,19 @@ public class MoodExecuterService extends Service {
 					queue.add(qe);
 				}
 			}
+		String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+		moodName = (moodName==null) ? "" : moodName;
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.huemore)
+		        .setContentTitle(this.getResources().getString(R.string.app_name))
+		        .setContentText(moodName);
+		NotificationManager mNotificationManager =
+			    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			// mId allows you to update the notification later on.
+			mNotificationManager.notify(notificationId, mBuilder.build());
+		
+			
 		}else if (encodedTransientMood!= null){
 			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedTransientMood);
 			Integer[] bulbS = decodedValues.first;
@@ -186,6 +228,19 @@ public class MoodExecuterService extends Service {
 						}
 					numSkips += numTransientChanges;
 				}else if(queue.peek()==null){
+					String moodName = me.getResources().getString(R.string.app_name);
+					NotificationCompat.Builder mBuilder =
+					        new NotificationCompat.Builder(me)
+					        .setSmallIcon(R.drawable.huemore)
+					        .setContentTitle(me.getResources().getString(R.string.app_name))
+					        .setContentText("");
+					NotificationManager mNotificationManager =
+						    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+						// mId allows you to update the notification later on.
+						mNotificationManager.notify(notificationId, mBuilder.build());
+					
+					
+					
 					me.stopSelf();
 				}
 				else if(queue.peek().time<=System.nanoTime()/1000000){

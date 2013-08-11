@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 
 import com.kuxhausen.huemore.MoodExecuterService;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -42,9 +43,10 @@ public class Utils {
 		return m;
 	}
 	
-	public static void transmit(Context context, String priority, Mood m, Integer[] bulbS){
+	public static void transmit(Context context, String priority, Mood m, Integer[] bulbS, String optionalMoodName){
 		Intent intent = new Intent(context, MoodExecuterService.class);
 		intent.putExtra(priority, HueUrlEncoder.encode(m,bulbS));
+		intent.putExtra(InternalArguments.MOOD_NAME, optionalMoodName);
         context.startService(intent);
 	}
 }

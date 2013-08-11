@@ -151,8 +151,9 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		}
 		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
 
-		Mood m = Utils.getMoodFromDatabase(((TextView) moodSpinner.getSelectedView())
-				.getText().toString(), this);
+		String moodName = ((TextView) moodSpinner.getSelectedView())
+				.getText().toString();
+		Mood m = Utils.getMoodFromDatabase(moodName, this);
 		
 		int brightness = brightnessBar.getProgress();
 		for (int i = 0; i < m.events.length; i++) {
@@ -160,7 +161,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 			m.events[i].state.bri = brightness;
 		}
 		
-		Utils.transmit(context, InternalArguments.ENCODED_MOOD, m, bulbS);
+		Utils.transmit(context, InternalArguments.ENCODED_MOOD, m, bulbS, moodName);
 	}
 
 	public String getSerializedByNamePreview() {

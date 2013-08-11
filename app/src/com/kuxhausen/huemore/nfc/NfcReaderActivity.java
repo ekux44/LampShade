@@ -84,7 +84,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				bulbS = result.first;
 				Mood m = result.second;
 				
-				Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS);
+				Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null);
 				
 				onButton.setChecked(m.events[0].state.on);
 			}
@@ -134,7 +134,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		m.usesTiming = false;
 		m.events = eRay;		
 		
-		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS);
+		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null);
 	}
 
 	@Override
