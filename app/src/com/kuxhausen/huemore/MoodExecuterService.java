@@ -61,44 +61,28 @@ public class MoodExecuterService extends Service {
         return mBinder;
     }
 	
+    public void createNotification(String secondaryText){
+    	// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(this, MainActivity.class);
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,
+                resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+	
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.huemore)
+		        .setContentTitle(this.getResources().getString(R.string.app_name))
+		        .setContentText(secondaryText)
+		        .setContentIntent(resultPendingIntent);
+		this.startForeground(notificationId, mBuilder.build());
+		
+    }
 	
 	@Override
 	public void onCreate(){
 		super.onCreate();
 		volleyRQ = Volley.newRequestQueue(this);
 		restartCountDownTimer();
-		
-		//TODO make forground like music player
-		
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.huemore)
-		        .setContentTitle(this.getResources().getString(R.string.app_name))
-		        .setContentText("");
-		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, MainActivity.class);
-
-		// The stack builder object will contain an artificial back stack for the
-		// started Activity.
-		// This ensures that navigating backward from the Activity leads out of
-		// your application to the Home screen.
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		// Adds the back stack for the Intent (but not the Intent itself)
-		stackBuilder.addParentStack(MainActivity.class);
-		// Adds the Intent that starts the Activity to the top of the stack
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent =
-		        stackBuilder.getPendingIntent(
-		            0,
-		            PendingIntent.FLAG_UPDATE_CURRENT
-		        );
-		mBuilder.setContentIntent(resultPendingIntent);
-		//NotificationManager mNotificationManager =
-		//    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-		//mNotificationManager.notify(notificationId, mBuilder.build());
-		this.startForeground(notificationId, mBuilder.build());
-		
+		createNotification("");
 	}
 	
 	
@@ -137,19 +121,9 @@ public class MoodExecuterService extends Service {
 				moodPair = HueUrlEncoder.decode(encodedMood);
 				loadMoodIntoQueue();
 				
-			String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
-			moodName = (moodName==null) ? "" : moodName;
-			NotificationCompat.Builder mBuilder =
-			        new NotificationCompat.Builder(this)
-			        .setSmallIcon(R.drawable.huemore)
-			        .setContentTitle(this.getResources().getString(R.string.app_name))
-			        .setContentText(moodName);
-			//NotificationManager mNotificationManager =
-			//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				// mId allows you to update the notification later on.
-			//	mNotificationManager.notify(notificationId, mBuilder.build());
-				this.startForeground(notificationId, mBuilder.build());
-			
+				String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+				moodName = (moodName==null) ? "" : moodName;
+				createNotification(moodName);
 				
 			}else if (encodedTransientMood!= null){
 				Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedTransientMood);
@@ -248,18 +222,7 @@ public class MoodExecuterService extends Service {
 					if(moodPair!=null && moodPair.second.isInfiniteLooping()){
 						loadMoodIntoQueue();
 					} else {
-						String moodName = me.getResources().getString(R.string.app_name);
-						NotificationCompat.Builder mBuilder =
-						        new NotificationCompat.Builder(me)
-						        .setSmallIcon(R.drawable.huemore)
-						        .setContentTitle(me.getResources().getString(R.string.app_name))
-						        .setContentText("");
-						//NotificationManager mNotificationManager =
-						//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-							// mId allows you to update the notification later on.
-						//	mNotificationManager.notify(notificationId, mBuilder.build());
-						me.startForeground(notificationId, mBuilder.build());
-						
+						createNotification("");
 						
 						me.stopSelf();
 					}
