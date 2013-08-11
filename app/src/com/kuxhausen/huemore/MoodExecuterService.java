@@ -128,55 +128,55 @@ public class MoodExecuterService extends Service {
 	}
 	
 	@Override
-	public int onStartCommand (Intent intent, int flags, int startId){
-		
-		String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
-		String encodedTransientMood = intent.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
-		
-		if(encodedMood != null){
-			moodPair = HueUrlEncoder.decode(encodedMood);
-			loadMoodIntoQueue();
+	public int onStartCommand (Intent intent, int flags, int startId){	
+		if(intent!=null){
+			String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
+			String encodedTransientMood = intent.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
 			
-		String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
-		moodName = (moodName==null) ? "" : moodName;
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.huemore)
-		        .setContentTitle(this.getResources().getString(R.string.app_name))
-		        .setContentText(moodName);
-		//NotificationManager mNotificationManager =
-		//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			// mId allows you to update the notification later on.
-		//	mNotificationManager.notify(notificationId, mBuilder.build());
-			this.startForeground(notificationId, mBuilder.build());
-		
+			if(encodedMood != null){
+				moodPair = HueUrlEncoder.decode(encodedMood);
+				loadMoodIntoQueue();
+				
+			String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+			moodName = (moodName==null) ? "" : moodName;
+			NotificationCompat.Builder mBuilder =
+			        new NotificationCompat.Builder(this)
+			        .setSmallIcon(R.drawable.huemore)
+			        .setContentTitle(this.getResources().getString(R.string.app_name))
+			        .setContentText(moodName);
+			//NotificationManager mNotificationManager =
+			//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				// mId allows you to update the notification later on.
+			//	mNotificationManager.notify(notificationId, mBuilder.build());
+				this.startForeground(notificationId, mBuilder.build());
 			
-		}else if (encodedTransientMood!= null){
-			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedTransientMood);
-			Integer[] bulbS = decodedValues.first;
-			Mood m = decodedValues.second;
-			
-			ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
-			for(int i = 0; i<channels.length; i++)
-				channels[i] = new ArrayList<Integer>();
-			
-			for(int i = 0; i<bulbS.length; i++){
-				channels[i%m.numChannels].add(bulbS[i]);
-			}
-			
-			
-			for(Event e : m.events){
-				for(Integer bNum : channels[e.channel]){
-					BulbState toModify = transientStateChanges[bNum-1];
-					toModify.merge(e.state);
-					if(toModify.toString()!=e.state.toString())
-						flagTransientChanges[bNum-1] = true;
+				
+			}else if (encodedTransientMood!= null){
+				Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedTransientMood);
+				Integer[] bulbS = decodedValues.first;
+				Mood m = decodedValues.second;
+				
+				ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+				for(int i = 0; i<channels.length; i++)
+					channels[i] = new ArrayList<Integer>();
+				
+				for(int i = 0; i<bulbS.length; i++){
+					channels[i%m.numChannels].add(bulbS[i]);
 				}
+				
+				
+				for(Event e : m.events){
+					for(Integer bNum : channels[e.channel]){
+						BulbState toModify = transientStateChanges[bNum-1];
+						toModify.merge(e.state);
+						if(toModify.toString()!=e.state.toString())
+							flagTransientChanges[bNum-1] = true;
+					}
+				}
+				
+				
 			}
-			
-			
 		}
-		
 		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -210,10 +210,11 @@ public class MoodExecuterService extends Service {
 	
 	private Pair<Integer[], Mood> moodPair;
 	private CountDownTimer countDownTimer;
-	int numSkips = 0;
 	int time;
 	
 	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
+	PriorityQueue<QueueEvent> highPriorityQueue = new PriorityQueue<QueueEvent>();
+	int transientIndex = 0;
 	
 	public void restartCountDownTimer(){
 		if(countDownTimer!=null)
@@ -227,19 +228,22 @@ public class MoodExecuterService extends Service {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				Log.e("executor","skips:"+numSkips +"   queue:"+queue.size());
+				Log.e("executor","highPriorityQueue:"+highPriorityQueue.size()+ "   queue:"+queue.size());
 				
-				if(numSkips>0){
-					numSkips--;
-				} else if(hasTransientChanges()){
-					int numTransientChanges = 0;
-					for(int i = 0; i<50; i++)
-						if(flagTransientChanges[i]){
-							NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, i+1, transientStateChanges[i]);
-							flagTransientChanges[i]=false;
-							numTransientChanges++;
+				if(highPriorityQueue.peek()!=null){
+					QueueEvent e = highPriorityQueue.poll();
+					NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, e.bulb, e.state);
+				}else if(hasTransientChanges()){
+					boolean addedSomethingToQueue = false;
+					while(!addedSomethingToQueue){
+						if(flagTransientChanges[transientIndex]){
+							//Note the +1 to account for the 1-based real bulb numbering
+							NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, transientIndex+1, transientStateChanges[transientIndex]);
+							flagTransientChanges[transientIndex]=false;
+							addedSomethingToQueue = true;
 						}
-					numSkips += numTransientChanges;
+						transientIndex = (transientIndex+1)%50;
+					}
 				}else if(queue.peek()==null){
 					if(moodPair!=null && moodPair.second.isInfiniteLooping()){
 						loadMoodIntoQueue();
@@ -273,9 +277,7 @@ public class MoodExecuterService extends Service {
 					}
 					
 					for(QueueEvent e : eList)
-						NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, e.bulb, e.state);
-					
-					numSkips += eList.size();
+						highPriorityQueue.add(e);
 				
 				}
 			}
