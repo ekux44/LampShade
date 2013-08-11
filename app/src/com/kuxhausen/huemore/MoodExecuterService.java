@@ -101,6 +101,32 @@ public class MoodExecuterService extends Service {
 		
 	}
 	
+	
+	
+	
+	private void loadMoodIntoQueue(){
+		Integer[] bulbS = moodPair.first;
+		Mood m = moodPair.second;
+		
+		ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+		for(int i = 0; i<channels.length; i++)
+			channels[i] = new ArrayList<Integer>();
+		
+		for(int i = 0; i<bulbS.length; i++){
+			channels[i%m.numChannels].add(bulbS[i]);
+		}
+		
+		
+		for(Event e : m.events){
+			e.time += (int)System.nanoTime()/1000000;//divide by 1 million to convert to millis
+			for(Integer bNum : channels[e.channel]){
+				QueueEvent qe = new QueueEvent(e);
+				qe.bulb = bNum;
+				queue.add(qe);
+			}
+		}
+	}
+	
 	@Override
 	public int onStartCommand (Intent intent, int flags, int startId){
 		
@@ -108,27 +134,9 @@ public class MoodExecuterService extends Service {
 		String encodedTransientMood = intent.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
 		
 		if(encodedMood != null){
-			Pair<Integer[], Mood> decodedValues = HueUrlEncoder.decode(encodedMood);
-			Integer[] bulbS = decodedValues.first;
-			Mood m = decodedValues.second;
+			moodPair = HueUrlEncoder.decode(encodedMood);
+			loadMoodIntoQueue();
 			
-			ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
-			for(int i = 0; i<channels.length; i++)
-				channels[i] = new ArrayList<Integer>();
-			
-			for(int i = 0; i<bulbS.length; i++){
-				channels[i%m.numChannels].add(bulbS[i]);
-			}
-			
-			
-			for(Event e : m.events){
-				e.time += (int)System.nanoTime()/1000000;//divide by 1 million to convert to millis
-				for(Integer bNum : channels[e.channel]){
-					QueueEvent qe = new QueueEvent(e);
-					qe.bulb = bNum;
-					queue.add(qe);
-				}
-			}
 		String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
 		moodName = (moodName==null) ? "" : moodName;
 		NotificationCompat.Builder mBuilder =
@@ -200,6 +208,7 @@ public class MoodExecuterService extends Service {
 		return result;
 	}
 	
+	private Pair<Integer[], Mood> moodPair;
 	private CountDownTimer countDownTimer;
 	int numSkips = 0;
 	int time;
@@ -232,20 +241,24 @@ public class MoodExecuterService extends Service {
 						}
 					numSkips += numTransientChanges;
 				}else if(queue.peek()==null){
-					String moodName = me.getResources().getString(R.string.app_name);
-					NotificationCompat.Builder mBuilder =
-					        new NotificationCompat.Builder(me)
-					        .setSmallIcon(R.drawable.huemore)
-					        .setContentTitle(me.getResources().getString(R.string.app_name))
-					        .setContentText("");
-					//NotificationManager mNotificationManager =
-					//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-						// mId allows you to update the notification later on.
-					//	mNotificationManager.notify(notificationId, mBuilder.build());
-					me.startForeground(notificationId, mBuilder.build());
-					
-					
-					me.stopSelf();
+					if(moodPair!=null && moodPair.second.isInfiniteLooping()){
+						loadMoodIntoQueue();
+					} else {
+						String moodName = me.getResources().getString(R.string.app_name);
+						NotificationCompat.Builder mBuilder =
+						        new NotificationCompat.Builder(me)
+						        .setSmallIcon(R.drawable.huemore)
+						        .setContentTitle(me.getResources().getString(R.string.app_name))
+						        .setContentText("");
+						//NotificationManager mNotificationManager =
+						//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+							// mId allows you to update the notification later on.
+						//	mNotificationManager.notify(notificationId, mBuilder.build());
+						me.startForeground(notificationId, mBuilder.build());
+						
+						
+						me.stopSelf();
+					}
 				}
 				else if(queue.peek().time<=System.nanoTime()/1000000){
 					//remove all events occuring at the same time
