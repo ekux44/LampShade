@@ -218,6 +218,8 @@ public class MoodExecuterService extends Service {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
+				Log.e("executor","skips:"+numSkips +"   queue:"+queue.size());
+				
 				if(numSkips>0){
 					numSkips--;
 				} else if(hasTransientChanges()){
@@ -225,6 +227,7 @@ public class MoodExecuterService extends Service {
 					for(int i = 0; i<50; i++)
 						if(flagTransientChanges[i]){
 							NetworkMethods.PreformTransmitGroupMood(getRequestQueue(), me, null, i+1, transientStateChanges[i]);
+							flagTransientChanges[i]=false;
 							numTransientChanges++;
 						}
 					numSkips += numTransientChanges;
