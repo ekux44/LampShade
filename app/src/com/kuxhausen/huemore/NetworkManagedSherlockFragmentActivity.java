@@ -17,7 +17,6 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 public class NetworkManagedSherlockFragmentActivity extends
 		SherlockFragmentActivity implements ConnectionMonitor{
 
-	private RequestQueue volleyRQ;
     public MoodExecuterService mService;
     boolean mBound = false;
 	
@@ -40,13 +39,12 @@ public class NetworkManagedSherlockFragmentActivity extends
 	}
 	
 	public RequestQueue getRequestQueue() {
-		return volleyRQ;
+		return mService.getRequestQueue();
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		volleyRQ = Volley.newRequestQueue(this);
 		// Bind to LocalService
         Intent intent = new Intent(this, MoodExecuterService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -55,20 +53,12 @@ public class NetworkManagedSherlockFragmentActivity extends
 	@Override
 	public void onStop() {
 		super.onStop();
-		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		
 		// Unbind from the service
         if (mBound) {
             unbindService(mConnection);
             mBound = false;
         }
-	}
-	
-	@Override
-	public void onDestroy() {
-		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
-		super.onDestroy();
 	}
 	
 	/** Defines callbacks for service binding, passed to bindService() */
