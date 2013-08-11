@@ -99,9 +99,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 			
 			
-			String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Sunset", "Sunset", "Deep Sea", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
-			int[] simpleSat = {144, 211 ,49, 232, 200, 202, 253, 230, 253, 244, 254, 173};
-			int[] simpleHue = {15331, 13122, 33863, 34495, 8027, 12327, 45489, 1111, 45489, 15483, 25593, 64684};
+			String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
+			int[] simpleSat = {144, 211 ,49, 232, 253, 230, 253, 244, 254, 173};
+			int[] simpleHue = {15331, 13122, 33863, 34495, 45489, 1111, 45489, 15483, 25593, 64684};
 			
 			for(int i = 0; i< simpleNames.length; i++){
 				BulbState hs = new BulbState();
@@ -140,6 +140,84 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
 				db.insert(MoodColumns.TABLE_NAME, null, cv);
 			}
+			
+			//Construct animated fruit mood
+			{
+			BulbState bs1 = new BulbState();
+			bs1.on = true;
+			bs1.transitiontime = 100;
+			bs1.sat = 244;
+			bs1.hue = 15483;
+			
+			BulbState bs2 = new BulbState();
+			bs2.on = true;
+			bs2.transitiontime = 100;
+			bs2.sat = 254;
+			bs2.hue= 25593;
+			
+			BulbState bs3 = new BulbState();
+			bs3.on = true;
+			bs3.transitiontime = 100;
+			bs3.sat = 173;
+			bs3.hue= 64684;
+			
+			Event e1 = new Event(bs1, 0, 0);
+			Event e2 = new Event(bs2, 1, 0);
+			Event e3 = new Event(bs3, 2, 0);
+			Event e4 = new Event(bs2, 0, 100);
+			Event e5 = new Event(bs3, 1, 100);
+			Event e6 = new Event(bs1, 2, 100);
+			Event e7 = new Event(bs3, 0, 200);
+			Event e8 = new Event(bs1, 1, 200);
+			Event e9 = new Event(bs2, 2, 200);
+			Event[] events = {e1,e2,e3,e4,e5,e6,e7,e8,e9};
+			
+			Mood m = new Mood();
+			m.usesTiming = true;
+			m.timeAddressingRepeatPolicy = false;
+			m.numChannels = 3;
+			m.setInfiniteLooping(true);
+			m.events = events;
+			
+			cv.put(MoodColumns.MOOD, "Fruity");
+			cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
+			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			}
+			//Construct timed sunset mood
+			{
+			BulbState bs1 = new BulbState();
+			bs1.on = true;
+			bs1.transitiontime = 200;
+			bs1.sat = 211;
+			bs1.hue = 13122;
+			
+			BulbState bs2 = new BulbState();
+			bs2.on = true;
+			bs2.transitiontime = 600;
+			bs2.sat = 200;
+			bs2.hue= 8027;
+			
+			BulbState bs3 = new BulbState();
+			bs3.on = false;
+			bs3.transitiontime = 600;
+			
+			Event e1 = new Event(bs1, 0, 0);
+			Event e2 = new Event(bs2, 0, 200);
+			Event e3 = new Event(bs3, 0, 800);
+			Event[] events = {e1,e2,e3};
+			
+			Mood m = new Mood();
+			m.usesTiming = true;
+			m.timeAddressingRepeatPolicy = false;
+			m.numChannels = 1;
+			m.setInfiniteLooping(false);
+			m.events = events;
+			
+			cv.put(MoodColumns.MOOD, "Sunset");
+			cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
+			db.insert(MoodColumns.TABLE_NAME, null, cv);
+			}
+			
 		}
 
 	}
