@@ -85,4 +85,5 @@
     <string name="cap_on">ON</string>
     <string name="cap_off">OFF</string>
     <string name="cap_random">RANDOM</string>
+    <string name="broken_mood_link">Oops! This mood link cannot be read</string>
 </resources>
