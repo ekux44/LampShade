@@ -93,11 +93,11 @@ public class MoodExecuterService extends Service {
 		            PendingIntent.FLAG_UPDATE_CURRENT
 		        );
 		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager =
-		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		//NotificationManager mNotificationManager =
+		//    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
-		mNotificationManager.notify(notificationId, mBuilder.build());
-		
+		//mNotificationManager.notify(notificationId, mBuilder.build());
+		this.startForeground(notificationId, mBuilder.build());
 		
 	}
 	
@@ -136,10 +136,11 @@ public class MoodExecuterService extends Service {
 		        .setSmallIcon(R.drawable.huemore)
 		        .setContentTitle(this.getResources().getString(R.string.app_name))
 		        .setContentText(moodName);
-		NotificationManager mNotificationManager =
-			    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		//NotificationManager mNotificationManager =
+		//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			// mId allows you to update the notification later on.
-			mNotificationManager.notify(notificationId, mBuilder.build());
+		//	mNotificationManager.notify(notificationId, mBuilder.build());
+			this.startForeground(notificationId, mBuilder.build());
 		
 			
 		}else if (encodedTransientMood!= null){
@@ -234,11 +235,11 @@ public class MoodExecuterService extends Service {
 					        .setSmallIcon(R.drawable.huemore)
 					        .setContentTitle(me.getResources().getString(R.string.app_name))
 					        .setContentText("");
-					NotificationManager mNotificationManager =
-						    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					//NotificationManager mNotificationManager =
+					//	    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 						// mId allows you to update the notification later on.
-						mNotificationManager.notify(notificationId, mBuilder.build());
-					
+					//	mNotificationManager.notify(notificationId, mBuilder.build());
+					me.startForeground(notificationId, mBuilder.build());
 					
 					
 					me.stopSelf();
