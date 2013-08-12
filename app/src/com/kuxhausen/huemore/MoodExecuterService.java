@@ -5,10 +5,13 @@ import java.util.PriorityQueue;
 
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.Pair;
@@ -64,6 +67,8 @@ public class MoodExecuterService extends Service {
 	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
 
 	PriorityQueue<QueueEvent> highPriorityQueue = new PriorityQueue<QueueEvent>();
+	
+	WakeLock wakelock;
 
 	int transientIndex = 0;
 	public MoodExecuterService() {
@@ -128,19 +133,23 @@ public class MoodExecuterService extends Service {
 		volleyRQ = Volley.newRequestQueue(this);
 		restartCountDownTimer();
 		createNotification("");
+		
+		//acquire wakelock
+		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+		wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
+		wakelock.acquire();
 	}
 	@Override
 	public void onDestroy() {
 		countDownTimer.cancel();
 		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		wakelock.release();
 		super.onDestroy();
 	}
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent != null) {
-			//TODO acquire wakelock
-			
 			//remove any possible launched wakelocks
 			AlarmReciever.completeWakefulIntent(intent);
 			FireReceiver.completeWakefulIntent(intent);
