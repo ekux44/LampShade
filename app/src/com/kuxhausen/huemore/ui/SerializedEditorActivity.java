@@ -191,7 +191,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 	}
 
 	public String getSerializedByValue() {
-		String url = "kuxhausen.com/HueMore/nfc?";
+		String url = "lampshade.io/nfc?";
 
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
