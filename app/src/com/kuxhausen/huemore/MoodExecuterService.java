@@ -186,7 +186,6 @@ public class MoodExecuterService extends Service {
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
-		Log.e("asdf", "count down timer interval rate = " + (1000 / 15));
 		// runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 15)) {
 
@@ -229,10 +228,6 @@ public class MoodExecuterService extends Service {
 						me.stopSelf();
 					}
 				} else if (queue.peek().time <= System.nanoTime() / 1000000) {
-					// remove all events occuring at the same time
-					// combine any events effecting same channel
-					// execute all lists
-					// skip num cycles according to num events executed
 					ArrayList<QueueEvent> eList = new ArrayList<QueueEvent>();
 					eList.add(queue.poll());
 					while (queue.peek() != null

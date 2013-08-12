@@ -515,7 +515,7 @@ public class MainActivity extends GodObject implements
 	private void initializationDatabaseChecks(){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-		/*{ debug mode only
+		/*{ //debug mode only
 			Editor edit = settings.edit();
 			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, 50);
 			edit.commit();
