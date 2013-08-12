@@ -379,9 +379,7 @@ public class MainActivity extends GodObject implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		if (PreferenceManager.getDefaultSharedPreferences(this).getInt(
-				PreferencesKeys.BULBS_UNLOCKED,
-				PreferencesKeys.ALWAYS_FREE_BULBS) > PreferencesKeys.ALWAYS_FREE_BULBS) {
+		if (Utils.hasProVersion(this)) {
 			// has pro version
 
 			// hide unlocks button

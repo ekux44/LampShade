@@ -245,9 +245,7 @@ public class SecondActivity extends GodObject implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.second, menu);
-		if (PreferenceManager.getDefaultSharedPreferences(this).getInt(
-				PreferencesKeys.BULBS_UNLOCKED,
-				PreferencesKeys.ALWAYS_FREE_BULBS) > PreferencesKeys.ALWAYS_FREE_BULBS) {
+		if (Utils.hasProVersion(this)) {
 			// has pro version
 
 			if (NfcAdapter.getDefaultAdapter(this) == null) {
