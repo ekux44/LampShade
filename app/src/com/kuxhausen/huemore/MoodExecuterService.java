@@ -142,13 +142,15 @@ public class MoodExecuterService extends Service {
 			String encodedTransientMood = intent
 					.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
 
+			
+			
 			if (encodedMood != null) {
 				moodPair = HueUrlEncoder.decode(encodedMood);
 				loadMoodIntoQueue();
 
 				String moodName = intent
 						.getStringExtra(InternalArguments.MOOD_NAME);
-				moodName = (moodName == null) ? "" : moodName;
+				moodName = (moodName == null) ? "Unknown Mood" : moodName;
 				createNotification(moodName);
 
 			} else if (encodedTransientMood != null) {
