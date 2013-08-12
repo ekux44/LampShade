@@ -163,6 +163,7 @@ public class MoodExecuterService extends Service {
 			
 			if (encodedMood != null) {
 				moodPair = HueUrlEncoder.decode(encodedMood);
+				queue.clear();
 				loadMoodIntoQueue();
 
 				String moodName = intent
