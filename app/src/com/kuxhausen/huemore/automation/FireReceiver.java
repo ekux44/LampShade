@@ -6,19 +6,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class FireReceiver extends BroadcastReceiver {
+public class FireReceiver extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -51,19 +55,15 @@ public class FireReceiver extends BroadcastReceiver {
 					.size()]);
 
 			Mood m = Utils.getMoodFromDatabase(gmb.mood, context);
-			
-//TODO rewrite/renable			
-/*			int brightness = gmb.brightness;
-			for (int i = 0; i < moodS.length; i++) {
-				BulbState bs = gson.fromJson(moodS[i], BulbState.class);
-				bs.bri = brightness;
-				moodS[i] = gson.toJson(bs);// back into json for
-											// TransmitGroupMood
+			for(Event e: m.events){
+				e.state.bri = gmb.brightness;
 			}
 
-			SynchronousTransmitGroupMood trasmitter = new SynchronousTransmitGroupMood();
-			trasmitter.execute(context, bulbS, moodS);
-		*/}
+			Intent trasmitter = new Intent(context, MoodExecuterService.class);
+			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+			trasmitter.putExtra(InternalArguments.MOOD_NAME, gmb.mood);
+			startWakefulService(context, trasmitter);
+		}
 	}
 
 }

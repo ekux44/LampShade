@@ -15,6 +15,7 @@ import android.util.Pair;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -22,6 +23,7 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.timing.AlarmReciever;
 
 public class MoodExecuterService extends Service {
 
@@ -137,12 +139,18 @@ public class MoodExecuterService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent != null) {
+			//TODO acquire wakelock
+			
+			//remove any possible launched wakelocks
+			AlarmReciever.completeWakefulIntent(intent);
+			FireReceiver.completeWakefulIntent(intent);
+
+			
 			String encodedMood = intent
 					.getStringExtra(InternalArguments.ENCODED_MOOD);
 			String encodedTransientMood = intent
 					.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
 
-			
 			
 			if (encodedMood != null) {
 				moodPair = HueUrlEncoder.decode(encodedMood);
