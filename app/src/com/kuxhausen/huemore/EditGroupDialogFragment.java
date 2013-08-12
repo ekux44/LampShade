@@ -190,17 +190,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 			return;
 		bulbArray = result;
 
-		// Get preferences cache
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
-		int numberBulbsUnlocked = settings.getInt(
-				PreferencesKeys.BULBS_UNLOCKED,
-				PreferencesKeys.ALWAYS_FREE_BULBS);
-		if (bulbArray.length > numberBulbsUnlocked) {
-			// tell user to upgrade
-		}
-
-		for (int i = 0; i < Math.min(bulbArray.length, numberBulbsUnlocked); i++) {
+		for (int i = 0; i < bulbArray.length; i++) {
 			// bulbNameList.add(bulb.name);
 			Bulb bulb = bulbArray[i];
 			bulb.number = i + 1;
