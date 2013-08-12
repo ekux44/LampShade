@@ -375,8 +375,9 @@ public class HueMoreProvider extends ContentProvider {
 		
 		
 		// Tells the Cursor what URI to watch, so it knows when its source data
-		// changes
+		// changes. apparently the merge cursor doesn't forward notifications, so notify individually too!
 		c.setNotificationUri(getContext().getContentResolver(), uri);
+		c2.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}
 
