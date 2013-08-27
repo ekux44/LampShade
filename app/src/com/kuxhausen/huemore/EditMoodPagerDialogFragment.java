@@ -116,14 +116,22 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	}
 	
 	public void routeMood(Mood m){
-		if (!m.usesTiming && m.events.length == 1 && m.events[0].state.ct == null) {
-			// show simple mood page
-			mViewPager.setCurrentItem(0);
-		} else {
-			// show multi mood page
-			mViewPager.setCurrentItem(2);
+		if(!m.usesTiming){
+			if (m.events.length == 1 && m.events[0].state.ct == null) {
+				// show simple mood page
+				mViewPager.setCurrentItem(0);
+			} else
+			{
+				// show multi mood page
+				mViewPager.setCurrentItem(2);
+			}
+		}else{
+			if(m.numChannels==1){
+				mViewPager.setCurrentItem(1);
+			}else{
+				mViewPager.setCurrentItem(3);
+			}	
 		}
-		
 	}
 	
 	/**
