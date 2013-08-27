@@ -89,4 +89,7 @@
     <string name="action_report_bug">Report a bug</string>
     <string name="developer_email">erickuxhausen+huemore@gmail.com</string>
     <string name="report_bug_email_subject">HueMore 2.4.0 bug</string>
+    <string name="coming_soon">This page coming in version 2.5</string>
+    <string name="cap_timed_mood">TIMED</string>
+    <string name="cap_multi_mood">MULTI</string>
 </resources>

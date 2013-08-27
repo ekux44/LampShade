@@ -99,7 +99,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		cancelButton.setOnClickListener(this);
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
-		newMoodFragments = new OnCreateMoodListener[2];
+		newMoodFragments = new OnCreateMoodListener[mEditMoodPagerAdapter.getCount()];
 
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
@@ -109,17 +109,23 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			
 			priorMood = Utils.getMoodFromDatabase(moodName, this.getActivity());
 			
-			if (!priorMood.usesTiming && priorMood.events.length == 1 && priorMood.events[0].state.ct == null) {
-				// show simple mood page
-				mViewPager.setCurrentItem(0);
-			} else {
-				// show multi mood page
-				mViewPager.setCurrentItem(1);
-			}
+			routeMood(priorMood);
+				
 		}
 		return myView;
 	}
-
+	
+	public void routeMood(Mood m){
+		if (!m.usesTiming && m.events.length == 1 && m.events[0].state.ct == null) {
+			// show simple mood page
+			mViewPager.setCurrentItem(0);
+		} else {
+			// show multi mood page
+			mViewPager.setCurrentItem(2);
+		}
+		
+	}
+	
 	/**
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
@@ -152,6 +158,17 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				newMoodFragments[i] = nchf;
 				return (Fragment) newMoodFragments[i];
 			case 1:
+				EditTimedMoodFragment etmf = new EditTimedMoodFragment();
+				Bundle args1 = new Bundle();
+				args1.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
+				if (priorMood != null && !priorMood.usesTiming) {
+					args1.putString(InternalArguments.ENCODED_MOOD,
+							HueUrlEncoder.encode(priorMood));
+				}
+				etmf.setArguments(args1);
+				newMoodFragments[i] = etmf;
+				return (Fragment) newMoodFragments[i];
+			case 2:
 				NewMultiMoodFragment nmmf = new NewMultiMoodFragment();
 				Bundle args2 = new Bundle();
 				args2.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
@@ -162,6 +179,17 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				nmmf.setArguments(args2);
 				newMoodFragments[i] = nmmf;
 				return (Fragment) newMoodFragments[i];
+			case 3:
+				EditComplexMoodFragment ecmf = new EditComplexMoodFragment();
+				Bundle args3 = new Bundle();
+				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
+				if (priorMood != null && !priorMood.usesTiming) {
+					args3.putString(InternalArguments.ENCODED_MOOD,
+							HueUrlEncoder.encode(priorMood));
+				}
+				ecmf.setArguments(args3);
+				newMoodFragments[i] = ecmf;
+				return (Fragment) newMoodFragments[i];
 			default:
 				return null;
 			}
@@ -169,7 +197,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 4;
 		}
 
 		@Override
@@ -178,6 +206,10 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			case 0:
 				return frag.getActivity().getString(R.string.cap_simple_mood);
 			case 1:
+				return frag.getActivity().getString(R.string.cap_timed_mood);
+			case 2:
+				return frag.getActivity().getString(R.string.cap_multi_mood);
+			case 3:
 				return frag.getActivity().getString(R.string.cap_advanced_mood);
 			}
 			return "";
