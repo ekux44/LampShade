@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -474,6 +475,16 @@ public class MainActivity extends GodObject implements
 		case R.id.action_alarms:
 			Intent i = new Intent(this, AlarmListActivity.class);
 			this.startActivity(i);
+			return true;
+		case R.id.action_report_bug:
+			Intent send = new Intent(Intent.ACTION_SENDTO);
+			String uriText = "mailto:" + Uri.encode(getResources().getString(R.string.developer_email)) + 
+			          "?subject=" + Uri.encode(getResources().getString(R.string.report_bug_email_subject))/* + 
+			          "&body=" + Uri.encode("the body of the message")*/;
+			Uri uri = Uri.parse(uriText);
+
+			send.setData(uri);
+			startActivity(Intent.createChooser(send, "Send mail..."));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

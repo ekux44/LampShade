@@ -86,4 +86,7 @@
     <string name="cap_off">OFF</string>
     <string name="cap_random">RANDOM</string>
     <string name="broken_mood_link">Oops! This mood link cannot be read</string>
+    <string name="action_report_bug">Report a bug</string>
+    <string name="developer_email">erickuxhausen+huemore@gmail.com</string>
+    <string name="report_bug_email_subject">HueMore 2.4.0 bug</string>
 </resources>
