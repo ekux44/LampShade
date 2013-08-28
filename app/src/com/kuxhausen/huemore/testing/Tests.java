@@ -89,7 +89,7 @@ public class Tests {
 	}
 	
 	public static void tests() {
-		
+		/*
 		BulbState bs = new BulbState();
 		bs.on=true;
 		bs.bri=80;
@@ -126,6 +126,7 @@ public class Tests {
 		Log.e("tests","6"+test(6,m,null));
 		Integer[] bulbs = {1, 3, 14};
 		Log.e("tests","7"+test(7,m,bulbs));
+		*/
 		
 		/** bitSet to encoding test **/
 		/*{
