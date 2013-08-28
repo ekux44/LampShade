@@ -27,7 +27,17 @@ public class Utils {
 				null
 				);
 		moodCursor.moveToFirst();
-		return HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		try {
+			return HueUrlEncoder.decode(moodCursor.getString(0)).second;
+		} catch (InvalidEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (FutureEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public static Mood generateSimpleMood(BulbState bs){

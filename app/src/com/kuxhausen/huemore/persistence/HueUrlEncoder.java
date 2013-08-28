@@ -2,11 +2,9 @@ package com.kuxhausen.huemore.persistence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import android.util.Base64;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.state.Event;
@@ -311,101 +309,106 @@ public class HueUrlEncoder {
 		return bs;
 	}
 	
-	public static Pair<Integer[], Mood> decode(String code){
-		Mood mood = new Mood();
-		ArrayList<Integer> bList = new ArrayList<Integer>();
-		ManagedBitSet mBitSet = new ManagedBitSet(code);
-		
-		//3 bit encoding version
-		int encodingVersion = mBitSet.extractNumber(3);
-		
-		//1 bit optional bulb inclusion flags flag
-		boolean hasBulbs = mBitSet.incrementingGet();
-		if(hasBulbs){
-			//50 bits of optional bulb inclusion flags
-			for (int i = 0; i < 50; i++)
-				if (mBitSet.incrementingGet())
-					bList.add(i + 1);
-		}
-		
-		if(encodingVersion == 1){
-			int numChannels = mBitSet.extractNumber(6);
-			mood.numChannels=numChannels;
+	public static Pair<Integer[], Mood> decode(String code) throws InvalidEncodingException, FutureEncodingException{
+		try {
+			Mood mood = new Mood();
+			ArrayList<Integer> bList = new ArrayList<Integer>();
+			ManagedBitSet mBitSet = new ManagedBitSet(code);
 			
-			//1 bit timing addressing reference mode
-			mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
+			//3 bit encoding version
+			int encodingVersion = mBitSet.extractNumber(3);
 			
-			//7 bit timing repeat number
-			mood.setNumLoops(mBitSet.extractNumber(7));
-			//flag infinite looping if max numLoops
-			mood.setInfiniteLooping(mood.getNumLoops() == 127);
-			
-			//6 bit number of timestamps
-			int numTimestamps = mBitSet.extractNumber(6);
-			int[] timeArray = new int[numTimestamps];
-			for(int i = 0; i<numTimestamps; i++){
-				//20 bit timestamp
-				timeArray[i]= mBitSet.extractNumber(20);
-			}
-			mood.usesTiming = !(timeArray.length==0||(timeArray.length==1&&timeArray[0]==0));
-			
-			//6 bit number of states
-			int numStates = mBitSet.extractNumber(6);
-			BulbState[] stateArray = new BulbState[numStates];
-			for(int i = 0; i<numStates; i++){
-				//decode each state
-				stateArray[i] = extractState(mBitSet);
+			//1 bit optional bulb inclusion flags flag
+			boolean hasBulbs = mBitSet.incrementingGet();
+			if(hasBulbs){
+				//50 bits of optional bulb inclusion flags
+				for (int i = 0; i < 50; i++)
+					if (mBitSet.incrementingGet())
+						bList.add(i + 1);
 			}
 			
-			int numEvents = mBitSet.extractNumber(8);
-			Event[] eList = new Event[numEvents];
-			
-			for(int i =0; i<numEvents; i++){
-				Event e = new Event();
-				e.channel = mBitSet.extractNumber(getBitLength(mood.numChannels));
+			if(encodingVersion == 1){
+				int numChannels = mBitSet.extractNumber(6);
+				mood.numChannels=numChannels;
 				
-				e.time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
+				//1 bit timing addressing reference mode
+				mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
 				
-				e.state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
+				//7 bit timing repeat number
+				mood.setNumLoops(mBitSet.extractNumber(7));
+				//flag infinite looping if max numLoops
+				mood.setInfiniteLooping(mood.getNumLoops() == 127);
 				
-				eList[i] = e;
+				//6 bit number of timestamps
+				int numTimestamps = mBitSet.extractNumber(6);
+				int[] timeArray = new int[numTimestamps];
+				for(int i = 0; i<numTimestamps; i++){
+					//20 bit timestamp
+					timeArray[i]= mBitSet.extractNumber(20);
+				}
+				mood.usesTiming = !(timeArray.length==0||(timeArray.length==1&&timeArray[0]==0));
+				
+				//6 bit number of states
+				int numStates = mBitSet.extractNumber(6);
+				BulbState[] stateArray = new BulbState[numStates];
+				for(int i = 0; i<numStates; i++){
+					//decode each state
+					stateArray[i] = extractState(mBitSet);
+				}
+				
+				int numEvents = mBitSet.extractNumber(8);
+				Event[] eList = new Event[numEvents];
+				
+				for(int i =0; i<numEvents; i++){
+					Event e = new Event();
+					e.channel = mBitSet.extractNumber(getBitLength(mood.numChannels));
+					
+					e.time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
+					
+					e.state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
+					
+					eList[i] = e;
+				}
+				mood.events=eList;
+				
+			} if(encodingVersion==0){
+				mBitSet.useLittleEndianEncoding(true);
+	
+				//7 bit number of states
+				int numStates = mBitSet.extractNumber(7);
+				Event[]	eventArray = new Event[numStates];
+	
+				/** Decode each state **/	
+				for(int i = 0; i<numStates; i++){
+					Event e = new Event();
+					//decode each state
+					e.state = extractState(mBitSet);
+					e.channel = i;
+					e.time = 0;
+					eventArray[i] = e;
+				}
+				mood.events = eventArray;
+				mood.numChannels = numStates;
+				mood.timeAddressingRepeatPolicy = false;
+				mood.usesTiming = false;
+				
 			}
-			mood.events=eList;
-			
-		} if(encodingVersion==0){
-			mBitSet.useLittleEndianEncoding(true);
-
-			//7 bit number of states
-			int numStates = mBitSet.extractNumber(7);
-			Event[]	eventArray = new Event[numStates];
-
-			/** Decode each state **/	
-			for(int i = 0; i<numStates; i++){
-				Event e = new Event();
-				//decode each state
-				e.state = extractState(mBitSet);
-				e.channel = i;
-				e.time = 0;
-				eventArray[i] = e;
+			else{
+				throw new FutureEncodingException();
 			}
-			mood.events = eventArray;
-			mood.numChannels = numStates;
-			mood.timeAddressingRepeatPolicy = false;
-			mood.usesTiming = false;
 			
+			Integer[] bulbs=null;
+			if(hasBulbs){
+				bulbs = new Integer[bList.size()];
+				for(int i = 0; i<bList.size(); i++)
+					bulbs[i]=bList.get(i);
+			}
+					
+			return new Pair<Integer[], Mood>(bulbs, mood);
+		} catch(FutureEncodingException e){
+			throw new FutureEncodingException();
+		}catch(Exception e){
+			throw new InvalidEncodingException();
 		}
-		else{
-			//TODO
-			//Please update your app to open this mood
-		}
-		
-		Integer[] bulbs=null;
-		if(hasBulbs){
-			bulbs = new Integer[bList.size()];
-			for(int i = 0; i<bList.size(); i++)
-				bulbs[i]=bList.get(i);
-		}
-				
-		return new Pair<Integer[], Mood>(bulbs, mood);
 	}
 }
