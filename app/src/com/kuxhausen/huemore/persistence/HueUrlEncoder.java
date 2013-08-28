@@ -371,7 +371,7 @@ public class HueUrlEncoder {
 				}
 				mood.events=eList;
 				
-			} if(encodingVersion==0){
+			} else if(encodingVersion==0){
 				mBitSet.useLittleEndianEncoding(true);
 	
 				//7 bit number of states

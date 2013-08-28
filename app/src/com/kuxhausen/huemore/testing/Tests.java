@@ -25,9 +25,11 @@ public class Tests {
 			} else
 				m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1)).second;		
 		} catch (InvalidEncodingException e) {
+			Log.e("error","InvalidEncodingException");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FutureEncodingException e) {
+			Log.e("error","FutureEncodingException");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
