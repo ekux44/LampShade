@@ -145,19 +145,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			{
 			BulbState bs1 = new BulbState();
 			bs1.on = true;
-			bs1.transitiontime = 100;
+			bs1.transitiontime = 50;
 			bs1.sat = 244;
 			bs1.hue = 15483;
 			
 			BulbState bs2 = new BulbState();
 			bs2.on = true;
-			bs2.transitiontime = 100;
+			bs2.transitiontime = 50;
 			bs2.sat = 254;
 			bs2.hue= 25593;
 			
 			BulbState bs3 = new BulbState();
 			bs3.on = true;
-			bs3.transitiontime = 100;
+			bs3.transitiontime = 50;
 			bs3.sat = 173;
 			bs3.hue= 64684;
 			
@@ -187,7 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			{
 			BulbState bs1 = new BulbState();
 			bs1.on = true;
-			bs1.transitiontime = 200;
+			bs1.transitiontime = 100;
 			bs1.sat = 211;
 			bs1.hue = 13122;
 			
@@ -202,8 +202,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			bs3.transitiontime = 600;
 			
 			Event e1 = new Event(bs1, 0, 0);
-			Event e2 = new Event(bs2, 0, 200);
-			Event e3 = new Event(bs3, 0, 800);
+			Event e2 = new Event(bs2, 0, 100);
+			Event e3 = new Event(bs3, 0, 700);
 			Event[] events = {e1,e2,e3};
 			
 			Mood m = new Mood();
