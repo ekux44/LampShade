@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.util.Pair;
 
 import com.android.volley.RequestQueue;
@@ -224,9 +223,9 @@ public class MoodExecuterService extends Service {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				Log.e("executor",
-						"highPriorityQueue:" + highPriorityQueue.size()
-								+ "   queue:" + queue.size());
+				//Log.e("executor",
+				//		"highPriorityQueue:" + highPriorityQueue.size()
+				//				+ "   queue:" + queue.size());
 
 				if (highPriorityQueue.peek() != null) {
 					QueueEvent e = highPriorityQueue.poll();
