@@ -538,8 +538,16 @@ public class MainActivity extends GodObject implements
 					PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
 			// google store
 			edit.commit();
-		}
-		
+		} else
+			try {
+				if (settings.getInt(PreferencesKeys.VERSION_NUMBER, -1)!= this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode){
+					UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
+					ucdf.show(this.getSupportFragmentManager(),
+							InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+				}
+			} catch (NameNotFoundException e1){
+			}
+		Log.e("wtf","...");
 		if (!settings.contains(PreferencesKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false);

@@ -71,7 +71,7 @@
     <string name="cap_short_none"></string>
     <string name="cap_short_every_day">EVERY DAY</string>
     <string name="next_scheduled_intro">Next alarm</string>
-	<string name="update_welcome_title">New in HueMore 2.3</string>
+	<string name="update_welcome_title">New in HueMore 2.4</string>
 	<string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
 	<string name="update_message">Please update HueMore to the newest version.</string>
 	<string name="update_opt_out">Disable update reminders</string>
