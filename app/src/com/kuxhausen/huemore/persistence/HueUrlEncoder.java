@@ -334,6 +334,10 @@ public class HueUrlEncoder {
 				//1 bit timing addressing reference mode
 				mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
 				
+				//TODO support this mode
+				if(mood.timeAddressingRepeatPolicy)
+					throw new FutureEncodingException();
+				
 				//7 bit timing repeat number
 				mood.setNumLoops(mBitSet.extractNumber(7));
 				//flag infinite looping if max numLoops
