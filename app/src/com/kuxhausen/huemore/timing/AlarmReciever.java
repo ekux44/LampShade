@@ -189,7 +189,8 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			Mood m = Utils.getMoodFromDatabase(as.mood, context);	
 			for(Event e: m.events){
 				e.state.bri = as.brightness;
-				e.state.transitiontime = as.transitiontime;
+				if(!m.usesTiming)
+					e.state.transitiontime = as.transitiontime;
 			}
 
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
