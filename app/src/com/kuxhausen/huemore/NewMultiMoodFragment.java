@@ -92,8 +92,8 @@ public class NewMultiMoodFragment extends ListFragment implements
 		for (int i = 0; i < moodRowArray.size(); i++) {
 			states[i] = gson.toJson(moodRowArray.get(i).hs);
 		}
-		//TODO fix
-		//		((GodObject) getActivity()).testMood(states);
+		
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
 
 	}
 
@@ -106,9 +106,33 @@ public class NewMultiMoodFragment extends ListFragment implements
 		}
 	}
 
+	private Mood getMood(){
+		Mood m = new Mood();
+		m.usesTiming = false;
+		m.numChannels = rayAdapter.getCount();
+		m.timeAddressingRepeatPolicy = false;
+		Event[] eRay = new Event[m.numChannels];
+		for(int i = 0; i<eRay.length; i++){
+			Event e = new Event();
+			e.channel = i;
+			e.time = 0;
+			e.state = moodRowArray.get(i).hs;
+			eRay[i] = e;
+		}
+		m.events = eRay;
+		return m;
+	}
+	
 	@Override
 	public void onCreateMood(String groupname) {
-		//TODO implement
+		
+		
+		ContentValues mNewValues = new ContentValues();
+		mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
+		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(getMood()));
+		
+		getActivity().getContentResolver().insert(
+				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
 	}
 
 	@Override
