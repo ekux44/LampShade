@@ -102,8 +102,8 @@ public class NewColorTempFragment extends Fragment implements
 	@Override
 	public Intent onCreateColor() {
 		Intent i = new Intent();
-		i.putExtra(InternalArguments.COLOR, gson.toJson(hs));
-		i.putExtra(InternalArguments.HUE_STATE, 0xffffffff);
+		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
+		i.putExtra(InternalArguments.COLOR, 0xffffffff);
 		return i;
 	}
 

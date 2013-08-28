@@ -160,10 +160,9 @@ public class ColorWheelFragment extends SherlockFragment implements
 		if (transitionSpinner != null)
 			hs.transitiontime = transitionValues[transitionSpinner
 					.getSelectedItemPosition()];
-		//hs.hue = cpv.getHue();
 		Intent i = new Intent();
 		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
-		//i.putExtra(InternalArguments.COLOR, cpv.getColor());
+		i.putExtra(InternalArguments.COLOR, picker.getColor());
 		return i;
 	}
 
