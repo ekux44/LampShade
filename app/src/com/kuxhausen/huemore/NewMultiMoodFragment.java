@@ -19,6 +19,7 @@ import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -44,8 +45,8 @@ public class NewMultiMoodFragment extends ListFragment implements
 		addColor.setOnClickListener(this);
 
 		Bundle args = getArguments();
-		if (args != null && args.containsKey(InternalArguments.ENCODED_MOOD)) {
-			Mood mood = HueUrlEncoder.decode(args.getString(InternalArguments.ENCODED_MOOD)).second;
+		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
+			Mood mood = Utils.getMoodFromDatabase(args.getString(InternalArguments.MOOD_NAME), this.getActivity());
 			for (Event e : mood.events) {
 				MoodRow mr = new MoodRow();
 				mr.hs = e.state;

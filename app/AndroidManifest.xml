@@ -68,6 +68,11 @@
         </receiver>
 
         <activity
+            android:name="com.kuxhausen.huemore.DecodeErrorActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kuxhausen.huemore.nfc.NfcWriterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" >

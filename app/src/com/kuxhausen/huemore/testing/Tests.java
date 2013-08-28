@@ -5,7 +5,9 @@ import java.util.BitSet;
 import android.util.Log;
 import android.util.Pair;
 
+import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -16,12 +18,19 @@ public class Tests {
 		
 		Mood m2 = null;
 		Integer[] b2 = null;
-		if(b1!=null){
-			m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).second;
-			b2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).first;
+		try {
+			if(b1!=null){
+				m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).second;
+				b2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).first;
+			} else
+				m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1)).second;		
+		} catch (InvalidEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FutureEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else
-			m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1)).second;
 		
 		if(b1!=null){
 			if(b1.length!=b2.length){

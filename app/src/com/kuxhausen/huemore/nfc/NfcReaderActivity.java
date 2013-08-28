@@ -20,13 +20,16 @@ import android.widget.ToggleButton;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.DecodeErrorActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -80,13 +83,26 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				// System.out.println(data);
 				data = data.substring(data.indexOf('?') + 1);
 				// System.out.println(data);
-				Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
-				bulbS = result.first;
-				Mood m = result.second;
-				
-				Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null);
-				
-				onButton.setChecked(m.events[0].state.on);
+
+				try {
+					Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
+					bulbS = result.first;
+					Mood m = result.second;
+					
+					Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null);
+					
+					onButton.setChecked(m.events[0].state.on);
+				} catch (InvalidEncodingException e) {
+					Intent i = new Intent(this,DecodeErrorActivity.class);
+					i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
+					startActivity(i);
+					this.finish();
+				} catch (FutureEncodingException e) {
+					Intent i = new Intent(this,DecodeErrorActivity.class);
+					i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, true);
+					startActivity(i);
+					this.finish();
+				}
 			}
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

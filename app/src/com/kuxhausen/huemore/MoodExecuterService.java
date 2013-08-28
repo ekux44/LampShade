@@ -21,7 +21,9 @@ import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.QueueEvent;
@@ -160,40 +162,48 @@ public class MoodExecuterService extends Service {
 			String encodedTransientMood = intent
 					.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
 
-			
-			if (encodedMood != null) {
-				moodPair = HueUrlEncoder.decode(encodedMood);
-				queue.clear();
-				loadMoodIntoQueue();
-
-				String moodName = intent
-						.getStringExtra(InternalArguments.MOOD_NAME);
-				moodName = (moodName == null) ? "Unknown Mood" : moodName;
-				createNotification(moodName);
-
-			} else if (encodedTransientMood != null) {
-				Pair<Integer[], Mood> decodedValues = HueUrlEncoder
-						.decode(encodedTransientMood);
-				Integer[] bulbS = decodedValues.first;
-				Mood m = decodedValues.second;
-
-				ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
-				for (int i = 0; i < channels.length; i++)
-					channels[i] = new ArrayList<Integer>();
-
-				for (int i = 0; i < bulbS.length; i++) {
-					channels[i % m.numChannels].add(bulbS[i]);
-				}
-
-				for (Event e : m.events) {
-					for (Integer bNum : channels[e.channel]) {
-						BulbState toModify = transientStateChanges[bNum - 1];
-						toModify.merge(e.state);
-						if (toModify.toString() != e.state.toString())
-							flagTransientChanges[bNum - 1] = true;
+			try{
+				if (encodedMood != null) {
+					moodPair = HueUrlEncoder.decode(encodedMood);
+					queue.clear();
+					loadMoodIntoQueue();
+	
+					String moodName = intent
+							.getStringExtra(InternalArguments.MOOD_NAME);
+					moodName = (moodName == null) ? "Unknown Mood" : moodName;
+					createNotification(moodName);
+	
+				} else if (encodedTransientMood != null) {
+					Pair<Integer[], Mood> decodedValues = HueUrlEncoder
+							.decode(encodedTransientMood);
+					Integer[] bulbS = decodedValues.first;
+					Mood m = decodedValues.second;
+	
+					ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+					for (int i = 0; i < channels.length; i++)
+						channels[i] = new ArrayList<Integer>();
+	
+					for (int i = 0; i < bulbS.length; i++) {
+						channels[i % m.numChannels].add(bulbS[i]);
+					}
+	
+					for (Event e : m.events) {
+						for (Integer bNum : channels[e.channel]) {
+							BulbState toModify = transientStateChanges[bNum - 1];
+							toModify.merge(e.state);
+							if (toModify.toString() != e.state.toString())
+								flagTransientChanges[bNum - 1] = true;
+						}
 					}
 				}
-
+			} catch (InvalidEncodingException e) {
+				Intent i = new Intent(this,DecodeErrorActivity.class);
+				i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
+				startActivity(i);
+			} catch (FutureEncodingException e) {
+				Intent i = new Intent(this,DecodeErrorActivity.class);
+				i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, true);
+				startActivity(i);
 			}
 		}
 		restartCountDownTimer();

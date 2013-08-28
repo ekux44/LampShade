@@ -49,8 +49,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	static int currentPage;
 
 	EditText nameEditText;
-	String priorName;
-
+	static String priorName;
 	static Mood priorMood;
 	static Gson gson = new Gson();
 
@@ -170,8 +169,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				Bundle args1 = new Bundle();
 				args1.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (priorMood != null && !priorMood.usesTiming) {
-					args1.putString(InternalArguments.ENCODED_MOOD,
-							HueUrlEncoder.encode(priorMood));
+					args1.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				etmf.setArguments(args1);
 				newMoodFragments[i] = etmf;
@@ -181,8 +179,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				Bundle args2 = new Bundle();
 				args2.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (priorMood != null && !priorMood.usesTiming) {
-					args2.putString(InternalArguments.ENCODED_MOOD,
-							HueUrlEncoder.encode(priorMood));
+					args2.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				nmmf.setArguments(args2);
 				newMoodFragments[i] = nmmf;
@@ -192,8 +189,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				Bundle args3 = new Bundle();
 				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (priorMood != null && !priorMood.usesTiming) {
-					args3.putString(InternalArguments.ENCODED_MOOD,
-							HueUrlEncoder.encode(priorMood));
+					args3.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				ecmf.setArguments(args3);
 				newMoodFragments[i] = ecmf;
