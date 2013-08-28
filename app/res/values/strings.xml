@@ -92,4 +92,6 @@
     <string name="coming_soon">This page coming in version 2.5</string>
     <string name="cap_timed_mood">TIMED</string>
     <string name="cap_multi_mood">MULTI</string>
+    <string name="update_required">This mood requires an updated version of HueMore</string>
+    <string name="corrupted_mood">This mood cannot be read</string>
 </resources>
