@@ -114,11 +114,11 @@ public class MoodExecuterService extends Service {
 		}
 
 		for (Event e : m.events) {
-			e.time += (int) System.nanoTime() / 1000000;// divide by 1 million
-														// to convert to millis
 			for (Integer bNum : channels[e.channel]) {
 				QueueEvent qe = new QueueEvent(e);
 				qe.bulb = bNum;
+				// 10^8 * e.time
+				qe.nanoTime = System.nanoTime()+(e.time*100000000l);
 				queue.add(qe);
 			}
 		}
@@ -230,7 +230,7 @@ public class MoodExecuterService extends Service {
 				if (highPriorityQueue.peek() != null) {
 					QueueEvent e = highPriorityQueue.poll();
 					NetworkMethods.PreformTransmitGroupMood(getRequestQueue(),
-							me, null, e.bulb, e.state);
+							me, null, e.bulb, e.event.state);
 				} else if (hasTransientChanges()) {
 					boolean addedSomethingToQueue = false;
 					while (!addedSomethingToQueue) {
@@ -254,7 +254,7 @@ public class MoodExecuterService extends Service {
 
 						me.stopSelf();
 					}
-				} else if (queue.peek().time <= System.nanoTime() / 1000000) {
+				} else if (queue.peek().nanoTime <= System.nanoTime()) {
 					ArrayList<QueueEvent> eList = new ArrayList<QueueEvent>();
 					eList.add(queue.poll());
 					while (queue.peek() != null
