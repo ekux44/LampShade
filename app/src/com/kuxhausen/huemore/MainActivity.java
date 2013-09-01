@@ -154,7 +154,7 @@ public class MainActivity extends GodObject implements
 		
 		Calendar currentTime = Calendar.getInstance();
 		Calendar updateTime = Calendar.getInstance();
-		updateTime.set(Calendar.MONTH, Calendar.AUGUST); //TODO remember to change this when releasing new versions
+		updateTime.set(Calendar.MONTH, Calendar.SEPTEMBER); //TODO remember to change this when releasing new versions
 		
 		if(currentTime.after(updateTime) && !settings.getBoolean(PreferencesKeys.UPDATE_OPT_OUT, false)){
 			UpdateDialogFragment updates = new UpdateDialogFragment();
