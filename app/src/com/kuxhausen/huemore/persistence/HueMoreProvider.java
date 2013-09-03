@@ -291,20 +291,24 @@ public class HueMoreProvider extends ContentProvider {
 		case MOODS:
 			if((selection!=null) && (selectionArgs.length>0 && selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
 					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
-					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off)))){
+					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
+					||selectionArgs[0].charAt(0) == ((char) 8))){
 				BulbState resultState = new BulbState();
 					
-				if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))) {
+				if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
+						|| selectionArgs[0].equals(((char) 8) + "RANDOM")) {
 					// random only handled here 
 					resultState.on = true;
 					resultState.effect = "none";
 					resultState.hue = (int) (65535 * Math.random());
 					resultState.sat = (short) (255 * (Math.random() * 5. + .25));
 					
-				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))){
+				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
+						|| selectionArgs[0].equals(((char) 8) + "ON")) {
 					resultState.on = true;
 					resultState.effect = "none";
-				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))){
+				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
+						|| selectionArgs[0].equals(((char) 8) + "OFF")) {
 					resultState.on = false;
 					resultState.effect = "none";
 				}
@@ -346,8 +350,24 @@ public class HueMoreProvider extends ContentProvider {
 				null, // don't filter by row groups
 				sortOrder // The sort order
 				);
+		
 		Cursor[] cRay;
-		if(sUriMatcher.match(uri) == MOODS && selectionArgs==null){
+		if(sUriMatcher.match(uri) == MOODS && c2.getCount()<1){
+			//If mood doesn't exist in db, return a blank mood
+			BulbState resultState = new BulbState();
+			resultState.on = true; //todo make this field Boolean so I don't have to set it
+			
+			Mood m = Utils.generateSimpleMood(resultState);
+			
+			String[] moodColumns = { MoodColumns.STATE };
+			MatrixCursor mc = new MatrixCursor(moodColumns);
+			Object[] tempRow = {HueUrlEncoder.encode(m)};
+			mc.addRow(tempRow);
+			mc.setNotificationUri(getContext().getContentResolver(), uri);
+			
+			return mc;
+		}
+		else if(sUriMatcher.match(uri) == MOODS && selectionArgs==null){
 			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
 			MatrixCursor c1 = new MatrixCursor(columns);
 			Object[] tempCol0 = {this.getContext().getString(R.string.cap_off),0};
