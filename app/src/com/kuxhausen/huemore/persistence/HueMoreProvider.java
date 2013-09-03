@@ -56,8 +56,8 @@ public class HueMoreProvider extends ContentProvider {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 		{
-
-			// operation
+			// Add a pattern that routes URIs terminated with "groups" to a
+			// GROUPS operation
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groups", GROUPS);
 			// Creates a new projection map instance. The map returns a column
 			// name
@@ -76,36 +76,21 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.GroupColumns.PRECEDENCE);
 		}
 		{
-			// Add a pattern that routes URIs terminated with "moods" to a MOODS
-			// operation
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moods", MOODS);
-			// Creates a new projection map instance. The map returns a column
-			// name
-			// given a string. The two are usually equal.
 			sMoodsProjectionMap = new HashMap<String, String>();
 
-			// Maps the string "_ID" to the column name "_ID"
 			sMoodsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-
 			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
 					DatabaseDefinitions.MoodColumns.MOOD);
 			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
 					DatabaseDefinitions.MoodColumns.STATE);
 		}
 		{
-			// Add a pattern that routes URIs terminated with "groups" to a
-			// GROUPS
-			// operation
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groupbulbs",
 					GROUPBULBS);
-			// Creates a new projection map instance. The map returns a column
-			// name
-			// given a string. The two are usually equal.
 			sGroupBulbsProjectionMap = new HashMap<String, String>();
 
-			// Maps the string "_ID" to the column name "_ID"
 			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-
 			sGroupBulbsProjectionMap.put(
 					DatabaseDefinitions.GroupColumns.GROUP,
 					DatabaseDefinitions.GroupColumns.GROUP);
@@ -116,18 +101,10 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.GroupColumns.PRECEDENCE);
 		}
 		{
-			// Add a pattern that routes URIs terminated with "groups" to a
-			// GROUPS
-			// operation
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "alarms", ALARMS);
-			// Creates a new projection map instance. The map returns a column
-			// name
-			// given a string. The two are usually equal.
 			sAlarmsProjectionMap = new HashMap<String, String>();
 
-			// Maps the string "_ID" to the column name "_ID"
 			sAlarmsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-
 			sAlarmsProjectionMap.put(DatabaseDefinitions.AlarmColumns.STATE,
 					DatabaseDefinitions.AlarmColumns.STATE);
 			sAlarmsProjectionMap.put(
@@ -149,7 +126,6 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
-		// If the incoming URI is for notes, chooses the Notes projection
 
 		case ALARMS:
 			table = (DatabaseDefinitions.AlarmColumns.TABLE_NAME);
@@ -193,7 +169,6 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
-		// If the incoming URI is for notes, chooses the Notes projection
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
@@ -215,8 +190,6 @@ public class HueMoreProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
-		// Opens the database object in "read" mode, since no writes need to be
-		// done.
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
 		long insertId = db.insert(qb.getTables(), null, values);
@@ -254,7 +227,6 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
-		// If the incoming URI is for notes, chooses the Notes projection
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
@@ -342,13 +314,13 @@ public class HueMoreProvider extends ContentProvider {
 		 * contains null. If no records were selected, then the Cursor object is
 		 * empty, and Cursor.getCount() returns 0.
 		 */
-		Cursor c2 = qb.query(db, // The database to query
+		Cursor c2 = qb.query(db,
 				projection, // The columns to return from the query
 				selection, // The columns for the where clause
 				selectionArgs, // The values for the where clause
 				groupBy, // don't group the rows
 				null, // don't filter by row groups
-				sortOrder // The sort order
+				sortOrder 
 				);
 		
 		Cursor[] cRay;
