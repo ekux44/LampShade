@@ -29,7 +29,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	public Gson gson = new Gson();
 	private ArrayList<AsyncTask<?, ?, ?>> inFlight = new ArrayList<AsyncTask<?, ?, ?>>();
 	private String groupS;	
-	private Integer[] bulbS;
+	private Integer[] bulbS = new Integer[0];
 	private String mood;
 	
 	class SerializedGodObjectForTransport{
