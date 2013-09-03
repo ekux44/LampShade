@@ -238,7 +238,9 @@ public class HueMoreProvider extends ContentProvider {
 			groupBy = DatabaseDefinitions.GroupColumns.GROUP;
 			break;
 		case GROUPBULBS:
-			if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_all))){
+			if((selection!=null) && selectionArgs.length>0 && (
+					selectionArgs[0].equals(this.getContext().getString(R.string.cap_all)) 
+					|| selectionArgs[0].charAt(0) == ((char) 8))){
 				
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
 				int numBulbs = settings.getInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS, 1);
@@ -261,10 +263,11 @@ public class HueMoreProvider extends ContentProvider {
 			groupBy = null;
 			break;
 		case MOODS:
-			if((selection!=null) && (selectionArgs.length>0 && selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
-					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
-					||selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
-					||selectionArgs[0].charAt(0) == ((char) 8))){
+			if((selection!=null) && selectionArgs.length>0 && (
+					selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
+					|| selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
+					|| selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
+					|| selectionArgs[0].charAt(0) == ((char) 8))){
 				BulbState resultState = new BulbState();
 					
 				if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
