@@ -19,7 +19,7 @@ import android.provider.BaseColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.R;
@@ -243,7 +243,7 @@ public class HueMoreProvider extends ContentProvider {
 					|| selectionArgs[0].charAt(0) == ((char) 8))){
 				
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-				int numBulbs = settings.getInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS, 1);
+				int numBulbs = settings.getInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS, 1);
 				
 				//TODO dynamically handle columns to return
 				//String[] groupColumns = { GroupColumns.GROUP, GroupColumns.BULB };

@@ -20,7 +20,7 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 
 public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> {
@@ -58,9 +58,9 @@ public class GetBulbsAttributes extends AsyncTask<Void, Void, BulbAttributes[]> 
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(cont);
-		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
+		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
 				null);
-		String hash = settings.getString(PreferencesKeys.HASHED_USERNAME, "");
+		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
 
 		if (bridge == null)
 			return null;

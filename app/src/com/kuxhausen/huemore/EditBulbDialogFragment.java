@@ -26,11 +26,11 @@ public class EditBulbDialogFragment extends DialogFragment {
 	EditText nameEditText;
 	int bulbNumber;
 	Gson gson = new Gson();
-	BulbsFragment bulbF;
+	BulbListFragment bulbF;
 
 	private GodObject parrentActivity;
 
-	public void setBulbsFragment(BulbsFragment bf) {
+	public void setBulbsFragment(BulbListFragment bf) {
 		bulbF = bf;
 	}
 

@@ -150,11 +150,7 @@ public final class DatabaseDefinitions {
 		public final static String DECODER_ERROR_UPGRADE = "DecoderErrorUpgrade";
 	}
 
-	public static final class ExternalArguments {
-		public static final String NA = "N/A";
-	}
-
-	public static final class PreferencesKeys {
+	public static final class PreferenceKeys {
 		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
 		public static final String HASHED_USERNAME = "Hashed_Username";
 		public static final String DEFAULT_TO_GROUPS = "default_to_groups";

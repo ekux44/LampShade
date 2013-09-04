@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -65,6 +65,6 @@ public class Utils {
 	
 	public static boolean hasProVersion(Context c){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(c);
-		return settings.getInt(PreferencesKeys.BULBS_UNLOCKED,0) > PreferencesKeys.ALWAYS_FREE_BULBS;
+		return settings.getInt(PreferenceKeys.BULBS_UNLOCKED,0) > PreferenceKeys.ALWAYS_FREE_BULBS;
 	}
 }

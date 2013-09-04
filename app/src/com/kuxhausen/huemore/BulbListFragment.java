@@ -20,7 +20,7 @@ import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.Bulb;
 
-public class BulbsFragment extends SherlockListFragment implements
+public class BulbListFragment extends SherlockListFragment implements
 		GetBulbList.OnBulbListReturnedListener {
 
 	public TextView selected, longSelected; // updated on long click

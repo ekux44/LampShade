@@ -28,9 +28,9 @@ import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class MoodsListFragment extends SherlockListFragment implements
+public class MoodListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 	OnMoodSelectedListener mMoodCallback;
 

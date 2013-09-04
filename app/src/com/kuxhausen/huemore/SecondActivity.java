@@ -32,7 +32,7 @@ import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
@@ -47,7 +47,7 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
  * 
  */
 public class SecondActivity extends GodObject implements
-		MoodsListFragment.OnMoodSelectedListener {
+		MoodListFragment.OnMoodSelectedListener {
 
 	public SecondActivity me = this;
 	
@@ -81,7 +81,7 @@ public class SecondActivity extends GodObject implements
 		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
-		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)) {
+		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
 			mViewPager2.setCurrentItem(MOOD_LOCATION);
 		}
 		brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
@@ -141,7 +141,7 @@ public class SecondActivity extends GodObject implements
 	private static final int MOOD_LOCATION = 1;
 	private static final int MANUAL_LOCATION = 0;
 
-	private static MoodsListFragment moodsListFragment;
+	private static MoodListFragment moodListFragment;
 	private static ColorWheelFragment colorWheelFragment;
 
 	ViewPager mViewPager2;
@@ -149,7 +149,7 @@ public class SecondActivity extends GodObject implements
 	
 	@Override
 	public void onSelected(Integer[] bulbNum, String name,
-			GroupsListFragment groups, BulbsFragment bulbs) {
+			GroupListFragment groups, BulbListFragment bulbs) {
 		throw new RuntimeException("Not implemented here");
 	}
 	
@@ -166,9 +166,9 @@ public class SecondActivity extends GodObject implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case MOOD_LOCATION:
-				if (moodsListFragment == null)
-					moodsListFragment = new MoodsListFragment();
-				return moodsListFragment;
+				if (moodListFragment == null)
+					moodListFragment = new MoodListFragment();
+				return moodListFragment;
 			case MANUAL_LOCATION:
 				if (colorWheelFragment == null) {
 					colorWheelFragment = new ColorWheelFragment();
@@ -207,7 +207,7 @@ public class SecondActivity extends GodObject implements
 		}
 	}
 	public void invalidateSelection() {
-		((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
+		((MoodListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
 				.invalidateSelection();
 	}
 	@Override

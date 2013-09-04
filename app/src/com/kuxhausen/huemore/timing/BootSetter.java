@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class BootSetter extends BroadcastReceiver {
 
@@ -19,7 +19,7 @@ public class BootSetter extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		if (settings.contains(PreferencesKeys.FIRST_RUN)) {
+		if (settings.contains(PreferenceKeys.FIRST_RUN)) {
 			String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
 			Cursor cursor = context.getContentResolver().query(
 					AlarmColumns.ALARMS_URI, columns, null, null, null);

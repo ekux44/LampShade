@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class SettingsDialogFragment extends DialogFragment implements
 		OnClickListener, OnCheckedChangeListener {
@@ -43,11 +43,11 @@ public class SettingsDialogFragment extends DialogFragment implements
 				.findViewById(R.id.secondViewSettingGroup);
 		secondViewRadioGroup.setOnCheckedChangeListener(this);
 
-		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false))
+		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false))
 			firstViewRadioGroup.check(R.id.groupsViewRadioButton);
 		else
 			firstViewRadioGroup.check(R.id.bulbsViewRadioButton);
-		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true))
+		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true))
 			secondViewRadioGroup.check(R.id.moodsViewRadioButton);
 		else
 			secondViewRadioGroup.check(R.id.manualViewRadioButton);
@@ -71,19 +71,19 @@ public class SettingsDialogFragment extends DialogFragment implements
 		Editor edit = settings.edit();
 		switch (checkedId) {
 		case R.id.groupsViewRadioButton:
-			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, true);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
 			edit.commit();
 			break;
 		case R.id.bulbsViewRadioButton:
-			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
 			edit.commit();
 			break;
 		case R.id.moodsViewRadioButton:
-			edit.putBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
 			edit.commit();
 			break;
 		case R.id.manualViewRadioButton:
-			edit.putBoolean(PreferencesKeys.DEFAULT_TO_MOODS, false);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, false);
 			edit.commit();
 			break;
 

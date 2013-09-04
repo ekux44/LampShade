@@ -11,14 +11,14 @@ import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MoodsListFragment.OnMoodSelectedListener;
+import com.kuxhausen.huemore.MoodListFragment.OnMoodSelectedListener;
 import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.GetBulbsAttributes.OnAttributeListReturnedListener;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
@@ -85,7 +85,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 	public abstract GetBulbList.OnBulbListReturnedListener getBulbListenerFragment();
 	
 	public abstract void onSelected(Integer[] bulbNum, String name,
-			GroupsListFragment groups, BulbsFragment bulbs);
+			GroupListFragment groups, BulbListFragment bulbs);
 	
 	public Integer[] getBulbs(){
 		return bulbS;

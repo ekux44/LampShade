@@ -31,10 +31,10 @@ import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
-public class UpdateDialogFragment extends DialogFragment implements
+public class PromptUpdateDialogFragment extends DialogFragment implements
 		OnCheckedChangeListener {
 
 	CheckBox optOut;
@@ -95,9 +95,9 @@ public class UpdateDialogFragment extends DialogFragment implements
 				.getDefaultSharedPreferences(parrentActivity);
 		Editor edit = settings.edit();
 		if (isChecked)
-			edit.putBoolean(PreferencesKeys.UPDATE_OPT_OUT, true);
+			edit.putBoolean(PreferenceKeys.UPDATE_OPT_OUT, true);
 		else
-			edit.putBoolean(PreferencesKeys.UPDATE_OPT_OUT, false);
+			edit.putBoolean(PreferenceKeys.UPDATE_OPT_OUT, false);
 		edit.commit();
 	}
 }

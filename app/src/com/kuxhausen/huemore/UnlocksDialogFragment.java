@@ -16,7 +16,7 @@ import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class UnlocksDialogFragment extends DialogFragment implements
 		OnClickListener {
@@ -80,12 +80,12 @@ public class UnlocksDialogFragment extends DialogFragment implements
 			} else {
 				int numUnlocked = 50;
 				int previousMax = settings.getInt(
-						PreferencesKeys.BULBS_UNLOCKED,
-						PreferencesKeys.ALWAYS_FREE_BULBS);
+						PreferenceKeys.BULBS_UNLOCKED,
+						PreferenceKeys.ALWAYS_FREE_BULBS);
 				if (numUnlocked > previousMax) {
 					// Update the number held in settings
 					Editor edit = settings.edit();
-					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
+					edit.putInt(PreferenceKeys.BULBS_UNLOCKED, numUnlocked);
 					edit.commit();
 
 				}

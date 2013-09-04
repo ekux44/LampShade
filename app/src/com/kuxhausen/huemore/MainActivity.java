@@ -35,7 +35,7 @@ import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.registration.ConnectionStatusDialogFragment;
@@ -51,7 +51,7 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
  * 
  */
 public class MainActivity extends GodObject implements
-		MoodsListFragment.OnMoodSelectedListener {
+		MoodListFragment.OnMoodSelectedListener {
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	IabHelper mPlayHelper;
@@ -87,7 +87,7 @@ public class MainActivity extends GodObject implements
 		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
-		if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false)) {
+		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
 			if (mViewPager1.getCurrentItem() != GROUP_LOCATION)
 				mViewPager1.setCurrentItem(GROUP_LOCATION);
 		} else {
@@ -105,7 +105,7 @@ public class MainActivity extends GodObject implements
 			mViewPager2 = (ViewPager) this.findViewById(R.id.mood_pager);
 			mViewPager2.setAdapter(mMoodManualPagerAdapter);
 			
-			if (settings.getBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true)) {
+			if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
 				mViewPager2.setCurrentItem(MOOD_LOCATION);
 			}
 			brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
@@ -157,8 +157,8 @@ public class MainActivity extends GodObject implements
 		Calendar updateTime = Calendar.getInstance();
 		updateTime.set(Calendar.MONTH, Calendar.SEPTEMBER); //TODO remember to change this when releasing new versions
 		
-		if(currentTime.after(updateTime) && !settings.getBoolean(PreferencesKeys.UPDATE_OPT_OUT, false)){
-			UpdateDialogFragment updates = new UpdateDialogFragment();
+		if(currentTime.after(updateTime) && !settings.getBoolean(PreferenceKeys.UPDATE_OPT_OUT, false)){
+			PromptUpdateDialogFragment updates = new PromptUpdateDialogFragment();
 			updates.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
@@ -197,20 +197,20 @@ public class MainActivity extends GodObject implements
 	private static final int GROUP_LOCATION = 1;
 	private static final int BULB_LOCATION = 0;
 
-	private static GroupsListFragment groupsListFragment;
-	private static BulbsFragment bulbsFragment;
+	private static GroupListFragment groupListFragment;
+	private static BulbListFragment bulbListFragment;
 
 	ViewPager mViewPager1;
 	GodObject parrentActivity;
 	
 	public void onSelected(Integer[] bulbNum, String name,
-			GroupsListFragment groups, BulbsFragment bulbs) {
-		if (groups == groupsListFragment && groups != null
-				&& bulbsFragment != null)
-			bulbsFragment.invalidateSelection();
-		if (bulbs == bulbsFragment && bulbs != null
-				&& groupsListFragment != null)
-			groupsListFragment.invalidateSelection();
+			GroupListFragment groups, BulbListFragment bulbs) {
+		if (groups == groupListFragment && groups != null
+				&& bulbListFragment != null)
+			bulbListFragment.invalidateSelection();
+		if (bulbs == bulbListFragment && bulbs != null
+				&& groupListFragment != null)
+			groupListFragment.invalidateSelection();
 
 		if (parrentActivity != null || bulbNum == null || name == null)
 			parrentActivity.onGroupBulbSelected(bulbNum, name);
@@ -229,15 +229,15 @@ public class MainActivity extends GodObject implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case GROUP_LOCATION:
-				if (groupsListFragment == null) {
-					groupsListFragment = new GroupsListFragment();
+				if (groupListFragment == null) {
+					groupListFragment = new GroupListFragment();
 				}
-				return groupsListFragment;
+				return groupListFragment;
 			case BULB_LOCATION:
-				if (bulbsFragment == null) {
-					bulbsFragment = new BulbsFragment();
+				if (bulbListFragment == null) {
+					bulbListFragment = new BulbListFragment();
 				}
-				return bulbsFragment;
+				return bulbListFragment;
 			default:
 				return null;
 			}
@@ -269,7 +269,7 @@ public class MainActivity extends GodObject implements
 	private static final int MOOD_LOCATION = 1;
 	private static final int MANUAL_LOCATION = 0;
 
-	private static MoodsListFragment moodsListFragment;
+	private static MoodListFragment moodListFragment;
 	private static ColorWheelFragment colorWheelFragment;
 
 	ViewPager mViewPager2;
@@ -287,9 +287,9 @@ public class MainActivity extends GodObject implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case MOOD_LOCATION:
-				if (moodsListFragment == null)
-					moodsListFragment = new MoodsListFragment();
-				return moodsListFragment;
+				if (moodListFragment == null)
+					moodListFragment = new MoodListFragment();
+				return moodListFragment;
 			case MANUAL_LOCATION:
 				if (colorWheelFragment == null) {
 					colorWheelFragment = new ColorWheelFragment();
@@ -335,7 +335,7 @@ public class MainActivity extends GodObject implements
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
-			((MoodsListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
+			((MoodListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
 					.invalidateSelection();
 		}
 	}
@@ -530,17 +530,17 @@ public class MainActivity extends GodObject implements
 			edit.commit();
 		}*/
 		
-		if (!settings.contains(PreferencesKeys.FIRST_RUN)) {
+		if (!settings.contains(PreferenceKeys.FIRST_RUN)) {
 			// Mark no longer first run in preferences cache
 			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.FIRST_RUN, false);
-			edit.putInt(PreferencesKeys.BULBS_UNLOCKED,
-					PreferencesKeys.ALWAYS_FREE_BULBS);// TODO load from
+			edit.putBoolean(PreferenceKeys.FIRST_RUN, false);
+			edit.putInt(PreferenceKeys.BULBS_UNLOCKED,
+					PreferenceKeys.ALWAYS_FREE_BULBS);// TODO load from
 			// google store
 			edit.commit();
 		} else
 			try {
-				if (settings.getInt(PreferencesKeys.VERSION_NUMBER, -1)!= this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode){
+				if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1)!= this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode){
 					UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
 					ucdf.show(this.getSupportFragmentManager(),
 							InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -548,32 +548,32 @@ public class MainActivity extends GodObject implements
 			} catch (NameNotFoundException e1){
 			}
 		Log.e("wtf","...");
-		if (!settings.contains(PreferencesKeys.DEFAULT_TO_GROUPS)) {
+		if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.DEFAULT_TO_GROUPS, false);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
 			edit.commit();
 		}
-		if (!settings.contains(PreferencesKeys.DEFAULT_TO_MOODS)) {
+		if (!settings.contains(PreferenceKeys.DEFAULT_TO_MOODS)) {
 			Editor edit = settings.edit();
-			edit.putBoolean(PreferencesKeys.DEFAULT_TO_MOODS, true);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
 			edit.commit();
 		}
 
 		// check to see if the bridge IP address is setup yet
-		if (!settings.contains(PreferencesKeys.BRIDGE_IP_ADDRESS)) {
+		if (!settings.contains(PreferenceKeys.BRIDGE_IP_ADDRESS)) {
 			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
 			dhdf.show(this.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
-		if (!settings.contains(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS)) {
+		if (!settings.contains(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS)) {
 			Editor edit = settings.edit();
-			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,1);
+			edit.putInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS,1);
 			edit.commit();
 		}
 		
 		Editor edit = settings.edit();
 		try {
-			edit.putInt(PreferencesKeys.VERSION_NUMBER, this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
+			edit.putInt(PreferenceKeys.VERSION_NUMBER, this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
 		} catch (NameNotFoundException e) {
 		}
 		edit.commit();
@@ -624,7 +624,7 @@ public class MainActivity extends GodObject implements
 			} else {
 				// Log.d("asdf", "Query inventory was successful.");
 				lastQuerriedInventory = inventory;
-				int numUnlocked = PreferencesKeys.ALWAYS_FREE_BULBS;
+				int numUnlocked = PreferenceKeys.ALWAYS_FREE_BULBS;
 				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
 					numUnlocked = Math.max(50, numUnlocked);
 				if (inventory.hasPurchase(PlayItems.BUY_ME_A_BULB_DONATION_1))
@@ -635,12 +635,12 @@ public class MainActivity extends GodObject implements
 				SharedPreferences settings = PreferenceManager
 						.getDefaultSharedPreferences(me);
 				int previousMax = settings.getInt(
-						PreferencesKeys.BULBS_UNLOCKED,
-						PreferencesKeys.ALWAYS_FREE_BULBS);
+						PreferenceKeys.BULBS_UNLOCKED,
+						PreferenceKeys.ALWAYS_FREE_BULBS);
 				if (numUnlocked > previousMax) {
 					// Update the number held in settings
 					Editor edit = settings.edit();
-					edit.putInt(PreferencesKeys.BULBS_UNLOCKED, numUnlocked);
+					edit.putInt(PreferenceKeys.BULBS_UNLOCKED, numUnlocked);
 					edit.commit();
 
 				}

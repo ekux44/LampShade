@@ -28,7 +28,7 @@ import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.api.Bridge;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
@@ -167,8 +167,8 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 						.getDefaultSharedPreferences(parrentActivity);
 
 				Editor edit = settings.edit();
-				edit.putString(PreferencesKeys.BRIDGE_IP_ADDRESS, bridgeIP);
-				edit.putString(PreferencesKeys.HASHED_USERNAME, username);
+				edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, bridgeIP);
+				edit.putString(PreferenceKeys.HASHED_USERNAME, username);
 				edit.commit();
 
 				// done with registration dialog

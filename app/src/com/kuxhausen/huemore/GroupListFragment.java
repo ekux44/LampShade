@@ -29,9 +29,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class GroupsListFragment extends SherlockListFragment implements
+public class GroupListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
 	// Identifies a particular Loader being used in this component

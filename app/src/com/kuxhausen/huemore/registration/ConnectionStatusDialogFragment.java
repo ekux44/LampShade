@@ -3,7 +3,7 @@ package com.kuxhausen.huemore.registration;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -34,7 +34,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment{
 		if(parrentActivity.hasHubConnection()){
 			SharedPreferences settings = PreferenceManager
 					.getDefaultSharedPreferences(parrentActivity);
-			String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
+			String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
 					"");
 			
 			

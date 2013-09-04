@@ -22,7 +22,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
 public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
@@ -57,9 +57,9 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 		// Get username and IP from preferences cache
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(cont);
-		String bridge = settings.getString(PreferencesKeys.BRIDGE_IP_ADDRESS,
+		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
 				null);
-		String hash = settings.getString(PreferencesKeys.HASHED_USERNAME, "");
+		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
 
 		if (bridge == null)
 			return returnOutput;
@@ -114,7 +114,7 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 		if(result!=null && result.length>0){
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(cont);
 			Editor edit = settings.edit();
-			edit.putInt(PreferencesKeys.NUMBER_OF_CONNECTED_BULBS,result.length);
+			edit.putInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS,result.length);
 			edit.commit();
 			
 			tracker.setHubConnectionState(true);
