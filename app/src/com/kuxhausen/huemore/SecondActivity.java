@@ -67,7 +67,7 @@ public class SecondActivity extends GodObject implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.second_activity);
+		setContentView(R.layout.secondary_page);
 		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
 		this.getSupportActionBar().setTitle(this.getGroupS());
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
