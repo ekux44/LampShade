@@ -11,9 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NewColorPagerDialogFragment extends DialogFragment implements
 		OnClickListener {
@@ -38,9 +42,13 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 
 	static int currentPage;
 
+	Spinner transitionSpinner;
+	int[] transitionValues;
+	Gson gson = new Gson();
+	
 	public interface OnCreateColorListener {
 		/** Called by HeadlinesFragment when a list item is selected */
-		public Intent onCreateColor();
+		public Intent onCreateColor(Integer transitionTime);
 
 	}
 
@@ -51,6 +59,24 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.color_dialog_pager, container, false);
 
+	 	transitionSpinner = (Spinner) myView
+				.findViewById(R.id.transitionSpinner);
+		// Create an ArrayAdapter using the string array and a default
+		// spinner
+		// layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+				R.array.transition_names_array,
+				android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		transitionSpinner.setAdapter(adapter);
+
+		transitionValues = getActivity().getResources().getIntArray(
+				R.array.transition_values_array);
+		
+		
+		
 		// Create an adapter that when requested, will return a fragment
 		// representing an object in
 		// the collection.
@@ -77,7 +103,28 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		okayButton.setOnClickListener(this);
 
 		newColorFragments = new OnCreateColorListener[2];
+		
+		
+		Bundle args = this.getArguments();
+		if (args != null && args.containsKey(InternalArguments.BULB_STATE)) {
+			BulbState bs = gson.fromJson(args.getString(InternalArguments.BULB_STATE),BulbState.class);
+			routeState(bs);
+			
+			if (bs.transitiontime != null) {
+				int pos = 0;
+				for (int i = 0; i < transitionValues.length; i++)
+					if (bs.transitiontime == transitionValues[i])
+						pos = i;
+				transitionSpinner.setSelection(pos);
+			}
+		}
+		
 		return myView;
+	}
+
+	private void routeState(BulbState bs) {
+		// TODO Auto-generated method stub
+		//mViewPager.setCurrentItem(2);
 	}
 
 	/**
@@ -133,7 +180,12 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.okay:
-			Intent i = newColorFragments[currentPage].onCreateColor();
+			Integer transitionTime = null;
+			if (transitionSpinner != null)
+				transitionTime = transitionValues[transitionSpinner
+						.getSelectedItemPosition()];
+			
+			Intent i = newColorFragments[currentPage].onCreateColor(transitionTime);
 			getTargetFragment().onActivityResult(getTargetRequestCode(),
 					i.getExtras().getInt(InternalArguments.COLOR), i);
 			this.dismiss();

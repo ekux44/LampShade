@@ -43,10 +43,9 @@ public class ColorWheelFragment extends SherlockFragment implements
 	Gson gson = new Gson();
 
 	CompoundButton colorLoop;
-	Spinner transitionSpinner;
-	int[] transitionValues;
+	
 	LinearLayout colorLoopLayout, transitionLayout;
-	boolean colorLoopLayoutVisible = true, transitionLayoutVisible = true;
+	boolean colorLoopLayoutVisible = true;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,29 +65,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 		saturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);
 		picker.addSaturationBar(saturationBar);
 
-		ArrayAdapter<CharSequence> adapter;
-		if (transitionLayoutVisible) {
-			transitionSpinner = (Spinner) groupDialogView
-					.findViewById(R.id.transitionSpinner);
-			// Create an ArrayAdapter using the string array and a default
-			// spinner
-			// layout
-			adapter = ArrayAdapter.createFromResource(getActivity(),
-					R.array.transition_names_array,
-					android.R.layout.simple_spinner_item);
-			// Specify the layout to use when the list of choices appears
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			// Apply the adapter to the spinner
-			transitionSpinner.setAdapter(adapter);
-
-			transitionValues = getActivity().getResources().getIntArray(
-					R.array.transition_values_array);
-			transitionLayout = (LinearLayout) groupDialogView
-					.findViewById(R.id.transitionTimeLayout);
-		} else {
-			groupDialogView.findViewById(R.id.transitionTimeLayout)
-					.setVisibility(View.GONE);
-		}
 
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.BULB_STATE)) {
@@ -103,14 +79,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 			float[] hsv = { (hs.hue * 360) / 65535, hs.sat / 255f, 1 };
 			picker.setColor(Color.HSVToColor(hsv));
 			saturationBar.setSaturation(hsv[1]);
-			if (transitionLayoutVisible && bs.transitiontime != null) {
-				hs.transitiontime = bs.transitiontime;
-				int pos = 0;
-				for (int i = 0; i < transitionValues.length; i++)
-					if (bs.transitiontime == transitionValues[i])
-						pos = i;
-				transitionSpinner.setSelection(pos);
-			}
+			
 		}
 		
 		if (colorLoopLayoutVisible) {
@@ -141,13 +110,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 			colorLoopLayout.setVisibility(View.GONE);
 	}
 
-	public void hideTransitionTime() {
-		transitionLayoutVisible = false;
-		transitionSpinner = null;
-		if (transitionLayout != null)
-			transitionLayout.setVisibility(View.GONE);
-	}
-
 	public void preview() {
 		if(isAdded()){
 			
@@ -157,10 +119,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public Intent onCreateColor() {
-		if (transitionSpinner != null)
-			hs.transitiontime = transitionValues[transitionSpinner
-					.getSelectedItemPosition()];
+	public Intent onCreateColor(Integer transitionTime) {
+		hs.transitiontime = transitionTime;
 		Intent i = new Intent();
 		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
 		i.putExtra(InternalArguments.COLOR, picker.getColor());
@@ -169,7 +129,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	@Override
 	public void onCreateMood(String groupname) {
-		onCreateColor();
+		onCreateColor(null);
 
 		// Defines an object to contain the new values to
 		// insert

@@ -171,7 +171,6 @@ public class SecondActivity extends GodObject implements
 			case MANUAL_LOCATION:
 				if (colorWheelFragment == null) {
 					colorWheelFragment = new ColorWheelFragment();
-					colorWheelFragment.hideTransitionTime();
 				}
 				return colorWheelFragment;
 			default:
