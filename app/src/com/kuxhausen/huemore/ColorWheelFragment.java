@@ -57,7 +57,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 		hs.on = true;
 		hs.effect = "none";
 
-		hs.hue = 0;// todo poll existing saturation if there is one
+		hs.hue = 0;
+		hs.sat = 0;// todo poll existing saturation if there is one
 
 		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
 
@@ -99,7 +100,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 			if (bs.sat != null) {
 				hs.sat = bs.sat;
 			}
-			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+			float[] hsv = { (hs.hue * 360) / 65535, hs.sat / 255f, 1 };
 			picker.setColor(Color.HSVToColor(hsv));
 			saturationBar.setSaturation(hsv[1]);
 			if (transitionLayoutVisible && bs.transitiontime != null) {
