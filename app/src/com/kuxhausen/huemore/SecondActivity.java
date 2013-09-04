@@ -26,6 +26,7 @@ import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
+import com.kuxhausen.huemore.editmood.ColorWheelFragment;
 import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
@@ -34,12 +35,12 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferencesKeys;
 import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
-import com.kuxhausen.huemore.ui.registration.DiscoverHubDialogFragment;
 
 /**
  * @author Eric Kuxhausen

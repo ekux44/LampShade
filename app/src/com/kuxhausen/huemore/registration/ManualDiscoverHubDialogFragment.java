@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.ui.registration;
+package com.kuxhausen.huemore.registration;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

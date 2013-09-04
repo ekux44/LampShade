@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,11 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.id;
+import com.kuxhausen.huemore.R.layout;
+import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;

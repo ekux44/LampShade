@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.ui;
+package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;

@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.ui.registration;
+package com.kuxhausen.huemore.registration;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;

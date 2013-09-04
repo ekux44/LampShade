@@ -1,6 +1,8 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.editmood;
 
-import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.layout;
+import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,14 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class EditTimedMoodFragment extends Fragment implements OnCreateMoodListener{
+public class EditComplexMoodFragment extends Fragment implements OnCreateMoodListener{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		View myView = inflater.inflate(R.layout.edit_timed_mood, null);
+		View myView = inflater.inflate(R.layout.edit_complex_mood, null);
 		
 		return myView;
 	}

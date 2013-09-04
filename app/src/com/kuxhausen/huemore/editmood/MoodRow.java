@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.editmood;
 
 import com.kuxhausen.huemore.state.api.BulbState;
 

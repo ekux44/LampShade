@@ -1,6 +1,10 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
+
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.id;
+import com.kuxhausen.huemore.R.layout;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;

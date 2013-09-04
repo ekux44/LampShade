@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.editmood;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.array;
+import com.kuxhausen.huemore.R.id;
+import com.kuxhausen.huemore.R.layout;
+import com.kuxhausen.huemore.R.string;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
 

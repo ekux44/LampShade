@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
+import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class AddMoodGroupSelectorDialogFragment extends DialogFragment

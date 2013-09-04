@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.ui.registration;
+package com.kuxhausen.huemore.registration;
 
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;

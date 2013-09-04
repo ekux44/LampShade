@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.ui.SerializedEditorActivity;
+import com.kuxhausen.huemore.SerializedEditorActivity;
 
 public class NfcWriterActivity extends SerializedEditorActivity implements
 		OnClickListener {
