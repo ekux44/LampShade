@@ -122,6 +122,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			for(String key : moodStateMap.keySet()){
 				
 				ArrayList<String> stateJson = moodStateMap.get(key);
+				//bug fix in case there are any empty bulbstates in the old system
+				for(int i = 0; i<stateJson.size(); i++){
+					if(stateJson.get(i)==null || gson.fromJson(stateJson.get(i),BulbState.class)==null)
+						stateJson.remove(i);
+				}
+				
 				Event[] events = new Event[stateJson.size()];
 				for(int i = 0; i< stateJson.size(); i++){
 					Event e = new Event();
