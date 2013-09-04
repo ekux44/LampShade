@@ -15,14 +15,14 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
+import com.kuxhausen.huemore.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class NewColorTempFragment extends Fragment implements
+public class EditColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener {
 
 	private int mInitialColor;

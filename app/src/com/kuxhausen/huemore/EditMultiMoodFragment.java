@@ -24,7 +24,7 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class NewMultiMoodFragment extends ListFragment implements
+public class EditMultiMoodFragment extends ListFragment implements
 		OnClickListener, OnCreateMoodListener {
 
 	MoodRowAdapter rayAdapter;
@@ -73,7 +73,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 		mr.hs = example;
 		moodRowArray.add(mr);
 		rayAdapter.add(mr);
-		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
+		EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 		// cpdf.setPreviewGroups(bulbS);//TODO fix
 		cpdf.setTargetFragment(this, rayAdapter.getPosition(mr));
 		cpdf.show(getFragmentManager(),
@@ -138,7 +138,7 @@ public class NewMultiMoodFragment extends ListFragment implements
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 
-		NewColorPagerDialogFragment cpdf = new NewColorPagerDialogFragment();
+		EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 		Bundle args = new Bundle();
 		args.putString(InternalArguments.PREVIOUS_STATE,
 				gson.toJson(moodRowArray.get(position).hs));

@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class NewColorPagerDialogFragment extends DialogFragment implements
+public class EditStatePagerDialogFragment extends DialogFragment implements
 		OnClickListener {
 
 	/**
@@ -150,7 +150,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 				((ColorWheelFragment) newColorFragments[i]).hideColorLoop();
 				return (Fragment) newColorFragments[i];
 			case 1:
-				newColorFragments[i] = new NewColorTempFragment();
+				newColorFragments[i] = new EditColorTempFragment();
 				return (Fragment) newColorFragments[i];
 			default:
 				return null;

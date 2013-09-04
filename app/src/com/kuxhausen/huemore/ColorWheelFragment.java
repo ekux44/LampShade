@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.EditMoodPagerDialogFragment.OnCreateMoodListener;
-import com.kuxhausen.huemore.NewColorPagerDialogFragment.OnCreateColorListener;
+import com.kuxhausen.huemore.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
