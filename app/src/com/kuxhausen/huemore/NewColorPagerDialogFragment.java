@@ -49,7 +49,7 @@ public class NewColorPagerDialogFragment extends DialogFragment implements
 			Bundle savedInstanceState) {
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.dialog_pager, container, false);
+		View myView = inflater.inflate(R.layout.color_dialog_pager, container, false);
 
 		// Create an adapter that when requested, will return a fragment
 		// representing an object in
