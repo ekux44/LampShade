@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/contextstatemenu_edit"
+        android:orderInCategory="0"
+        android:title="@string/contextmenu_edit"/>
+    <item
+        android:id="@+id/contextstatemenu_delete"
+        android:orderInCategory="1"
+        android:title="@string/contextmenu_delete"/>
+
+</menu>

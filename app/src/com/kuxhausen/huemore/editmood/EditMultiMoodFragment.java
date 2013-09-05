@@ -6,19 +6,21 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -28,8 +30,8 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class EditMultiMoodFragment extends ListFragment implements
-		OnClickListener, OnCreateMoodListener {
+public class EditMultiMoodFragment extends SherlockListFragment implements
+		OnClickListener, OnCreateMoodListener, OnMenuItemClickListener {
 
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
@@ -41,10 +43,11 @@ public class EditMultiMoodFragment extends ListFragment implements
 
 		moodRowArray = new ArrayList<MoodRow>();
 
-		View groupView = inflater.inflate(R.layout.edit_multi_mood, null);
 		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
 		setListAdapter(rayAdapter);
 
+		View groupView = inflater.inflate(R.layout.edit_multi_mood, null);
+				
 		Button addColor = (Button) groupView.findViewById(R.id.addColor);
 		addColor.setOnClickListener(this);
 
@@ -65,8 +68,12 @@ public class EditMultiMoodFragment extends ListFragment implements
 				rayAdapter.add(mr);
 			}
 		}
-
 		return groupView;
+	}
+	
+	public void onActivityCreated(Bundle savedState) {
+		super.onActivityCreated(savedState);
+		registerForContextMenu(getListView());
 	}
 
 	private void addState() {
@@ -147,9 +154,46 @@ public class EditMultiMoodFragment extends ListFragment implements
 		args.putString(InternalArguments.PREVIOUS_STATE,
 				gson.toJson(moodRowArray.get(position).hs));
 		cpdf.setArguments(args);
-		// cpdf.show(getFragmentManager(), "dialog");
-		rayAdapter.remove(moodRowArray.get(position));
-		moodRowArray.remove(moodRowArray.get(position));
-
+		cpdf.show(getFragmentManager(), "dialog");
 	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		android.view.MenuInflater inflater = this.getActivity()
+				.getMenuInflater();
+		inflater.inflate(R.menu.context_state, menu);
+		
+		for(int i = 0; i< menu.size(); i++)
+			menu.getItem(i).setOnMenuItemClickListener(this);
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    int position = info.position;
+	    
+		switch (item.getItemId()) {
+
+		case R.id.contextstatemenu_delete:
+			rayAdapter.remove(moodRowArray.get(position));
+			moodRowArray.remove(moodRowArray.get(position));
+			return true;
+		case R.id.contextstatemenu_edit:
+			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.PREVIOUS_STATE,
+					gson.toJson(moodRowArray.get(position).hs));
+			cpdf.setArguments(args);
+			cpdf.show(getFragmentManager(), "dialog");
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+
 }
