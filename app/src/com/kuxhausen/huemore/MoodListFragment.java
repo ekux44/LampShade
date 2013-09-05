@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
@@ -95,9 +96,9 @@ public class MoodListFragment extends SherlockListFragment implements
 		switch (item.getItemId()) {
 
 		case R.id.action_add_mood:
-			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
-			nmdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
+			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
+			this.getActivity().startActivity(i);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -152,13 +153,10 @@ public class MoodListFragment extends SherlockListFragment implements
 					moodArg);
 			return true;
 		case R.id.contextmoodmenu_edit:
-			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
-			Bundle args = new Bundle();
-			args.putString(InternalArguments.MOOD_NAME,
-					(String) (longSelected).getText());
-			nmdf.setArguments(args);
-			nmdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
+			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
+			i.putExtra(InternalArguments.MOOD_NAME, (String) (longSelected).getText());
+			this.getActivity().startActivity(i);
 			return true;
 		default:
 			return super.onContextItemSelected(item);

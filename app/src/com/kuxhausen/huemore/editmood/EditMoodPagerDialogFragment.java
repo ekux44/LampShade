@@ -16,20 +16,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.BulbListFragment;
+import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.GroupListFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.R.string;
+import com.kuxhausen.huemore.network.GetBulbList.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class EditMoodPagerDialogFragment extends DialogFragment implements
+public class EditMoodPagerDialogFragment extends GodObject implements
 		OnClickListener {
 
 	/**
@@ -63,16 +69,17 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 
 	}
 
+	/** Called when the activity is first created. */
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.mood_dialog_pager, container,
-				false);
-		// Bundle args = getArguments();
-
-		nameEditText = (EditText) myView.findViewById(R.id.editText1);
+		setContentView(R.layout.mood_dialog_pager);
+		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		
+		nameEditText = (EditText) this.findViewById(R.id.editText1);
 
 		// Create an adapter that when requested, will return a fragment
 		// representing an object in
@@ -84,7 +91,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		mEditMoodPagerAdapter = new EditMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
-		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
+		mViewPager = (ViewPager) this.findViewById(R.id.pager);
 		mViewPager.setAdapter(mEditMoodPagerAdapter);
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
@@ -95,27 +102,26 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle(
-				getActivity().getString(R.string.actionmenu_new_mood));
+		this.getSupportActionBar().setTitle(
+				this.getString(R.string.actionmenu_new_mood));
 
-		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
+		Button cancelButton = (Button) this.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
-		Button okayButton = (Button) myView.findViewById(R.id.okay);
+		Button okayButton = (Button) this.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 		newMoodFragments = new OnCreateMoodListener[mEditMoodPagerAdapter.getCount()];
 
-		Bundle args = this.getArguments();
+		Bundle args = this.getIntent().getExtras();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
 			String moodName = args.getString(InternalArguments.MOOD_NAME);
 			priorName = moodName;
 			nameEditText.setText(moodName);
 			
-			priorMood = Utils.getMoodFromDatabase(moodName, this.getActivity());
+			priorMood = Utils.getMoodFromDatabase(moodName, this);
 			
 			routeMood(priorMood);
 				
 		}
-		return myView;
 	}
 	
 	public void routeMood(Mood m){
@@ -143,11 +149,11 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 	 */
 	public static class EditMoodPagerAdapter extends FragmentPagerAdapter {
 
-		android.support.v4.app.Fragment frag;
+		EditMoodPagerDialogFragment frag;
 
-		public EditMoodPagerAdapter(android.support.v4.app.Fragment fragment) {
-			super(fragment.getChildFragmentManager());
-			frag = fragment;
+		public EditMoodPagerAdapter(EditMoodPagerDialogFragment editMoodPagerDialogFragment) {
+			super(editMoodPagerDialogFragment.getSupportFragmentManager());
+			frag = editMoodPagerDialogFragment;
 		}
 
 		@Override
@@ -212,13 +218,13 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return frag.getActivity().getString(R.string.cap_simple_mood);
+				return frag.getString(R.string.cap_simple_mood);
 			case 1:
-				return frag.getActivity().getString(R.string.cap_timed_mood);
+				return frag.getString(R.string.cap_timed_mood);
 			case 2:
-				return frag.getActivity().getString(R.string.cap_multi_mood);
+				return frag.getString(R.string.cap_multi_mood);
 			case 3:
-				return frag.getActivity().getString(R.string.cap_advanced_mood);
+				return frag.getString(R.string.cap_advanced_mood);
 			}
 			return "";
 		}
@@ -233,17 +239,44 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				// delete old mood
 				String moodSelect = MoodColumns.MOOD + "=?";
 				String[] moodArg = { priorName };
-				getActivity().getContentResolver().delete(
+				this.getContentResolver().delete(
 						DatabaseDefinitions.MoodColumns.MOODS_URI,
 						moodSelect, moodArg);
 			}
 			newMoodFragments[currentPage].onCreateMood(nameEditText.getText()
 					.toString());
-			this.dismiss();
+			this.onBackPressed();
 			break;
 		case R.id.cancel:
-			this.dismiss();
+			this.onBackPressed();
 			break;
 		}
+	}
+
+	@Override
+	public void onListReturned(BulbAttributes[] bulbsAttributes) {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public void onGroupBulbSelected(Integer[] bulb, String name) {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public void setBulbListenerFragment(OnBulbListReturnedListener frag) {
+		throw new RuntimeException("Not implemented here");
+		
+	}
+
+	@Override
+	public OnBulbListReturnedListener getBulbListenerFragment() {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public void onSelected(Integer[] bulbNum, String name,
+			GroupListFragment groups, BulbListFragment bulbs) {
+		throw new RuntimeException("Not implemented here");
 	}
 }

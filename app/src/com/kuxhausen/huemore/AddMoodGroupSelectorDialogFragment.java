@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -45,9 +46,10 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment
 			dismiss();
 			break;
 		case R.id.newMoodButton:
-			EditMoodPagerDialogFragment nmdf = new EditMoodPagerDialogFragment();
-			nmdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
+			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
+			this.getActivity().startActivity(i);
+			
 			dismiss();
 			break;
 		}
