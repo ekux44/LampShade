@@ -169,7 +169,7 @@ public class EditMoodPagerDialogFragment extends DialogFragment implements
 				newMoodFragments[i] = nchf;
 				return (Fragment) newMoodFragments[i];
 			case 1:
-				EditTimedMoodFragment etmf = new EditTimedMoodFragment();
+				EditLoopMoodFragment etmf = new EditLoopMoodFragment();
 				Bundle args1 = new Bundle();
 				args1.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (priorMood != null && !priorMood.usesTiming) {

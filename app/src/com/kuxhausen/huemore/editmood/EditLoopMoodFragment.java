@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class EditTimedMoodFragment extends Fragment implements OnCreateMoodListener{
+public class EditLoopMoodFragment extends Fragment implements OnCreateMoodListener{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
