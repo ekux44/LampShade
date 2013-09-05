@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
 import com.kuxhausen.huemore.GodObject;
@@ -81,13 +82,6 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		
 		nameEditText = (EditText) this.findViewById(R.id.editText1);
 
-		// Create an adapter that when requested, will return a fragment
-		// representing an object in
-		// the collection.
-		//
-		// ViewPager and its adapters use support library fragments, so we must
-		// use
-		// getSupportFragmentManager.
 		mEditMoodPagerAdapter = new EditMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
@@ -251,6 +245,17 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 			this.onBackPressed();
 			break;
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.onBackPressed();
+			return true;
+		}
+		return false;
 	}
 
 	@Override
