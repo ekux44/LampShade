@@ -21,7 +21,7 @@
 	         android:layout_height="wrap_content"
 	         android:padding="8dp"
 	         android:layout_gravity="center_vertical"
-	         android:text="@string/transition_intro"
+	         android:text="@string/step_intro"
 	         android:layout_weight="1" />
 	
 	     <Spinner
