@@ -108,7 +108,7 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 		cpdf.show(getFragmentManager(), "dialog");
 	}
 
-	@SuppressLint("NewApi")
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
