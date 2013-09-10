@@ -48,7 +48,7 @@ public class EditLoopMoodFragment extends SherlockListFragment implements
 
 		moodRowArray = new ArrayList<MoodRow>();
 
-		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
+		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null);
 		setListAdapter(rayAdapter);
 
 		View myView = inflater.inflate(R.layout.edit_loop_mood, null);

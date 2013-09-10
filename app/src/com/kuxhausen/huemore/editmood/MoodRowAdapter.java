@@ -5,23 +5,27 @@ import java.util.ArrayList;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 
-	public MoodRowAdapter(Activity context, ArrayList<MoodRow> objects) {
+	public MoodRowAdapter(Activity context, ArrayList<MoodRow> objects, OnClickListener l) {
 		super(context, R.layout.edit_mood_row);
 		this.activity = context;
 		this.list = objects;
+		this.listener = l;
 	}
 
+	private final OnClickListener listener;
 	private final Activity activity;
 	private final ArrayList<MoodRow> list;
 
@@ -42,7 +46,7 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 		View rowView = convertView;
 		ViewHolder view;
 
-		if (rowView == null) {
+		//if (rowView == null) {
 			// Get a new instance of the row layout view
 			LayoutInflater inflater = activity.getLayoutInflater();
 			rowView = inflater.inflate(R.layout.edit_mood_row, null);
@@ -54,10 +58,12 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 			view.state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
 			
-			rowView.setTag(view);
-		} else {
-			view = (ViewHolder) rowView.getTag();
-		}
+			rowView.setOnClickListener(listener);
+			//rowView.setTag(view);
+			rowView.setTag(position);
+		//} else {
+		//	view = (ViewHolder) rowView.getTag();
+		//}
 
 		/** Set data to your Views. */
 		MoodRow item = list.get(position);

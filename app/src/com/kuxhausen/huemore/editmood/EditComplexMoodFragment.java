@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
@@ -61,7 +62,7 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 			
 			moodRowArray = new ArrayList<MoodRow>();
 			
-			rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray);
+			rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null);
 			
 			
 			gridview = (GridView) myView.findViewById(R.id.gridview);
@@ -131,6 +132,7 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 			break;
 		case R.id.enterAdvancedEditor:
 			Intent i = new Intent(this.getActivity(), EditAdvancedMood.class);
+			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
 			this.startActivity(i);
 			break;
 		}

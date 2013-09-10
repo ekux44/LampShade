@@ -2,10 +2,19 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.BulbListFragment;
+import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.GroupListFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.R.menu;
+import com.kuxhausen.huemore.network.GetBulbList.OnBulbListReturnedListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.os.Bundle;
@@ -21,8 +30,9 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.GridLayout.LayoutParams;
 import android.support.v7.widget.GridLayout.Spec;
 
-public class EditAdvancedMood extends Activity implements OnClickListener {
+public class EditAdvancedMood extends GodObject implements OnClickListener {
 
+	Gson gson = new Gson();
 	GridLayout grid;
 	
 	MoodRowAdapter rayAdapter;
@@ -32,6 +42,7 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_advanced_mood);
+		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
 		
 		addTimeslot = (Button) this.findViewById(R.id.addTimeslotButton);
 		addTimeslot.setOnClickListener(this);
@@ -51,7 +62,7 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
 		ArrayList<MoodRow> moodRowArray = new ArrayList<MoodRow>();
-		rayAdapter = new MoodRowAdapter(this, moodRowArray);
+		rayAdapter = new MoodRowAdapter(this, moodRowArray, this);
 	
 		addState();
 	    addState();
@@ -88,15 +99,16 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 	
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_advanced_mood, menu);
-		return true;
-	}
-	
-	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
+		case R.id.clickable_layout:
+			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.PREVIOUS_STATE,
+					gson.toJson(rayAdapter.getItem((Integer) v.getTag()).hs));
+			cpdf.setArguments(args);
+			cpdf.show(this.getSupportFragmentManager(), "dialog");
+			break;
 		case R.id.addChannelButton:
 			int width = grid.getColumnCount();
 			grid.setColumnCount(1+width);
@@ -123,9 +135,35 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 				vg.columnSpec = GridLayout.spec(c);
 				vg.rowSpec = GridLayout.spec(r);
 				
-				grid.addView(rayAdapter.getView(0, null, grid), vg);
+				grid.addView(rayAdapter.getView(r*grid.getColumnCount()+c, null, grid), vg);
 			}
 		
 		grid.invalidate();
+	}
+
+	@Override
+	public void onListReturned(BulbAttributes[] bulbsAttributes) {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public void onGroupBulbSelected(Integer[] bulb, String name) {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public void setBulbListenerFragment(OnBulbListReturnedListener frag) {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public OnBulbListReturnedListener getBulbListenerFragment() {
+		throw new RuntimeException("Not implemented here");
+	}
+
+	@Override
+	public void onSelected(Integer[] bulbNum, String name,
+			GroupListFragment groups, BulbListFragment bulbs) {
+		throw new RuntimeException("Not implemented here");
 	}
 }
