@@ -11,6 +11,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,7 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 	MoodRowAdapter rayAdapter;
 	ArrayList<MoodRow> moodRowArray;
 	Gson gson = new Gson();
-	Button addChannel, addTimeslot;
+	Button addChannel, addTimeslot, enterAdvanced;
 	GridView gridview;
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -53,6 +54,10 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 			
 			addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
 			addTimeslot.setOnClickListener(this);
+			
+			enterAdvanced = (Button) myView.findViewById(R.id.enterAdvancedEditor);
+			enterAdvanced.setOnClickListener(this);
+
 			
 			moodRowArray = new ArrayList<MoodRow>();
 			
@@ -124,7 +129,10 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 				addState();
 			}
 			break;
+		case R.id.enterAdvancedEditor:
+			Intent i = new Intent(this.getActivity(), EditAdvancedMood.class);
+			this.startActivity(i);
+			break;
 		}
 	}
-
 }
