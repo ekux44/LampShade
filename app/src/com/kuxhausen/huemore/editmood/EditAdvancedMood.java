@@ -26,7 +26,6 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 	GridLayout grid;
 	
 	MoodRowAdapter rayAdapter;
-	ArrayList<MoodRow> moodRowArray;
 	Button addChannel, addTimeslot;
 	
 	@Override
@@ -51,7 +50,7 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
-		moodRowArray = new ArrayList<MoodRow>();
+		ArrayList<MoodRow> moodRowArray = new ArrayList<MoodRow>();
 		rayAdapter = new MoodRowAdapter(this, moodRowArray);
 	
 		addState();
@@ -68,7 +67,6 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 		BulbState example = new BulbState();
 		example.on = false;
 		mr.hs = example;
-		moodRowArray.add(mr);
 		rayAdapter.add(mr);
 	}
 	private void addState(int i) {
@@ -77,7 +75,6 @@ public class EditAdvancedMood extends Activity implements OnClickListener {
 		BulbState example = new BulbState();
 		example.on = false;
 		mr.hs = example;
-		moodRowArray.add(i, mr);
 		rayAdapter.insert(mr, i);
 	}
 	

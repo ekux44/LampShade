@@ -26,6 +26,18 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 	private final ArrayList<MoodRow> list;
 
 	@Override
+	public void add(MoodRow object){
+		super.add(object);
+		list.add(object);
+	}
+	
+	@Override
+	public void insert(MoodRow object, int position){
+		super.insert(object, position);
+		list.add(position, object);
+	}
+	
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		ViewHolder view;
@@ -41,7 +53,7 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 
 			view.state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-
+			
 			rowView.setTag(view);
 		} else {
 			view = (ViewHolder) rowView.getTag();
