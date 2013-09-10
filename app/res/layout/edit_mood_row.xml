@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/stateColorView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:background="@null"
         android:padding="8dp"
         android:src="@drawable/content_new" />

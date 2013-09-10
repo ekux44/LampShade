@@ -18,8 +18,8 @@
 			    android:id="@+id/advancedGridLayout"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
-			    android:minHeight="48dp"
-			    android:minWidth="48dp"
+			    android:minHeight="144dp"
+			    android:minWidth="144dp"
 			    app:columnCount="3"
 			    app:rowCount="3" >
 
@@ -29,6 +29,7 @@
 				    android:id="@+id/addTimesliceButton"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
+				    android:layout_alignLeft="@id/advancedGridLayout"
 				    android:layout_alignRight="@id/advancedGridLayout"
 				    android:layout_below="@id/advancedGridLayout"
 				    android:text="Button" />
@@ -38,6 +39,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_alignBottom="@id/advancedGridLayout"
+				    android:layout_alignTop="@id/advancedGridLayout"
 				    android:layout_toRightOf="@id/advancedGridLayout"
 				    android:rotation="270"
 				    android:text="Button" />
