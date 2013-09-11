@@ -208,7 +208,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
 		
-		timeslotSpinners.remove(row+initialRows);
+		timeslotSpinners.remove(row);
 		
 		grid.setRowCount(initialRows + gridRows()-1);
 	}
