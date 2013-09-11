@@ -166,7 +166,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.rowSpec = GridLayout.spec(0);
 			grid.addView(v, vg);
 		}
-		{
+		/*{
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
 
@@ -191,7 +191,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.rowSpec = GridLayout.spec(1);
 			vg.setGravity(Gravity.FILL_HORIZONTAL);
 			grid.addView(rowView, vg);
-		}
+		}*/
 		grid.invalidate();
 	}
 

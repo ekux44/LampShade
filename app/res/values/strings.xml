@@ -103,4 +103,6 @@
 	<string name="grid_col_title_timeslot">Timeslot</string>
 	<string name="add_channel">+ C H A N N E L</string>
 	<string name="grid_col_title_channels">Channels</string>
+	<string name="infinite_loop">Loop</string>
+	<string name="save">Save</string>
 </resources>
