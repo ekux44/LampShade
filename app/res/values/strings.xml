@@ -98,4 +98,6 @@
     <string name="title_activity_edit_advanced_mood">EditAdvancedMood</string>
 	<string name="contextmenu_delete_timeslot">Delete timeslot</string>
 	<string name="contextmenu_delete_channel">Delete channel</string>
+	<string name="add_timeslot">+ Timeslot</string>
+	<string name="prompt_timeslot_time">Timeslot offset</string>
 </resources>

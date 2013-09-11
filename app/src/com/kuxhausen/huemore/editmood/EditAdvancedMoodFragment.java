@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.GridLayout.LayoutParams;
 import android.support.v7.widget.GridLayout.Spec;
@@ -43,6 +44,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	View contextView;
 	
 	ArrayList<MoodRow> dataRay = new ArrayList<MoodRow>();
+	ArrayList<Spinner> timeslotSpinners = new ArrayList<Spinner>();
 	Button addChannel, addTimeslot;
 	
 	@Override
@@ -65,16 +67,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
 		grid.setColumnCount(3);
-		grid.setRowCount(3);
+		grid.setRowCount(1);
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
-		//rayAdapter = new MoodRowAdapter(this.getActivity(), new ArrayList<MoodRow>(), this, this);
-	
-		addState();
-	    addState();
-	    addState();
-	    addState();
+		addRow();
+		addRow();
 	    
 	    redrawGrid();
 	    
@@ -141,7 +139,14 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				
 				grid.addView(dataRay.get(r*gridCols()+c).getView((r*gridCols()+c), grid, this, this), vg);
 			}
-		
+		for(int r = 0; r<timeslotSpinners.size(); r++){
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(r+initialRows);
+			
+			grid.addView(timeslotSpinners.get(r), vg);
+
+		}
 		grid.invalidate();
 	}
 
@@ -202,6 +207,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
+		
+		timeslotSpinners.remove(row+initialRows);
+		
 		grid.setRowCount(initialRows + gridRows()-1);
 	}
 	private void deleteCol(int item){
@@ -217,6 +225,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	private void addRow(){
 		grid.setRowCount(initialRows + gridRows()+1);
+		
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		timeslotSpinners.add((Spinner)inflater.inflate(R.layout.timeslot_spinner, null));
+				
 		for(int i = gridCols(); i>0; i--){
 			addState();
 		}
