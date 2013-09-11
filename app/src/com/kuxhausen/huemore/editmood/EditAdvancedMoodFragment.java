@@ -169,13 +169,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(v, vg);
 		}
-		/*{
+		{
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
 
-			ColorDrawable cd = new ColorDrawable(0xFF33B5E5);
+			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
 			rowView.setImageDrawable(cd);
-			rowView.setMinimumWidth(3);
+			rowView.setMinimumWidth(1);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(1);
 			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
@@ -186,15 +186,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_horizontal_seperator, null);
 
-			ColorDrawable cd = new ColorDrawable(0xFF33B5E5);
+			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
 			rowView.setImageDrawable(cd);
-			rowView.setMinimumHeight(3);
+			rowView.setMinimumHeight(1);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0,initialCols+gridCols());
 			vg.rowSpec = GridLayout.spec(1);
 			vg.setGravity(Gravity.FILL_HORIZONTAL);
 			grid.addView(rowView, vg);
-		}*/
+		}
 		grid.invalidate();
 	}
 
