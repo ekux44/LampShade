@@ -131,7 +131,7 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 			}
 			break;
 		case R.id.enterAdvancedEditor:
-			Intent i = new Intent(this.getActivity(), EditAdvancedMood.class);
+			Intent i = new Intent(this.getActivity(), EditAdvancedMoodActivity.class);
 			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
 			this.startActivity(i);
 			break;

@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import java.util.ArrayList;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
@@ -20,9 +21,11 @@ import com.kuxhausen.huemore.state.api.BulbState;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -30,7 +33,7 @@ import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.GridLayout.LayoutParams;
 import android.support.v7.widget.GridLayout.Spec;
 
-public class EditAdvancedMood extends GodObject implements OnClickListener {
+public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
@@ -39,15 +42,16 @@ public class EditAdvancedMood extends GodObject implements OnClickListener {
 	Button addChannel, addTimeslot;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_advanced_mood);
-		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
+		View myView = inflater.inflate(R.layout.activity_edit_advanced_mood, null);
 		
-		addTimeslot = (Button) this.findViewById(R.id.addTimeslotButton);
+		
+		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
 		addTimeslot.setOnClickListener(this);
 		
-		addChannel = (Button) this.findViewById(R.id.addChannelButton);
+		addChannel = (Button) myView.findViewById(R.id.addChannelButton);
 		//int h = addChannel.getHeight();
 		//int w = addChannel.getWidth();
 		//addChannel.setRotation(270);
@@ -55,14 +59,14 @@ public class EditAdvancedMood extends GodObject implements OnClickListener {
 		//addChannel.setWidth(h);
 		addChannel.setOnClickListener(this);
 		
-		grid = (GridLayout) this.findViewById(R.id.advancedGridLayout);
+		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
 		grid.setColumnCount(2);
 		grid.setRowCount(2);
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
 		ArrayList<MoodRow> moodRowArray = new ArrayList<MoodRow>();
-		rayAdapter = new MoodRowAdapter(this, moodRowArray, this);
+		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, this);
 	
 		addState();
 	    addState();
@@ -70,6 +74,8 @@ public class EditAdvancedMood extends GodObject implements OnClickListener {
 	    addState();
 	    
 	    redrawGrid();
+	    
+	    return myView;
 	}
 	
 	private void addState() {
@@ -107,7 +113,7 @@ public class EditAdvancedMood extends GodObject implements OnClickListener {
 			args.putString(InternalArguments.PREVIOUS_STATE,
 					gson.toJson(rayAdapter.getItem((Integer) v.getTag()).hs));
 			cpdf.setArguments(args);
-			cpdf.show(this.getSupportFragmentManager(), "dialog");
+			cpdf.show(this.getFragmentManager(), "dialog");
 			break;
 		case R.id.addChannelButton:
 			int width = grid.getColumnCount();
@@ -139,31 +145,5 @@ public class EditAdvancedMood extends GodObject implements OnClickListener {
 			}
 		
 		grid.invalidate();
-	}
-
-	@Override
-	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public void onGroupBulbSelected(Integer[] bulb, String name) {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public void setBulbListenerFragment(OnBulbListReturnedListener frag) {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public OnBulbListReturnedListener getBulbListenerFragment() {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public void onSelected(Integer[] bulbNum, String name,
-			GroupListFragment groups, BulbListFragment bulbs) {
-		throw new RuntimeException("Not implemented here");
 	}
 }
