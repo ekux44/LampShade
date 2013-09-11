@@ -81,30 +81,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	    return myView;
 	}
 	
-	private void addState() {
+	private MoodRow generateDefaultMoodRow(){
 		MoodRow mr = new MoodRow();
 		mr.color = 0xff000000;
 		BulbState example = new BulbState();
 		example.on = false;
 		mr.hs = example;
-		dataRay.add(mr);
-	}
-	private void addState(int i) {
-		MoodRow mr = new MoodRow();
-		mr.color = 0xff000000;
-		BulbState example = new BulbState();
-		example.on = false;
-		mr.hs = example;
-		dataRay.add(i, mr);
-	}
-	private void delete(int i){
-		MoodRow mr = new MoodRow();
-		mr.color = 0xff000000;
-		BulbState example = new BulbState();
-		example.on = false;
-		mr.hs = example;
-		
-		dataRay.set(i, mr);
+		return mr;
 	}
 	
 	private void populateGrid(int index){
@@ -147,9 +130,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			break;
 		case R.id.addChannelButton:
 			addCol();
+			redrawGrid();
 			break;
 		case R.id.addTimeslotButton:
 			addRow();
+			redrawGrid();
 			break;
 		}
 	}
@@ -196,13 +181,25 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			return true;
 		case R.id.contextstatemenu_delete_timeslot:
 			deleteRow((Integer)contextView.getTag());
+			redrawGrid();
 			return true;
 		case R.id.contextstatemenu_delete_channel:
 			deleteCol((Integer)contextView.getTag());
+			redrawGrid();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
+	}
+	
+	private void addState() {
+		dataRay.add(generateDefaultMoodRow());
+	}
+	private void addState(int i) {
+		dataRay.add(i, generateDefaultMoodRow());
+	}
+	private void delete(int i){
+		dataRay.set(i, generateDefaultMoodRow());
 	}
 	
 	private void deleteRow(int item){
@@ -214,7 +211,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
 		grid.setRowCount(grid.getRowCount()-1);
-		redrawGrid();
 	}
 	private void deleteCol(int item){
 		int col = item % grid.getColumnCount();
@@ -226,14 +222,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
 		grid.setColumnCount(grid.getColumnCount()-1);
-		redrawGrid();
 	}
 	private void addRow(){
 		grid.setRowCount(grid.getRowCount()+1);
 		for(int i = grid.getColumnCount(); i>0; i--){
 			addState();
 		}
-		redrawGrid();
 	}
 	private void addCol(){
 		int width = grid.getColumnCount();
@@ -241,6 +235,5 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(int i = dataRay.size(); i>0; i-=width){
 			addState(i);
 		}
-		redrawGrid();
 	}
 }
