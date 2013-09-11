@@ -97,6 +97,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		mr.hs = example;
 		dataRay.add(i, mr);
 	}
+	private void delete(int i){
+		MoodRow mr = new MoodRow();
+		mr.color = 0xff000000;
+		BulbState example = new BulbState();
+		example.on = false;
+		mr.hs = example;
+		
+		dataRay.set(i, mr);
+	}
 	
 	private void populateGrid(int index){
 		GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
@@ -175,13 +184,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.contextmoodmenu_edit:
+		case R.id.contextstatemenu_edit:
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 			cpdf.setTargetFragment(this, (Integer) contextView.getTag());
 			cpdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
-		case R.id.contextmoodmenu_delete:
+		case R.id.contextstatemenu_delete:
+			delete((Integer)contextView.getTag());
+			redrawGrid();
 			return true;
 		case R.id.contextstatemenu_delete_timeslot:
 			deleteRow((Integer)contextView.getTag());
