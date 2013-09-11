@@ -2,44 +2,29 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.BulbListFragment;
 import com.kuxhausen.huemore.GodObject;
-import com.kuxhausen.huemore.GroupListFragment;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
-import com.kuxhausen.huemore.R.menu;
-import com.kuxhausen.huemore.editmood.MoodRowAdapter.ViewHolder;
-import com.kuxhausen.huemore.network.GetBulbList.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.state.api.BulbAttributes;
+import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.support.v7.widget.GridLayout;
-import android.support.v7.widget.GridLayout.LayoutParams;
-import android.support.v7.widget.GridLayout.Spec;
 
 public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener {
 
@@ -55,7 +40,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		View myView = inflater.inflate(R.layout.activity_edit_advanced_mood, null);
+		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
 		
 		
 		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
@@ -100,15 +85,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				data.getStringExtra(InternalArguments.HUE_STATE),
 				BulbState.class);
 
-		/*String[] states = new String[moodRowArray.size()];
-		for (int i = 0; i < moodRowArray.size(); i++) {
-			states[i] = gson.toJson(moodRowArray.get(i).hs);
-		}*/
-		
-		//Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
 		redrawGrid();
 	}
 	
+	private Mood getMood() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){

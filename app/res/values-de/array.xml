@@ -39,11 +39,4 @@
         <item>Alarms widget (only on devices with Android 3.0 or newer)</item>
         <item>Alarms bug fix. If you have encountered unscheduled alarms going off, restart your phone for the bug fix to take effect</item>
     </string-array>
-    <string-array name="major_update_history">
-        <item>2.1: Longclick to rename bulbs, edit groups and moods</item>
-        <item>2.0: Can change mood fade-in rate, pro version unlocks NFC and Alarms (beta)</item>
-        <item>1.6: Smart brigthness bar, moods support color temperature mode</item>
-        <item>1.5: Can use indvididual bulbs and use manual control</item>
-        <item>1.0: Can use and create groups and moods</item>
-    </string-array>
 </resources>

@@ -1,16 +1,10 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.ArrayList;
-
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.state.api.BulbState;
-
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -20,20 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.GridView;
-import android.widget.Toast;
 
-public class EditComplexMoodFragment extends Fragment implements OnCreateMoodListener, OnItemClickListener, OnClickListener{
+public class EditComplexMoodFragment extends Fragment implements OnCreateMoodListener, OnClickListener{
 	
-	MoodRowAdapter rayAdapter;
-	ArrayList<MoodRow> moodRowArray;
 	Gson gson = new Gson();
-	Button addChannel, addTimeslot, enterAdvanced;
-	GridView gridview;
+	Button enterAdvanced;
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -42,39 +28,9 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 		super.onCreate(savedInstanceState);
 		
 		View myView = inflater.inflate(R.layout.edit_complex_mood, null);
+		enterAdvanced = (Button) myView.findViewById(R.id.enterAdvancedEditor);
+		enterAdvanced.setOnClickListener(this);
 		
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-			
-			addChannel = (Button) myView.findViewById(R.id.addChannelButton);
-			//int h = addChannel.getHeight();
-			//int w = addChannel.getWidth();
-			//addChannel.setRotation(270);
-			//addChannel.setHeight(w);
-			//addChannel.setWidth(h);
-			addChannel.setOnClickListener(this);
-			
-			addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
-			addTimeslot.setOnClickListener(this);
-			
-			enterAdvanced = (Button) myView.findViewById(R.id.enterAdvancedEditor);
-			enterAdvanced.setOnClickListener(this);
-
-			
-			moodRowArray = new ArrayList<MoodRow>();
-			
-			rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null, null);
-			
-			
-			gridview = (GridView) myView.findViewById(R.id.gridview);
-		    gridview.setAdapter(rayAdapter);
-	
-		    gridview.setOnItemClickListener(this);
-			
-		    addState();
-		    addState();
-		    addState();
-		    addState();
-		}
 		return myView;
 	}
 
@@ -83,53 +39,11 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 		// TODO Auto-generated method stub
 		
 	}
-	
-	private void addState() {
-		MoodRow mr = new MoodRow();
-		mr.color = 0xff000000;
-		BulbState example = new BulbState();
-		example.on = false;
-		mr.hs = example;
-		moodRowArray.add(mr);
-		rayAdapter.add(mr);
-	}
-	private void addState(int i) {
-		MoodRow mr = new MoodRow();
-		mr.color = 0xff000000;
-		BulbState example = new BulbState();
-		example.on = false;
-		mr.hs = example;
-		moodRowArray.add(i, mr);
-		rayAdapter.insert(mr, i);
-	}
-	
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-		Bundle args = new Bundle();
-		args.putString(InternalArguments.PREVIOUS_STATE,
-				gson.toJson(moodRowArray.get(position).hs));
-		cpdf.setArguments(args);
-		cpdf.show(getFragmentManager(), "dialog");
-	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
-		case R.id.addChannelButton:
-			int width = gridview.getNumColumns();
-			gridview.setNumColumns(1+width);
-			for(int i = rayAdapter.getCount(); i>0; i-=width){
-				addState(i);
-			}
-			break;
-		case R.id.addTimeslotButton:
-			for(int i = gridview.getNumColumns(); i>0; i--){
-				addState();
-			}
-			break;
 		case R.id.enterAdvancedEditor:
 			Intent i = new Intent(this.getActivity(), EditAdvancedMoodActivity.class);
 			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
