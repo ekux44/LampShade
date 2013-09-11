@@ -20,6 +20,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -65,8 +66,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
-		ArrayList<MoodRow> moodRowArray = new ArrayList<MoodRow>();
-		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, this);
+		rayAdapter = new MoodRowAdapter(this.getActivity(), new ArrayList<MoodRow>(), this);
 	
 		addState();
 	    addState();
@@ -103,17 +103,36 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid.addView(rayAdapter.getView(index, null, grid), vg);
 	}
 	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		rayAdapter.getItem(requestCode).color = resultCode;
+		rayAdapter.notifyDataSetChanged();
+		rayAdapter.getItem(requestCode).hs = gson.fromJson(
+				data.getStringExtra(InternalArguments.HUE_STATE),
+				BulbState.class);
+
+		/*String[] states = new String[moodRowArray.size()];
+		for (int i = 0; i < moodRowArray.size(); i++) {
+			states[i] = gson.toJson(moodRowArray.get(i).hs);
+		}*/
+		
+		//Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
+		redrawGrid();
+	}
 	
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.clickable_layout:
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-			Bundle args = new Bundle();
-			args.putString(InternalArguments.PREVIOUS_STATE,
-					gson.toJson(rayAdapter.getItem((Integer) v.getTag()).hs));
-			cpdf.setArguments(args);
-			cpdf.show(this.getFragmentManager(), "dialog");
+			//Bundle args = new Bundle();
+			//args.putString(InternalArguments.PREVIOUS_STATE,
+			//		gson.toJson(rayAdapter.getItem((Integer) v.getTag()).hs));
+			//cpdf.setArguments(args);
+			//cpdf.show(this.getFragmentManager(), "dialog");
+			cpdf.setTargetFragment(this, (Integer) v.getTag());
+			cpdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			break;
 		case R.id.addChannelButton:
 			int width = grid.getColumnCount();
