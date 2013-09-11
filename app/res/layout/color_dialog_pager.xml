@@ -32,30 +32,11 @@
 	         android:padding="8dp" 
 	         android:layout_weight="2"/>
 	</LinearLayout>
-    
+	
     <View
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="#33B5E5" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/okay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/accept" />
-    </LinearLayout>
-
+    <include layout="@layout/confirmation_bar"/>
 </LinearLayout>
