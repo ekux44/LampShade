@@ -138,19 +138,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			break;
 		case R.id.addChannelButton:
-			int width = grid.getColumnCount();
-			grid.setColumnCount(1+width);
-			for(int i = rayAdapter.getCount(); i>0; i-=width){
-				addState(i);
-			}
-			redrawGrid();
+			addCol();
 			break;
 		case R.id.addTimeslotButton:
-			grid.setRowCount(grid.getRowCount()+1);
-			for(int i = grid.getColumnCount(); i>0; i--){
-				addState();
-			}
-			redrawGrid();
+			addRow();
 			break;
 		}
 	}
@@ -194,11 +185,56 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		case R.id.contextmoodmenu_delete:
 			return true;
 		case R.id.contextstatemenu_delete_timeslot:
+			deleteRow((Integer)contextView.getTag());
 			return true;
 		case R.id.contextstatemenu_delete_channel:
+			deleteCol((Integer)contextView.getTag());
 			return true;
 		default:
 			return super.onContextItemSelected(item);
 		}
+	}
+	
+	private void deleteRow(int item){
+		int row = item / grid.getColumnCount();
+		int col = item % grid.getColumnCount();
+		Log.e("blar", "i"+ item +" r"+ row + " c"+col);
+		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
+		for(int i = 0; i<grid.getColumnCount(); i++){
+			toRemove.add(rayAdapter.getItem(i + row*grid.getColumnCount()));
+		}
+		for(MoodRow kill : toRemove)
+			rayAdapter.remove(kill);
+		grid.setRowCount(grid.getRowCount()-1);
+		redrawGrid();
+	}
+	private void deleteCol(int item){
+		int row = item / grid.getColumnCount();
+		int col = item % grid.getColumnCount();
+		Log.e("blar", "i"+ item +" r"+ row + " c"+col);
+		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
+		for(int i = 0; i<grid.getRowCount(); i++){
+			Log.e("omg", col+" "+i*grid.getColumnCount());
+			toRemove.add(rayAdapter.getItem(col + i*grid.getColumnCount()));
+		}
+		for(MoodRow kill : toRemove)
+			rayAdapter.remove(kill);
+		grid.setRowCount(grid.getColumnCount()-1);
+		redrawGrid();
+	}
+	private void addRow(){
+		grid.setRowCount(grid.getRowCount()+1);
+		for(int i = grid.getColumnCount(); i>0; i--){
+			addState();
+		}
+		redrawGrid();
+	}
+	private void addCol(){
+		int width = grid.getColumnCount();
+		grid.setColumnCount(1+width);
+		for(int i = rayAdapter.getCount(); i>0; i-=width){
+			addState(i);
+		}
+		redrawGrid();
 	}
 }
