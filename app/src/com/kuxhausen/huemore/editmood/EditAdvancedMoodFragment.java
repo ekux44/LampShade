@@ -77,6 +77,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		addRow();
 		addRow();
+		addRow();
 	    
 	    redrawGrid();
 	    
@@ -147,7 +148,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(r+initialRows);
-			
+			vg.setGravity(Gravity.CENTER);
 			grid.addView(timeslotSpinners.get(r), vg);
 		}
 		{
@@ -156,6 +157,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
 			vg.rowSpec = GridLayout.spec(0);
+			vg.setGravity(Gravity.CENTER);
 			grid.addView(v, vg);
 		}
 		{
@@ -164,6 +166,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(0);
+			vg.setGravity(Gravity.CENTER);
 			grid.addView(v, vg);
 		}
 		/*{

@@ -40,7 +40,8 @@ public class MoodRow {
 
 		ColorDrawable cd = new ColorDrawable(color);
 		cd.setAlpha(255);
-		view.state_color.setImageDrawable(cd);
+		if((color%0xff000000)!=0)
+			view.state_color.setImageDrawable(cd);
 		rowView.setMinimumHeight(96);
 		return rowView;
 	}
