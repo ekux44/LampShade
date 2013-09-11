@@ -32,7 +32,7 @@
 				    android:layout_alignLeft="@id/advancedGridLayout"
 				    android:layout_alignRight="@id/advancedGridLayout"
 				    android:layout_below="@id/advancedGridLayout"
-				    android:text="Button" />
+				    android:text="+ Timeslot" />
 
 				<Button
 				    android:id="@+id/addChannelButton"
@@ -41,8 +41,7 @@
 				    android:layout_alignBottom="@id/advancedGridLayout"
 				    android:layout_alignTop="@id/advancedGridLayout"
 				    android:layout_toRightOf="@id/advancedGridLayout"
-				    android:rotation="270"
-				    android:text="Button" />
+				    android:text="+" />
 
         </RelativeLayout>
     </HorizontalScrollView>
