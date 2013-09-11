@@ -15,11 +15,11 @@
         <item>6000</item>
     </integer-array>
     <string-array name="timeslot_names_array">
-        <item>1 Second</item>
-        <item>10 Seconds</item>
-        <item>1 Minute</item>
-        <item>10 Minutes</item>
-        <item>Custom</item>
+        <item>+ 1 Second</item>
+        <item>+ 10 Seconds</item>
+        <item>+ 1 Minute</item>
+        <item>+ 10 Minutes</item>
+        <item>+ Custom</item>
     </string-array>
     <integer-array name="timeslot_values_array">
         <item>10</item>

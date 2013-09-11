@@ -145,7 +145,22 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.rowSpec = GridLayout.spec(r+initialRows);
 			
 			grid.addView(timeslotSpinners.get(r), vg);
-
+		}
+		{
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			View v =inflater.inflate(R.layout.grid_col_channels_label, null);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
+			vg.rowSpec = GridLayout.spec(0);
+			grid.addView(v, vg);
+		}
+		{
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(0);
+			grid.addView(v, vg);
 		}
 		grid.invalidate();
 	}

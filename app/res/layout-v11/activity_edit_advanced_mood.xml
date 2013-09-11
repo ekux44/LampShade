@@ -21,7 +21,7 @@
 			    android:minHeight="144dp"
 			    android:minWidth="144dp"
 			    app:columnCount="3"
-			    app:rowCount="3" >
+			    app:rowCount="1" >
 
 			</android.support.v7.widget.GridLayout>
 			    
@@ -32,16 +32,16 @@
 				    android:layout_alignLeft="@id/advancedGridLayout"
 				    android:layout_alignRight="@id/advancedGridLayout"
 				    android:layout_below="@id/advancedGridLayout"
-				    android:text="+ Timeslot" />
+				    android:text="@string/add_timeslot" />
 
 				<Button
 				    android:id="@+id/addChannelButton"
-				    android:layout_width="wrap_content"
+				    android:layout_width="48dp"
 				    android:layout_height="wrap_content"
 				    android:layout_alignBottom="@id/advancedGridLayout"
 				    android:layout_alignTop="@id/advancedGridLayout"
 				    android:layout_toRightOf="@id/advancedGridLayout"
-				    android:text="+" />
+				    android:text="@string/add_channel" />
 
         </RelativeLayout>
     </HorizontalScrollView>
