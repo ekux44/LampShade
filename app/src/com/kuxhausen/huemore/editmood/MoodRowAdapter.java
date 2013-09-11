@@ -2,6 +2,7 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
@@ -12,20 +13,23 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 
-	public MoodRowAdapter(Activity context, ArrayList<MoodRow> objects, OnClickListener l) {
+	public MoodRowAdapter(Activity context, ArrayList<MoodRow> objects, OnClickListener l, SherlockFragment frag) {
 		super(context, R.layout.edit_mood_row);
 		this.activity = context;
 		this.list = objects;
 		this.listener = l;
+		this.frag = frag;
 	}
 
 	private final OnClickListener listener;
+	private final SherlockFragment frag;
 	private final Activity activity;
 	private final ArrayList<MoodRow> list;
 
@@ -59,6 +63,8 @@ public class MoodRowAdapter extends ArrayAdapter<MoodRow> {
 					.findViewById(R.id.stateColorView);
 			
 			rowView.setOnClickListener(listener);
+			if(frag!=null)
+				frag.registerForContextMenu(rowView);
 			//rowView.setTag(view);
 			rowView.setTag(position);
 		//} else {

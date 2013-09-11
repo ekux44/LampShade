@@ -62,7 +62,7 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 			
 			moodRowArray = new ArrayList<MoodRow>();
 			
-			rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null);
+			rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null, null);
 			
 			
 			gridview = (GridView) myView.findViewById(R.id.gridview);

@@ -22,10 +22,12 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -38,6 +40,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 	Gson gson = new Gson();
 	GridLayout grid;
+	View contextView;
 	
 	MoodRowAdapter rayAdapter;
 	Button addChannel, addTimeslot;
@@ -66,7 +69,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
-		rayAdapter = new MoodRowAdapter(this.getActivity(), new ArrayList<MoodRow>(), this);
+		rayAdapter = new MoodRowAdapter(this.getActivity(), new ArrayList<MoodRow>(), this, this);
 	
 		addState();
 	    addState();
@@ -164,5 +167,38 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			}
 		
 		grid.invalidate();
+	}
+
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		contextView = v;
+		
+		android.view.MenuInflater inflater = this.getActivity()
+				.getMenuInflater();
+		inflater.inflate(R.menu.context_state, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.contextmoodmenu_edit:
+			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+			cpdf.setTargetFragment(this, (Integer) contextView.getTag());
+			cpdf.show(getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			return true;
+		case R.id.contextmoodmenu_delete:
+			return true;
+		case R.id.contextstatemenu_delete_timeslot:
+			return true;
+		case R.id.contextstatemenu_delete_channel:
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
 	}
 }

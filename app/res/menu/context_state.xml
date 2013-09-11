@@ -8,5 +8,13 @@
         android:id="@+id/contextstatemenu_delete"
         android:orderInCategory="1"
         android:title="@string/contextmenu_delete"/>
+    <item
+        android:id="@+id/contextstatemenu_delete_timeslot"
+        android:orderInCategory="2"
+        android:title="@string/contextmenu_delete_timeslot"/>
+    <item
+        android:id="@+id/contextstatemenu_delete_channel"
+        android:orderInCategory="3"
+        android:title="@string/contextmenu_delete_channel"/>
 
 </menu>

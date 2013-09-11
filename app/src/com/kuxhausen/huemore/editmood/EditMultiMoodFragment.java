@@ -43,7 +43,7 @@ public class EditMultiMoodFragment extends SherlockListFragment implements
 
 		moodRowArray = new ArrayList<MoodRow>();
 
-		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null);
+		rayAdapter = new MoodRowAdapter(this.getActivity(), moodRowArray, null, null);
 		setListAdapter(rayAdapter);
 
 		View groupView = inflater.inflate(R.layout.edit_multi_mood, null);
