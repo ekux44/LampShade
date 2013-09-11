@@ -42,7 +42,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	GridLayout grid;
 	View contextView;
 	
-	MoodRowAdapter rayAdapter;
+	ArrayList<MoodRow> dataRay = new ArrayList<MoodRow>();
 	Button addChannel, addTimeslot;
 	
 	@Override
@@ -69,7 +69,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
-		rayAdapter = new MoodRowAdapter(this.getActivity(), new ArrayList<MoodRow>(), this, this);
+		//rayAdapter = new MoodRowAdapter(this.getActivity(), new ArrayList<MoodRow>(), this, this);
 	
 		addState();
 	    addState();
@@ -87,7 +87,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		BulbState example = new BulbState();
 		example.on = false;
 		mr.hs = example;
-		rayAdapter.add(mr);
+		dataRay.add(mr);
 	}
 	private void addState(int i) {
 		MoodRow mr = new MoodRow();
@@ -95,7 +95,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		BulbState example = new BulbState();
 		example.on = false;
 		mr.hs = example;
-		rayAdapter.insert(mr, i);
+		dataRay.add(i, mr);
 	}
 	
 	private void populateGrid(int index){
@@ -103,14 +103,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		vg.columnSpec = GridLayout.spec(index % grid.getColumnCount());
 		vg.rowSpec = GridLayout.spec(index / grid.getRowCount());
 		
-		grid.addView(rayAdapter.getView(index, null, grid), vg);
+		grid.addView(dataRay.get(index).getView(index, grid, this, this), vg);
 	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		rayAdapter.getItem(requestCode).color = resultCode;
-		rayAdapter.notifyDataSetChanged();
-		rayAdapter.getItem(requestCode).hs = gson.fromJson(
+		dataRay.get(requestCode).color = resultCode;
+		dataRay.get(requestCode).hs = gson.fromJson(
 				data.getStringExtra(InternalArguments.HUE_STATE),
 				BulbState.class);
 
@@ -154,7 +153,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				vg.columnSpec = GridLayout.spec(c);
 				vg.rowSpec = GridLayout.spec(r);
 				
-				grid.addView(rayAdapter.getView(r*grid.getColumnCount()+c, null, grid), vg);
+				grid.addView(dataRay.get(r*grid.getColumnCount()+c).getView((r*grid.getColumnCount()+c), grid, this, this), vg);
 			}
 		
 		grid.invalidate();
@@ -194,6 +193,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			return super.onContextItemSelected(item);
 		}
 	}
+	/*public int locate(View v){
+		for (int i = 0; i<dataRay.size(); i++){
+			if(dataRay.get(i).getView(i, grid, this, this).equals(v))
+					return i;
+		}
+		return -1;
+	}*/
 	
 	private void deleteRow(int item){
 		int row = item / grid.getColumnCount();
@@ -201,10 +207,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		Log.e("blar", "i"+ item +" r"+ row + " c"+col);
 		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
 		for(int i = 0; i<grid.getColumnCount(); i++){
-			toRemove.add(rayAdapter.getItem(i + row*grid.getColumnCount()));
+			toRemove.add(dataRay.get(i + row*grid.getColumnCount()));
 		}
 		for(MoodRow kill : toRemove)
-			rayAdapter.remove(kill);
+			dataRay.remove(kill);
 		grid.setRowCount(grid.getRowCount()-1);
 		redrawGrid();
 	}
@@ -215,10 +221,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
 		for(int i = 0; i<grid.getRowCount(); i++){
 			Log.e("omg", col+" "+i*grid.getColumnCount());
-			toRemove.add(rayAdapter.getItem(col + i*grid.getColumnCount()));
+			toRemove.add(dataRay.get(col + i*grid.getColumnCount()));
 		}
 		for(MoodRow kill : toRemove)
-			rayAdapter.remove(kill);
+			dataRay.remove(kill);
 		grid.setRowCount(grid.getColumnCount()-1);
 		redrawGrid();
 	}
@@ -232,7 +238,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private void addCol(){
 		int width = grid.getColumnCount();
 		grid.setColumnCount(1+width);
-		for(int i = rayAdapter.getCount(); i>0; i-=width){
+		for(int i = dataRay.size(); i>0; i-=width){
 			addState(i);
 		}
 		redrawGrid();
