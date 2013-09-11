@@ -13,6 +13,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.R.menu;
+import com.kuxhausen.huemore.editmood.MoodRowAdapter.ViewHolder;
 import com.kuxhausen.huemore.network.GetBulbList.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
@@ -21,8 +22,10 @@ import com.kuxhausen.huemore.state.api.BulbState;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -32,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.GridLayout.LayoutParams;
@@ -66,8 +70,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		addChannel.setOnClickListener(this);
 		
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
-		grid.setColumnCount(3);
-		grid.setRowCount(1);
+		grid.setColumnCount(initialCols+2);
+		grid.setRowCount(initialRows);
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
@@ -162,6 +166,32 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.rowSpec = GridLayout.spec(0);
 			grid.addView(v, vg);
 		}
+		{
+			LayoutInflater inflater = this.getActivity().getLayoutInflater();
+			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
+
+			ColorDrawable cd = new ColorDrawable(0xFF33B5E5);
+			rowView.setImageDrawable(cd);
+			rowView.setMinimumWidth(3);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(1);
+			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
+			vg.setGravity(Gravity.FILL_VERTICAL);
+			grid.addView(rowView, vg);
+		}
+		{
+			LayoutInflater inflater = this.getActivity().getLayoutInflater();
+			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_horizontal_seperator, null);
+
+			ColorDrawable cd = new ColorDrawable(0xFF33B5E5);
+			rowView.setImageDrawable(cd);
+			rowView.setMinimumHeight(3);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0,initialCols+gridCols());
+			vg.rowSpec = GridLayout.spec(1);
+			vg.setGravity(Gravity.FILL_HORIZONTAL);
+			grid.addView(rowView, vg);
+		}
 		grid.invalidate();
 	}
 
@@ -255,8 +285,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			addState(i);
 		}
 	}
-	private final int initialRows = 1;
-	private final int initialCols = 1 ;
+	private final int initialRows = 2;
+	private final int initialCols = 2 ;
 	private final int gridRows(){
 		return grid.getRowCount()-initialRows;
 	}
