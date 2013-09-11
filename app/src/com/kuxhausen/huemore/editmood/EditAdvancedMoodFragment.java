@@ -64,8 +64,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		addChannel.setOnClickListener(this);
 		
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
-		grid.setColumnCount(2);
-		grid.setRowCount(2);
+		grid.setColumnCount(3);
+		grid.setRowCount(3);
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
 		
@@ -88,14 +88,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		example.on = false;
 		mr.hs = example;
 		return mr;
-	}
-	
-	private void populateGrid(int index){
-		GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-		vg.columnSpec = GridLayout.spec(index % grid.getColumnCount());
-		vg.rowSpec = GridLayout.spec(index / grid.getRowCount());
-		
-		grid.addView(dataRay.get(index).getView(index, grid, this, this), vg);
 	}
 	
 	@Override
@@ -141,13 +133,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 	private void redrawGrid() {
 		grid.removeAllViews();
-		for(int r = 0; r< grid.getRowCount(); r++)
-			for(int c = 0; c<grid.getColumnCount(); c++){
+		for(int r = 0; r< gridRows(); r++)
+			for(int c = 0; c<gridCols(); c++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-				vg.columnSpec = GridLayout.spec(c);
-				vg.rowSpec = GridLayout.spec(r);
+				vg.columnSpec = GridLayout.spec(c+initialCols);
+				vg.rowSpec = GridLayout.spec(r+initialRows);
 				
-				grid.addView(dataRay.get(r*grid.getColumnCount()+c).getView((r*grid.getColumnCount()+c), grid, this, this), vg);
+				grid.addView(dataRay.get(r*gridCols()+c).getView((r*gridCols()+c), grid, this, this), vg);
 			}
 		
 		grid.invalidate();
@@ -195,45 +187,53 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private void addState() {
 		dataRay.add(generateDefaultMoodRow());
 	}
-	private void addState(int i) {
-		dataRay.add(i, generateDefaultMoodRow());
+	private void addState(int item) {
+		dataRay.add(item, generateDefaultMoodRow());
 	}
-	private void delete(int i){
-		dataRay.set(i, generateDefaultMoodRow());
+	private void delete(int item){
+		dataRay.set(item, generateDefaultMoodRow());
 	}
 	
 	private void deleteRow(int item){
-		int row = item / grid.getColumnCount();
+		int row = item / gridCols();
 		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
-		for(int i = 0; i<grid.getColumnCount(); i++){
-			toRemove.add(dataRay.get(i + row*grid.getColumnCount()));
+		for(int i = 0; i<gridCols(); i++){
+			toRemove.add(dataRay.get(i + row*gridCols()));
 		}
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
-		grid.setRowCount(grid.getRowCount()-1);
+		grid.setRowCount(initialRows + gridRows()-1);
 	}
 	private void deleteCol(int item){
-		int col = item % grid.getColumnCount();
+		int col = item % gridCols();
 		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
-		for(int i = 0; i<grid.getRowCount(); i++){
-			Log.e("omg", col+" "+i*grid.getColumnCount());
-			toRemove.add(dataRay.get(col + i*grid.getColumnCount()));
+		for(int i = 0; i<gridRows(); i++){
+			Log.e("omg", col+" "+i*gridCols());
+			toRemove.add(dataRay.get(col + i*gridCols()));
 		}
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
-		grid.setColumnCount(grid.getColumnCount()-1);
+		grid.setColumnCount(initialCols+gridCols()-1);
 	}
 	private void addRow(){
-		grid.setRowCount(grid.getRowCount()+1);
-		for(int i = grid.getColumnCount(); i>0; i--){
+		grid.setRowCount(initialRows + gridRows()+1);
+		for(int i = gridCols(); i>0; i--){
 			addState();
 		}
 	}
 	private void addCol(){
-		int width = grid.getColumnCount();
-		grid.setColumnCount(1+width);
+		int width = gridCols();
+		grid.setColumnCount(1+width+initialCols);
 		for(int i = dataRay.size(); i>0; i-=width){
 			addState(i);
 		}
+	}
+	private final int initialRows = 1;
+	private final int initialCols = 1 ;
+	private final int gridRows(){
+		return grid.getRowCount()-initialRows;
+	}
+	private final int gridCols(){
+		return grid.getColumnCount()-initialCols;
 	}
 }
