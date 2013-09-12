@@ -111,8 +111,9 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		
 		
 		Bundle args = this.getArguments();
-		if (args != null && args.containsKey(InternalArguments.BULB_STATE)) {
-			BulbState bs = gson.fromJson(args.getString(InternalArguments.BULB_STATE),BulbState.class);
+		if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
+			
+			BulbState bs = gson.fromJson(args.getString(InternalArguments.PREVIOUS_STATE),BulbState.class);
 			routeState(bs);
 			
 			if (bs.transitiontime != null) {
@@ -128,8 +129,14 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	}
 
 	private void routeState(BulbState bs) {
-		// TODO Auto-generated method stub
-		//mViewPager.setCurrentItem(2);
+		//// TODO Auto-generated method stub
+		if(bs.ct!=null){
+			mViewPager.setCurrentItem(1);
+			((EditColorTempFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
+		}
+		else{
+			((ColorWheelFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
+		}
 	}
 
 	/**

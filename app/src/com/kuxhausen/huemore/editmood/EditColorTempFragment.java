@@ -30,7 +30,13 @@ public class EditColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener {
 
 	private int mInitialColor;
-	private BulbState hs;
+	private BulbState hs = new BulbState();
+	{
+		hs.on = true;
+		hs.effect = "none";
+
+		hs.ct = 1000000/4000;
+	}
 	Gson gson = new Gson();
 	SeekBar seekBar;
 	EditText tempEditText;
@@ -41,21 +47,22 @@ public class EditColorTempFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		hs = new BulbState();
-		hs.on = true;
-		hs.effect = "none";
 		mInitialColor = 0;
 
 		View groupDialogView = inflater.inflate(R.layout.edit_temp_color, null);
 
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.temperatureBar);
+		
+		seekBar.setProgress((1000000 / hs.ct) - seekBarOffset );
+		
 		seekBar.setOnSeekBarChangeListener(this);
-		hs.sat = (short) seekBar.getProgress();
-
+		
 		tempEditText = (EditText) groupDialogView
 				.findViewById(R.id.temperatureText);
 		tempEditText.setVisibility(View.VISIBLE);
-
+		
+		tempEditText.setText(""+(1000000 / hs.ct));
+		
 		tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
@@ -77,17 +84,25 @@ public class EditColorTempFragment extends Fragment implements
 		return groupDialogView;
 	}
 
+	public void loadPrevious(BulbState bs){
+		if(bs.ct!=null)
+			hs.ct = bs.ct;
+	}
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
-		// TODO Auto-generated method stub
-
+		if(fromUser){
+			hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
+			tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
+			//preview();
+		}
 	}
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-
+		hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
+		tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
+		//preview();
 	}
 
 	@Override

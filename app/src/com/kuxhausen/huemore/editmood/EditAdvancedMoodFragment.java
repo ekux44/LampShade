@@ -172,11 +172,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		case R.id.clickable_layout:
 			stopPreview();
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-			//Bundle args = new Bundle();
-			//args.putString(InternalArguments.PREVIOUS_STATE,
-			//		gson.toJson(rayAdapter.getItem((Integer) v.getTag()).hs));
-			//cpdf.setArguments(args);
-			//cpdf.show(this.getFragmentManager(), "dialog");
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.PREVIOUS_STATE,
+					gson.toJson(dataRay.get((Integer) v.getTag()).hs));
+			cpdf.setArguments(args);
 			cpdf.setTargetFragment(this, (Integer) v.getTag());
 			cpdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -292,6 +291,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		case R.id.contextstatemenu_edit:
 			stopPreview();
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+			Bundle args = new Bundle();
+			args.putString(InternalArguments.PREVIOUS_STATE,
+					gson.toJson(dataRay.get((Integer) contextView.getTag()).hs));
+			cpdf.setArguments(args);
 			cpdf.setTargetFragment(this, (Integer) contextView.getTag());
 			cpdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);

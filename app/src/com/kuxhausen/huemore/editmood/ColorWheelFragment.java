@@ -43,7 +43,14 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	ColorPicker picker;
 	SaturationBar saturationBar;
-	private BulbState hs;
+	private BulbState hs = new BulbState();
+	{
+		hs.on = true;
+		hs.effect = "none";
+
+		hs.hue = 0;
+		hs.sat = 255;
+	}
 	Gson gson = new Gson();
 
 	CompoundButton colorLoop;
@@ -56,13 +63,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		hs = new BulbState();
-		hs.on = true;
-		hs.effect = "none";
-
-		hs.hue = 0;
-		hs.sat = 0;// todo poll existing saturation if there is one
-
 		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
 
 		picker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
@@ -71,20 +71,16 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 
 		Bundle args = getArguments();
-		if (args != null && args.containsKey(InternalArguments.BULB_STATE)) {
+		if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
 			BulbState bs = gson.fromJson(
-					args.getString(InternalArguments.BULB_STATE),
+					args.getString(InternalArguments.PREVIOUS_STATE),
 					BulbState.class);
-			if (bs.hue != null)
-				hs.hue = bs.hue;
-			if (bs.sat != null) {
-				hs.sat = bs.sat;
-			}
-			float[] hsv = { (hs.hue * 360) / 65535, hs.sat / 255f, 1 };
-			picker.setColor(Color.HSVToColor(hsv));
-			saturationBar.setSaturation(hsv[1]);
-			
+			loadPrevious(bs);
 		}
+		float[] hsv = { (hs.hue * 360) / 65535, hs.sat / 255f, 1 };
+		picker.setColor(Color.HSVToColor(hsv));
+		picker.setOldCenterColor(Color.HSVToColor(hsv));
+		saturationBar.setSaturation(hsv[1]);
 		
 		if (colorLoopLayoutVisible) {
 			colorLoop = (CompoundButton) groupDialogView
@@ -100,6 +96,13 @@ public class ColorWheelFragment extends SherlockFragment implements
 		return groupDialogView;
 	}
 	
+	public void loadPrevious(BulbState bs){
+		if (bs.hue != null)
+			hs.hue = bs.hue;
+		if (bs.sat != null) {
+			hs.sat = bs.sat;
+		}
+	}
 	public void onStart(){
 		super.onStart();
 		picker.setOnColorChangedListener(this);

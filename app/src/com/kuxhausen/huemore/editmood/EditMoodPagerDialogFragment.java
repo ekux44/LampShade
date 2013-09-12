@@ -162,7 +162,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (priorMood != null && !priorMood.usesTiming && priorMood.events.length == 1
 						&& priorMood.events[0].state.ct == null) {
-					args.putString(InternalArguments.BULB_STATE,
+					args.putString(InternalArguments.PREVIOUS_STATE,
 							gson.toJson(priorMood.events[0].state));
 				}
 				nchf.setArguments(args);
