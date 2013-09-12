@@ -7,7 +7,10 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
@@ -15,6 +18,7 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.os.Bundle;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -36,7 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v7.widget.GridLayout;
 
-public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener {
+public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener, OnCreateMoodListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
@@ -49,6 +53,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	Button addChannel, addTimeslot;
 	EditText moodName;
 	CheckBox loop;
+	static String priorName;
+	static Mood priorMood;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +92,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		addRow();
 	    
 	    redrawGrid();
+	    
+	    Button cancelButton = (Button) myView.findViewById(R.id.cancel);
+		cancelButton.setOnClickListener(this);
+		Button okayButton = (Button) myView.findViewById(R.id.okay);
+		okayButton.setOnClickListener(this);
 	    
 	    return myView;
 	}
@@ -178,7 +189,23 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			addRow();
 			redrawGrid();
 			break;
+		case R.id.okay:
+			if (priorName != null) {
+				// delete old mood
+				String moodSelect = MoodColumns.MOOD + "=?";
+				String[] moodArg = { priorName };
+				this.getActivity().getContentResolver().delete(
+						DatabaseDefinitions.MoodColumns.MOODS_URI,
+						moodSelect, moodArg);
+			}
+			this.onCreateMood(moodName.getText().toString());
+			getActivity().onBackPressed();
+			break;
+		case R.id.cancel:
+			getActivity().onBackPressed();
+			break;
 		}
+		
 	}
 
 	private void redrawGrid() {
@@ -383,4 +410,14 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		return usedSpinnerIDs++;
 	}
 	private int usedSpinnerIDs = 0;
+
+	@Override
+	public void onCreateMood(String moodname) {
+		ContentValues mNewValues = new ContentValues();
+		mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, moodname);
+		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(getMood()));
+		
+		getActivity().getContentResolver().insert(
+				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
+	}
 }
