@@ -144,7 +144,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			eRay[i] = events.get(i);
 		
 		m.events = eRay;
-		m.timeBetweenLastEventAndLoop = getTime(this.gridRows());
+		m.loopIterationTimeLength = getTime(this.gridRows());
 		return m;
 	}
 	private int getTime(int row){

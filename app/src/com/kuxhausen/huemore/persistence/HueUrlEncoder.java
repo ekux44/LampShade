@@ -67,8 +67,8 @@ public class HueUrlEncoder {
 		
 		addListOfEvents(mBitSet, mood, timeArray, stateArray);
 		
-		// Set 20 bit timestamps representing the timeBetweenLastEventAndLoop
-		mBitSet.addNumber(mood.timeBetweenLastEventAndLoop,20);
+		// Set 20 bit timestamps representing the loopIterationTimeLength
+		mBitSet.addNumber(mood.loopIterationTimeLength,20);
 				
 		return mBitSet.getBase64Encoding();
 	}
@@ -382,9 +382,9 @@ public class HueUrlEncoder {
 				}
 				mood.events=eList;
 				
-				// 20 bit timeBetweenLastEventAndLoop is only difference between encodingVersion=1 & =2
+				// 20 bit loopIterationTimeLength is only difference between encodingVersion=1 & =2
 				if(encodingVersion==2)
-					mood.timeBetweenLastEventAndLoop = mBitSet.extractNumber(20);
+					mood.loopIterationTimeLength = mBitSet.extractNumber(20);
 				
 			} else if(encodingVersion==0){
 				mBitSet.useLittleEndianEncoding(true);
