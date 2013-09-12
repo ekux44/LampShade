@@ -56,6 +56,17 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	static String priorName;
 	static Mood priorMood;
 	
+	private boolean timedMode;
+	private boolean multiMode;
+	
+	public void setTimedMode(){
+		timedMode = true;
+	}
+	public void setMultiMode(){
+		multiMode = true;
+	}
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -68,7 +79,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		moodName = (EditText)myView.findViewById(R.id.moodNameEditText);
 		
 		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
-		loop.setOnCheckedChangeListener(this);
 		
 		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
 		addTimeslot.setOnClickListener(this);
@@ -82,21 +92,47 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		addChannel.setOnClickListener(this);
 		
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
-		grid.setColumnCount(initialCols+2);
+		grid.removeAllViews();
+		timeslotDuration.clear();
+		timeslotDurationById.clear();
+		dataRay.clear();
+		grid.setColumnCount(initialCols+1);
 		grid.setRowCount(initialRows);
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
+		addRow();
+		if(!multiMode){
+			addRow();
+			addRow();
+		} else{
+			myView.findViewById(R.id.addTimeslotButton).setVisibility(View.GONE);
+		}
 		
-		addRow();
-		addRow();
-		addRow();
+		if(!timedMode){
+			addCol();
+		} else{
+			loop.setChecked(true);
+			myView.findViewById(R.id.addChannelButton).setVisibility(View.GONE);
+		}
 	    
+		loop.setOnCheckedChangeListener(this);
 	    redrawGrid();
 	    
-	    Button cancelButton = (Button) myView.findViewById(R.id.cancel);
-		cancelButton.setOnClickListener(this);
-		Button okayButton = (Button) myView.findViewById(R.id.okay);
-		okayButton.setOnClickListener(this);
+	    if(timedMode || multiMode){
+	    	myView.findViewById(R.id.confirmationBar).setVisibility(View.GONE);
+	    	myView.findViewById(R.id.advancedLinearLayout).setVisibility(View.GONE);
+	    }
+	    else
+	    {
+		    Button cancelButton = (Button) myView.findViewById(R.id.cancel);
+			cancelButton.setOnClickListener(this);
+			Button okayButton = (Button) myView.findViewById(R.id.okay);
+			okayButton.setOnClickListener(this);
+	    }
+		Bundle args = getArguments();
+		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
+			Mood mood = Utils.getMoodFromDatabase(args.getString(InternalArguments.MOOD_NAME), this.getActivity());
+		}
 	    
 	    return myView;
 	}
@@ -222,7 +258,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(r+initialRows);
 			vg.setGravity(Gravity.CENTER);
-			grid.addView(timeslotDuration.get(r).spin, vg);
+			
+			View v = timeslotDuration.get(r).spin;
+			if(v.getParent()!=null)
+				((ViewGroup)v.getParent()).removeView(v);
+			grid.addView(v, vg);
+			
+			
 		}
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();

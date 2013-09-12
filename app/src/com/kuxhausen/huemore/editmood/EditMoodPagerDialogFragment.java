@@ -169,24 +169,24 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				newMoodFragments[i] = nchf;
 				return (Fragment) newMoodFragments[i];
 			case 1:
-				EditLoopMoodFragment etmf = new EditLoopMoodFragment();
+				EditAdvancedMoodFragment eamf = new EditAdvancedMoodFragment();
+				eamf.setTimedMode();
 				Bundle args1 = new Bundle();
-				args1.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (priorMood != null && !priorMood.usesTiming) {
+				if (priorMood != null && priorMood.numChannels==1) {
 					args1.putString(InternalArguments.MOOD_NAME, priorName);
 				}
-				etmf.setArguments(args1);
-				newMoodFragments[i] = etmf;
+				eamf.setArguments(args1);
+				newMoodFragments[i] = eamf;
 				return (Fragment) newMoodFragments[i];
 			case 2:
-				EditMultiMoodFragment nmmf = new EditMultiMoodFragment();
+				EditAdvancedMoodFragment eamf2 = new EditAdvancedMoodFragment();
+				eamf2.setMultiMode();
 				Bundle args2 = new Bundle();
-				args2.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (priorMood != null && !priorMood.usesTiming) {
 					args2.putString(InternalArguments.MOOD_NAME, priorName);
 				}
-				nmmf.setArguments(args2);
-				newMoodFragments[i] = nmmf;
+				eamf2.setArguments(args2);
+				newMoodFragments[i] = eamf2;
 				return (Fragment) newMoodFragments[i];
 			case 3:
 				EditComplexMoodFragment ecmf = new EditComplexMoodFragment();
