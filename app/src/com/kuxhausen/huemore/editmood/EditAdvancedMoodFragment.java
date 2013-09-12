@@ -100,9 +100,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		redrawGrid();
 	}
 	
+	private void stopPreview(){
+		Mood m = new Mood();
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "");
+	}
 	private void preview(){
-		
-		Log.e("encodedMood",HueUrlEncoder.encode(getMood()));
 		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), moodName.getText().toString());
 		
 	}
@@ -120,7 +122,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		ArrayList<Event> events = new ArrayList<Event>();
 		for(int i = 0; i< dataRay.size(); i++){
 			MoodRow mr = dataRay.get(i);
-			Log.e("mr",mr.hs.toString());
 			
 			if(mr.hs!=null && !mr.hs.toString().equals("")){
 				int row = i / gridCols();
@@ -145,6 +146,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.clickable_layout:
+			stopPreview();
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 			//Bundle args = new Bundle();
 			//args.putString(InternalArguments.PREVIOUS_STATE,
@@ -248,6 +250,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.contextstatemenu_edit:
+			stopPreview();
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 			cpdf.setTargetFragment(this, (Integer) contextView.getTag());
 			cpdf.show(getFragmentManager(),
@@ -332,7 +335,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		// TODO Auto-generated method stub
-		
+		preview();
 	}
 }
