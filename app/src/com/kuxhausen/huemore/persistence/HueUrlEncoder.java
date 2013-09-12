@@ -13,7 +13,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueUrlEncoder {
 
-	public final static Integer PROTOCOL_VERSION_NUMBER = 1;
+	public final static Integer PROTOCOL_VERSION_NUMBER = 2;
 	
 	
 	public static String encode(Mood mood)
@@ -65,7 +65,11 @@ public class HueUrlEncoder {
 		// Set 8 bit number of events
 		mBitSet.addNumber(mood.events.length,8);
 		
-		addListOfEvents(mBitSet, mood, timeArray, stateArray);		
+		addListOfEvents(mBitSet, mood, timeArray, stateArray);
+		
+		// Set 20 bit timestamps representing the timeBetweenLastEventAndLoop
+		mBitSet.addNumber(mood.timeBetweenLastEventAndLoop,20);
+				
 		return mBitSet.getBase64Encoding();
 	}
 	
@@ -330,7 +334,7 @@ public class HueUrlEncoder {
 						bList.add(i + 1);
 			}
 			
-			if(encodingVersion == 1){
+			if(encodingVersion == 1||encodingVersion==2){
 				int numChannels = mBitSet.extractNumber(6);
 				mood.numChannels=numChannels;
 				
@@ -377,6 +381,10 @@ public class HueUrlEncoder {
 					eList[i] = e;
 				}
 				mood.events=eList;
+				
+				// 20 bit timeBetweenLastEventAndLoop is only difference between encodingVersion=1 & =2
+				if(encodingVersion==2)
+					mood.timeBetweenLastEventAndLoop = mBitSet.extractNumber(20);
 				
 			} else if(encodingVersion==0){
 				mBitSet.useLittleEndianEncoding(true);
