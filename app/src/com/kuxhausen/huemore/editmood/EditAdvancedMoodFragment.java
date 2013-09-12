@@ -85,12 +85,33 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				data.getStringExtra(InternalArguments.HUE_STATE),
 				BulbState.class);
 
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
+		preview();
 		redrawGrid();
 	}
 	
+	private void preview(){
+		//Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
+		
+	}
+	
 	private Mood getMood() {
-		// TODO Auto-generated method stub
+		//todo calculate dynamically for each timeslot
+		int transitionTime = 10;
+		/*
+		Mood m = new Mood();
+		m.usesTiming = true;
+		m.numChannels = gridCols();
+		m.timeAddressingRepeatPolicy = false;
+		Event[] eRay = new Event[m.numChannels];
+		for(int i = 0; i<eRay.length; i++){
+			Event e = new Event();
+			e.channel = 0;
+			e.time = i*transitionTime;
+			e.state = moodRowArray.get(i).hs;
+			eRay[i] = e;
+		}
+		m.events = eRay;
+		return m;*/
 		return null;
 	}
 
