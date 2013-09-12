@@ -174,7 +174,7 @@ public class MoodExecuterService extends Service {
 							.getStringExtra(InternalArguments.MOOD_NAME);
 					moodName = (moodName == null) ? "Unknown Mood" : moodName;
 					createNotification(moodName);
-	
+					restartCountDownTimer();
 				} else if (encodedTransientMood != null) {
 					Pair<Integer[], Mood> decodedValues = HueUrlEncoder
 							.decode(encodedTransientMood);
@@ -208,7 +208,6 @@ public class MoodExecuterService extends Service {
 				startActivity(i);
 			}
 		}
-		restartCountDownTimer();
 		return super.onStartCommand(intent, flags, startId);
 	}
 
