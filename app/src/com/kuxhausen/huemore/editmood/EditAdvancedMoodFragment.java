@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
@@ -23,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -33,14 +36,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v7.widget.GridLayout;
 
-public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener {
+public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
 	View contextView;
 	
 	ArrayList<MoodRow> dataRay = new ArrayList<MoodRow>();
-	ArrayList<Spinner> timeslotSpinners = new ArrayList<Spinner>();
+	ArrayList<TimeslotDuration> timeslotDuration = new ArrayList<TimeslotDuration>();
+	HashMap<Integer, TimeslotDuration> timeslotDurationById = new HashMap<Integer, TimeslotDuration>();
+	int[] timeslotValues;
 	Button addChannel, addTimeslot;
 	EditText moodName;
 	CheckBox loop;
@@ -50,6 +55,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
+		
+		timeslotValues = getActivity().getResources().getIntArray(
+				R.array.timeslot_values_array);
 		
 		moodName = (EditText)myView.findViewById(R.id.moodNameEditText);
 		
@@ -109,10 +117,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 	}
 	
-	private Mood getMood() {
-		//todo calculate dynamically for each timeslot
-		int transitionTime = 10;
-		
+	private Mood getMood() {		
 		Mood m = new Mood();
 		m.usesTiming = true; //TODO not always the case...
 		m.numChannels = gridCols();
@@ -129,7 +134,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				
 				Event e = new Event();
 				e.channel = col;
-				e.time = row * transitionTime; //TODO actually calculate this with compounding transition times
+				e.time = getTime(row);
 				e.state = mr.hs;
 				events.add(e);
 			}
@@ -139,7 +144,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			eRay[i] = events.get(i);
 		
 		m.events = eRay;
+		m.timeBetweenLastEventAndLoop = getTime(this.gridRows());
 		return m;
+	}
+	private int getTime(int row){
+		int time = 0;
+		for(int i = row-1; i>=0; i--){
+			time+=timeslotDuration.get(i).duration;
+		}
+		return time;
 	}
 
 	@Override
@@ -178,12 +191,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				
 				grid.addView(dataRay.get(r*gridCols()+c).getView((r*gridCols()+c), grid, this, this), vg);
 			}
-		for(int r = 0; r<timeslotSpinners.size(); r++){
+		for(int r = 0; r<timeslotDuration.size(); r++){
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(r+initialRows);
 			vg.setGravity(Gravity.CENTER);
-			grid.addView(timeslotSpinners.get(r), vg);
+			grid.addView(timeslotDuration.get(r).spin, vg);
 		}
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -292,7 +305,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(MoodRow kill : toRemove)
 			dataRay.remove(kill);
 		
-		timeslotSpinners.remove(row);
+		timeslotDurationById.remove(timeslotDuration.get(row).id);
+		timeslotDuration.remove(row);
 		
 		grid.setRowCount(initialRows + gridRows()-1);
 	}
@@ -311,8 +325,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid.setRowCount(initialRows + gridRows()+1);
 		
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		timeslotSpinners.add((Spinner)inflater.inflate(R.layout.timeslot_spinner, null));
-				
+		TimeslotDuration td = new TimeslotDuration();
+		td.spin = (Spinner)inflater.inflate(R.layout.timeslot_spinner, null);
+		td.id = getSpinnerId();
+		td.spin.setId(td.id);
+		td.duration = timeslotValues[0];
+		timeslotDuration.add(td);
+		timeslotDurationById.put(td.id, td);
+		td.spin.setOnItemSelectedListener(this);
+		
 		for(int i = gridCols(); i>0; i--){
 			addState();
 		}
@@ -337,4 +358,29 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		preview();
 	}
+
+	@Override
+	public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+		if(position<timeslotValues.length-1){
+			Log.e("position",""+position);
+			Log.e("id",""+parent.getId());
+			TimeslotDuration td = timeslotDurationById.get(parent.getId());
+			Log.e("td=null?",""+(td==null));
+			td.duration=(timeslotValues[position]);
+		}
+		else{
+			//TODO launch custom time dialog
+		}
+			
+	}
+
+	@Override
+	public void onNothingSelected (AdapterView<?> parent) {
+		// TODO Auto-generated method stub
+		
+	}
+	private int getSpinnerId(){
+		return usedSpinnerIDs++;
+	}
+	private int usedSpinnerIDs = 0;
 }
