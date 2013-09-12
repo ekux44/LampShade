@@ -83,7 +83,7 @@ public class HueUrlEncoder {
 		/** Put 9 bit properties flags **/
 		{
 			// On/OFF flag always include in v1 implementation 1
-			mBitSet.incrementingSet(true);
+			mBitSet.incrementingSet(bs.on != null);
 			
 			// Put bri flag
 			mBitSet.incrementingSet(bs.bri != null);
@@ -110,8 +110,9 @@ public class HueUrlEncoder {
 			mBitSet.incrementingSet(bs.transitiontime != null);
 		}
 		/** Put on bit **/
-		// On/OFF flag always include in v1 implementation 1
-		mBitSet.incrementingSet(bs.on);
+		if (bs.on != null) {
+			mBitSet.incrementingSet(bs.on);
+		}
 		
 		/** Put 8 bit bri **/	
 		if (bs.bri != null) {
@@ -239,7 +240,9 @@ public class HueUrlEncoder {
 		}
 
 		/** Get on bit **/
-		bs.on = mBitSet.incrementingGet();
+		if (propertiesFlags[0]) {
+			bs.on = mBitSet.incrementingGet();
+		}
 		
 		/** Get 8 bit bri **/	
 		if (propertiesFlags[1]) {

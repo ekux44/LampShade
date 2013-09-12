@@ -330,7 +330,6 @@ public class HueMoreProvider extends ContentProvider {
 		if(sUriMatcher.match(uri) == MOODS && c2.getCount()<1){
 			//If mood doesn't exist in db, return a blank mood
 			BulbState resultState = new BulbState();
-			resultState.on = true; //todo make this field Boolean so I don't have to set it
 			
 			Mood m = Utils.generateSimpleMood(resultState);
 			

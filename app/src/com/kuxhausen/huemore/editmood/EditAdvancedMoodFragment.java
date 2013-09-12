@@ -73,7 +73,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		MoodRow mr = new MoodRow();
 		mr.color = 0xff000000;
 		BulbState example = new BulbState();
-		example.on = false;
 		mr.hs = example;
 		return mr;
 	}

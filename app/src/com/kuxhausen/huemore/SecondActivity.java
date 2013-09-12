@@ -223,7 +223,7 @@ public class SecondActivity extends GodObject implements
 			int brightnessPool = 0;
 			for (BulbAttributes ba : bulbsAttributes) {
 				if (ba != null) {
-					if (ba.state.on == false)
+					if (ba.state.on!=null && ba.state.on == false)
 						brightnessPool++;
 					else {
 						brightnessSum += ba.state.bri;

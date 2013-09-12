@@ -5,7 +5,7 @@ public class BulbState {
 	/**
 	 * On/Off state of the light. On=true, Off=false
 	 */
-	public boolean on;
+	public Boolean on;
 	/**
 	 * The brightness value to set the light to. Brightness is a scale from 0
 	 * (the minimum the light is capable of) to 255 (the maximum). Note: a
@@ -67,7 +67,8 @@ public class BulbState {
 	@Override
 	public String toString() {
 		String result = "";
-		result += "on:" + (on ? "true" : "false") + " ";
+		if (on != null)
+			result += "on:" + (on ? "true" : "false") + " ";
 		if (bri != null)
 			result += "bri:" + bri + " ";
 		if (hue != null)
@@ -89,7 +90,7 @@ public class BulbState {
 	
 	/* when in doubt, override **/
 	public void merge(BulbState other){
-		on = other.on;
+		on = (other.on!=null) ? other.on : on;
 		bri = (other.bri!=null) ? other.bri : bri;
 		hue = (other.hue!=null) ? other.hue : hue;
 		sat = (other.sat!=null) ? other.sat : sat;

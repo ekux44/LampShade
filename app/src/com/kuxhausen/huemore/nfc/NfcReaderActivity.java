@@ -90,8 +90,10 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 					Mood m = result.second;
 					
 					Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null);
-					
-					onButton.setChecked(m.events[0].state.on);
+					boolean on = false;
+					if(m.events[0].state.on!=null && m.events[0].state.on)
+						on=true;
+					onButton.setChecked(on);
 				} catch (InvalidEncodingException e) {
 					Intent i = new Intent(this,DecodeErrorActivity.class);
 					i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
