@@ -7,7 +7,9 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -84,34 +86,48 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				data.getStringExtra(InternalArguments.HUE_STATE),
 				BulbState.class);
 
-		preview();
 		redrawGrid();
 	}
 	
 	private void preview(){
-		//Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
+		
+		Log.e("encodedMood",HueUrlEncoder.encode(getMood()));
+		//todo make this not transient
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
 		
 	}
 	
 	private Mood getMood() {
 		//todo calculate dynamically for each timeslot
 		int transitionTime = 10;
-		/*
+		
 		Mood m = new Mood();
-		m.usesTiming = true;
+		m.usesTiming = true; //TODO not always the case...
 		m.numChannels = gridCols();
 		m.timeAddressingRepeatPolicy = false;
-		Event[] eRay = new Event[m.numChannels];
-		for(int i = 0; i<eRay.length; i++){
-			Event e = new Event();
-			e.channel = 0;
-			e.time = i*transitionTime;
-			e.state = moodRowArray.get(i).hs;
-			eRay[i] = e;
+		
+		ArrayList<Event> events = new ArrayList<Event>();
+		for(int i = 0; i< dataRay.size(); i++){
+			MoodRow mr = dataRay.get(i);
+			Log.e("mr",mr.hs.toString());
+			
+			if(mr.hs!=null && !mr.hs.toString().equals("")){
+				int row = i / gridCols();
+				int col = i % gridCols();
+				
+				Event e = new Event();
+				e.channel = col;
+				e.time = row * transitionTime; //TODO actually calculate this with compounding transition times
+				e.state = mr.hs;
+				events.add(e);
+			}
 		}
+		Event[] eRay = new Event[events.size()];
+		for(int i = 0; i<eRay.length; i++)
+			eRay[i] = events.get(i);
+		
 		m.events = eRay;
-		return m;*/
-		return null;
+		return m;
 	}
 
 	@Override
@@ -201,6 +217,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			grid.addView(rowView, vg);
 		}
 		grid.invalidate();
+		preview();
 	}
 
 	
