@@ -250,8 +250,10 @@ public class MoodExecuterService extends Service {
 						transientIndex = (transientIndex + 1) % 50;
 					}
 				} else if (queue.peek() == null) {
-					if (moodPair != null && moodPair.second.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
-						loadMoodIntoQueue();
+					if (moodPair != null && moodPair.second.isInfiniteLooping()) {
+						if(System.nanoTime()>moodLoopIterationEndNanoTime){
+							loadMoodIntoQueue();
+						}
 					} else {
 						createNotification("");
 
