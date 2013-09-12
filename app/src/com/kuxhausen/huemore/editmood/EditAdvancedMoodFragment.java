@@ -44,7 +44,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 	Gson gson = new Gson();
 	GridLayout grid;
-	View contextView;
+	int contextSpot;
 	
 	ArrayList<MoodRow> dataRay = new ArrayList<MoodRow>();
 	ArrayList<TimeslotDuration> timeslotDuration = new ArrayList<TimeslotDuration>();
@@ -65,7 +65,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public void setMultiMode(){
 		multiMode = true;
 	}
-	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -244,14 +243,17 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 
 	private void redrawGrid() {
+		Log.e("redraw","redraw grid");
+		
 		grid.removeAllViews();
 		for(int r = 0; r< gridRows(); r++)
 			for(int c = 0; c<gridCols(); c++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(c+initialCols);
 				vg.rowSpec = GridLayout.spec(r+initialRows);
-				
-				grid.addView(dataRay.get(r*gridCols()+c).getView((r*gridCols()+c), grid, this, this), vg);
+				View v = dataRay.get(r*gridCols()+c).getView((r*gridCols()+c), grid, this, this);
+				v.setTag(r*this.gridCols()+c);
+				grid.addView(v, vg);
 			}
 		for(int r = 0; r<timeslotDuration.size(); r++){
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
@@ -320,41 +322,104 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		contextView = v;
+		contextSpot = (Integer)v.getTag();
+		Log.e("cv!=null",""+(v!=null));
+		Log.e("cv tag!=null",""+(v.getTag()!=null));
+		Log.e("cv tag",v.getTag().toString());
 		
+		if(timedMode){
+			android.view.MenuInflater inflater = this.getActivity()
+					.getMenuInflater();
+			inflater.inflate(R.menu.context_timed_state, menu);
+		} else if (multiMode){
+			android.view.MenuInflater inflater = this.getActivity()
+					.getMenuInflater();
+			inflater.inflate(R.menu.context_multi_state, menu);
+		} else{
 		android.view.MenuInflater inflater = this.getActivity()
 				.getMenuInflater();
 		inflater.inflate(R.menu.context_state, menu);
+		}
 	}
 
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.contextstatemenu_edit:
-			stopPreview();
-			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-			Bundle args = new Bundle();
-			args.putString(InternalArguments.PREVIOUS_STATE,
-					gson.toJson(dataRay.get((Integer) contextView.getTag()).hs));
-			cpdf.setArguments(args);
-			cpdf.setTargetFragment(this, (Integer) contextView.getTag());
-			cpdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
-		case R.id.contextstatemenu_delete:
-			delete((Integer)contextView.getTag());
-			redrawGrid();
-			return true;
-		case R.id.contextstatemenu_delete_timeslot:
-			deleteRow((Integer)contextView.getTag());
-			redrawGrid();
-			return true;
-		case R.id.contextstatemenu_delete_channel:
-			deleteCol((Integer)contextView.getTag());
-			redrawGrid();
-			return true;
-		default:
-			return super.onContextItemSelected(item);
+		if(timedMode){
+			switch (item.getItemId()) {
+			case R.id.contexttimedmenu_edit:
+				stopPreview();
+				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+				Bundle args = new Bundle();
+				args.putString(InternalArguments.PREVIOUS_STATE,
+						gson.toJson(dataRay.get(contextSpot).hs));
+				cpdf.setArguments(args);
+				cpdf.setTargetFragment(this, contextSpot);
+				cpdf.show(getFragmentManager(),
+						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+				return true;
+			case R.id.contexttimedmenu_delete:
+				delete(contextSpot);
+				redrawGrid();
+				return true;
+			case R.id.contexttimedmenu_delete_timeslot:
+				deleteRow(contextSpot);
+				redrawGrid();
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+			}
+		}else if(multiMode){
+			switch (item.getItemId()) {
+			case R.id.contextmultimenu_edit:
+				stopPreview();
+				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+				Bundle args = new Bundle();
+				args.putString(InternalArguments.PREVIOUS_STATE,
+						gson.toJson(dataRay.get(contextSpot).hs));
+				cpdf.setArguments(args);
+				cpdf.setTargetFragment(this, contextSpot);
+				cpdf.show(getFragmentManager(),
+						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+				return true;
+			case R.id.contextmultimenu_delete:
+				delete(contextSpot);
+				redrawGrid();
+				return true;
+			case R.id.contextmultimenu_delete_channel:
+				deleteCol(contextSpot);
+				redrawGrid();
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+			}
+		}else{
+			switch (item.getItemId()) {
+			case R.id.contextstatemenu_edit:
+				stopPreview();
+				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+				Bundle args = new Bundle();
+				args.putString(InternalArguments.PREVIOUS_STATE,
+						gson.toJson(dataRay.get(contextSpot).hs));
+				cpdf.setArguments(args);
+				cpdf.setTargetFragment(this, contextSpot);
+				cpdf.show(getFragmentManager(),
+						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+				return true;
+			case R.id.contextstatemenu_delete:
+				delete(contextSpot);
+				redrawGrid();
+				return true;
+			case R.id.contextstatemenu_delete_timeslot:
+				deleteRow(contextSpot);
+				redrawGrid();
+				return true;
+			case R.id.contextstatemenu_delete_channel:
+				deleteCol(contextSpot);
+				redrawGrid();
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+			}
 		}
 	}
 	
@@ -369,52 +434,62 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void deleteRow(int item){
-		int row = item / gridCols();
-		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
-		for(int i = 0; i<gridCols(); i++){
-			toRemove.add(dataRay.get(i + row*gridCols()));
+		if(gridRows()>1){
+			int row = item / gridCols();
+			ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
+			for(int i = 0; i<gridCols(); i++){
+				toRemove.add(dataRay.get(i + row*gridCols()));
+			}
+			for(MoodRow kill : toRemove)
+				dataRay.remove(kill);
+			
+			timeslotDurationById.remove(timeslotDuration.get(row).id);
+			timeslotDuration.remove(row);
+			
+			grid.setRowCount(initialRows + gridRows()-1);
 		}
-		for(MoodRow kill : toRemove)
-			dataRay.remove(kill);
-		
-		timeslotDurationById.remove(timeslotDuration.get(row).id);
-		timeslotDuration.remove(row);
-		
-		grid.setRowCount(initialRows + gridRows()-1);
 	}
 	private void deleteCol(int item){
-		int col = item % gridCols();
-		ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
-		for(int i = 0; i<gridRows(); i++){
-			Log.e("omg", col+" "+i*gridCols());
-			toRemove.add(dataRay.get(col + i*gridCols()));
+		Log.e("deleteCol",item + "  "+gridCols());
+		
+		if(gridCols()>1){
+			int col = item % gridCols();
+			ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
+			for(int i = 0; i<gridRows(); i++){
+				Log.e("omg", col+" "+i*gridCols());
+				toRemove.add(dataRay.get(col + i*gridCols()));
+			}
+			for(MoodRow kill : toRemove)
+				dataRay.remove(kill);
+			grid.setColumnCount(initialCols+gridCols()-1);
 		}
-		for(MoodRow kill : toRemove)
-			dataRay.remove(kill);
-		grid.setColumnCount(initialCols+gridCols()-1);
 	}
 	private void addRow(){
-		grid.setRowCount(initialRows + gridRows()+1);
-		
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		TimeslotDuration td = new TimeslotDuration();
-		td.spin = (Spinner)inflater.inflate(R.layout.timeslot_spinner, null);
-		td.id = getSpinnerId();
-		td.spin.setId(td.id);
-		td.duration = timeslotValues[0];
-		timeslotDuration.add(td);
-		timeslotDurationById.put(td.id, td);
-		td.spin.setOnItemSelectedListener(this);
-		
-		for(int i = gridCols(); i>0; i--){
-			addState();
+		if(gridRows()<=8){
+			grid.setRowCount(initialRows + gridRows()+1);
+			
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			TimeslotDuration td = new TimeslotDuration();
+			td.spin = (Spinner)inflater.inflate(R.layout.timeslot_spinner, null);
+			td.id = getSpinnerId();
+			td.spin.setId(td.id);
+			td.duration = timeslotValues[0];
+			timeslotDuration.add(td);
+			timeslotDurationById.put(td.id, td);
+			td.spin.setOnItemSelectedListener(this);
+			
+			for(int i = gridCols(); i>0; i--){
+				addState();
+			}
 		}
 	}
 	private void addCol(){
-		int width = gridCols();
-		grid.setColumnCount(1+width+initialCols);
-		for(int i = dataRay.size(); i>0; i-=width){
-			addState(i);
+		if(gridCols()<8){
+			int width = gridCols();
+			grid.setColumnCount(1+width+initialCols);
+			for(int i = dataRay.size(); i>0; i-=width){
+				addState(i);
+			}
 		}
 	}
 	private final int initialRows = 2;

@@ -87,12 +87,12 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) this.findViewById(R.id.pager);
 		mViewPager.setAdapter(mEditMoodPagerAdapter);
+		mViewPager.setOffscreenPageLimit(2);
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int position) {
 				currentPage = position;
-
 			}
 
 		});
