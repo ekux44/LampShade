@@ -24,11 +24,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.support.v7.widget.GridLayout;
 
-public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener {
+public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
@@ -37,6 +42,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	ArrayList<MoodRow> dataRay = new ArrayList<MoodRow>();
 	ArrayList<Spinner> timeslotSpinners = new ArrayList<Spinner>();
 	Button addChannel, addTimeslot;
+	EditText moodName;
+	CheckBox loop;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +51,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
 		
+		moodName = (EditText)myView.findViewById(R.id.moodNameEditText);
+		
+		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
+		loop.setOnCheckedChangeListener(this);
 		
 		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
 		addTimeslot.setOnClickListener(this);
@@ -92,8 +103,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private void preview(){
 		
 		Log.e("encodedMood",HueUrlEncoder.encode(getMood()));
-		//todo make this not transient
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), null);
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), moodName.getText().toString());
 		
 	}
 	
@@ -105,6 +115,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		m.usesTiming = true; //TODO not always the case...
 		m.numChannels = gridCols();
 		m.timeAddressingRepeatPolicy = false;
+		m.setInfiniteLooping(loop.isChecked());
 		
 		ArrayList<Event> events = new ArrayList<Event>();
 		for(int i = 0; i< dataRay.size(); i++){
@@ -317,5 +328,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	private final int gridCols(){
 		return grid.getColumnCount()-initialCols;
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		// TODO Auto-generated method stub
+		
 	}
 }
