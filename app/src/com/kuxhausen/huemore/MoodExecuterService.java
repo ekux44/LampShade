@@ -64,6 +64,8 @@ public class MoodExecuterService extends Service {
 	private CountDownTimer countDownTimer;
 
 	int time;
+	
+	Long moodLoopIterationEndNanoTime = 0l;
 
 	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
 
@@ -122,6 +124,7 @@ public class MoodExecuterService extends Service {
 				queue.add(qe);
 			}
 		}
+		moodLoopIterationEndNanoTime = System.nanoTime()+(m.loopIterationTimeLength*100000000l);
 	}
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -247,7 +250,7 @@ public class MoodExecuterService extends Service {
 						transientIndex = (transientIndex + 1) % 50;
 					}
 				} else if (queue.peek() == null) {
-					if (moodPair != null && moodPair.second.isInfiniteLooping()) {
+					if (moodPair != null && moodPair.second.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
 						loadMoodIntoQueue();
 					} else {
 						createNotification("");
