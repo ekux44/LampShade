@@ -43,9 +43,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
 
 	private SeekBar brightnessBar;
-	private Spinner groupSpinner, moodSpinner, transitionSpinner;
+	private Spinner groupSpinner, moodSpinner;
 	private SimpleCursorAdapter groupDataSource, moodDataSource;
-	private int[] transitionValues;
 	private Button repeatButton;
 	private TextView repeatView;
 	private Gson gson = new Gson();
@@ -105,11 +104,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 				}
 				groupSpinner.setSelection(groupPos);
 
-				int transitionPos = 0;
-				for (int i = 0; i < transitionValues.length; i++)
-					if (optionalState.transitiontime == transitionValues[i])
-						transitionPos = i;
-				transitionSpinner.setSelection(transitionPos);
 
 				brightnessBar.setProgress(optionalState.brightness);
 
@@ -157,21 +151,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		groupSpinner = (Spinner) myView.findViewById(R.id.groupSpinner);
 
 		moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
-
-		transitionSpinner = (Spinner) myView
-				.findViewById(R.id.transitionSpinner);
-		// Create an ArrayAdapter using the string array and a default spinner
-		// layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				getActivity(), R.array.transition_names_array,
-				android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		transitionSpinner.setAdapter(adapter);
-
-		transitionValues = getActivity().getResources().getIntArray(
-				R.array.transition_values_array);
 
 		onLoadLoaderManager(priorState);
 
@@ -336,8 +315,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		AlarmState as = new AlarmState();
 		as.group = ((Cursor) groupSpinner.getSelectedItem()).getString(0);
 		as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
-		as.transitiontime = transitionValues[transitionSpinner
-				.getSelectedItemPosition()];
 		as.brightness = brightnessBar.getProgress();
 		as.setRepeatingDays(repeats);
 		as.scheduledForFuture = true;
@@ -347,8 +324,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		projectedTime.set(Calendar.HOUR_OF_DAY, timePick.getCurrentHour());
 		projectedTime.set(Calendar.MINUTE, timePick.getCurrentMinute());
 		projectedTime.set(Calendar.SECOND, 0);
-		// ensure transition starts ahead to culminate at the specified time
-		projectedTime.add(Calendar.SECOND, -as.transitiontime / 10);
 
 		if (as.isRepeating()) {
 			long[] l = new long[7];

@@ -45,8 +45,6 @@ public class AlarmRow {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
 		
-		// remember transition starts ahead to culminate at the specified time
-		cal.add(Calendar.SECOND, aState.transitiontime / 10);
 		return DateFormat.getTimeFormat(c).format(cal.getTime());
 	}
 
