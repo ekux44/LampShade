@@ -13,7 +13,7 @@
         android:id="@+id/enterAdvancedEditor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="enterAdvancedEditor" />
+        android:text="@string/title_activity_edit_advanced_mood" />
 
 
 </LinearLayout>

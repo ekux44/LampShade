@@ -95,7 +95,7 @@
     <string name="update_required">This mood requires an updated version of HueMore</string>
     <string name="corrupted_mood">This mood cannot be read</string>
     <string name="step_intro">Color interval</string>
-    <string name="title_activity_edit_advanced_mood">EditAdvancedMood</string>
+    <string name="title_activity_edit_advanced_mood">Advanced Mood Editor</string>
 	<string name="contextmenu_delete_timeslot">Delete timeslot</string>
 	<string name="contextmenu_delete_channel">Delete channel</string>
 	<string name="add_timeslot">+ Timeslot</string>
@@ -105,4 +105,5 @@
 	<string name="grid_col_title_channels">Channels</string>
 	<string name="infinite_loop">Loop</string>
 	<string name="save">Save</string>
+	
 </resources>

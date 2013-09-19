@@ -11,8 +11,6 @@
         android:hint="@string/hint_mood_name"
         android:imeOptions="actionDone"
         android:inputType="text" >
-
-        <requestFocus />
     </EditText>
     <View
         android:layout_width="fill_parent"
