@@ -143,7 +143,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 	public static void cancelAlarm(Context context, AlarmState alarmState) {
 		for (int i = 0; i < 8; i++) {
 			PendingIntent pIntent = calculatePendingIntent(context, alarmState,
-					8);
+					i);
 			AlarmManager alarmMgr = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
 			alarmMgr.cancel(pIntent);
@@ -157,7 +157,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 		String aState = gson.toJson(alarmState);
 
 		Intent intent = new Intent(context, AlarmReciever.class);
-		intent.setAction("com.kuxhausen.huemore." + aState);
+		intent.setAction("com.kuxhausen.huemore." +dayOfWeek+"."+ aState);
 		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				dayOfWeek, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -189,8 +189,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			Mood m = Utils.getMoodFromDatabase(as.mood, context);	
 			for(Event e: m.events){
 				e.state.bri = as.brightness;
-				if(!m.usesTiming)
-					e.state.transitiontime = as.transitiontime;
 			}
 
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
