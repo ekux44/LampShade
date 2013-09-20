@@ -30,6 +30,7 @@ import android.widget.TimePicker;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
@@ -51,10 +52,14 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private boolean[] repeats = new boolean[7];
 	private TimePicker timePick;
 	private AlarmState priorState;
+	private Integer priorStateRow;
 
-	public void onLoadLoaderManager(AlarmState optionalState) {
+	public void onLoadLoaderManager(AlarmState optionalState, Integer optionalStateRow) {
 		if (optionalState != null) {
 			this.priorState = optionalState;
+		}
+		if (optionalStateRow != null) {
+			this.priorStateRow = optionalStateRow;
 		}
 		if (groupSpinner != null && moodSpinner != null) {
 			/*
@@ -157,7 +162,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 
 		moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
 
-		onLoadLoaderManager(priorState);
+		onLoadLoaderManager(priorState, priorStateRow);
 
 		return myView;
 	}
@@ -177,8 +182,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			this.dismiss();
 			break;
 		case R.id.cancel:
-			if (priorState != null)
-				reCreateAlarm();
 			this.dismiss();
 			break;
 		}
@@ -317,6 +320,15 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	}
 
 	public void onCreateAlarm() {
+		if(priorState!=null){
+			// delete old one
+	
+			String moodSelect2 = BaseColumns._ID + "=?";
+			String[] moodArg2 = { "" + priorStateRow };
+			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
+					moodSelect2, moodArg2);
+		}
+		
 		AlarmState as = new AlarmState();
 		as.group = ((Cursor) groupSpinner.getSelectedItem()).getString(0);
 		as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
@@ -339,18 +351,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			as.setTime(projectedTime.getTimeInMillis());
 		}
 		AlarmReciever.createAlarms(getActivity(), as);
-
-		// Defines an object to contain the new values to insert
-		ContentValues mNewValues = new ContentValues();
-		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
-
-		Uri mNewUri = getActivity().getContentResolver().insert(
-				DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
-	}
-
-	private void reCreateAlarm() {
-		AlarmState as = AlarmReciever.createAlarms(getActivity(), priorState);
-		as.scheduledForFuture = true;
 
 		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();

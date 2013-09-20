@@ -84,7 +84,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			nadf.onLoadLoaderManager(null);
+			nadf.onLoadLoaderManager(null, null);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -115,16 +115,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			Log.e("asdf", "edit has state"
 					+ (selectedRow.getAlarmState() != null));
-			nadf.onLoadLoaderManager(selectedRow.getAlarmState());
-
-			// also delete
-			if (selectedRow.isScheduled())
-				selectedRow.toggle();
-
-			String moodSelect2 = BaseColumns._ID + "=?";
-			String[] moodArg2 = { "" + selectedRow.getID() };
-			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
-					moodSelect2, moodArg2);
+			nadf.onLoadLoaderManager(selectedRow.getAlarmState(), selectedRow.getID());
 
 			return true;
 
