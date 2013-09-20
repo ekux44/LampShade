@@ -49,16 +49,11 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private Gson gson = new Gson();
 	private boolean[] repeats = new boolean[7];
 	private TimePicker timePick;
-	private AlarmState priorState;
-	private Integer priorStateRow;
+	private AlarmRow priorState;
 
-	public void onLoadLoaderManager(AlarmState optionalState, Integer optionalStateRow) {
-		if (optionalState != null) {
+	public void onLoadLoaderManager(AlarmRow optionalState) {
+		if (optionalState != null)
 			this.priorState = optionalState;
-		}
-		if (optionalStateRow != null) {
-			this.priorStateRow = optionalStateRow;
-		}
 		if (groupSpinner != null && moodSpinner != null) {
 			/*
 			 * Initializes the CursorLoader. The GROUPS_LOADER value is
@@ -87,33 +82,32 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			moodSpinner.setAdapter(moodDataSource);
 
-			if (optionalState != null) {
-
+			if (optionalState != null) {				
 				// apply initial state
 				Log.e("asdf", "" + moodDataSource.getCount());
 				int moodPos = 0;
 				for (int i = 0; i < moodDataSource.getCount(); i++) {
-					if (moodDataSource.getItem(i).equals(optionalState.mood))
+					if (moodDataSource.getItem(i).equals(optionalState.getAlarmState().mood))
 						moodPos = i;
 					Log.e("asdf", moodDataSource.getItem(i) + "");
-					Log.e("asdf", optionalState.mood + "");
+					Log.e("asdf", optionalState.getAlarmState().mood + "");
 				}
 				moodSpinner.setSelection(moodPos);
 
 				int groupPos = 0;
 				for (int i = 0; i < groupDataSource.getCount(); i++) {
-					if (groupDataSource.getItem(i).equals(optionalState.group))
+					if (groupDataSource.getItem(i).equals(optionalState.getAlarmState().group))
 						groupPos = i;
 				}
 				groupSpinner.setSelection(groupPos);
 
 
-				brightnessBar.setProgress(optionalState.brightness);
+				brightnessBar.setProgress(optionalState.getAlarmState().brightness);
 
-				onRepeatSelected(optionalState.getRepeatingDays());
+				onRepeatSelected(optionalState.getAlarmState().getRepeatingDays());
 
 				Calendar projectedTime = Calendar.getInstance();
-				projectedTime.setTimeInMillis(optionalState.getTime());
+				projectedTime.setTimeInMillis(optionalState.getAlarmState().getTime());
 				timePick.setCurrentHour(projectedTime.get(Calendar.HOUR_OF_DAY));
 				timePick.setCurrentMinute(projectedTime.get(Calendar.MINUTE));
 				
@@ -153,7 +147,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 
 		moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
 
-		onLoadLoaderManager(priorState, priorStateRow);
+		onLoadLoaderManager(priorState);
 
 		return myView;
 	}
@@ -241,18 +235,18 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 			int moodPos = 0;
 			for (int i = 0; i < moodDataSource.getCount(); i++) {
 				if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
-						priorState.mood))
+						priorState.getAlarmState().mood))
 					moodPos = i;
 				Log.e("asdf", ((Cursor) moodDataSource.getItem(i)).getString(0)
 						+ "");
-				Log.e("asdf", priorState.mood + "");
+				Log.e("asdf", priorState.getAlarmState().mood + "");
 			}
 			moodSpinner.setSelection(moodPos);
 
 			int groupPos = 0;
 			for (int i = 0; i < groupDataSource.getCount(); i++) {
 				if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(
-						priorState.group))
+						priorState.getAlarmState().group))
 					groupPos = i;
 			}
 			groupSpinner.setSelection(groupPos);
@@ -312,9 +306,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	public void onCreateAlarm() {
 		if(priorState!=null){
 			// delete old one
-	
 			String moodSelect2 = BaseColumns._ID + "=?";
-			String[] moodArg2 = { "" + priorStateRow };
+			String[] moodArg2 = { "" + priorState.getID() };
 			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
 					moodSelect2, moodArg2);
 		}

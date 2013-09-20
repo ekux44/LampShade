@@ -75,7 +75,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			nadf.onLoadLoaderManager(null, null);
+			nadf.onLoadLoaderManager(null);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -106,7 +106,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			Log.e("asdf", "edit has state"
 					+ (selectedRow.getAlarmState() != null));
-			nadf.onLoadLoaderManager(selectedRow.getAlarmState(), selectedRow.getID());
+			nadf.onLoadLoaderManager(selectedRow);
 
 			return true;
 
