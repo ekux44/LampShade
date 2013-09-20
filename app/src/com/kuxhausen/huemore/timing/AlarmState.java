@@ -43,7 +43,6 @@ public class AlarmState {
 	/** if nonrepeating, size = 1. If repeating, size = 7 **/
 	private Long[] scheduledTimes;
 
-	/** only valid if isRepeating == false **/
 	public long getTime() {
 		if (scheduledTimes == null || scheduledTimes.length != 1
 				|| scheduledTimes[0] == null)
