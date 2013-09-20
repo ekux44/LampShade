@@ -253,7 +253,7 @@ public class MainActivity extends GodObject implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case GROUP_LOCATION:
-				return frag.getString(R.string.cap_groups);
+				return frag.getString(R.string.groups).toUpperCase();
 			case BULB_LOCATION:
 				return frag.getString(R.string.cap_bulbs);
 
@@ -310,7 +310,7 @@ public class MainActivity extends GodObject implements
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case MOOD_LOCATION:
-				return frag.getString(R.string.cap_moods);
+				return frag.getString(R.string.moods).toUpperCase();
 			case MANUAL_LOCATION:
 				return frag.getString(R.string.cap_manual);
 			}

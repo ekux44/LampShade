@@ -26,7 +26,7 @@
         android:id="@+id/action_nfc"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/cap_nfc"/>
+        android:title="@string/nfc"/>
     <item
         android:id="@+id/action_alarms"
         android:icon="@drawable/device_access_alarms"

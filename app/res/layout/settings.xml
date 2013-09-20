@@ -27,8 +27,8 @@
             android:id="@+id/groupsViewRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             
-            android:text="@string/cap_groups"/>
+            android:textAllCaps="true"
+            android:text="@string/groups"/>
 
     </RadioGroup>
 
@@ -49,8 +49,8 @@
             android:id="@+id/moodsViewRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            
-            android:text="@string/cap_moods" />
+            android:textAllCaps="true"
+            android:text="@string/moods" />
 
         <RadioButton
             android:id="@+id/manualViewRadioButton"

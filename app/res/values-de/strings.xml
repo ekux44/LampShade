@@ -7,9 +7,7 @@
     <string name="action_settings">Einstellungen</string>
     <string name="action_register_with_hub">Mit Bridge registrieren</string>
     <string name="action_unlocks">Entsperren</string>
-    <string name="cap_moods">SZENEN</string>
     <string name="cap_manual">MANUELL</string>
-    <string name="cap_groups">GRUPPEN</string>
     <string name="cap_bulbs">LAMPEN</string>
     <string name="cap_simple_mood">EINFACH</string>
     <string name="cap_advanced_mood">FORTGESCHRITTEN</string>
@@ -42,7 +40,6 @@
     <string name="brightness">Helligkeit</string>
     <string name="saturation">Sättigung</string>
     <string name="temperature">Farbtemperatur (K)</string>
-    <string name="color_temp_initial_value">3200</string>
     <string name="add_color">Farbe hinzufügen</string>
     <string name="toggleColorLoop">Farbschlaufe:</string>
     <string name="promp_first_view_setting">Standard Startmenü</string>
@@ -51,8 +48,7 @@
     <string name="unlock_pro_prompt">Pro Version freischalten!</string>
     <string name="unlock_pro_already">Du hast bereits die Pro Version!</string>
     <string name="unlock_pro_descriptor">Die Pro Version schaltet Alarme und NFC Funktionalitäten frei.</string>
-    <string name="nfc">Nfc</string>
-    <string name="cap_nfc">NFC</string>
+    <string name="nfc">NFC</string>
     <string name="nfc_tag_detected">Tag erkannt</string>
     <string name="nfc_tag_not_detected">Tag nicht gefunden</string>
     <string name="nfc_tag_write_prompt">Auf Tag schreiben</string>
@@ -63,24 +59,10 @@
     <string name="nfc_tag_read_success">NFC Tag gelesen</string>
     <string name="nfc_tag_not_supported">Dein Gerät unterstützt das schreiben auf diesen NFC Tag nicht!</string>
     <string name="alarms">Alarme</string>
-    <string name="cap_alarms">ALARME</string>
     <string name="transition_intro">Einblenden:</string>
     <string name="alarm_repeat">Wiederholen:</string>
     <string name="cap_short_none"></string>
     <string name="cap_short_every_day">TÄGLICH</string>
     <string name="next_scheduled_intro">Nächster Alarm</string>
-	<string name="update_welcome_title">New in HueMore 2.3</string>
-	<string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
-	<string name="update_message">Please update HueMore to the newest version.</string>
-	<string name="update_opt_out">Disable update reminders</string>
-	<string name="update">Update</string>
-	<string name="action_hub_status">Hub Status</string>
-	<string name="reset_hub_connection">Reset Hub Connection</string>
-	<string name="hub_connection">Connected to hub with network address</string>
-	<string name="hub_connection_error">Not connected to hub!</string>
-    <string name="empty_view_text">No alarms found…</string>
-    <string name="cap_all">ALL</string>
-    <string name="cap_on">ON</string>
-    <string name="cap_off">OFF</string>
-    <string name="cap_random">RANDOM</string>
+
 </resources>
