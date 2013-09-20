@@ -56,10 +56,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 
 		View myView = inflater.inflate(R.layout.alarm_view, null);
 
-		LinearLayout headingRow = (LinearLayout) myView
-				.findViewById(R.id.showOnLandScape);
-		if (headingRow.getVisibility() == View.GONE)
-			setHasOptionsMenu(true);
+		setHasOptionsMenu(true);
 
 		getActivity().setTitle(R.string.alarms);
 

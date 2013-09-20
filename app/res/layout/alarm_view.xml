@@ -5,30 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone" 
-        android:id="@+id/showOnLandScape">
-
-        <TextView
-            android:id="@+id/TextView01"
-            style="@style/AppTheme"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:text="@string/alarms" />
-
-        <ImageButton
-            android:id="@+id/newAlarmButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:padding="8dp"
-            android:src="@drawable/device_access_add_alarm" />
-    </LinearLayout>
     
     <View
         android:layout_width="fill_parent"
