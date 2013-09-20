@@ -28,10 +28,7 @@
 
      </LinearLayout>
     
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
+	<include layout="@layout/horizontal_divider_line"/>
     
 	<ScrollView
 	    android:id="@+id/scrollView1"
@@ -78,10 +75,8 @@
         	</RelativeLayout>
     	</HorizontalScrollView>
 	</ScrollView>
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
+	
+	<include layout="@layout/horizontal_divider_line"/>
 	
     <include layout="@layout/confirmation_bar"/>
 </LinearLayout>

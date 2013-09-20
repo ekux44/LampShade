@@ -21,12 +21,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal" />
             
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:background="#33B5E5" />
-
-            
+            <include layout="@layout/horizontal_divider_line"/>            
                 
 			<LinearLayout
        	 	android:layout_width="match_parent"
@@ -115,10 +110,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <View
-                android:layout_width="fill_parent"
-                android:layout_height="2dip"
-                android:background="#33B5E5" />
+    <include layout="@layout/horizontal_divider_line"/>
     
 	<include layout="@layout/confirmation_bar"/>
 

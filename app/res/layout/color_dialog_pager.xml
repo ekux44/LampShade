@@ -5,10 +5,7 @@
 
     <include layout="@layout/pager"/>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
+    <include layout="@layout/horizontal_divider_line"/>
     
     <LinearLayout
 	    android:id="@+id/transitionTimeLayout"
@@ -33,10 +30,7 @@
 	         android:layout_weight="2"/>
 	</LinearLayout>
 	
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
+    <include layout="@layout/horizontal_divider_line"/>
 
     <include layout="@layout/confirmation_bar"/>
 </LinearLayout>

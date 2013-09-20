@@ -8,10 +8,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
          	layout="@layout/pager"/>
-	<View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
+	
+	<include layout="@layout/horizontal_divider_line"/>
 
     <TextView
         android:id="@+id/brightnessDescripterTextView"
@@ -29,9 +27,6 @@
         android:paddingBottom="8dp"
         android:progress="127" />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#33B5E5" />
+    <include layout="@layout/horizontal_divider_line"/>
 
 </LinearLayout>
