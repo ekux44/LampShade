@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
@@ -35,11 +34,6 @@ public class AlarmsListFragment extends SherlockListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// We need to use a different list item layout for devices older than
-		// Honeycomb
-		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-				: android.R.layout.simple_list_item_1;
 
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually

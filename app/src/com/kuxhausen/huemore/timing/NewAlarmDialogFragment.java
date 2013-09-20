@@ -5,7 +5,6 @@ import java.util.Calendar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -136,19 +134,12 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.edit_alarm_dialog, container,
 				false);
-		Bundle args = getArguments();
 
-		// this.getDialog().setTitle("New Alarm");
 		this.getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
-
-		// We need to use a different list item layout for devices older than
-		// Honeycomb
-		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-				: android.R.layout.simple_list_item_1;
 
 		timePick = (TimePicker) myView.findViewById(R.id.alarmTimePicker);
 
@@ -169,7 +160,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.repeatButton:
 			RepeatDialogFragment rdf = new RepeatDialogFragment();
@@ -356,7 +346,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
 
-		Uri mNewUri = getActivity().getContentResolver().insert(
+		getActivity().getContentResolver().insert(
 				DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
 	}
 
