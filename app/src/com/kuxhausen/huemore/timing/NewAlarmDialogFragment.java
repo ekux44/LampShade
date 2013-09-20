@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,6 +137,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		okayButton.setOnClickListener(this);
 
 		timePick = (TimePicker) myView.findViewById(R.id.alarmTimePicker);
+		timePick.setIs24HourView(DateFormat.is24HourFormat(this.getActivity()));
 
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 
