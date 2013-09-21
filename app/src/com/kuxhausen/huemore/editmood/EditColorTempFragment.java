@@ -61,7 +61,7 @@ public class EditColorTempFragment extends Fragment implements
 				.findViewById(R.id.temperatureText);
 		tempEditText.setVisibility(View.VISIBLE);
 		
-		tempEditText.setText(""+(1000000 / hs.ct));
+		tempEditText.setText(hs.getCT());
 		
 		tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override

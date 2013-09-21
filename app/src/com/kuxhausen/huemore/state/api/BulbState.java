@@ -100,4 +100,8 @@ public class BulbState {
 		effect = (other.effect!=null) ? other.effect : effect;
 		transitiontime = (other.transitiontime!=null) ? other.transitiontime : transitiontime;
 	}
+	public String getCT(){
+		return (1000000 / ct)+"K";
+		
+	}
 }
