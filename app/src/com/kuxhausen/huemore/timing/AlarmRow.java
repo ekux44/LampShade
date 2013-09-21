@@ -96,4 +96,13 @@ public class AlarmRow {
 				rowSelect, rowArg);
 
 	}
+	public void delete(){
+		if (this.isScheduled())
+			this.toggle();
+		
+		String moodSelect2 = BaseColumns._ID + "=?";
+		String[] moodArg2 = { "" + this.getID() };
+		c.getContentResolver().delete(AlarmColumns.ALARMS_URI,
+				moodSelect2, moodArg2);
+	}
 }

@@ -96,11 +96,9 @@ public class AlarmsListFragment extends SherlockListFragment implements
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
 		switch (item.getItemId()) {
 
-		case R.id.contextalarmmenu_edit: // <-- your custom menu item id here
+		case R.id.contextalarmmenu_edit:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -109,17 +107,9 @@ public class AlarmsListFragment extends SherlockListFragment implements
 			nadf.onLoadLoaderManager(selectedRow);
 
 			return true;
-
-		case R.id.contextalarmmenu_delete: // <-- your custom menu item id here
-			if (selectedRow.isScheduled())
-				selectedRow.toggle();
-
-			String moodSelect = BaseColumns._ID + "=?";
-			String[] moodArg = { "" + selectedRow.getID() };
-			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
-					moodSelect, moodArg);
+		case R.id.contextalarmmenu_delete:
+			selectedRow.delete();
 			return true;
-
 		default:
 			return super.onContextItemSelected(item);
 		}

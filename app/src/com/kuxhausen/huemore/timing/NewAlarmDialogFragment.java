@@ -306,12 +306,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	}
 
 	public void onCreateAlarm() {
-		if(priorState!=null){
+		if(priorState!=null){			
 			// delete old one
-			String moodSelect2 = BaseColumns._ID + "=?";
-			String[] moodArg2 = { "" + priorState.getID() };
-			getActivity().getContentResolver().delete(AlarmColumns.ALARMS_URI,
-					moodSelect2, moodArg2);
+			priorState.delete();
 		}
 		
 		AlarmState as = new AlarmState();
