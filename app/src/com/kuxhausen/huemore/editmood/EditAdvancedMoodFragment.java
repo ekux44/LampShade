@@ -255,18 +255,20 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				v.setTag(r*this.gridCols()+c);
 				grid.addView(v, vg);
 			}
-		for(int r = 0; r<timeslotDuration.size(); r++){
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(r+initialRows);
-			vg.setGravity(Gravity.CENTER);
-			
-			View v = timeslotDuration.get(r).spin;
-			if(v.getParent()!=null)
-				((ViewGroup)v.getParent()).removeView(v);
-			grid.addView(v, vg);
-			
-			
+		if(!multiMode){
+			for(int r = 0; r<timeslotDuration.size(); r++){
+				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+				vg.columnSpec = GridLayout.spec(0);
+				vg.rowSpec = GridLayout.spec(r+initialRows);
+				vg.setGravity(Gravity.CENTER);
+				
+				View v = timeslotDuration.get(r).spin;
+				if(v.getParent()!=null)
+					((ViewGroup)v.getParent()).removeView(v);
+				grid.addView(v, vg);
+				
+				
+			}
 		}
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -277,27 +279,31 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(v, vg);
 		}
-		{
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(0);
-			vg.setGravity(Gravity.CENTER);
-			grid.addView(v, vg);
+		if(!multiMode){
+			{
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+				vg.columnSpec = GridLayout.spec(0);
+				vg.rowSpec = GridLayout.spec(0);
+				vg.setGravity(Gravity.CENTER);
+				grid.addView(v, vg);
+			}
 		}
-		{
-			LayoutInflater inflater = this.getActivity().getLayoutInflater();
-			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
-
-			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
-			rowView.setImageDrawable(cd);
-			rowView.setMinimumWidth(1);
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(1);
-			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
-			vg.setGravity(Gravity.FILL_VERTICAL);
-			grid.addView(rowView, vg);
+		if(!multiMode){
+			{
+				LayoutInflater inflater = this.getActivity().getLayoutInflater();
+				ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
+	
+				ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
+				rowView.setImageDrawable(cd);
+				rowView.setMinimumWidth(1);
+				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+				vg.columnSpec = GridLayout.spec(1);
+				vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
+				vg.setGravity(Gravity.FILL_VERTICAL);
+				grid.addView(rowView, vg);
+			}
 		}
 		{
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
