@@ -131,11 +131,11 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	private void routeState(BulbState bs) {
 		//// TODO Auto-generated method stub
 		if(bs.ct!=null){
-			mViewPager.setCurrentItem(2);
+			mViewPager.setCurrentItem(3);
 			((EditColorTempFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
 		}
 		else{
-			mViewPager.setCurrentItem(1);
+			mViewPager.setCurrentItem(2);
 			((ColorWheelFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
 		}
 	}
@@ -162,10 +162,13 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 				newColorFragments[i] = new SampleStatesFragment();
 				return (Fragment) newColorFragments[i];
 			case 1:
+				newColorFragments[i] = new RecentStatesFragment();
+				return (Fragment) newColorFragments[i];
+			case 2:
 				newColorFragments[i] = new ColorWheelFragment();
 				((ColorWheelFragment) newColorFragments[i]).hideColorLoop();
 				return (Fragment) newColorFragments[i];
-			case 2:
+			case 3:
 				newColorFragments[i] = new EditColorTempFragment();
 				return (Fragment) newColorFragments[i];
 			default:
@@ -175,7 +178,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override
@@ -184,8 +187,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			case 0:
 				return frag.getActivity().getString(R.string.cap_sample_state);
 			case 1:
-				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
+				return frag.getActivity().getString(R.string.cap_recent_state);
 			case 2:
+				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
+			case 3:
 				return frag.getActivity().getString(
 						R.string.cap_color_temp_mode);
 			}

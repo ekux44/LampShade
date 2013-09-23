@@ -20,7 +20,7 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
+public class RecentStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
 	private View lastSelection;

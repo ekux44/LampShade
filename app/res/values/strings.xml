@@ -102,5 +102,5 @@
 	<string name="infinite_loop">Loop</string>
 	<string name="save">Save</string>
 	<string name="cap_sample_state">SAMPLE</string>
-	
+	<string name="cap_recent_state">RECENT</string>
 </resources>
