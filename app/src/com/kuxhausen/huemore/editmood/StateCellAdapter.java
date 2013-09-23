@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 public class StateCellAdapter extends BaseAdapter {
-    public StateCellAdapter(OnClickListener l, ArrayList<MoodRow> list, SherlockFragment frag) {
+    public StateCellAdapter(OnClickListener l, ArrayList<StateCell> list, SherlockFragment frag) {
       	this.l = l;
       	this.list = list;
       	this.frag = frag;
@@ -35,7 +35,7 @@ public class StateCellAdapter extends BaseAdapter {
     }
 
     private OnClickListener l;
-    private ArrayList<MoodRow> list;
+    private ArrayList<StateCell> list;
     private SherlockFragment frag;
 }
 

@@ -46,7 +46,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	GridLayout grid;
 	int contextSpot;
 	
-	ArrayList<MoodRow> dataRay = new ArrayList<MoodRow>();
+	ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
 	ArrayList<TimeslotDuration> timeslotDuration = new ArrayList<TimeslotDuration>();
 	HashMap<Integer, TimeslotDuration> timeslotDurationById = new HashMap<Integer, TimeslotDuration>();
 	int[] timeslotValues;
@@ -136,8 +136,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	    return myView;
 	}
 	
-	private MoodRow generateDefaultMoodRow(){
-		MoodRow mr = new MoodRow();
+	private StateCell generateDefaultMoodRow(){
+		StateCell mr = new StateCell();
 		mr.color = 0xff000000;
 		BulbState example = new BulbState();
 		mr.hs = example;
@@ -172,7 +172,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		ArrayList<Event> events = new ArrayList<Event>();
 		for(int i = 0; i< dataRay.size(); i++){
-			MoodRow mr = dataRay.get(i);
+			StateCell mr = dataRay.get(i);
 			
 			if(mr.hs!=null && !mr.hs.toString().equals("")){
 				int row = i / gridCols();
@@ -442,11 +442,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private void deleteRow(int item){
 		if(gridRows()>1){
 			int row = item / gridCols();
-			ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
+			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
 			for(int i = 0; i<gridCols(); i++){
 				toRemove.add(dataRay.get(i + row*gridCols()));
 			}
-			for(MoodRow kill : toRemove)
+			for(StateCell kill : toRemove)
 				dataRay.remove(kill);
 			
 			timeslotDurationById.remove(timeslotDuration.get(row).id);
@@ -460,12 +460,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		if(gridCols()>1){
 			int col = item % gridCols();
-			ArrayList<MoodRow> toRemove = new ArrayList<MoodRow>();
+			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
 			for(int i = 0; i<gridRows(); i++){
 				Log.e("omg", col+" "+i*gridCols());
 				toRemove.add(dataRay.get(col + i*gridCols()));
 			}
-			for(MoodRow kill : toRemove)
+			for(StateCell kill : toRemove)
 				dataRay.remove(kill);
 			grid.setColumnCount(initialCols+gridCols()-1);
 		}

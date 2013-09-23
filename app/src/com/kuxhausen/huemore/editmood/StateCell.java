@@ -12,7 +12,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class MoodRow {
+public class StateCell {
 
 	public String name;
 	public int color;

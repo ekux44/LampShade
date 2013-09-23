@@ -24,7 +24,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 
 	private GridView g;
 	private View lastSelection;
-	private MoodRow lastSelectedRow;
+	private StateCell lastSelectedRow;
 	Gson gson = new Gson();
 	
 	@Override
@@ -35,7 +35,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		View myView = inflater.inflate(R.layout.grid_view, null);
 		
 		
-		ArrayList<MoodRow> list = new ArrayList<MoodRow>();
+		ArrayList<StateCell> list = new ArrayList<StateCell>();
 		
 		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
 		int[] simpleSat = {144, 211 ,49, 232, 253, 230, 244, 254, 173};
@@ -48,7 +48,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 	    	hs.on=true;
 	    	hs.effect="none";
 	    	
-	    	MoodRow mr = new MoodRow();
+	    	StateCell mr = new StateCell();
 	    	mr.hs = hs;
 	    	mr.name = simpleNames[i];
 	    	float[] hsv = new float[3];
@@ -92,7 +92,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 			lastSelection.setBackgroundColor(0);
 		
 		lastSelection = v;
-		lastSelectedRow = (MoodRow)g.getAdapter().getItem(position);
+		lastSelectedRow = (StateCell)g.getAdapter().getItem(position);
 		preview();
 	}
 	
