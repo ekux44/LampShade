@@ -30,21 +30,29 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		
 		
 		ArrayList<MoodRow> list = new ArrayList<MoodRow>();
-		BulbState hs = new BulbState();
-    	hs.sat=(short)144;
-    	hs.hue=15331;
-    	hs.on=true;
-    	hs.effect="none";
+		
+		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
+		int[] simpleSat = {144, 211 ,49, 232, 253, 230, 244, 254, 173};
+		int[] simpleHue = {15331, 13122, 33863, 34495, 45489, 1111, 15483, 25593, 64684};
+		    
+		for(int i = 0; i<simpleSat.length; i++){
+			BulbState hs = new BulbState();
+	    	hs.sat=(short)simpleSat[i];
+	    	hs.hue=simpleHue[i];
+	    	hs.on=true;
+	    	hs.effect="none";
+	    	
+	    	MoodRow mr = new MoodRow();
+	    	mr.hs = hs;
+	    	mr.name = simpleNames[i];
+	    	float[] hsv = new float[3];
+	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
+	    	hsv[1] = (float) (hs.sat / 255.0);
+	    	hsv[2] = 1f;
+	    	mr.color = Color.HSVToColor(hsv);
+	    	list.add(mr);
     	
-    	MoodRow mr = new MoodRow();
-    	mr.hs = hs;
-    	mr.name = "Reading";
-    	float[] hsv = new float[3];
-    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-    	hsv[1] = (float) (hs.sat / 255.0);
-    	hsv[2] = 1f;
-    	mr.color = Color.HSVToColor(hsv);
-    	list.add(mr);
+		}
 		
 		
 		GridView g = (GridView) myView.findViewById(R.id.myGrid);
@@ -89,7 +97,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
         	
         	
         	View v = list.get(position).getView(position, parent, l, SampleStatesFragment.this);
-        	v.setLayoutParams(new GridView.LayoutParams(88, 88));
+        	v.setLayoutParams(new GridView.LayoutParams(100, 100));
         	v.setPadding(8, 8, 8, 8);
         	
         	return v;
