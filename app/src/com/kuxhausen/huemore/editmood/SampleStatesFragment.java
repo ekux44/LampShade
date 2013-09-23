@@ -1,11 +1,14 @@
 package com.kuxhausen.huemore.editmood;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -16,7 +19,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener{
+public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,8 +28,27 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		
 		View myView = inflater.inflate(R.layout.grid_view, null);
 		
+		
+		ArrayList<MoodRow> list = new ArrayList<MoodRow>();
+		BulbState hs = new BulbState();
+    	hs.sat=(short)144;
+    	hs.hue=15331;
+    	hs.on=true;
+    	hs.effect="none";
+    	
+    	MoodRow mr = new MoodRow();
+    	mr.hs = hs;
+    	mr.name = "Reading";
+    	float[] hsv = new float[3];
+    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
+    	hsv[1] = (float) (hs.sat / 255.0);
+    	hsv[2] = 1f;
+    	mr.color = Color.HSVToColor(hsv);
+    	list.add(mr);
+		
+		
 		GridView g = (GridView) myView.findViewById(R.id.myGrid);
-        g.setAdapter(new ImageAdapter(this.getActivity()));
+		g.setAdapter(new ImageAdapter(this, list));
 		
 		return myView;
 	}
@@ -36,15 +58,23 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	
 	public class ImageAdapter extends BaseAdapter {
-        public ImageAdapter(Context c) {
-            mContext = c;
+        public ImageAdapter(OnClickListener l, ArrayList<MoodRow> list) {
+          	this.l = l;
+          	this.list = list;
         }
 
         public int getCount() {
-            return mThumbIds.length;
+            return list.size();
         }
 
         public Object getItem(int position) {
@@ -56,23 +86,10 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-        	BulbState hs = new BulbState();
-        	hs.sat=(short)144;
-        	hs.hue=15331;
-        	hs.on=true;
-        	hs.effect="none";
         	
-        	MoodRow mr = new MoodRow();
-        	mr.hs = hs;
-        	mr.name = "Reading";
-        	float[] hsv = new float[3];
-        	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-        	hsv[1] = (float) (hs.sat / 255.0);
-        	hsv[2] = 1f;
-        	mr.color = Color.HSVToColor(hsv);
         	
-        	View v = mr.getView(position, parent, null, SampleStatesFragment.this);
-        	v.setLayoutParams(new GridView.LayoutParams(72, 72));
+        	View v = list.get(position).getView(position, parent, l, SampleStatesFragment.this);
+        	v.setLayoutParams(new GridView.LayoutParams(88, 88));
         	v.setPadding(8, 8, 8, 8);
         	
         	return v;
@@ -93,11 +110,8 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
             return imageView;*/
         }
 
-        private Context mContext;
-
-        private Integer[] mThumbIds = {
-                R.drawable.on, R.drawable.off,
-        };
+        private OnClickListener l;
+        private ArrayList<MoodRow> list;
     }
 
 }
