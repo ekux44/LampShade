@@ -107,7 +107,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 
-		newColorFragments = new OnCreateColorListener[2];
+		newColorFragments = new OnCreateColorListener[mNewColorPagerAdapter.getCount()];
 		
 		
 		Bundle args = this.getArguments();
@@ -131,10 +131,11 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	private void routeState(BulbState bs) {
 		//// TODO Auto-generated method stub
 		if(bs.ct!=null){
-			mViewPager.setCurrentItem(1);
+			mViewPager.setCurrentItem(2);
 			((EditColorTempFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
 		}
 		else{
+			mViewPager.setCurrentItem(1);
 			((ColorWheelFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
 		}
 	}
@@ -158,10 +159,13 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 				return (Fragment) newColorFragments[i];
 			switch (i) {
 			case 0:
+				newColorFragments[i] = new SampleStatesFragment();
+				return (Fragment) newColorFragments[i];
+			case 1:
 				newColorFragments[i] = new ColorWheelFragment();
 				((ColorWheelFragment) newColorFragments[i]).hideColorLoop();
 				return (Fragment) newColorFragments[i];
-			case 1:
+			case 2:
 				newColorFragments[i] = new EditColorTempFragment();
 				return (Fragment) newColorFragments[i];
 			default:
@@ -171,15 +175,17 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
+				return frag.getActivity().getString(R.string.cap_sample_state);
 			case 1:
+				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
+			case 2:
 				return frag.getActivity().getString(
 						R.string.cap_color_temp_mode);
 			}

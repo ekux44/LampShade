@@ -101,5 +101,6 @@
 	<string name="grid_col_title_channels">Channels</string>
 	<string name="infinite_loop">Loop</string>
 	<string name="save">Save</string>
+	<string name="cap_sample_state">SAMPLE</string>
 	
 </resources>
