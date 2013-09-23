@@ -46,7 +46,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	GridLayout grid;
 	int contextSpot;
 	
-	ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
+	public ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
 	ArrayList<TimeslotDuration> timeslotDuration = new ArrayList<TimeslotDuration>();
 	HashMap<Integer, TimeslotDuration> timeslotDurationById = new HashMap<Integer, TimeslotDuration>();
 	int[] timeslotValues;
@@ -207,6 +207,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		case R.id.clickable_layout:
 			stopPreview();
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+			cpdf.setParrentMood(this);
 			Bundle args = new Bundle();
 			args.putString(InternalArguments.PREVIOUS_STATE,
 					gson.toJson(dataRay.get((Integer) v.getTag()).hs));
@@ -355,6 +356,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			case R.id.contexttimedmenu_edit:
 				stopPreview();
 				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+				cpdf.setParrentMood(this);
 				Bundle args = new Bundle();
 				args.putString(InternalArguments.PREVIOUS_STATE,
 						gson.toJson(dataRay.get(contextSpot).hs));
@@ -379,6 +381,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			case R.id.contextmultimenu_edit:
 				stopPreview();
 				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+				cpdf.setParrentMood(this);
 				Bundle args = new Bundle();
 				args.putString(InternalArguments.PREVIOUS_STATE,
 						gson.toJson(dataRay.get(contextSpot).hs));
@@ -403,6 +406,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			case R.id.contextstatemenu_edit:
 				stopPreview();
 				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+				cpdf.setParrentMood(this);
 				Bundle args = new Bundle();
 				args.putString(InternalArguments.PREVIOUS_STATE,
 						gson.toJson(dataRay.get(contextSpot).hs));

@@ -38,6 +38,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	 */
 	NewMoodPagerAdapter mNewColorPagerAdapter;
 	static OnCreateColorListener[] newColorFragments;
+	EditAdvancedMoodFragment parrentMood; 
 
 	/**
 	 * The {@link android.support.v4.view.ViewPager} that will display the
@@ -57,6 +58,11 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 	}
 
+	
+	public void setParrentMood(EditAdvancedMoodFragment eamf){
+		parrentMood = eamf;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -130,6 +136,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 	private void routeState(BulbState bs) {
 		//// TODO Auto-generated method stub
+		mViewPager.setCurrentItem(1);
+		((RecentStatesFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs, parrentMood.dataRay);
 		if(bs.ct!=null){
 			mViewPager.setCurrentItem(3);
 			((EditColorTempFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);

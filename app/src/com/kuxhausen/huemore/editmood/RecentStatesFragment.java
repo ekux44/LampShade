@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,6 +27,21 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 	private View lastSelection;
 	private StateCell lastSelectedRow;
 	Gson gson = new Gson();
+	ArrayList<StateCell> list;
+	
+	public boolean loadPrevious(BulbState bs, ArrayList<StateCell> cells){
+		list = new ArrayList<StateCell>();
+		HashSet<String> bulbStateHash = new HashSet<String>();
+		for(StateCell cell : cells){
+			if(!bulbStateHash.contains(cell.hs.toString())){
+				bulbStateHash.add(cell.hs.toString());
+				list.add(cell);
+			}
+		}
+		if(bulbStateHash.contains(bs.toString()))
+			return true;
+		return false;
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,33 +49,6 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 		super.onCreate(savedInstanceState);
 		
 		View myView = inflater.inflate(R.layout.grid_view, null);
-		
-		
-		ArrayList<StateCell> list = new ArrayList<StateCell>();
-		
-		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
-		int[] simpleSat = {144, 211 ,49, 232, 253, 230, 244, 254, 173};
-		int[] simpleHue = {15331, 13122, 33863, 34495, 45489, 1111, 15483, 25593, 64684};
-		    
-		for(int i = 0; i<simpleSat.length; i++){
-			BulbState hs = new BulbState();
-	    	hs.sat=(short)simpleSat[i];
-	    	hs.hue=simpleHue[i];
-	    	hs.on=true;
-	    	hs.effect="none";
-	    	
-	    	StateCell mr = new StateCell();
-	    	mr.hs = hs;
-	    	mr.name = simpleNames[i];
-	    	float[] hsv = new float[3];
-	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-	    	hsv[1] = (float) (hs.sat / 255.0);
-	    	hsv[2] = 1f;
-	    	mr.color = Color.HSVToColor(hsv);
-	    	list.add(mr);
-    	
-		}
-		
 		
 		g = (GridView) myView.findViewById(R.id.myGrid);
 		g.setAdapter(new StateCellAdapter(this, list, this));
