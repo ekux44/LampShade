@@ -25,11 +25,14 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.ShareActionProvider;
 import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Utils;
 
 public class MoodListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -40,7 +43,8 @@ public class MoodListFragment extends SherlockListFragment implements
 	public CursorAdapter dataSource;
 
 	public TextView selected, longSelected; // updated on long click
-	private int selectedPos = -1;
+	private int selectedPos = -1; 
+	private ShareActionProvider mShareActionProvider;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -77,6 +81,16 @@ public class MoodListFragment extends SherlockListFragment implements
 		return myView;
 	}
 
+	/** Returns a share intent */
+    private Intent getDefaultShareIntent(String mood){
+ 
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        //intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
+        intent.putExtra(Intent.EXTRA_TEXT,"#LampShade http://lampshade.io/share?"+HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity())));
+        return intent;
+    }
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.action_mood, menu);
@@ -87,6 +101,21 @@ public class MoodListFragment extends SherlockListFragment implements
 			MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
 			unlocksItem.setEnabled(false);
 			unlocksItem.setVisible(false);
+		}
+		if (selectedPos>-1) {
+			/** Getting the actionprovider associated with the menu item whose id is share */
+			mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
+	
+			/** Getting the target intent */
+			Intent intent = getDefaultShareIntent(""+selected.getText());
+	
+			/** Setting a share intent */
+			if(intent!=null)
+					mShareActionProvider.setShareIntent(intent);
+		}else{
+			MenuItem shareItem = menu.findItem(R.id.action_share);
+			shareItem.setEnabled(false);
+			shareItem.setVisible(false);
 		}
 	}
 
@@ -122,6 +151,9 @@ public class MoodListFragment extends SherlockListFragment implements
 		// two-pane layout
 		if (selected != null && selectedPos > -1)
 			getListView().setItemChecked(selectedPos, false);
+		selectedPos = -1;
+		selected = null;
+		getSherlockActivity().supportInvalidateOptionsMenu();
 	}
 
 	@Override
@@ -222,7 +254,7 @@ public class MoodListFragment extends SherlockListFragment implements
 
 		// Notify the parent activity of selected item
 		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
-
+		getSherlockActivity().supportInvalidateOptionsMenu();
 	}
 
 }

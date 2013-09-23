@@ -6,5 +6,11 @@
         android:orderInCategory="1"
         android:showAsAction="always"
         android:title="@string/actionmenu_new_mood"/>
-
+	<item
+        android:id="@+id/action_share"
+        android:title="@string/share"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
+    />
 </menu>

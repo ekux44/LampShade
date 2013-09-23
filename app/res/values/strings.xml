@@ -103,4 +103,5 @@
 	<string name="save">Save</string>
 	<string name="cap_sample_state">SAMPLE</string>
 	<string name="cap_recent_state">RECENT</string>
+	<string name="share">Share</string>
 </resources>
