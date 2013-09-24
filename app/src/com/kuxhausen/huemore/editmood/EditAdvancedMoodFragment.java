@@ -99,10 +99,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid.setRowCount(initialRows);
 		
 		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
-		addRow();
+		addRow(timeslotValues[0]);
 		if(!multiMode){
-			addRow();
-			addRow();
+			addRow(timeslotValues[0]);
+			addRow(timeslotValues[0]);
 		} else{
 			myView.findViewById(R.id.addTimeslotButton).setVisibility(View.GONE);
 		}
@@ -163,12 +163,31 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void loadMood(Mood mFromDB) {
-		this.setGridCols(mFromDB.numChannels);
-		//this.setGridRows()
-		for(Event e: mFromDB.events){
-			
-		}
+		Log.e("loadMood", mFromDB.numChannels+" "+ mFromDB.events.length);
 		
+		this.setGridCols(mFromDB.numChannels);
+		int row = -1;
+		int time = -1;
+		for(Event e: mFromDB.events){
+			if(e.time!=time){
+				row++;
+				setGridRows(row+1, e.time - time);
+				time=e.time;
+			}
+		}
+		if(mFromDB.usesTiming)
+			setGridRows(row+1, mFromDB.loopIterationTimeLength - time);
+		
+		row = -1;
+		time = -1;
+		for(Event e: mFromDB.events){
+			if(e.time!=time){
+				row++;
+				time = e.time;
+			}
+			dataRay.get(gridCols()*row + e.channel).hs = e.state;
+		}
+		redrawGrid();
 	}
 	private Mood getMood() {		
 		Mood m = new Mood();
@@ -228,7 +247,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			redrawGrid();
 			break;
 		case R.id.addTimeslotButton:
-			addRow();
+			addRow(timeslotValues[0]);
 			redrawGrid();
 			break;
 		case R.id.okay:
@@ -451,8 +470,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void deleteRow(int item){
+		Log.e("deleteRow", item+" "+gridRows());
 		if(gridRows()>1){
-			int row = item / gridCols();
+			int row = (item / gridCols())-1;//-1?
 			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
 			for(int i = 0; i<gridCols(); i++){
 				toRemove.add(dataRay.get(i + row*gridCols()));
@@ -467,7 +487,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	private void deleteCol(int item){
-		Log.e("deleteCol",item + "  "+gridCols());
+		//Log.e("deleteCol",item + "  "+gridCols());
 		
 		if(gridCols()>1){
 			int col = item % gridCols();
@@ -481,7 +501,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			grid.setColumnCount(initialCols+gridCols()-1);
 		}
 	}
-	private void addRow(){
+	private void addRow(int duration){
 		if(gridRows()<=8){
 			grid.setRowCount(initialRows + gridRows()+1);
 			
@@ -490,7 +510,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			td.spin = (Spinner)inflater.inflate(R.layout.timeslot_spinner, null);
 			td.id = getSpinnerId();
 			td.spin.setId(td.id);
-			td.duration = timeslotValues[0];
+			td.duration = duration;
 			timeslotDuration.add(td);
 			timeslotDurationById.put(td.id, td);
 			td.spin.setOnItemSelectedListener(this);
@@ -517,19 +537,24 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private final int gridCols(){
 		return grid.getColumnCount()-initialCols;
 	}
-	private final void setGridRows(int num){
+	private final void setGridRows(int num, int duration){
+		Log.e("setGridRows",num+"num , duration"+duration);
+		
 		while(gridRows()!=num){
-			if(num<gridRows())
-				addRow();
-			else if(num>gridRows())
+			Log.e("gridRows",gridRows()+"gr num"+num);
+			if(gridRows()<num)
+				addRow(duration);
+			else if(gridRows()>num)
 				deleteRow(gridRows()-1);
 		}
 	}
 	private final void setGridCols(int num){
+		Log.e("setGridCols",num+"");
 		while(gridCols()!=num){
-			if(num<gridCols())
+			Log.e("gridCols",gridCols()+"gc num"+num);
+			if(gridCols()<num)
 				addCol();
-			else if(num>gridCols())
+			else if(gridCols()>num)
 				deleteCol(gridCols()-1);
 		}
 	}

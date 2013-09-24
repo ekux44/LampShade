@@ -118,23 +118,30 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		}
 	}
 	
-	public void routeMood(Mood m){
+	private static int calculateRoute(Mood m){
+		if(m==null)
+			return -1;
 		if(!m.usesTiming){
 			if (m.events.length == 1 && m.events[0].state.ct == null) {
 				// show simple mood page
-				mViewPager.setCurrentItem(0);
+				return 0;
 			} else
 			{
 				// show multi mood page
-				mViewPager.setCurrentItem(2);
+				return 2;
 			}
 		}else{
 			if(m.numChannels==1){
-				mViewPager.setCurrentItem(1);
+				return 1;
 			}else{
-				mViewPager.setCurrentItem(3);
+				return 3;
 			}	
 		}
+	}
+	
+	public void routeMood(Mood m){
+		if(m!=null)
+			mViewPager.setCurrentItem(calculateRoute(m));
 	}
 	
 	/**
@@ -160,8 +167,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
 				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (priorMood != null && !priorMood.usesTiming && priorMood.events.length == 1
-						&& priorMood.events[0].state.ct == null) {
+				if (calculateRoute(priorMood)==0) {
 					args.putString(InternalArguments.PREVIOUS_STATE,
 							gson.toJson(priorMood.events[0].state));
 				}
@@ -172,7 +178,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				EditAdvancedMoodFragment eamf = new EditAdvancedMoodFragment();
 				eamf.setTimedMode();
 				Bundle args1 = new Bundle();
-				if (priorMood != null && priorMood.numChannels==1) {
+				if (calculateRoute(priorMood)==1) {
 					args1.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				eamf.setArguments(args1);
@@ -182,7 +188,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				EditAdvancedMoodFragment eamf2 = new EditAdvancedMoodFragment();
 				eamf2.setMultiMode();
 				Bundle args2 = new Bundle();
-				if (priorMood != null && !priorMood.usesTiming) {
+				if (calculateRoute(priorMood)==2) {
 					args2.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				eamf2.setArguments(args2);
@@ -192,7 +198,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				EditComplexMoodFragment ecmf = new EditComplexMoodFragment();
 				Bundle args3 = new Bundle();
 				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (priorMood != null && !priorMood.usesTiming) {
+				if (calculateRoute(priorMood)==3) {
 					args3.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				ecmf.setArguments(args3);
