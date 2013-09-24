@@ -50,7 +50,7 @@
     <string name="rate_on_google_play">Rate on Google Play</string>
     <string name="unlock_pro_prompt">Unlock Pro Version!</string>
     <string name="unlock_pro_already">You already have the Pro Version!</string>
-    <string name="unlock_pro_descriptor">Pro version enables Alarms and NFC features.</string>
+    <string name="unlock_pro_descriptor">Pro version enables Alarms, Tasker, Locale and NFC features.</string>
     <string name="nfc">NFC</string>
     <string name="nfc_tag_detected">Tag Detected</string>
     <string name="nfc_tag_not_detected">Tag Not Found</string>
@@ -67,7 +67,7 @@
     <string name="cap_short_none"></string>
     <string name="cap_short_every_day">EVERY DAY</string>
     <string name="next_scheduled_intro">Next alarm</string>
-    <string name="update_welcome_title">New in LampShade 2.4</string>
+    <string name="update_welcome_title">New in LampShade 2.5</string>
     <string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
     <string name="update_message">Please update HueMore to the newest version.</string>
     <string name="update_opt_out">Disable update reminders</string>
@@ -85,12 +85,10 @@
     <string name="action_report_bug">Report a bug</string>
     <string name="developer_email">erickuxhausen+lampshade@gmail.com</string>
     <string name="report_bug_email_subject">bug</string>
-    <string name="coming_soon">This page coming in version 2.5</string>
     <string name="cap_timed_mood">TIMED</string>
     <string name="cap_multi_mood">MULTI</string>
-    <string name="update_required">This mood requires an updated version of HueMore</string>
+    <string name="update_required">This mood requires an updated version of LampShade</string>
     <string name="corrupted_mood">This mood cannot be read</string>
-    <string name="step_intro">Color interval</string>
     <string name="title_activity_edit_advanced_mood">Advanced Mood Editor</string>
 	<string name="contextmenu_delete_timeslot">Delete timeslot</string>
 	<string name="contextmenu_delete_channel">Delete channel</string>
