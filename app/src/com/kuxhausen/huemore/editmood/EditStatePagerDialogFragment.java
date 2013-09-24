@@ -219,7 +219,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			Intent i = newColorFragments[currentPage].onCreateColor(transitionTime);
 			if(i!=null)
 				getTargetFragment().onActivityResult(getTargetRequestCode(),
-						i.getExtras().getInt(InternalArguments.COLOR), i);
+						-1, i);
 			this.dismiss();
 			break;
 		case R.id.cancel:

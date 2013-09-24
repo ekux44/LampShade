@@ -65,7 +65,6 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 			lastSelectedRow.hs.transitiontime = transitionTime;
 			Intent i = new Intent();
 			i.putExtra(InternalArguments.HUE_STATE, gson.toJson(lastSelectedRow.hs));
-			i.putExtra(InternalArguments.COLOR, lastSelectedRow.color);
 		return i;
 		}
 		return null;

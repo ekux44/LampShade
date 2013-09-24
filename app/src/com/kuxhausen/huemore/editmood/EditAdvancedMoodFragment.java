@@ -130,7 +130,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	    }
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
-			Mood mood = Utils.getMoodFromDatabase(args.getString(InternalArguments.MOOD_NAME), this.getActivity());
+			//load prior mood
+			loadMood(Utils.getMoodFromDatabase(args.getString(InternalArguments.MOOD_NAME), this.getActivity()));
 		}
 	    
 	    return myView;
@@ -138,7 +139,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	
 	private StateCell generateDefaultMoodRow(){
 		StateCell mr = new StateCell();
-		mr.color = 0xff000000;
 		BulbState example = new BulbState();
 		mr.hs = example;
 		return mr;
@@ -146,7 +146,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		dataRay.get(requestCode).color = resultCode;
 		dataRay.get(requestCode).hs = gson.fromJson(
 				data.getStringExtra(InternalArguments.HUE_STATE),
 				BulbState.class);
@@ -163,6 +162,14 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 	}
 	
+	private void loadMood(Mood mFromDB) {
+		this.setGridCols(mFromDB.numChannels);
+		//this.setGridRows()
+		for(Event e: mFromDB.events){
+			
+		}
+		
+	}
 	private Mood getMood() {		
 		Mood m = new Mood();
 		m.usesTiming = true; //TODO not always the case...
@@ -509,6 +516,22 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	private final int gridCols(){
 		return grid.getColumnCount()-initialCols;
+	}
+	private final void setGridRows(int num){
+		while(gridRows()!=num){
+			if(num<gridRows())
+				addRow();
+			else if(num>gridRows())
+				deleteRow(gridRows()-1);
+		}
+	}
+	private final void setGridCols(int num){
+		while(gridCols()!=num){
+			if(num<gridCols())
+				addCol();
+			else if(num>gridCols())
+				deleteCol(gridCols()-1);
+		}
 	}
 
 	@Override

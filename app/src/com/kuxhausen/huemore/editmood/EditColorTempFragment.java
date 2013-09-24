@@ -123,7 +123,6 @@ public class EditColorTempFragment extends Fragment implements
 		hs.transitiontime = transitionTime;
 		Intent i = new Intent();
 		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
-		i.putExtra(InternalArguments.COLOR, 0xffffffff);
 		return i;
 	}
 

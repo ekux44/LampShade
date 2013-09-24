@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class StateCell {
 
 	public String name;
-	public int color;
 	public BulbState hs;
 	
 	
@@ -31,6 +31,14 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
+			int color = 0;
+			if(hs.hue!=null && hs.sat!=null){
+				float[] hsv = new float[3];
+		    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
+		    	hsv[1] = (float) (hs.sat / 255.0);
+		    	hsv[2] = 1f;
+		    	color = Color.HSVToColor(hsv);
+			}
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)

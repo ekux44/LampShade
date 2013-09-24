@@ -137,7 +137,6 @@ public final class DatabaseDefinitions {
 		public static final String FALLBACK_USERNAME_HASH = "f01623452466afd4eba5c1ed0a0a9395";
 		public final static String ALARM_DETAILS = "alarmDetailsBundle";
 		public final static String HUE_STATE = "HueState";
-		public final static String COLOR = "Color";
 		public final static String SHOW_EDIT_TEXT = "ShowEditText";
 		public final static String PREVIOUS_STATE = "PreviousState";
 		public final static String PROMPT_UPGRADE = "PromptUpgrade";

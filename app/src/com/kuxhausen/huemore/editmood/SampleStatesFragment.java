@@ -51,11 +51,6 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 	    	StateCell mr = new StateCell();
 	    	mr.hs = hs;
 	    	mr.name = simpleNames[i];
-	    	float[] hsv = new float[3];
-	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-	    	hsv[1] = (float) (hs.sat / 255.0);
-	    	hsv[2] = 1f;
-	    	mr.color = Color.HSVToColor(hsv);
 	    	list.add(mr);
     	
 		}
@@ -76,7 +71,6 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 			lastSelectedRow.hs.transitiontime = transitionTime;
 			Intent i = new Intent();
 			i.putExtra(InternalArguments.HUE_STATE, gson.toJson(lastSelectedRow.hs));
-			i.putExtra(InternalArguments.COLOR, lastSelectedRow.color);
 		return i;
 		}
 		return null;
