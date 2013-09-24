@@ -146,6 +146,11 @@ public class MoodListFragment extends SherlockListFragment implements
 		super.onStart();
 		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 	}
+	@Override
+	public void onResume(){
+		super.onResume();
+		this.invalidateSelection();
+	}
 
 	public void invalidateSelection() {
 		// Set the previous selected item as checked to be unhighlighted when in
