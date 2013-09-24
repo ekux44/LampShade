@@ -78,6 +78,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		View myView = inflater.inflate(R.layout.mood_view, container, false);
 
 		setHasOptionsMenu(true);
+		getSherlockActivity().supportInvalidateOptionsMenu();
 		return myView;
 	}
 
@@ -87,7 +88,7 @@ public class MoodListFragment extends SherlockListFragment implements
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         //intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
-        intent.putExtra(Intent.EXTRA_TEXT,"#LampShade http://lampshade.io/share?"+HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity())));
+        intent.putExtra(Intent.EXTRA_TEXT,"#LampShade.io http://lampshade.io/share?"+HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity())));
         return intent;
     }
 	
