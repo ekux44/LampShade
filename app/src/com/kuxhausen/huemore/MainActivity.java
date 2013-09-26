@@ -153,17 +153,17 @@ public class MainActivity extends GodObject implements
 		initializationDatabaseChecks();
 		initializeBillingCode();
 		
-		
+		/*
 		Calendar currentTime = Calendar.getInstance();
 		Calendar updateTime = Calendar.getInstance();
-		updateTime.set(Calendar.MONTH, Calendar.SEPTEMBER); //TODO remember to change this when releasing new versions
+		updateTime.set(Calendar.MONTH, Calendar.NOVEMBER); //TODO remember to change this when releasing new versions
 		
 		if(currentTime.after(updateTime) && !settings.getBoolean(PreferenceKeys.UPDATE_OPT_OUT, false)){
 			PromptUpdateDialogFragment updates = new PromptUpdateDialogFragment();
 			updates.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
-		
+		*/
 
 		Bundle b = this.getIntent().getExtras();
 		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
