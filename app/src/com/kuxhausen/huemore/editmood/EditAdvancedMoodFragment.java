@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -469,7 +470,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void deleteRow(int item){
-		Log.e("deleteRow", item+"");
+		Log.e("deleteRow", item+"" + "curMax"+gridRows());
 		if(gridRows()>1){
 			int row = (item / gridCols());//-1?
 			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
@@ -484,6 +485,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			
 			grid.setRowCount(initialRows + gridRows()-1);
 		}
+		redrawGrid();
 	}
 	private void deleteCol(int item){
 		Log.e("deleteCol",item+"");
@@ -498,6 +500,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				dataRay.remove(kill);
 			grid.setColumnCount(initialCols+gridCols()-1);
 		}
+		redrawGrid();
 	}
 	private void addRow(int duration){
 		if(gridRows()<=8){
@@ -538,6 +541,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private final void setGridRows(int num, int duration){
 		Log.e("setGridRows","setNum"+num+" currentNum"+gridRows());
 		while(gridRows()!=num){
+			Log.e("setRow","num:"+num+" cur"+gridRows());
 			if(gridRows()<num)
 				addRow(duration);
 			else if(gridRows()>num)
