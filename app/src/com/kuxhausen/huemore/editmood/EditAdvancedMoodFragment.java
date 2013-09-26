@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -98,7 +97,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid.setColumnCount(initialCols+1);
 		grid.setRowCount(initialRows);
 		
-		Log.e("colrow",grid.getColumnCount()+" "+grid.getRowCount());
+		Log.e("prePageCustomization","cells:"+dataRay.size()+" rows"+gridRows()+" cols"+gridCols());
 		addRow(timeslotValues[0]);
 		if(!multiMode){
 			addRow(timeslotValues[0]);
@@ -130,6 +129,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	    }
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
+			
+			Log.e("preLoadPriorMood","cells:"+dataRay.size()+" rows"+gridRows()+" cols"+gridCols());
+			
 			//load prior mood
 			loadMood(Utils.getMoodFromDatabase(args.getString(InternalArguments.MOOD_NAME), this.getActivity()));
 		}
@@ -163,7 +165,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void loadMood(Mood mFromDB) {
-		Log.e("loadMood", mFromDB.numChannels+" "+ mFromDB.events.length);
+		Log.e("mood Dims", "channels:"+mFromDB.numChannels+" numEvents:"+ mFromDB.events.length);
 		
 		this.setGridCols(mFromDB.numChannels);
 		int row = -1;
@@ -356,9 +358,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		contextSpot = (Integer)v.getTag();
-		Log.e("cv!=null",""+(v!=null));
-		Log.e("cv tag!=null",""+(v.getTag()!=null));
-		Log.e("cv tag",v.getTag().toString());
 		
 		if(timedMode){
 			android.view.MenuInflater inflater = this.getActivity()
@@ -470,9 +469,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void deleteRow(int item){
-		Log.e("deleteRow", item+" "+gridRows());
+		Log.e("deleteRow", item+"");
 		if(gridRows()>1){
-			int row = (item / gridCols())-1;//-1?
+			int row = (item / gridCols());//-1?
 			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
 			for(int i = 0; i<gridCols(); i++){
 				toRemove.add(dataRay.get(i + row*gridCols()));
@@ -487,13 +486,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	private void deleteCol(int item){
-		//Log.e("deleteCol",item + "  "+gridCols());
+		Log.e("deleteCol",item+"");
 		
 		if(gridCols()>1){
 			int col = item % gridCols();
 			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
 			for(int i = 0; i<gridRows(); i++){
-				Log.e("omg", col+" "+i*gridCols());
 				toRemove.add(dataRay.get(col + i*gridCols()));
 			}
 			for(StateCell kill : toRemove)
@@ -538,10 +536,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		return grid.getColumnCount()-initialCols;
 	}
 	private final void setGridRows(int num, int duration){
-		Log.e("setGridRows",num+"num , duration"+duration);
-		
+		Log.e("setGridRows","setNum"+num+" currentNum"+gridRows());
 		while(gridRows()!=num){
-			Log.e("gridRows",gridRows()+"gr num"+num);
 			if(gridRows()<num)
 				addRow(duration);
 			else if(gridRows()>num)
@@ -549,9 +545,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	private final void setGridCols(int num){
-		Log.e("setGridCols",num+"");
+		Log.e("setGridCols","setNum"+num+" currentNum"+gridCols());
 		while(gridCols()!=num){
-			Log.e("gridCols",gridCols()+"gc num"+num);
 			if(gridCols()<num)
 				addCol();
 			else if(gridCols()>num)
@@ -567,10 +562,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	@Override
 	public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
 		if(position<timeslotValues.length-1){
-			Log.e("position",""+position);
-			Log.e("id",""+parent.getId());
 			TimeslotDuration td = timeslotDurationById.get(parent.getId());
-			Log.e("td=null?",""+(td==null));
 			td.duration=(timeslotValues[position]);
 		}
 		else{
