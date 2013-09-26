@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.support.v7.widget.GridLayout;
 
 public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnCreateMoodListener {
@@ -515,6 +516,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			for(int i = gridCols(); i>0; i--){
 				addState();
 			}
+		}else{
+			Toast t = Toast.makeText(getActivity(), R.string.advanced_timeslot_limit, Toast.LENGTH_LONG);
+			t.show();
 		}
 	}
 	private void addCol(){
@@ -524,6 +528,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			for(int i = dataRay.size(); i>0; i-=width){
 				addState(i);
 			}
+		}else{
+			Toast t = Toast.makeText(getActivity(), R.string.advanced_channel_limit, Toast.LENGTH_LONG);
+			t.show();
 		}
 	}
 	private final int initialRows = 2;

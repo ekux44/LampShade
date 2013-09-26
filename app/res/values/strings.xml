@@ -104,4 +104,6 @@
 	<string name="share">Share</string>
 	<string name="seconds">Seconds</string>
 	<string name="preview">Preview</string>
+	<string name="advanced_timeslot_limit">Sorry, moods are limited to 8 timeslots in this version</string>
+	<string name="advanced_channel_limit">Sorry, moods are limited to 8 channels in this version</string>
 </resources>
