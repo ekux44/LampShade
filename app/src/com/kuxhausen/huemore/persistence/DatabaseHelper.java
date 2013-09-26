@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				while (cursor.moveToNext()) {
 					try {
 						String name = cursor.getString(0);
-						Mood mood = HueUrlEncoder.decode(cursor.getString(0)).second;
+						Mood mood = HueUrlEncoder.decode(cursor.getString(1)).second;
 						moodMap.put(name, mood);
 					} catch (InvalidEncodingException e){
 					} catch (FutureEncodingException e) {
@@ -164,7 +164,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				moodMap.remove("Fruity");
 				moodMap.remove("Sunset");
 				
-				db.execSQL("DROP TABLE " + MoodColumns.TABLE_NAME);
+				db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
 				
 				db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
@@ -254,7 +254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					db.insert(MoodColumns.TABLE_NAME, null, cv);
 				}
 				
-				db.execSQL("DROP TABLE " + AlarmColumns.TABLE_NAME);
+				db.execSQL("DROP TABLE IF EXISTS " + AlarmColumns.TABLE_NAME);
 				
 				db.execSQL("CREATE TABLE IF NOT EXISTS " + AlarmColumns.TABLE_NAME + " ("
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
