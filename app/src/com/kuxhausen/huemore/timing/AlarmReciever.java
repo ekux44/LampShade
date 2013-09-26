@@ -162,7 +162,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction() != null) {
+		if (intent.getAction() != null && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.\\d\\..*")) {
 			AlarmState as = gson.fromJson(
 					intent.getExtras().getString(
 							InternalArguments.ALARM_DETAILS), AlarmState.class);
