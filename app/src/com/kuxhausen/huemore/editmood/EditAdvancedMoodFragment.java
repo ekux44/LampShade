@@ -136,7 +136,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private StateCell generateDefaultMoodRow(){
-		StateCell mr = new StateCell();
+		StateCell mr = new StateCell(this.getActivity());
 		BulbState example = new BulbState();
 		mr.hs = example;
 		return mr;

@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -17,7 +18,11 @@ public class StateCell {
 
 	public String name;
 	public BulbState hs;
+	public Context context;
 	
+	public StateCell(Context ctx){
+		context = ctx;
+	}
 	
 	public View getView(int position, ViewGroup parent, OnClickListener l, SherlockFragment frag) {
 		View rowView;
@@ -26,23 +31,29 @@ public class StateCell {
 			rowView = inflater.inflate(R.layout.edit_mood_colortemp_row, null);
 			TextView stateText = (TextView) rowView.findViewById(R.id.ctTextView);
 			stateText.setText(hs.getCT());
-		}else{
+		}else if(hs.hue!=null && hs.sat!=null){
 			rowView = inflater.inflate(R.layout.edit_mood_row, null);
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			int color = 0;
-			if(hs.hue!=null && hs.sat!=null){
-				float[] hsv = new float[3];
-		    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-		    	hsv[1] = (float) (hs.sat / 255.0);
-		    	hsv[2] = 1f;
-		    	color = Color.HSVToColor(hsv);
-			}
+			float[] hsv = new float[3];
+	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
+	    	hsv[1] = (float) (hs.sat / 255.0);
+	    	hsv[2] = 1f;
+	    	int color = Color.HSVToColor(hsv);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
 				state_color.setImageDrawable(cd);		
+		}else if (hs.on!=null){
+			rowView = inflater.inflate(R.layout.edit_mood_on_row, null);
+			TextView stateText = (TextView) rowView.findViewById(R.id.onTextView);
+			if(hs.on!=null && hs.on)
+				stateText.setText(context.getResources().getString(R.string.cap_on));
+			else
+				stateText.setText(context.getResources().getString(R.string.cap_off));
+		} else{
+			rowView = inflater.inflate(R.layout.edit_mood_row, null);
 		}
 		rowView.setOnClickListener(l);
 		if(frag!=null)

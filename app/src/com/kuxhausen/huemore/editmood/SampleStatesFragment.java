@@ -37,6 +37,27 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		
 		ArrayList<StateCell> list = new ArrayList<StateCell>();
 		
+		{
+			BulbState hs = new BulbState();
+			hs.on=true;
+	    	hs.effect="none";
+			
+			StateCell mr = new StateCell(this.getActivity());
+			mr.hs = hs;
+			mr.name = this.getActivity().getResources().getString(R.string.cap_on);
+			list.add(mr);
+		}
+		{
+			BulbState hs = new BulbState();
+			hs.on=false;
+	    	hs.effect="none";
+			
+			StateCell mr = new StateCell(this.getActivity());
+			mr.hs = hs;
+			mr.name = this.getActivity().getResources().getString(R.string.cap_off);
+			list.add(mr);
+		}
+		
 		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea", "Deep Sea", "Fruit", "Fruit", "Fruit"};
 		int[] simpleSat = {144, 211 ,49, 232, 253, 230, 244, 254, 173};
 		int[] simpleHue = {15331, 13122, 33863, 34495, 45489, 1111, 15483, 25593, 64684};
@@ -48,7 +69,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 	    	hs.on=true;
 	    	hs.effect="none";
 	    	
-	    	StateCell mr = new StateCell();
+	    	StateCell mr = new StateCell(this.getActivity());
 	    	mr.hs = hs;
 	    	mr.name = simpleNames[i];
 	    	list.add(mr);
