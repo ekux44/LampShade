@@ -103,7 +103,11 @@ public class MoodListFragment extends SherlockListFragment implements
 			unlocksItem.setEnabled(false);
 			unlocksItem.setVisible(false);
 		}
-		if (selectedPos>-1) {
+		if (selectedPos>-1 
+				&& selected!=null
+				&& !selected.getText().equals(this.getActivity().getString(R.string.cap_off))
+				&& !selected.getText().equals(this.getActivity().getString(R.string.cap_on))
+				&& !selected.getText().equals(this.getActivity().getString(R.string.cap_random))) {
 			/** Getting the actionprovider associated with the menu item whose id is share */
 			mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
 	
