@@ -134,7 +134,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			Log.e("preLoadPriorMood","cells:"+dataRay.size()+" rows"+gridRows()+" cols"+gridCols());
 			
 			//load prior mood
-			loadMood(Utils.getMoodFromDatabase(args.getString(InternalArguments.MOOD_NAME), this.getActivity()));
+			priorName = args.getString(InternalArguments.MOOD_NAME);
+			loadMood(Utils.getMoodFromDatabase(priorName, this.getActivity()));
+			moodName.setText(priorName);
 		}
 	    
 	    return myView;
@@ -190,6 +192,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			}
 			dataRay.get(gridCols()*row + e.channel).hs = e.state;
 		}
+		
+		loop.setChecked(mFromDB.isInfiniteLooping());
 		redrawGrid();
 	}
 	private Mood getMood() {		
