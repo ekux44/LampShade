@@ -245,29 +245,29 @@ public class SecondActivity extends GodObject implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.second, menu);
-		if (Utils.hasProVersion(this)) {
-			// has pro version
-
-			if (NfcAdapter.getDefaultAdapter(this) == null) {
-				// hide nfc link if nfc not supported
-				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-				if (nfcItem != null) {
-					nfcItem.setEnabled(false);
-					nfcItem.setVisible(false);
-				}
-			}
-		} else {
-			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-			if (nfcItem != null) {
-				nfcItem.setEnabled(false);
-				nfcItem.setVisible(false);
-			}
-			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
-			if (alarmItem != null) {
-				alarmItem.setEnabled(false);
-				alarmItem.setVisible(false);
-			}
-		}
+//		if (Utils.hasProVersion(this)) {
+//			// has pro version
+//
+//			if (NfcAdapter.getDefaultAdapter(this) == null) {
+//				// hide nfc link if nfc not supported
+//				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
+//				if (nfcItem != null) {
+//					nfcItem.setEnabled(false);
+//					nfcItem.setVisible(false);
+//				}
+//			}
+//		} else {
+//			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
+//			if (nfcItem != null) {
+//				nfcItem.setEnabled(false);
+//				nfcItem.setVisible(false);
+//			}
+//			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
+//			if (alarmItem != null) {
+//				alarmItem.setEnabled(false);
+//				alarmItem.setVisible(false);
+//			}
+//		}
 
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
 			MenuItem bothItem = menu.findItem(R.id.action_add_both);
@@ -286,29 +286,29 @@ public class SecondActivity extends GodObject implements
 		case android.R.id.home:
 			this.onBackPressed();
 			return true;
-		case R.id.action_settings:
-			SettingsDialogFragment settings = new SettingsDialogFragment();
-			settings.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
+//		case R.id.action_settings:
+//			SettingsDialogFragment settings = new SettingsDialogFragment();
+//			settings.show(getSupportFragmentManager(),
+//					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+//			return true;
 		case R.id.action_add_both:
 			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
 			addBoth.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
-		case R.id.action_nfc:
-			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
-				Toast.makeText(this, this.getString(R.string.nfc_disabled),
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Intent i = new Intent(this, NfcWriterActivity.class);
-				this.startActivity(i);
-			}
-			return true;
-		case R.id.action_alarms:
-			Intent i = new Intent(this, AlarmListActivity.class);
-			this.startActivity(i);
-			return true;
+//		case R.id.action_nfc:
+//			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
+//				Toast.makeText(this, this.getString(R.string.nfc_disabled),
+//						Toast.LENGTH_SHORT).show();
+//			} else {
+//				Intent i = new Intent(this, NfcWriterActivity.class);
+//				this.startActivity(i);
+//			}
+//			return true;
+//		case R.id.action_alarms:
+//			Intent i = new Intent(this, AlarmListActivity.class);
+//			this.startActivity(i);
+//			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
