@@ -508,7 +508,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			grid.setRowCount(initialRows + gridRows()+1);
 			
 			
-			TimeslotDuration td = new TimeslotDuration(getActivity(), getSpinnerId());
+			TimeslotDuration td = new TimeslotDuration(this, getSpinnerId());
 			td.setDuration(duration);
 			timeslotDuration.add(td);
 			

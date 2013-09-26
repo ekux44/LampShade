@@ -2,30 +2,37 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.editmood.EditTimeslotDialogFragment.TimeslotTimeResult;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 
-public class TimeslotDuration implements OnItemSelectedListener {
+public class TimeslotDuration implements OnItemSelectedListener, TimeslotTimeResult{
 	
 	private int duration;
 	private int id;
 	private Spinner spin;
-	ArrayList<Integer> timeslotValues;
+	private ArrayList<Integer> timeslotValues;
+	private SherlockFragment frag;
 	
-	public TimeslotDuration(Activity activity, int id){
-		LayoutInflater inflater = activity.getLayoutInflater();
+	public TimeslotDuration(SherlockFragment frag, int id){
+		this.frag = frag;
+		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		spin = (Spinner)inflater.inflate(R.layout.timeslot_spinner, null);
 		spin.setId(id);
 		spin.setOnItemSelectedListener(this);
 		
 		timeslotValues = new ArrayList<Integer>();
-		int[] values = activity.getResources().getIntArray(
+		int[] values = frag.getActivity().getResources().getIntArray(
 				R.array.timeslot_values_array);
 		for(int v : values)
 			timeslotValues.add(v);
@@ -41,7 +48,7 @@ public class TimeslotDuration implements OnItemSelectedListener {
 	
 	public void setDuration(int duration){
 		if(timeslotValues.indexOf(duration)>-1);
-			spin.setSelection(timeslotValues.indexOf(duration));
+			spin.setSelection(timeslotValues.indexOf(duration));		
 		this.duration = duration;
 	}
 	public int getDuration(){
@@ -54,7 +61,12 @@ public class TimeslotDuration implements OnItemSelectedListener {
 			duration=(timeslotValues.get(position));
 		}
 		else{
-			//TODO launch custom time dialog
+			EditTimeslotDialogFragment etdf = new EditTimeslotDialogFragment();
+			etdf.setTimeslotTimeResultListener(this);
+			Bundle args = new Bundle();
+			args.putInt(InternalArguments.TRANSITON_TIME, duration);
+			etdf.show(frag.getFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 			
 	}
