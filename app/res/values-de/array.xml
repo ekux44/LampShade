@@ -7,13 +7,13 @@
         <item>1 Minute</item>
         <item>10 Minuten</item>
     </string-array>
-    <integer-array name="transition_values_array">
-        <item>4</item>
-        <item>10</item>
-        <item>100</item>
-        <item>600</item>
-        <item>6000</item>
-    </integer-array>
+     <string-array name="timeslot_names_array">
+        <item>1 Sekunde</item>
+        <item>10 Sekunden</item>
+        <item>1 Minute</item>
+        <item>10 Minuten</item>
+        <item>Custom</item>
+    </string-array>
     <string-array name="repeat_days">
         <item>Sonntag</item>
         <item>Montag</item>
@@ -31,5 +31,12 @@
         <item>DO</item>
         <item>FR</item>
         <item>SA</item>
+    </string-array>
+    <string-array name="update_features">
+        <item>Sie können nun animierte Szenen erstellen</item>
+        <item>Szenen können nun als Links geteilt werden!</item>
+        <item>Trete der LampShade.io Community auf Facebook, G+ oder Twitter bei um mehr Szenen zu entdecken</item>
+        <item>To accommodate the new mood system, alarms now start at the set time. All previous alarms have been cleared</item>
+        <item>Wegen großen Änderungen der App müssen Tasker Plugin Aktionen neu erstellt werden. Tut mir leid!</item>
     </string-array>
 </resources>
