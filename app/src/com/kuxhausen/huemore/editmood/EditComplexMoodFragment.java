@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
@@ -16,7 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class EditComplexMoodFragment extends Fragment implements OnCreateMoodListener, OnClickListener{
+public class EditComplexMoodFragment extends SherlockFragment implements OnCreateMoodListener, OnClickListener{
 	
 	Gson gson = new Gson();
 	Button enterAdvanced;
@@ -30,6 +31,14 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 		View myView = inflater.inflate(R.layout.edit_complex_mood, null);
 		enterAdvanced = (Button) myView.findViewById(R.id.enterAdvancedEditor);
 		enterAdvanced.setOnClickListener(this);
+		
+		
+		Bundle args = getArguments();
+		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
+			Intent i = getAdvancedIntent();
+			i.putExtra(InternalArguments.MOOD_NAME, args.getString(InternalArguments.MOOD_NAME));
+			this.startActivity(i);
+		}
 		
 		return myView;
 	}
@@ -45,10 +54,14 @@ public class EditComplexMoodFragment extends Fragment implements OnCreateMoodLis
 	public void onClick(View v) {
 		switch(v.getId()){
 		case R.id.enterAdvancedEditor:
-			Intent i = new Intent(this.getActivity(), EditAdvancedMoodActivity.class);
-			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
-			this.startActivity(i);
+			this.startActivity(getAdvancedIntent());
 			break;
 		}
+	}
+	
+	public Intent getAdvancedIntent(){
+		Intent i = new Intent(this.getActivity(), EditAdvancedMoodActivity.class);
+		i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
+		return i;
 	}
 }
