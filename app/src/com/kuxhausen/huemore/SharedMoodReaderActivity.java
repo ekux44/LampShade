@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -44,6 +45,7 @@ import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
@@ -66,7 +68,6 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	
 	private EditText name;
 	
-	Integer[] bulbS = null;
 	Button previewButton;
 	Mood sharedMood;
 
@@ -91,16 +92,35 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				preview();
+				int brightness = brightnessBar.getProgress();
+				for (int i = 0; i < sharedMood.events.length; i++) {
+					//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
+					sharedMood.events[i].state.bri = brightness;
+				}
+				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null);
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
+				int brightness = brightnessBar.getProgress();
+				for (int i = 0; i < sharedMood.events.length; i++) {
+					//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
+					sharedMood.events[i].state.bri = brightness;
+				}
+				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null);
 			}
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
+				if(fromUser){
+					int brightness = brightnessBar.getProgress();
+					for (int i = 0; i < sharedMood.events.length; i++) {
+						//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
+						sharedMood.events[i].state.bri = brightness;
+					}
+					Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null);
+				}
 			}
 		});
 
@@ -119,6 +139,10 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		
 		name = (EditText)this.findViewById(R.id.moodNameEditText);
 		
+		Button cancelButton = (Button) findViewById(R.id.cancel);
+		cancelButton.setOnClickListener(this);
+		Button okayButton = (Button) findViewById(R.id.okay);
+		okayButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -165,12 +189,31 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.previewButton:
-				preview();
+				Utils.transmit(context, InternalArguments.ENCODED_MOOD, sharedMood, getBulbs(), name.getText().toString());
+				break;
+			case R.id.okay:
+				String moodName = name.getText().toString();
+				// delete any old mood with same name //todo warn users
+				String moodSelect = MoodColumns.MOOD + "=?";
+				String[] moodArg = { moodName };
+				this.getContentResolver().delete(
+						DatabaseDefinitions.MoodColumns.MOODS_URI,
+						moodSelect, moodArg);
+				
+				ContentValues mNewValues = new ContentValues();
+				mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, moodName);
+				mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(sharedMood));
+				
+				this.getContentResolver().insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
+				this.finish();
+				break;
+			case R.id.cancel:
+				this.finish();
 				break;
 		}
 	}
 	
-	public void preview() {
+	public Integer[] getBulbs(){
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
 		String[] gWhereClause = { ((TextView) groupSpinner.getSelectedView())
@@ -192,17 +235,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		while (groupCursor.moveToNext()) {
 			groupStates.add(groupCursor.getInt(0));
 		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-
-		
-		
-		int brightness = brightnessBar.getProgress();
-		for (int i = 0; i < sharedMood.events.length; i++) {
-			//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
-			sharedMood.events[i].state.bri = brightness;
-		}
-		
-		Utils.transmit(context, InternalArguments.ENCODED_MOOD, sharedMood, bulbS, name.getText().toString());
+		return groupStates.toArray(new Integer[groupStates.size()]);
 	}
 	
 	/**
