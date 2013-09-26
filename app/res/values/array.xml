@@ -50,7 +50,7 @@
         <item>You can now created animated Moods!</item>
         <item>Moods can now be shared as links!</item>
         <item>Join the LampShade.io community on facebook, g+, or twitter to discover more Moods</item>
-        <item>To accommodate the new mood system, alarms now start on the set time. All previous alarms have been cleared</item>
+        <item>To accommodate the new mood system, alarms now start at the set time. All previous alarms have been cleared</item>
         <item>Due to major app changes, Tasker pluggin actions also have to be recreated. My apologies for the inconvenience</item>
     </string-array>
 </resources>
