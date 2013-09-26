@@ -47,9 +47,10 @@
         <item>SAT</item>
     </string-array>
     <string-array name="update_features">
-        <item>Bug fixes</item>
-        <item>Moods \'Fruity\' and \'Sunset\' are previews of version 2.5</item>
-        <item>Version 2.5 update will be availible on September 4th</item>
-        <item>HueMore will be renamed to LampShade in update 2.5</item>
+        <item>You can now created animated Moods!</item>
+        <item>Moods can now be shared</item>
+        <item>Join the LampShade.io community on facebook, g+, or twitter to discover more Moods</item>
+        <item>To accommodate the new mood system, alarms have been reset. Also, there is still a bug in alarms that repeat multiple days a week</item>
+        <item>Due to major app changes, Tasker pluggin actions also have to be recreated. My apologies for the inconvenience</item>
     </string-array>
 </resources>
