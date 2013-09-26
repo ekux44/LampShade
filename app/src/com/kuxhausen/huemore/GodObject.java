@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodListFragment.OnMoodSelectedListener;

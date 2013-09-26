@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -45,8 +44,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 				timeAdjustedCal.add(Calendar.DATE, 1);
 			}
 			as.setTime(timeAdjustedCal.getTimeInMillis());
-
-			Log.e("asdf", "oneOffAlarm");
 
 			AlarmReciever.scheduleAlarm(context, as,
 					timeAdjustedCal.getTimeInMillis());
@@ -88,7 +85,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			for (int i = 0; i < 7; i++) {
 				long t = as.getRepeatingTimes()[i];
 				if (as.getRepeatingDays()[i]) {
-					Log.e("asdf", "repeatingAlarm");
 					AlarmReciever.scheduleWeeklyAlarm(context, as, t, i + 1);
 
 					Calendar setTime = Calendar.getInstance();
@@ -111,10 +107,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 	private static void scheduleAlarm(Context context, AlarmState alarmState,
 			Long timeInMillis) {
 
-		Log.d("asdf",
-				"createAlarm"
-						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
-
 		PendingIntent pIntent = calculatePendingIntent(context, alarmState, 0);
 		AlarmManager alarmMgr = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
@@ -123,10 +115,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 
 	private static void scheduleWeeklyAlarm(Context context,
 			AlarmState alarmState, Long timeInMillis, int dayOfWeek) {
-
-		Log.d("asdf",
-				"createRepeatingAlarm"
-						+ ((timeInMillis - System.currentTimeMillis()) / 60000));
 
 		PendingIntent pIntent = calculatePendingIntent(context, alarmState,
 				dayOfWeek);

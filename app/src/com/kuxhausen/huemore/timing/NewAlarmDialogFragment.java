@@ -14,7 +14,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,13 +84,10 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 
 			if (optionalState != null) {				
 				// apply initial state
-				Log.e("asdf", "" + moodDataSource.getCount());
 				int moodPos = 0;
 				for (int i = 0; i < moodDataSource.getCount(); i++) {
 					if (moodDataSource.getItem(i).equals(optionalState.getAlarmState().mood))
 						moodPos = i;
-					Log.e("asdf", moodDataSource.getItem(i) + "");
-					Log.e("asdf", optionalState.getAlarmState().mood + "");
 				}
 				moodSpinner.setSelection(moodPos);
 
@@ -118,12 +114,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 				}
 				timePick.setCurrentHour(projectedTime.get(Calendar.HOUR_OF_DAY));
 				timePick.setCurrentMinute(projectedTime.get(Calendar.MINUTE));
-				
-				Log.e("asdf", "apply prior state");
 			}
 		}
-		Log.e("asdf", "loaderManager has priorState" + (priorState != null));
-
 	}
 
 	@Override
@@ -240,15 +232,11 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		if (priorState != null) {
 
 			// apply initial state
-			Log.e("asdf", "" + moodDataSource.getCount());
 			int moodPos = 0;
 			for (int i = 0; i < moodDataSource.getCount(); i++) {
 				if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
 						priorState.getAlarmState().mood))
 					moodPos = i;
-				Log.e("asdf", ((Cursor) moodDataSource.getItem(i)).getString(0)
-						+ "");
-				Log.e("asdf", priorState.getAlarmState().mood + "");
 			}
 			moodSpinner.setSelection(moodPos);
 

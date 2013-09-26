@@ -18,7 +18,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
@@ -510,7 +509,7 @@ public class MainActivity extends GodObject implements
 			}
 		}
 		mPlayHelper = null;
-		Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
+		//Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
 		super.onDestroy();
 	}
 	
@@ -556,7 +555,6 @@ public class MainActivity extends GodObject implements
 				}
 			} catch (NameNotFoundException e1){
 			}
-		Log.e("wtf","...");
 		if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
@@ -594,7 +592,7 @@ public class MainActivity extends GodObject implements
 		String base64EncodedPublicKey = firstChunk + secondChunk;
 		// compute your public key and store it in base64EncodedPublicKey
 		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
+		//Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
 		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override

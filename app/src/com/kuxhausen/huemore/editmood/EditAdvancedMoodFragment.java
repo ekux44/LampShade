@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -95,7 +94,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid.setColumnCount(initialCols+1);
 		grid.setRowCount(initialRows);
 		
-		Log.e("prePageCustomization","cells:"+dataRay.size()+" rows"+gridRows()+" cols"+gridCols());
 		addRow(defaultDuration);
 		if(!multiMode){
 			addRow(defaultDuration);
@@ -127,8 +125,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	    }
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
-			
-			Log.e("preLoadPriorMood","cells:"+dataRay.size()+" rows"+gridRows()+" cols"+gridCols());
 			
 			//load prior mood
 			priorName = args.getString(InternalArguments.MOOD_NAME);
@@ -165,8 +161,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void loadMood(Mood mFromDB) {
-		Log.e("mood Dims", "channels:"+mFromDB.numChannels+" numEvents:"+ mFromDB.events.length);
-		
 		this.setGridCols(mFromDB.numChannels);
 		int row = -1;
 		int time = -1;
@@ -276,8 +270,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 
 	private void redrawGrid() {
-		Log.e("redraw","redraw grid");
-		
 		grid.removeAllViews();
 		for(int r = 0; r< gridRows(); r++)
 			for(int c = 0; c<gridCols(); c++){
@@ -473,7 +465,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void deleteRow(int item){
-		Log.e("deleteRow", item+"" + "curMax"+gridRows());
 		if(gridRows()>1){
 			int row = (item / gridCols());//-1?
 			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
@@ -490,8 +481,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		redrawGrid();
 	}
 	private void deleteCol(int item){
-		Log.e("deleteCol",item+"");
-		
 		if(gridCols()>1){
 			int col = item % gridCols();
 			ArrayList<StateCell> toRemove = new ArrayList<StateCell>();
@@ -542,9 +531,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		return grid.getColumnCount()-initialCols;
 	}
 	private final void setGridRows(int num, int duration){
-		Log.e("setGridRows","setNum"+num+" currentNum"+gridRows());
 		while(gridRows()!=num){
-			Log.e("setRow","num:"+num+" cur"+gridRows());
 			if(gridRows()<num)
 				addRow(duration);
 			else if(gridRows()>num)
@@ -552,7 +539,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	private final void setGridCols(int num){
-		Log.e("setGridCols","setNum"+num+" currentNum"+gridCols());
 		while(gridCols()!=num){
 			if(gridCols()<num)
 				addCol();

@@ -6,7 +6,6 @@ import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,8 +101,6 @@ public class AlarmsListFragment extends SherlockListFragment implements
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			Log.e("asdf", "edit has state"
-					+ (selectedRow.getAlarmState() != null));
 			nadf.onLoadLoaderManager(selectedRow);
 
 			return true;
