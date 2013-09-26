@@ -57,6 +57,7 @@ public class EditTimeslotDialogFragment extends SherlockDialogFragment implement
 			String s = seconds.getText().toString();
 			try{	
 				int transitionTime = Integer.parseInt(s) * 10;
+				transitionTime = Math.min(transitionTime, 36000);
 				listener.setDuration(transitionTime);
 			} catch (Exception e){
 			}
