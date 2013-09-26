@@ -64,7 +64,8 @@ public class TimeslotDuration implements OnItemSelectedListener, TimeslotTimeRes
 			EditTimeslotDialogFragment etdf = new EditTimeslotDialogFragment();
 			etdf.setTimeslotTimeResultListener(this);
 			Bundle args = new Bundle();
-			args.putInt(InternalArguments.TRANSITON_TIME, duration);
+			args.putInt(InternalArguments.DURATION_TIME, duration/10);
+			etdf.setArguments(args);
 			etdf.show(frag.getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}

@@ -40,11 +40,13 @@ public class EditTimeslotDialogFragment extends SherlockDialogFragment implement
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 		
-		Bundle args = getArguments();
-		if (args != null && args.containsKey(InternalArguments.TRANSITON_TIME)) {
-			seconds.setText(""+args.getInt(InternalArguments.TRANSITON_TIME));
+		Bundle args = this.getArguments();
+		if (args != null && args.containsKey(InternalArguments.DURATION_TIME)) {
+			seconds.setText(""+args.getInt(InternalArguments.DURATION_TIME));
 		}
 		
+		this.getDialog().setTitle(
+				getActivity().getString(R.string.grid_col_title_timeslot));
 		return myView;
 	}
 
