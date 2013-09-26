@@ -40,7 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v7.widget.GridLayout;
 
-public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnItemSelectedListener, OnCreateMoodListener {
+public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnCreateMoodListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
@@ -48,8 +48,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	
 	public ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
 	ArrayList<TimeslotDuration> timeslotDuration = new ArrayList<TimeslotDuration>();
-	HashMap<Integer, TimeslotDuration> timeslotDurationById = new HashMap<Integer, TimeslotDuration>();
-	int[] timeslotValues;
+	private final static int defaultDuration = 10;
+	
 	Button addChannel, addTimeslot;
 	EditText moodName;
 	CheckBox loop;
@@ -72,9 +72,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
 		
-		timeslotValues = getActivity().getResources().getIntArray(
-				R.array.timeslot_values_array);
-		
 		moodName = (EditText)myView.findViewById(R.id.moodNameEditText);
 		
 		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
@@ -93,16 +90,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
 		grid.removeAllViews();
 		timeslotDuration.clear();
-		timeslotDurationById.clear();
 		dataRay.clear();
 		grid.setColumnCount(initialCols+1);
 		grid.setRowCount(initialRows);
 		
 		Log.e("prePageCustomization","cells:"+dataRay.size()+" rows"+gridRows()+" cols"+gridCols());
-		addRow(timeslotValues[0]);
+		addRow(defaultDuration);
 		if(!multiMode){
-			addRow(timeslotValues[0]);
-			addRow(timeslotValues[0]);
+			addRow(defaultDuration);
+			addRow(defaultDuration);
 		} else{
 			myView.findViewById(R.id.addTimeslotButton).setVisibility(View.GONE);
 		}
@@ -187,6 +183,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		time = -1;
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
+				if(time!=-1)
+					timeslotDuration.get(row).setDuration(e.time-time);
 				row++;
 				time = e.time;
 			}
@@ -229,7 +227,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private int getTime(int row){
 		int time = 0;
 		for(int i = row-1; i>=0; i--){
-			time+=timeslotDuration.get(i).duration;
+			time+=timeslotDuration.get(i).getDuration();
 		}
 		return time;
 	}
@@ -254,7 +252,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			redrawGrid();
 			break;
 		case R.id.addTimeslotButton:
-			addRow(timeslotValues[0]);
+			addRow(defaultDuration);
 			redrawGrid();
 			break;
 		case R.id.okay:
@@ -296,7 +294,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				vg.rowSpec = GridLayout.spec(r+initialRows);
 				vg.setGravity(Gravity.CENTER);
 				
-				View v = timeslotDuration.get(r).spin;
+				View v = timeslotDuration.get(r).getSpinner();
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
 				grid.addView(v, vg);
@@ -484,7 +482,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			for(StateCell kill : toRemove)
 				dataRay.remove(kill);
 			
-			timeslotDurationById.remove(timeslotDuration.get(row).id);
 			timeslotDuration.remove(row);
 			
 			grid.setRowCount(initialRows + gridRows()-1);
@@ -510,15 +507,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		if(gridRows()<=8){
 			grid.setRowCount(initialRows + gridRows()+1);
 			
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			TimeslotDuration td = new TimeslotDuration();
-			td.spin = (Spinner)inflater.inflate(R.layout.timeslot_spinner, null);
-			td.id = getSpinnerId();
-			td.spin.setId(td.id);
-			td.duration = duration;
+			
+			TimeslotDuration td = new TimeslotDuration(getActivity(), getSpinnerId());
+			td.setDuration(duration);
 			timeslotDuration.add(td);
-			timeslotDurationById.put(td.id, td);
-			td.spin.setOnItemSelectedListener(this);
 			
 			for(int i = gridCols(); i>0; i--){
 				addState();
@@ -567,23 +559,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		preview();
 	}
 
-	@Override
-	public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
-		if(position<timeslotValues.length-1){
-			TimeslotDuration td = timeslotDurationById.get(parent.getId());
-			td.duration=(timeslotValues[position]);
-		}
-		else{
-			//TODO launch custom time dialog
-		}
-			
-	}
-
-	@Override
-	public void onNothingSelected (AdapterView<?> parent) {
-		// TODO Auto-generated method stub
-		
-	}
 	private int getSpinnerId(){
 		return usedSpinnerIDs++;
 	}
