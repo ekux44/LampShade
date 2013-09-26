@@ -43,7 +43,6 @@
     <string name="saturation">Saturation</string>
     <string name="temperature">Color Temperature (K)</string>
     <string name="color_temp_initial_value">3200</string>
-    <string name="add_color">Add Color</string>
     <string name="toggleColorLoop">Loop Colors :</string>
     <string name="promp_first_view_setting">Default home screen</string>
     <string name="promp_second_view_setting">Default second screen</string>

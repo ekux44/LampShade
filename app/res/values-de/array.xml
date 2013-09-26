@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="transition_names_array">
-        <item>Nicht</item>
+        <item>Keine</item>
         <item>1 Sekunde</item>
         <item>10 Sekunden</item>
         <item>1 Minute</item>
@@ -31,12 +31,5 @@
         <item>DO</item>
         <item>FR</item>
         <item>SA</item>
-    </string-array>
-    <string-array name="update_features">
-        <item>New colorwheel</item>
-        <item>Hub connection indicator</item>
-        <item>Brightness bar now continuously synchs with lights</item>
-        <item>Alarms widget (only on devices with Android 3.0 or newer)</item>
-        <item>Alarms bug fix. If you have encountered unscheduled alarms going off, restart your phone for the bug fix to take effect</item>
     </string-array>
 </resources>
