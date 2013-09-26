@@ -108,7 +108,14 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 				onRepeatSelected(optionalState.getAlarmState().getRepeatingDays());
 
 				Calendar projectedTime = Calendar.getInstance();
-				projectedTime.setTimeInMillis(optionalState.getAlarmState().getTime());
+				if(optionalState.getAlarmState().isRepeating()){
+					for(int i =0; i< optionalState.getAlarmState().getRepeatingDays().length; i++){
+						if(optionalState.getAlarmState().getRepeatingDays()[i])
+							projectedTime.setTimeInMillis(optionalState.getAlarmState().getRepeatingTimes()[i]);
+					}
+				}else{
+					projectedTime.setTimeInMillis(optionalState.getAlarmState().getTime());
+				}
 				timePick.setCurrentHour(projectedTime.get(Calendar.HOUR_OF_DAY));
 				timePick.setCurrentMinute(projectedTime.get(Calendar.MINUTE));
 				
