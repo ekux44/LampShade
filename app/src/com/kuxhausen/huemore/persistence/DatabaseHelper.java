@@ -213,7 +213,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					m.numChannels = 3;
 					m.setInfiniteLooping(true);
 					m.events = events;
-					m.loopIterationTimeLength = 100;
+					m.loopIterationTimeLength = 300;
 					
 					cv.put(MoodColumns.MOOD, "Fruity");
 					cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
