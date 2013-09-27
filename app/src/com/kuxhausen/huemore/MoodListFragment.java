@@ -88,7 +88,7 @@ public class MoodListFragment extends SherlockListFragment implements
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         //intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
-        intent.putExtra(Intent.EXTRA_TEXT,mood+" #LampShade.io http://lampshade.io/share?"+HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity())));
+        intent.putExtra(Intent.EXTRA_TEXT,mood+" #LampShadeIO http://lampshade.io/share?"+HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity())));
         return intent;
     }
 	
