@@ -105,4 +105,8 @@
 	<string name="preview">Preview</string>
 	<string name="advanced_timeslot_limit">Sorry, moods are limited to 8 timeslots in this version</string>
 	<string name="advanced_channel_limit">Sorry, moods are limited to 8 channels in this version</string>
+	<string name="community_facebook">Facebook community</string>
+	<string name="community_g_plus">G+ community</string>
+	<string name="community_twitter">Twitter community</string>
+	<string name="action_communities">Communities</string>
 </resources>

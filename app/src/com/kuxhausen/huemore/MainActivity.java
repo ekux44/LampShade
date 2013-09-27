@@ -453,6 +453,11 @@ public class MainActivity extends GodObject implements
 			settings.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
+		case R.id.action_communities:
+			CommunityDialogFragment communities = new CommunityDialogFragment();
+			communities.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			return true;
 		case R.id.action_add_both:
 			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
 			addBoth.show(getSupportFragmentManager(),
