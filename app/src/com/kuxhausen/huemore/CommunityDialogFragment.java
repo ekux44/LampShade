@@ -40,13 +40,13 @@ OnClickListener{
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		
 		switch (v.getId()) {
-		case R.id.facebookButton:
-			url = "https://www.facebook.com/LampShade.io";
+		case R.id.googleButton:
+			url = "https://plus.google.com/communities/117876087643455039742";
 			i.setData(Uri.parse(url));
 			startActivity(i);
 			break;
-		case R.id.googleButton:
-			url = "https://plus.google.com/communities/117876087643455039742";
+		case R.id.facebookButton:
+			url = "https://www.facebook.com/LampShade.io";
 			i.setData(Uri.parse(url));
 			startActivity(i);
 			break;
