@@ -6,27 +6,21 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/welcomeMessageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/community_message" />
+        android:text="@string/welcome_message" />
 
     <Button
-        android:id="@+id/googleButton"
+        android:id="@+id/getStartedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/community_g_plus" />
+        android:text="@string/welcome_get_started" />
 
     <Button
-        android:id="@+id/facebookButton"
+        android:id="@+id/getHueButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/community_facebook" />
-
-    <Button
-        android:id="@+id/twitterButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/community_twitter" />
+        android:text="@string/welcome_get_hue" />
 
 </LinearLayout>

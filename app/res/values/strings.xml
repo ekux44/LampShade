@@ -105,8 +105,13 @@
 	<string name="preview">Preview</string>
 	<string name="advanced_timeslot_limit">Sorry, moods are limited to 8 timeslots in this version</string>
 	<string name="advanced_channel_limit">Sorry, moods are limited to 8 channels in this version</string>
-	<string name="community_facebook">Facebook community</string>
-	<string name="community_g_plus">G+ community</string>
-	<string name="community_twitter">Twitter community</string>
-	<string name="action_communities">Communities</string>
+	<string name="community_facebook">LampShade.io on Facebook</string>
+	<string name="community_g_plus">LampShade.io on Google+</string>
+	<string name="community_twitter">LampShade.io on Twitter</string>
+	<string name="action_communities">Community and Support</string>
+	<string name="community_message">Join the LampShade.io online community to share moods and discuss LampShade.io features</string>
+	<string name="action_welcome">Welcome</string>
+	<string name="welcome_message">Welcome to LampShade.io, a powerful app for controlling the Philips Hue smarthome lighting system</string>
+	<string name="welcome_get_started">Connect to my Hue</string>
+	<string name="welcome_get_hue">Buy a Philips Hue</string>
 </resources>
