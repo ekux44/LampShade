@@ -11,6 +11,12 @@
         android:text="@string/link_prompt"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pushlink_image" />
+
     <ProgressBar
         android:id="@+id/timerProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
