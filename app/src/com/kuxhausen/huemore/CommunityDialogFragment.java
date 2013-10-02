@@ -1,8 +1,11 @@
 package com.kuxhausen.huemore;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class CommunityDialogFragment extends SherlockDialogFragment implements
 OnClickListener{
@@ -31,6 +35,13 @@ OnClickListener{
 		
 		this.getDialog().setTitle(R.string.action_communities);
 		
+		// Remember that this page has been shown so as not to show it again unless the user seeks it out
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this.getSherlockActivity());
+		Editor edit = settings.edit();
+		edit.putBoolean(PreferenceKeys.HAS_SHOWN_COMMUNITY_DIALOG, true);
+		edit.commit();
+
 		return myView;
 	}
 	

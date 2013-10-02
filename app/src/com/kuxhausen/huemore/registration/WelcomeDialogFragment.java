@@ -47,10 +47,9 @@ OnClickListener{
 			dhdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
-			// Add username and IP to preferences cache
+			// Remember that this page has been shown so as not to show it again
 			SharedPreferences settings = PreferenceManager
 					.getDefaultSharedPreferences(this.getSherlockActivity());
-
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferenceKeys.DONE_WITH_WELCOME_DIALOG, true);
 			edit.commit();

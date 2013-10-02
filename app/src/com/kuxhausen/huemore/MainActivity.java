@@ -40,6 +40,7 @@ import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.registration.ConnectionStatusDialogFragment;
 import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
+import com.kuxhausen.huemore.registration.WelcomeDialogFragment;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
@@ -562,7 +563,7 @@ public class MainActivity extends GodObject implements
 			}
 		if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
+			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
 			edit.commit();
 		}
 		if (!settings.contains(PreferenceKeys.DEFAULT_TO_MOODS)) {
@@ -573,9 +574,21 @@ public class MainActivity extends GodObject implements
 
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferenceKeys.BRIDGE_IP_ADDRESS)) {
-			DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-			dhdf.show(this.getSupportFragmentManager(),
+			if(!settings.contains(PreferenceKeys.DONE_WITH_WELCOME_DIALOG))
+			{
+				WelcomeDialogFragment wdf = new WelcomeDialogFragment();
+				wdf.show(this.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			}else{
+				DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
+				dhdf.show(this.getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			}
+		} else if(!settings.contains(PreferenceKeys.HAS_SHOWN_COMMUNITY_DIALOG)){
+			CommunityDialogFragment cdf = new CommunityDialogFragment();
+			cdf.show(this.getSupportFragmentManager(),
+				InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			
 		}
 		if (!settings.contains(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS)) {
 			Editor edit = settings.edit();
