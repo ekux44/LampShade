@@ -46,6 +46,7 @@
         <item>FRI</item>
         <item>SAT</item>
     </string-array>
+    <integer name="major_update_version">37</integer>
     <string-array name="update_features">
         <item>You can now created animated Moods!</item>
         <item>Moods can now be shared as links!</item>

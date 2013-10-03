@@ -552,15 +552,11 @@ public class MainActivity extends GodObject implements
 					PreferenceKeys.ALWAYS_FREE_BULBS);// TODO load from
 			// google store
 			edit.commit();
-		} else
-			try {
-				if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1)!= this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode){
-					UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
-					ucdf.show(this.getSupportFragmentManager(),
-							InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-				}
-			} catch (NameNotFoundException e1){
-			}
+		} else if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1)< this.getResources().getInteger(R.integer.major_update_version)){
+			UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
+			ucdf.show(this.getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		}
 		if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
