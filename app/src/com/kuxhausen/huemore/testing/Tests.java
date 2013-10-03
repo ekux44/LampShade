@@ -35,10 +35,19 @@ public class Tests {
 		
 	}
 	
-	public static void testConversionLogic(float r, float g, float b){
-		float red = r;
-		float green = g;
-		float blue = b;
+	/**
+	 * @param h in 0 to 1
+	 * @param s in 0 to 1
+	 */
+	public static float[] hsTOxy(float h, float s){
+		
+		float[] hsv = {h * 360, s , 1 };
+		int rgb = Color.HSVToColor(hsv);
+		
+		float red = ((rgb>>>16)&0xFF)/255f;
+		float green = ((rgb>>>8)&0xFF)/255f;
+		float blue = ((rgb)&0xFF)/255f;
+		
 		red = (float) ((red > 0.04045f) ? Math.pow((red + 0.055f) / (1.0f + 0.055f), 2.4f) : (red / 12.92f));
 		green = (float) ((green > 0.04045f) ? Math.pow((green + 0.055f) / (1.0f + 0.055f), 2.4f) : (green / 12.92f));
 		blue = (float) ((blue > 0.04045f) ? Math.pow((blue + 0.055f) / (1.0f + 0.055f), 2.4f) : (blue / 12.92f));
@@ -47,11 +56,11 @@ public class Tests {
 		float Z = red * 0.0000000f + green * 0.053077f + blue * 1.035763f;
 		float x = X / (X + Y + Z); 
 		float y = Y / (X + Y + Z);
-		Log.e("testColor",""+red +" "+ green +" "+ blue +" "+ x +" "+ y);
+
+		float[] result = {x, y};
+		return result;
 	}
-	public static void testConversionLogic(float x, float y){
-		//float x = x; // the given x value
-		//float y = y; // the given y value
+	public static float[] xyTOhs(float x, float y){
 		float z = 1.0f - x - y; 
 		float Y = 1f; // The given brightness value
 		float X = (Y / y) * x;  
@@ -63,7 +72,23 @@ public class Tests {
 		g = (float) (g <= 0.0031308f ? 12.92f * g : (1.0f + 0.055f) * Math.pow(g, (1.0f / 2.4f)) - 0.055f);
 		b = (float) (b <= 0.0031308f ? 12.92f * b : (1.0f + 0.055f) * Math.pow(b, (1.0f / 2.4f)) - 0.055f);
 		
-		Log.e("testColor",""+r +" "+ g +" "+ b +" "+ x +" "+ y);
+		
+		float max = Math.max(r, Math.max(g, b));
+		r = r/max;
+		g = g/max;
+		b = b/max;
+		r = Math.max(r, 0);
+		g = Math.max(g, 0);
+		b = Math.max(b, 0);
+		
+		float[] hsv = new float[3];
+		Color.RGBToHSV((int)(r*0xFF), (int)(g*0xFF), (int)(b*0xFF), hsv);
+		
+		float h = hsv[0]/360;
+		float s = hsv[1];
+		
+		float[] result = {h, s};
+		return result;
 	}
 	
 	
@@ -142,19 +167,36 @@ public class Tests {
 	}
 	
 	public static void tests() {
-		testConversionLogic(.999f,.999f,.999f);
-		testConversionLogic(.001f,.001f,.001f);
-		testConversionLogic(0.31271f, 0.32902f);
+		Log.e("tests","red");
+		hsTOxy(1,1);
+		xyTOhs(0.7347f,0.2653f);
 		
-		
-		testConversionLogic(.999f,.001f,.001f);
-		testConversionLogic(.999f,.001f);
-		
-		testConversionLogic(.001f,.999f,.001f);
-		testConversionLogic(.001f,.999f);
-		
-		testConversionLogic(.001f,.001f,.999f);
-		testConversionLogic(.001f,.001f);
+//		Log.e("tests","blue");
+//		hsTOxy(.667f,1f);
+//		xyTOhs(0.1566f,0.0177f);
+//		
+//		Log.e("tests","white");
+//		hsTOxy(1f,0f);
+//		xyTOhs(0.3457f,0.3585f);
+//		
+		float[] hs = new float[2];//{0.7347f, 0.2653f};
+		float[] xy = new float[2];
+		for(int j =0; j<10; j++){
+			hs[0]=(float)Math.random();
+			hs[1]=Math.max((float)Math.random(),.01f);
+			
+			
+			for(int i= 0; i<10; i++){
+				xy = hsTOxy(hs[0],hs[1]);
+				
+				if(i==0||i==9)
+					Log.e("testColor"," h"+hs[0]+"  s"+hs[1]+"  x"+xy[0]+"  y"+xy[1]);
+				
+				hs = xyTOhs(xy[0],xy[1]);
+				
+				
+			}
+		}
 		
 		
 		//testColorSpace();
