@@ -2,17 +2,70 @@ package com.kuxhausen.huemore.testing;
 
 import java.util.BitSet;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Tests {
+	
+	public static void testColorSpace(){
+		int[] colors = { 0x888888 , Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
+		for(int color : colors){
+			Log.e("testing","starting rgb "+Integer.toHexString(color));
+			Float[] xy = Utils.xyFromRGB(color);
+			Log.e("testing","x"+xy[0]+" y"+xy[1]);
+			int colorResult = Utils.rgbFromXY(xy);
+			Log.e("testing","final rgb "+Integer.toHexString(colorResult));
+		}
+		
+		Float[] xy = {1.0f, 0f};
+		Log.e("testing","opening x"+xy[0]+" y"+xy[1]);		
+		int color = Utils.rgbFromXY(xy);
+		Log.e("testing","rgb "+Integer.toHexString(color));
+		Float[] xyResult = Utils.xyFromRGB(color);
+		Log.e("testing","closing x"+xyResult[0]+" y"+xyResult[1]);
+		
+	}
+	
+	public static void testConversionLogic(float r, float g, float b){
+		float red = r;
+		float green = g;
+		float blue = b;
+		red = (float) ((red > 0.04045f) ? Math.pow((red + 0.055f) / (1.0f + 0.055f), 2.4f) : (red / 12.92f));
+		green = (float) ((green > 0.04045f) ? Math.pow((green + 0.055f) / (1.0f + 0.055f), 2.4f) : (green / 12.92f));
+		blue = (float) ((blue > 0.04045f) ? Math.pow((blue + 0.055f) / (1.0f + 0.055f), 2.4f) : (blue / 12.92f));
+		float X = red * 0.649926f + green * 0.103455f + blue * 0.197109f; 
+		float Y = red * 0.234327f + green * 0.743075f + blue * 0.022598f;
+		float Z = red * 0.0000000f + green * 0.053077f + blue * 1.035763f;
+		float x = X / (X + Y + Z); 
+		float y = Y / (X + Y + Z);
+		Log.e("testColor",""+red +" "+ green +" "+ blue +" "+ x +" "+ y);
+	}
+	public static void testConversionLogic(float x, float y){
+		//float x = x; // the given x value
+		//float y = y; // the given y value
+		float z = 1.0f - x - y; 
+		float Y = 1f; // The given brightness value
+		float X = (Y / y) * x;  
+		float Z = (Y / y) * z;
+		float r = X * 1.612f - Y * 0.203f - Z * 0.302f;
+		float g = -X * 0.509f + Y * 1.412f + Z * 0.066f;
+		float b = X * 0.026f - Y * 0.072f + Z * 0.962f;
+		r = (float) (r <= 0.0031308f ? 12.92f * r : (1.0f + 0.055f) * Math.pow(r, (1.0f / 2.4f)) - 0.055f);
+		g = (float) (g <= 0.0031308f ? 12.92f * g : (1.0f + 0.055f) * Math.pow(g, (1.0f / 2.4f)) - 0.055f);
+		b = (float) (b <= 0.0031308f ? 12.92f * b : (1.0f + 0.055f) * Math.pow(b, (1.0f / 2.4f)) - 0.055f);
+		
+		Log.e("testColor",""+r +" "+ g +" "+ b +" "+ x +" "+ y);
+	}
+	
 	
 	public static Boolean test(int tNum, Mood m1, Integer[] b1){
 		
@@ -89,6 +142,23 @@ public class Tests {
 	}
 	
 	public static void tests() {
+		testConversionLogic(.999f,.999f,.999f);
+		testConversionLogic(.001f,.001f,.001f);
+		testConversionLogic(0.31271f, 0.32902f);
+		
+		
+		testConversionLogic(.999f,.001f,.001f);
+		testConversionLogic(.999f,.001f);
+		
+		testConversionLogic(.001f,.999f,.001f);
+		testConversionLogic(.001f,.999f);
+		
+		testConversionLogic(.001f,.001f,.999f);
+		testConversionLogic(.001f,.001f);
+		
+		
+		//testColorSpace();
+		
 		/*
 		BulbState bs = new BulbState();
 		bs.on=true;

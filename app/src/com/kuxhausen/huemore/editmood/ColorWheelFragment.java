@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +49,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 		hs.on = true;
 		hs.effect = "none";
 
-		hs.hue = 0;
-		hs.sat = 255;
+		Float[] verryRedXY = {1.0f, 0f};
+		hs.xy = verryRedXY;
 	}
 	Gson gson = new Gson();
 
@@ -77,10 +78,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 					BulbState.class);
 			loadPrevious(bs);
 		}
-		float[] hsv = { (hs.hue * 360) / 65535, hs.sat / 255f, 1 };
-		picker.setColor(Color.HSVToColor(hsv));
-		picker.setOldCenterColor(Color.HSVToColor(hsv));
-		saturationBar.setSaturation(hsv[1]);
+		loadPrevious(hs);
 		
 		if (colorLoopLayoutVisible) {
 			colorLoop = (CompoundButton) groupDialogView
@@ -97,10 +95,28 @@ public class ColorWheelFragment extends SherlockFragment implements
 	}
 	
 	public void loadPrevious(BulbState bs){
-		if (bs.hue != null)
-			hs.hue = bs.hue;
-		if (bs.sat != null) {
-			hs.sat = bs.sat;
+		if (bs.hue != null && bs.sat!=null){
+			Log.e("load","hue"+bs.hue+" sat"+bs.sat);
+			
+			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+			
+			picker.setColor(Color.HSVToColor(hsv));
+			picker.setOldCenterColor(Color.HSVToColor(hsv));
+			saturationBar.setSaturation(hsv[1]);
+		}
+		if(bs.xy!=null){
+			Log.e("load","x"+bs.xy[0]+" y"+bs.xy[1]);
+			hs.xy = bs.xy;
+			float[] hsv = new float[3];
+			int rgb = Utils.rgbFromXY(hs.xy);
+			Log.e("rgb",Integer.toHexString(rgb));
+			Color.RGBToHSV((rgb>>16)%256, (rgb>>8)%256, (rgb)%256, hsv);
+			
+			picker.setColor(rgb);
+			picker.setOldCenterColor(rgb);
+			
+			saturationBar.setSaturation(hsv[1]);
+			Log.e("hsv",hsv[0]+"   "+hsv[1]+"   "+hsv[2]);
 		}
 	}
 	public void onStart(){
@@ -165,10 +181,11 @@ public class ColorWheelFragment extends SherlockFragment implements
 	@Override
 	public void onColorChanged(int color) {
 		picker.setOldCenterColor(color);
-		float[] hsv = new float[3];
-		Color.colorToHSV(color, hsv);
-		hs.hue = (int)((hsv[0] * 65535) / 360);
-		hs.sat = (short)(hsv[1] * 255);
+		//float[] hsv = new float[3];
+		//Color.colorToHSV(color, hsv);
+		//hs.hue = (int)((hsv[0] * 65535) / 360);
+		//hs.sat = (short)(hsv[1] * 255);
+		hs.xy = Utils.xyFromRGB(color);
 		preview();
 	}
 }

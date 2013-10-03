@@ -266,9 +266,9 @@ public class HueUrlEncoder {
 		
 		/** Get 64 bit xy **/
 		if (propertiesFlags[4]) {
-			Double x = (double) Float.intBitsToFloat(mBitSet.extractNumber(32));
-			Double y = (double) Float.intBitsToFloat(mBitSet.extractNumber(32));
-			bs.xy = new Double[] { x, y };
+			Float x = Float.intBitsToFloat(mBitSet.extractNumber(32));
+			Float y = Float.intBitsToFloat(mBitSet.extractNumber(32));
+			bs.xy = new Float[] { x, y };
 		}
 		
 		/** Get 9 bit ct **/
