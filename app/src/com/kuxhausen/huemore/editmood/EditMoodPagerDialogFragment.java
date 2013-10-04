@@ -2,8 +2,11 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,6 +33,7 @@ import com.kuxhausen.huemore.network.GetBulbList.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
@@ -243,8 +247,16 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 						DatabaseDefinitions.MoodColumns.MOODS_URI,
 						moodSelect, moodArg);
 			}
-			newMoodFragments[currentPage].onCreateMood(nameEditText.getText()
-					.toString());
+			String moodName=nameEditText.getText().toString();
+			if(moodName==null || moodName.length()<1){
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+				int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, 0);
+				Editor edit = settings.edit();
+				edit.putInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, unnamedNumber);
+				edit.commit();
+				moodName = this.getResources().getString(R.string.unnamed_mood)+" "+unnamedNumber;
+			}
+			newMoodFragments[currentPage].onCreateMood(moodName);
 			this.onBackPressed();
 			break;
 		case R.id.cancel:

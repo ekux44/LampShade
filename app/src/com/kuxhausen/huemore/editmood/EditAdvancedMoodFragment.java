@@ -11,6 +11,7 @@ import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodLi
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
@@ -18,8 +19,11 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -51,7 +55,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private final static int defaultDuration = 10;
 	
 	Button addChannel, addTimeslot;
-	EditText moodName;
+	EditText nameEditText;
 	CheckBox loop;
 	static String priorName;
 	static Mood priorMood;
@@ -72,7 +76,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
 		
-		moodName = (EditText)myView.findViewById(R.id.moodNameEditText);
+		nameEditText = (EditText)myView.findViewById(R.id.moodNameEditText);
 		
 		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
 		
@@ -129,7 +133,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			//load prior mood
 			priorName = args.getString(InternalArguments.MOOD_NAME);
 			loadMood(Utils.getMoodFromDatabase(priorName, this.getActivity()));
-			moodName.setText(priorName);
+			nameEditText.setText(priorName);
 		}
 	    
 	    return myView;
@@ -156,7 +160,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "");
 	}
 	private void preview(){
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), moodName.getText().toString());
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), nameEditText.getText().toString());
 		
 	}
 	
@@ -259,7 +263,16 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 						DatabaseDefinitions.MoodColumns.MOODS_URI,
 						moodSelect, moodArg);
 			}
-			this.onCreateMood(moodName.getText().toString());
+			String moodName=nameEditText.getText().toString();
+			if(moodName==null || moodName.length()<1){
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+				int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, 0);
+				Editor edit = settings.edit();
+				edit.putInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, unnamedNumber);
+				edit.commit();
+				moodName = this.getResources().getString(R.string.unnamed_mood)+" "+unnamedNumber;
+			}
+			this.onCreateMood(moodName);
 			getActivity().onBackPressed();
 			break;
 		case R.id.cancel:

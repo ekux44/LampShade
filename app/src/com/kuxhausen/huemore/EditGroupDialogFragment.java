@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -142,8 +143,16 @@ public class EditGroupDialogFragment extends DialogFragment implements
 							}
 						}
 
-						String groupname = nameEditText.getText().toString();
-
+						String groupName = nameEditText.getText().toString();
+						if(groupName==null || groupName.length()<1){
+							SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
+							int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_GROUP_NUMBER, 0);
+							Editor edit = settings.edit();
+							edit.putInt(PreferenceKeys.UNNAMED_GROUP_NUMBER, unnamedNumber);
+							edit.commit();
+							groupName = parrentActivity.getResources().getString(R.string.unnamed_group)+" "+unnamedNumber;
+						}
+						
 						for (int i = 0; i < checkedBulbs.size(); i++) {
 							
 							// Defines an object to contain the new values to
@@ -157,7 +166,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 							 */
 							mNewValues.put(
 									DatabaseDefinitions.GroupColumns.GROUP,
-									groupname);
+									groupName);
 							mNewValues.put(
 									DatabaseDefinitions.GroupColumns.BULB,
 									checkedBulbs.get(i));

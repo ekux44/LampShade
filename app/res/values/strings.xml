@@ -114,4 +114,6 @@
 	<string name="welcome_message">Welcome to LampShade.io, a powerful app for controlling the Philips Hue smarthome lighting system</string>
 	<string name="welcome_get_started">Connect to my Hue</string>
 	<string name="welcome_get_hue">Buy a Philips Hue</string>
+	<string name="unnamed_group">Unnamed Group</string>
+	<string name="unnamed_mood">Unnamed Mood</string>
 </resources>

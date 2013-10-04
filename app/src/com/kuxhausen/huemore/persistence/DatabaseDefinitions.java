@@ -162,6 +162,8 @@ public final class DatabaseDefinitions {
 		public static final int ALWAYS_FREE_BULBS = 10;
 		public static final String NUMBER_OF_CONNECTED_BULBS = "Number_Of_Connected_Bulbs";
 		public static final String VERSION_NUMBER = "Version_Number";
+		public static final String UNNAMED_GROUP_NUMBER = "UNNAMED_GROUP_NUMBER";
+		public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
 	}
 
 	public static final class PlayItems {
