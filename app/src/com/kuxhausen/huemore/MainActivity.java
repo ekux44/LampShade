@@ -68,7 +68,7 @@ public class MainActivity extends GodObject implements
 	}
 	
 	@Override
-	public void onConnectionStatusChanged(){
+	public void onConnectionStatusChanged(boolean connected){
 		this.supportInvalidateOptionsMenu();
 	}
 	
@@ -419,7 +419,7 @@ public class MainActivity extends GodObject implements
 			}
 		}
 		
-		if(this.hasHubConnection()){
+		if(this.mServiceHolder.mService.hasHubConnection()){
 			MenuItem connectionErrorItem = menu.findItem(R.id.action_register_with_hub);
 			if (connectionErrorItem != null) {
 				connectionErrorItem.setEnabled(false);
@@ -620,7 +620,7 @@ public class MainActivity extends GodObject implements
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
 					if (me.bulbListenerFragment != null) {
 						GetBulbList pushGroupMood = new GetBulbList(me,
-								me.bulbListenerFragment, me);
+								me.bulbListenerFragment, me, me.mServiceHolder);
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 							pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						} else {

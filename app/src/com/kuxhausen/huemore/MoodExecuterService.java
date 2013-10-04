@@ -13,12 +13,16 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.util.Pair;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.automation.FireReceiver;
+import com.kuxhausen.huemore.network.ConnectionMonitor;
+import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -29,7 +33,7 @@ import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmReciever;
 
-public class MoodExecuterService extends Service {
+public class MoodExecuterService extends Service implements ConnectionMonitor{
 
 	/**
 	 * Class used for the client Binder. Because we know this service always
@@ -72,10 +76,38 @@ public class MoodExecuterService extends Service {
 	PriorityQueue<QueueEvent> highPriorityQueue = new PriorityQueue<QueueEvent>();
 	
 	WakeLock wakelock;
-
+	
+	private boolean hasHubConnection = false;
+	
 	int transientIndex = 0;
+	
+	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
+	
 	public MoodExecuterService() {
 	}
+	
+
+	
+	@Override
+	public void setHubConnectionState(boolean connected){
+		if(hasHubConnection!=connected){
+			hasHubConnection = connected;
+			for(OnConnectionStatusChangedListener l : connectionListeners)
+				l.onConnectionStatusChanged(connected);	
+		}
+		if(!connected){
+			//TODO rate limit
+			GetBulbList pushGroupMood = new GetBulbList(this, null,
+					null, this);
+			pushGroupMood.execute();
+		}
+		Log.e("setHubConnection", ""+connected);
+	}
+	public boolean hasHubConnection(){
+		return hasHubConnection;
+	}
+	
+	
 	public void createNotification(String secondaryText) {
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MainActivity.class);
@@ -142,6 +174,11 @@ public class MoodExecuterService extends Service {
 		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 		wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
 		wakelock.acquire();
+		
+		//start pinging to test connectivity
+		GetBulbList pushGroupMood = new GetBulbList(this, null,
+				null, this);
+		pushGroupMood.execute();
 	}
 	@Override
 	public void onDestroy() {

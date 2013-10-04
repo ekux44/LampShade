@@ -31,6 +31,7 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 	private OnBulbListReturnedListener mResultListener;
 	Gson gson = new Gson();
 	private GodObject tracker;
+	private ConnectionMonitor monitor;
 
 	// The container Activity must implement this interface so the frag can
 	// deliver messages
@@ -40,18 +41,21 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 	}
 
 	public GetBulbList(Context context,
-			OnBulbListReturnedListener resultListener, GodObject ma) {
+			OnBulbListReturnedListener resultListener, GodObject ma, ConnectionMonitor cm) {
 		cont = context;
 		mResultListener = resultListener;
 		tracker = ma;
-		tracker.getInFlight().add(this);
+		if(tracker!=null)
+			tracker.getInFlight().add(this);
+		
+		monitor = cm;
 	}
 
 	@Override
 	protected Bulb[] doInBackground(Object... params) {
 		Bulb[] returnOutput = null;
 
-		if (cont == null || mResultListener == null)
+		if (cont == null)
 			return returnOutput;
 
 		// Get username and IP from preferences cache
@@ -108,8 +112,10 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 
 	@Override
 	protected void onPostExecute(Bulb[] result) {
-		tracker.getInFlight().remove(this);
-		mResultListener.onListReturned(result);
+		if(tracker!=null)
+			tracker.getInFlight().remove(this);
+		if(mResultListener!=null)
+			mResultListener.onListReturned(result);
 
 		if(result!=null && result.length>0){
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(cont);
@@ -117,9 +123,11 @@ public class GetBulbList extends AsyncTask<Object, Void, Bulb[]> {
 			edit.putInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS,result.length);
 			edit.commit();
 			
-			tracker.setHubConnectionState(true);
+			if(monitor!=null)
+				monitor.setHubConnectionState(true);
 		} else{
-			tracker.setHubConnectionState(false);
+			if(monitor!=null)
+				monitor.setHubConnectionState(false);
 		}
 	}
 }

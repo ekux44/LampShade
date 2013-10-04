@@ -77,7 +77,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
 		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this,
-				parrentActivity);
+				parrentActivity, parrentActivity.mServiceHolder);
 		pushGroupMood.execute();
 
 		Bundle args = this.getArguments();

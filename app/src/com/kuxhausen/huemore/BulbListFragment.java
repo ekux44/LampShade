@@ -56,7 +56,7 @@ public class BulbListFragment extends SherlockListFragment implements
 
 	public void refreshList() {
 		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this,
-				parrentActivity);
+				parrentActivity, parrentActivity.mServiceHolder);
 		pushGroupMood.execute();
 
 	}
