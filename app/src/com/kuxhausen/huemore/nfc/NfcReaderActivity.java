@@ -80,9 +80,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 
 				String data = new String(payload, 1, payload.length - 1,
 						Charset.forName("US-ASCII"));
-				// System.out.println(data);
 				data = data.substring(data.indexOf('?') + 1);
-				// System.out.println(data);
 
 				try {
 					Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
