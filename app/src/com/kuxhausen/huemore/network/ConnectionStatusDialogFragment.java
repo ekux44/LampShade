@@ -1,10 +1,10 @@
-package com.kuxhausen.huemore.registration;
+package com.kuxhausen.huemore.network;
 
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
