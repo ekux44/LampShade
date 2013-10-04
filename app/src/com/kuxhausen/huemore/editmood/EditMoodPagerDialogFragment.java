@@ -135,7 +135,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				return 2;
 			}
 		}else{
-			if(m.numChannels==1){
+			if(m.getNumChannels()==1){
 				return 1;
 			}else{
 				return 3;

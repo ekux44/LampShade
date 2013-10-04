@@ -49,7 +49,6 @@ public class Utils {
 		Event[] eRay = {e};
 		//more boilerplate
 		Mood m = new Mood();
-		m.numChannels=1;
 		m.usesTiming = false;
 		m.events = eRay;
 		

@@ -107,12 +107,12 @@ public class MoodExecuterService extends Service {
 		Integer[] bulbS = moodPair.first;
 		Mood m = moodPair.second;
 
-		ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+		ArrayList<Integer>[] channels = new ArrayList[m.getNumChannels()];
 		for (int i = 0; i < channels.length; i++)
 			channels[i] = new ArrayList<Integer>();
 
 		for (int i = 0; i < bulbS.length; i++) {
-			channels[i % m.numChannels].add(bulbS[i]);
+			channels[i % m.getNumChannels()].add(bulbS[i]);
 		}
 
 		for (Event e : m.events) {
@@ -181,12 +181,12 @@ public class MoodExecuterService extends Service {
 					Integer[] bulbS = decodedValues.first;
 					Mood m = decodedValues.second;
 	
-					ArrayList<Integer>[] channels = new ArrayList[m.numChannels];
+					ArrayList<Integer>[] channels = new ArrayList[m.getNumChannels()];
 					for (int i = 0; i < channels.length; i++)
 						channels[i] = new ArrayList<Integer>();
 	
 					for (int i = 0; i < bulbS.length; i++) {
-						channels[i % m.numChannels].add(bulbS[i]);
+						channels[i % m.getNumChannels()].add(bulbS[i]);
 					}
 	
 					for (Event e : m.events) {

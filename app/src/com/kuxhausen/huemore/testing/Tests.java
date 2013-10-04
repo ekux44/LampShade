@@ -56,7 +56,7 @@ public class Tests {
 			Log.e("tests",tNum+"usesTimingNotEqual");
 			return false;
 		}
-		if(m1.numChannels!=m2.numChannels){
+		if(m1.getNumChannels()!=m2.getNumChannels()){
 			Log.e("tests",tNum+"numChannelsNotEqual");
 			return false;
 		}

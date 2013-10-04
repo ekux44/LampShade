@@ -165,7 +165,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void loadMood(Mood mFromDB) {
-		this.setGridCols(mFromDB.numChannels);
+		this.setGridCols(mFromDB.getNumChannels());
 		int row = -1;
 		int time = -1;
 		for(Event e: mFromDB.events){
@@ -196,7 +196,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private Mood getMood() {		
 		Mood m = new Mood();
 		m.usesTiming = true; //TODO not always the case...
-		m.numChannels = gridCols();
+		m.setNumChannels(gridCols());
 		m.timeAddressingRepeatPolicy = false;
 		m.setInfiniteLooping(loop.isChecked());
 		

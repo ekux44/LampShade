@@ -135,7 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					Mood m = new Mood();
 					m.usesTiming=false;
 					m.timeAddressingRepeatPolicy=false;
-					m.numChannels = stateJson.size();
+					m.setNumChannels(stateJson.size());
 					m.events = events;
 					
 					cv.put(MoodColumns.MOOD, key);
@@ -210,7 +210,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					Mood m = new Mood();
 					m.usesTiming = true;
 					m.timeAddressingRepeatPolicy = false;
-					m.numChannels = 3;
+					m.setNumChannels(3);
 					m.setInfiniteLooping(true);
 					m.events = events;
 					m.loopIterationTimeLength = 300;
@@ -245,7 +245,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					Mood m = new Mood();
 					m.usesTiming = true;
 					m.timeAddressingRepeatPolicy = false;
-					m.numChannels = 1;
 					m.setInfiniteLooping(false);
 					m.events = events;
 					

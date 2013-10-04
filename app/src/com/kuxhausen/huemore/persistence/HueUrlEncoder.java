@@ -44,7 +44,7 @@ public class HueUrlEncoder {
 		}
 		
 		// Set 6 bit number of channels
-		mBitSet.addNumber(mood.numChannels,6);
+		mBitSet.addNumber(mood.getNumChannels(),6);
 		
 		addTimingRepeatPolicy(mBitSet, mood);
 		
@@ -191,7 +191,7 @@ public class HueUrlEncoder {
 		for(Event e: mood.events){
 			
 			// add channel number
-			mBitSet.addNumber(e.channel, getBitLength(mood.numChannels));
+			mBitSet.addNumber(e.channel, getBitLength(mood.getNumChannels()));
 			
 			//add timestamp lookup number
 			mBitSet.addNumber(timeArray.indexOf(e.time), getBitLength(timeArray.size()));
@@ -336,7 +336,7 @@ public class HueUrlEncoder {
 			
 			if(encodingVersion == 1||encodingVersion==2){
 				int numChannels = mBitSet.extractNumber(6);
-				mood.numChannels=numChannels;
+				mood.setNumChannels(numChannels);
 				
 				//1 bit timing addressing reference mode
 				mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
@@ -372,7 +372,7 @@ public class HueUrlEncoder {
 				
 				for(int i =0; i<numEvents; i++){
 					Event e = new Event();
-					e.channel = mBitSet.extractNumber(getBitLength(mood.numChannels));
+					e.channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 					
 					e.time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
 					
@@ -403,7 +403,7 @@ public class HueUrlEncoder {
 					eventArray[i] = e;
 				}
 				mood.events = eventArray;
-				mood.numChannels = numStates;
+				mood.setNumChannels(numStates);
 				mood.timeAddressingRepeatPolicy = false;
 				mood.usesTiming = false;
 				

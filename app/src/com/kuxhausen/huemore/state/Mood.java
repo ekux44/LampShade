@@ -2,7 +2,7 @@ package com.kuxhausen.huemore.state;
 
 public class Mood {
 	public Event[] events;
-	public int numChannels;
+	private int numChannels;
 	public Boolean usesTiming;
 	/**in units of 1/10 of a second */
 	public int loopIterationTimeLength;
@@ -30,5 +30,11 @@ public class Mood {
 	}
 	public int getNumLoops(){
 		return numLoops;
+	}
+	public int getNumChannels(){
+		return Math.max(numChannels, 1);
+	}
+	public void setNumChannels(int num){
+		numChannels = num;
 	}
 }

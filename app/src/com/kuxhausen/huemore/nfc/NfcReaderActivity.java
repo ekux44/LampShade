@@ -140,17 +140,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
 		
-		//boilerplate
-		Event e = new Event();
-		e.channel=0;
-		e.time=0;
-		e.state=bs;
-		Event[] eRay = {e};
-		//more boilerplate
-		Mood m = new Mood();
-		m.numChannels=1;
-		m.usesTiming = false;
-		m.events = eRay;		
+		Mood m = Utils.generateSimpleMood(bs);		
 		
 		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null);
 	}
