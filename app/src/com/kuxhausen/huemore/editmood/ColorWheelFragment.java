@@ -48,9 +48,9 @@ public class ColorWheelFragment extends SherlockFragment implements
 	{
 		hs.on = true;
 		hs.effect = "none";
+		Float[] lol = {.5f, .5f};
+		hs.xy = lol;//TODO change
 
-		Float[] verryRedXY = {1.0f, 0f};
-		hs.xy = verryRedXY;
 	}
 	Gson gson = new Gson();
 
@@ -96,27 +96,26 @@ public class ColorWheelFragment extends SherlockFragment implements
 	
 	public void loadPrevious(BulbState bs){
 		if (bs.hue != null && bs.sat!=null){
-			Log.e("load","hue"+bs.hue+" sat"+bs.sat);
 			
 			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
 			
 			picker.setColor(Color.HSVToColor(hsv));
 			picker.setOldCenterColor(Color.HSVToColor(hsv));
 			saturationBar.setSaturation(hsv[1]);
 		}
 		if(bs.xy!=null){
-			Log.e("load","x"+bs.xy[0]+" y"+bs.xy[1]);
 			hs.xy = bs.xy;
-			float[] hsv = new float[3];
-			int rgb = Utils.rgbFromXY(hs.xy);
-			Log.e("rgb",Integer.toHexString(rgb));
-			Color.RGBToHSV((rgb>>16)%256, (rgb>>8)%256, (rgb)%256, hsv);
+			
+			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
+			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
+			
+			int rgb = Color.HSVToColor(hsv);
 			
 			picker.setColor(rgb);
 			picker.setOldCenterColor(rgb);
 			
 			saturationBar.setSaturation(hsv[1]);
-			Log.e("hsv",hsv[0]+"   "+hsv[1]+"   "+hsv[2]);
 		}
 	}
 	public void onStart(){
@@ -181,11 +180,13 @@ public class ColorWheelFragment extends SherlockFragment implements
 	@Override
 	public void onColorChanged(int color) {
 		picker.setOldCenterColor(color);
-		//float[] hsv = new float[3];
-		//Color.colorToHSV(color, hsv);
-		//hs.hue = (int)((hsv[0] * 65535) / 360);
-		//hs.sat = (short)(hsv[1] * 255);
-		hs.xy = Utils.xyFromRGB(color);
+		
+		float[] hsv = new float[3];
+		Color.RGBToHSV((color>>16)%256, (color>>8)%256, (color)%256, hsv);
+		
+		hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+		hs.hue = null;
+		hs.sat = null;
 		preview();
 	}
 }
