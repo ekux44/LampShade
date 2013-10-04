@@ -23,7 +23,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 	Gson gson = new Gson();
 
 	public DatabaseHelper(Context context) {
@@ -260,6 +260,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 						+ AlarmColumns.STATE + " TEXT,"
 						+ AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
+			}
+			case 3:
+			{
+				//remove any nameless moods
+				ContentValues cv = new ContentValues();
+				String[] moodColumns = {MoodColumns.MOOD, MoodColumns.STATE};
+				Cursor moodCursor = db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null, null, null);
+				
+				HashMap<String,Mood> moodMap = new HashMap<String,Mood>();
+				
+				while (moodCursor.moveToNext()) {
+					try {
+						String name = moodCursor.getString(0);
+						Mood mood = HueUrlEncoder.decode(moodCursor.getString(1)).second;
+						moodMap.put(name, mood);
+					} catch (InvalidEncodingException e){
+					} catch (FutureEncodingException e) {
+					}
+				}
+				moodMap.remove("");
+				moodMap.remove(null);
+				
+				db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
+				
+				db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
+						+ " TEXT," + MoodColumns.STATE + " TEXT" + ");");
+				
+				for(String key : moodMap.keySet()){
+					cv.put(MoodColumns.MOOD, key);
+					cv.put(MoodColumns.STATE, HueUrlEncoder.encode(moodMap.get(key)));
+					db.insert(MoodColumns.TABLE_NAME, null, cv);
+				}
+				
+				//remove any nameless groups
+				String[] groupColumns = {GroupColumns.GROUP, GroupColumns.PRECEDENCE, GroupColumns.BULB};
+				Cursor groupCursor = db.query(DatabaseDefinitions.GroupColumns.TABLE_NAME, groupColumns, null, null, null, null, null);
+				
+				HashMap<String,Integer[]> groupMap = new HashMap<String,Integer[]>();
+				
+				while (groupCursor.moveToNext()) {
+					String name = groupCursor.getString(0);
+					Integer precedence = groupCursor.getInt(1);
+					Integer bulb = groupCursor.getInt(2);
+					Integer[] precBulb = {precedence, bulb};
+					groupMap.put(name, precBulb);
+				}
+				groupMap.remove("");
+				groupMap.remove(null);
+				
+				db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
+				
+				db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+						+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
+						+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
+				
+				for(String key : groupMap.keySet()){
+					cv.put(GroupColumns.GROUP, key);
+					cv.put(GroupColumns.PRECEDENCE, groupMap.get(key)[0]);
+					cv.put(GroupColumns.BULB, groupMap.get(key)[1]);
+					db.insert(GroupColumns.TABLE_NAME, null, cv);
+				}
+				
 			}
 		}
 	}
