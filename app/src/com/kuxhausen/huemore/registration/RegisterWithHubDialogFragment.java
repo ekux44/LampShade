@@ -78,7 +78,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				if (isAdded()) {
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					NetworkMethods.PreformRegister(parrentActivity.getRequestQueue(), parrentActivity, getListeners(getUserName()), bridges, getUserName(), getDeviceType());
+					NetworkMethods.PreformRegister(parrentActivity.getService(), getListeners(getUserName()), bridges, getUserName(), getDeviceType());
 				}
 			}
 
@@ -86,7 +86,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			public void onFinish() {
 				if (isAdded()) {
 					// try one last time
-					NetworkMethods.PreformRegister(parrentActivity.getRequestQueue(), parrentActivity, getListeners(getUserName()), bridges, getUserName(), getDeviceType());
+					NetworkMethods.PreformRegister(parrentActivity.getService(), getListeners(getUserName()), bridges, getUserName(), getDeviceType());
 					
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();

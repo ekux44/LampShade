@@ -26,7 +26,7 @@ import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.editmood.ColorWheelFragment;
-import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -53,12 +53,12 @@ public class SecondActivity extends GodObject implements
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	IabHelper mPlayHelper;
 	Inventory lastQuerriedInventory;
-	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
+	public OnBulbListReturnedListener bulbListenerFragment;
 	
-	public void setBulbListenerFragment(GetBulbList.OnBulbListReturnedListener frag){
+	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
 		bulbListenerFragment = frag;
 	}
-	public GetBulbList.OnBulbListReturnedListener getBulbListenerFragment(){
+	public OnBulbListReturnedListener getBulbListenerFragment(){
 		return bulbListenerFragment;
 	}
 	

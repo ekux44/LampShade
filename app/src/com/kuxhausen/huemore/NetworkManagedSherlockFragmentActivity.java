@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import java.util.ArrayList;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,17 +20,31 @@ public class NetworkManagedSherlockFragmentActivity extends
 		SherlockFragmentActivity implements OnConnectionStatusChangedListener{
 
     
-	public ServiceHolder mServiceHolder = new ServiceHolder();
-    boolean mBound = false;
+	private MoodExecuterService mService = new MoodExecuterService();
+    private boolean mBound = false;
+	private ArrayList<OnServiceConnectedListener> serviceListeners = new ArrayList<OnServiceConnectedListener>();
+    
+	//register for a one time on service connected message
+	public void registerOnServiceConnectedListener(OnServiceConnectedListener l){
+		if(mBound)
+			l.onServiceConnected();
+		else
+			serviceListeners.add(l);
+	}
 	
+	public MoodExecuterService getService(){
+		if(mBound)
+			return mService;
+		else
+			return null;
+	}
+	public boolean boundToService(){
+		return mBound;
+	}
 	
     @Override
 	public void onConnectionStatusChanged(boolean status) {
 		//override in subclass if needed
-	}
-	
-	public RequestQueue getRequestQueue() {
-		return mServiceHolder.mService.getRequestQueue();
 	}
 
 	@Override
@@ -45,7 +61,7 @@ public class NetworkManagedSherlockFragmentActivity extends
 		
 		// Unbind from the service
         if (mBound) {
-        	mServiceHolder.mService.connectionListeners.remove(this);
+        	mService.connectionListeners.remove(this);
             unbindService(mConnection);
             mBound = false;
         }
@@ -59,9 +75,15 @@ public class NetworkManagedSherlockFragmentActivity extends
                 IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             LocalBinder binder = (LocalBinder) service;
-            mServiceHolder.mService = binder.getService();
+            mService = binder.getService();
             mBound = true;
-            mServiceHolder.mService.connectionListeners.add(NetworkManagedSherlockFragmentActivity.this);
+            mService.connectionListeners.add(NetworkManagedSherlockFragmentActivity.this);
+            
+            
+            for(OnServiceConnectedListener l: serviceListeners){
+            	l.onServiceConnected();
+            }
+            serviceListeners.clear();
         }
 
         @Override
@@ -70,14 +92,8 @@ public class NetworkManagedSherlockFragmentActivity extends
         }
     };
     
-    public class ServiceHolder implements ConnectionMonitor{
-    	public MoodExecuterService mService;
-
-		@Override
-		public void setHubConnectionState(boolean b) {
-			if(mService!=null)
-				mService.setHubConnectionState(b);
-		}
+    public interface OnServiceConnectedListener{
+    	public abstract void onServiceConnected();
     }
 
 }

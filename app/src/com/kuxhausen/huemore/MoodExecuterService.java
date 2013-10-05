@@ -20,7 +20,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.network.ConnectionMonitor;
-import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -97,9 +96,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 		}
 		if(!connected){
 			//TODO rate limit
-			GetBulbList pushGroupMood = new GetBulbList(this, null,
-					null, this);
-			pushGroupMood.execute();
+			NetworkMethods.PreformGetBulbList(this, null);
 		}
 		Log.e("setHubConnection", ""+connected);
 	}
@@ -176,9 +173,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 		wakelock.acquire();
 		
 		//start pinging to test connectivity
-		GetBulbList pushGroupMood = new GetBulbList(this, null,
-				null, this);
-		pushGroupMood.execute();
+		NetworkMethods.PreformGetBulbList(this, null);
 	}
 	@Override
 	public void onDestroy() {
@@ -268,16 +263,14 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 
 				if (highPriorityQueue.peek() != null) {
 					QueueEvent e = highPriorityQueue.poll();
-					NetworkMethods.PreformTransmitGroupMood(getRequestQueue(),
-							me, null, e.bulb, e.event.state);
+					NetworkMethods.PreformTransmitGroupMood(me, e.bulb, e.event.state);
 				} else if (hasTransientChanges()) {
 					boolean addedSomethingToQueue = false;
 					while (!addedSomethingToQueue) {
 						if (flagTransientChanges[transientIndex]) {
 							// Note the +1 to account for the 1-based real bulb
 							// numbering
-							NetworkMethods.PreformTransmitGroupMood(
-									getRequestQueue(), me, null,
+							NetworkMethods.PreformTransmitGroupMood(me,
 									transientIndex + 1,
 									transientStateChanges[transientIndex]);
 							flagTransientChanges[transientIndex] = false;

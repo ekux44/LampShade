@@ -16,12 +16,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
+import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.Bulb;
 
 public class BulbListFragment extends SherlockListFragment implements
-		GetBulbList.OnBulbListReturnedListener {
+	OnBulbListReturnedListener, OnServiceConnectedListener{
 
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
@@ -50,15 +52,12 @@ public class BulbListFragment extends SherlockListFragment implements
 				bulbNameList);
 		setListAdapter(rayAdapter);
 		parrentActivity.setBulbListenerFragment(this);
-		refreshList();
+		parrentActivity.registerOnServiceConnectedListener(this);
 		return myView;
 	}
 
 	public void refreshList() {
-		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this,
-				parrentActivity, parrentActivity.mServiceHolder);
-		pushGroupMood.execute();
-
+		NetworkMethods.PreformGetBulbList(parrentActivity.getService(), this);
 	}
 
 	@Override
@@ -158,5 +157,10 @@ public class BulbListFragment extends SherlockListFragment implements
 
 		registerForContextMenu(getListView());
 		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+	}
+
+	@Override
+	public void onServiceConnected() {
+		refreshList();		
 	}
 }

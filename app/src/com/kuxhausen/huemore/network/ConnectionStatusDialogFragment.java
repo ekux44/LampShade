@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.network;
 
 import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -16,13 +17,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class ConnectionStatusDialogFragment extends DialogFragment implements OnConnectionStatusChangedListener, OnClickListener{
+public class ConnectionStatusDialogFragment extends DialogFragment implements OnConnectionStatusChangedListener, OnClickListener, OnServiceConnectedListener{
 	
 	GodObject parrentActivity;
 	Button leftButton, rightButton;
 	TextView connectionStatusMessage;
+	ProgressBar checkingConnectionInProgress;
+	
 	private boolean connectionStatus;
 	
 	@Override
@@ -38,10 +42,15 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		leftButton.setOnClickListener(this);
 		rightButton = (Button) myView.findViewById(R.id.okay);
 		rightButton.setOnClickListener(this);
-
+		
 		connectionStatusMessage = (TextView)myView.findViewById(R.id.connectionStatusTextView);
 		
-		this.onConnectionStatusChanged(parrentActivity.mServiceHolder.mService.hasHubConnection());
+		checkingConnectionInProgress = (ProgressBar)myView.findViewById(R.id.checkingConnectionProgressBar);
+		
+		//just so the UI is filled
+		this.onConnectionStatusChanged(false);
+		
+		parrentActivity.registerOnServiceConnectedListener(this);
 		
 		return myView;
 	}
@@ -50,13 +59,13 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
 		parrentActivity = (GodObject)activity;
-		parrentActivity.mServiceHolder.mService.connectionListeners.add(this);
 	}
 	
 	@Override
 	public void onDetach(){
 		super.onDetach();
-		parrentActivity.mServiceHolder.mService.connectionListeners.remove(this);
+		if(parrentActivity.boundToService())
+			parrentActivity.getService().connectionListeners.remove(this);
 	}
 
 	@Override
@@ -69,12 +78,13 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 			connectionStatusMessage.setText(this.getString(R.string.hub_connection)+": "+bridge);
 			leftButton.setText(R.string.reset_hub_connection);
 			rightButton.setText(R.string.accept);
-			
+			checkingConnectionInProgress.setVisibility(View.GONE);
 			
 		}else{
 			connectionStatusMessage.setText(R.string.hub_connection_error);
 			leftButton.setText(R.string.cancel);
 			rightButton.setText(R.string.reset_hub_connection);
+			checkingConnectionInProgress.setVisibility(View.VISIBLE);
 		}
 		
 	}
@@ -105,5 +115,11 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 			}
 			break;
 		}
+	}
+
+	@Override
+	public void onServiceConnected() {
+		this.onConnectionStatusChanged(parrentActivity.getService().hasHubConnection());
+		parrentActivity.getService().connectionListeners.add(this);
 	}
 }

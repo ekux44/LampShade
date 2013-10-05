@@ -30,8 +30,8 @@ import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.editmood.ColorWheelFragment;
+import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionStatusDialogFragment;
-import com.kuxhausen.huemore.network.GetBulbList;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -58,12 +58,12 @@ public class MainActivity extends GodObject implements
 	IabHelper mPlayHelper;
 	private MainActivity me;
 	Inventory lastQuerriedInventory;
-	public GetBulbList.OnBulbListReturnedListener bulbListenerFragment;
+	public OnBulbListReturnedListener bulbListenerFragment;
 	
-	public void setBulbListenerFragment(GetBulbList.OnBulbListReturnedListener frag){
+	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
 		bulbListenerFragment = frag;
 	}
-	public GetBulbList.OnBulbListReturnedListener getBulbListenerFragment(){
+	public OnBulbListReturnedListener getBulbListenerFragment(){
 		return bulbListenerFragment;
 	}
 	
@@ -419,7 +419,7 @@ public class MainActivity extends GodObject implements
 			}
 		}
 		
-		if(this.mServiceHolder.mService.hasHubConnection()){
+		if(this.boundToService() && this.getService().hasHubConnection()){
 			MenuItem connectionErrorItem = menu.findItem(R.id.action_register_with_hub);
 			if (connectionErrorItem != null) {
 				connectionErrorItem.setEnabled(false);
@@ -618,15 +618,6 @@ public class MainActivity extends GodObject implements
 				} else {
 					// Hooray, IAB is fully set up!
 					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-					if (me.bulbListenerFragment != null) {
-						GetBulbList pushGroupMood = new GetBulbList(me,
-								me.bulbListenerFragment, me, me.mServiceHolder);
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-							pushGroupMood.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						} else {
-							pushGroupMood.execute();
-						}
-					}
 				}
 			}
 		});

@@ -12,7 +12,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.R.menu;
-import com.kuxhausen.huemore.network.GetBulbList.OnBulbListReturnedListener;
+import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;

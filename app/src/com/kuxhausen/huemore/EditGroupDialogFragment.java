@@ -22,7 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
+import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -30,7 +32,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.api.Bulb;
 
 public class EditGroupDialogFragment extends DialogFragment implements
-		GetBulbList.OnBulbListReturnedListener {
+		OnBulbListReturnedListener, OnServiceConnectedListener {
 
 	ArrayList<String> bulbNameList;
 	ListView bulbsListView;
@@ -76,9 +78,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
-		GetBulbList pushGroupMood = new GetBulbList(getActivity(), this,
-				parrentActivity, parrentActivity.mServiceHolder);
-		pushGroupMood.execute();
+		parrentActivity.registerOnServiceConnectedListener(this);
 
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.GROUP_NAME)) {
@@ -211,6 +211,11 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
 		}
 
+	}
+
+	@Override
+	public void onServiceConnected() {
+		NetworkMethods.PreformGetBulbList(parrentActivity.getService(), this);
 	}
 
 }

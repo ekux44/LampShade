@@ -8,7 +8,7 @@ import android.support.v4.app.DialogFragment;
 
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.GetBulbList;
+import com.kuxhausen.huemore.network.NetworkMethods;
 
 public class RegistrationSuccessDialogFragment extends DialogFragment {
 	GodObject ma;
@@ -22,9 +22,8 @@ public class RegistrationSuccessDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						if (ma.getBulbListenerFragment() != null) {
-							GetBulbList pushGroupMood = new GetBulbList(ma,
-									ma.getBulbListenerFragment(), ma, ma.mServiceHolder);
-							pushGroupMood.execute();
+							
+							NetworkMethods.PreformGetBulbList(ma.getService(), ma.getBulbListenerFragment());
 						}
 					}
 				});
