@@ -6,6 +6,7 @@
     android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/widget_group_layout"
     android:resizeMode="horizontal|vertical"
+    android:widgetCategory="keyguard|home_screen"
     android:minResizeHeight="120dp" android:minResizeWidth="180dp" android:previewImage="@drawable/widget_landscape">
 </appwidget-provider>
 
