@@ -78,10 +78,10 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 	        // Set the click intent
 	        final Intent fillInIntent = new Intent();
 	        final Bundle extras = new Bundle();
-	        extras.putString(InternalArguments.MOOD_NAME, mContext.getResources().getString(R.string.cap_on));
+	        extras.putString(InternalArguments.MOOD_NAME, mContext.getResources().getString(R.string.cap_off));
 	        extras.putString(InternalArguments.GROUP_NAME, groupName);
 	        fillInIntent.putExtras(extras);
-	        rv.setOnClickFillInIntent(R.id.onButton, fillInIntent);
+	        rv.setOnClickFillInIntent(R.id.offButton, fillInIntent);
         }
         {
 	        // Set the click intent
@@ -90,7 +90,7 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 	        extras.putString(InternalArguments.MOOD_NAME, mContext.getResources().getString(R.string.cap_on));
 	        extras.putString(InternalArguments.GROUP_NAME, groupName);
 	        fillInIntent.putExtras(extras);
-	        rv.setOnClickFillInIntent(R.id.offButton, fillInIntent);
+	        rv.setOnClickFillInIntent(R.id.onButton, fillInIntent);
         }
         
         return rv;

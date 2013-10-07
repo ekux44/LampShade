@@ -15,13 +15,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/onButton"
+        android:id="@+id/offButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cap_off" />
 
     <Button
-        android:id="@+id/offButton"
+        android:id="@+id/onButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cap_on" />
