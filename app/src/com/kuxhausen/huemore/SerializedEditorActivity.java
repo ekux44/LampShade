@@ -183,7 +183,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			gmb.brightness = brightnessBar.getProgress();
 		
-		String preview = gmb.group + " -> " + gmb.mood;
+		String preview = gmb.group + " \u2192 " + gmb.mood;
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			preview+=" @ "+ ((gmb.brightness * 100) / 255) + "%";
 		return preview;

@@ -49,7 +49,7 @@ public class AlarmRow {
 	}
 
 	public String getSecondaryDescription() {
-		String result = aState.group + " -> " + aState.mood;
+		String result = aState.group + " \u2192 " + aState.mood;
 
 		if (aState.isRepeating()) {
 			result += "   "
