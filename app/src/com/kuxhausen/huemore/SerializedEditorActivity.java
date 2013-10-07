@@ -14,6 +14,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -34,7 +38,7 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActivity implements
-		LoaderManager.LoaderCallbacks<Cursor> {
+		LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener {
 
 	Context context;
 	Gson gson = new Gson();
@@ -43,6 +47,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
 
 	private SeekBar brightnessBar;
+	private CheckBox brightnessCheckBox;
+	private TextView brightnessDescripterTextView;
 	private Spinner groupSpinner, moodSpinner;
 	private SimpleCursorAdapter groupDataSource, moodDataSource;
 
@@ -82,7 +88,12 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 					boolean fromUser) {
 			}
 		});
-
+		
+		brightnessDescripterTextView = (TextView)this.findViewById(R.id.brightnessDescripterTextView);
+		
+		brightnessCheckBox = (CheckBox)this.findViewById(R.id.includeBrightnessCheckBox);
+		brightnessCheckBox.setOnCheckedChangeListener(this);
+		
 		groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
 		String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
 		groupDataSource = new SimpleCursorAdapter(this, layout, null, gColumns,
@@ -169,9 +180,13 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				.toString();
 		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText()
 				.toString();
-		gmb.brightness = brightnessBar.getProgress();
-		return gmb.group + " -> " + gmb.mood + " @ "
-				+ ((gmb.brightness * 100) / 255) + "%";
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			gmb.brightness = brightnessBar.getProgress();
+		
+		String preview = gmb.group + " -> " + gmb.mood;
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			preview+=" @ "+ ((gmb.brightness * 100) / 255) + "%";
+		return preview;
 	}
 
 	public void setSerializedByName(String s) {
@@ -185,7 +200,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				.toString();
 		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText()
 				.toString();
-		gmb.brightness = brightnessBar.getProgress();
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			gmb.brightness = brightnessBar.getProgress();
 		return gson.toJson(gmb);
 	}
 
@@ -303,7 +319,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 					groupPos = i;
 			}
 			groupSpinner.setSelection(groupPos);
-			brightnessBar.setProgress(priorGMB.brightness);
+			if(priorGMB.brightness!=null)
+				brightnessBar.setProgress(priorGMB.brightness);
 		}
 	}
 
@@ -325,6 +342,17 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				moodDataSource.changeCursor(null);
 			}
 			break;
+		}
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(isChecked){
+			brightnessBar.setVisibility(View.VISIBLE);
+			brightnessDescripterTextView.setVisibility(View.VISIBLE);
+		} else {
+			brightnessBar.setVisibility(View.INVISIBLE);
+			brightnessDescripterTextView.setVisibility(View.INVISIBLE);
 		}
 	}
 }

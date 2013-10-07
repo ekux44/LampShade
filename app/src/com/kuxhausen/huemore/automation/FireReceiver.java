@@ -56,7 +56,8 @@ public class FireReceiver extends WakefulBroadcastReceiver {
 
 			Mood m = Utils.getMoodFromDatabase(gmb.mood, context);
 			for(Event e: m.events){
-				e.state.bri = gmb.brightness;
+				if(gmb.brightness!=null)
+					e.state.bri = gmb.brightness;
 			}
 
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);

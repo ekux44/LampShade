@@ -7,5 +7,7 @@ public class GroupMoodBrightness {
 
 	public String group;
 	public String mood;
+	
+	/** may be null in serialization **/
 	public Integer brightness;
 }

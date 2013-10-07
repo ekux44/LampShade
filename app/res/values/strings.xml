@@ -119,4 +119,5 @@
 	<string name="empty_group_list_text">No groups found…</string>
 	<string name ="widget_alarms_label">LampShade Alarms</string>
 	<string name ="widget_groups_label">LampShade Groups</string>
+	<string name ="include_brightness">Include Brightness</string>
 </resources>
