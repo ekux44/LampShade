@@ -80,6 +80,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 	
 	int transientIndex = 0;
 	
+	private int countDownToStopSelf = 10;
+	
 	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	
 	public MoodExecuterService() {
@@ -247,8 +249,10 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
+		countDownToStopSelf = 10;
+		
 		// runs at the rate to execute 15 op/sec
-		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 15)) {
+		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 10)) {
 
 			@Override
 			public void onFinish() {
@@ -285,8 +289,10 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 						}
 					} else {
 						createNotification("");
-
-						me.stopSelf();
+						if(countDownToStopSelf<=0)
+							me.stopSelf();
+						else
+							countDownToStopSelf--;
 					}
 				} else if (queue.peek().nanoTime <= System.nanoTime()) {
 					ArrayList<QueueEvent> eList = new ArrayList<QueueEvent>();
