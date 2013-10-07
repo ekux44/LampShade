@@ -116,4 +116,7 @@
 	<string name="welcome_get_hue">Buy a Philips Hue</string>
 	<string name="unnamed_group">Unnamed Group</string>
 	<string name="unnamed_mood">Unnamed Mood</string>
+	<string name="empty_group_list_text">No groups found…</string>
+	<string name ="widget_alarms_label">LampShade Alarms</string>
+	<string name ="widget_groups_label">LampShade Groups</string>
 </resources>

@@ -139,7 +139,7 @@
         </receiver>
         <receiver
             android:name="com.kuxhausen.huemore.widget.AlarmWidgetProvider"
-            android:exported="true" >
+            android:exported="true" android:label="@string/widget_alarms_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -156,6 +156,27 @@
             android:name="com.kuxhausen.huemore.widget.AlarmWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+        
+        <receiver
+            android:name="com.kuxhausen.huemore.widget.GroupWidgetProvider"
+            android:exported="true" android:label="@string/widget_groups_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/group_widgetinfo" />
+        </receiver>
+
+        <service
+            android:name="com.kuxhausen.huemore.widget.GroupWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        
         <service
             android:name="com.kuxhausen.huemore.MoodExecuterService"
             android:enabled="true"
