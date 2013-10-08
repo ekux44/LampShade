@@ -123,17 +123,17 @@ public class Tests {
 		}*/
 		
 		
-		BulbState bs = new BulbState();
+		/*BulbState bs = new BulbState();
 		Float[] myXY = {.5f,.6f};
 		bs.xy = myXY;
 		
 		Log.e("reversability", myXY[0]+" "+Float.intBitsToFloat(Float.floatToIntBits(myXY[0])));
 		Log.e("reversability", myXY[1]+" "+Float.intBitsToFloat(Float.floatToIntBits(myXY[1])));
 		
-		test(1,Utils.generateSimpleMood(bs),null);
+		test(1,Utils.generateSimpleMood(bs),null);*/
 		
-		/*
-		BulbState bs = new BulbState();
+		
+		/*BulbState bs = new BulbState();
 		bs.on=true;
 		bs.bri=80;
 		
@@ -155,7 +155,7 @@ public class Tests {
 		Event[] eRay = {e1,e2,e3,e1,e1,e3, e2};
 		Mood m = new Mood();
 		Log.e("tests","1"+test(1,m,null));
-		m.numChannels=3;
+		m.setNumChannels(3);
 		m.events = eRay;
 		Log.e("tests","2"+test(2,m,null));
 		e3.time = 2;
@@ -165,11 +165,11 @@ public class Tests {
 		Log.e("tests","4"+test(4,m,null));
 		m.setInfiniteLooping(true);
 		Log.e("tests","5"+test(5,m,null));
-		m.timeAddressingRepeatPolicy=true;
-		Log.e("tests","6"+test(6,m,null));
+		//m.timeAddressingRepeatPolicy=true;
+		//Log.e("tests","6"+test(6,m,null));
 		Integer[] bulbs = {1, 3, 14};
-		Log.e("tests","7"+test(7,m,bulbs));
-		*/
+		Log.e("tests","7"+test(7,m,bulbs));*/
+		
 		
 		/** bitSet to encoding test **/
 		/*{

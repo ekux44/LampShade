@@ -136,11 +136,11 @@ public class HueUrlEncoder {
 		/** Put 64 bit xy **/
 		if (bs.xy != null) {
 			int x = Float
-					.floatToIntBits((float) ((double) bs.xy[0]));
+					.floatToIntBits(bs.xy[0]);
 			mBitSet.addNumber(x,32);
 
 			int y = Float
-					.floatToIntBits((float) ((double) bs.xy[1]));
+					.floatToIntBits(bs.xy[1]);
 			mBitSet.addNumber(y,32);
 		}
 		
