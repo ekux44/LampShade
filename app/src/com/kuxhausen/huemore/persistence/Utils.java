@@ -43,6 +43,11 @@ public class Utils {
 	}
 	
 	public static Mood generateSimpleMood(BulbState bs){
+		Log.e("generate", "hue"+(bs.hue==null?"null":bs.hue.toString()));
+		Log.e("generate", "sat"+(bs.sat==null?"null":bs.sat.toString()));
+		Log.e("generate", "x"+(bs.xy==null?"null":bs.xy[0].toString()));
+		Log.e("generate", "y"+(bs.xy==null?"null":bs.xy[1].toString()));
+		
 		//boilerplate
 		Event e = new Event();
 		e.channel=0;
@@ -75,6 +80,9 @@ public class Utils {
 	 * @return CIE 1931 xy each ranging 0 to 1
 	 */
 	public static Float[] hsTOxy(float h, float s){
+		
+		h = Math.max(0f, Math.min(h, 1f));
+		s = Math.max(0f, Math.min(s, 1f));
 		
 		float[] hsv = {h * 360, s , 1 };
 		int rgb = Color.HSVToColor(hsv);
@@ -129,6 +137,9 @@ public class Utils {
 		
 		float h = hsv[0]/360;
 		float s = hsv[1];
+		
+		h = Math.max(0f, Math.min(h, 1f));
+		s = Math.max(0f, Math.min(s, 1f));
 		
 		Float[] result = {h, s};
 		Log.e("colorspace", "h"+h+" s"+s+" x"+x+" y"+y);

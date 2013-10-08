@@ -123,6 +123,15 @@ public class Tests {
 		}*/
 		
 		
+		BulbState bs = new BulbState();
+		Float[] myXY = {.5f,.6f};
+		bs.xy = myXY;
+		
+		Log.e("reversability", myXY[0]+" "+Float.intBitsToFloat(Float.floatToIntBits(myXY[0])));
+		Log.e("reversability", myXY[1]+" "+Float.intBitsToFloat(Float.floatToIntBits(myXY[1])));
+		
+		test(1,Utils.generateSimpleMood(bs),null);
+		
 		/*
 		BulbState bs = new BulbState();
 		bs.on=true;

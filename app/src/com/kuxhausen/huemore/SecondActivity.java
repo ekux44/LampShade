@@ -25,7 +25,6 @@ import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
-import com.kuxhausen.huemore.editmood.ColorWheelFragment;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;

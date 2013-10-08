@@ -144,7 +144,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		}
 		else{
 			mViewPager.setCurrentItem(2);
-			((ColorWheelFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
+			((EditColorWheelFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
 		}
 	}
 
@@ -173,8 +173,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 				newColorFragments[i] = new RecentStatesFragment();
 				return (Fragment) newColorFragments[i];
 			case 2:
-				newColorFragments[i] = new ColorWheelFragment();
-				((ColorWheelFragment) newColorFragments[i]).hideColorLoop();
+				newColorFragments[i] = new EditColorWheelFragment();
+				((EditColorWheelFragment) newColorFragments[i]).hideColorLoop();
 				return (Fragment) newColorFragments[i];
 			case 3:
 				newColorFragments[i] = new EditColorTempFragment();

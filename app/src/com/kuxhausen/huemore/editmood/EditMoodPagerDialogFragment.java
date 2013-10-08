@@ -23,6 +23,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
+import com.kuxhausen.huemore.ColorWheelFragment;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.GroupListFragment;
 import com.kuxhausen.huemore.R;

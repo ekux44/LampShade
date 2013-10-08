@@ -32,9 +32,8 @@ import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.SaturationBar;
 
-public class ColorWheelFragment extends SherlockFragment implements
-		OnCreateColorListener, OnCreateMoodListener,
-		OnCheckedChangeListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
+public class EditColorWheelFragment extends SherlockFragment implements
+		OnCreateColorListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -95,34 +94,32 @@ public class ColorWheelFragment extends SherlockFragment implements
 	}
 	
 	public void loadPrevious(BulbState bs){
-		if (bs.hue != null && bs.sat!=null){
-			
-			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
-			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
-			
-			picker.setColor(Color.HSVToColor(hsv));
-			picker.setOldCenterColor(Color.HSVToColor(hsv));
-			saturationBar.setSaturation(hsv[1]);
-		}
-		if(bs.xy!=null){
-			hs.xy = bs.xy;
-			
-			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
-			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
-			
-			int rgb = Color.HSVToColor(hsv);
-			
-			picker.setColor(rgb);
-			picker.setOldCenterColor(rgb);
-			
-			saturationBar.setSaturation(hsv[1]);
-		}
+//		if (bs.hue != null && bs.sat!=null){
+//			
+//			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+//			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+//			
+//			picker.setColor(Color.HSVToColor(hsv));
+//			picker.setOldCenterColor(Color.HSVToColor(hsv));
+//			saturationBar.setSaturation(hsv[1]);
+//		}
+//		if(bs.xy!=null){
+//			hs.xy = bs.xy;
+//			
+//			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
+//			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
+//			
+//			int rgb = Color.HSVToColor(hsv);
+//			
+//			picker.setColor(rgb);
+//			picker.setOldCenterColor(rgb);
+//			
+//			saturationBar.setSaturation(hsv[1]);
+//		}
 	}
 	public void onStart(){
 		super.onStart();
 		picker.setOnColorChangedListener(this);
-		if (colorLoopLayoutVisible)
-			colorLoop.setOnCheckedChangeListener(this);
 	}
 	
 	public void hideColorLoop() {
@@ -142,39 +139,12 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	@Override
 	public Intent onCreateColor(Integer transitionTime) {
+		this.onColorChanged(this.picker.getColor());
+		
 		hs.transitiontime = transitionTime;
 		Intent i = new Intent();
 		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
 		return i;
-	}
-
-	@Override
-	public void onCreateMood(String groupname) {
-		onCreateColor(null);
-
-		// Defines an object to contain the new values to
-		// insert
-		ContentValues mNewValues = new ContentValues();
-
-		mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
-		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(Utils.generateSimpleMood(hs)));
-		
-		getActivity().getContentResolver().insert(
-				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues // the
-																		// values
-																		// to
-																		// insert
-				);
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-		if (isChecked)
-			hs.effect = "colorloop";
-		else
-			hs.effect = "none";
-		preview();
 	}
 
 	@Override
