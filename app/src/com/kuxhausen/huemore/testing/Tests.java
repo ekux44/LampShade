@@ -2,12 +2,14 @@ package com.kuxhausen.huemore.testing;
 
 import java.util.BitSet;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -89,6 +91,38 @@ public class Tests {
 	}
 	
 	public static void tests() {
+		/*Log.e("tests","red");
+		Utils.hsTOxy(1,1);
+		Utils.xyTOhs(0.7347f,0.2653f);*/
+		
+//		Log.e("tests","blue");
+//		hsTOxy(.667f,1f);
+//		xyTOhs(0.1566f,0.0177f);
+//		
+//		Log.e("tests","white");
+//		hsTOxy(1f,0f);
+//		xyTOhs(0.3457f,0.3585f);
+//		
+		/*float[] hs = new float[2];//{0.7347f, 0.2653f};
+		float[] xy = new float[2];
+		for(int j =0; j<10; j++){
+			hs[0]=(float)Math.random();
+			hs[1]=Math.max((float)Math.random(),.01f);
+			
+			
+			for(int i= 0; i<10; i++){
+				xy = Utils.hsTOxy(hs[0],hs[1]);
+				
+				if(i==0||i==9)
+					Log.e("testColor"," h"+hs[0]+"  s"+hs[1]+"  x"+xy[0]+"  y"+xy[1]);
+				
+				hs =Utils.xyTOhs(xy[0],xy[1]);
+				
+				
+			}
+		}*/
+		
+		
 		/*
 		BulbState bs = new BulbState();
 		bs.on=true;

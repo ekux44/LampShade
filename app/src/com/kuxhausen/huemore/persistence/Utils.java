@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -66,4 +68,71 @@ public class Utils {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(c);
 		return settings.getInt(PreferenceKeys.BULBS_UNLOCKED,0) > PreferenceKeys.ALWAYS_FREE_BULBS;
 	}
+	
+	/**
+	 * @param h in 0 to 1
+	 * @param s in 0 to 1
+	 * @return CIE 1931 xy each ranging 0 to 1
+	 */
+	public static Float[] hsTOxy(float h, float s){
+		
+		float[] hsv = {h * 360, s , 1 };
+		int rgb = Color.HSVToColor(hsv);
+		
+		float red = ((rgb>>>16)&0xFF)/255f;
+		float green = ((rgb>>>8)&0xFF)/255f;
+		float blue = ((rgb)&0xFF)/255f;
+		
+		red = (float) ((red > 0.04045f) ? Math.pow((red + 0.055f) / (1.0f + 0.055f), 2.4f) : (red / 12.92f));
+		green = (float) ((green > 0.04045f) ? Math.pow((green + 0.055f) / (1.0f + 0.055f), 2.4f) : (green / 12.92f));
+		blue = (float) ((blue > 0.04045f) ? Math.pow((blue + 0.055f) / (1.0f + 0.055f), 2.4f) : (blue / 12.92f));
+		float X = red * 0.649926f + green * 0.103455f + blue * 0.197109f; 
+		float Y = red * 0.234327f + green * 0.743075f + blue * 0.022598f;
+		float Z = red * 0.0000000f + green * 0.053077f + blue * 1.035763f;
+		float x = X / (X + Y + Z); 
+		float y = Y / (X + Y + Z);
+
+		Float[] result = {x, y};
+		
+		Log.e("colorspace", "h"+h+" s"+s+" x"+x+" y"+y);
+		return result;
+	}
+	/**
+	 * 
+	 * @param x CIE 1931 x ranging from 0 to 1
+	 * @param y CIE 1931 y ranging from 0 to 1
+	 * @return h,s each ranging 0 to 1
+	 */
+	public static Float[] xyTOhs(float x, float y){
+		float z = 1.0f - x - y; 
+		float Y = 1f; // The given brightness value
+		float X = (Y / y) * x;  
+		float Z = (Y / y) * z;
+		float r = X * 1.612f - Y * 0.203f - Z * 0.302f;
+		float g = -X * 0.509f + Y * 1.412f + Z * 0.066f;
+		float b = X * 0.026f - Y * 0.072f + Z * 0.962f;
+		r = (float) (r <= 0.0031308f ? 12.92f * r : (1.0f + 0.055f) * Math.pow(r, (1.0f / 2.4f)) - 0.055f);
+		g = (float) (g <= 0.0031308f ? 12.92f * g : (1.0f + 0.055f) * Math.pow(g, (1.0f / 2.4f)) - 0.055f);
+		b = (float) (b <= 0.0031308f ? 12.92f * b : (1.0f + 0.055f) * Math.pow(b, (1.0f / 2.4f)) - 0.055f);
+		
+		
+		float max = Math.max(r, Math.max(g, b));
+		r = r/max;
+		g = g/max;
+		b = b/max;
+		r = Math.max(r, 0);
+		g = Math.max(g, 0);
+		b = Math.max(b, 0);
+		
+		float[] hsv = new float[3];
+		Color.RGBToHSV((int)(r*0xFF), (int)(g*0xFF), (int)(b*0xFF), hsv);
+		
+		float h = hsv[0]/360;
+		float s = hsv[1];
+		
+		Float[] result = {h, s};
+		Log.e("colorspace", "h"+h+" s"+s+" x"+x+" y"+y);
+		return result;
+	}
+	
 }

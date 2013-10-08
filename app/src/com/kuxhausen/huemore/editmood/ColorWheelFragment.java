@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,9 @@ public class ColorWheelFragment extends SherlockFragment implements
 	{
 		hs.on = true;
 		hs.effect = "none";
+		Float[] lol = {.5f, .5f};
+		hs.xy = lol;//TODO change
 
-		hs.hue = 0;
-		hs.sat = 255;
 	}
 	Gson gson = new Gson();
 
@@ -77,10 +78,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 					BulbState.class);
 			loadPrevious(bs);
 		}
-		float[] hsv = { (hs.hue * 360) / 65535, hs.sat / 255f, 1 };
-		picker.setColor(Color.HSVToColor(hsv));
-		picker.setOldCenterColor(Color.HSVToColor(hsv));
-		saturationBar.setSaturation(hsv[1]);
+		loadPrevious(hs);
 		
 		if (colorLoopLayoutVisible) {
 			colorLoop = (CompoundButton) groupDialogView
@@ -97,10 +95,27 @@ public class ColorWheelFragment extends SherlockFragment implements
 	}
 	
 	public void loadPrevious(BulbState bs){
-		if (bs.hue != null)
-			hs.hue = bs.hue;
-		if (bs.sat != null) {
-			hs.sat = bs.sat;
+		if (bs.hue != null && bs.sat!=null){
+			
+			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+			
+			picker.setColor(Color.HSVToColor(hsv));
+			picker.setOldCenterColor(Color.HSVToColor(hsv));
+			saturationBar.setSaturation(hsv[1]);
+		}
+		if(bs.xy!=null){
+			hs.xy = bs.xy;
+			
+			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
+			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
+			
+			int rgb = Color.HSVToColor(hsv);
+			
+			picker.setColor(rgb);
+			picker.setOldCenterColor(rgb);
+			
+			saturationBar.setSaturation(hsv[1]);
 		}
 	}
 	public void onStart(){
@@ -165,10 +180,13 @@ public class ColorWheelFragment extends SherlockFragment implements
 	@Override
 	public void onColorChanged(int color) {
 		picker.setOldCenterColor(color);
+		
 		float[] hsv = new float[3];
-		Color.colorToHSV(color, hsv);
-		hs.hue = (int)((hsv[0] * 65535) / 360);
-		hs.sat = (short)(hsv[1] * 255);
+		Color.RGBToHSV((color>>16)%256, (color>>8)%256, (color)%256, hsv);
+		
+		hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+		hs.hue = null;
+		hs.sat = null;
 		preview();
 	}
 }
