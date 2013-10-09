@@ -120,6 +120,8 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 			
 			routeMood(priorMood);
 				
+		} else {
+			priorMood = null;
 		}
 	}
 	

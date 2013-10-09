@@ -43,11 +43,6 @@ public class Utils {
 	}
 	
 	public static Mood generateSimpleMood(BulbState bs){
-		Log.e("generate", "hue"+(bs.hue==null?"null":bs.hue.toString()));
-		Log.e("generate", "sat"+(bs.sat==null?"null":bs.sat.toString()));
-		Log.e("generate", "x"+(bs.xy==null?"null":bs.xy[0].toString()));
-		Log.e("generate", "y"+(bs.xy==null?"null":bs.xy[1].toString()));
-		
 		//boilerplate
 		Event e = new Event();
 		e.channel=0;

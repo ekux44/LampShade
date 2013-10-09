@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class StateCell {
@@ -31,7 +32,23 @@ public class StateCell {
 			rowView = inflater.inflate(R.layout.edit_mood_colortemp_row, null);
 			TextView stateText = (TextView) rowView.findViewById(R.id.ctTextView);
 			stateText.setText(hs.getCT());
-		}else if(hs.hue!=null && hs.sat!=null){
+		} else if(hs.xy!=null){
+			rowView = inflater.inflate(R.layout.edit_mood_row, null);
+
+			ImageView state_color = (ImageView) rowView
+					.findViewById(R.id.stateColorView);
+			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
+			float[] hsv = new float[3];
+	    	hsv[0] = (float) (hueSat[0] *360) ;
+	    	hsv[1] = (float) (hueSat[1]);
+	    	hsv[2] = 1f;
+	    	int color = Color.HSVToColor(hsv);
+			ColorDrawable cd = new ColorDrawable(color);
+			cd.setAlpha(255);
+			if((color%0xff000000)!=0)
+				state_color.setImageDrawable(cd);
+		}
+		else if(hs.hue!=null && hs.sat!=null){
 			rowView = inflater.inflate(R.layout.edit_mood_row, null);
 
 			ImageView state_color = (ImageView) rowView

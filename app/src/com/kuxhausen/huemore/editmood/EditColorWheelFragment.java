@@ -1,32 +1,20 @@
 package com.kuxhausen.huemore.editmood;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
-import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.colorpicker.ColorPicker;
@@ -89,33 +77,32 @@ public class EditColorWheelFragment extends SherlockFragment implements
 					View.GONE);
 		}
 		
-		// Create the AlertDialog object and return it
 		return groupDialogView;
 	}
 	
 	public void loadPrevious(BulbState bs){
-//		if (bs.hue != null && bs.sat!=null){
-//			
-//			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
-//			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
-//			
-//			picker.setColor(Color.HSVToColor(hsv));
-//			picker.setOldCenterColor(Color.HSVToColor(hsv));
-//			saturationBar.setSaturation(hsv[1]);
-//		}
-//		if(bs.xy!=null){
-//			hs.xy = bs.xy;
-//			
-//			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
-//			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
-//			
-//			int rgb = Color.HSVToColor(hsv);
-//			
-//			picker.setColor(rgb);
-//			picker.setOldCenterColor(rgb);
-//			
-//			saturationBar.setSaturation(hsv[1]);
-//		}
+		if (bs.hue != null && bs.sat!=null){
+			
+			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
+			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+			
+			picker.setColor(Color.HSVToColor(hsv));
+			picker.setOldCenterColor(Color.HSVToColor(hsv));
+			saturationBar.setSaturation(hsv[1]);
+		}
+		if(bs.xy!=null){
+			hs.xy = bs.xy;
+			
+			Float[] hueSat = Utils.xyTOhs(bs.xy[0], bs.xy[1]);
+			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
+			
+			int rgb = Color.HSVToColor(hsv);
+			
+			picker.setColor(rgb);
+			picker.setOldCenterColor(rgb);
+			
+			saturationBar.setSaturation(hsv[1]);
+		}
 	}
 	public void onStart(){
 		super.onStart();
@@ -148,11 +135,14 @@ public class EditColorWheelFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onColorChanged(int color) {
-		picker.setOldCenterColor(color);
+	public void onColorChanged(int rgb) {
+		picker.setOldCenterColor(rgb);
 		
 		float[] hsv = new float[3];
-		Color.RGBToHSV((color>>16)%256, (color>>8)%256, (color)%256, hsv);
+		int red = ((rgb>>>16)&0xFF);
+		int green = ((rgb>>>8)&0xFF);
+		int blue = ((rgb)&0xFF);
+		Color.RGBToHSV(red, green, blue, hsv);
 		
 		hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
 		hs.hue = null;
