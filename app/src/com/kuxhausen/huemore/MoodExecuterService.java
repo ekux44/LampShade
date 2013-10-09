@@ -80,7 +80,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 	
 	int transientIndex = 0;
 	
-	private int countDownToStopSelf = 10;
+	private final static int MAX_STOP_SELF_COUNDOWN = 40;
+	private int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
 	
 	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	
@@ -249,10 +250,10 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
-		countDownToStopSelf = 10;
+		countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
 		
 		// runs at the rate to execute 15 op/sec
-		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 10)) {
+		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 15)) {
 
 			@Override
 			public void onFinish() {
