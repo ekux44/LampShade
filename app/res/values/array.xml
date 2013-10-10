@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="transition_names_array">
-        <item>Default</item>
-        <item>1 Second</item>
-        <item>10 Seconds</item>
-        <item>1 Minute</item>
-        <item>10 Minutes</item>
-    </string-array>
+    <string name="app_name">LampShade</string>
+    <integer name="major_update_version">37</integer>
+    <string name="nfc">NFC</string>
     <integer-array name="transition_values_array">
         <item>4</item>
         <item>10</item>
@@ -14,13 +10,6 @@
         <item>600</item>
         <item>6000</item>
     </integer-array>
-    <string-array name="timeslot_names_array">
-        <item>1 Second</item>
-        <item>10 Seconds</item>
-        <item>1 Minute</item>
-        <item>10 Minutes</item>
-        <item>Custom</item>
-    </string-array>
     <integer-array name="timeslot_values_array">
         <item>10</item>
         <item>100</item>
@@ -28,30 +17,10 @@
         <item>6000</item>
         <item>-1</item>
     </integer-array>
-    <string-array name="repeat_days">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-    </string-array>
-    <string-array name="cap_short_repeat_days">
-        <item>SUN</item>
-        <item>MON</item>
-        <item>TUE</item>
-        <item>WED</item>
-        <item>THU</item>
-        <item>FRI</item>
-        <item>SAT</item>
-    </string-array>
-    <integer name="major_update_version">37</integer>
-    <string-array name="update_features">
-        <item>You can now created animated Moods!</item>
-        <item>Moods can now be shared as links!</item>
-        <item>Join the LampShade.io community on facebook, g+, or twitter to discover more Moods</item>
-        <item>To accommodate the new mood system, alarms now start at the set time. All previous alarms have been cleared</item>
-        <item>Due to major app changes, Tasker pluggin actions also have to be recreated. My apologies for the inconvenience</item>
-    </string-array>
+    <string name="ip_address_v4_seperator">.</string>
+    
+    <!-- A format string for breadcrumbs in the titlebar.  For left to right languages, such as English, the format will look something like "Main Activity > Sub Activity > Sub Activity 2".  Item #1 is the previous path, item #2 is the separator, and item #3 is the current item.  For most left to right languages, this shouldn't need to be changed. -->
+    <string name="twofortyfouram_locale_breadcrumb_format">%1$s%2$s%3$s</string>
+    <!-- The separator character for breadcrumbs.  For most left to right languages, this shouldn't need to be changed. -->
+    <string name="twofortyfouram_locale_breadcrumb_separator">\u0020&gt;\u0020</string>
 </resources>

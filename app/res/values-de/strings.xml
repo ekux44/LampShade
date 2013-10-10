@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="twofortyfouram_locale_breadcrumb_format">%1$s%2$s%3$s</string>
-    <string name="twofortyfouram_locale_breadcrumb_separator">\u0020&gt;\u0020</string>
-    
-    <string name="app_name">LampShade</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_register_with_hub">Bei Bridge registrieren</string>
     <string name="action_unlocks">Entsperren</string>
@@ -46,7 +42,6 @@
     <string name="unlock_pro_prompt">Pro Version freischalten!</string>
     <string name="unlock_pro_already">Du hast bereits die Pro Version!</string>
     <string name="unlock_pro_descriptor">Die Pro Version schaltet Alarme und NFC Funktionalitäten frei.</string>
-    <string name="nfc">NFC</string>
     <string name="nfc_tag_detected">Tag erkannt</string>
     <string name="nfc_tag_not_detected">Tag nicht gefunden</string>
     <string name="nfc_tag_write_prompt">Auf Tag schreiben</string>
@@ -97,4 +92,45 @@
 	<string name="share">TEILEN</string>
 	<string name="seconds">Sekunden</string>
 	<string name="preview">Vorschau</string>
+	
+	
+	<string-array name="update_features">
+        <item>Sie können nun animierte Szenen erstellen</item>
+        <item>Szenen können nun als Links geteilt werden!</item>
+        <item>Trete der LampShade.io Community auf Facebook, G+ oder Twitter bei um mehr Szenen zu entdecken</item>
+        <item>To accommodate the new mood system, alarms now start at the set time. All previous alarms have been cleared</item>
+        <item>Wegen großen Änderungen der App müssen Tasker Plugin Aktionen neu erstellt werden. Tut mir leid!</item>
+    </string-array>
+    <string-array name="repeat_days">
+        <item>Sonntag</item>
+        <item>Montag</item>
+        <item>Dienstag</item>
+        <item>Mittwoch</item>
+        <item>Donnerstag</item>
+        <item>Freitag</item>
+        <item>Samstag</item>
+    </string-array>
+    <string-array name="cap_short_repeat_days">
+        <item>SO</item>
+        <item>MO</item>
+        <item>DI</item>
+        <item>MI</item>
+        <item>DO</item>
+        <item>FR</item>
+        <item>SA</item>
+    </string-array>
+    <string-array name="transition_names_array">
+        <item>Keine</item>
+        <item>1 Sekunde</item>
+        <item>10 Sekunden</item>
+        <item>1 Minute</item>
+        <item>10 Minuten</item>
+    </string-array>
+    <string-array name="timeslot_names_array">
+        <item>1 Sekunde</item>
+        <item>10 Sekunden</item>
+        <item>1 Minute</item>
+        <item>10 Minuten</item>
+        <item>Custom</item>
+    </string-array>
 </resources>
