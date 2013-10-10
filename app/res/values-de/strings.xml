@@ -54,7 +54,6 @@
     <string name="alarms">Wecker</string>
     <string name="transition_intro">Einblenden:</string>
     <string name="alarm_repeat">Wiederholen:</string>
-    <string name="cap_short_none"></string>
     <string name="cap_short_every_day">TÄGLICH</string>
     <string name="next_scheduled_intro">Nächster Alarm</string>
 	<string name="update_welcome_title">Neuigkeiten in LampShade 2.5</string>

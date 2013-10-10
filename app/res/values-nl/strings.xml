@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Instellingen</string>
+    <string name="action_register_with_hub">Registeren bij Bridge</string>
+    <string name="action_unlocks">Ontgrendelen</string>
+    <string name="cap_manual">MANUEEL</string>
+    <string name="cap_bulbs">LAMPEN</string>
+    <string name="cap_simple_mood">SIMPEL</string>
+    <string name="cap_advanced_mood">UITGEBREID</string>
+    <string name="cap_hue_sat_mode">TINT</string>
+    <string name="cap_color_temp_mode">TEMPERATUUR</string>
+    <string name="groups">Groepen</string>
+    <string name="moods">Sferen</string>
+    <string name="mood_intro">Sfeer:</string>
+    <string name="group_intro">Groep:</string>
+    <string name="accept">Okee</string>
+    <string name="cancel">Annuleren</string>
+    <string name="register_success">Verbinding succesvol</string>
+    <string name="register_fail">Kan geen verbinding maken met de Bridge. Zorg ervoor dat het apparaat op dezelfde wifi als de Bridge is aangesloten en toegang heeft tot internet. Probeer het daarna nogmaals.</string>
+    <string name="link_prompt">Druk op de link knop van de Bridge</string>
+    <string name="manual_ip_prompt">Voer het IP adres van de Bridge in</string>
+    <string name="advanced">Geavanceerd</string>
+    <string name="auto_discover">Automatisch Verbinden</string>
+    <string name="contextmenu_delete">Verwijderen</string>
+    <string name="contextmenu_edit">Wijzigen</string>
+    <string name="contextmenu_rename">Hernoemen</string>
+    <string name="actionmenu_new">Nieuwe</string>
+    <string name="actionmenu_new_group">Nieuwe groep</string>
+    <string name="actionmenu_new_mood">Nieuwe sfeer</string>
+    <string name="actionmenu_new_color">Nieuwe kleur</string>
+    <string name="actionmenu_new_alarm">Nieuw alarm</string>
+    <string name="hint_mood_name">sfeer naam</string>
+    <string name="hint_group_name">groep naam</string>
+    <string name="hint_bulb_name">lamp naam</string>
+    <string name="brightness">Helderheid</string>
+    <string name="saturation">Kleurverzadiging</string>
+    <string name="temperature">Kleurtemperatuur (K)</string>
+    <string name="toggleColorLoop">Roteer kleuren:</string>
+    <string name="promp_first_view_setting">Standaard startscherm</string>
+    <string name="promp_second_view_setting">Tweede startscherm</string>
+    <string name="rate_on_google_play">Waarderen op Google Play</string>
+    <string name="unlock_pro_prompt">Ontgrendel de Pro Versie!</string>
+    <string name="unlock_pro_already">Je hebt reeds de Pro versie!</string>
+    <string name="unlock_pro_descriptor">De pro versie voegt Alarmen, NFC, en Timers toe.</string>
+    <string name="nfc_tag_detected">Tag herkent</string>
+    <string name="nfc_tag_not_detected">Tag niet gevonden</string>
+    <string name="nfc_tag_write_prompt">Schrijven naar Tag</string>
+    <string name="nfc_tag_write_success">Opslaan van Tag</string>
+    <string name="nfc_tag_write_fail">Opslaan van Tag Mislukt</string>
+    <string name="nfc_disabled">NFC is niet ingeschakeld. Schakel dit in via je toestelinstellingen.</string>
+    <string name="nfc_read_done">Klaar</string>
+    <string name="nfc_tag_read_success">NFC tag gelezen</string>
+    <string name="nfc_tag_not_supported">Jouw telefoon kan geen data naar NFC tags wegschrijven!</string>
+    <string name="alarms">Alarmen</string>
+    <string name="transition_intro">Vervagen over:</string>
+    <string name="alarm_repeat">Herhaling:</string>
+    <string name="cap_short_every_day">ELKE DAG</string>
+    <string name="next_scheduled_intro">Volgende alarm</string>
+    <string name="update_welcome_title">Nieuw in LampShade 2.5</string>
+    <string name="hub_discovery_disclaimer">Bridge opzoeken. Dit kan enige momenten duren.</string>
+    <string name="update_message">Update HueMore naar de laatste versie</string>
+    <string name="update_opt_out">Schakel updateherinneringen uit</string>
+    <string name="update">Update</string>
+    <string name="action_hub_status">Bridge Status</string>
+    <string name="reset_hub_connection">Verbinding met Bridge resetten</string>
+    <string name="hub_connection">Verbonden met Bridge met netwerkadres:</string>
+    <string name="hub_connection_error">Verbonden met Bridge met netwerkadres:</string>
+    <string name="empty_view_text">Geen alarm gevonden…</string>
+    <string name="cap_all">ALLE</string>
+    <string name="cap_on">AAN</string>
+    <string name="cap_off">UIT</string>
+    <string name="cap_random">WILLEKEURIG</string>
+    <string name="broken_mood_link">Oeps! Deze sfeer kan niet gelezen worden</string>
+    <string name="action_report_bug">Fout melden</string>
+    <string name="cap_timed_mood">GEPLAND</string>
+    <string name="cap_multi_mood">MULTI</string>
+    <string name="update_required">Deze sfeer heeft een nieuwere versie van Lampshade nodig</string>
+    <string name="corrupted_mood">Deze sfeer kan niet gelezen worden</string>
+    <string name="title_activity_edit_advanced_mood">Geavanceerde Sfeer-Editor</string>
+	<string name="contextmenu_delete_timeslot">Verwijder tijdslot</string>
+	<string name="contextmenu_delete_channel">Verwijder kanaal</string>
+	<string name="add_timeslot">+ Tijdslot</string>
+	<string name="prompt_timeslot_time">Duur</string>
+	<string name="grid_col_title_timeslot">Duur</string>
+	<string name="add_channel">+ K A N A A L</string>
+	<string name="grid_col_title_channels">Kanalen</string>
+	<string name="infinite_loop">Herhaal</string>
+	<string name="save">Herhaal</string>
+	<string name="cap_sample_state">VOORBEELD</string>
+	<string name="cap_recent_state">RECENT</string>
+	<string name="share">DEEL</string>
+	<string name="seconds">Seconden</string>
+	<string name="preview">voorbeeld</string>
+	<string name="community_facebook">LampShade.io op Facebook</string>
+	<string name="community_google_plus">LampShade.io op Google+</string>
+	<string name="community_twitter">LampShade.io op Twitter</string>
+	<string name="action_communities">Forum en Hulp</string>
+	<string name="community_message">Wordt lid van het LampShade.io online forum om sferen te delen en te praten over LampShade.io functies</string>
+	<string name="action_welcome">Welkom</string>
+	<string name="welcome_message">Welkom bij LampShade.io, een krachtige app voor het besturen van Philips Hue Smarthome verlichtingssysteem</string>
+	<string name="welcome_get_started">Verbind met My Hue</string>
+	<string name="welcome_get_hue">Koop een Philips Hue</string>
+	<string name="unnamed_group">Naamloze Groep</string>
+	<string name="unnamed_mood">Naamloze Sfeer</string>
+	<string name="empty_group_list_text">Geen groepen gevonden…</string>
+	
+	
+	<string-array name="update_features">
+        <item>Je kunt nu geanimeerde Sferen maken!</item>
+        <item>Sferen kunnen nu gedeeld worden als links!</item>
+        <item>Wordt lid van de Lampshade Community op Facebook, G+ of Twitter om meer Sferen te ontdekken</item>
+        <item>Om het nieuwe Sfeer systeem mogelijk te maken, starten alarmen op de gezette tijd. Alle vorige alarmen zijn verwijderd.</item>
+        <item>Door grote veranderingen in de App moeten de Tasker Plugin Acties ook opnieuw ingesteld worden. Sorry voor het ongemak!</item>
+    </string-array>
+        <string-array name="repeat_days">
+        <item>Zondag</item>
+        <item>Maandag</item>
+        <item>Dinsdag</item>
+        <item>Woensdag</item>
+        <item>Donderdag</item>
+        <item>Vrijdag</item>
+        <item>Zaterdag</item>
+    </string-array>
+    <string-array name="cap_short_repeat_days">
+        <item>ZON</item>
+        <item>MAA</item>
+        <item>DIN</item>
+        <item>WOE</item>
+        <item>DON</item>
+        <item>VRI</item>
+        <item>ZAT</item>
+    </string-array>
+    <string-array name="transition_names_array">
+        <item>Default</item>
+        <item>1 seconde</item>
+        <item>10 seconden</item>
+        <item>1 minuut</item>
+        <item>10 minuten</item>
+    </string-array>
+    <string-array name="timeslot_names_array">
+        <item>1 seconde</item>
+        <item>10 seconden</item>
+        <item>1 minuut</item>
+        <item>10 minuten</item>
+        <item>Willekeurig</item>
+    </string-array>
+</resources>

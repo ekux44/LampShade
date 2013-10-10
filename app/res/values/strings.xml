@@ -35,7 +35,6 @@
     <string name="brightness">Brightness</string>
     <string name="saturation">Saturation</string>
     <string name="temperature">Color Temperature (K)</string>
-    <string name="color_temp_initial_value">3200</string>
     <string name="toggleColorLoop">Loop Colors :</string>
     <string name="promp_first_view_setting">Default home screen</string>
     <string name="promp_second_view_setting">Default second screen</string>
@@ -55,7 +54,6 @@
     <string name="alarms">Alarms</string>
     <string name="transition_intro">Fade In:</string>
     <string name="alarm_repeat">Repeat:</string>
-    <string name="cap_short_none"></string>
     <string name="cap_short_every_day">EVERY DAY</string>
     <string name="next_scheduled_intro">Next alarm</string>
     <string name="update_welcome_title">New in LampShade 2.5</string>
@@ -74,8 +72,6 @@
     <string name="cap_random">RANDOM</string>
     <string name="broken_mood_link">Oops! This mood link cannot be read</string>
     <string name="action_report_bug">Report a bug</string>
-    <string name="developer_email">erickuxhausen+lampshade@gmail.com</string>
-    <string name="report_bug_email_subject">bug</string>
     <string name="cap_timed_mood">TIMED</string>
     <string name="cap_multi_mood">MULTI</string>
     <string name="update_required">This mood requires an updated version of LampShade</string>
