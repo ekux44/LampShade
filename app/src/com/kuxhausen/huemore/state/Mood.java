@@ -1,6 +1,8 @@
 package com.kuxhausen.huemore.state;
 
-public class Mood {
+import com.google.gson.Gson;
+
+public class Mood implements Cloneable{
 	public Event[] events;
 	private int numChannels;
 	public Boolean usesTiming;
@@ -36,5 +38,11 @@ public class Mood {
 	}
 	public void setNumChannels(int num){
 		numChannels = num;
+	}
+	
+	@Override
+	public Mood clone(){
+		Gson gson = new Gson();
+		return gson.fromJson(gson.toJson(this), Mood.class);
 	}
 }

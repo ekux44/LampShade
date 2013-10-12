@@ -13,14 +13,18 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueUrlEncoder {
 
-	public final static Integer PROTOCOL_VERSION_NUMBER = 2;
+	/** zero indexed **/
+	public final static Integer PROTOCOL_VERSION_NUMBER = 3;
 	
 	
 	public static String encode(Mood mood)
 	{
 		return encode(mood, null);
 	}
-	public static String encode(Mood mood, Integer[] bulbsAffected){
+	//TODO switch to GroupMoodBrightness object to support relative brightnesses
+	public static String encode(Mood m, Integer[] bulbsAffected){
+		Mood mood = m.clone();
+		
 		if (mood == null)
 			return "";
 		
@@ -28,7 +32,7 @@ public class HueUrlEncoder {
 		
 		// Set 3 bit protocol version
 		mBitSet.addNumber(PROTOCOL_VERSION_NUMBER,3);
-		
+			
 		//Flag if optional bulblist included
 		mBitSet.incrementingSet(bulbsAffected!=null);
 		
@@ -41,6 +45,33 @@ public class HueUrlEncoder {
 			}
 			for(int i = 0; i<bulbs.length; i++)
 				mBitSet.incrementingSet(bulbs[i]);
+		}
+		
+		/** optional brightness added in Protocol_Version_Number==3 **/
+		{
+			//TODO do more outside of URL encoder
+			//decide if brightness included
+			boolean optionalBrightness = false;
+			/**
+			 * The brightness value to set the light to. Brightness is a scale from 0
+			 * (the minimum the light is capable of) to 255 (the maximum). Note: a
+			 * brightness of 0 is not off.
+			 */
+			Integer brightness = null;
+			for(Event e : mood.events){
+				if(e.state.bri!=null){
+					optionalBrightness= true;
+					brightness = e.state.bri;
+					e.state.bri = null;
+				}
+			}
+			
+			//Flag if optional brightness included
+			mBitSet.incrementingSet(optionalBrightness);
+			
+			//If optional brightness included, write it's 8 bits
+			if(optionalBrightness)
+				mBitSet.addNumber(brightness, 8);
 		}
 		
 		// Set 6 bit number of channels
@@ -62,8 +93,8 @@ public class HueUrlEncoder {
 		for(BulbState state : stateArray)
 			addState(mBitSet, state);
 		
-		// Set 8 bit number of events
-		mBitSet.addNumber(mood.events.length,8);
+		// Set 12 bit number of events
+		mBitSet.addNumber(mood.events.length,12);
 		
 		addListOfEvents(mBitSet, mood, timeArray, stateArray);
 		
@@ -334,7 +365,17 @@ public class HueUrlEncoder {
 						bList.add(i + 1);
 			}
 			
-			if(encodingVersion == 1||encodingVersion==2){
+			if(encodingVersion == 1||encodingVersion==2 ||encodingVersion == 3){
+				boolean hasBrightness = false;
+				Integer brightness = null;
+				if(encodingVersion>=3){
+					//1 bit optional brightness inclusion flag
+					hasBrightness = mBitSet.incrementingGet();
+					if(hasBrightness)
+						//8 bit optional global brightness
+						brightness = mBitSet.extractNumber(8);
+				}
+				
 				int numChannels = mBitSet.extractNumber(6);
 				mood.setNumChannels(numChannels);
 				
@@ -365,9 +406,24 @@ public class HueUrlEncoder {
 				for(int i = 0; i<numStates; i++){
 					//decode each state
 					stateArray[i] = extractState(mBitSet);
+					
+					//TODO support relative brightness outside of URL encoder
+					// for now, stuff global brightness back into states until app changed
+					// if has relative brightness (bri per state) in encoding, throw not implemented
+					if(encodingVersion>=3){
+						if(stateArray[i].bri!=null)
+							throw new FutureEncodingException();
+						if(hasBrightness)
+							stateArray[i].bri = brightness;
+					}
 				}
 				
-				int numEvents = mBitSet.extractNumber(8);
+				// number of events, 8 bits for encodings 1 & 2, 12 bits for 3+
+				int numEvents;
+				if(encodingVersion <=2)
+					numEvents = mBitSet.extractNumber(8);
+				else
+					numEvents = mBitSet.extractNumber(12);
 				Event[] eList = new Event[numEvents];
 				
 				for(int i =0; i<numEvents; i++){
@@ -383,7 +439,7 @@ public class HueUrlEncoder {
 				mood.events=eList;
 				
 				// 20 bit loopIterationTimeLength is only difference between encodingVersion=1 & =2
-				if(encodingVersion==2)
+				if(encodingVersion>=2)
 					mood.loopIterationTimeLength = mBitSet.extractNumber(20);
 				
 			} else if(encodingVersion==0){
