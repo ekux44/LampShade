@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
@@ -321,6 +322,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					cv.put(GroupColumns.PRECEDENCE, groupMap.get(key)[0]);
 					cv.put(GroupColumns.BULB, groupMap.get(key)[1]);
 					db.insert(GroupColumns.TABLE_NAME, null, cv);
+				}
+				
+			}
+			case 4:
+			{
+				String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea1", "Deep Sea2", "Fruit1", "Fruit2", "Fruit3"};
+				int[] simpleSat = {144, 211, 49, 232, 253, 230, 244, 254, 173};
+				int[] simpleHue = {15331, 13122, 33863, 34495, 45489, 1111, 15483, 25593, 64684};
+				float[] simpleX = {0.4571f, 0.5119f, 0.368f, 0.3151f, 0.1859f, 0.6367f, 0.5089f, 0.5651f, 0.4081f};
+				float[] simpleY = {0.4123f, 0.4147f, 0.3686f, 0.3252f, 0.0771f, 0.3349f, 0.438f, 0.3306f, 0.518f};
+				
+				SparseArray<BulbState> conversionMap = new SparseArray<BulbState>();
+				
+				for(int i = 0; i< simpleHue.length; i++){
+					BulbState conversion = new BulbState();
+					conversion.sat = (short) simpleSat[i];
+					conversion.hue = simpleHue[i];
+					Float[] conversionXY = {simpleX[i], simpleY[i]};
+					conversion.xy = conversionXY;
+					conversionMap.put(conversion.hue,conversion);
+				}
+				
+				
+				ContentValues cv = new ContentValues();
+				String[] moodColumns = {MoodColumns.MOOD, MoodColumns.STATE};
+				Cursor moodCursor = db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null, null, null);
+				
+				HashMap<String,Mood> moodMap = new HashMap<String,Mood>();
+				
+				while (moodCursor.moveToNext()) {
+					try {
+						String name = moodCursor.getString(0);
+						Mood mood = HueUrlEncoder.decode(moodCursor.getString(1)).second;
+						
+						for(Event e : mood.events){
+							if(e.state.hue!=null && e.state.sat!=null && conversionMap.get(e.state.hue)!=null && conversionMap.get(e.state.hue).sat.equals(e.state.sat)){
+								BulbState conversion = conversionMap.get(e.state.hue);
+								e.state.hue = null;
+								e.state.sat = null;
+								e.state.xy = conversion.xy;
+							}
+						}
+						
+						moodMap.put(name, mood);
+					} catch (InvalidEncodingException e){
+					} catch (FutureEncodingException e) {
+					}
+				}
+				
+				db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
+				
+				db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
+						+ " TEXT," + MoodColumns.STATE + " TEXT" + ");");
+				
+				for(String key : moodMap.keySet()){
+					cv.put(MoodColumns.MOOD, key);
+					cv.put(MoodColumns.STATE, HueUrlEncoder.encode(moodMap.get(key)));
+					db.insert(MoodColumns.TABLE_NAME, null, cv);
 				}
 				
 			}

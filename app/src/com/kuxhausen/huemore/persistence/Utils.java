@@ -97,7 +97,7 @@ public class Utils {
 
 		Float[] result = {x, y};
 		
-		Log.e("colorspace", "h"+h+" s"+s+" x"+x+" y"+y);
+	//	Log.e("colorspace", "h"+h+" s"+s+" to x"+x+" y"+y);
 		return result;
 	}
 	/**
@@ -137,7 +137,7 @@ public class Utils {
 		s = Math.max(0f, Math.min(s, 1f));
 		
 		Float[] result = {h, s};
-		Log.e("colorspace", "h"+h+" s"+s+" x"+x+" y"+y);
+	//	Log.e("colorspace", "h"+h+" s"+s+" from x"+x+" y"+y);
 		return result;
 	}
 	
