@@ -2,8 +2,6 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +10,8 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
@@ -26,6 +20,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 	private View lastSelection;
 	private StateCell lastSelectedRow;
 	Gson gson = new Gson();
+	EditStatePagerDialogFragment statePager;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,13 +33,13 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		ArrayList<StateCell> list = new ArrayList<StateCell>();
 		
 		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea1", "Deep Sea2", "Fruit1", "Fruit2", "Fruit3"};
-		int[] simpleSat = {144, 211, 49, 232, 253, 230, 244, 254, 173};
-		int[] simpleHue = {15331, 13122, 33863, 34495, 45489, 1111, 15483, 25593, 64684};
+		float[] simpleX = {0.4571f, 0.5119f, 0.368f, 0.3151f, 0.1859f, 0.6367f, 0.5089f, 0.5651f, 0.4081f};
+		float[] simpleY = {0.4123f, 0.4147f, 0.3686f, 0.3252f, 0.0771f, 0.3349f, 0.438f, 0.3306f, 0.518f};
 		    
-		for(int i = 0; i<simpleSat.length; i++){
+		for(int i = 0; i<simpleX.length; i++){
 			BulbState hs = new BulbState();
-	    	hs.sat=(short)simpleSat[i];
-	    	hs.hue=simpleHue[i];
+			Float[] conversionXY = {simpleX[i], simpleY[i]};
+			hs.xy = conversionXY;
 	    	hs.on=true;
 	    	hs.effect="none";
 	    	
@@ -79,23 +74,8 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		g = (GridView) myView.findViewById(R.id.myGrid);
 		g.setAdapter(new StateCellAdapter(this, list, this));
 		
-		//set up an initial selection
-		//onClick(lastSelectedRow.getView(0, null, this, this));
-		
 		return myView;
-	}
-	
-	@Override
-	public Intent onCreateColor(Integer transitionTime) {
-		if(lastSelectedRow!=null){
-			lastSelectedRow.hs.transitiontime = transitionTime;
-			Intent i = new Intent();
-			i.putExtra(InternalArguments.HUE_STATE, gson.toJson(lastSelectedRow.hs));
-		return i;
-		}
-		return null;
-	}
-	
+	}	
 
 	@Override
 	public void onClick(View v) {
@@ -107,13 +87,18 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		
 		lastSelection = v;
 		lastSelectedRow = (StateCell)g.getAdapter().getItem(position);
-		preview();
+		
+		statePager.setState(lastSelectedRow.hs, this);
 	}
-	
-	public void preview() {
-		if(lastSelectedRow!=null){
-			Mood m = Utils.generateSimpleMood(lastSelectedRow.hs);	
-			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject) getActivity()).getBulbs(), null);
-		}
+
+	@Override
+	public boolean stateChanged() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setStatePager(EditStatePagerDialogFragment statePage) {
+		statePager = statePage;		
 	}
 }

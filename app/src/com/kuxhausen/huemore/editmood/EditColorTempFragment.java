@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.editmood;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -14,22 +13,13 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Event;
-import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener {
 
-	private int mInitialColor;
 	private BulbState hs = new BulbState();
 	{
 		hs.on = true;
@@ -37,17 +27,15 @@ public class EditColorTempFragment extends Fragment implements
 
 		hs.ct = 1000000/4000;
 	}
-	Gson gson = new Gson();
 	SeekBar seekBar;
 	EditText tempEditText;
-	int seekBarOffset = 2000;
+	final int seekBarOffset = 2000;
+	EditStatePagerDialogFragment statePager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		mInitialColor = 0;
 
 		View groupDialogView = inflater.inflate(R.layout.edit_temp_color, null);
 
@@ -74,7 +62,7 @@ public class EditColorTempFragment extends Fragment implements
 					temp = Math.min(temp, seekBarOffset + seekBar.getMax());
 					seekBar.setProgress(temp - seekBarOffset);
 					hs.ct = ((1000000 / temp));
-					preview();
+					statePager.setState(hs, EditColorTempFragment.this);
 				}
 				return false;
 			}
@@ -94,7 +82,7 @@ public class EditColorTempFragment extends Fragment implements
 		if(fromUser){
 			hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
 			tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-			//preview();
+			statePager.setState(hs, this);
 		}
 	}
 
@@ -102,28 +90,24 @@ public class EditColorTempFragment extends Fragment implements
 	public void onStartTrackingTouch(SeekBar seekBar) {
 		hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
 		tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-		//preview();
+		statePager.setState(hs, this);
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
 		tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-		preview();
-	}
-
-	public void preview() {
-		Mood m = Utils.generateSimpleMood(hs);
-		
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject) getActivity()).getBulbs(), null);
+		statePager.setState(hs, this);
 	}
 
 	@Override
-	public Intent onCreateColor(Integer transitionTime) {
-		hs.transitiontime = transitionTime;
-		Intent i = new Intent();
-		i.putExtra(InternalArguments.HUE_STATE, gson.toJson(hs));
-		return i;
+	public boolean stateChanged() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public void setStatePager(EditStatePagerDialogFragment statePage) {
+		statePager = statePage;		
 	}
 
 }
