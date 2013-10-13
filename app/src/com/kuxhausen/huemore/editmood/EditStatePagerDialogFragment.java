@@ -50,7 +50,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		return currentState;
 	}
 	public void setState(BulbState newState, OnCreateColorListener initiator){
-		currentState = newState;
+		currentState = newState;//gson.fromJson(gson.toJson(newState), BulbState.class);;
 		this.stateChanged(initiator);
 	}
 	

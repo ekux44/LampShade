@@ -43,6 +43,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 			hs.xy = conversionXY;
 	    	hs.on=true;
 	    	hs.effect="none";
+	    	hs.transitiontime = 4; //TODO remove hard coding of all this stuff
 	    	
 	    	StateCell mr = new StateCell(this.getActivity());
 	    	mr.hs = hs;
@@ -97,11 +98,16 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 	public boolean stateChanged() {
 		if(list==null)
 			return false;
+		
+		if(lastSelectedPosition > -1){
+			list.get(lastSelectedPosition).selected = false;
+			adapter.notifyDataSetChanged();
+		}
+		
 		for(int i = 0; i< list.size(); i++){
 			StateCell cell = list.get(i);
 			if(cell.hs.toString().equals(statePager.getState().toString())){
-				if(lastSelectedPosition > -1)
-					list.get(lastSelectedPosition).selected = false;
+				
 				lastSelectedPosition = i;
 				list.get(lastSelectedPosition).selected = true;
 				

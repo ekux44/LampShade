@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,9 +71,14 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 	public boolean stateChanged() {
 		for(int i = 0; i< list.size(); i++){
 			StateCell cell = list.get(i);
+			Log.e("stateChanged",cell.hs.toString());
+			Log.e("stateChanged",statePager.getState().toString());
+			
+			if(lastSelectedPosition > -1){
+				list.get(lastSelectedPosition).selected = false;
+				adapter.notifyDataSetChanged();
+			}
 			if(cell.hs.toString().equals(statePager.getState().toString())){
-				if(lastSelectedPosition > -1)
-					list.get(lastSelectedPosition).selected = false;
 				lastSelectedPosition = i;
 				list.get(lastSelectedPosition).selected = true;
 				

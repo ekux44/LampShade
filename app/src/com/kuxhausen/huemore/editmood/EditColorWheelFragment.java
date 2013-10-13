@@ -61,25 +61,26 @@ public class EditColorWheelFragment extends SherlockFragment implements
 
 	@Override
 	public boolean stateChanged() {
-		BulbState previous = statePager.getState();
-		if (previous.hue != null && previous.sat!=null){
+		BulbState state = statePager.getState();
+		if (state.hue != null && state.sat!=null){
 			
-			float[] hsv = { (previous.hue * 360) / 65535, previous.sat / 255f, 1 };
-			previous.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+			float[] hsv = { (state.hue * 360) / 65535, state.sat / 255f, 1 };
+			state.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
 			
 			int rgb = Color.HSVToColor(hsv);
 			if(picker!=null&&saturationBar!=null){
 				picker.setColor(rgb);
 				picker.setOldCenterColor(rgb);
 				saturationBar.setSaturation(hsv[1]);
+				picker.invalidate();
 			}
 			
-			previous.hue = null;
-			previous.sat = null;
+			state.hue = null;
+			state.sat = null;
 			return true;
 		}
-		if(previous.xy!=null){
-			Float[] hueSat = Utils.xyTOhs(previous.xy[0], previous.xy[1]);
+		if(state.xy!=null){
+			Float[] hueSat = Utils.xyTOhs(state.xy[0], state.xy[1]);
 			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
 			
 			int rgb = Color.HSVToColor(hsv);
@@ -88,6 +89,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 				picker.setColor(rgb);
 				picker.setOldCenterColor(rgb);
 				saturationBar.setSaturation(hsv[1]);
+				picker.invalidate();
 			}
 			return true;
 		}
