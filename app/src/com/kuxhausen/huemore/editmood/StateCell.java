@@ -20,6 +20,7 @@ public class StateCell {
 	public String name;
 	public BulbState hs;
 	public Context context;
+	public boolean selected;
 	
 	public StateCell(Context ctx){
 		context = ctx;
@@ -72,6 +73,11 @@ public class StateCell {
 		} else{
 			rowView = inflater.inflate(R.layout.edit_mood_row, null);
 		}
+		if(selected)
+			rowView.setBackgroundColor(0xFFFFBB33);
+		else
+			rowView.setBackgroundColor(0);
+		
 		rowView.setOnClickListener(l);
 		if(frag!=null)
 			frag.registerForContextMenu(rowView);

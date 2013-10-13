@@ -68,9 +68,11 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			previous.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
 			
 			int rgb = Color.HSVToColor(hsv);
-			picker.setColor(rgb);
-			picker.setOldCenterColor(rgb);
-			saturationBar.setSaturation(hsv[1]);
+			if(picker!=null&&saturationBar!=null){
+				picker.setColor(rgb);
+				picker.setOldCenterColor(rgb);
+				saturationBar.setSaturation(hsv[1]);
+			}
 			
 			previous.hue = null;
 			previous.sat = null;
@@ -82,10 +84,11 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			
 			int rgb = Color.HSVToColor(hsv);
 			
-			picker.setColor(rgb);
-			picker.setOldCenterColor(rgb);
-			
-			saturationBar.setSaturation(hsv[1]);
+			if(picker!=null&&saturationBar!=null){
+				picker.setColor(rgb);
+				picker.setOldCenterColor(rgb);
+				saturationBar.setSaturation(hsv[1]);
+			}
 			return true;
 		}
 		return false;

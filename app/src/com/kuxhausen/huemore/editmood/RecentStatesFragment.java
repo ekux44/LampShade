@@ -18,8 +18,8 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class RecentStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
-	private View lastSelection;
-	private StateCell lastSelectedRow;
+	StateCellAdapter adapter;
+	private int lastSelectedPosition = -1;
 	Gson gson = new Gson();
 	ArrayList<StateCell> list;
 	EditStatePagerDialogFragment statePager;
@@ -46,28 +46,42 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 		View myView = inflater.inflate(R.layout.grid_view, null);
 		
 		g = (GridView) myView.findViewById(R.id.myGrid);
-		g.setAdapter(new StateCellAdapter(this, list, this));
+		adapter = new StateCellAdapter(this, list, this);
+		g.setAdapter(adapter);
+		
+		if(lastSelectedPosition>-1)
+			onClick(g.getAdapter().getView(lastSelectedPosition, null, g));
 		
 		return myView;
 	}	
 
 	@Override
 	public void onClick(View v) {
-		int position = (Integer) v.getTag();
-
-		v.setBackgroundColor(0xFFFFBB33);
-		if(lastSelection!=null)
-			lastSelection.setBackgroundColor(0);
-		
-		lastSelection = v;
-		lastSelectedRow = (StateCell)g.getAdapter().getItem(position);
-		statePager.setState(lastSelectedRow.hs, this);
+		if(lastSelectedPosition > -1)
+			list.get(lastSelectedPosition).selected = false;
+		lastSelectedPosition = (Integer) v.getTag();
+		list.get(lastSelectedPosition).selected = true;
+		adapter.notifyDataSetChanged();
+		statePager.setState(list.get(lastSelectedPosition).hs, this);
 	}
 	
 
 	@Override
 	public boolean stateChanged() {
-		// TODO Auto-generated method stub
+		for(int i = 0; i< list.size(); i++){
+			StateCell cell = list.get(i);
+			if(cell.hs.toString().equals(statePager.getState().toString())){
+				if(lastSelectedPosition > -1)
+					list.get(lastSelectedPosition).selected = false;
+				lastSelectedPosition = i;
+				list.get(lastSelectedPosition).selected = true;
+				
+				if(adapter!=null)
+					adapter.notifyDataSetChanged();
+				return true;
+			}
+		}
+			
 		return false;
 	}
 	@Override

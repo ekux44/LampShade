@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import java.util.ArrayList;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,10 +18,11 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
-	private View lastSelection;
-	private StateCell lastSelectedRow;
+	StateCellAdapter adapter;
+	private int lastSelectedPosition = -1;
 	Gson gson = new Gson();
 	EditStatePagerDialogFragment statePager;
+	ArrayList<StateCell> list;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,8 +31,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		
 		View myView = inflater.inflate(R.layout.grid_view, null);
 		
-		
-		ArrayList<StateCell> list = new ArrayList<StateCell>();
+		list = new ArrayList<StateCell>();
 		
 		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea1", "Deep Sea2", "Fruit1", "Fruit2", "Fruit3"};
 		float[] simpleX = {0.4571f, 0.5119f, 0.368f, 0.3151f, 0.1859f, 0.6367f, 0.5089f, 0.5651f, 0.4081f};
@@ -72,31 +73,46 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		
 		
 		g = (GridView) myView.findViewById(R.id.myGrid);
-		g.setAdapter(new StateCellAdapter(this, list, this));
+		adapter = new StateCellAdapter(this, list, this);
+		g.setAdapter(adapter);
+		
+		if(lastSelectedPosition>-1)
+			onClick(g.getAdapter().getView(lastSelectedPosition, null, g));
 		
 		return myView;
 	}	
 
 	@Override
 	public void onClick(View v) {
-		int position = (Integer) v.getTag();
-
-		v.setBackgroundColor(0xFFFFBB33);
-		if(lastSelection!=null)
-			lastSelection.setBackgroundColor(0);
-		
-		lastSelection = v;
-		lastSelectedRow = (StateCell)g.getAdapter().getItem(position);
-		
-		statePager.setState(lastSelectedRow.hs, this);
+		if(lastSelectedPosition > -1)
+			list.get(lastSelectedPosition).selected = false;
+		lastSelectedPosition = (Integer) v.getTag();
+		list.get(lastSelectedPosition).selected = true;
+		adapter.notifyDataSetChanged();
+		statePager.setState(list.get(lastSelectedPosition).hs, this);
 	}
+	
 
 	@Override
 	public boolean stateChanged() {
-		// TODO Auto-generated method stub
+		if(list==null)
+			return false;
+		for(int i = 0; i< list.size(); i++){
+			StateCell cell = list.get(i);
+			if(cell.hs.toString().equals(statePager.getState().toString())){
+				if(lastSelectedPosition > -1)
+					list.get(lastSelectedPosition).selected = false;
+				lastSelectedPosition = i;
+				list.get(lastSelectedPosition).selected = true;
+				
+				if(adapter!=null)
+					adapter.notifyDataSetChanged();
+				return true;
+			}
+		}
+			
 		return false;
 	}
-
 	@Override
 	public void setStatePager(EditStatePagerDialogFragment statePage) {
 		statePager = statePage;		

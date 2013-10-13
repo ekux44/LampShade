@@ -38,13 +38,15 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 	static int currentPage;
 
-	private BulbState currentState = new BulbState();
+	private BulbState currentState;
 	
 	Spinner transitionSpinner;
 	int[] transitionValues;
 	Gson gson = new Gson();
 	
 	public BulbState getState(){
+		if(currentState==null)
+			currentState = new BulbState();
 		return currentState;
 	}
 	public void setState(BulbState newState, OnCreateColorListener initiator){
@@ -61,7 +63,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 	public void stateChanged(OnCreateColorListener initiator){
 		for(OnCreateColorListener listener : newColorFragments){
-			if(listener!=initiator)
+			if(listener!=initiator && listener!=null)
 				listener.stateChanged();
 		}
 		
@@ -145,9 +147,12 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	}
 
 	private void routeState(BulbState bs) {
-		mViewPager.setCurrentItem(1);
-		((RecentStatesFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs, parrentMood.dataRay);
-		if(bs.ct!=null){
+		((RecentStatesFragment)mNewColorPagerAdapter.getItem(1)).loadPrevious(bs, parrentMood.dataRay);
+		if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(1)).stateChanged())
+			mViewPager.setCurrentItem(1);
+		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(0)).stateChanged())
+			mViewPager.setCurrentItem(0);
+		else if(bs.ct!=null){
 			mViewPager.setCurrentItem(3);
 			((EditColorTempFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
 		}
