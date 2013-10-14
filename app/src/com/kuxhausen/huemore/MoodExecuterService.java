@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.PriorityQueue;
 
 import android.app.PendingIntent;
@@ -151,9 +152,27 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 			for (Integer bNum : channels[e.channel]) {
 				QueueEvent qe = new QueueEvent(e);
 				qe.bulb = bNum;
-				// 10^8 * e.time
-				qe.nanoTime = System.nanoTime()+(e.time*100000000l);
-				queue.add(qe);
+				
+				if(m.timeAddressingRepeatPolicy){
+					
+					Calendar current = Calendar.getInstance();
+					Calendar startOfDay = Calendar.getInstance();
+					startOfDay.set(Calendar.HOUR_OF_DAY, 0);
+					startOfDay.set(Calendar.SECOND, 0);
+					startOfDay.set(Calendar.MILLISECOND, 0);
+					startOfDay.getTimeInMillis();
+					Long offsetWithinTheDayInNanos = (current.getTimeInMillis() - startOfDay.getTimeInMillis())*1000000l;
+					Long startOfDayInNanos = System.nanoTime() - offsetWithinTheDayInNanos;
+					
+					qe.nanoTime = startOfDayInNanos+(e.time*100000000l);
+					if(qe.nanoTime>=0l)
+						queue.add(qe);
+				}
+				else{
+					// 10^8 * e.time
+					qe.nanoTime = System.nanoTime()+(e.time*100000000l);
+					queue.add(qe);
+				}
 			}
 		}
 		moodLoopIterationEndNanoTime = System.nanoTime()+(m.loopIterationTimeLength*100000000l);
