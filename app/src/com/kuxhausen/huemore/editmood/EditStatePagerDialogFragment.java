@@ -50,6 +50,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		else if(newState!=null && newState.ct!=null)
 			Log.e("setStateInPager", newState.ct +" "+optionalMessage);
 		currentState = newState.clone();
+		setSpinner();
 		this.stateChanged(initiator);
 	}
 	
@@ -124,16 +125,20 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			currentState = gson.fromJson(args.getString(InternalArguments.PREVIOUS_STATE),BulbState.class);
 			routeState(currentState);
 			
-			if (currentState.transitiontime != null) {
-				int pos = 0;
-				for (int i = 0; i < transitionValues.length; i++)
-					if (currentState.transitiontime == transitionValues[i])
-						pos = i;
-				transitionSpinner.setSelection(pos);
-			}
+			setSpinner();
 		}
 		
 		return myView;
+	}
+	
+	private void setSpinner(){
+		if (currentState.transitiontime != null) {
+			int pos = 0;
+			for (int i = 0; i < transitionValues.length; i++)
+				if (currentState.transitiontime == transitionValues[i])
+					pos = i;
+			transitionSpinner.setSelection(pos);
+		}
 	}
 
 	private void routeState(BulbState bs) {
