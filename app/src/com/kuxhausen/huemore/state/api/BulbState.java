@@ -90,17 +90,30 @@ public class BulbState {
 		return result;
 	}
 	
-	/* when in doubt, override **/
+	/* when in doubt, override, only allow 1 of three color modes**/
 	public void merge(BulbState other){
 		on = (other.on!=null) ? other.on : on;
 		bri = (other.bri!=null) ? other.bri : bri;
-		hue = (other.hue!=null) ? other.hue : hue;
-		sat = (other.sat!=null) ? other.sat : sat;
-		xy = (other.xy!=null) ? other.xy : xy;
-		ct = (other.ct!=null) ? other.ct : ct;
 		alert = (other.alert!=null) ? other.alert : alert;
 		effect = (other.effect!=null) ? other.effect : effect;
 		transitiontime = (other.transitiontime!=null) ? other.transitiontime : transitiontime;
+		
+		if(other.xy!=null){
+			xy = other.xy;
+			hue = null;
+			sat = null;
+			ct = null;
+		} else if(other.hue!=null && other.sat!=null){
+			xy = null;
+			hue = other.hue;
+			sat = other.sat;
+			ct = null;
+		} else if(other.ct!=null) {
+			xy = null;
+			hue = null;
+			sat = null;
+			ct = other.ct;
+		}
 	}
 	public String getCT(){
 		return (1000000 / ct)+"K";

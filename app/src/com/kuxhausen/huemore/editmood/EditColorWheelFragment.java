@@ -76,6 +76,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 				picker.setOldCenterColor(rgb);
 				saturationBar.setSaturation(hsv[1]);
 				picker.setOnColorChangedListener(this);
+				picker.invalidate();
 			}
 			
 			state.hue = null;
@@ -94,6 +95,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 				picker.setOldCenterColor(rgb);
 				saturationBar.setSaturation(hsv[1]);
 				picker.setOnColorChangedListener(this);
+				picker.invalidate();
 			}
 			return true;
 		}
