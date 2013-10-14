@@ -295,34 +295,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				}
 				
 				//remove any nameless groups
-				String[] groupColumns = {GroupColumns.GROUP, GroupColumns.PRECEDENCE, GroupColumns.BULB};
-				Cursor groupCursor = db.query(DatabaseDefinitions.GroupColumns.TABLE_NAME, groupColumns, null, null, null, null, null);
 				
-				HashMap<String,Integer[]> groupMap = new HashMap<String,Integer[]>();
-				
-				while (groupCursor.moveToNext()) {
-					String name = groupCursor.getString(0);
-					Integer precedence = groupCursor.getInt(1);
-					Integer bulb = groupCursor.getInt(2);
-					Integer[] precBulb = {precedence, bulb};
-					groupMap.put(name, precBulb);
-				}
-				groupMap.remove("");
-				groupMap.remove(null);
-				
-				db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
-				
-				db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
-						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
-						+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
-						+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
-				
-				for(String key : groupMap.keySet()){
-					cv.put(GroupColumns.GROUP, key);
-					cv.put(GroupColumns.PRECEDENCE, groupMap.get(key)[0]);
-					cv.put(GroupColumns.BULB, groupMap.get(key)[1]);
-					db.insert(GroupColumns.TABLE_NAME, null, cv);
-				}
+				String[] gSelectionArgs = { ""};
+				db.delete(GroupColumns.TABLE_NAME,
+						DatabaseDefinitions.GroupColumns.GROUP + "=?",
+						gSelectionArgs);
 				
 			}
 			case 4:
