@@ -40,11 +40,11 @@ public class StateCell {
 		View rowView;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		if(hs.ct!=null && hs.ct!=0){
-			rowView = inflater.inflate(R.layout.edit_mood_colortemp_row, null);
+			rowView = inflater.inflate(R.layout.edit_mood_colortemp_row, parent, false);
 			TextView stateText = (TextView) rowView.findViewById(R.id.ctTextView);
 			stateText.setText(hs.getCT());
 		} else if(hs.xy!=null){
-			rowView = inflater.inflate(R.layout.edit_mood_row, null);
+			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
@@ -60,7 +60,7 @@ public class StateCell {
 				state_color.setImageDrawable(cd);
 		}
 		else if(hs.hue!=null && hs.sat!=null){
-			rowView = inflater.inflate(R.layout.edit_mood_row, null);
+			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
@@ -74,14 +74,14 @@ public class StateCell {
 			if((color%0xff000000)!=0)
 				state_color.setImageDrawable(cd);		
 		}else if (hs.on!=null){
-			rowView = inflater.inflate(R.layout.edit_mood_on_row, null);
+			rowView = inflater.inflate(R.layout.edit_mood_on_row, parent, false);
 			TextView stateText = (TextView) rowView.findViewById(R.id.onTextView);
 			if(hs.on!=null && hs.on)
 				stateText.setText(context.getResources().getString(R.string.cap_on));
 			else
 				stateText.setText(context.getResources().getString(R.string.cap_off));
 		} else{
-			rowView = inflater.inflate(R.layout.edit_mood_row, null);
+			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 		}
 		if(selected)
 			rowView.setBackgroundColor(0xFFFFBB33);
