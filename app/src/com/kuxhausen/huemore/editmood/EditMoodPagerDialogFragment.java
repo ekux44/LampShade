@@ -151,6 +151,12 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 			mViewPager.setCurrentItem(calculateRoute(m));
 	}
 	
+	public String getName(){
+		if(nameEditText!=null)
+			return nameEditText.getText().toString();
+		return "";
+	}
+	
 	/**
 	 * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a
 	 * fragment representing an object in the collection.
@@ -203,6 +209,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				return (Fragment) newMoodFragments[i];
 			case 3:
 				EditComplexMoodFragment ecmf = new EditComplexMoodFragment();
+				ecmf.pager = frag;
 				Bundle args3 = new Bundle();
 				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (calculateRoute(priorMood)==3) {

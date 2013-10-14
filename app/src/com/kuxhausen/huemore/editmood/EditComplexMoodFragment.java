@@ -21,6 +21,7 @@ public class EditComplexMoodFragment extends SherlockFragment implements OnCreat
 	
 	Gson gson = new Gson();
 	Button enterAdvanced;
+	EditMoodPagerDialogFragment pager;
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -61,6 +62,8 @@ public class EditComplexMoodFragment extends SherlockFragment implements OnCreat
 	
 	public Intent getAdvancedIntent(){
 		Intent i = new Intent(this.getActivity(), EditAdvancedMoodActivity.class);
+		if(pager!= null && pager.getName().length()>0)
+			i.putExtra(InternalArguments.MOOD_NAME, pager.getName());
 		i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
 		return i;
 	}
