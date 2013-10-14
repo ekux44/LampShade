@@ -25,6 +25,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,6 +38,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:noHistory="true"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
         </activity>
         <activity
@@ -44,6 +46,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:noHistory="true"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
         </activity>
 
@@ -60,6 +63,7 @@
             android:icon="@drawable/preview"
             android:label="@string/app_name"
             android:noHistory="true"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
@@ -75,16 +79,19 @@
         <activity
             android:name="com.kuxhausen.huemore.DecodeErrorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcWriterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock"
             android:noHistory="true" >
             <intent-filter>
@@ -111,6 +118,7 @@
 		<activity
             android:name="com.kuxhausen.huemore.SharedMoodReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock"
             android:noHistory="true" >
 
@@ -129,6 +137,7 @@
         <activity
             android:name="com.kuxhausen.huemore.timing.AlarmListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
         </activity>
 
@@ -187,6 +196,7 @@
             android:label="@string/title_activity_edit_advanced_mood" 
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:noHistory="true"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock">
         </activity>
     </application>
