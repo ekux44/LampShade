@@ -13,6 +13,7 @@
         <item>100</item>
         <item>600</item>
         <item>6000</item>
+        <item>36000</item>
     </integer-array>
     <integer-array name="timeslot_values_array">
         <item>10</item>
