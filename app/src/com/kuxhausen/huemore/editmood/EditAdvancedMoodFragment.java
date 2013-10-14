@@ -507,7 +507,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		redrawGrid();
 	}
 	private void addRow(int duration){
-		if(gridRows()<=8){
+		if(gridRows()<=64){
 			grid.setRowCount(initialRows + gridRows()+1);
 			
 			
@@ -524,7 +524,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	private void addCol(){
-		if(gridCols()<8){
+		if(gridCols()<64){
 			int width = gridCols();
 			grid.setColumnCount(1+width+initialCols);
 			for(int i = dataRay.size(); i>0; i-=width){

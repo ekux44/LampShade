@@ -136,6 +136,7 @@
         <item>10 seconden</item>
         <item>1 minuut</item>
         <item>10 minuten</item>
+        <item>60 minuten</item>
     </string-array>
     <string-array name="timeslot_names_array">
         <item>1 seconde</item>
