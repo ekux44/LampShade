@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/onTextView"
         android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:clickable="false"
         android:gravity="center_horizontal"
         android:paddingLeft="8dp"
