@@ -230,6 +230,13 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 							toModify.merge(e.state);
 							if (toModify.toString() != e.state.toString())
 								flagTransientChanges[bNum - 1] = true;
+							
+							//cancel any active mood if any non-brightness related transient changes
+							if(e.state.ct!=null || e.state.xy!=null || e.state.hue!=null || e.state.sat !=null || e.state.effect!=null){
+								moodPair = null;
+								queue.clear();
+							}
+								
 						}
 					}
 				}
