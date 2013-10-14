@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.state.api;
 
+import com.google.gson.Gson;
+
 public class BulbState {
 
 	/**
@@ -103,5 +105,10 @@ public class BulbState {
 	public String getCT(){
 		return (1000000 / ct)+"K";
 		
+	}
+	
+	public BulbState clone(){
+		Gson gson = new Gson();
+		return gson.fromJson(gson.toJson(this), BulbState.class);
 	}
 }

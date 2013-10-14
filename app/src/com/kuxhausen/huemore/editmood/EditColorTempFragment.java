@@ -62,7 +62,7 @@ public class EditColorTempFragment extends Fragment implements
 					temp = Math.min(temp, seekBarOffset + seekBar.getMax());
 					seekBar.setProgress(temp - seekBarOffset);
 					hs.ct = ((1000000 / temp));
-					statePager.setState(hs, EditColorTempFragment.this);
+					statePager.setState(hs, EditColorTempFragment.this, "ct");
 				}
 				return false;
 			}
@@ -72,17 +72,13 @@ public class EditColorTempFragment extends Fragment implements
 		return groupDialogView;
 	}
 
-	public void loadPrevious(BulbState bs){
-		if(bs.ct!=null)
-			hs.ct = bs.ct;
-	}
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		if(fromUser){
 			hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
 			tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-			statePager.setState(hs, this);
+			statePager.setState(hs, this, "ct");
 		}
 	}
 
@@ -90,19 +86,22 @@ public class EditColorTempFragment extends Fragment implements
 	public void onStartTrackingTouch(SeekBar seekBar) {
 		hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
 		tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-		statePager.setState(hs, this);
+		statePager.setState(hs, this, "ct");
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
 		tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-		statePager.setState(hs, this);
+		statePager.setState(hs, this, "ct");
 	}
 
 	@Override
 	public boolean stateChanged() {
-		// TODO Auto-generated method stub
+		if(statePager.getState().ct!=null){
+			hs.ct = statePager.getState().ct;
+			return true;
+		}
 		return false;
 	}
 	@Override

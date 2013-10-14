@@ -11,32 +11,27 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class RecentStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
-	StateCellAdapter adapter;
+	private StateCellAdapter adapter;
 	private int lastSelectedPosition = -1;
-	Gson gson = new Gson();
-	ArrayList<StateCell> list;
-	EditStatePagerDialogFragment statePager;
+	private ArrayList<StateCell> list;
+	private EditStatePagerDialogFragment statePager;
 	
-	public boolean loadPrevious(BulbState bs, ArrayList<StateCell> cells){
+	private void loadPrevious(ArrayList<StateCell> cells){
 		list = new ArrayList<StateCell>();
 		HashSet<String> bulbStateHash = new HashSet<String>();
 		for(StateCell cell : cells){
-			if(!bulbStateHash.contains(cell.hs.toString())){
-				bulbStateHash.add(cell.hs.toString());
-				list.add(cell);
+			StateCell localCopy = cell.clone();
+			if(!bulbStateHash.contains(localCopy.hs.toString()) && (localCopy.hs.toString().length()>0)){
+				bulbStateHash.add(localCopy.hs.toString());
+				list.add(localCopy);
 			}
 		}
-		if(bulbStateHash.contains(bs.toString()))
-			return true;
-		return false;
 	}
 	
 	@Override
@@ -45,16 +40,17 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 		super.onCreate(savedInstanceState);
 		
 		View myView = inflater.inflate(R.layout.grid_view, null);
-		
 		g = (GridView) myView.findViewById(R.id.myGrid);
 		adapter = new StateCellAdapter(this, list, this);
 		g.setAdapter(adapter);
-		
-		if(lastSelectedPosition>-1)
-			onClick(g.getAdapter().getView(lastSelectedPosition, null, g));
-		
 		return myView;
-	}	
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		stateChanged();
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -63,35 +59,34 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 		lastSelectedPosition = (Integer) v.getTag();
 		list.get(lastSelectedPosition).selected = true;
 		adapter.notifyDataSetChanged();
-		statePager.setState(list.get(lastSelectedPosition).hs, this);
+		statePager.setState(list.get(lastSelectedPosition).hs, this, "recent");
 	}
 	
 
 	@Override
 	public boolean stateChanged() {
+		int newSelectedPosition = -1;
 		for(int i = 0; i< list.size(); i++){
-			StateCell cell = list.get(i);
-			Log.e("stateChanged",cell.hs.toString());
-			Log.e("stateChanged",statePager.getState().toString());
-			
-			if(lastSelectedPosition > -1){
-				list.get(lastSelectedPosition).selected = false;
-				adapter.notifyDataSetChanged();
-			}
-			if(cell.hs.toString().equals(statePager.getState().toString())){
-				lastSelectedPosition = i;
-				list.get(lastSelectedPosition).selected = true;
-				
-				if(adapter!=null)
-					adapter.notifyDataSetChanged();
-				return true;
+			if(list.get(i).hs.toString().equals(statePager.getState().toString())){
+				newSelectedPosition = i;
+				list.get(i).selected = true;
+			} else {
+				list.get(i).selected = false;
 			}
 		}
-			
+		if(lastSelectedPosition!=newSelectedPosition){
+			lastSelectedPosition = newSelectedPosition;
+			if(adapter!=null)
+				adapter.notifyDataSetChanged();
+		}
+		if(newSelectedPosition!=-1){
+			return true;
+		}
 		return false;
 	}
 	@Override
 	public void setStatePager(EditStatePagerDialogFragment statePage) {
-		statePager = statePage;		
+		statePager = statePage;
+		loadPrevious(statePager.parrentMood.dataRay);
 	}
 }

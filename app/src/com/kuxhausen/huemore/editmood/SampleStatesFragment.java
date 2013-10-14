@@ -10,7 +10,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -18,20 +17,13 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
-	StateCellAdapter adapter;
+	private StateCellAdapter adapter;
 	private int lastSelectedPosition = -1;
-	Gson gson = new Gson();
-	EditStatePagerDialogFragment statePager;
-	ArrayList<StateCell> list;
+	private EditStatePagerDialogFragment statePager;
+	private ArrayList<StateCell> list;
 	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		View myView = inflater.inflate(R.layout.grid_view, null);
-		
-		list = new ArrayList<StateCell>();
+	private void loadPresets(){
+list = new ArrayList<StateCell>();
 		
 		String[] simpleNames = {"Reading","Relax","Concentrate","Energize", "Deep Sea1", "Deep Sea2", "Fruit1", "Fruit2", "Fruit3"};
 		float[] simpleX = {0.4571f, 0.5119f, 0.368f, 0.3151f, 0.1859f, 0.6367f, 0.5089f, 0.5651f, 0.4081f};
@@ -45,7 +37,7 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 	    	hs.effect="none";
 	    	hs.transitiontime = 4; //TODO remove hard coding of all this stuff
 	    	
-	    	StateCell mr = new StateCell(this.getActivity());
+	    	StateCell mr = new StateCell(statePager.getActivity());
 	    	mr.hs = hs;
 	    	mr.name = simpleNames[i];
 	    	list.add(mr);
@@ -56,9 +48,9 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 			hs.on=true;
 	    	hs.effect="none";
 			
-			StateCell mr = new StateCell(this.getActivity());
+			StateCell mr = new StateCell(statePager.getActivity());
 			mr.hs = hs;
-			mr.name = this.getActivity().getResources().getString(R.string.cap_on);
+			mr.name = statePager.getActivity().getResources().getString(R.string.cap_on);
 			list.add(mr);
 		}
 		{
@@ -66,22 +58,33 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 			hs.on=false;
 	    	hs.effect="none";
 			
-			StateCell mr = new StateCell(this.getActivity());
+			StateCell mr = new StateCell(statePager.getActivity());
 			mr.hs = hs;
-			mr.name = this.getActivity().getResources().getString(R.string.cap_off);
+			mr.name = statePager.getActivity().getResources().getString(R.string.cap_off);
 			list.add(mr);
 		}
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		
-		
+		View myView = inflater.inflate(R.layout.grid_view, null);
 		g = (GridView) myView.findViewById(R.id.myGrid);
 		adapter = new StateCellAdapter(this, list, this);
 		g.setAdapter(adapter);
 		
-		if(lastSelectedPosition>-1)
-			onClick(g.getAdapter().getView(lastSelectedPosition, null, g));
-		
 		return myView;
-	}	
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		
+		stateChanged();
+		Log.e("lifecycle", "sample onResume");
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -90,37 +93,34 @@ public class SampleStatesFragment extends SherlockFragment implements OnCreateCo
 		lastSelectedPosition = (Integer) v.getTag();
 		list.get(lastSelectedPosition).selected = true;
 		adapter.notifyDataSetChanged();
-		statePager.setState(list.get(lastSelectedPosition).hs, this);
+		statePager.setState(list.get(lastSelectedPosition).hs, this, "sample");
 	}
 	
 
 	@Override
 	public boolean stateChanged() {
-		if(list==null)
-			return false;
-		
-		if(lastSelectedPosition > -1){
-			list.get(lastSelectedPosition).selected = false;
-			adapter.notifyDataSetChanged();
-		}
-		
+		int newSelectedPosition = -1;
 		for(int i = 0; i< list.size(); i++){
-			StateCell cell = list.get(i);
-			if(cell.hs.toString().equals(statePager.getState().toString())){
-				
-				lastSelectedPosition = i;
-				list.get(lastSelectedPosition).selected = true;
-				
-				if(adapter!=null)
-					adapter.notifyDataSetChanged();
-				return true;
+			if(list.get(i).hs.toString().equals(statePager.getState().toString())){
+				newSelectedPosition = i;
+				list.get(i).selected = true;
+			} else {
+				list.get(i).selected = false;
 			}
 		}
-			
+		if(lastSelectedPosition!=newSelectedPosition){
+			lastSelectedPosition = newSelectedPosition;
+			if(adapter!=null)
+				adapter.notifyDataSetChanged();
+		}
+		if(newSelectedPosition!=-1){
+			return true;
+		}
 		return false;
 	}
 	@Override
 	public void setStatePager(EditStatePagerDialogFragment statePage) {
-		statePager = statePage;		
+		statePager = statePage;
+		loadPresets();
 	}
 }

@@ -103,20 +103,20 @@ public class Tests {
 //		hsTOxy(1f,0f);
 //		xyTOhs(0.3457f,0.3585f);
 //		
-		/*float[] hs = new float[2];//{0.7347f, 0.2653f};
-		float[] xy = new float[2];
+		/*Float[] hs = new Float[2];//{0.7347f, 0.2653f};
+		Float[] xy = new Float[2];
 		for(int j =0; j<10; j++){
 			hs[0]=(float)Math.random();
 			hs[1]=Math.max((float)Math.random(),.01f);
 			
 			
 			for(int i= 0; i<10; i++){
-				xy = Utils.hsTOxy(hs[0],hs[1]);
+				xy = Utils.hsTOxy(hs);
 				
 				if(i==0||i==9)
 					Log.e("testColor"," h"+hs[0]+"  s"+hs[1]+"  x"+xy[0]+"  y"+xy[1]);
 				
-				hs =Utils.xyTOhs(xy[0],xy[1]);
+				hs =Utils.xyTOhs(xy);
 				
 				
 			}

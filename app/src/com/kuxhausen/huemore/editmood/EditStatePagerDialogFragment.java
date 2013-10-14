@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,16 +31,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	static OnCreateColorListener[] newColorFragments;
 	EditAdvancedMoodFragment parrentMood; 
 
-	/**
-	 * The {@link android.support.v4.view.ViewPager} that will display the
-	 * object collection.
-	 */
 	ViewPager mViewPager;
-
 	static int currentPage;
-
+	public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3;
 	private BulbState currentState;
-	
 	Spinner transitionSpinner;
 	int[] transitionValues;
 	Gson gson = new Gson();
@@ -49,8 +44,12 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			currentState = new BulbState();
 		return currentState;
 	}
-	public void setState(BulbState newState, OnCreateColorListener initiator){
-		currentState = newState;//gson.fromJson(gson.toJson(newState), BulbState.class);;
+	public void setState(BulbState newState, OnCreateColorListener initiator, String optionalMessage){		
+		if(newState!=null && newState.xy!=null)
+			Log.e("setStateInPager",newState.xy[0]+"  "+newState.clone().xy[0]+"  "+optionalMessage);
+		else if(newState!=null && newState.ct!=null)
+			Log.e("setStateInPager", newState.ct +" "+optionalMessage);
+		currentState = newState.clone();
 		this.stateChanged(initiator);
 	}
 	
@@ -61,7 +60,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		public void setStatePager(EditStatePagerDialogFragment statePage);
 	}
 
-	public void stateChanged(OnCreateColorListener initiator){
+	private void stateChanged(OnCreateColorListener initiator){
 		for(OnCreateColorListener listener : newColorFragments){
 			if(listener!=initiator && listener!=null)
 				listener.stateChanged();
@@ -84,15 +83,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 	 	transitionSpinner = (Spinner) myView
 				.findViewById(R.id.transitionSpinner);
-		// Create an ArrayAdapter using the string array and a default
-		// spinner
-		// layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
 				R.array.transition_names_array,
 				android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
 		transitionSpinner.setAdapter(adapter);
 
 		transitionValues = getActivity().getResources().getIntArray(
@@ -101,11 +95,9 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		
 		
 		// Create an adapter that when requested, will return a fragment
-		// representing an object in
-		// the collection.
+		// representing an object in the collection.
 		mNewColorPagerAdapter = new NewMoodPagerAdapter(this);
 
-		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mNewColorPagerAdapter);
 		currentPage = 0;
@@ -117,8 +109,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			}
 
 		});
-		this.getDialog().setTitle(
-				getActivity().getString(R.string.actionmenu_new_color));
+		this.getDialog().setTitle(getActivity().getString(R.string.actionmenu_new_color));
 
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
@@ -126,7 +117,6 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		okayButton.setOnClickListener(this);
 
 		newColorFragments = new OnCreateColorListener[mNewColorPagerAdapter.getCount()];
-		
 		
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
@@ -147,18 +137,15 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	}
 
 	private void routeState(BulbState bs) {
-		((RecentStatesFragment)mNewColorPagerAdapter.getItem(1)).loadPrevious(bs, parrentMood.dataRay);
-		if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(1)).stateChanged())
-			mViewPager.setCurrentItem(1);
-		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(0)).stateChanged())
-			mViewPager.setCurrentItem(0);
-		else if(bs.ct!=null){
-			mViewPager.setCurrentItem(3);
-			((EditColorTempFragment)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).loadPrevious(bs);
-		}
+		if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(RECENT_PAGE)).stateChanged())
+			mViewPager.setCurrentItem(RECENT_PAGE);
+		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(SAMPLE_PAGE)).stateChanged())
+			mViewPager.setCurrentItem(SAMPLE_PAGE);
+		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(TEMP_PAGE)).stateChanged())
+			mViewPager.setCurrentItem(TEMP_PAGE);
 		else{
-			mViewPager.setCurrentItem(2);
-			((OnCreateColorListener)mNewColorPagerAdapter.getItem(mViewPager.getCurrentItem())).stateChanged();
+			((OnCreateColorListener)mNewColorPagerAdapter.getItem(WHEEL_PAGE)).stateChanged();
+			mViewPager.setCurrentItem(WHEEL_PAGE);
 		}
 	}
 

@@ -87,7 +87,8 @@ public class ColorWheelFragment extends SherlockFragment implements OnCreateMood
 		if (bs.hue != null && bs.sat!=null){
 			
 			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
-			hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+			Float[] input = {hsv[0]/360f, hsv[1]};
+			hs.xy = Utils.hsTOxy(input);
 			
 			picker.setColor(Color.HSVToColor(hsv));
 			picker.setOldCenterColor(Color.HSVToColor(hsv));
@@ -96,7 +97,7 @@ public class ColorWheelFragment extends SherlockFragment implements OnCreateMood
 		if(bs.xy!=null){
 			hs.xy = bs.xy;
 			
-			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
+			Float[] hueSat = Utils.xyTOhs(hs.xy);
 			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
 			
 			int rgb = Color.HSVToColor(hsv);
@@ -162,7 +163,8 @@ public class ColorWheelFragment extends SherlockFragment implements OnCreateMood
 		int blue = ((rgb)&0xFF);
 		Color.RGBToHSV(red, green, blue, hsv);
 		
-		hs.xy = Utils.hsTOxy(hsv[0]/360f, hsv[1]);
+		Float[] input = {hsv[0]/360f, hsv[1]};
+		hs.xy = Utils.hsTOxy(input);
 		hs.hue = null;
 		hs.sat = null;
 		preview();

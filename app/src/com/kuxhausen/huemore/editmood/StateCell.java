@@ -26,6 +26,16 @@ public class StateCell {
 		context = ctx;
 	}
 	
+	public StateCell clone(){
+		StateCell copy = new StateCell(context);
+		if(hs!=null)
+			copy.hs = hs.clone();
+		if(name!=null)
+			copy.name = new String(name);
+		copy.selected = Boolean.valueOf(selected);
+		return copy;
+	}
+	
 	public View getView(int position, ViewGroup parent, OnClickListener l, SherlockFragment frag) {
 		View rowView;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
@@ -38,7 +48,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			Float[] hueSat = Utils.xyTOhs(hs.xy[0], hs.xy[1]);
+			Float[] hueSat = Utils.xyTOhs(hs.xy);
 			float[] hsv = new float[3];
 	    	hsv[0] = (float) (hueSat[0] *360) ;
 	    	hsv[1] = (float) (hueSat[1]);

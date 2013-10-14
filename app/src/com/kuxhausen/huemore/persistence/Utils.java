@@ -74,7 +74,10 @@ public class Utils {
 	 * @param s in 0 to 1
 	 * @return CIE 1931 xy each ranging 0 to 1
 	 */
-	public static Float[] hsTOxy(float h, float s){
+	public static Float[] hsTOxy(Float[] input){
+		
+		float h = Float.valueOf(input[0]);
+		float s = Float.valueOf(input[1]);
 		
 		h = Math.max(0f, Math.min(h, 1f));
 		s = Math.max(0f, Math.min(s, 1f));
@@ -106,7 +109,10 @@ public class Utils {
 	 * @param y CIE 1931 y ranging from 0 to 1
 	 * @return h,s each ranging 0 to 1
 	 */
-	public static Float[] xyTOhs(float x, float y){
+	public static Float[] xyTOhs(Float[] input){
+		float x = Float.valueOf(input[0]);
+		float y = Float.valueOf(input[1]);		
+		
 		float z = 1.0f - x - y; 
 		float Y = 1f; // The given brightness value
 		float X = (Y / y) * x;  
