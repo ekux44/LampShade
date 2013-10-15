@@ -116,9 +116,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		loop.setOnCheckedChangeListener(this);
 	    redrawGrid();
 	    
-	    if(timedMode || multiMode){
+	    if(multiMode){
 	    	myView.findViewById(R.id.confirmationBar).setVisibility(View.GONE);
 	    	myView.findViewById(R.id.advancedLinearLayout).setVisibility(View.GONE);
+	    } else if(timedMode){
+	    	myView.findViewById(R.id.confirmationBar).setVisibility(View.GONE);
+	    	myView.findViewById(R.id.moodNameEditText).setVisibility(View.GONE);
 	    }
 	    else
 	    {
