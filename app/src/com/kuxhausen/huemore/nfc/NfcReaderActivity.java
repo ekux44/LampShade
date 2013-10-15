@@ -19,7 +19,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.DecodeErrorActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
@@ -38,7 +37,6 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements
 		OnCheckedChangeListener, OnClickListener {
 
-	Gson gson = new Gson();
 	Integer[] bulbS = null;
 	ToggleButton onButton;
 	Button doneButton;

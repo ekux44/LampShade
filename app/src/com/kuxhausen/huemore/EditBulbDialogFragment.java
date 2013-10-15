@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -25,7 +24,6 @@ public class EditBulbDialogFragment extends DialogFragment {
 
 	EditText nameEditText;
 	int bulbNumber;
-	Gson gson = new Gson();
 	BulbListFragment bulbF;
 
 	private GodObject parrentActivity;

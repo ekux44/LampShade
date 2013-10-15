@@ -122,6 +122,10 @@ public class BulbState {
 	
 	public BulbState clone(){
 		Gson gson = new Gson();
-		return gson.fromJson(gson.toJson(this), BulbState.class);
+		try{
+			return gson.fromJson(gson.toJson(this), BulbState.class);
+		} catch (Exception e){
+			return new BulbState();
+		}
 	}
 }

@@ -289,9 +289,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ " TEXT," + MoodColumns.STATE + " TEXT" + ");");
 				
 				for(String key : moodMap.keySet()){
-					cv.put(MoodColumns.MOOD, key);
-					cv.put(MoodColumns.STATE, HueUrlEncoder.encode(moodMap.get(key)));
-					db.insert(MoodColumns.TABLE_NAME, null, cv);
+					try{
+						cv.put(MoodColumns.MOOD, key);
+						cv.put(MoodColumns.STATE, HueUrlEncoder.encode(moodMap.get(key)));
+						db.insert(MoodColumns.TABLE_NAME, null, cv);
+					} catch (Exception e) {
+					}
 				}
 				
 				//remove any nameless groups

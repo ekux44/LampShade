@@ -35,7 +35,6 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.DecodeErrorActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
@@ -57,7 +56,6 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 	Context context;
-	Gson gson = new Gson();
 
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
