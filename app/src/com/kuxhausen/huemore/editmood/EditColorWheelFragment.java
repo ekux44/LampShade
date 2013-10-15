@@ -51,7 +51,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 		Float[] newXY = Utils.hsTOxy(newHueSat);
 		
 		BulbState state = statePager.getState();
-		
+		state.on= true;
 		state.xy = newXY;
 		state.hue = null;
 		state.sat = null;
@@ -68,6 +68,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			float[] hsv = { (state.hue * 360) / 65535, state.sat / 255f, 1 };
 			Float[] input = {hsv[0]/360f, hsv[1]};
 			state.xy = Utils.hsTOxy(input);
+			state.on = true;
 			
 			int rgb = Color.HSVToColor(hsv);
 			if(picker!=null&&saturationBar!=null){
@@ -86,6 +87,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 		if(state.xy!=null){
 			Float[] hueSat = Utils.xyTOhs(state.xy);
 			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
+			state.on=true;
 			
 			int rgb = Color.HSVToColor(hsv);
 			

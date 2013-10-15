@@ -40,8 +40,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	Gson gson = new Gson();
 	
 	public BulbState getState(){
-		if(currentState==null)
+		if(currentState==null){
 			currentState = new BulbState();
+			currentState.on = true;
+		}
 		return currentState;
 	}
 	public void setState(BulbState newState, OnCreateColorListener initiator, String optionalMessage){		
