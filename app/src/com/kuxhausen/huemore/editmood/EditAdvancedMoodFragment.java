@@ -303,7 +303,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				vg.rowSpec = GridLayout.spec(r+initialRows);
 				vg.setGravity(Gravity.CENTER);
 				
-				View v = timeslotDuration.get(r).getSpinner();
+				View v = timeslotDuration.get(r).getView();
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
 				grid.addView(v, vg);
@@ -514,7 +514,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			grid.setRowCount(initialRows + gridRows()+1);
 			
 			
-			TimeslotDuration td = new TimeslotDuration(this, getSpinnerId());
+			TimeslotDuration td = new OffsetTimeslot(this, getSpinnerId());
 			td.setDuration(duration);
 			timeslotDuration.add(td);
 			
