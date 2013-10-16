@@ -22,8 +22,8 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 	private ArrayList<StateCell> list;
 	private EditStatePagerDialogFragment statePager;
 	
-	private void loadPrevious(ArrayList<StateCell> cells){
-		list = new ArrayList<StateCell>();
+	public static ArrayList<StateCell> extractUniques(ArrayList<StateCell> cells){
+		ArrayList<StateCell> list = new ArrayList<StateCell>();
 		HashSet<String> bulbStateHash = new HashSet<String>();
 		for(StateCell cell : cells){
 			StateCell localCopy = cell.clone();
@@ -32,6 +32,11 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 				list.add(localCopy);
 			}
 		}
+		return list;
+	}
+	
+	private void loadPrevious(ArrayList<StateCell> cells){
+		list = extractUniques(cells);
 	}
 	
 	@Override

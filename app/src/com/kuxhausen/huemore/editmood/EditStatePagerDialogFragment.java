@@ -39,6 +39,9 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	int[] transitionValues;
 	Gson gson = new Gson();
 	
+	/** 1 if true, 0 if false **/
+	private int hasNoRecentStates = 1;
+	
 	public BulbState getState(){
 		if(currentState==null)
 			currentState = new BulbState();
@@ -73,7 +76,12 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	
 	public void setParrentMood(EditAdvancedMoodFragment eamf){
 		parrentMood = eamf;
+		if(RecentStatesFragment.extractUniques(eamf.dataRay).size()>0)
+			hasNoRecentStates = 0;
+		else
+			hasNoRecentStates = 1;
 	}
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +109,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 		mViewPager = (ViewPager) myView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mNewColorPagerAdapter);
+		mViewPager.setOffscreenPageLimit(3);
 		currentPage = 0;
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
@@ -146,12 +155,12 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			mViewPager.setCurrentItem(RECENT_PAGE);
 		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(SAMPLE_PAGE)).stateChanged())
 			mViewPager.setCurrentItem(SAMPLE_PAGE);
-		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(TEMP_PAGE)).stateChanged())
-			mViewPager.setCurrentItem(TEMP_PAGE);
-		else{
-			((OnCreateColorListener)mNewColorPagerAdapter.getItem(WHEEL_PAGE)).stateChanged();
-			mViewPager.setCurrentItem(WHEEL_PAGE);
-		}
+		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(TEMP_PAGE-hasNoRecentStates)).stateChanged())
+			mViewPager.setCurrentItem(TEMP_PAGE-hasNoRecentStates);
+		else if(((OnCreateColorListener)mNewColorPagerAdapter.getItem(WHEEL_PAGE-hasNoRecentStates)).stateChanged())
+			mViewPager.setCurrentItem(WHEEL_PAGE-hasNoRecentStates);
+		else
+			mViewPager.setCurrentItem(RECENT_PAGE);
 	}
 
 	/**
@@ -161,7 +170,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	public static class NewMoodPagerAdapter extends FragmentPagerAdapter {
 
 		EditStatePagerDialogFragment frag;
-
+		
 		public NewMoodPagerAdapter(EditStatePagerDialogFragment fragment) {
 			super(fragment.getChildFragmentManager());
 			frag = fragment;
@@ -171,46 +180,43 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		public Fragment getItem(int i) {
 			if (newColorFragments[i] != null)
 				return (Fragment) newColorFragments[i];
-			switch (i) {
-			case 0:
+			
+			if(i == SAMPLE_PAGE){
 				newColorFragments[i] = new SampleStatesFragment();
 				newColorFragments[i].setStatePager(frag);
 				return (Fragment) newColorFragments[i];
-			case 1:
-				newColorFragments[i] = new RecentStatesFragment();
-				newColorFragments[i].setStatePager(frag);
-				return (Fragment) newColorFragments[i];
-			case 2:
+			}  else if (i == WHEEL_PAGE - frag.hasNoRecentStates){
 				newColorFragments[i] = new EditColorWheelFragment();
 				newColorFragments[i].setStatePager(frag);
 				return (Fragment) newColorFragments[i];
-			case 3:
+			} else if (i == TEMP_PAGE - frag.hasNoRecentStates){
 				newColorFragments[i] = new EditColorTempFragment();
 				newColorFragments[i].setStatePager(frag);
 				return (Fragment) newColorFragments[i];
-			default:
-				return null;
+			} else if (i == RECENT_PAGE){
+				newColorFragments[i] = new RecentStatesFragment();
+				newColorFragments[i].setStatePager(frag);
+				return (Fragment) newColorFragments[i];
 			}
+			else
+				return null;
 		}
 
 		@Override
 		public int getCount() {
-			return 4;
+			return 4-frag.hasNoRecentStates;
 		}
 
 		@Override
-		public CharSequence getPageTitle(int position) {
-			switch (position) {
-			case 0:
+		public CharSequence getPageTitle(int i) {
+			if(i == SAMPLE_PAGE)
 				return frag.getActivity().getString(R.string.cap_sample_state);
-			case 1:
-				return frag.getActivity().getString(R.string.cap_recent_state);
-			case 2:
+			else if (i == WHEEL_PAGE - frag.hasNoRecentStates)
 				return frag.getActivity().getString(R.string.cap_hue_sat_mode);
-			case 3:
-				return frag.getActivity().getString(
-						R.string.cap_color_temp_mode);
-			}
+			else if (i == TEMP_PAGE - frag.hasNoRecentStates)
+				return frag.getActivity().getString(R.string.cap_color_temp_mode);
+			else if (i == RECENT_PAGE)
+				return frag.getActivity().getString(R.string.cap_recent_state);
 			return "";
 		}
 	}
