@@ -44,7 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.GridLayout;
 
-public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCheckedChangeListener, OnCreateMoodListener {
+public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
@@ -55,24 +55,28 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private final static int defaultDuration = 10;
 	
 	Button addChannel, addTimeslot;
-	CheckBox loop;
+	
 	static String priorName;
 	static Mood priorMood;
 	
+	private int pageType;
 	private boolean timedMode;
 	private boolean multiMode;
 	
 	public EditMoodPagerDialogFragment pager;
 	
 	public void setTimedMode(EditMoodPagerDialogFragment p){
+		pageType = EditMoodPagerDialogFragment.TIMED_PAGE;
 		pager = p;
 		timedMode = true;
 	}
 	public void setMultiMode(EditMoodPagerDialogFragment p){
+		pageType = EditMoodPagerDialogFragment.MULTI_PAGE;
 		pager = p;
 		multiMode = true;
 	}
 	public void setAdvMode(EditMoodPagerDialogFragment p){
+		pageType = EditMoodPagerDialogFragment.ADV_PAGE;
 		pager = p;
 	}
 	
@@ -81,8 +85,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
-		
-		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
 		
 		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
 		addTimeslot.setOnClickListener(this);
@@ -105,7 +107,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		addRow(defaultDuration);
 		if(!multiMode){
 			addRow(defaultDuration);
-			addRow(defaultDuration);
 		} else{
 			myView.findViewById(R.id.addTimeslotButton).setVisibility(View.GONE);
 		}
@@ -113,16 +114,12 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		if(!timedMode){
 			addCol();
 		} else{
-			loop.setChecked(true);
+			pager.setChecked(true);
 			myView.findViewById(R.id.addChannelButton).setVisibility(View.GONE);
 		}
 	    
-		loop.setOnCheckedChangeListener(this);
 	    redrawGrid();
 	    
-	    if(multiMode){
-	    	myView.findViewById(R.id.loopCheckBox).setVisibility(View.GONE);
-	    } 
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
 			
@@ -154,8 +151,9 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		Mood m = new Mood();
 		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "");
 	}
-	private void preview(){
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), pager.getName());
+	void preview(){
+		if(pageType == EditMoodPagerDialogFragment.currentPage)
+			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), pager.getName());
 		
 	}
 	
@@ -185,7 +183,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			dataRay.get(gridCols()*row + e.channel).hs = e.state;
 		}
 		
-		loop.setChecked(mFromDB.isInfiniteLooping());
+		pager.setChecked(mFromDB.isInfiniteLooping());
 		redrawGrid();
 	}
 	private Mood getMood() {		
@@ -193,7 +191,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		m.usesTiming = true; //TODO not always the case...
 		m.setNumChannels(gridCols());
 		m.timeAddressingRepeatPolicy = false;
-		m.setInfiniteLooping(loop.isChecked());
+		m.setInfiniteLooping(pager.isChecked());
 		
 		ArrayList<Event> events = new ArrayList<Event>();
 		for(int i = 0; i< dataRay.size(); i++){
@@ -529,11 +527,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			else if(gridCols()>num)
 				deleteCol(gridCols()-1);
 		}
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		preview();
 	}
 
 	private int getSpinnerId(){

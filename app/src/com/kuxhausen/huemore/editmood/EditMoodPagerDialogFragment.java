@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -42,7 +45,7 @@ import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditMoodPagerDialogFragment extends GodObject implements
-		OnClickListener {
+		OnClickListener, OnCheckedChangeListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -64,10 +67,13 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 
 	static int currentPage;
 
-	EditText nameEditText;
+	private EditText nameEditText;
 	static String priorName;
 	static Mood priorMood;
 	static Gson gson = new Gson();
+	private CheckBox loop;
+	
+	public final static int WHEEL_PAGE = 0, TIMED_PAGE=1, MULTI_PAGE=2, ADV_PAGE=3;
 
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
@@ -85,19 +91,30 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		
-		nameEditText = (EditText) this.findViewById(R.id.editText1);
-
+		nameEditText = (EditText) this.findViewById(R.id.moodNameEditText);
+		loop = (CheckBox)this.findViewById(R.id.loopCheckBox);
+		loop.setVisibility(View.GONE);
+		
 		mEditMoodPagerAdapter = new EditMoodPagerAdapter(this);
 
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager = (ViewPager) this.findViewById(R.id.pager);
 		mViewPager.setAdapter(mEditMoodPagerAdapter);
-		mViewPager.setOffscreenPageLimit(2);
+		mViewPager.setOffscreenPageLimit(4);
 		mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int position) {
 				currentPage = position;
+				if(loop!=null){
+					if(currentPage == TIMED_PAGE || currentPage ==ADV_PAGE){
+						loop.setVisibility(View.VISIBLE);
+					} else {
+						loop.setVisibility(View.GONE);
+					}
+						
+				}
+				
 			}
 
 		});
@@ -123,6 +140,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		} else {
 			priorMood = null;
 		}
+		loop.setOnCheckedChangeListener(this);
 	}
 	
 	private static int calculateRoute(Mood m){
@@ -131,17 +149,17 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		if(!m.usesTiming){
 			if (m.events.length == 1 && m.events[0].state.ct == null) {
 				// show simple mood page
-				return 0;
+				return WHEEL_PAGE;
 			} else
 			{
 				// show multi mood page
-				return 2;
+				return MULTI_PAGE;
 			}
 		}else{
 			if(m.getNumChannels()==1){
-				return 1;
+				return TIMED_PAGE;
 			}else{
-				return 3;
+				return ADV_PAGE;
 			}	
 		}
 	}
@@ -155,6 +173,21 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		if(nameEditText!=null)
 			return nameEditText.getText().toString();
 		return "";
+	}
+	public boolean isChecked(){
+		if(loop!=null)
+			return loop.isChecked();
+		return false;
+	}
+	public void setChecked(boolean check){
+		if(loop!=null)
+			loop.setChecked(check);
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(currentPage==TIMED_PAGE || currentPage==ADV_PAGE)
+			((EditAdvancedMoodFragment) mEditMoodPagerAdapter.getItem(currentPage)).preview();
 	}
 	
 	/**
@@ -175,44 +208,44 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 			if (newMoodFragments[i] != null)
 				return (Fragment) newMoodFragments[i];
 			switch (i) {
-			case 0:
+			case WHEEL_PAGE:
 				ColorWheelFragment nchf = new ColorWheelFragment();
 				nchf.hideColorLoop();
 				Bundle args = new Bundle();
 				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (calculateRoute(priorMood)==0) {
+				if (calculateRoute(priorMood)==WHEEL_PAGE) {
 					args.putString(InternalArguments.PREVIOUS_STATE,
 							gson.toJson(priorMood.events[0].state));
 				}
 				nchf.setArguments(args);
 				newMoodFragments[i] = nchf;
 				return (Fragment) newMoodFragments[i];
-			case 1:
+			case TIMED_PAGE:
 				EditAdvancedMoodFragment eamf = new EditAdvancedMoodFragment();
 				eamf.setTimedMode(frag);
 				Bundle args1 = new Bundle();
-				if (calculateRoute(priorMood)==1) {
+				if (calculateRoute(priorMood)==TIMED_PAGE) {
 					args1.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				eamf.setArguments(args1);
 				newMoodFragments[i] = eamf;
 				return (Fragment) newMoodFragments[i];
-			case 2:
+			case MULTI_PAGE:
 				EditAdvancedMoodFragment eamf2 = new EditAdvancedMoodFragment();
 				eamf2.setMultiMode(frag);
 				Bundle args2 = new Bundle();
-				if (calculateRoute(priorMood)==2) {
+				if (calculateRoute(priorMood)==MULTI_PAGE) {
 					args2.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				eamf2.setArguments(args2);
 				newMoodFragments[i] = eamf2;
 				return (Fragment) newMoodFragments[i];
-			case 3:
+			case ADV_PAGE:
 				EditAdvancedMoodFragment eamf3 = new EditAdvancedMoodFragment();
 				eamf3.setAdvMode(frag);
 				Bundle args3 = new Bundle();
 				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (calculateRoute(priorMood)==3) {
+				if (calculateRoute(priorMood)==ADV_PAGE) {
 					args3.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				eamf3.setArguments(args3);

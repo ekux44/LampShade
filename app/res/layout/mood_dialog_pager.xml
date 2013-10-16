@@ -3,15 +3,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hint_mood_name"
-        android:imeOptions="actionDone"
-        android:inputType="text" >
-    </EditText>
+	<LinearLayout
+	    android:id="@+id/advancedLinearLayout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:padding="8dp" >
+
+         <EditText
+		    android:id="@+id/moodNameEditText"
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/hint_mood_name"
+		    android:imeOptions="actionDone"
+		    android:inputType="text"
+		    android:layout_weight="1" >
+		</EditText>
+	    <CheckBox
+        	android:id="@+id/loopCheckBox"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+       		android:text="@string/infinite_loop" />
+	</LinearLayout>
     
     <include layout="@layout/horizontal_divider_line"/>
     
