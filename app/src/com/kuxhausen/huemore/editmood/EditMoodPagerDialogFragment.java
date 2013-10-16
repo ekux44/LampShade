@@ -189,7 +189,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				return (Fragment) newMoodFragments[i];
 			case 1:
 				EditAdvancedMoodFragment eamf = new EditAdvancedMoodFragment();
-				eamf.setTimedMode();
+				eamf.setTimedMode(frag);
 				Bundle args1 = new Bundle();
 				if (calculateRoute(priorMood)==1) {
 					args1.putString(InternalArguments.MOOD_NAME, priorName);
@@ -199,7 +199,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				return (Fragment) newMoodFragments[i];
 			case 2:
 				EditAdvancedMoodFragment eamf2 = new EditAdvancedMoodFragment();
-				eamf2.setMultiMode();
+				eamf2.setMultiMode(frag);
 				Bundle args2 = new Bundle();
 				if (calculateRoute(priorMood)==2) {
 					args2.putString(InternalArguments.MOOD_NAME, priorName);
@@ -208,15 +208,15 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				newMoodFragments[i] = eamf2;
 				return (Fragment) newMoodFragments[i];
 			case 3:
-				EditComplexMoodFragment ecmf = new EditComplexMoodFragment();
-				ecmf.pager = frag;
+				EditAdvancedMoodFragment eamf3 = new EditAdvancedMoodFragment();
+				eamf3.setAdvMode(frag);
 				Bundle args3 = new Bundle();
 				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
 				if (calculateRoute(priorMood)==3) {
 					args3.putString(InternalArguments.MOOD_NAME, priorName);
 				}
-				ecmf.setArguments(args3);
-				newMoodFragments[i] = ecmf;
+				eamf3.setArguments(args3);
+				newMoodFragments[i] = eamf3;
 				return (Fragment) newMoodFragments[i];
 			default:
 				return null;

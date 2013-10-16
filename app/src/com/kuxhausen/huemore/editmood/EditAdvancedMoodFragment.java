@@ -55,7 +55,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private final static int defaultDuration = 10;
 	
 	Button addChannel, addTimeslot;
-	EditText nameEditText;
 	CheckBox loop;
 	static String priorName;
 	static Mood priorMood;
@@ -63,11 +62,18 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private boolean timedMode;
 	private boolean multiMode;
 	
-	public void setTimedMode(){
+	public EditMoodPagerDialogFragment pager;
+	
+	public void setTimedMode(EditMoodPagerDialogFragment p){
+		pager = p;
 		timedMode = true;
 	}
-	public void setMultiMode(){
+	public void setMultiMode(EditMoodPagerDialogFragment p){
+		pager = p;
 		multiMode = true;
+	}
+	public void setAdvMode(EditMoodPagerDialogFragment p){
+		pager = p;
 	}
 	
 	@Override
@@ -75,8 +81,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
-		
-		nameEditText = (EditText)myView.findViewById(R.id.moodNameEditText);
 		
 		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
 		
@@ -117,26 +121,14 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	    redrawGrid();
 	    
 	    if(multiMode){
-	    	myView.findViewById(R.id.confirmationBar).setVisibility(View.GONE);
-	    	myView.findViewById(R.id.advancedLinearLayout).setVisibility(View.GONE);
-	    } else if(timedMode){
-	    	myView.findViewById(R.id.confirmationBar).setVisibility(View.GONE);
-	    	myView.findViewById(R.id.moodNameEditText).setVisibility(View.GONE);
-	    }
-	    else
-	    {
-		    Button cancelButton = (Button) myView.findViewById(R.id.cancel);
-			cancelButton.setOnClickListener(this);
-			Button okayButton = (Button) myView.findViewById(R.id.okay);
-			okayButton.setOnClickListener(this);
-	    }
+	    	myView.findViewById(R.id.loopCheckBox).setVisibility(View.GONE);
+	    } 
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
 			
 			//load prior mood
 			priorName = args.getString(InternalArguments.MOOD_NAME);
 			loadMood(Utils.getMoodFromDatabase(priorName, this.getActivity()));
-			nameEditText.setText(priorName);
 		}
 	    
 	    return myView;
@@ -163,7 +155,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "");
 	}
 	private void preview(){
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), nameEditText.getText().toString());
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), pager.getName());
 		
 	}
 	
@@ -256,30 +248,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		case R.id.addTimeslotButton:
 			addRow(defaultDuration);
 			redrawGrid();
-			break;
-		case R.id.okay:
-			if (priorName != null) {
-				// delete old mood
-				String moodSelect = MoodColumns.MOOD + "=?";
-				String[] moodArg = { priorName };
-				this.getActivity().getContentResolver().delete(
-						DatabaseDefinitions.MoodColumns.MOODS_URI,
-						moodSelect, moodArg);
-			}
-			String moodName=nameEditText.getText().toString();
-			if(moodName==null || moodName.length()<1){
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-				int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, 0);
-				Editor edit = settings.edit();
-				edit.putInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, unnamedNumber);
-				edit.commit();
-				moodName = this.getResources().getString(R.string.unnamed_mood)+" "+unnamedNumber;
-			}
-			this.onCreateMood(moodName);
-			getActivity().onBackPressed();
-			break;
-		case R.id.cancel:
-			getActivity().onBackPressed();
 			break;
 		}
 		
