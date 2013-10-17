@@ -60,7 +60,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	static Mood priorMood;
 	
 	private int pageType;
-	private boolean timedMode;
 	private boolean multiMode;
 	
 	public EditMoodPagerDialogFragment pager;
@@ -68,16 +67,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public void setTimedMode(EditMoodPagerDialogFragment p){
 		pageType = EditMoodPagerDialogFragment.TIMED_PAGE;
 		pager = p;
-		timedMode = true;
 	}
 	public void setMultiMode(EditMoodPagerDialogFragment p){
 		pageType = EditMoodPagerDialogFragment.MULTI_PAGE;
 		pager = p;
 		multiMode = true;
-	}
-	public void setAdvMode(EditMoodPagerDialogFragment p){
-		pageType = EditMoodPagerDialogFragment.ADV_PAGE;
-		pager = p;
 	}
 	
 	@Override
@@ -110,13 +104,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		} else{
 			myView.findViewById(R.id.addTimeslotButton).setVisibility(View.GONE);
 		}
-		
-		if(!timedMode){
-			addCol();
-		} else{
-			pager.setChecked(true);
-			myView.findViewById(R.id.addChannelButton).setVisibility(View.GONE);
-		}
+		addCol();
 	    
 	    redrawGrid();
 	    
@@ -337,11 +325,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 		contextSpot = (Integer)v.getTag();
 		
-		if(timedMode){
-			android.view.MenuInflater inflater = this.getActivity()
-					.getMenuInflater();
-			inflater.inflate(R.menu.context_timed_state, menu);
-		} else if (multiMode){
+		if (multiMode){
 			android.view.MenuInflater inflater = this.getActivity()
 					.getMenuInflater();
 			inflater.inflate(R.menu.context_multi_state, menu);
@@ -354,32 +338,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		if(timedMode){
-			switch (item.getItemId()) {
-			case R.id.contexttimedmenu_edit:
-				stopPreview();
-				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-				cpdf.setParrentMood(this);
-				Bundle args = new Bundle();
-				args.putString(InternalArguments.PREVIOUS_STATE,
-						gson.toJson(dataRay.get(contextSpot).hs));
-				cpdf.setArguments(args);
-				cpdf.setTargetFragment(this, contextSpot);
-				cpdf.show(getFragmentManager(),
-						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-				return true;
-			case R.id.contexttimedmenu_delete:
-				delete(contextSpot);
-				redrawGrid();
-				return true;
-			case R.id.contexttimedmenu_delete_timeslot:
-				deleteRow(contextSpot);
-				redrawGrid();
-				return true;
-			default:
-				return super.onContextItemSelected(item);
-			}
-		}else if(multiMode){
+		if(multiMode){
 			switch (item.getItemId()) {
 			case R.id.contextmultimenu_edit:
 				stopPreview();

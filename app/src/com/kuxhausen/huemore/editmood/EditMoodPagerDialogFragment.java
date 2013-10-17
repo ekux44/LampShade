@@ -73,7 +73,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 	static Gson gson = new Gson();
 	private CheckBox loop;
 	
-	public final static int WHEEL_PAGE = 0, TIMED_PAGE=1, MULTI_PAGE=2, ADV_PAGE=3;
+	public final static int WHEEL_PAGE = 0, MULTI_PAGE=1, TIMED_PAGE=2;
 
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
@@ -107,7 +107,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 			public void onPageSelected(int position) {
 				currentPage = position;
 				if(loop!=null){
-					if(currentPage == TIMED_PAGE || currentPage ==ADV_PAGE){
+					if(currentPage == TIMED_PAGE){
 						loop.setVisibility(View.VISIBLE);
 					} else {
 						loop.setVisibility(View.GONE);
@@ -155,13 +155,8 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				// show multi mood page
 				return MULTI_PAGE;
 			}
-		}else{
-			if(m.getNumChannels()==1){
-				return TIMED_PAGE;
-			}else{
-				return ADV_PAGE;
-			}	
-		}
+		}else
+			return TIMED_PAGE;
 	}
 	
 	public void routeMood(Mood m){
@@ -186,7 +181,7 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if(currentPage==TIMED_PAGE || currentPage==ADV_PAGE)
+		if(currentPage==TIMED_PAGE)
 			((EditAdvancedMoodFragment) mEditMoodPagerAdapter.getItem(currentPage)).preview();
 	}
 	
@@ -240,17 +235,6 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 				eamf2.setArguments(args2);
 				newMoodFragments[i] = eamf2;
 				return (Fragment) newMoodFragments[i];
-			case ADV_PAGE:
-				EditAdvancedMoodFragment eamf3 = new EditAdvancedMoodFragment();
-				eamf3.setAdvMode(frag);
-				Bundle args3 = new Bundle();
-				args3.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (calculateRoute(priorMood)==ADV_PAGE) {
-					args3.putString(InternalArguments.MOOD_NAME, priorName);
-				}
-				eamf3.setArguments(args3);
-				newMoodFragments[i] = eamf3;
-				return (Fragment) newMoodFragments[i];
 			default:
 				return null;
 			}
@@ -258,20 +242,18 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 
 		@Override
 		public int getCount() {
-			return 4;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
-			case 0:
+			case WHEEL_PAGE:
 				return frag.getString(R.string.cap_simple_mood);
-			case 1:
+			case TIMED_PAGE:
 				return frag.getString(R.string.cap_timed_mood);
-			case 2:
+			case MULTI_PAGE:
 				return frag.getString(R.string.cap_multi_mood);
-			case 3:
-				return frag.getString(R.string.cap_advanced_mood);
 			}
 			return "";
 		}
