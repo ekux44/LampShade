@@ -93,7 +93,7 @@ public class NetworkMethods {
 		String url = "http://" + bridge + "/api/" + hash+ "/lights";
 		
 		GsonRequest<BulbList> req = new GsonRequest<BulbList>(Method.GET, url, null, BulbList.class, null,
-				new BulbListSuccessListener(service, listener), new BasicErrorListener(service));
+				new BulbListSuccessListener(service, listener, service), new BasicErrorListener(service));
 		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		service.getRequestQueue().add(req);
 	}
