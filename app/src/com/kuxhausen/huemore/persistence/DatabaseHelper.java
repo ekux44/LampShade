@@ -156,7 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				while (cursor.moveToNext()) {
 					try {
 						String name = cursor.getString(0);
-						Mood mood = HueUrlEncoder.decode(cursor.getString(1)).second;
+						Mood mood = HueUrlEncoder.decode(cursor.getString(1)).second.first;
 						moodMap.put(name, mood);
 					} catch (InvalidEncodingException e){
 					} catch (FutureEncodingException e) {
@@ -273,7 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				while (moodCursor.moveToNext()) {
 					try {
 						String name = moodCursor.getString(0);
-						Mood mood = HueUrlEncoder.decode(moodCursor.getString(1)).second;
+						Mood mood = HueUrlEncoder.decode(moodCursor.getString(1)).second.first;
 						moodMap.put(name, mood);
 					} catch (InvalidEncodingException e){
 					} catch (FutureEncodingException e) {
@@ -334,7 +334,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				while (moodCursor.moveToNext()) {
 					try {
 						String name = moodCursor.getString(0);
-						Mood mood = HueUrlEncoder.decode(moodCursor.getString(1)).second;
+						Mood mood = HueUrlEncoder.decode(moodCursor.getString(1)).second.first;
 						
 						for(Event e : mood.events){
 							if(e.state.hue!=null && e.state.sat!=null && conversionMap.get(e.state.hue)!=null && conversionMap.get(e.state.hue).sat.equals(e.state.sat)){

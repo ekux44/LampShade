@@ -137,11 +137,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	
 	private void stopPreview(){
 		Mood m = new Mood();
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "");
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "", null);
 	}
 	void preview(){
 		if(pageType == EditMoodPagerDialogFragment.currentPage && grid!=null)
-			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), pager.getName());
+			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), pager.getName(), null);
 		
 	}
 	

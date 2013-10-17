@@ -91,21 +91,15 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				int brightness = brightnessBar.getProgress();
-				for (int i = 0; i < sharedMood.events.length; i++) {
-					//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
-					sharedMood.events[i].state.bri = brightness;
-				}
-				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null);
+				
+				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null, brightness);
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				int brightness = brightnessBar.getProgress();
-				for (int i = 0; i < sharedMood.events.length; i++) {
-					//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
-					sharedMood.events[i].state.bri = brightness;
-				}
-				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null);
+				
+				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null, brightness);
 			}
 
 			@Override
@@ -113,11 +107,8 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 					boolean fromUser) {
 				if(fromUser){
 					int brightness = brightnessBar.getProgress();
-					for (int i = 0; i < sharedMood.events.length; i++) {
-						//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
-						sharedMood.events[i].state.bri = brightness;
-					}
-					Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null);
+					
+					Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null, brightness);
 				}
 			}
 		});
@@ -150,7 +141,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		Uri data = getIntent().getData();
 		String encodedMood = data.getQuery();
 		try {
-			sharedMood = HueUrlEncoder.decode(encodedMood).second;
+			sharedMood = HueUrlEncoder.decode(encodedMood).second.first;
 		} catch (InvalidEncodingException e) {
 			BrokenLinkDialogFragment bldf = new BrokenLinkDialogFragment();
 			bldf.show(this.getSupportFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -187,7 +178,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.previewButton:
-				Utils.transmit(context, InternalArguments.ENCODED_MOOD, sharedMood, getBulbs(), name.getText().toString());
+				Utils.transmit(context, InternalArguments.ENCODED_MOOD, sharedMood, getBulbs(), name.getText().toString(),null);
 				break;
 			case R.id.okay:
 				String moodName = name.getText().toString();

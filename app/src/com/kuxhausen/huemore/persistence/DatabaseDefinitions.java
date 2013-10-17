@@ -147,6 +147,7 @@ public final class DatabaseDefinitions {
 		public final static String ALARM_JSON = "AlarmJson";
 		public final static String DECODER_ERROR_UPGRADE = "DecoderErrorUpgrade";
 		public static final String DURATION_TIME = "DurationTime";
+		public static final String BRIGHTNESS = "Brightness";
 	}
 
 	public static final class PreferenceKeys {

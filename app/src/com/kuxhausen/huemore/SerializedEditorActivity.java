@@ -166,12 +166,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		Mood m = Utils.getMoodFromDatabase(moodName, this);
 		
 		int brightness = brightnessBar.getProgress();
-		for (int i = 0; i < m.events.length; i++) {
-			//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
-			m.events[i].state.bri = brightness;
-		}
 		
-		Utils.transmit(context, InternalArguments.ENCODED_MOOD, m, bulbS, moodName);
+		Utils.transmit(context, InternalArguments.ENCODED_MOOD, m, bulbS, moodName, brightness);
 	}
 
 	public String getSerializedByNamePreview() {
@@ -235,12 +231,8 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				.getText().toString(), this);
 		
 		int brightness = brightnessBar.getProgress();
-		for (int i = 0; i < m.events.length; i++) {
-			//rewrite the brightness of all events to match brightness bar... need to find a smarter approach to this
-			m.events[i].state.bri = brightness;
-		}
 		
-		String data = HueUrlEncoder.encode(m, bulbS);
+		String data = HueUrlEncoder.encode(m, bulbS, brightness);
 		return url + data;
 	}
 

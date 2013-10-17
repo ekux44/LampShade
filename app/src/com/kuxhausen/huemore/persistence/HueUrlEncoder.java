@@ -19,10 +19,9 @@ public class HueUrlEncoder {
 	
 	public static String encode(Mood mood)
 	{
-		return encode(mood, null);
+		return encode(mood, null, null);
 	}
-	//TODO switch to GroupMoodBrightness object to support relative brightnesses
-	public static String encode(Mood m, Integer[] bulbsAffected){
+	public static String encode(Mood m, Integer[] bulbsAffected, Integer brightness){
 		Mood mood = m.clone();
 		
 		if (mood == null)
@@ -47,30 +46,19 @@ public class HueUrlEncoder {
 				mBitSet.incrementingSet(bulbs[i]);
 		}
 		
-		/** optional brightness added in Protocol_Version_Number==3 **/
+		/** optional total brightness added in Protocol_Version_Number==3 **/
 		{
-			//TODO do more outside of URL encoder
-			//decide if brightness included
-			boolean optionalBrightness = false;
 			/**
 			 * The brightness value to set the light to. Brightness is a scale from 0
 			 * (the minimum the light is capable of) to 255 (the maximum). Note: a
 			 * brightness of 0 is not off.
 			 */
-			Integer brightness = null;
-			for(Event e : mood.events){
-				if(e.state.bri!=null){
-					optionalBrightness= true;
-					brightness = e.state.bri;
-					e.state.bri = null;
-				}
-			}
 			
 			//Flag if optional brightness included
-			mBitSet.incrementingSet(optionalBrightness);
+			mBitSet.incrementingSet(brightness!=null);
 			
 			//If optional brightness included, write it's 8 bits
-			if(optionalBrightness)
+			if(brightness!=null)
 				mBitSet.addNumber(brightness, 8);
 		}
 		
@@ -347,10 +335,11 @@ public class HueUrlEncoder {
 		return bs;
 	}
 	
-	public static Pair<Integer[], Mood> decode(String code) throws InvalidEncodingException, FutureEncodingException{
+	public static Pair<Integer[], Pair<Mood,Integer>> decode(String code) throws InvalidEncodingException, FutureEncodingException{
 		try {
 			Mood mood = new Mood();
 			ArrayList<Integer> bList = new ArrayList<Integer>();
+			Integer brightness = null;
 			ManagedBitSet mBitSet = new ManagedBitSet(code);
 			
 			//3 bit encoding version
@@ -367,7 +356,7 @@ public class HueUrlEncoder {
 			
 			if(encodingVersion == 1||encodingVersion==2 ||encodingVersion == 3){
 				boolean hasBrightness = false;
-				Integer brightness = null;
+				
 				if(encodingVersion>=3){
 					//1 bit optional brightness inclusion flag
 					hasBrightness = mBitSet.incrementingGet();
@@ -407,14 +396,12 @@ public class HueUrlEncoder {
 					//decode each state
 					stateArray[i] = extractState(mBitSet);
 					
-					//TODO support relative brightness outside of URL encoder
-					// for now, stuff global brightness back into states until app changed
-					// if has relative brightness (bri per state) in encoding, throw not implemented
-					if(encodingVersion>=3){
-						if(stateArray[i].bri!=null)
-							throw new FutureEncodingException();
-						if(hasBrightness)
-							stateArray[i].bri = brightness;
+					if(encodingVersion<3){
+						//convert from old brightness stuffing to new relative brightness + total brightness system
+						if(stateArray[i].bri!=null){
+							brightness = stateArray[i].bri;
+							stateArray[i].bri = null;
+						}
 					}
 				}
 				
@@ -454,6 +441,13 @@ public class HueUrlEncoder {
 					Event e = new Event();
 					//decode each state
 					e.state = extractState(mBitSet);
+					
+					//convert from old brightness stuffing to new relative brightness + total brightness system
+					if(e.state.bri!=null){
+						brightness = e.state.bri;
+						e.state.bri = null;
+					}
+						
 					e.channel = i;
 					e.time = 0;
 					eventArray[i] = e;
@@ -475,7 +469,7 @@ public class HueUrlEncoder {
 					bulbs[i]=bList.get(i);
 			}
 					
-			return new Pair<Integer[], Mood>(bulbs, mood);
+			return new Pair<Integer[], Pair<Mood,Integer>>(bulbs, new Pair<Mood, Integer>(mood, brightness));
 		} catch(FutureEncodingException e){
 			throw new FutureEncodingException();
 		}catch(Exception e){

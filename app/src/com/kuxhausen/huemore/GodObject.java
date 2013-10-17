@@ -102,7 +102,7 @@ public abstract class GodObject extends NetworkManagedSherlockFragmentActivity i
 		
 		Mood m = Utils.getMoodFromDatabase(mood, this);
 		
-		Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, mood);
+		Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, mood,null);
 	}
 	
 }

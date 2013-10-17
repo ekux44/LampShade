@@ -13,12 +13,14 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.SaturationBar;
+import com.larswerkman.colorpicker.ValueBar;
 
 public class EditColorWheelFragment extends SherlockFragment implements
 		OnCreateColorListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
 
 	ColorPicker picker;
 	SaturationBar saturationBar;
+	ValueBar valueBar;
 	EditStatePagerDialogFragment statePager;
 	
 	@Override
@@ -26,14 +28,14 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		View myView = inflater.inflate(R.layout.edit_hue_color, null);
+		View myView = inflater.inflate(R.layout.edit_hue_state, null);
 
 		picker = (ColorPicker) myView.findViewById(R.id.picker);
 		saturationBar = (SaturationBar) myView.findViewById(R.id.saturationbar);
 		picker.addSaturationBar(saturationBar);
+		valueBar = (ValueBar) myView.findViewById(R.id.valuebar);
+		picker.addValueBar(valueBar);
 		picker.setOnColorChangedListener(this);
-		
-		myView.findViewById(R.id.colorLoopLayout).setVisibility(View.GONE);
 		
 		return myView;
 	}
@@ -71,7 +73,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			state.on = true;
 			
 			int rgb = Color.HSVToColor(hsv);
-			if(picker!=null&&saturationBar!=null){
+			if(picker!=null&&saturationBar!=null&&valueBar!=null){
 				picker.setOnColorChangedListener(null);
 				picker.setColor(rgb);
 				picker.setOldCenterColor(rgb);
@@ -91,7 +93,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			
 			int rgb = Color.HSVToColor(hsv);
 			
-			if(picker!=null&&saturationBar!=null){
+			if(picker!=null&&saturationBar!=null&&valueBar!=null){
 				picker.setOnColorChangedListener(null);
 				picker.setColor(rgb);
 				picker.setOldCenterColor(rgb);

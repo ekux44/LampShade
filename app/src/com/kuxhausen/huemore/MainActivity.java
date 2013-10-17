@@ -114,22 +114,22 @@ public class MainActivity extends GodObject implements
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
 					BulbState hs = new BulbState();
-					hs.bri = seekBar.getProgress();
 					hs.on = true;
+					Integer brightness = seekBar.getProgress();
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null);
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
 					isTrackingTouch = false;
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
 					BulbState hs = new BulbState();
-					hs.bri = seekBar.getProgress();
 					hs.on = true;
+					Integer brightness = seekBar.getProgress();
 					
 					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null);
+					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
 					isTrackingTouch = true;
 				}
 
@@ -138,11 +138,11 @@ public class MainActivity extends GodObject implements
 						boolean fromUser) {
 					if(fromUser){
 						BulbState hs = new BulbState();
-						hs.bri = progress;
 						hs.on = true;
+						Integer brightness = seekBar.getProgress();
 						
 						Mood m = Utils.generateSimpleMood(hs);
-						Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null);
+						Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
 					}
 				}
 			});

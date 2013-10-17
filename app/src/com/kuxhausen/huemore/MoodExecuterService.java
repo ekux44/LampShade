@@ -63,7 +63,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 
 	private boolean[] flagTransientChanges = new boolean[50];
 
-	private Pair<Integer[], Mood> moodPair;
+	private Pair<Integer[], Pair<Mood,Integer>> moodPair;
 
 	private CountDownTimer countDownTimer;
 
@@ -138,7 +138,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 	}
 	private void loadMoodIntoQueue() {
 		Integer[] bulbS = moodPair.first;
-		Mood m = moodPair.second;
+		Mood m = moodPair.second.first;
 
 		ArrayList<Integer>[] channels = new ArrayList[m.getNumChannels()];
 		for (int i = 0; i < channels.length; i++)
@@ -230,11 +230,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 					createNotification(moodName);
 					restartCountDownTimer();
 				} else if (encodedTransientMood != null) {
-					Pair<Integer[], Mood> decodedValues = HueUrlEncoder
+					Pair<Integer[], Pair<Mood,Integer>> decodedValues = HueUrlEncoder
 							.decode(encodedTransientMood);
 					Integer[] bulbS = decodedValues.first;
-					Mood m = decodedValues.second;
-	
+					Mood m = decodedValues.second.first;
+					Integer totalBrightness = decodedValues.second.second;
+					
 					ArrayList<Integer>[] channels = new ArrayList[m.getNumChannels()];
 					for (int i = 0; i < channels.length; i++)
 						channels[i] = new ArrayList<Integer>();
@@ -310,7 +311,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 						transientIndex = (transientIndex + 1) % 50;
 					}
 				} else if (queue.peek() == null) {
-					if (moodPair != null && moodPair.second.isInfiniteLooping()) {
+					if (moodPair != null && moodPair.second.first.isInfiniteLooping()) {
 						if(System.nanoTime()>moodLoopIterationEndNanoTime){
 							loadMoodIntoQueue();
 						}

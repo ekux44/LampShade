@@ -71,7 +71,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		}
 		
 		Mood m = Utils.generateSimpleMood(currentState);	
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject) getActivity()).getBulbs(), null);
+		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject) getActivity()).getBulbs(), null, null);
 	}
 	
 	public void setParrentMood(EditAdvancedMoodFragment eamf){

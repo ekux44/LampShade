@@ -118,7 +118,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
 			Mood m = Utils.getMoodFromDatabase(mood, ctx);	
 			
 			Intent trasmitter = new Intent(ctx, MoodExecuterService.class);
-			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS, null));
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, mood);
 			ctx.startService(trasmitter);
         }

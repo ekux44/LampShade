@@ -171,12 +171,9 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 					.size()]);
 
 			Mood m = Utils.getMoodFromDatabase(as.mood, context);	
-			for(Event e: m.events){
-				e.state.bri = as.brightness;
-			}
 
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
-			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS));
+			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS, as.brightness));
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, as.mood);
 			startWakefulService(context, trasmitter);
 

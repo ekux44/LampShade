@@ -16,16 +16,16 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Tests {
 	
-	public static Boolean test(int tNum, Mood m1, Integer[] b1){
+	public static Boolean test(int tNum, Mood m1, Integer[] b1, Integer bri1){
 		
 		Mood m2 = null;
 		Integer[] b2 = null;
+		Integer bri2 = null;
 		try {
-			if(b1!=null){
-				m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).second;
-				b2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1)).first;
-			} else
-				m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1)).second;		
+			m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1, bri1)).second.first;
+			b2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1, bri1)).first;
+			bri2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1, bri1)).second.second;
+					
 		} catch (InvalidEncodingException e) {
 			Log.e("error","InvalidEncodingException");
 			// TODO Auto-generated catch block

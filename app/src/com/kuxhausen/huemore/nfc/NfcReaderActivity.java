@@ -81,11 +81,12 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				data = data.substring(data.indexOf('?') + 1);
 
 				try {
-					Pair<Integer[], Mood> result = HueUrlEncoder.decode(data);
+					Pair<Integer[], Pair<Mood, Integer>> result = HueUrlEncoder.decode(data);
 					bulbS = result.first;
-					Mood m = result.second;
+					Mood m = result.second.first;
+					Integer brightness = result.second.second;
 					
-					Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null);
+					Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null, brightness);
 					boolean on = false;
 					if(m.events[0].state.on!=null && m.events[0].state.on)
 						on=true;
@@ -138,7 +139,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		
 		Mood m = Utils.generateSimpleMood(bs);		
 		
-		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null);
+		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null, null);
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class Utils {
 				);
 		moodCursor.moveToFirst();
 		try {
-			return HueUrlEncoder.decode(moodCursor.getString(0)).second;
+			return HueUrlEncoder.decode(moodCursor.getString(0)).second.first;
 		} catch (InvalidEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,10 +57,11 @@ public class Utils {
 		return m;
 	}
 	
-	public static void transmit(Context context, String priority, Mood m, Integer[] bulbS, String optionalMoodName){
+	public static void transmit(Context context, String priority, Mood m, Integer[] bulbS, String optionalMoodName, Integer optionalTotalBrightness){
 		Intent intent = new Intent(context, MoodExecuterService.class);
-		intent.putExtra(priority, HueUrlEncoder.encode(m,bulbS));
+		intent.putExtra(priority, HueUrlEncoder.encode(m,bulbS,optionalTotalBrightness));
 		intent.putExtra(InternalArguments.MOOD_NAME, optionalMoodName);
+		intent.putExtra(InternalArguments.BRIGHTNESS, optionalTotalBrightness);
         context.startService(intent);
 	}
 	
