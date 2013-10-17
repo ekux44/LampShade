@@ -2,17 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="16dp" >
 
     <Button
         android:id="@+id/newGroupButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:text="@string/actionmenu_new_group" />
+
 	<Button
-        android:id="@+id/newMoodButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/actionmenu_new_mood" />
+	    android:id="@+id/newMoodButton"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="16dp"
+	    android:text="@string/actionmenu_new_mood" />
     
 </LinearLayout>
