@@ -190,15 +190,6 @@
             android:enabled="true"
             android:exported="false" >
         </service>
-
-        <activity
-            android:name="com.kuxhausen.huemore.editmood.EditAdvancedMoodActivity"
-            android:label="@string/title_activity_edit_advanced_mood" 
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:noHistory="true"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.Sherlock">
-        </activity>
     </application>
 
 </manifest>

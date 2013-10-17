@@ -6,7 +6,6 @@
     <string name="cap_manual">MANUAL</string>
     <string name="cap_bulbs">BULBS</string>
     <string name="cap_simple_mood">SIMPLE</string>
-    <string name="cap_advanced_mood">ADVANCED</string>
     <string name="cap_hue_sat_mode">HUE</string>
     <string name="cap_color_temp_mode">TEMPERATURE</string>
     <string name="groups">Groups</string>
@@ -33,7 +32,6 @@
     <string name="hint_group_name">group name</string>
     <string name="hint_bulb_name">bulb name</string>
     <string name="brightness">Brightness</string>
-    <string name="saturation">Saturation</string>
     <string name="temperature">Color Temperature (K)</string>
     <string name="toggleColorLoop">Loop Colors :</string>
     <string name="promp_first_view_setting">Default home screen</string>

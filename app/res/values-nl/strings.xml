@@ -6,7 +6,6 @@
     <string name="cap_manual">MANUEEL</string>
     <string name="cap_bulbs">LAMPEN</string>
     <string name="cap_simple_mood">SIMPEL</string>
-    <string name="cap_advanced_mood">UITGEBREID</string>
     <string name="cap_hue_sat_mode">TINT</string>
     <string name="cap_color_temp_mode">TEMPERATUUR</string>
     <string name="groups">Groepen</string>
@@ -33,7 +32,6 @@
     <string name="hint_group_name">groep naam</string>
     <string name="hint_bulb_name">lamp naam</string>
     <string name="brightness">Helderheid</string>
-    <string name="saturation">Kleurverzadiging</string>
     <string name="temperature">Kleurtemperatuur (K)</string>
     <string name="toggleColorLoop">Roteer kleuren:</string>
     <string name="promp_first_view_setting">Standaard startscherm</string>

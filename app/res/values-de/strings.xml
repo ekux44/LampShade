@@ -6,7 +6,6 @@
     <string name="cap_manual">MANUELL</string>
     <string name="cap_bulbs">LAMPEN</string>
     <string name="cap_simple_mood">EINFACH</string>
-    <string name="cap_advanced_mood">FORTGESCHRITTEN</string>
     <string name="cap_hue_sat_mode">FARBTON</string>
     <string name="cap_color_temp_mode">TEMPERATUR</string>
     <string name="groups">Gruppen</string>
@@ -33,7 +32,6 @@
     <string name="hint_group_name">Gruppenname</string>
     <string name="hint_bulb_name">Lampenname</string>
     <string name="brightness">Helligkeit</string>
-    <string name="saturation">Sättigung</string>
     <string name="temperature">Farbtemperatur (K)</string>
     <string name="toggleColorLoop">Farbschlaufe:</string>
     <string name="promp_first_view_setting">Standard Startmenü</string>
