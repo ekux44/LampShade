@@ -56,7 +56,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 		state.hue = null;
 		state.sat = null;
 		state.ct = null;
-		if(EditStatePagerDialogFragment.currentPage == EditStatePagerDialogFragment.WHEEL_PAGE)
+		if(EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE-EditStatePagerDialogFragment.hasNoRecentStates))
 			statePager.setState(state, this, "wheel");
 	}
 

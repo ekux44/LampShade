@@ -40,7 +40,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	Gson gson = new Gson();
 	
 	/** 1 if true, 0 if false **/
-	private int hasNoRecentStates = 1;
+	static int hasNoRecentStates = 1;
 	
 	public BulbState getState(){
 		if(currentState==null)
