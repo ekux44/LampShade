@@ -56,12 +56,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	// Binder given to clients
 	private final IBinder mBinder = new LocalBinder();
 
-	private CountDownTimer countDownTimer;
+	private static CountDownTimer countDownTimer;
 	Long moodLoopIterationEndNanoTime = 0l;
 	WakeLock wakelock;
 	private boolean hasHubConnection = false;
-	private final static int MAX_STOP_SELF_COUNDOWN = 40;
-	private int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
+	private final static int MAX_STOP_SELF_COUNDOWN = 45;
+	private static int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
 	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	
 	public MoodExecuterService() {
@@ -312,16 +312,15 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			try{
 				if (encodedMood != null) {
 					Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
-					String moodName = intent
-							.getStringExtra(InternalArguments.MOOD_NAME);
+					String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
 					moodName = (moodName == null) ? "Unknown Mood" : moodName;
 					
-					int[] bulbs = new int[moodPairs.first.length];
-					for(int i = 0; i< bulbs.length; i++)
-						bulbs[i] = moodPairs.first[i];
-					
-					if(bulbs!=null)
+					if(moodPairs.first!=null && moodPairs.first.length>0){
+						int[] bulbs = new int[moodPairs.first.length];
+						for(int i = 0; i< bulbs.length; i++)
+							bulbs[i] = moodPairs.first[i];
 						onGroupSelected(bulbs, moodPairs.second.second);
+					}
 					if(moodPairs.second.first!=null)
 						startMood(moodPairs.second.first, moodName);				
 				}
@@ -357,17 +356,14 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					QueueEvent e = queue.poll();
 					int bulbInGroup = calculateBulbPositionInGroup(e.bulb);
 					if(bulbInGroup>-1){
-						if(e.event.state.bri!=null){
-							//convert relative brightness into absolute brightness
+						//convert relative brightness into absolute brightness
+						if(e.event.state.bri!=null)
 							bulbRelBri[bulbInGroup] = e.event.state.bri;
-							bulbBri[bulbInGroup] = (bulbRelBri[bulbInGroup] * maxBrightness)/ MAX_REL_BRI;
-							e.event.state.bri = bulbBri[bulbInGroup];
-							bulbKnown[bulbInGroup] = KnownState.Synched;
-						} else if (bulbKnown[bulbInGroup]==KnownState.ToSend){
-							//send outstanding brightness change for bulb
-							e.event.state.bri = bulbBri[bulbInGroup];
-							bulbKnown[bulbInGroup] = KnownState.Synched;
-						}
+						else
+							bulbRelBri[bulbInGroup] = MAX_REL_BRI;
+						bulbBri[bulbInGroup] = (bulbRelBri[bulbInGroup] * maxBrightness)/ MAX_REL_BRI;
+						e.event.state.bri = bulbBri[bulbInGroup];
+						bulbKnown[bulbInGroup] = KnownState.Synched;
 					}					
 					NetworkMethods.PreformTransmitGroupMood(me, e.bulb, e.event.state);
 				} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
@@ -386,7 +382,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 						}
 						transientIndex = (transientIndex + 1) % group.length;
 					}
-				} else if (queue.peek() == null){
+				} else if (queue.peek() == null && (mood ==null || !mood.isInfiniteLooping())){
 					createNotification("");
 					if(countDownToStopSelf<=0)
 						me.stopSelf();

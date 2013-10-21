@@ -17,6 +17,7 @@ import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedL
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.Mood;
 
 public class NetworkManagedSherlockFragmentActivity extends
@@ -28,7 +29,6 @@ public class NetworkManagedSherlockFragmentActivity extends
 	
 	private int[] bulbsCache;
 	private Integer brightnessCache;
-	private Mood moodCache;
 	
 	public void setGroup(int[] bulbs, String optionalName){
 		if(mBound)
@@ -45,17 +45,14 @@ public class NetworkManagedSherlockFragmentActivity extends
 			brightnessCache = b;
 	}
 	public void startMood(Mood m, String optionalName){
-		if(mBound)
-			mService.startMood(m, optionalName);
-		else {
-			moodCache = m;
-			moodName = optionalName;
-		}
+		Intent intent = new Intent(this, MoodExecuterService.class);
+		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,null,null));
+		intent.putExtra(InternalArguments.MOOD_NAME, optionalName);
+		this.startService(intent);
 	}
 	public void stopMood(){
 		if(mBound){
 			mService.stopMood();
-			moodCache = null;
 		}
 	}
 	
@@ -159,10 +156,6 @@ public class NetworkManagedSherlockFragmentActivity extends
             if(brightnessCache!=null){
             	mService.setBrightness(brightnessCache);
             	brightnessCache=null;
-            }
-            if(moodCache!=null){
-            	mService.startMood(moodCache, moodName);
-            	moodCache = null;
             }
         }
 

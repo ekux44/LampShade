@@ -61,7 +61,6 @@ public class Utils {
 		Intent intent = new Intent(context, MoodExecuterService.class);
 		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS,optionalTotalBrightness));
 		intent.putExtra(InternalArguments.MOOD_NAME, optionalMoodName);
-		intent.putExtra(InternalArguments.BRIGHTNESS, optionalTotalBrightness);
         context.startService(intent);
 	}
 	
