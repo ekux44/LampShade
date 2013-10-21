@@ -47,7 +47,6 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment
 			break;
 		case R.id.newMoodButton:
 			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
-			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
 			this.getActivity().startActivity(i);
 			
 			dismiss();

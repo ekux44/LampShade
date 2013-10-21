@@ -6,7 +6,7 @@ public class QueueEvent implements Comparable<QueueEvent>{
 	public Event event;
 	
 	public QueueEvent(Event e){
-		this.event = e;
+		this.event = e.clone();
 	}
 	@Override
 	public int compareTo(QueueEvent another) {

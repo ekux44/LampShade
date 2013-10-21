@@ -21,12 +21,12 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
@@ -44,8 +44,7 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
  * @author Eric Kuxhausen
  * 
  */
-public class SecondActivity extends GodObject implements
-		MoodListFragment.OnMoodSelectedListener {
+public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 
 	public SecondActivity me = this;
 	
@@ -67,8 +66,7 @@ public class SecondActivity extends GodObject implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.secondary_page);
-		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
-		this.getSupportActionBar().setTitle(this.getGroupS());
+		this.getSupportActionBar().setTitle(this.getCurentGroupName());
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
@@ -87,23 +85,13 @@ public class SecondActivity extends GodObject implements
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				BulbState hs = new BulbState();
-				hs.on = true;
-				Integer brightness = seekBar.getProgress();
-				
-				Mood m = Utils.generateSimpleMood(hs);
-				Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
+				me.setBrightness(seekBar.getProgress());
 				isTrackingTouch = false;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				BulbState hs = new BulbState();
-				hs.on = true;
-				Integer brightness = seekBar.getProgress();
-				
-				Mood m = Utils.generateSimpleMood(hs);
-				Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
+				me.setBrightness(seekBar.getProgress());
 				isTrackingTouch = true;
 			}
 
@@ -111,25 +99,13 @@ public class SecondActivity extends GodObject implements
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if(fromUser){
-					BulbState hs = new BulbState();
-					hs.on = true;
-					Integer brightness = seekBar.getProgress();
-					
-					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
+					me.setBrightness(seekBar.getProgress());
 				}
 			}
 		});
 
 		
-	}
-
-	@Override
-	public void onGroupBulbSelected(Integer[] bulb, String name) {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	
+	}	
 
 	SeekBar brightnessBar;
 	boolean isTrackingTouch = false;
@@ -143,19 +119,13 @@ public class SecondActivity extends GodObject implements
 	private static ColorWheelFragment colorWheelFragment;
 
 	ViewPager mViewPager2;
-	GodObject parrentActivity;
-	
-	@Override
-	public void onSelected(Integer[] bulbNum, String name,
-			GroupListFragment groups, BulbListFragment bulbs) {
-		throw new RuntimeException("Not implemented here");
-	}
+	NetworkManagedSherlockFragmentActivity parrentActivity;
 	
 	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
-		GodObject frag;
+		NetworkManagedSherlockFragmentActivity frag;
 		
-		public MoodManualPagerAdapter(GodObject godObject) {
+		public MoodManualPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
 			super(godObject.getSupportFragmentManager());
 			frag = godObject;
 		}
@@ -193,52 +163,18 @@ public class SecondActivity extends GodObject implements
 			return "";
 		}
 	}
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void pollBrightness() {
-		GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
-				parrentActivity, parrentActivity.getBulbs(), this,
-				this.parrentActivity);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getBulbsAttributes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			getBulbsAttributes.execute();
-		}
-	}
+	
 	public void invalidateSelection() {
 		((MoodListFragment) (mMoodManualPagerAdapter.getItem(MOOD_LOCATION)))
 				.invalidateSelection();
 	}
+	
 	@Override
-	public void onResume() {
-		super.onResume();
-		pollBrightness();
+	public void onBrightnessChanged(int brightness) {
+		if(brightnessBar!=null && !isTrackingTouch)
+			brightnessBar.setProgress(brightness);
 	}
-	@Override
-	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		if (!isTrackingTouch && bulbsAttributes != null
-				&& bulbsAttributes.length > 0) {
-			int brightnessSum = 0;
-			int brightnessPool = 0;
-			for (BulbAttributes ba : bulbsAttributes) {
-				if (ba != null) {
-					if (ba.state.on!=null && ba.state.on == false)
-						brightnessPool++;
-					else {
-						brightnessSum += ba.state.bri;
-						brightnessPool++;
-					}
-				}
-			}
-			if (brightnessPool == 0)
-				return;
-			int brightnessAverage = brightnessSum / brightnessPool;
-
-			brightnessBar.setProgress(brightnessAverage);
-		}
-	}
-
-
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();

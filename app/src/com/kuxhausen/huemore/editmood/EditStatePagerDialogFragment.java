@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -69,9 +69,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			if(listener!=initiator && listener!=null)
 				listener.stateChanged();
 		}
-		
-		Mood m = Utils.generateSimpleMood(currentState);	
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject) getActivity()).getBulbs(), null, null);
+		Mood m = Utils.generateSimpleMood(currentState);
+		((NetworkManagedSherlockFragmentActivity) getActivity()).startMood(m, null);
 	}
 	
 	public void setParrentMood(EditAdvancedMoodFragment eamf){

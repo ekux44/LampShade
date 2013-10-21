@@ -167,7 +167,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		
 		int brightness = brightnessBar.getProgress();
 		
-		Utils.transmit(context, InternalArguments.ENCODED_MOOD, m, bulbS, moodName, brightness);
+		Utils.transmit(context, m, bulbS, moodName, brightness);
 	}
 
 	public String getSerializedByNamePreview() {

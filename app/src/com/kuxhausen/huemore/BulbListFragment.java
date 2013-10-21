@@ -27,9 +27,7 @@ public class BulbListFragment extends SherlockListFragment implements
 
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
-	private GodObject gbpfCallback;
-
-	private GodObject parrentActivity;
+	private NetworkManagedSherlockFragmentActivity parrentActivity;
 
 	ArrayList<String> bulbNameList;
 	ArrayAdapter<String> rayAdapter;
@@ -63,8 +61,7 @@ public class BulbListFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		gbpfCallback = (GodObject) activity;
-		parrentActivity = (GodObject) activity;
+		parrentActivity = (NetworkManagedSherlockFragmentActivity) activity;
 	}
 
 	@Override
@@ -131,10 +128,9 @@ public class BulbListFragment extends SherlockListFragment implements
 		selectedPos = position;
 
 		// Notify the parent activity of selected item
-		Integer[] iPos = { position + 1 };
-		gbpfCallback
-				.onSelected(iPos, selected.getText().toString(), null, this);
-
+		int[] iPos = { position + 1 };
+		parrentActivity.setGroup(iPos, selected.getText().toString());
+		
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);
 	}

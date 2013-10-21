@@ -57,9 +57,9 @@ public class Utils {
 		return m;
 	}
 	
-	public static void transmit(Context context, String priority, Mood m, Integer[] bulbS, String optionalMoodName, Integer optionalTotalBrightness){
+	public static void transmit(Context context, Mood m, Integer[] bulbS, String optionalMoodName, Integer optionalTotalBrightness){
 		Intent intent = new Intent(context, MoodExecuterService.class);
-		intent.putExtra(priority, HueUrlEncoder.encode(m,bulbS,optionalTotalBrightness));
+		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS,optionalTotalBrightness));
 		intent.putExtra(InternalArguments.MOOD_NAME, optionalMoodName);
 		intent.putExtra(InternalArguments.BRIGHTNESS, optionalTotalBrightness);
         context.startService(intent);

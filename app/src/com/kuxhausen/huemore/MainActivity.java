@@ -25,13 +25,13 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionStatusDialogFragment;
-import com.kuxhausen.huemore.network.GetBulbsAttributes;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
@@ -50,21 +50,12 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
  * @author Eric Kuxhausen
  * 
  */
-public class MainActivity extends GodObject implements
-		MoodListFragment.OnMoodSelectedListener {
+public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
 	IabHelper mPlayHelper;
 	private MainActivity me;
 	Inventory lastQuerriedInventory;
-	public OnBulbListReturnedListener bulbListenerFragment;
-	
-	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
-		bulbListenerFragment = frag;
-	}
-	public OnBulbListReturnedListener getBulbListenerFragment(){
-		return bulbListenerFragment;
-	}
 	
 	@Override
 	public void onConnectionStatusChanged(boolean connected){
@@ -113,23 +104,13 @@ public class MainActivity extends GodObject implements
 
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					BulbState hs = new BulbState();
-					hs.on = true;
-					Integer brightness = seekBar.getProgress();
-					
-					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
+					me.setBrightness(seekBar.getProgress());
 					isTrackingTouch = false;
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					BulbState hs = new BulbState();
-					hs.on = true;
-					Integer brightness = seekBar.getProgress();
-					
-					Mood m = Utils.generateSimpleMood(hs);
-					Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
+					me.setBrightness(seekBar.getProgress());
 					isTrackingTouch = true;
 				}
 
@@ -137,12 +118,7 @@ public class MainActivity extends GodObject implements
 				public void onProgressChanged(SeekBar seekBar, int progress,
 						boolean fromUser) {
 					if(fromUser){
-						BulbState hs = new BulbState();
-						hs.on = true;
-						Integer brightness = seekBar.getProgress();
-						
-						Mood m = Utils.generateSimpleMood(hs);
-						Utils.transmit(me, InternalArguments.ENCODED_TRANSIENT_MOOD, m, getBulbs(), null, brightness);
+						me.setBrightness(seekBar.getProgress());
 					}
 				}
 			});
@@ -177,17 +153,15 @@ public class MainActivity extends GodObject implements
 	}
 
 	@Override
-	public void onGroupBulbSelected(Integer[] bulb, String name) {
-		setGroupS(name);
-		setBulbS(bulb);
+	public void setGroup(int[] bulbs, String optionalName){
+		super.setGroup(bulbs, optionalName);
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
 			invalidateSelection();
-			pollBrightness();
-		 }else{
+		 }else if( this.boundToService()){
+			// only load the moods page if the group has been sent to the service
 			Intent i = new Intent(this, SecondActivity.class);
-			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, this.getSerialized());
 			this.startActivity(i);
 		 }
 	}
@@ -201,26 +175,13 @@ public class MainActivity extends GodObject implements
 	private static BulbListFragment bulbListFragment;
 
 	ViewPager mViewPager1;
-	GodObject parrentActivity;
-	
-	public void onSelected(Integer[] bulbNum, String name,
-			GroupListFragment groups, BulbListFragment bulbs) {
-		if (groups == groupListFragment && groups != null
-				&& bulbListFragment != null)
-			bulbListFragment.invalidateSelection();
-		if (bulbs == bulbListFragment && bulbs != null
-				&& groupListFragment != null)
-			groupListFragment.invalidateSelection();
-
-		if (parrentActivity != null || bulbNum == null || name == null)
-			parrentActivity.onGroupBulbSelected(bulbNum, name);
-	}
+	NetworkManagedSherlockFragmentActivity parrentActivity;
 		
 	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
-		GodObject frag;
+		NetworkManagedSherlockFragmentActivity frag;
 
-		public GroupBulbPagerAdapter(GodObject godObject) {
+		public GroupBulbPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
 			super(godObject.getSupportFragmentManager());
 			frag = godObject;
 		}
@@ -276,9 +237,9 @@ public class MainActivity extends GodObject implements
 	
 	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
-		GodObject frag;
+		NetworkManagedSherlockFragmentActivity frag;
 		
-		public MoodManualPagerAdapter(GodObject godObject) {
+		public MoodManualPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
 			super(godObject.getSupportFragmentManager());
 			frag = godObject;
 		}
@@ -316,21 +277,7 @@ public class MainActivity extends GodObject implements
 			return "";
 		}
 	}
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void pollBrightness() {
-		if ((getResources().getConfiguration().screenLayout &
-				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
-				 Configuration.SCREENLAYOUT_SIZE_LARGE){
-			GetBulbsAttributes getBulbsAttributes = new GetBulbsAttributes(
-					parrentActivity, parrentActivity.getBulbs(), this,
-					this.parrentActivity);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-				getBulbsAttributes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			} else {
-				getBulbsAttributes.execute();
-			}
-		}
-	}
+	
 	public void invalidateSelection() {
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
@@ -339,41 +286,11 @@ public class MainActivity extends GodObject implements
 					.invalidateSelection();
 		}
 	}
+		
 	@Override
-	public void onResume() {
-		super.onResume();
-		if ((getResources().getConfiguration().screenLayout &
-				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
-				 Configuration.SCREENLAYOUT_SIZE_LARGE){
-			pollBrightness();
-		}
-	}
-	@Override
-	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		if ((getResources().getConfiguration().screenLayout &
-				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
-				 Configuration.SCREENLAYOUT_SIZE_LARGE){
-			if (!isTrackingTouch && bulbsAttributes != null
-					&& bulbsAttributes.length > 0) {
-				int brightnessSum = 0;
-				int brightnessPool = 0;
-				for (BulbAttributes ba : bulbsAttributes) {
-					if (ba != null) {
-						if (ba.state.on!=null && ba.state.on == false)
-							brightnessPool++;
-						else {
-							brightnessSum += ba.state.bri;
-							brightnessPool++;
-						}
-					}
-				}
-				if (brightnessPool == 0)
-					return;
-				int brightnessAverage = brightnessSum / brightnessPool;
-				
-				brightnessBar.setProgress(brightnessAverage);
-			}
-		}
+	public void onBrightnessChanged(int brightness) {
+		if(brightnessBar!=null && !isTrackingTouch)
+			brightnessBar.setProgress(brightness);
 	}
 
 	@Override

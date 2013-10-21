@@ -20,6 +20,7 @@ import android.util.Pair;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.automation.FireReceiver;
+import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
@@ -30,10 +31,11 @@ import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.QueueEvent;
+import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmReciever;
 
-public class MoodExecuterService extends Service implements ConnectionMonitor{
+public class MoodExecuterService extends Service implements ConnectionMonitor, OnBulbAttributesReturnedListener{
 
 	/**
 	 * Class used for the client Binder. Because we know this service always
@@ -54,42 +56,133 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 	// Binder given to clients
 	private final IBinder mBinder = new LocalBinder();
 
-	private BulbState[] transientStateChanges = new BulbState[50];
-
-	{
-		for (int i = 0; i < transientStateChanges.length; i++)
-			transientStateChanges[i] = new BulbState();
-	}
-
-	private boolean[] flagTransientChanges = new boolean[50];
-
-	private Pair<Integer[], Pair<Mood,Integer>> moodPair;
-
 	private CountDownTimer countDownTimer;
-
-	int time;
-	
 	Long moodLoopIterationEndNanoTime = 0l;
-
-	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
-
-	PriorityQueue<QueueEvent> highPriorityQueue = new PriorityQueue<QueueEvent>();
-	
 	WakeLock wakelock;
-	
 	private boolean hasHubConnection = false;
-	
-	int transientIndex = 0;
-	
 	private final static int MAX_STOP_SELF_COUNDOWN = 40;
 	private int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
-	
 	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	
 	public MoodExecuterService() {
 	}
 	
+	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
+	int transientIndex = 0;
+	
+	public enum KnownState {Unknown, ToSend, Getting, Synched};	
+	public Integer maxBrightness;
+	public int[] group;
+	public int[] bulbBri;
+	public int[] bulbRelBri;
+	public KnownState[] bulbKnown;
+	public Mood mood;
+	private static int MAX_REL_BRI = 255;
+	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
+	
+	public void onGroupSelected(int[] bulbs, Integer optionalBri){
+		group = bulbs;
+		maxBrightness = null;
+		bulbBri = new int[group.length];
+		bulbRelBri = new int[group.length];
+		bulbKnown = new KnownState[group.length];
+		for(int i = 0; i < bulbRelBri.length; i++){
+			bulbRelBri[i] = MAX_REL_BRI;
+			bulbKnown[i] = KnownState.Unknown;
+		}
+		
+		if(optionalBri==null){
+			for(int i = 0; i< group.length; i++){
+				bulbKnown[i] = KnownState.Getting;
+				NetworkMethods.PreformGetBulbAttributes(me, me, group[i]);
+			}
+		} else {
+			maxBrightness = optionalBri;
+			for(int i = 0; i< group.length; i++)
+				bulbKnown[i] = KnownState.ToSend;
+			onBrightnessChanged();
+		}
+	}
+	/** doesn't notify listeners **/
+	public synchronized void setBrightness(int brightness){
+		Log.e("bri",""+brightness);
+		
+		maxBrightness = brightness;
+		for(int i = 0; i< group.length; i++){
+			bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
+			bulbKnown[i] = KnownState.ToSend;
+		}
+	}
 
+	public interface OnBrightnessChangedListener {
+		public void onBrightnessChanged(int brightness);
+	}
+	
+	/** announce brightness to any listeners **/
+	public void onBrightnessChanged(){
+		for(OnBrightnessChangedListener l : brightnessListeners){
+			l.onBrightnessChanged(maxBrightness);
+		}
+	}
+	public void registerBrightnessListener(OnBrightnessChangedListener l){
+		if(maxBrightness!=null)
+			l.onBrightnessChanged(maxBrightness);
+		brightnessListeners.add(l);
+	}
+	public void removeBrightnessListener(OnBrightnessChangedListener l){
+		brightnessListeners.remove(l);
+	}
+	
+	public void startMood(Mood m, String moodName){
+		mood = m;
+		createNotification(moodName);
+		queue.clear();
+		loadMoodIntoQueue();
+		restartCountDownTimer();
+	}
+	public void stopMood(){
+		mood = null;
+		queue.clear();
+	}
+	
+	@Override
+	public void onAttributesReturned(BulbAttributes result, int bulbNumber) {
+		//figure out which bulb in group (if that group is still selected)
+		int index = calculateBulbPositionInGroup(bulbNumber);
+		//if group is still expected this, save 
+		if(index>-1 && bulbKnown[index]==KnownState.Getting){
+			bulbKnown[index] = KnownState.Synched;
+			bulbBri[index] = result.state.bri;
+			
+			//if all expected get brightnesses have returned, compute maxbri and notify listeners
+			boolean anyOutstandingGets = false;
+			for(KnownState ks : bulbKnown)
+				anyOutstandingGets |= (ks == KnownState.Getting);
+			if(!anyOutstandingGets){
+				//todo calc more intelligent bri when mood known
+				int briSum = 0;
+				for(int bri : bulbBri)
+					briSum +=bri;
+				maxBrightness = briSum/group.length;
+				
+				for(int i = 0; i< group.length; i++){
+					bulbBri[i]= maxBrightness;
+					bulbRelBri[i] = MAX_REL_BRI;
+				}
+				
+				onBrightnessChanged();
+			}	
+		}	
+	}
+	/** finds bulb index within group[] **/
+	private int calculateBulbPositionInGroup(int bulbNumber){
+		int index = -1;
+		for(int j = 0; j< group.length; j++){
+			if(group[j]==bulbNumber)
+				index = j;
+		}
+		return index;
+	}
 	
 	@Override
 	public void setHubConnectionState(boolean connected){
@@ -131,29 +224,29 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 	}
 
 	private boolean hasTransientChanges() {
+		if(bulbKnown==null)
+			return false;		
 		boolean result = false;
-		for (boolean b : flagTransientChanges)
-			result |= b;
+		for (KnownState ks : bulbKnown)
+			result |= (ks==KnownState.ToSend);
 		return result;
 	}
-	private void loadMoodIntoQueue() {
-		Integer[] bulbS = moodPair.first;
-		Mood m = moodPair.second.first;
 
-		ArrayList<Integer>[] channels = new ArrayList[m.getNumChannels()];
+	private void loadMoodIntoQueue() {		
+		ArrayList<Integer>[] channels = new ArrayList[mood.getNumChannels()];
 		for (int i = 0; i < channels.length; i++)
 			channels[i] = new ArrayList<Integer>();
 
-		for (int i = 0; i < bulbS.length; i++) {
-			channels[i % m.getNumChannels()].add(bulbS[i]);
+		for (int i = 0; i < group.length; i++) {
+			channels[i % mood.getNumChannels()].add(group[i]);
 		}
 
-		for (Event e : m.events) {
+		for (Event e : mood.events) {
 			for (Integer bNum : channels[e.channel]) {
 				QueueEvent qe = new QueueEvent(e);
 				qe.bulb = bNum;
 				
-				if(m.timeAddressingRepeatPolicy){
+				if(mood.timeAddressingRepeatPolicy){
 					
 					Calendar current = Calendar.getInstance();
 					Calendar startOfDay = Calendar.getInstance();
@@ -175,7 +268,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 				}
 			}
 		}
-		moodLoopIterationEndNanoTime = System.nanoTime()+(m.loopIterationTimeLength*100000000l);
+		moodLoopIterationEndNanoTime = System.nanoTime()+(mood.loopIterationTimeLength*100000000l);
 	}
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -215,50 +308,22 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 			
 			String encodedMood = intent
 					.getStringExtra(InternalArguments.ENCODED_MOOD);
-			String encodedTransientMood = intent
-					.getStringExtra(InternalArguments.ENCODED_TRANSIENT_MOOD);
 
 			try{
 				if (encodedMood != null) {
-					moodPair = HueUrlEncoder.decode(encodedMood);
-					queue.clear();
-					loadMoodIntoQueue();
-	
+					Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
 					String moodName = intent
 							.getStringExtra(InternalArguments.MOOD_NAME);
 					moodName = (moodName == null) ? "Unknown Mood" : moodName;
-					createNotification(moodName);
-					restartCountDownTimer();
-				} else if (encodedTransientMood != null) {
-					Pair<Integer[], Pair<Mood,Integer>> decodedValues = HueUrlEncoder
-							.decode(encodedTransientMood);
-					Integer[] bulbS = decodedValues.first;
-					Mood m = decodedValues.second.first;
-					Integer totalBrightness = decodedValues.second.second;
 					
-					ArrayList<Integer>[] channels = new ArrayList[m.getNumChannels()];
-					for (int i = 0; i < channels.length; i++)
-						channels[i] = new ArrayList<Integer>();
-	
-					for (int i = 0; i < bulbS.length; i++) {
-						channels[i % m.getNumChannels()].add(bulbS[i]);
-					}
-	
-					for (Event e : m.events) {
-						for (Integer bNum : channels[e.channel]) {
-							BulbState toModify = transientStateChanges[bNum - 1];
-							toModify.merge(e.state);
-							if (toModify.toString() != e.state.toString())
-								flagTransientChanges[bNum - 1] = true;
-							
-							//cancel any active mood if any non-brightness related transient changes
-							if(e.state.ct!=null || e.state.xy!=null || e.state.hue!=null || e.state.sat !=null || e.state.effect!=null){
-								moodPair = null;
-								queue.clear();
-							}
-								
-						}
-					}
+					int[] bulbs = new int[moodPairs.first.length];
+					for(int i = 0; i< bulbs.length; i++)
+						bulbs[i] = moodPairs.first[i];
+					
+					if(bulbs!=null)
+						onGroupSelected(bulbs, moodPairs.second.second);
+					if(moodPairs.second.first!=null)
+						startMood(moodPairs.second.first, moodName);				
 				}
 			} catch (InvalidEncodingException e) {
 				Intent i = new Intent(this,DecodeErrorActivity.class);
@@ -284,61 +349,52 @@ public class MoodExecuterService extends Service implements ConnectionMonitor{
 
 			@Override
 			public void onFinish() {
-
 			}
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				//Log.e("executor",
-				//		"highPriorityQueue:" + highPriorityQueue.size()
-				//				+ "   queue:" + queue.size());
-
-				if (highPriorityQueue.peek() != null) {
-					QueueEvent e = highPriorityQueue.poll();
+				if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
+					QueueEvent e = queue.poll();
+					int bulbInGroup = calculateBulbPositionInGroup(e.bulb);
+					if(bulbInGroup>-1){
+						if(e.event.state.bri!=null){
+							//convert relative brightness into absolute brightness
+							bulbRelBri[bulbInGroup] = e.event.state.bri;
+							bulbBri[bulbInGroup] = (bulbRelBri[bulbInGroup] * maxBrightness)/ MAX_REL_BRI;
+							e.event.state.bri = bulbBri[bulbInGroup];
+							bulbKnown[bulbInGroup] = KnownState.Synched;
+						} else if (bulbKnown[bulbInGroup]==KnownState.ToSend){
+							//send outstanding brightness change for bulb
+							e.event.state.bri = bulbBri[bulbInGroup];
+							bulbKnown[bulbInGroup] = KnownState.Synched;
+						}
+					}					
 					NetworkMethods.PreformTransmitGroupMood(me, e.bulb, e.event.state);
+				} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
+					loadMoodIntoQueue();
 				} else if (hasTransientChanges()) {
-					boolean addedSomethingToQueue = false;
-					while (!addedSomethingToQueue) {
-						if (flagTransientChanges[transientIndex]) {
-							// Note the +1 to account for the 1-based real bulb
-							// numbering
-							NetworkMethods.PreformTransmitGroupMood(me,
-									transientIndex + 1,
-									transientStateChanges[transientIndex]);
-							flagTransientChanges[transientIndex] = false;
-							addedSomethingToQueue = true;
+					boolean sentSomething = false;
+					while (!sentSomething) {
+						if(bulbKnown[transientIndex] == KnownState.ToSend){
+							BulbState bs = new BulbState();
+							bulbBri[transientIndex] = (bulbRelBri[transientIndex] * maxBrightness)/ MAX_REL_BRI;
+							bs.bri = bulbBri[transientIndex];
+							
+							NetworkMethods.PreformTransmitGroupMood(me, group[transientIndex], bs);
+							bulbKnown[transientIndex] = KnownState.Synched;
+							sentSomething = true;
 						}
-						transientIndex = (transientIndex + 1) % 50;
+						transientIndex = (transientIndex + 1) % group.length;
 					}
-				} else if (queue.peek() == null) {
-					if (moodPair != null && moodPair.second.first.isInfiniteLooping()) {
-						if(System.nanoTime()>moodLoopIterationEndNanoTime){
-							loadMoodIntoQueue();
-						}
-					} else {
-						createNotification("");
-						if(countDownToStopSelf<=0)
-							me.stopSelf();
-						else
-							countDownToStopSelf--;
-					}
-				} else if (queue.peek().nanoTime <= System.nanoTime()) {
-					ArrayList<QueueEvent> eList = new ArrayList<QueueEvent>();
-					eList.add(queue.poll());
-					while (queue.peek() != null
-							&& queue.peek().compareTo(eList.get(0)) == 0) {
-						QueueEvent e = queue.poll();
-						eList.add(e);
-					}
-
-					for (QueueEvent e : eList)
-						highPriorityQueue.add(e);
-
+				} else if (queue.peek() == null){
+					createNotification("");
+					if(countDownToStopSelf<=0)
+						me.stopSelf();
+					else
+						countDownToStopSelf--;
 				}
 			}
 		};
 		countDownTimer.start();
-
 	}
-
 }

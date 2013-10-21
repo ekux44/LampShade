@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
@@ -136,12 +136,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	}
 	
 	private void stopPreview(){
-		Mood m = new Mood();
-		Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), "", null);
+		((NetworkManagedSherlockFragmentActivity)this.getActivity()).stopMood();
 	}
 	void preview(){
 		if(pageType == EditMoodPagerDialogFragment.currentPage && grid!=null)
-			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_MOOD, getMood(), ((GodObject)this.getActivity()).getBulbs(), pager.getName(), null);
+			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), pager.getName());
 		
 	}
 	

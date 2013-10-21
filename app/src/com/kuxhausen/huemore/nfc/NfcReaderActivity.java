@@ -37,7 +37,9 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements
 		OnCheckedChangeListener, OnClickListener {
 
-	Integer[] bulbS = null;
+	Integer[] bulbS;
+	Mood m;
+	Integer brightness;
 	ToggleButton onButton;
 	Button doneButton;
 
@@ -83,10 +85,10 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				try {
 					Pair<Integer[], Pair<Mood, Integer>> result = HueUrlEncoder.decode(data);
 					bulbS = result.first;
-					Mood m = result.second.first;
-					Integer brightness = result.second.second;
+					m = result.second.first;
+					brightness = result.second.second;
 					
-					Utils.transmit(this, InternalArguments.ENCODED_MOOD, m, bulbS, null, brightness);
+					Utils.transmit(this, m, bulbS, null, brightness);
 					boolean on = false;
 					if(m.events[0].state.on!=null && m.events[0].state.on)
 						on=true;
@@ -136,10 +138,8 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
-		
 		Mood m = Utils.generateSimpleMood(bs);		
-		
-		Utils.transmit(this, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null, null);
+		Utils.transmit(this, m, bulbS, null, null);
 	}
 
 	@Override

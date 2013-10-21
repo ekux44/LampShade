@@ -27,8 +27,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
 import com.kuxhausen.huemore.ColorWheelFragment;
-import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.GroupListFragment;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
@@ -44,7 +44,7 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class EditMoodPagerDialogFragment extends GodObject implements
+public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentActivity implements
 		OnClickListener, OnCheckedChangeListener {
 
 	/**
@@ -87,7 +87,6 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.mood_dialog_pager);
-		this.restoreSerialized(this.getIntent().getStringExtra(InternalArguments.SERIALIZED_GOD_OBJECT));
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		
@@ -299,32 +298,5 @@ public class EditMoodPagerDialogFragment extends GodObject implements
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void onListReturned(BulbAttributes[] bulbsAttributes) {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public void onGroupBulbSelected(Integer[] bulb, String name) {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public void setBulbListenerFragment(OnBulbListReturnedListener frag) {
-		throw new RuntimeException("Not implemented here");
-		
-	}
-
-	@Override
-	public OnBulbListReturnedListener getBulbListenerFragment() {
-		throw new RuntimeException("Not implemented here");
-	}
-
-	@Override
-	public void onSelected(Integer[] bulbNum, String name,
-			GroupListFragment groups, BulbListFragment bulbs) {
-		throw new RuntimeException("Not implemented here");
 	}
 }

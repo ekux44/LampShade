@@ -26,7 +26,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 	int bulbNumber;
 	BulbListFragment bulbF;
 
-	private GodObject parrentActivity;
+	private NetworkManagedSherlockFragmentActivity parrentActivity;
 
 	public void setBulbsFragment(BulbListFragment bf) {
 		bulbF = bf;
@@ -39,7 +39,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (GodObject) activity;
+			parrentActivity = (NetworkManagedSherlockFragmentActivity) activity;
 		} catch (ClassCastException e) {
 		}
 	}
@@ -72,7 +72,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		Mood m = Utils.generateSimpleMood(bs);
 		
 		Integer[] bulbS = { bulbNumber };
-		Utils.transmit(parrentActivity, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null, null);
+		Utils.transmit(parrentActivity, m, bulbS, null, null);
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
@@ -90,7 +90,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 						Mood m = Utils.generateSimpleMood(bs);
 						
 						Integer[] bulbS = { bulbNumber };
-						Utils.transmit(parrentActivity, InternalArguments.ENCODED_TRANSIENT_MOOD, m, bulbS, null, null);
+						Utils.transmit(parrentActivity, m, bulbS, null, null);
 						
 						bulbF.refreshList();
 					}

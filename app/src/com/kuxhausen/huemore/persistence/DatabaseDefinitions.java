@@ -129,7 +129,6 @@ public final class DatabaseDefinitions {
 		public static final String BULB_NUMBER = "Bulb_Number";
 		public static final String MOOD_NAME = "Mood_Name";
 		public static final String ENCODED_MOOD = "Encoded_Mood";
-		public static final String ENCODED_TRANSIENT_MOOD = "Encoded_Transient_Mood";
 		public static final String BRIDGES = "Bridges";
 		public static final String MD5 = "MD5";
 		public static final String FRAG_MANAGER_DIALOG_TAG = "dialog";
@@ -140,7 +139,6 @@ public final class DatabaseDefinitions {
 		public final static String SHOW_EDIT_TEXT = "ShowEditText";
 		public final static String PREVIOUS_STATE = "PreviousState";
 		public final static String PROMPT_UPGRADE = "PromptUpgrade";
-		public final static String SERIALIZED_GOD_OBJECT = "SerializedGodObject";
 		public final static String TRANSIENT_NETWORK_REQUEST = "TransienteNetworkRequest";
 		public final static String PERMANENT_NETWORK_REQUEST = "PermanentNetworkRequest";
 		public final static String ALARM_ID = "AlarmId";

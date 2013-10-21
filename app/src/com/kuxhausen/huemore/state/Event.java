@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.state;
 
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Event implements Comparable<Event>{
@@ -20,6 +21,12 @@ public class Event implements Comparable<Event>{
 		this.state = state;
 		this.channel = channel;
 		this.time = time;
+	}
+	
+	@Override
+	public Event clone(){
+		Gson gson = new Gson();
+		return gson.fromJson(gson.toJson(this), Event.class);
 	}
 	
 }

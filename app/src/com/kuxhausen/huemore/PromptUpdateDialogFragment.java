@@ -38,7 +38,7 @@ public class PromptUpdateDialogFragment extends DialogFragment implements
 
 	CheckBox optOut;
 
-	private GodObject parrentActivity;
+	private NetworkManagedSherlockFragmentActivity parrentActivity;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -47,7 +47,7 @@ public class PromptUpdateDialogFragment extends DialogFragment implements
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (GodObject) activity;
+			parrentActivity = (NetworkManagedSherlockFragmentActivity) activity;
 		} catch (ClassCastException e) {
 		}
 	}

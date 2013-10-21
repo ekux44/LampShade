@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -51,6 +52,28 @@ public class NetworkMethods {
 			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 			service.getRequestQueue().add(req);
 		}
+	}
+	
+	public static void PreformGetBulbAttributes(MoodExecuterService service, OnBulbAttributesReturnedListener listener, int bulb){
+		if (service == null)
+			return;
+
+		// Get username and IP from preferences cache
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(service);
+		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
+				null);
+		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
+
+		if (bridge == null)
+			return;
+		
+		String url = "http://" + bridge + "/api/" + hash + "/lights/" + bulb;
+		
+		GsonRequest<BulbAttributes> req = new GsonRequest<BulbAttributes>(Method.GET, url, null, BulbAttributes.class, null,
+				new BulbAttributesSuccessListener(service, listener, bulb), new BasicErrorListener(service));
+		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		service.getRequestQueue().add(req);
 	}
 	
 	public static void PreformSetBulbAttributes(MoodExecuterService service, int bulbNum, BulbAttributes bulbAtt){

@@ -24,7 +24,7 @@ import android.widget.ProgressBar;
 
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -38,13 +38,13 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
-	public GodObject parrentActivity;
+	public NetworkManagedSherlockFragmentActivity parrentActivity;
 	Bridge[] bridges = null;
 	Gson gson = new Gson();
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		parrentActivity = (GodObject) this.getActivity();
+		parrentActivity = (NetworkManagedSherlockFragmentActivity) this.getActivity();
 		if (this.getArguments() != null) {
 			bridges = gson.fromJson(
 					this.getArguments().getString(InternalArguments.BRIDGES),

@@ -36,7 +36,6 @@ import com.kuxhausen.huemore.persistence.Utils;
 
 public class MoodListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
-	OnMoodSelectedListener mMoodCallback;
 
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
@@ -45,13 +44,6 @@ public class MoodListFragment extends SherlockListFragment implements
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1; 
 	private ShareActionProvider mShareActionProvider;
-
-	// The container Activity must implement this interface so the frag can
-	// deliver messages
-	public interface OnMoodSelectedListener {
-		/** Called by HeadlinesFragment when a list item is selected */
-		public void onMoodSelected(String mood);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,18 +123,11 @@ public class MoodListFragment extends SherlockListFragment implements
 
 		case R.id.action_add_mood:
 			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
-			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
 			this.getActivity().startActivity(i);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mMoodCallback = (GodObject) activity;
 	}
 
 	@Override
@@ -196,7 +181,6 @@ public class MoodListFragment extends SherlockListFragment implements
 			return true;
 		case R.id.contextmoodmenu_edit:
 			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
-			i.putExtra(InternalArguments.SERIALIZED_GOD_OBJECT, ((GodObject)this.getActivity()).getSerialized());
 			i.putExtra(InternalArguments.MOOD_NAME, (String) (longSelected).getText());
 			this.getActivity().startActivity(i);
 			return true;
@@ -263,7 +247,8 @@ public class MoodListFragment extends SherlockListFragment implements
 		getListView().setItemChecked(selectedPos, true);
 
 		// Notify the parent activity of selected item
-		mMoodCallback.onMoodSelected((String) ((TextView) (v)).getText());
+		String moodName = (String) ((TextView) (v)).getText();
+		((NetworkManagedSherlockFragmentActivity)getActivity()).startMood(Utils.getMoodFromDatabase(moodName, getActivity()),moodName);
 		getSherlockActivity().supportInvalidateOptionsMenu();
 	}
 

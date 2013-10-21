@@ -55,7 +55,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-	Context context;
+	private SharedMoodReaderActivity me;
 
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
@@ -68,13 +68,15 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	
 	Button previewButton;
 	Mood sharedMood;
+	
+	boolean isTrackingTouch = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shared_mood_reader);
 
-		context = this;
+		me = this;
 		
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
@@ -90,25 +92,21 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				int brightness = brightnessBar.getProgress();
-				
-				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null, brightness);
+				me.setBrightness(seekBar.getProgress());
+				isTrackingTouch = false;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				int brightness = brightnessBar.getProgress();
-				
-				Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null, brightness);
+				me.setBrightness(seekBar.getProgress());
+				isTrackingTouch = true;
 			}
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if(fromUser){
-					int brightness = brightnessBar.getProgress();
-					
-					Utils.transmit(context, InternalArguments.ENCODED_TRANSIENT_MOOD, sharedMood, getBulbs(), null, brightness);
+					me.setBrightness(seekBar.getProgress());
 				}
 			}
 		});
@@ -134,6 +132,11 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		okayButton.setOnClickListener(this);
 	}
 
+	@Override
+	public void onBrightnessChanged(int brightness) {
+		if(brightnessBar!=null && !isTrackingTouch)
+			brightnessBar.setProgress(brightness);
+	}
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -166,19 +169,11 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void initializeActionBar(Boolean value) {
-		try {
-			this.getActionBar().setDisplayHomeAsUpEnabled(value);
-		} catch (Error e) {
-		}
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.previewButton:
-				Utils.transmit(context, InternalArguments.ENCODED_MOOD, sharedMood, getBulbs(), name.getText().toString(),null);
+				Utils.transmit(me, sharedMood, getBulbs(), name.getText().toString(),null);
 				break;
 			case R.id.okay:
 				String moodName = name.getText().toString();

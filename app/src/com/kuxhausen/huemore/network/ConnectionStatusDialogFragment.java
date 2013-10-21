@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.network;
 
-import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class ConnectionStatusDialogFragment extends DialogFragment implements OnConnectionStatusChangedListener, OnClickListener, OnServiceConnectedListener{
 	
-	GodObject parrentActivity;
+	NetworkManagedSherlockFragmentActivity parrentActivity;
 	Button leftButton, rightButton;
 	TextView connectionStatusMessage;
 	ProgressBar checkingConnectionInProgress;
@@ -58,7 +58,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
-		parrentActivity = (GodObject)activity;
+		parrentActivity = (NetworkManagedSherlockFragmentActivity)activity;
 	}
 	
 	@Override

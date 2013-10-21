@@ -6,16 +6,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.kuxhausen.huemore.GodObject;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.network.NetworkMethods;
 
 public class RegistrationSuccessDialogFragment extends DialogFragment {
-	GodObject ma;
+	NetworkManagedSherlockFragmentActivity ma;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		ma = (GodObject) this.getActivity();
+		ma = (NetworkManagedSherlockFragmentActivity) this.getActivity();
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {

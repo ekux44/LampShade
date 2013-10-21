@@ -39,7 +39,7 @@ public class GroupListFragment extends SherlockListFragment implements
 	public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	public int selectedPos = -1;
-	private GodObject gbpfCallback;
+	private NetworkManagedSherlockFragmentActivity gbpfCallback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,7 +113,7 @@ public class GroupListFragment extends SherlockListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		gbpfCallback = (GodObject) activity;
+		gbpfCallback = (NetworkManagedSherlockFragmentActivity) activity;
 	}
 
 	public void invalidateSelection() {
@@ -193,11 +193,12 @@ public class GroupListFragment extends SherlockListFragment implements
 		while (cursor.moveToNext()) {
 			groupStates.add(cursor.getInt(0));
 		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+		int[] bulbS = new int[groupStates.size()];
+		for(int i = 0; i< bulbS.length; i++)
+			bulbS[i] = groupStates.get(i);
 
 		// Notify the parent activity of selected bulbs
-		gbpfCallback.onSelected(bulbS, selected.getText().toString(), this,
-				null);
+		gbpfCallback.setGroup(bulbS, selected.getText().toString());
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);

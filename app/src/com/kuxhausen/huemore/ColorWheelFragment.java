@@ -11,7 +11,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.GodObject;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
@@ -124,9 +123,8 @@ public class ColorWheelFragment extends SherlockFragment implements OnCreateMood
 
 	public void preview() {
 		if(isAdded()){
-			
 			Mood m = Utils.generateSimpleMood(hs);
-			Utils.transmit(this.getActivity(), InternalArguments.ENCODED_TRANSIENT_MOOD, m, ((GodObject)this.getActivity()).getBulbs(), null, null);
+			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(m, null);
 		}
 	}
 
