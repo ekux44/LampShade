@@ -49,11 +49,9 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		setContentView(R.layout.nfc_reader);
 
 		onButton = (ToggleButton) this.findViewById(R.id.onToggleButton);
-		onButton.setOnCheckedChangeListener(this);
 
 		doneButton = (Button) this.findViewById(R.id.doneButton);
 		doneButton.setOnClickListener(this);
-
 	}
 
 	@Override
@@ -88,11 +86,13 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 					m = result.second.first;
 					brightness = result.second.second;
 					
+					onButton.setOnCheckedChangeListener(null);
 					Utils.transmit(this, m, bulbS, null, brightness);
 					boolean on = false;
 					if(m.events[0].state.on!=null && m.events[0].state.on)
 						on=true;
 					onButton.setChecked(on);
+					onButton.setOnCheckedChangeListener(this);
 				} catch (InvalidEncodingException e) {
 					Intent i = new Intent(this,DecodeErrorActivity.class);
 					i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
@@ -106,10 +106,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				}
 			}
 		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			initializeActionBar(true);
-
-		}
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -126,20 +123,12 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void initializeActionBar(Boolean value) {
-		try {
-			this.getActionBar().setDisplayHomeAsUpEnabled(value);
-		} catch (Error e) {
-		}
-	}
-
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
 		Mood m = Utils.generateSimpleMood(bs);		
-		Utils.transmit(this, m, bulbS, null, null);
+		Utils.transmit(this, m, bulbS, null, brightness);
 	}
 
 	@Override

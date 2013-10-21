@@ -110,10 +110,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		moodSpinner.setAdapter(moodDataSource);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			initializeActionBar(true);
-
-		}
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -126,14 +123,6 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void initializeActionBar(Boolean value) {
-		try {
-			this.getActionBar().setDisplayHomeAsUpEnabled(value);
-		} catch (Error e) {
 		}
 	}
 
