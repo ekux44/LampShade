@@ -66,7 +66,9 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.secondary_page);
-		this.getSupportActionBar().setTitle(this.getCurentGroupName());
+		String name = this.getIntent().getExtras().getString(InternalArguments.MOOD_NAME);
+		if(name!=null)
+			this.getSupportActionBar().setTitle(name);
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);

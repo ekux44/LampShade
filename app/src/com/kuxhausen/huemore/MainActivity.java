@@ -162,6 +162,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		 }else if( this.boundToService()){
 			// only load the moods page if the group has been sent to the service
 			Intent i = new Intent(this, SecondActivity.class);
+			i.putExtra(InternalArguments.MOOD_NAME, optionalName);
 			this.startActivity(i);
 		 }
 	}
