@@ -154,7 +154,9 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 				.getText().toString();
 		Mood m = Utils.getMoodFromDatabase(moodName, this);
 		
-		int brightness = brightnessBar.getProgress();
+		Integer brightness = null;
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			brightness = brightnessBar.getProgress();
 		
 		Utils.transmit(context, m, bulbS, moodName, brightness);
 	}
@@ -219,7 +221,9 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		Mood m = Utils.getMoodFromDatabase( ((TextView) moodSpinner.getSelectedView())
 				.getText().toString(), this);
 		
-		int brightness = brightnessBar.getProgress();
+		Integer brightness = null;
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			brightness = brightnessBar.getProgress();
 		
 		String data = HueUrlEncoder.encode(m, bulbS, brightness);
 		return url + data;

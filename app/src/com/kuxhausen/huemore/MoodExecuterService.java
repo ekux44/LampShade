@@ -355,7 +355,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 				if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
 					QueueEvent e = queue.poll();
 					int bulbInGroup = calculateBulbPositionInGroup(e.bulb);
-					if(bulbInGroup>-1){
+					if(bulbInGroup>-1 && maxBrightness!=null){
 						//convert relative brightness into absolute brightness
 						if(e.event.state.bri!=null)
 							bulbRelBri[bulbInGroup] = e.event.state.bri;
