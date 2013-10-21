@@ -53,6 +53,9 @@ public class EditColorWheelFragment extends SherlockFragment implements
 		Float[] newXY = Utils.hsTOxy(newHueSat);
 		
 		BulbState state = statePager.getState();
+		//relative brightness
+		if(newHSV[2]!=1f)
+			state.bri = (int) (newHSV[2]*255f);
 		state.on= true;
 		state.xy = newXY;
 		state.hue = null;
@@ -88,7 +91,8 @@ public class EditColorWheelFragment extends SherlockFragment implements
 		}
 		if(state.xy!=null){
 			Float[] hueSat = Utils.xyTOhs(state.xy);
-			float[] hsv = {hueSat[0]*360, hueSat[1], 1f};
+			//don't forget relative brightness if set
+			float[] hsv = {hueSat[0]*360, hueSat[1], (state.bri!=null)?state.bri/255f:1f};
 			state.on=true;
 			
 			int rgb = Color.HSVToColor(hsv);

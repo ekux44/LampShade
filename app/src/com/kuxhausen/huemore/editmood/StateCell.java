@@ -52,7 +52,7 @@ public class StateCell {
 			float[] hsv = new float[3];
 	    	hsv[0] = (float) (hueSat[0] *360) ;
 	    	hsv[1] = (float) (hueSat[1]);
-	    	hsv[2] = 1f;
+	    	hsv[2] = (hs.bri!=null)?hs.bri/255f:1f; //remember relative brightness
 	    	int color = Color.HSVToColor(hsv);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
