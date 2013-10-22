@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.PriorityQueue;
+import java.util.Stack;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -241,13 +242,17 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			channels[i % mood.getNumChannels()].add(group[i]);
 		}
 
-		for (Event e : mood.events) {
-			for (Integer bNum : channels[e.channel]) {
-				QueueEvent qe = new QueueEvent(e);
-				qe.bulb = bNum;
-				
-				if(mood.timeAddressingRepeatPolicy){
-					
+		if(mood.timeAddressingRepeatPolicy){
+			Stack<QueueEvent> pendingEvents = new Stack<QueueEvent>();
+			
+			long earliestEventStillApplicable = Long.MIN_VALUE;
+			
+			for (int i= mood.events.length-1; i>=0; i--) {
+				Event e = mood.events[i];
+				for (Integer bNum : channels[e.channel]) {
+					QueueEvent qe = new QueueEvent(e);
+					qe.bulb = bNum;
+						
 					Calendar current = Calendar.getInstance();
 					Calendar startOfDay = Calendar.getInstance();
 					startOfDay.set(Calendar.HOUR_OF_DAY, 0);
@@ -258,10 +263,24 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					Long startOfDayInNanos = System.nanoTime() - offsetWithinTheDayInNanos;
 					
 					qe.nanoTime = startOfDayInNanos+(e.time*100000000l);
-					if(qe.nanoTime>=0l)
-						queue.add(qe);
+					if(qe.nanoTime>0l)
+						pendingEvents.add(qe);
+					else if(qe.nanoTime>=earliestEventStillApplicable){
+						earliestEventStillApplicable = qe.nanoTime;
+						qe.nanoTime = 0l;
+						pendingEvents.add(qe);
+					}
 				}
-				else{
+			}
+			while(!pendingEvents.empty()){
+				queue.add(pendingEvents.pop());
+			}
+		}else{
+			for (Event e : mood.events) {
+				for (Integer bNum : channels[e.channel]) {
+					QueueEvent qe = new QueueEvent(e);
+					qe.bulb = bNum;
+					
 					// 10^8 * e.time
 					qe.nanoTime = System.nanoTime()+(e.time*100000000l);
 					queue.add(qe);
