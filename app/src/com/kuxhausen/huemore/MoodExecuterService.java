@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -25,6 +26,8 @@ import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttribu
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -339,6 +342,33 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 						for(int i = 0; i< bulbs.length; i++)
 							bulbs[i] = moodPairs.first[i];
 						onGroupSelected(bulbs, moodPairs.second.second);
+					} else if(group==null){
+						//default to the all group
+						String[] groupColumns = { GroupColumns.BULB };
+						String[] gWhereClause = {this.getResources().getString(R.string.cap_all)};
+						Cursor groupCursor = getContentResolver().query(
+								DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
+																					// default
+																					// content
+																					// URI
+																					// for the
+																					// provider.
+								groupColumns, // Return the note ID and title for each note.
+								GroupColumns.GROUP + "=?", // selection clause
+								gWhereClause, // selection clause args
+								null // Use the default sort order.
+								);
+
+						ArrayList<Integer> groupStates = new ArrayList<Integer>();
+						while (groupCursor.moveToNext()) {
+							groupStates.add(groupCursor.getInt(0));
+						}
+						Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
+						
+						int[] bulbs = new int[bulbS.length];
+						for(int i = 0; i< bulbs.length; i++)
+							bulbs[i] = bulbS[i];
+						onGroupSelected(bulbs, null);
 					}
 					if(moodPairs.second.first!=null)
 						startMood(moodPairs.second.first, moodName);				
