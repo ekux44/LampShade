@@ -54,7 +54,7 @@
     <string name="alarm_repeat">Wiederholen:</string>
     <string name="cap_short_every_day">TÄGLICH</string>
     <string name="next_scheduled_intro">Nächster Alarm</string>
-	<string name="update_welcome_title">Neuigkeiten in LampShade 2.5</string>
+    <string name="update_welcome_title">Neuigkeiten in LampShade 2.5</string>
     <string name="hub_discovery_disclaimer">Es wird nach der Bridge gesucht, dies kann einen Moment dauern.</string>
     <string name="update_message">Bitte aktualisieren Sie HueMore auf die neuste Version.</string>
     <string name="update_opt_out">Update Benachrichtigungen ausschalten</string>
@@ -89,7 +89,25 @@
 	<string name="share">TEILEN</string>
 	<string name="seconds">Sekunden</string>
 	<string name="preview">Vorschau</string>
-	
+	<string name="advanced_timeslot_limit">Sorry, moods are limited to 64 timeslots in this version</string>
+	<string name="advanced_channel_limit">Sorry, moods are limited to 64 channels in this version</string>
+	<string name="community_facebook">LampShade.io on Facebook</string>
+	<string name="community_google_plus">LampShade.io on Google+</string>
+	<string name="community_twitter">LampShade.io on Twitter</string>
+	<string name="action_communities">Community and Support</string>
+	<string name="community_message">Join the LampShade.io online community to share moods and discuss LampShade.io features</string>
+	<string name="action_welcome">Welcome</string>
+	<string name="welcome_message">Welcome to LampShade.io, a powerful app for controlling the Philips Hue smarthome lighting system</string>
+	<string name="welcome_get_started">Connect to my Hue</string>
+	<string name="welcome_get_hue">Buy a Philips Hue</string>
+	<string name="unnamed_group">Unnamed Group</string>
+	<string name="unnamed_mood">Unnamed Mood</string>
+	<string name="empty_group_list_text">No groups found…</string>
+	<string name ="widget_alarms_label">LampShade Alarms</string>
+	<string name ="widget_groups_label">LampShade Groups</string>
+	<string name ="include_brightness">Include Brightness</string>
+	<string name="cap_daily_mood">DAILY</string>
+	<string name="daily_start_time">Start Time</string>
 	
 	<string-array name="update_features">
         <item>Sie können nun animierte Szenen erstellen</item>
@@ -98,7 +116,7 @@
         <item>To accommodate the new mood system, alarms now start at the set time. All previous alarms have been cleared</item>
         <item>Wegen großen Änderungen der App müssen Tasker Plugin Aktionen neu erstellt werden. Tut mir leid!</item>
     </string-array>
-    <string-array name="repeat_days">
+        <string-array name="repeat_days">
         <item>Sonntag</item>
         <item>Montag</item>
         <item>Dienstag</item>
@@ -122,7 +140,7 @@
         <item>10 Sekunden</item>
         <item>1 Minute</item>
         <item>10 Minuten</item>
-        <item>60 Minuten</item>
+        <item>1 Hour</item>
     </string-array>
     <string-array name="timeslot_names_array">
         <item>1 Sekunde</item>

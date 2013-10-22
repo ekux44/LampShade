@@ -83,12 +83,14 @@
 	<string name="add_channel">+ K A N A A L</string>
 	<string name="grid_col_title_channels">Kanalen</string>
 	<string name="infinite_loop">Herhaal</string>
-	<string name="save">Herhaal</string>
+	<string name="save">Opslaan</string>
 	<string name="cap_sample_state">VOORBEELD</string>
 	<string name="cap_recent_state">RECENT</string>
 	<string name="share">DEEL</string>
 	<string name="seconds">Seconden</string>
 	<string name="preview">voorbeeld</string>
+	<string name="advanced_timeslot_limit">Sorry, moods are limited to 64 timeslots in this version</string>
+	<string name="advanced_channel_limit">Sorry, moods are limited to 64 channels in this version</string>
 	<string name="community_facebook">LampShade.io op Facebook</string>
 	<string name="community_google_plus">LampShade.io op Google+</string>
 	<string name="community_twitter">LampShade.io op Twitter</string>
@@ -101,7 +103,11 @@
 	<string name="unnamed_group">Naamloze Groep</string>
 	<string name="unnamed_mood">Naamloze Sfeer</string>
 	<string name="empty_group_list_text">Geen groepen gevonden…</string>
-	
+	<string name ="widget_alarms_label">LampShade Alarms</string>
+	<string name ="widget_groups_label">LampShade Groups</string>
+	<string name ="include_brightness">Include Brightness</string>
+	<string name="cap_daily_mood">DAILY</string>
+	<string name="daily_start_time">Start Time</string>
 	
 	<string-array name="update_features">
         <item>Je kunt nu geanimeerde Sferen maken!</item>
@@ -134,7 +140,7 @@
         <item>10 seconden</item>
         <item>1 minuut</item>
         <item>10 minuten</item>
-        <item>60 minuten</item>
+        <item>1 Hour</item>
     </string-array>
     <string-array name="timeslot_names_array">
         <item>1 seconde</item>
