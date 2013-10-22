@@ -49,13 +49,13 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 	}
 
 	@Override
-	public void setDuration(int offsetWithinDayInDeciSeconds) {
+	public void setDuration(int offsetWithinDayInDeciSeconds) {		
 		Calendar startOfDay = Calendar.getInstance();
 		startOfDay.set(Calendar.HOUR_OF_DAY, 0);
 		startOfDay.set(Calendar.SECOND, 0);
 		startOfDay.set(Calendar.MILLISECOND, 0);
 		
-		cal.setTimeInMillis( cal.getTimeInMillis() + (offsetWithinDayInDeciSeconds*100l));
+		cal.setTimeInMillis( startOfDay.getTimeInMillis() + (offsetWithinDayInDeciSeconds*100l));
 	}
 
 	@Override
