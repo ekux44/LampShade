@@ -7,21 +7,22 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class EditTimeslotDialogFragment extends SherlockDialogFragment implements OnClickListener {
+public class EditTimeOfDayDialogFragment extends SherlockDialogFragment implements OnClickListener {
 
-	public interface TimeslotTimeResult{
-		public abstract void setDuration(int duration);
+	public interface TimeOfDayResult{
+		public abstract void setTimeOfDay(int duration);
 	}
 	
-	EditText seconds;
-	private TimeslotTimeResult listener;
+	TimePicker picker;
+	private TimeOfDayResult listener;
 	
-	public void setTimeslotTimeResultListener(TimeslotTimeResult l){
+	public void setTimeOfDayResultListener(TimeOfDayResult l){
 		listener = l;
 	}
 	
@@ -30,9 +31,9 @@ public class EditTimeslotDialogFragment extends SherlockDialogFragment implement
 			Bundle savedInstanceState) {
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.edit_timeslot_dialog, container, false);
+		View myView = inflater.inflate(R.layout.edit_timeslot_time_of_day, container, false);
 	
-		seconds = (EditText)myView.findViewById(R.id.secondsEditText);
+		picker = (TimePicker)myView.findViewById(R.id.timePicker);
 		
 		
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
@@ -40,13 +41,8 @@ public class EditTimeslotDialogFragment extends SherlockDialogFragment implement
 		Button okayButton = (Button) myView.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 		
-		Bundle args = this.getArguments();
-		if (args != null && args.containsKey(InternalArguments.DURATION_TIME)) {
-			seconds.setText(""+args.getInt(InternalArguments.DURATION_TIME));
-		}
-		
 		this.getDialog().setTitle(
-				getActivity().getString(R.string.grid_col_title_timeslot));
+				getActivity().getString(R.string.daily_start_time));
 		return myView;
 	}
 
@@ -54,13 +50,7 @@ public class EditTimeslotDialogFragment extends SherlockDialogFragment implement
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.okay:
-			String s = seconds.getText().toString();
-			try{	
-				int transitionTime = Integer.parseInt(s) * 10;
-				transitionTime = Math.min(transitionTime, 36000);
-				listener.setDuration(transitionTime);
-			} catch (Exception e){
-			}
+			listener.setTimeOfDay(0);
 			this.dismiss();
 			break;
 		case R.id.cancel:

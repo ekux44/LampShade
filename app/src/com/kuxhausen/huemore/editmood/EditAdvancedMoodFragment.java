@@ -273,6 +273,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
 			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+			if(pageType==EditMoodPagerDialogFragment.DAILY_PAGE)
+				((TextView)v.findViewById(R.id.textLabel)).setText(R.string.daily_start_time);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(0);

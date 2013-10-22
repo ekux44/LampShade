@@ -4,23 +4,29 @@ import java.util.Calendar;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.editmood.EditTimeOfDayDialogFragment.TimeOfDayResult;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
+
+import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
-public class TimeOfDayTimeslot implements TimeslotDuration{
+public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener, TimeOfDayResult{
 
 	public static int hour;
 	private SherlockFragment frag;
-	private TextView t;
+	private Button t;
 	public int myHour;
 	
 	public TimeOfDayTimeslot(SherlockFragment frag, int id){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
-		t = (TextView)inflater.inflate(R.layout.timeslot_date, null);
+		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
+		t.setOnClickListener(this);
 		myHour = hour++;
 	}
 
@@ -51,6 +57,21 @@ public class TimeOfDayTimeslot implements TimeslotDuration{
 	public int getDuration() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		EditTimeOfDayDialogFragment etdf = new EditTimeOfDayDialogFragment();
+		etdf.setTimeOfDayResultListener(this);
+		etdf.show(frag.getFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+	}
+
+
+	@Override
+	public void setTimeOfDay(int duration) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

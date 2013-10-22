@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditTimeslotDialogFragment.TimeslotTimeResult;
+import com.kuxhausen.huemore.editmood.EditOffsetDialogFragment.TimeslotTimeResult;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 import android.os.Bundle;
@@ -54,7 +54,7 @@ public class OffsetTimeslot implements TimeslotDuration, OnItemSelectedListener,
 			duration=(timeslotValues.get(position));
 		}
 		else{
-			EditTimeslotDialogFragment etdf = new EditTimeslotDialogFragment();
+			EditOffsetDialogFragment etdf = new EditOffsetDialogFragment();
 			etdf.setTimeslotTimeResultListener(this);
 			Bundle args = new Bundle();
 			args.putInt(InternalArguments.DURATION_TIME, duration/10);

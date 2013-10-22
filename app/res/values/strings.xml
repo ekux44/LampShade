@@ -107,6 +107,7 @@
 	<string name ="widget_groups_label">LampShade Groups</string>
 	<string name ="include_brightness">Include Brightness</string>
 	<string name="cap_daily_mood">DAILY</string>
+	<string name="daily_start_time">Start Time</string>
 	
 	<string-array name="update_features">
         <item>You can now created animated Moods!</item>
