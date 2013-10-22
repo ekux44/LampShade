@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -100,9 +101,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		addRow(defaultDuration);
 		addRow(defaultDuration);
-		
 		addCol();
-	    
+		
 	    redrawGrid();
 	    
 		Bundle args = getArguments();
@@ -148,7 +148,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
 				row++;
-				setGridRows(row+1, e.time - time);
+				if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE)
+					setGridRows(row+1, e.time);
+				else 
+					setGridRows(row+1, e.time - time);
 				time=e.time;
 			}
 		}
@@ -159,8 +162,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		time = -1;
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
-				if(time!=-1)
+				if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE)
+					timeslotDuration.get(row+1).setDuration(e.time);
+				else if(time!=-1)
 					timeslotDuration.get(row).setDuration(e.time-time);
+				
 				row++;
 				time = e.time;
 			}
@@ -174,7 +180,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		Mood m = new Mood();
 		m.usesTiming = true; //TODO not always the case...
 		m.setNumChannels(gridCols());
-		m.timeAddressingRepeatPolicy = false;
+		if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE)
+			m.timeAddressingRepeatPolicy=true;
+		else
+			m.timeAddressingRepeatPolicy = false;
 		m.setInfiniteLooping(pager.isChecked());
 		
 		ArrayList<Event> events = new ArrayList<Event>();
@@ -201,11 +210,31 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		return m;
 	}
 	private int getTime(int row){
-		int time = 0;
-		for(int i = row-1; i>=0; i--){
-			time+=timeslotDuration.get(i).getDuration();
+		if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE){
+			if(row<timeslotDuration.size())
+				return timeslotDuration.get(row).getDuration();
+			else
+				return 0;
 		}
-		return time;
+		else {
+			int time = 0;
+			for(int i = row-1; i>=0; i--){
+				time+=timeslotDuration.get(i).getDuration();
+			}
+			return time;
+		}
+	}
+	
+	public Calendar computeMinimumValue(int position){
+		if(position <=0){
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.HOUR_OF_DAY, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			return c;
+		} else{
+			return ((TimeOfDayTimeslot)timeslotDuration.get(position-1)).getCal();
+		}
 	}
 
 	@Override
@@ -235,7 +264,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 	}
 
-	private void redrawGrid() {
+	public void redrawGrid() {
 		grid.removeAllViews();
 		for(int r = 0; r< gridRows(); r++)
 			for(int c = 0; c<gridCols(); c++){
@@ -437,7 +466,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			
 			TimeslotDuration td;
 			if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE){
-				td = new TimeOfDayTimeslot(this, getSpinnerId());
+				td = new TimeOfDayTimeslot(this, getSpinnerId(), gridRows()-1);
 			}
 			else{
 				td = new OffsetTimeslot(this, getSpinnerId());

@@ -3,7 +3,6 @@ package com.kuxhausen.huemore.editmood;
 import java.util.Calendar;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
@@ -20,16 +19,20 @@ import android.widget.TimePicker;
 
 public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 
-	Calendar cal;
-	private SherlockFragment frag;
+	private Calendar cal;
+	private EditAdvancedMoodFragment frag;
 	private Button t;
 	
-	public TimeOfDayTimeslot(SherlockFragment frag, int id){
+	public TimeOfDayTimeslot(EditAdvancedMoodFragment frag, int id, int position){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
 		t.setOnClickListener(this);
+		
+		Calendar previousTimeslotCal = frag.computeMinimumValue(position);
 		cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 1+previousTimeslotCal.get(Calendar.HOUR_OF_DAY));
+		cal.set(Calendar.MINUTE, previousTimeslotCal.get(Calendar.MINUTE));
 		cal.set(Calendar.MILLISECOND, 0);
 	}
 
@@ -46,22 +49,29 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 	}
 
 	@Override
-	public void setDuration(int duration) {
-		// TODO Auto-generated method stub
+	public void setDuration(int offsetWithinDayInDeciSeconds) {
+		Calendar startOfDay = Calendar.getInstance();
+		startOfDay.set(Calendar.HOUR_OF_DAY, 0);
+		startOfDay.set(Calendar.SECOND, 0);
+		startOfDay.set(Calendar.MILLISECOND, 0);
 		
+		cal.setTimeInMillis( cal.getTimeInMillis() + (offsetWithinDayInDeciSeconds*100l));
 	}
 
 	@Override
 	public int getDuration() {
-		// TODO Auto-generated method stub
-		return 0;
+		Calendar startOfDay = Calendar.getInstance();
+		startOfDay.set(Calendar.HOUR_OF_DAY, 0);
+		startOfDay.set(Calendar.SECOND, 0);
+		startOfDay.set(Calendar.MILLISECOND, 0);
+		Long offsetWithinTheDayInMilis = cal.getTimeInMillis() - startOfDay.getTimeInMillis();
+		
+		return (int) (offsetWithinTheDayInMilis/100);
 	}
 	
-	public void setTime(int hour, int minute){
-		cal.set(Calendar.HOUR_OF_DAY, hour);
-		cal.set(Calendar.MINUTE, minute);
+	public Calendar getCal(){
+		return cal;
 	}
-
 
 	@Override
 	public void onClick(View v) {
@@ -85,7 +95,20 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		}
 		
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			t.setTime(hourOfDay, minute);
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			c.set(Calendar.MINUTE, minute);
+			c.set(Calendar.MILLISECOND, 0);
+			
+			Calendar previousTimeslotCal = t.frag.computeMinimumValue(t.frag.timeslotDuration.indexOf(t));
+			if(previousTimeslotCal.before(c))
+				t.cal=c;
+			else{
+				t.cal.set(Calendar.HOUR_OF_DAY, previousTimeslotCal.get(Calendar.HOUR_OF_DAY));
+				t.cal.set(Calendar.MINUTE, 1+previousTimeslotCal.get(Calendar.MINUTE));
+				t.cal.set(Calendar.MILLISECOND, 0);
+			}
+			t.frag.redrawGrid();
 		}
 	}
 }
