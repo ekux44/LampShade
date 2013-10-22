@@ -22,6 +22,12 @@ public class EditActivity extends SerializedEditorActivity implements
 	// don't change value
 	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.EXTRA_BUNDLE_SERIALIZED_BY_NAME";
 
+	protected static final String PERCENT_BRIGHTNESS_KEY = "com.kuxhausen.huemore.PERCENT_BRIGHTNESS";
+	protected static final String PERCENT_BRIGHTNESS_VALUE = "%percentbrightness";
+			
+	protected static final String TASKER_VARIABLE_TARGETS_KEY = "net.dinglisch.android.tasker.extras.VARIABLE_REPLACE_KEYS";	
+	protected static final String TASKER_VARIABLE_TARGETS_VALUE = PERCENT_BRIGHTNESS_KEY+"";
+	
 	private Button okayButton, cancelButton;
 
 	Context context;
@@ -66,6 +72,8 @@ public class EditActivity extends SerializedEditorActivity implements
 			Bundle b = new Bundle();
 			b.putString(EXTRA_BUNDLE_SERIALIZED_BY_NAME, getSerializedByName());
 			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, b);
+			i.putExtra(TASKER_VARIABLE_TARGETS_KEY, TASKER_VARIABLE_TARGETS_VALUE);
+			i.putExtra(PERCENT_BRIGHTNESS_KEY, PERCENT_BRIGHTNESS_VALUE);
 			setResult(Activity.RESULT_OK, i);
 			super.finish();
 			break;

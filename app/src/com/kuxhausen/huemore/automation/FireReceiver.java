@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.google.gson.Gson;
@@ -55,6 +56,17 @@ public class FireReceiver extends WakefulBroadcastReceiver {
 					.size()]);
 
 			Mood m = Utils.getMoodFromDatabase(gmb.mood, context);
+			
+			Bundle b = intent.getExtras();
+			if(b.containsKey(EditActivity.PERCENT_BRIGHTNESS_KEY) && !b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY).contains("%")){
+				try{
+				int percent = Integer.parseInt(b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY));
+				if(percent>=0 && percent <=100)
+					gmb.brightness = ((percent*255)/100);
+				} catch (Error e){
+				}
+			}
+			
 			
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
 			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS,gmb.brightness));
