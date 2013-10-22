@@ -148,10 +148,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
 				row++;
-				if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE)
-					setGridRows(row+1, e.time);
-				else 
-					setGridRows(row+1, e.time - time);
+				setGridRows(row+1, e.time - time);
 				time=e.time;
 			}
 		}
