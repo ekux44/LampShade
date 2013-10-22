@@ -60,7 +60,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	static Mood priorMood;
 	
 	private int pageType;
-	private boolean multiMode;
+	private boolean dailyMode;
 	
 	public EditMoodPagerDialogFragment pager;
 	
@@ -68,10 +68,10 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		pageType = EditMoodPagerDialogFragment.TIMED_PAGE;
 		pager = p;
 	}
-	public void setMultiMode(EditMoodPagerDialogFragment p){
-		pageType = EditMoodPagerDialogFragment.MULTI_PAGE;
+	public void setDailyMode(EditMoodPagerDialogFragment p){
+		pageType = EditMoodPagerDialogFragment.DAILY_PAGE;
 		pager = p;
-		multiMode = true;
+		dailyMode = true;
 	}
 	
 	@Override
@@ -99,11 +99,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		grid.setRowCount(initialRows);
 		
 		addRow(defaultDuration);
-		if(!multiMode){
-			addRow(defaultDuration);
-		} else{
-			myView.findViewById(R.id.addTimeslotButton).setVisibility(View.GONE);
-		}
+		addRow(defaultDuration);
+		
 		addCol();
 	    
 	    redrawGrid();
@@ -249,7 +246,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				v.setTag(r*this.gridCols()+c);
 				grid.addView(v, vg);
 			}
-		if(!multiMode){
+		{
 			for(int r = 0; r<timeslotDuration.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(0);
@@ -273,31 +270,27 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(v, vg);
 		}
-		if(!multiMode){
-			{
-				LayoutInflater inflater = getActivity().getLayoutInflater();
-				View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
-				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-				vg.columnSpec = GridLayout.spec(0);
-				vg.rowSpec = GridLayout.spec(0);
-				vg.setGravity(Gravity.CENTER);
-				grid.addView(v, vg);
-			}
+		{
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(0);
+			vg.setGravity(Gravity.CENTER);
+			grid.addView(v, vg);
 		}
-		if(!multiMode){
-			{
-				LayoutInflater inflater = this.getActivity().getLayoutInflater();
-				ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
-	
-				ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
-				rowView.setImageDrawable(cd);
-				rowView.setMinimumWidth(1);
-				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-				vg.columnSpec = GridLayout.spec(1);
-				vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
-				vg.setGravity(Gravity.FILL_VERTICAL);
-				grid.addView(rowView, vg);
-			}
+		{
+			LayoutInflater inflater = this.getActivity().getLayoutInflater();
+			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
+
+			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
+			rowView.setImageDrawable(cd);
+			rowView.setMinimumWidth(1);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(1);
+			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
+			vg.setGravity(Gravity.FILL_VERTICAL);
+			grid.addView(rowView, vg);		
 		}
 		{
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
@@ -324,22 +317,20 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 
 		contextSpot = (Integer)v.getTag();
 		
-		if (multiMode){
-			android.view.MenuInflater inflater = this.getActivity()
-					.getMenuInflater();
-			inflater.inflate(R.menu.context_multi_state, menu);
+		if (dailyMode){
+			android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
+			inflater.inflate(R.menu.context_daily_state, menu);
 		} else{
-		android.view.MenuInflater inflater = this.getActivity()
-				.getMenuInflater();
+		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_state, menu);
 		}
 	}
 
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		if(multiMode){
+		if(dailyMode){
 			switch (item.getItemId()) {
-			case R.id.contextmultimenu_edit:
+			case R.id.contextdailymenu_edit:
 				stopPreview();
 				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 				cpdf.setParrentMood(this);
@@ -351,11 +342,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 				cpdf.show(getFragmentManager(),
 						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 				return true;
-			case R.id.contextmultimenu_delete:
+			case R.id.contextdailymenu_delete:
 				delete(contextSpot);
 				redrawGrid();
 				return true;
-			case R.id.contextmultimenu_delete_channel:
+			case R.id.contextdailymenu_delete_timeslot:
+				deleteRow(contextSpot);
+				redrawGrid();
+				return true;
+			case R.id.contextdailymenu_delete_channel:
 				deleteCol(contextSpot);
 				redrawGrid();
 				return true;
@@ -438,7 +433,13 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			grid.setRowCount(initialRows + gridRows()+1);
 			
 			
-			TimeslotDuration td = new OffsetTimeslot(this, getSpinnerId());
+			TimeslotDuration td;
+			if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE){
+				td = new TimeOfDayTimeslot(this, getSpinnerId());
+			}
+			else{
+				td = new OffsetTimeslot(this, getSpinnerId());
+			}
 			td.setDuration(duration);
 			timeslotDuration.add(td);
 			

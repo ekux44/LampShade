@@ -73,7 +73,7 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 	static Gson gson = new Gson();
 	private CheckBox loop;
 	
-	public final static int WHEEL_PAGE = 0, MULTI_PAGE=1, TIMED_PAGE=2;
+	public final static int WHEEL_PAGE = 0, TIMED_PAGE=1, DAILY_PAGE =2;
 
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
@@ -145,15 +145,12 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 	private static int calculateRoute(Mood m){
 		if(m==null)
 			return -1;
-		if(!m.usesTiming){
-			if (m.events.length == 1 && m.events[0].state.ct == null) {
-				// show simple mood page
-				return WHEEL_PAGE;
-			} else
-			{
-				// show multi mood page
-				return MULTI_PAGE;
-			}
+		if(!m.usesTiming && m.events.length == 1 && m.events[0].state.ct == null) {
+			// show simple mood page
+			return WHEEL_PAGE;
+		}else if (m.timeAddressingRepeatPolicy==true){
+			//show daily page
+			return DAILY_PAGE;
 		}else
 			return TIMED_PAGE;
 	}
@@ -224,11 +221,11 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 				eamf.setArguments(args1);
 				newMoodFragments[i] = eamf;
 				return (Fragment) newMoodFragments[i];
-			case MULTI_PAGE:
+			case DAILY_PAGE:
 				EditAdvancedMoodFragment eamf2 = new EditAdvancedMoodFragment();
-				eamf2.setMultiMode(frag);
+				eamf2.setDailyMode(frag);
 				Bundle args2 = new Bundle();
-				if (calculateRoute(priorMood)==MULTI_PAGE) {
+				if (calculateRoute(priorMood)==DAILY_PAGE) {
 					args2.putString(InternalArguments.MOOD_NAME, priorName);
 				}
 				eamf2.setArguments(args2);
@@ -251,8 +248,8 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 				return frag.getString(R.string.cap_simple_mood);
 			case TIMED_PAGE:
 				return frag.getString(R.string.cap_timed_mood);
-			case MULTI_PAGE:
-				return frag.getString(R.string.cap_multi_mood);
+			case DAILY_PAGE:
+				return frag.getString(R.string.cap_daily_mood);
 			}
 			return "";
 		}
