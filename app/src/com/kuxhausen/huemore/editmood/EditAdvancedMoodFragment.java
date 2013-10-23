@@ -289,12 +289,41 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
-			View v =inflater.inflate(R.layout.grid_col_channels_label, null);
+			Button b =(Button) inflater.inflate(R.layout.grid_col_channels_label, null);
+			b.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					Mood showChanM = new Mood();
+					showChanM.usesTiming = true;
+					showChanM.setNumChannels(gridCols());
+					
+					//flash each channel 1.5 seconds apart
+					Event[] eRay = new Event[showChanM.getNumChannels()];
+					for(int i = 0; i< showChanM.getNumChannels(); i++){
+						BulbState bs = new BulbState();
+						bs.alert = "select";
+						bs.on = true;
+						
+						Event e = new Event();
+						e.channel = i;
+						e.time = 15*i;
+						e.state = bs;
+						eRay[i]=e;
+					}
+					showChanM.events = eRay;
+					showChanM.loopIterationTimeLength = 15*showChanM.getNumChannels();
+					
+					if(pageType == EditMoodPagerDialogFragment.currentPage && grid!=null)
+						((NetworkManagedSherlockFragmentActivity)pager).startMood(showChanM, null);
+				}
+				
+			});
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
 			vg.rowSpec = GridLayout.spec(0);
 			vg.setGravity(Gravity.CENTER);
-			grid.addView(v, vg);
+			grid.addView(b, vg);
 		}
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
