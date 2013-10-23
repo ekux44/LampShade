@@ -118,7 +118,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.onBackPressed();
+			this.startActivity(new Intent(this,MainActivity.class));
 			return true;
 
 		default:

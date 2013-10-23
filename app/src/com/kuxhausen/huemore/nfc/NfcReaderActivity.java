@@ -47,7 +47,8 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.nfc_reader);
-
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		onButton = (ToggleButton) this.findViewById(R.id.onToggleButton);
 
 		doneButton = (Button) this.findViewById(R.id.doneButton);
@@ -106,7 +107,6 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 				}
 			}
 		}
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -114,10 +114,8 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent i = new Intent(this, MainActivity.class);
-			startActivity(i);
+			this.startActivity(new Intent(this,MainActivity.class));
 			return true;
-
 		default:
 			return super.onOptionsItemSelected(item);
 		}

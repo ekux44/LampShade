@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class DecodeErrorActivity extends SherlockActivity implements OnClickListener {
@@ -20,6 +21,7 @@ public class DecodeErrorActivity extends SherlockActivity implements OnClickList
 	@Override
 	public void onCreate(Bundle b){
 		setContentView(R.layout.decoder_error_activity);
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		messageText = (TextView)findViewById(R.id.messageTextView);
 		continueButton = (Button)findViewById(R.id.continueButton);
@@ -42,5 +44,16 @@ public class DecodeErrorActivity extends SherlockActivity implements OnClickList
 							+ "com.kuxhausen.huemore")));
 		}
 		this.finish();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.startActivity(new Intent(this,MainActivity.class));
+			return true;
+		}
+		return false;
 	}
 }

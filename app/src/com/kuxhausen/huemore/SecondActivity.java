@@ -53,6 +53,8 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	Inventory lastQuerriedInventory;
 	public OnBulbListReturnedListener bulbListenerFragment;
 	
+	public String groupName;
+	
 	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
 		bulbListenerFragment = frag;
 	}
@@ -66,9 +68,9 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.secondary_page);
-		String name = this.getIntent().getExtras().getString(InternalArguments.MOOD_NAME);
-		if(name!=null)
-			this.getSupportActionBar().setTitle(name);
+		groupName = this.getIntent().getExtras().getString(InternalArguments.MOOD_NAME);
+		if(groupName!=null)
+			this.getSupportActionBar().setTitle(groupName);
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
@@ -220,7 +222,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.onBackPressed();
+			this.startActivity(new Intent(this,MainActivity.class));
 			return true;
 //		case R.id.action_settings:
 //			SettingsDialogFragment settings = new SettingsDialogFragment();

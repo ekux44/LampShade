@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -17,6 +18,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -67,9 +69,8 @@ public class AlarmsListFragment extends SherlockListFragment implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			getActivity().onBackPressed();
+			this.startActivity(new Intent(this.getSherlockActivity(),MainActivity.class));
 			return true;
-
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),

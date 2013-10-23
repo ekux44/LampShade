@@ -75,7 +75,8 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shared_mood_reader);
-
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		me = this;
 		
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
@@ -119,8 +120,6 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		groupSpinner.setAdapter(groupDataSource);
 
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
 		previewButton = (Button) this.findViewById(R.id.previewButton);
 		previewButton.setOnClickListener(this);
 		
@@ -160,10 +159,8 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent i = new Intent(this, MainActivity.class);
-			startActivity(i);
+			this.startActivity(new Intent(this,MainActivity.class));
 			return true;
-
 		default:
 			return super.onOptionsItemSelected(item);
 		}

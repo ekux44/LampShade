@@ -2,6 +2,7 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -28,6 +29,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
 import com.kuxhausen.huemore.ColorWheelFragment;
 import com.kuxhausen.huemore.GroupListFragment;
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
@@ -291,7 +293,7 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.onBackPressed();
+			this.startActivity(new Intent(this,MainActivity.class));
 			return true;
 		}
 		return false;

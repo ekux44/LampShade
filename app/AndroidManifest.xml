@@ -37,7 +37,6 @@
             android:name="com.kuxhausen.huemore.SecondActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.Sherlock" >
         </activity>
