@@ -24,9 +24,12 @@ public class EditActivity extends SerializedEditorActivity implements
 
 	protected static final String PERCENT_BRIGHTNESS_KEY = "com.kuxhausen.huemore.PERCENT_BRIGHTNESS";
 	protected static final String PERCENT_BRIGHTNESS_VALUE = "%percentbrightness";
-			
+	
+	protected static final String MOOD_NAME_KEY = "com.kuxhausen.huemore.MOOD_NAME";
+	protected static final String MOOD_NAME_VALUE = "%moodname";
+	
 	protected static final String TASKER_VARIABLE_TARGETS_KEY = "net.dinglisch.android.tasker.extras.VARIABLE_REPLACE_KEYS";	
-	protected static final String TASKER_VARIABLE_TARGETS_VALUE = PERCENT_BRIGHTNESS_KEY+"";
+	protected static final String TASKER_VARIABLE_TARGETS_VALUE = PERCENT_BRIGHTNESS_KEY+" "+MOOD_NAME_KEY;
 	
 	private Button okayButton, cancelButton;
 
@@ -74,6 +77,7 @@ public class EditActivity extends SerializedEditorActivity implements
 			i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, b);
 			i.putExtra(TASKER_VARIABLE_TARGETS_KEY, TASKER_VARIABLE_TARGETS_VALUE);
 			i.putExtra(PERCENT_BRIGHTNESS_KEY, PERCENT_BRIGHTNESS_VALUE);
+			i.putExtra(MOOD_NAME_KEY, MOOD_NAME_VALUE);
 			setResult(Activity.RESULT_OK, i);
 			super.finish();
 			break;

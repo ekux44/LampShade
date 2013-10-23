@@ -37,6 +37,21 @@ public class FireReceiver extends WakefulBroadcastReceiver {
 			GroupMoodBrightness gmb = gson.fromJson(serializedGMB,
 					GroupMoodBrightness.class);
 
+			Bundle b = intent.getExtras();
+			if(b.containsKey(EditActivity.PERCENT_BRIGHTNESS_KEY) && !b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY).contains("%")){
+				try{
+				int percent = Integer.parseInt(b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY));
+				if(percent>=0 && percent <=100)
+					gmb.brightness = ((percent*255)/100);
+				} catch (Error e){
+				}
+			}
+			if(b.containsKey(EditActivity.MOOD_NAME_KEY) && !b.getString(EditActivity.MOOD_NAME_KEY).contains("%")){
+				String mood = b.getString(EditActivity.MOOD_NAME_KEY);
+				if(mood!=null && mood.length()>0)
+					gmb.mood = mood;
+			}
+			
 			/** Cut down verison of Alarm Reciver code **/
 			// TODO merge
 
@@ -56,17 +71,6 @@ public class FireReceiver extends WakefulBroadcastReceiver {
 					.size()]);
 
 			Mood m = Utils.getMoodFromDatabase(gmb.mood, context);
-			
-			Bundle b = intent.getExtras();
-			if(b.containsKey(EditActivity.PERCENT_BRIGHTNESS_KEY) && !b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY).contains("%")){
-				try{
-				int percent = Integer.parseInt(b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY));
-				if(percent>=0 && percent <=100)
-					gmb.brightness = ((percent*255)/100);
-				} catch (Error e){
-				}
-			}
-			
 			
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
 			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS,gmb.brightness));
