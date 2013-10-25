@@ -61,7 +61,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	private final IBinder mBinder = new LocalBinder();
 
 	private static CountDownTimer countDownTimer;
-	Long moodLoopIterationEndNanoTime = 0l;
+	Long moodLoopIterationEndNanoTime = 0L;
 	WakeLock wakelock;
 	private boolean hasHubConnection = false;
 	private final static int MAX_STOP_SELF_COUNDOWN = 45;
@@ -83,6 +83,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public Mood mood;
 	private static int MAX_REL_BRI = 255;
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
+	public static final Long NANOS_PER_MILI = 1000000L;
 	
 	public void onGroupSelected(int[] bulbs, Integer optionalBri){
 		group = bulbs;
@@ -262,19 +263,32 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					startOfDay.set(Calendar.SECOND, 0);
 					startOfDay.set(Calendar.MILLISECOND, 0);
 					startOfDay.getTimeInMillis();
-					Long offsetWithinTheDayInNanos = (current.getTimeInMillis() - startOfDay.getTimeInMillis())*1000000l;
+					Long offsetWithinTheDayInNanos = (current.getTimeInMillis() - startOfDay.getTimeInMillis())*NANOS_PER_MILI;
 					Long startOfDayInNanos = System.nanoTime() - offsetWithinTheDayInNanos;
 					
-					qe.nanoTime = startOfDayInNanos+(e.time*100000000l);
-					if(qe.nanoTime>0l)
+					qe.nanoTime = startOfDayInNanos+(e.time* 100L * NANOS_PER_MILI);
+					if(qe.nanoTime>System.nanoTime()){
 						pendingEvents.add(qe);
+					}
 					else if(qe.nanoTime>=earliestEventStillApplicable){
 						earliestEventStillApplicable = qe.nanoTime;
-						qe.nanoTime = 0l;
+						qe.nanoTime = 0L;
 						pendingEvents.add(qe);
 					}
 				}
 			}
+			
+			if(earliestEventStillApplicable == Long.MIN_VALUE && mood.events.length>0){
+				//haven't found a previous state to start with, time to roll over and add last evening event
+				Event e = mood.events[mood.events.length-1];
+				for (Integer bNum : channels[e.channel]) {
+					QueueEvent qe = new QueueEvent(e);
+					qe.bulb = bNum;
+					qe.nanoTime = 0L;
+					pendingEvents.add(qe);
+				}
+			}
+			
 			while(!pendingEvents.empty()){
 				queue.add(pendingEvents.pop());
 			}
