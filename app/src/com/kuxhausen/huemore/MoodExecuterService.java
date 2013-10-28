@@ -9,12 +9,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.Pair;
@@ -29,6 +32,7 @@ import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
@@ -38,6 +42,7 @@ import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmReciever;
+import com.kuxhausen.huemore.timing.AlarmState;
 
 public class MoodExecuterService extends Service implements ConnectionMonitor, OnBulbAttributesReturnedListener{
 
@@ -66,6 +71,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	private boolean hasHubConnection = false;
 	private final static int MAX_STOP_SELF_COUNDOWN = 45;
 	private static int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
+	private static boolean suspendingTillNextEvent = false;
 	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	
 	public MoodExecuterService() {
@@ -81,6 +87,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public int[] bulbRelBri;
 	public KnownState[] bulbKnown;
 	public Mood mood;
+	public String groupName;
+	public String moodName;
 	private static int MAX_REL_BRI = 255;
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
 	public static final Long NANOS_PER_MILI = 1000000L;
@@ -140,6 +148,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	
 	public void startMood(Mood m, String moodName){
 		mood = m;
+		this.moodName = moodName;
 		createNotification(moodName);
 		queue.clear();
 		loadMoodIntoQueue();
@@ -238,6 +247,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 
 	private void loadMoodIntoQueue() {		
+		//clear out any cached upcoming resume mood
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		Editor edit = settings.edit();
+		edit.putString(PreferenceKeys.CACHED_EXECUTING_ENCODED_MOOD,"");
+		edit.commit();
+		
 		ArrayList<Integer>[] channels = new ArrayList[mood.getNumChannels()];
 		for (int i = 0; i < channels.length; i++)
 			channels[i] = new ArrayList<Integer>();
@@ -331,7 +346,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		countDownTimer.cancel();
 		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
-		wakelock.release();
+		if(wakelock!=null)
+			wakelock.release();
 		super.onDestroy();
 	}
 	@Override
@@ -341,6 +357,13 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			AlarmReciever.completeWakefulIntent(intent);
 			FireReceiver.completeWakefulIntent(intent);
 
+			//if doesn't already have a wakelock, acquire one
+			if(this.wakelock==null){
+				//acquire wakelock
+				PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+				wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
+				wakelock.acquire();
+			}
 			
 			String encodedMood = intent
 					.getStringExtra(InternalArguments.ENCODED_MOOD);
@@ -348,8 +371,9 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			try{
 				if (encodedMood != null) {
 					Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
-					String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+					moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
 					moodName = (moodName == null) ? "Unknown Mood" : moodName;
+					groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
 					
 					if(moodPairs.first!=null && moodPairs.first.length>0){
 						int[] bulbs = new int[moodPairs.first.length];
@@ -405,7 +429,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			countDownTimer.cancel();
 
 		countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
-		
+		suspendingTillNextEvent = false;
 		// runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 15)) {
 
@@ -445,6 +469,38 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 						}
 						transientIndex = (transientIndex + 1) % group.length;
 					}
+				} else if (suspendingTillNextEvent){
+					//TODO shut down loop also
+					if(countDownToStopSelf<=0){
+						if (wakelock!=null){
+							wakelock.release();
+							wakelock = null;
+						}
+					}						
+					else
+						countDownToStopSelf--;
+				}else if(queue.peek()!=null && (queue.peek().nanoTime + (5000* NANOS_PER_MILI)) > System.nanoTime() && mood.timeAddressingRepeatPolicy==true){
+					Integer[] bulbs = new Integer[group.length];
+					for(int i = 0; i< bulbs.length; i++)
+						bulbs[i] = group[i];
+					
+					String encodedMood = HueUrlEncoder.encode(mood, bulbs, maxBrightness);
+					
+					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(me);
+					Editor edit = settings.edit();
+					edit.putString(PreferenceKeys.CACHED_EXECUTING_ENCODED_MOOD,encodedMood);
+					edit.commit();
+									
+					//if no daily events for atleast another 5 seconds, schedule mood for future and flag count down to sleep
+					AlarmState as = new AlarmState();
+					as.mood = moodName;
+					as.group = groupName;
+					
+					//state 1 second before the next event is to occur
+					Long time = Calendar.getInstance().getTimeInMillis() + (System.nanoTime() - queue.peek().nanoTime)/NANOS_PER_MILI -1000;
+					
+					AlarmReciever.scheduleInternalAlarm(me, as, time);
+					suspendingTillNextEvent = true;
 				} else if (queue.peek() == null && (mood ==null || !mood.isInfiniteLooping())){
 					createNotification("");
 					if(countDownToStopSelf<=0)

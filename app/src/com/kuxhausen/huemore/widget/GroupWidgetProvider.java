@@ -120,6 +120,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
 			Intent trasmitter = new Intent(ctx, MoodExecuterService.class);
 			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS, null));
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, mood);
+			trasmitter.putExtra(InternalArguments.GROUP_NAME, group);
 			ctx.startService(trasmitter);
         }
 

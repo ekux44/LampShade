@@ -127,10 +127,11 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 	}
 
 	public void preview() {
+		
+		String groupName = ((TextView) groupSpinner.getSelectedView()).getText().toString();
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { ((TextView) groupSpinner.getSelectedView())
-				.getText().toString() };
+		String[] gWhereClause = { groupName };
 		Cursor groupCursor = getContentResolver().query(
 				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
 																	// default
@@ -158,7 +159,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			brightness = brightnessBar.getProgress();
 		
-		Utils.transmit(context, m, bulbS, moodName, brightness);
+		Utils.transmit(context, m, bulbS, moodName, groupName, brightness);
 	}
 
 	public String getSerializedByNamePreview() {

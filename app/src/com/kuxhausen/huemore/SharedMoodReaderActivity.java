@@ -170,7 +170,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.previewButton:
-				Utils.transmit(me, sharedMood, getBulbs(), name.getText().toString(),null);
+				Utils.transmit(me, sharedMood, getBulbs(), name.getText().toString(), ((TextView) groupSpinner.getSelectedView()).getText().toString(), null);
 				break;
 			case R.id.okay:
 				String moodName = name.getText().toString();

@@ -7,7 +7,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.text.format.DateUtils;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
@@ -123,6 +126,15 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 		alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis,
 				AlarmManager.INTERVAL_DAY * 7, pIntent);
 	}
+	
+	public static void scheduleInternalAlarm(Context context, AlarmState alarmState,
+			Long timeInMillis) {
+
+		PendingIntent pIntent = calculatePendingIntent(context, alarmState, 8);
+		AlarmManager alarmMgr = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
+	}
 
 	public static void cancelAlarm(Context context, AlarmState alarmState) {
 		for (int i = 0; i < 8; i++) {
@@ -134,7 +146,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 		}
 	}
 
-	/** day of week Sunday = 1, Saturday = 7, 0=not repeating so we don't care **/
+	/** day of week Sunday = 1, Saturday = 7, 0=not repeating so we don't care, 8=transient/not user visible**/
 	private static PendingIntent calculatePendingIntent(Context context,
 			AlarmState alarmState, int dayOfWeek) {
 		Gson gson = new Gson();
@@ -150,7 +162,23 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction() != null && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.\\d\\..*")) {
+		if (intent.getAction() != null && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.8\\..*")) {
+			AlarmState as = gson.fromJson(
+					intent.getExtras().getString(
+							InternalArguments.ALARM_DETAILS), AlarmState.class);
+
+			SharedPreferences settings = PreferenceManager
+					.getDefaultSharedPreferences(context);
+			String encodedMood = settings.getString(PreferenceKeys.CACHED_EXECUTING_ENCODED_MOOD,null);
+			if(encodedMood!=null && encodedMood.length()>0){
+				Intent trasmitter = new Intent(context, MoodExecuterService.class);
+				trasmitter.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
+				trasmitter.putExtra(InternalArguments.MOOD_NAME, as.mood);
+				trasmitter.putExtra(InternalArguments.GROUP_NAME, as.group);
+				startWakefulService(context, trasmitter);
+			}
+		}
+		else if (intent.getAction() != null && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.\\d\\..*")) {
 			AlarmState as = gson.fromJson(
 					intent.getExtras().getString(
 							InternalArguments.ALARM_DETAILS), AlarmState.class);
@@ -175,6 +203,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
 			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS, as.brightness));
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, as.mood);
+			trasmitter.putExtra(InternalArguments.GROUP_NAME, as.group);
 			startWakefulService(context, trasmitter);
 
 		}

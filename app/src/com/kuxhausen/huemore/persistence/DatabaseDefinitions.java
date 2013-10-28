@@ -163,6 +163,7 @@ public final class DatabaseDefinitions {
 		public static final String VERSION_NUMBER = "Version_Number";
 		public static final String UNNAMED_GROUP_NUMBER = "UNNAMED_GROUP_NUMBER";
 		public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
+		public static final String CACHED_EXECUTING_ENCODED_MOOD = "CACHED_EXECUTING_ENCODED_MOOD";
 	}
 
 	public static final class PlayItems {

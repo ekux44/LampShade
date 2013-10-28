@@ -88,7 +88,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 					brightness = result.second.second;
 					
 					onButton.setOnCheckedChangeListener(null);
-					Utils.transmit(this, m, bulbS, null, brightness);
+					Utils.transmit(this, m, bulbS, null, null, brightness);
 					boolean on = false;
 					if(m.events[0].state.on!=null && m.events[0].state.on)
 						on=true;
@@ -126,7 +126,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
 		Mood m = Utils.generateSimpleMood(bs);		
-		Utils.transmit(this, m, bulbS, null, brightness);
+		Utils.transmit(this, m, bulbS, null, null, brightness);
 	}
 
 	@Override

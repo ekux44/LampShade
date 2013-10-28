@@ -75,6 +75,7 @@ public class FireReceiver extends WakefulBroadcastReceiver {
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
 			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS,gmb.brightness));
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, gmb.mood);
+			trasmitter.putExtra(InternalArguments.GROUP_NAME, gmb.group);
 			startWakefulService(context, trasmitter);
 		}
 	}
