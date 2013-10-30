@@ -101,7 +101,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		
 		addRow(defaultDuration);
 		addRow(defaultDuration);
-		addCol();
 		
 	    redrawGrid();
 	    
