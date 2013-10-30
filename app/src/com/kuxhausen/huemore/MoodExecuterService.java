@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
+import alt.android.os.CountDownTimer;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -13,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Binder;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -120,6 +120,9 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public synchronized void setBrightness(int brightness){
 		Log.e("bri",""+brightness);
 		
+		if(countDownTimer==null)
+			restartCountDownTimer();
+		
 		maxBrightness = brightness;
 		for(int i = 0; i< group.length; i++){
 			bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
@@ -147,6 +150,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	
 	public void startMood(Mood m, String moodName){
+		Log.e("MoodExecutorService","startMood");
+		
 		mood = m;
 		this.moodName = moodName;
 		createNotification(moodName);
@@ -247,6 +252,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 
 	private void loadMoodIntoQueue() {		
+		Log.e("MoodExecuterService", "loadMoodIntoQueue()");
+		
 		//clear out any cached upcoming resume mood
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor edit = settings.edit();
@@ -320,6 +327,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			}
 		}
 		moodLoopIterationEndNanoTime = System.nanoTime()+(mood.loopIterationTimeLength*100000000l);
+		
+		Log.e("loadMood","length" + queue.size());
 	}
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -343,7 +352,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	@Override
 	public void onDestroy() {
-		countDownTimer.cancel();
+		if(countDownTimer!=null)
+			countDownTimer.cancel();
 		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
 		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
 		if(wakelock!=null)
@@ -425,6 +435,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 
 	public void restartCountDownTimer() {
+		Log.e("MoodExecuterService", "restartCountDownTimer()");
+		
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
@@ -439,7 +451,9 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 
 			@Override
 			public void onTick(long millisUntilFinished) {
+				Log.e("MoodExecuterService", "onTick");
 				if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
+					Log.e("MoodExecuterService", "1");
 					QueueEvent e = queue.poll();
 					int bulbInGroup = calculateBulbPositionInGroup(e.bulb);
 					if(bulbInGroup>-1 && maxBrightness!=null){
@@ -454,8 +468,10 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					}					
 					NetworkMethods.PreformTransmitGroupMood(me, e.bulb, e.event.state);
 				} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
+					Log.e("MoodExecuterService", "2");
 					loadMoodIntoQueue();
 				} else if (hasTransientChanges()) {
+					Log.e("MoodExecuterService", "3");
 					boolean sentSomething = false;
 					while (!sentSomething) {
 						if(bulbKnown[transientIndex] == KnownState.ToSend){
@@ -470,16 +486,20 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 						transientIndex = (transientIndex + 1) % group.length;
 					}
 				} else if (suspendingTillNextEvent){
+					Log.e("MoodExecuterService", "4");
 					//TODO shut down loop also
 					if(countDownToStopSelf<=0){
 						if (wakelock!=null){
 							wakelock.release();
 							wakelock = null;
 						}
+						countDownTimer = null;
+						this.cancel();
 					}						
 					else
 						countDownToStopSelf--;
 				}else if(queue.peek()!=null && (queue.peek().nanoTime + (5000* NANOS_PER_MILI)) > System.nanoTime() && mood.timeAddressingRepeatPolicy==true){
+					Log.e("MoodExecuterService", "5");
 					Integer[] bulbs = new Integer[group.length];
 					for(int i = 0; i< bulbs.length; i++)
 						bulbs[i] = group[i];
@@ -497,14 +517,18 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					as.group = groupName;
 					
 					//state 1 second before the next event is to occur
-					Long time = Calendar.getInstance().getTimeInMillis() + (System.nanoTime() - queue.peek().nanoTime)/NANOS_PER_MILI -1000;
+					Long time = Calendar.getInstance().getTimeInMillis() + (queue.peek().nanoTime - System.nanoTime())/NANOS_PER_MILI -1000l;
 					
 					AlarmReciever.scheduleInternalAlarm(me, as, time);
 					suspendingTillNextEvent = true;
 				} else if (queue.peek() == null && (mood ==null || !mood.isInfiniteLooping())){
+					Log.e("MoodExecuterService", "6");
 					createNotification("");
-					if(countDownToStopSelf<=0)
+					if(countDownToStopSelf<=0){
 						me.stopSelf();
+						countDownTimer = null;
+						this.cancel();
+					}
 					else
 						countDownToStopSelf--;
 				}
