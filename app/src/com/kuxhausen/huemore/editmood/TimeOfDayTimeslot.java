@@ -29,7 +29,7 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
 		t.setOnClickListener(this);
 		
-		Calendar previousTimeslotCal = frag.computeMinimumValue(position);
+		Calendar previousTimeslotCal = frag.computeMinimumValue(position -1 );
 		cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 1+previousTimeslotCal.get(Calendar.HOUR_OF_DAY));
 		cal.set(Calendar.MINUTE, previousTimeslotCal.get(Calendar.MINUTE));
