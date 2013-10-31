@@ -14,7 +14,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class HueUrlEncoder {
 
 	/** zero indexed **/
-	public final static Integer PROTOCOL_VERSION_NUMBER = 3;
+	public final static Integer PROTOCOL_VERSION_NUMBER = 4;
 	
 	
 	public static String encode(Mood mood)
@@ -75,8 +75,8 @@ public class HueUrlEncoder {
 			mBitSet.addNumber(i,20);
 
 		ArrayList<BulbState> stateArray = generateStatesArray(mood);
-		// Set 6 bit number of states
-		mBitSet.addNumber(stateArray.size(),6);
+		// Set 12 bit number of states
+		mBitSet.addNumber(stateArray.size(),12);
 		
 		for(BulbState state : stateArray)
 			addState(mBitSet, state);
@@ -385,8 +385,15 @@ public class HueUrlEncoder {
 				}
 				mood.usesTiming = !(timeArray.length==0||(timeArray.length==1&&timeArray[0]==0));
 				
-				//6 bit number of states
-				int numStates = mBitSet.extractNumber(6);
+				int numStates;
+				if(encodingVersion>=4){
+					//12 bit number of states
+					numStates = mBitSet.extractNumber(12);
+				}else{
+					//6 bit number of states
+					numStates = mBitSet.extractNumber(6);
+				}
+				
 				BulbState[] stateArray = new BulbState[numStates];
 				for(int i = 0; i<numStates; i++){
 					//decode each state
