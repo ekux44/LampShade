@@ -354,7 +354,7 @@ public class HueUrlEncoder {
 						bList.add(i + 1);
 			}
 			
-			if(encodingVersion == 1||encodingVersion==2 ||encodingVersion == 3){
+			if(encodingVersion == 1||encodingVersion==2 ||encodingVersion == 3 ||encodingVersion == 4){
 				boolean hasBrightness = false;
 				
 				if(encodingVersion>=3){
