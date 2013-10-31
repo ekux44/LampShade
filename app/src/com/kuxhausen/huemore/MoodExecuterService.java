@@ -19,7 +19,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.util.Pair;
 
 import com.android.volley.RequestQueue;
@@ -43,6 +42,7 @@ import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmReciever;
 import com.kuxhausen.huemore.timing.AlarmState;
+import com.kuxhausen.huemore.timing.Conversions;
 
 public class MoodExecuterService extends Service implements ConnectionMonitor, OnBulbAttributesReturnedListener{
 
@@ -91,7 +91,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public String moodName;
 	private static int MAX_REL_BRI = 255;
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
-	public static final Long NANOS_PER_MILI = 1000000L;
 	
 	public void onGroupSelected(int[] bulbs, Integer optionalBri){
 		group = bulbs;
@@ -118,8 +117,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	/** doesn't notify listeners **/
 	public synchronized void setBrightness(int brightness){
-		Log.e("bri",""+brightness);
-		
 		if(countDownTimer==null)
 			restartCountDownTimer();
 		
@@ -150,8 +147,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	
 	public void startMood(Mood m, String moodName){
-		Log.e("MoodExecutorService","startMood");
-		
 		mood = m;
 		this.moodName = moodName;
 		createNotification(moodName);
@@ -214,7 +209,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			//TODO rate limit
 			NetworkMethods.PreformGetBulbList(this, null);
 		}
-		Log.e("setHubConnection", ""+connected);
 	}
 	public boolean hasHubConnection(){
 		return hasHubConnection;
@@ -251,8 +245,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		return result;
 	}
 
-	private void loadMoodIntoQueue() {		
-		Log.e("MoodExecuterService", "loadMoodIntoQueue()");
+	private void loadMoodIntoQueue() {
 		
 		//clear out any cached upcoming resume mood
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -278,23 +271,14 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 				for (Integer bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
 					qe.bulb = bNum;
-						
-					Calendar current = Calendar.getInstance();
-					Calendar startOfDay = Calendar.getInstance();
-					startOfDay.set(Calendar.HOUR_OF_DAY, 0);
-					startOfDay.set(Calendar.SECOND, 0);
-					startOfDay.set(Calendar.MILLISECOND, 0);
-					startOfDay.getTimeInMillis();
-					Long offsetWithinTheDayInNanos = (current.getTimeInMillis() - startOfDay.getTimeInMillis())*NANOS_PER_MILI;
-					Long startOfDayInNanos = System.nanoTime() - offsetWithinTheDayInNanos;
 					
-					qe.nanoTime = startOfDayInNanos+(e.time* 100L * NANOS_PER_MILI);
+					qe.nanoTime = Conversions.nanoEventTimeFromMoodDailyTime(e.time);
 					if(qe.nanoTime>System.nanoTime()){
 						pendingEvents.add(qe);
 					}
 					else if(qe.nanoTime>=earliestEventStillApplicable){
 						earliestEventStillApplicable = qe.nanoTime;
-						qe.nanoTime = 0L;
+						qe.nanoTime = System.nanoTime();
 						pendingEvents.add(qe);
 					}
 				}
@@ -306,7 +290,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 				for (Integer bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
 					qe.bulb = bNum;
-					qe.nanoTime = 0L;
+					qe.nanoTime = System.nanoTime();
 					pendingEvents.add(qe);
 				}
 			}
@@ -328,7 +312,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		}
 		moodLoopIterationEndNanoTime = System.nanoTime()+(mood.loopIterationTimeLength*100000000l);
 		
-		Log.e("loadMood","length" + queue.size());
 	}
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -435,7 +418,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 
 	public void restartCountDownTimer() {
-		Log.e("MoodExecuterService", "restartCountDownTimer()");
 		
 		if (countDownTimer != null)
 			countDownTimer.cancel();
@@ -451,9 +433,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				Log.e("MoodExecuterService", "onTick");
 				if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
-					Log.e("MoodExecuterService", "1");
 					QueueEvent e = queue.poll();
 					int bulbInGroup = calculateBulbPositionInGroup(e.bulb);
 					if(bulbInGroup>-1 && maxBrightness!=null){
@@ -468,10 +448,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					}					
 					NetworkMethods.PreformTransmitGroupMood(me, e.bulb, e.event.state);
 				} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
-					Log.e("MoodExecuterService", "2");
 					loadMoodIntoQueue();
 				} else if (hasTransientChanges()) {
-					Log.e("MoodExecuterService", "3");
 					boolean sentSomething = false;
 					while (!sentSomething) {
 						if(bulbKnown[transientIndex] == KnownState.ToSend){
@@ -486,7 +464,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 						transientIndex = (transientIndex + 1) % group.length;
 					}
 				} else if (suspendingTillNextEvent){
-					Log.e("MoodExecuterService", "4");
 					//TODO shut down loop also
 					if(countDownToStopSelf<=0){
 						if (wakelock!=null){
@@ -498,8 +475,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					}						
 					else
 						countDownToStopSelf--;
-				}else if(queue.peek()!=null && (queue.peek().nanoTime + (5000* NANOS_PER_MILI)) > System.nanoTime() && mood.timeAddressingRepeatPolicy==true){
-					Log.e("MoodExecuterService", "5");
+				}else if(queue.peek()!=null && (queue.peek().nanoTime + (5000* 1000000L)) > System.nanoTime() && mood.timeAddressingRepeatPolicy==true){
 					Integer[] bulbs = new Integer[group.length];
 					for(int i = 0; i< bulbs.length; i++)
 						bulbs[i] = group[i];
@@ -517,12 +493,11 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					as.group = groupName;
 					
 					//state 1 second before the next event is to occur
-					Long time = Calendar.getInstance().getTimeInMillis() + (queue.peek().nanoTime - System.nanoTime())/NANOS_PER_MILI -1000l;
+					Long time = Calendar.getInstance().getTimeInMillis() + (queue.peek().nanoTime - System.nanoTime())/1000000L -1000L;
 					
 					AlarmReciever.scheduleInternalAlarm(me, as, time);
 					suspendingTillNextEvent = true;
 				} else if (queue.peek() == null && (mood ==null || !mood.isInfiniteLooping())){
-					Log.e("MoodExecuterService", "6");
 					createNotification("");
 					if(countDownToStopSelf<=0){
 						me.stopSelf();

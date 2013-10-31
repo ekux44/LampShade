@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -18,6 +17,7 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.timing.Conversions;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -221,15 +221,11 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	
-	public long computeMinimumValue(int position){
+	public int computeMinimumValue(int position){
 		if(position <=0){
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.HOUR_OF_DAY, 0);
-			c.set(Calendar.MINUTE, 0);
-			c.set(Calendar.MILLISECOND, 0);
-			return c.getTimeInMillis();
+			return 0;
 		} else{
-			return ((TimeOfDayTimeslot)timeslotDuration.get(position-1)).getCalTimeInMillis();
+			return (timeslotDuration.get(position-1)).getDuration();
 		}
 	}
 
@@ -495,8 +491,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			}
 			else{
 				td = new OffsetTimeslot(this, getSpinnerId());
+				td.setDuration(duration);
 			}
-			td.setDuration(duration);
 			timeslotDuration.add(td);
 			
 			for(int i = gridCols(); i>0; i--){

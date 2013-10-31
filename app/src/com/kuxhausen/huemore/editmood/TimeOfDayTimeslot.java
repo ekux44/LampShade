@@ -5,6 +5,7 @@ import java.util.Calendar;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.timing.Conversions;
 
 
 import android.app.Dialog;
@@ -19,7 +20,8 @@ import android.widget.TimePicker;
 
 public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 
-	private Calendar cal;
+	final static int MAX_MOOD_EVENT_TIME = 24*60*60*10-1;
+	int moodEventTime;
 	private EditAdvancedMoodFragment frag;
 	private Button t;
 	
@@ -29,17 +31,17 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
 		t.setOnClickListener(this);
 		
-		Calendar previousTimeslotCal = Calendar.getInstance();
-		previousTimeslotCal.setTimeInMillis(frag.computeMinimumValue(position -1 ));
-		cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 1+previousTimeslotCal.get(Calendar.HOUR_OF_DAY));
-		cal.set(Calendar.MINUTE, previousTimeslotCal.get(Calendar.MINUTE));
-		cal.set(Calendar.MILLISECOND, 0);
+		moodEventTime = 0;
+		
+		setDuration(36000+frag.computeMinimumValue(position));
 	}
 
 	
 	public String getTime() {
-		return DateFormat.getTimeFormat(frag.getActivity()).format(cal.getTime());
+		if(frag==null || frag.getActivity()==null)
+			return "";
+		Calendar c = Conversions.calendarMillisFromMoodDailyTime(moodEventTime);
+		return DateFormat.getTimeFormat(frag.getActivity()).format(c.getTime());
 	}
 	
 	@Override
@@ -51,29 +53,14 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 
 	@Override
 	public void setDuration(int offsetWithinDayInDeciSeconds) {		
-		Calendar startOfDay = Calendar.getInstance();
-		startOfDay.set(Calendar.HOUR_OF_DAY, 0);
-		startOfDay.set(Calendar.SECOND, 0);
-		startOfDay.set(Calendar.MILLISECOND, 0);
-		
-		cal.setTimeInMillis( startOfDay.getTimeInMillis() + (offsetWithinDayInDeciSeconds*100l));
+		moodEventTime = Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds);
 	}
 
 	@Override
-	public int getDuration() {
-		Calendar startOfDay = Calendar.getInstance();
-		startOfDay.set(Calendar.HOUR_OF_DAY, 0);
-		startOfDay.set(Calendar.SECOND, 0);
-		startOfDay.set(Calendar.MILLISECOND, 0);
-		Long offsetWithinTheDayInMilis = cal.getTimeInMillis() - startOfDay.getTimeInMillis();
-		
-		return (int) (offsetWithinTheDayInMilis/100);
+	public int getDuration() {		
+		return moodEventTime;
 	}
 	
-	public long getCalTimeInMillis(){
-		return cal.getTimeInMillis();
-	}
-
 	@Override
 	public void onClick(View v) {
 		TimePickerFragment etdf = new TimePickerFragment();
@@ -87,9 +74,11 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		TimeOfDayTimeslot t; 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			
 			// Use the current time as the default values for the picker
-			int hour = t.cal.get(Calendar.HOUR_OF_DAY);
-			int minute = t.cal.get(Calendar.MINUTE);
+			Calendar c = Conversions.calendarMillisFromMoodDailyTime(t.moodEventTime);
+			int hour = c.get(Calendar.HOUR_OF_DAY);
+			int minute = c.get(Calendar.MINUTE);
 			
 			// Create a new instance of TimePickerDialog and return it
 			return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
@@ -97,19 +86,18 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			Calendar c = Calendar.getInstance();
-			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-			c.set(Calendar.MINUTE, minute);
 			c.set(Calendar.MILLISECOND, 0);
+			c.set(Calendar.MINUTE, minute);
+			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			
-			Calendar previousTimeslotCal = Calendar.getInstance();
-			previousTimeslotCal.setTimeInMillis(t.frag.computeMinimumValue(t.frag.timeslotDuration.indexOf(t)));
-			if(previousTimeslotCal.before(c))
-				t.cal=c;
-			else{
-				t.cal.set(Calendar.HOUR_OF_DAY, previousTimeslotCal.get(Calendar.HOUR_OF_DAY));
-				t.cal.set(Calendar.MINUTE, 1+previousTimeslotCal.get(Calendar.MINUTE));
-				t.cal.set(Calendar.MILLISECOND, 0);
-			}
+			
+			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.frag.timeslotDuration.indexOf(t)));
+		//	if(previousTimeslotCal.before(c)){
+				t.setDuration(Conversions.moodDailyTimeFromCalendarMillis(c));
+		//	}
+		//	else{
+		//		t.setDuration(36000+Conversions.moodDailyTimeFromCalendarMillis(previousTimeslotCal.getTimeInMillis()));
+		//	}
 			t.frag.redrawGrid();
 		}
 	}
