@@ -29,7 +29,8 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
 		t.setOnClickListener(this);
 		
-		Calendar previousTimeslotCal = frag.computeMinimumValue(position -1 );
+		Calendar previousTimeslotCal = Calendar.getInstance();
+		previousTimeslotCal.setTimeInMillis(frag.computeMinimumValue(position -1 ));
 		cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 1+previousTimeslotCal.get(Calendar.HOUR_OF_DAY));
 		cal.set(Calendar.MINUTE, previousTimeslotCal.get(Calendar.MINUTE));
@@ -69,8 +70,8 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		return (int) (offsetWithinTheDayInMilis/100);
 	}
 	
-	public Calendar getCal(){
-		return cal;
+	public long getCalTimeInMillis(){
+		return cal.getTimeInMillis();
 	}
 
 	@Override
@@ -100,7 +101,8 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 			c.set(Calendar.MINUTE, minute);
 			c.set(Calendar.MILLISECOND, 0);
 			
-			Calendar previousTimeslotCal = t.frag.computeMinimumValue(t.frag.timeslotDuration.indexOf(t));
+			Calendar previousTimeslotCal = Calendar.getInstance();
+			previousTimeslotCal.setTimeInMillis(t.frag.computeMinimumValue(t.frag.timeslotDuration.indexOf(t)));
 			if(previousTimeslotCal.before(c))
 				t.cal=c;
 			else{

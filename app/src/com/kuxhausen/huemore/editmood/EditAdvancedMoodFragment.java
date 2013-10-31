@@ -221,15 +221,15 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		}
 	}
 	
-	public Calendar computeMinimumValue(int position){
+	public long computeMinimumValue(int position){
 		if(position <=0){
 			Calendar c = Calendar.getInstance();
 			c.set(Calendar.HOUR_OF_DAY, 0);
 			c.set(Calendar.MINUTE, 0);
 			c.set(Calendar.MILLISECOND, 0);
-			return c;
+			return c.getTimeInMillis();
 		} else{
-			return ((TimeOfDayTimeslot)timeslotDuration.get(position-1)).getCal();
+			return ((TimeOfDayTimeslot)timeslotDuration.get(position-1)).getCalTimeInMillis();
 		}
 	}
 
