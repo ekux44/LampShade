@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LampShade</string>
-    <integer name="major_update_version">37</integer>
+    <integer name="major_update_version">47</integer>
     <string name="nfc">NFC</string>
     <string name="color_temp_initial_value">3200</string>
     <string name="cap_short_none"></string>

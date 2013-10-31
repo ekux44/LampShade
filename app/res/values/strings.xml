@@ -110,7 +110,7 @@
 	<string name="daily_start_time">Start Time</string>
 	
 	<string-array name="update_features">
-        <item>Introducing \'Daily\' moods, a new type of mood which show different colors based on the time of day</item>
+        <item>Introducing \'Daily\' moods, a new type of mood that can show different colors based on the time of day</item>
         <item>Colors in moods can now have different relative brightnesses</item>
         <item>The Tasker plugin can now be controlled with Tasker variables</item>
         <item>New Groups widget</item>
