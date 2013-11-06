@@ -54,6 +54,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	public OnBulbListReturnedListener bulbListenerFragment;
 	
 	public String groupName;
+	public int[] groupValues;
 	
 	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
 		bulbListenerFragment = frag;
@@ -68,6 +69,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.secondary_page);
+		groupValues = this.getIntent().getExtras().getIntArray(InternalArguments.GROUP_VALUES);
 		groupName = this.getIntent().getExtras().getString(InternalArguments.MOOD_NAME);
 		if(groupName!=null)
 			this.getSupportActionBar().setTitle(groupName);
@@ -109,7 +111,15 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		});
 
 		
-	}	
+	}
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+		if(groupValues!=null){
+			this.setGroup(groupValues, groupName);
+		}
+	}
 
 	SeekBar brightnessBar;
 	boolean isTrackingTouch = false;

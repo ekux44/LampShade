@@ -92,7 +92,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	private static int MAX_REL_BRI = 255;
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
 	
-	public void onGroupSelected(int[] bulbs, Integer optionalBri){
+	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri){
 		group = bulbs;
 		maxBrightness = null;
 		bulbBri = new int[group.length];

@@ -125,6 +125,7 @@ public final class DatabaseDefinitions {
 
 	public static final class InternalArguments {
 		public static final String GROUP_NAME = "Group_Name";
+		public static final String GROUP_VALUES = "Group_Values";
 		public static final String BULB_NAME = "Bulb_Name";
 		public static final String BULB_NUMBER = "Bulb_Number";
 		public static final String MOOD_NAME = "Mood_Name";
