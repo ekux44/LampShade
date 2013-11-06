@@ -24,7 +24,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	Gson gson = new Gson();
 
 	public DatabaseHelper(Context context) {
@@ -220,39 +220,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
 					db.insert(MoodColumns.TABLE_NAME, null, cv);
 				}
-				//Construct timed sunset mood
-				{
-					BulbState bs1 = new BulbState();
-					bs1.on = true;
-					bs1.transitiontime = 100;
-					bs1.sat = 211;
-					bs1.hue = 13122;
-					
-					BulbState bs2 = new BulbState();
-					bs2.on = true;
-					bs2.transitiontime = 600;
-					bs2.sat = 200;
-					bs2.hue= 8027;
-					
-					BulbState bs3 = new BulbState();
-					bs3.on = false;
-					bs3.transitiontime = 600;
-					
-					Event e1 = new Event(bs1, 0, 0);
-					Event e2 = new Event(bs2, 0, 100);
-					Event e3 = new Event(bs3, 0, 700);
-					Event[] events = {e1,e2,e3};
-					
-					Mood m = new Mood();
-					m.usesTiming = true;
-					m.timeAddressingRepeatPolicy = false;
-					m.setInfiniteLooping(false);
-					m.events = events;
-					
-					cv.put(MoodColumns.MOOD, "Sunset");
-					cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
-					db.insert(MoodColumns.TABLE_NAME, null, cv);
-				}
 				
 				db.execSQL("DROP TABLE IF EXISTS " + AlarmColumns.TABLE_NAME);
 				
@@ -349,6 +316,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					} catch (InvalidEncodingException e){
 					} catch (FutureEncodingException e) {
 					}
+				}
+				try {
+					if(!moodMap.containsKey("Gentle Sunrise"))
+						moodMap.put("Gentle Sunrise", HueUrlEncoder.decode("AQSAAQAAgDQApAGAJzfkJ8o85KtGLQMAk8j5riCB-ZYxfgDAZPIyfiB9bL5VtUAAMAFgwCSAQwA=").second.first);
+					if(!moodMap.containsKey("Gentle Sunset"))
+						moodMap.put("Gentle Sunset", HueUrlEncoder.decode("AQSAAQAAgDQApAGAI-cHhj7kW1GOBwCTyd34iaDH-GrSiQHAJDAAMAFgQBWAQwA=").second.first);
+					if(!moodMap.containsKey("Living Night"))
+						moodMap.put("Living Night", HueUrlEncoder.decode("AfKHAAAAAEwAaGJWfu4rZb4IfDsAk4m_-TkqEvniQEQATAAEFBAVACYA").second.first);
+				} catch (InvalidEncodingException e) {
+				} catch (FutureEncodingException e) {
 				}
 				
 				db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
