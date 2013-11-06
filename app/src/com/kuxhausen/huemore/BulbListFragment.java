@@ -147,7 +147,6 @@ public class BulbListFragment extends SherlockListFragment implements
 		for (int i = 0; i < bulbArray.length; i++) {
 			// bulbNameList.add(bulb.name);
 			Bulb bulb = bulbArray[i];
-			bulb.number = i + 1;
 			rayAdapter.add(bulb.name);
 		}
 

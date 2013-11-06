@@ -202,7 +202,6 @@ public class EditGroupDialogFragment extends DialogFragment implements
 		for (int i = 0; i < bulbArray.length; i++) {
 			// bulbNameList.add(bulb.name);
 			Bulb bulb = bulbArray[i];
-			bulb.number = i + 1;
 			nameToBulb.put(bulb.name, bulb.number);
 			rayAdapter.add(bulb.name);
 			if (preChecked != null && preChecked[i] != null
