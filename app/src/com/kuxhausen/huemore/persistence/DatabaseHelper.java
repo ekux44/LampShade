@@ -324,6 +324,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						moodMap.put("Gentle Sunset", HueUrlEncoder.decode("AQSAAQAAgDQApAGAI-cHhj7kW1GOBwCTyd34iaDH-GrSiQHAJDAAMAFgQBWAQwA=").second.first);
 					if(!moodMap.containsKey("Living Night"))
 						moodMap.put("Living Night", HueUrlEncoder.decode("AfKHAAAAAEwAaGJWfu4rZb4IfDsAk4m_-TkqEvniQEQATAAEFBAVACYA").second.first);
+					if(!moodMap.containsKey("f.lux"))
+						moodMap.put("f.lux", HueUrlEncoder.decode("AQxA5RmHN7_yNEQDWOqnAoAj5-ux8ufr6SQBAJDI-YGhD_lWlOMBACRyvitIYL5ljB8AAAFQFGIoEQAAAA==").second.first);
 				} catch (InvalidEncodingException e) {
 				} catch (FutureEncodingException e) {
 				}
