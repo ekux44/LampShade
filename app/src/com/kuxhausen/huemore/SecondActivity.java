@@ -22,12 +22,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
-import com.kuxhausen.huemore.billing.IabHelper;
-import com.kuxhausen.huemore.billing.IabResult;
-import com.kuxhausen.huemore.billing.Inventory;
-import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -38,7 +33,6 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
-import com.kuxhausen.huemore.timing.AlarmListActivity;
 
 /**
  * @author Eric Kuxhausen
@@ -49,8 +43,6 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	public SecondActivity me = this;
 	
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
-	IabHelper mPlayHelper;
-	Inventory lastQuerriedInventory;
 	public OnBulbListReturnedListener bulbListenerFragment;
 	
 	public String groupName;

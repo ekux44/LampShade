@@ -13,11 +13,6 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_register_with_hub"/>
     <item
-        android:id="@+id/action_unlocks"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_unlocks"/>
-    <item
         android:id="@+id/action_communities"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -28,17 +23,6 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
-    <item
-        android:id="@+id/action_nfc"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/nfc"/>
-    <item
-        android:id="@+id/action_alarms"
-        android:icon="@drawable/device_access_alarms"
-        android:orderInCategory="10"
-        android:showAsAction="ifRoom"
-        android:title="@string/alarms"/>
     <item
         android:id="@+id/action_add_both"
         android:icon="@drawable/content_new"

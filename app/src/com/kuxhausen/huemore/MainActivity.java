@@ -26,13 +26,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
-import com.kuxhausen.huemore.billing.IabHelper;
-import com.kuxhausen.huemore.billing.IabResult;
-import com.kuxhausen.huemore.billing.Inventory;
-import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionStatusDialogFragment;
-import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -44,7 +39,6 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
-import com.kuxhausen.huemore.timing.AlarmListActivity;
 
 /**
  * @author Eric Kuxhausen
@@ -53,9 +47,7 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
 public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 
 	DatabaseHelper databaseHelper = new DatabaseHelper(this);
-	IabHelper mPlayHelper;
 	private MainActivity me;
-	Inventory lastQuerriedInventory;
 	
 	@Override
 	public void onConnectionStatusChanged(boolean connected){
@@ -126,7 +118,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		
 		
 		initializationDatabaseChecks();
-		initializeBillingCode();
 		
 		/*
 		Calendar currentTime = Calendar.getInstance();
@@ -139,14 +130,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 		*/
-
-		Bundle b = this.getIntent().getExtras();
-		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
-				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
-			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-		}
 		
 		//TODO turn off before relase
 		com.kuxhausen.huemore.testing.Tests.tests();
@@ -299,35 +282,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.main, menu);
-		if (Utils.hasProVersion(this)) {
-			// has pro version
-
-			// hide unlocks button
-			MenuItem unlocksItem = menu.findItem(R.id.action_unlocks);
-			if (unlocksItem != null) {
-				unlocksItem.setEnabled(false);
-				unlocksItem.setVisible(false);
-			}
-			if (NfcAdapter.getDefaultAdapter(this) == null) {
-				// hide nfc link if nfc not supported
-				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-				if (nfcItem != null) {
-					nfcItem.setEnabled(false);
-					nfcItem.setVisible(false);
-				}
-			}
-		} else {
-			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-			if (nfcItem != null) {
-				nfcItem.setEnabled(false);
-				nfcItem.setVisible(false);
-			}
-			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
-			if (alarmItem != null) {
-				alarmItem.setEnabled(false);
-				alarmItem.setVisible(false);
-			}
-		}
 
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
 			MenuItem bothItem = menu.findItem(R.id.action_add_both);
@@ -382,24 +336,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			addBoth.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
-		case R.id.action_unlocks:
-			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
-		case R.id.action_nfc:
-			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
-				Toast.makeText(this, this.getString(R.string.nfc_disabled),
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Intent i = new Intent(this, NfcWriterActivity.class);
-				this.startActivity(i);
-			}
-			return true;
-		case R.id.action_alarms:
-			Intent i = new Intent(this, AlarmListActivity.class);
-			this.startActivity(i);
-			return true;
 		case R.id.action_report_bug:
 			Intent send = new Intent(Intent.ACTION_SENDTO);
 			String versionName = "";
@@ -420,36 +356,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	
-	@Override
-	public void onDestroy() {
-		if (mPlayHelper != null) {
-			try {
-				mPlayHelper.dispose();
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		mPlayHelper = null;
-		//Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
-		super.onDestroy();
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + ","
-		// + data);
-
-		// Pass on the activity result to the helper for handling
-		if (!mPlayHelper.handleActivityResult(requestCode, resultCode, data)) {
-			// not handled, so handle it ourselves (here's where you'd
-			// perform any handling of activity results not related to in-app
-			// billing...
-			super.onActivityResult(requestCode, resultCode, data);
-		} else {
-			// Log.d(TAG, "onActivityResult handled by IABUtil.");
 		}
 	}
 	
@@ -476,11 +382,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 					PreferenceKeys.ALWAYS_FREE_BULBS);// TODO load from
 			// google store
 			edit.commit();
-		} else if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1)< this.getResources().getInteger(R.integer.major_update_version)){
-			UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
-			ucdf.show(this.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-		}
+		} 
 		if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
 			Editor edit = settings.edit();
 			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
@@ -522,111 +424,5 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		} catch (NameNotFoundException e) {
 		}
 		edit.commit();
-	}
-
-	private void initializeBillingCode(){
-		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
-		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
-		String base64EncodedPublicKey = firstChunk + secondChunk;
-		// compute your public key and store it in base64EncodedPublicKey
-		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		//Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
-		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-			@Override
-			public void onIabSetupFinished(IabResult result) {
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					// Log.d("asdf", "Problem setting up In-app Billing: "+
-					// result);
-				} else {
-					// Hooray, IAB is fully set up!
-					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-				}
-			}
-		});
-	}
-	
-	// Listener that's called when we finish querying the items and subscriptions we own
-	IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
-		@Override
-		public void onQueryInventoryFinished(IabResult result,
-				Inventory inventory) {
-
-			// Log.d("asdf", "Query inventory finished.");
-			if (result.isFailure()) {
-				// handle error
-				return;
-			} else {
-				// Log.d("asdf", "Query inventory was successful.");
-				lastQuerriedInventory = inventory;
-				int numUnlocked = PreferenceKeys.ALWAYS_FREE_BULBS;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
-					numUnlocked = Math.max(50, numUnlocked);
-				if (inventory.hasPurchase(PlayItems.BUY_ME_A_BULB_DONATION_1))
-					numUnlocked = Math.max(50, numUnlocked);
-				// update UI accordingly
-
-				// Get preferences cache
-				SharedPreferences settings = PreferenceManager
-						.getDefaultSharedPreferences(me);
-				int previousMax = settings.getInt(
-						PreferenceKeys.BULBS_UNLOCKED,
-						PreferenceKeys.ALWAYS_FREE_BULBS);
-				if (numUnlocked > previousMax) {
-					// Update the number held in settings
-					Editor edit = settings.edit();
-					edit.putInt(PreferenceKeys.BULBS_UNLOCKED, numUnlocked);
-					edit.commit();
-
-				}
-			}
-			/*
-			 * Check for items we own. Notice that for each purchase, we check
-			 * the developer payload to see if it's correct! See
-			 * verifyDeveloperPayload().
-			 */
-			/*
-			 * // Do we have the premium upgrade? Purchase premiumPurchase =
-			 * inventory.getPurchase(SKU_PREMIUM); mIsPremium = (premiumPurchase
-			 * != null && verifyDeveloperPayload(premiumPurchase)); Log.d(TAG,
-			 * "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
-			 * 
-			 * 
-			 * updateUi(); setWaitScreen(false); Log.d(TAG,
-			 * "Initial inventory query finished; enabling main UI.");
-			 */
-		}
-	};
-
-	/** Verifies the developer payload of a purchase. */
-	boolean verifyDeveloperPayload(Purchase p) {
-		String payload = p.getDeveloperPayload();
-		/*
-		 * TODO: verify that the developer payload of the purchase is correct.
-		 * It will be the same one that you sent when initiating the purchase.
-		 * 
-		 * WARNING: Locally generating a random string when starting a purchase
-		 * and verifying it here might seem like a good approach, but this will
-		 * fail in the case where the user purchases an item on one device and
-		 * then uses your app on a different device, because on the other device
-		 * you will not have access to the random string you originally
-		 * generated.
-		 * 
-		 * So a good developer payload has these characteristics:
-		 * 
-		 * 1. If two different users purchase an item, the payload is different
-		 * between them, so that one user's purchase can't be replayed to
-		 * another user.
-		 * 
-		 * 2. The payload must be such that you can verify it even when the app
-		 * wasn't the one who initiated the purchase flow (so that items
-		 * purchased by the user on one device work on other devices owned by
-		 * the user).
-		 * 
-		 * Using your own server to store and verify developer payloads across
-		 * app installations is recommended.
-		 */
-		return true;
 	}
 }

@@ -23,7 +23,6 @@ import android.util.Pair;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
@@ -348,7 +347,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		if (intent != null) {
 			//remove any possible launched wakelocks
 			AlarmReciever.completeWakefulIntent(intent);
-			FireReceiver.completeWakefulIntent(intent);
 
 			//if doesn't already have a wakelock, acquire one
 			if(this.wakelock==null){

@@ -70,14 +70,6 @@
 		    </RadioGroup>
 			
 			<include layout="@layout/horizontal_divider_line"/>
-		
-			<Button
-			    android:id="@+id/rateButton"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/rate_on_google_play" />
-		
-			<include layout="@layout/horizontal_divider_line"/>
 			
 			<CheckBox
 			    android:id="@+id/portForwardingCheckBox"

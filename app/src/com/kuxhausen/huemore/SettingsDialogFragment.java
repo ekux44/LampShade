@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class SettingsDialogFragment extends DialogFragment implements
-		OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener {
+		OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener {
 
 	SharedPreferences settings;
 	NetworkManagedSherlockFragmentActivity ma;
@@ -47,9 +47,6 @@ public class SettingsDialogFragment extends DialogFragment implements
 		View myView = inflater.inflate(R.layout.settings, container, false);
 		ma = (NetworkManagedSherlockFragmentActivity) this.getActivity();
 		this.getDialog().setTitle(R.string.action_settings);
-
-		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
-		rateButton.setOnClickListener(this);
 
 		settings = PreferenceManager.getDefaultSharedPreferences(ma);
 
@@ -87,17 +84,6 @@ public class SettingsDialogFragment extends DialogFragment implements
 		}
 		
 		return myView;
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.rateButton:
-			ma.startActivity(new Intent(Intent.ACTION_VIEW, Uri
-					.parse("market://details?id=" + "com.kuxhausen.huemore")));
-			break;
-		}
-
 	}
 
 	@Override
