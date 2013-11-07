@@ -9,6 +9,8 @@ import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -18,14 +20,18 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-public class ConnectionStatusDialogFragment extends DialogFragment implements OnConnectionStatusChangedListener, OnClickListener, OnServiceConnectedListener{
+public class ConnectionStatusDialogFragment extends DialogFragment implements OnConnectionStatusChangedListener, OnClickListener, OnServiceConnectedListener, OnCheckedChangeListener{
 	
 	NetworkManagedSherlockFragmentActivity parrentActivity;
 	Button leftButton, rightButton;
 	TextView connectionStatusMessage;
 	ProgressBar checkingConnectionInProgress;
+	RadioButton localIP, internetIP;
 	
 	private boolean connectionStatus;
 	
@@ -51,6 +57,26 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		this.onConnectionStatusChanged(false);
 		
 		parrentActivity.registerOnServiceConnectedListener(this);
+		
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(parrentActivity);
+		String localBridge = settings.getString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, null);
+		String internetBridge = settings.getString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null);
+		
+		RadioGroup rb = (RadioGroup)myView.findViewById(R.id.ipSelectionGroup);
+		if(localBridge!=null && internetBridge!=null){
+			localIP = (RadioButton)myView.findViewById(R.id.localIP);
+			localIP.setText(localBridge);
+			internetIP = (RadioButton)myView.findViewById(R.id.internetIP);			
+			internetIP.setText(internetBridge);
+			
+			String currentBridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS, null);
+			if(currentBridge.equals(internetBridge))
+				rb.check(R.id.internetIP);
+			rb.setOnCheckedChangeListener(this);
+		}else{
+			rb.setVisibility(View.GONE);
+		}
 		
 		return myView;
 	}
@@ -121,5 +147,23 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 	public void onServiceConnected() {
 		this.onConnectionStatusChanged(parrentActivity.getService().hasHubConnection());
 		parrentActivity.getService().connectionListeners.add(this);
+	}
+
+	@Override
+	public void onCheckedChanged(RadioGroup group, int checkedId) {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
+		Editor edit = settings.edit();
+		switch(checkedId){
+		case R.id.internetIP:
+			edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, settings.getString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null));
+			edit.commit();
+			this.dismiss();
+			break;
+		case R.id.localIP:
+			edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, settings.getString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, null));
+			edit.commit();
+			this.dismiss();
+			break;
+		}
 	}
 }

@@ -3,68 +3,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="@string/promp_first_view_setting" />
-
-    <RadioGroup
-        android:id="@+id/firstViewSettingsGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <RadioButton
-            android:id="@+id/bulbsViewRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            
-            android:text="@string/cap_bulbs" />
-
-        <RadioButton
-            android:id="@+id/groupsViewRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:text="@string/groups"/>
-
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="@string/promp_second_view_setting" />
-
-    <RadioGroup
-        android:id="@+id/secondViewSettingGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp" >
-
-        <RadioButton
-            android:id="@+id/moodsViewRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAllCaps="true"
-            android:text="@string/moods" />
-
-        <RadioButton
-            android:id="@+id/manualViewRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cap_manual" />
-    </RadioGroup>
 	
-	<include layout="@layout/horizontal_divider_line"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-	<Button
-	    android:id="@+id/rateButton"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:text="@string/rate_on_google_play" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+		            
+		    <TextView
+		        android:id="@+id/textView1"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:padding="8dp"
+		        android:text="@string/promp_first_view_setting" />
+		
+		    <RadioGroup
+		        android:id="@+id/firstViewSettingsGroup"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" >
+		
+		        <RadioButton
+		            android:id="@+id/bulbsViewRadioButton"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            
+		            android:text="@string/cap_bulbs" />
+		
+		        <RadioButton
+		            android:id="@+id/groupsViewRadioButton"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAllCaps="true"
+		            android:text="@string/groups"/>
+		
+		    </RadioGroup>
+		
+		    <TextView
+		        android:id="@+id/textView2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:padding="8dp"
+		        android:text="@string/promp_second_view_setting" />
+		
+		    <RadioGroup
+		        android:id="@+id/secondViewSettingGroup"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:paddingBottom="8dp" >
+		
+		        <RadioButton
+		            android:id="@+id/moodsViewRadioButton"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textAllCaps="true"
+		            android:text="@string/moods" />
+		
+		        <RadioButton
+		            android:id="@+id/manualViewRadioButton"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="@string/cap_manual" />
+		    </RadioGroup>
+			
+			<include layout="@layout/horizontal_divider_line"/>
+		
+			<Button
+			    android:id="@+id/rateButton"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:text="@string/rate_on_google_play" />
+		
+			<include layout="@layout/horizontal_divider_line"/>
+			
+			<CheckBox
+			    android:id="@+id/portForwardingCheckBox"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/enable_port_forwarding" />
 
+			<EditText
+			    android:id="@+id/portForwardingEditText"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:ems="10"
+			    android:hint="@string/port_forwarding_ip_prompt" />
+
+			<TextView
+			    android:id="@+id/portForwardingTextView"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/port_forwarding_instructions" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

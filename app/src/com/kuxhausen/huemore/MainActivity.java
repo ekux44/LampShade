@@ -456,6 +456,12 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	private void initializationDatabaseChecks(){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
+		if (settings.contains(PreferenceKeys.BRIDGE_IP_ADDRESS) && !settings.contains(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS)) {
+			Editor edit = settings.edit();
+			edit.putString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS, null));
+			edit.commit();
+		}
+		
 		/*{ //debug mode only
 			Editor edit = settings.edit();
 			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, 50);

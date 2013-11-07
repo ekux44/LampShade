@@ -168,6 +168,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 
 				Editor edit = settings.edit();
 				edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, bridgeIP);
+				edit.putString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, bridgeIP);
 				edit.putString(PreferenceKeys.HASHED_USERNAME, username);
 				edit.commit();
 

@@ -151,6 +151,8 @@ public final class DatabaseDefinitions {
 
 	public static final class PreferenceKeys {
 		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
+		public static final String LOCAL_BRIDGE_IP_ADDRESS = "Local_Bridge_IP_Address";
+		public static final String INTERNET_BRIDGE_IP_ADDRESS = "Internet_Bridge_IP_Address";
 		public static final String HASHED_USERNAME = "Hashed_Username";
 		public static final String DEFAULT_TO_GROUPS = "default_to_groups";
 		public static final String DEFAULT_TO_MOODS = "default_to_moods";
