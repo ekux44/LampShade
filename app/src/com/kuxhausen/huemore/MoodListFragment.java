@@ -148,7 +148,8 @@ public class MoodListFragment extends SherlockListFragment implements
 			getListView().setItemChecked(selectedPos, false);
 		selectedPos = -1;
 		selected = null;
-		getSherlockActivity().supportInvalidateOptionsMenu();
+		if(getSherlockActivity()!=null)
+			getSherlockActivity().supportInvalidateOptionsMenu();
 	}
 
 	@Override

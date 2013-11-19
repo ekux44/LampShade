@@ -157,6 +157,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			if (response[0].success!=null) {
 				countDownTimer.cancel();
 
+				if(getFragmentManager()!=null){
 				// Show the success dialog
 				RegistrationSuccessDialogFragment rsdf = new RegistrationSuccessDialogFragment();
 				rsdf.show(getFragmentManager(),
@@ -174,6 +175,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 
 				// done with registration dialog
 				dismiss();
+				}
 			}
 		}
 	}

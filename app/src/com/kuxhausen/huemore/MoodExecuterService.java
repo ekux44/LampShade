@@ -121,9 +121,11 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			restartCountDownTimer();
 		
 		maxBrightness = brightness;
-		for(int i = 0; i< group.length; i++){
-			bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
-			bulbKnown[i] = KnownState.ToSend;
+		if(group!=null){
+			for(int i = 0; i< group.length; i++){
+				bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
+				bulbKnown[i] = KnownState.ToSend;
+			}
 		}
 	}
 
@@ -422,6 +424,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
+		transientIndex = 0;
 		countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
 		suspendingTillNextEvent = false;
 		// runs at the rate to execute 15 op/sec
