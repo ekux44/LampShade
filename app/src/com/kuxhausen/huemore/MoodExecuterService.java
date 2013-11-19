@@ -69,7 +69,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	Long moodLoopIterationEndNanoTime = 0L;
 	WakeLock wakelock;
 	private boolean hasHubConnection = false;
-	private final static int MAX_STOP_SELF_COUNDOWN = 45;
+	private final static int TRANSMITS_PER_SECOND = 12;
+	private final static int MAX_STOP_SELF_COUNDOWN = TRANSMITS_PER_SECOND*3;
 	private static int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
 	private static boolean suspendingTillNextEvent = false;
 	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
@@ -91,8 +92,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public String moodName;
 	private static int MAX_REL_BRI = 255;
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
+	boolean groupIsLooping=false;
+	boolean groupIsAlerting=false;
 	
 	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri){
+		groupIsAlerting = false;
+		groupIsLooping = false;
 		group = bulbs;
 		maxBrightness = null;
 		bulbBri = new int[group.length];
@@ -428,7 +433,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
 		suspendingTillNextEvent = false;
 		// runs at the rate to execute 15 op/sec
-		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / 15)) {
+		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
 
 			@Override
 			public void onFinish() {
@@ -438,6 +443,21 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			public void onTick(long millisUntilFinished) {
 				if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
 					QueueEvent e = queue.poll();
+					
+					//remove effect=none except when meaningful (after spotting an effect=colorloop)
+					if(e.event.state.effect=="colorloop"){
+						MoodExecuterService.this.groupIsLooping = true;
+					}else if(!groupIsLooping){
+						e.event.state.effect = null;
+					}
+					//remove alert=none except when meaningful (after spotting an alert=colorloop)
+					if(e.event.state.alert=="select"||e.event.state.alert=="lselect"){
+						MoodExecuterService.this.groupIsAlerting = true;
+					}else if(!groupIsAlerting){
+						e.event.state.alert = null;
+					}
+					
+					
 					int bulbInGroup = calculateBulbPositionInGroup(e.bulb);
 					if(bulbInGroup>-1 && maxBrightness!=null){
 						//convert relative brightness into absolute brightness
