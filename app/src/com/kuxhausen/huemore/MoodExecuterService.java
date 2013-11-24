@@ -92,12 +92,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public String moodName;
 	private static int MAX_REL_BRI = 255;
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
-	boolean groupIsLooping=false;
+	boolean groupIsColorLooping=false;
 	boolean groupIsAlerting=false;
 	
 	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri){
 		groupIsAlerting = false;
-		groupIsLooping = false;
+		groupIsColorLooping = false;
 		group = bulbs;
 		maxBrightness = null;
 		bulbBri = new int[group.length];
@@ -445,14 +445,14 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					QueueEvent e = queue.poll();
 					
 					//remove effect=none except when meaningful (after spotting an effect=colorloop)
-					if(e.event.state.effect=="colorloop"){
-						MoodExecuterService.this.groupIsLooping = true;
-					}else if(!groupIsLooping){
+					if(e.event.state.effect!=null && e.event.state.effect.equals("colorloop")){
+						groupIsColorLooping = true;
+					}else if(!groupIsColorLooping){
 						e.event.state.effect = null;
 					}
 					//remove alert=none except when meaningful (after spotting an alert=colorloop)
-					if(e.event.state.alert=="select"||e.event.state.alert=="lselect"){
-						MoodExecuterService.this.groupIsAlerting = true;
+					if(e.event.state.alert!=null && (e.event.state.alert.equals("select")||e.event.state.alert.equals("lselect"))){
+						groupIsAlerting = true;
 					}else if(!groupIsAlerting){
 						e.event.state.alert = null;
 					}
