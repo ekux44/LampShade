@@ -13,7 +13,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-		            
+		    		
+			<Button
+			    android:id="@+id/rateButton"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:text="@string/rate_on_google_play" />
+		
+			<include layout="@layout/horizontal_divider_line"/>
+            
 		    <TextView
 		        android:id="@+id/textView1"
 		        android:layout_width="wrap_content"
@@ -69,34 +77,53 @@
 		            android:text="@string/cap_manual" />
 		    </RadioGroup>
 			
-			<include layout="@layout/horizontal_divider_line"/>
-		
-			<Button
-			    android:id="@+id/rateButton"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/rate_on_google_play" />
-		
-			<include layout="@layout/horizontal_divider_line"/>
-			
 			<CheckBox
 			    android:id="@+id/portForwardingCheckBox"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="@string/enable_port_forwarding" />
 
-			<EditText
-			    android:id="@+id/portForwardingEditText"
+			<LinearLayout
+			    android:id="@+id/portForwardingOptions"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:ems="10"
-			    android:hint="@string/port_forwarding_ip_prompt" />
+			    android:orientation="vertical" >
 
-			<TextView
-			    android:id="@+id/portForwardingTextView"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/port_forwarding_instructions" />
+			    <EditText
+			        android:id="@+id/portForwardingEditText"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:ems="10"
+			        android:hint="@string/port_forwarding_ip_prompt" >
+			    </EditText>
+
+			    <LinearLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal"
+			        android:layout_gravity="center" >
+
+			        <TextView
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/port_forwarding_port" />
+
+			        <EditText
+			            android:id="@+id/portNumberEditText"
+			            android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:layout_weight="1"
+			            android:ems="10"
+			            android:inputType="number"
+			            android:text="80" />
+			    </LinearLayout>
+
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/port_forwarding_instructions" />
+			</LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

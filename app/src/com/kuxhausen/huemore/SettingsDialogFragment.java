@@ -30,8 +30,8 @@ public class SettingsDialogFragment extends DialogFragment implements
 	SharedPreferences settings;
 	NetworkManagedSherlockFragmentActivity ma;
 	
-	EditText internetIP;
-	TextView portForwardingInstructions;
+	EditText internetIP, internetPort;
+	View portForwardingOptions;
 	CheckBox enablePortFowarding;
 	
 	private static final String PATTERN = 
@@ -73,17 +73,21 @@ public class SettingsDialogFragment extends DialogFragment implements
 		enablePortFowarding.setOnCheckedChangeListener(this);
 		
 		internetIP = (EditText)myView.findViewById(R.id.portForwardingEditText);
-		portForwardingInstructions = (TextView)myView.findViewById(R.id.portForwardingTextView);
+		internetPort = (EditText)myView.findViewById(R.id.portNumberEditText);
+		portForwardingOptions = myView.findViewById(R.id.portForwardingOptions);
 		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ma);
 		String internetBridge = settings.getString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null);
 		if(internetBridge!=null){
-			internetIP.setText(internetBridge);
+			
+			String[] sRay = internetBridge.split(":",2);
+			internetIP.setText(sRay[0]);
+			if(sRay.length>1)
+				internetPort.setText(sRay[1]);
 			enablePortFowarding.setChecked(true);
 		}else{
 			enablePortFowarding.setChecked(false);
-			internetIP.setVisibility(View.GONE);
-			portForwardingInstructions.setVisibility(View.GONE);
+			portForwardingOptions.setVisibility(View.GONE);
 		}
 		
 		return myView;
@@ -128,11 +132,9 @@ public class SettingsDialogFragment extends DialogFragment implements
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if(isChecked){
-			internetIP.setVisibility(View.VISIBLE);
-			portForwardingInstructions.setVisibility(View.VISIBLE);
+			portForwardingOptions.setVisibility(View.VISIBLE);
 		}else{
-			internetIP.setVisibility(View.GONE);
-			portForwardingInstructions.setVisibility(View.GONE);
+			portForwardingOptions.setVisibility(View.GONE);
 		}
 	}
 	
@@ -140,11 +142,8 @@ public class SettingsDialogFragment extends DialogFragment implements
 	public void onStop(){
 		super.onStop();
 		if(enablePortFowarding.isChecked()){
-			String candidateRemoteIP = internetIP.getText().toString();
-			//validate IP
-			Pattern pattern = Pattern.compile(PATTERN);
-		    Matcher matcher = pattern.matcher(candidateRemoteIP);
-			if(matcher.matches()){
+			String candidateRemoteIP = internetIP.getText().toString()+":"+internetPort.getText().toString();
+			if(candidateRemoteIP.length()>1){
 				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ma);
 				Editor edit = settings.edit();
 				edit.putString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, candidateRemoteIP);

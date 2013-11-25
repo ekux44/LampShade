@@ -109,8 +109,9 @@
 	<string name="cap_daily_mood">DAILY</string>
 	<string name="daily_start_time">Start Time</string>
 	<string name="enable_port_forwarding">Enable remote access (Beta)</string>
-	<string name="port_forwarding_instructions">To control your Hue lights over the internet, configure your wifi router settings to forward port 80 to the Hue hub. For help, visit the LampShade.io community on Google+ or Facebook</string>
+	<string name="port_forwarding_instructions">To control your Hue lights over the internet, configure your wifi router settings to forward a port (default is port 80) to the Hue hub. For help, visit the LampShade.io community on Google+ or Facebook</string>
 	<string name="port_forwarding_ip_prompt">Router\'s internet IP address</string>
+	<string name="port_forwarding_port">Port:</string>
 	
 	<string-array name="update_features">
         <item>Introducing \'Daily\' moods, a new type of mood that can show different colors based on the time of day</item>
