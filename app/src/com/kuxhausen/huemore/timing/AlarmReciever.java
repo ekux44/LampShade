@@ -144,6 +144,18 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 					.getSystemService(Context.ALARM_SERVICE);
 			alarmMgr.cancel(pIntent);
 		}
+		if(alarmState.scheduledForFuture!=null){
+			//reverse scheduledForFuture boolean to hit both possibilities
+			alarmState.scheduledForFuture=!alarmState.scheduledForFuture;
+			for (int i = 0; i < 8; i++) {
+				PendingIntent pIntent = calculatePendingIntent(context, alarmState,
+						i);
+				AlarmManager alarmMgr = (AlarmManager) context
+						.getSystemService(Context.ALARM_SERVICE);
+				alarmMgr.cancel(pIntent);
+			}
+			alarmState.scheduledForFuture=!alarmState.scheduledForFuture;
+		}
 	}
 
 	/** day of week Sunday = 1, Saturday = 7, 0=not repeating so we don't care, 8=transient/not user visible**/
@@ -154,6 +166,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 
 		Intent intent = new Intent(context, AlarmReciever.class);
 		intent.setAction("com.kuxhausen.huemore." +dayOfWeek+"."+ aState);
+		
 		intent.putExtra(InternalArguments.ALARM_DETAILS, aState);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
 				dayOfWeek, intent, PendingIntent.FLAG_UPDATE_CURRENT);
