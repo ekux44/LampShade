@@ -31,8 +31,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 	Gson gson = new Gson();
 
 	/**
-	 * when this method is called, AlarmState as must have the correct hour and
-	 * minute for each time the alarm is to be scheduled for
+	 * super dangerous because on repeating alarms, time value may be modified in this method. always save to db after calling this
 	 **/
 	public static AlarmState createAlarms(Context context, AlarmState as) {
 		Calendar soonestTime = null;
