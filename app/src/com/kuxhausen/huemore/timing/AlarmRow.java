@@ -71,12 +71,12 @@ public class AlarmRow {
 				aState.scheduledForFuture = false;
 				return false;
 			}
-			// TODO save back to database, maybe move this logic out
+			saveToDB();
 		}
 		return aState.scheduledForFuture;
 	}
 
-	public void toggle() {
+	public synchronized void toggle() {
 
 		if (isScheduled()) {
 			AlarmReciever.cancelAlarm(c, aState);
@@ -85,16 +85,8 @@ public class AlarmRow {
 		}
 
 		aState.scheduledForFuture = !isScheduled();
-		// save change to db
-		String rowSelect = BaseColumns._ID + "=?";
-		String[] rowArg = { "" + id };
-
-		ContentValues mNewValues = new ContentValues();
-		mNewValues.put(AlarmColumns.STATE, gson.toJson(aState));
-
-		c.getContentResolver().update(AlarmColumns.ALARMS_URI, mNewValues,
-				rowSelect, rowArg);
-
+		
+		saveToDB();
 	}
 	public void delete(){
 		if (this.isScheduled())
@@ -104,5 +96,17 @@ public class AlarmRow {
 		String[] moodArg2 = { "" + this.getID() };
 		c.getContentResolver().delete(AlarmColumns.ALARMS_URI,
 				moodSelect2, moodArg2);
+	}
+	
+	public void saveToDB(){
+		String rowSelect = BaseColumns._ID + "=?";
+		String[] rowArg = { "" + id };
+
+		ContentValues mNewValues = new ContentValues();
+		mNewValues.put(AlarmColumns.STATE, gson.toJson(aState));
+
+		c.getContentResolver().update(AlarmColumns.ALARMS_URI, mNewValues,
+				rowSelect, rowArg);
+
 	}
 }

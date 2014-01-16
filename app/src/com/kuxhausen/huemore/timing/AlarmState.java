@@ -9,6 +9,10 @@ public class AlarmState {
 	/** 7 booleans which days {Sunday, ... ,Saturday} to repeat on } **/
 	private Boolean[] repeats;
 
+	/** if nonrepeating, size = 1. If repeating, size = 7 **/
+	private Long[] scheduledTimes;
+
+	
 	public boolean isRepeating() {
 		boolean result = false;
 		if (repeats == null)
@@ -39,9 +43,6 @@ public class AlarmState {
 		for (int i = 0; i < 7; i++)
 			repeats[i] = day[i];
 	}
-
-	/** if nonrepeating, size = 1. If repeating, size = 7 **/
-	private Long[] scheduledTimes;
 
 	public long getTime() {
 		if (scheduledTimes == null || scheduledTimes.length != 1

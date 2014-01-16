@@ -26,10 +26,10 @@ public class BootSetter extends BroadcastReceiver {
 	
 			cursor.moveToPosition(-1);// not the same as move to first!
 			while (cursor.moveToNext()) {
-				AlarmState as = gson
-						.fromJson(cursor.getString(0), AlarmState.class);
-				if(as.scheduledForFuture)
-					AlarmReciever.createAlarms(context, as);
+				AlarmRow ar = new AlarmRow(context, gson.fromJson(cursor.getString(0), AlarmState.class), cursor.getInt(1));
+				if(ar.getAlarmState().scheduledForFuture)
+					AlarmReciever.createAlarms(context, ar.getAlarmState());
+				ar.saveToDB();
 			}
 		}
 	}
