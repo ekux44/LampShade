@@ -327,6 +327,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		} else {
 			as.setTime(projectedTime.getTimeInMillis());
 		}
+		AlarmReciever.updateAlarmTimes(getActivity(), as);
 		AlarmReciever.createAlarms(getActivity(), as);
 
 		// Defines an object to contain the new values to insert

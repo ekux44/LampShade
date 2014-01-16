@@ -81,6 +81,7 @@ public class AlarmRow {
 		if (isScheduled()) {
 			AlarmReciever.cancelAlarm(c, aState);
 		} else {
+			AlarmReciever.updateAlarmTimes(c, aState);
 			AlarmReciever.createAlarms(c, aState);
 		}
 

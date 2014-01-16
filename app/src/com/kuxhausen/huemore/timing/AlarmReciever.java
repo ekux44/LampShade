@@ -23,19 +23,16 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
 public class AlarmReciever extends WakefulBroadcastReceiver {
 
 	Gson gson = new Gson();
 
-	/**
-	 * super dangerous because on repeating alarms, time value may be modified in this method. always save to db after calling this
-	 **/
-	public static AlarmState createAlarms(Context context, AlarmState as) {
-		Calendar soonestTime = null;
-
+	
+	/** super dangerous because AlarmState modified. Must always save to db after calling **/
+	public static void updateAlarmTimes(Context context, AlarmState as){
+		
 		if (!as.isRepeating()) {
 			Calendar timeAdjustedCal = Calendar.getInstance();
 			timeAdjustedCal.setTimeInMillis(as.getTime());
@@ -47,9 +44,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			}
 			as.setTime(timeAdjustedCal.getTimeInMillis());
 
-			AlarmReciever.scheduleAlarm(context, as,
-					timeAdjustedCal.getTimeInMillis());
-			soonestTime = timeAdjustedCal;
 		} else {
 			Calendar rightNow = Calendar.getInstance();
 			long[] scheduledTimes = new long[7];
@@ -83,7 +77,23 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 				}
 			}
 			as.setRepeatingTimes(scheduledTimes);
+		}
+	}
+	
+	/**
+	 * must call updateAlarmTimes before calling this
+	 **/
+	public static void createAlarms(Context context, AlarmState as) {
+		Calendar soonestTime = null;
 
+		if (!as.isRepeating()) {
+			Calendar timeAdjustedCal = Calendar.getInstance();
+			timeAdjustedCal.setTimeInMillis(as.getTime());
+			
+			AlarmReciever.scheduleAlarm(context, as,
+					timeAdjustedCal.getTimeInMillis());
+			soonestTime = timeAdjustedCal;
+		} else {
 			for (int i = 0; i < 7; i++) {
 				long t = as.getRepeatingTimes()[i];
 				if (as.getRepeatingDays()[i]) {
@@ -97,13 +107,10 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			}
 		}
 
-		Toast.makeText(
-				context,
+		Toast.makeText(context,
 				context.getString(R.string.next_scheduled_intro)
-						+ " "
-						+ DateUtils.getRelativeTimeSpanString(soonestTime
-								.getTimeInMillis()), Toast.LENGTH_SHORT).show();
-		return as;
+				+ " "
+				+ DateUtils.getRelativeTimeSpanString(soonestTime.getTimeInMillis()), Toast.LENGTH_SHORT).show();
 	}
 
 	private static void scheduleAlarm(Context context, AlarmState alarmState,
