@@ -10,14 +10,14 @@ import android.provider.BaseColumns;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 
-public class AlarmRow {
+public class DatabaseAlarm {
 
 	private AlarmState aState;
 	private Context c;
 	private int id;
 	Gson gson = new Gson();
 
-	public AlarmRow(Context context, AlarmState as, int db_ID) {
+	public DatabaseAlarm(Context context, AlarmState as, int db_ID) {
 		c = context;
 		aState = as;
 		id = db_ID;

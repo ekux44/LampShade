@@ -49,9 +49,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private Gson gson = new Gson();
 	private boolean[] repeats = new boolean[7];
 	private TimePicker timePick;
-	private AlarmRow priorState;
+	private DatabaseAlarm priorState;
 
-	public void onLoadLoaderManager(AlarmRow optionalState) {
+	public void onLoadLoaderManager(DatabaseAlarm optionalState) {
 		if (optionalState != null)
 			this.priorState = optionalState;
 		if (groupSpinner != null && moodSpinner != null) {
