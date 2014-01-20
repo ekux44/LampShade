@@ -28,9 +28,7 @@ public class BootSetter extends BroadcastReceiver {
 			while (cursor.moveToNext()) {
 				DatabaseAlarm ar = new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), AlarmState.class), cursor.getInt(1));
 				if(ar.getAlarmState().scheduledForFuture){
-					AlarmReciever.updateAlarmTimes(context, ar.getAlarmState());
-					AlarmReciever.createAlarms(context, ar.getAlarmState());
-					ar.saveToDB();
+					AlarmReciever.createAlarms(context, ar);
 				}
 				
 			}
