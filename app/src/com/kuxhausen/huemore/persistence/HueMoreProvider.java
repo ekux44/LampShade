@@ -43,7 +43,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * pattern of the incoming URI
 	 */
 	// The incoming URI matches the Groups URI pattern
-	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4;
+	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -110,6 +110,9 @@ public class HueMoreProvider extends ContentProvider {
 			sAlarmsProjectionMap.put(
 					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE,
 					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE);
+		}
+		{
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.AlarmColumns.PATH_INDIVIDUAL_ALARM, INDIVIDUAL_ALARM);
 		}
 	}
 
@@ -228,6 +231,13 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
+		case INDIVIDUAL_ALARM:
+			qb.appendWhere(DatabaseDefinitions.AlarmColumns._ID + "=" + uri.getLastPathSegment());
+			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			qb.setProjectionMap(sAlarmsProjectionMap);
+			groupBy = null;
+			uri = DatabaseDefinitions.AlarmColumns.ALARMS_URI;
+			break;
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
