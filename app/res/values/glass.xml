@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="glass_acting_page">Applying</string>
+    <string name="glass_acting_page_footnote">Tap to configure</string>
+    <string name="glass_reconnect">Reconnect</string>
     <string name="glass_set_brightness">set the brightness</string>
 	<string name="glass_brightness_prompt">to * percent in *</string>
     <string name="glass_set_mood">set the mood</string>
