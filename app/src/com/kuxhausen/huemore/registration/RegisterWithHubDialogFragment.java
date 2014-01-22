@@ -60,13 +60,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 		progressBar = (ProgressBar) registerWithHubView
 				.findViewById(R.id.timerProgressBar);
 		
-		builder.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						// User cancelled the dialog
-					}
-				});
 		
 		countDownTimer = new CountDownTimer(length_in_milliseconds,
 				period_in_milliseconds) {

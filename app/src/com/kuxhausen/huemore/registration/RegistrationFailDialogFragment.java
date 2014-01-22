@@ -24,16 +24,7 @@ public class RegistrationFailDialogFragment extends DialogFragment {
 						dismiss();
 					}
 				});
-		builder.setNeutralButton(R.string.advanced,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						ManualDiscoverHubDialogFragment mrwhdf = new ManualDiscoverHubDialogFragment();
-						mrwhdf.show(getFragmentManager(),
-								InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-						dismiss();
-					}
-				});
+
 		builder.setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
 					@Override

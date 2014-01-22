@@ -39,14 +39,6 @@ public class DiscoverHubDialogFragment extends DialogFragment implements
 		progressBar = (ProgressBar) discoverHubView
 				.findViewById(R.id.progressBar1);
 
-		builder.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						// User cancelled the dialog
-					}
-				});
-		
 		
 		
 		startDiscovery();
