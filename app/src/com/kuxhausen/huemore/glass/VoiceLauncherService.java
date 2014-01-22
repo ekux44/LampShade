@@ -12,6 +12,7 @@ import com.kuxhausen.huemore.CommunityDialogFragment;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -19,15 +20,19 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
+import com.kuxhausen.huemore.registration.RegistrationFailDialogFragment;
 import com.kuxhausen.huemore.registration.WelcomeDialogFragment;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 
+import alt.android.os.CountDownTimer;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
@@ -37,6 +42,7 @@ import android.view.WindowManager;
 
 public class VoiceLauncherService extends NetworkManagedSherlockFragmentActivity {
 
+	CountDownTimer pageTimer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -115,16 +121,38 @@ public class VoiceLauncherService extends NetworkManagedSherlockFragmentActivity
         trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS,gmb.brightness));
         trasmitter.putExtra(InternalArguments.MOOD_NAME, gmb.mood);
         trasmitter.putExtra(InternalArguments.GROUP_NAME, gmb.group);
-        startService(trasmitter); 
+        startService(trasmitter);
+        
+        
+        
+        pageTimer = new CountDownTimer(4000,100) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+			}
+
+			@Override
+			public void onFinish() {
+				Log.e("voice","finished called");
+				if(VoiceLauncherService.this.isFinishing()!=true)
+					VoiceLauncherService.this.finish();
+			}
+		};
+		pageTimer.start();
 	}
 	
 	
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
           if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
-              openOptionsMenu();
+              if(pageTimer!=null)
+            	  pageTimer.cancel();
+        	  
+        	  openOptionsMenu();
               return true;
+          } else if (keyCode == KeyEvent.KEYCODE_BACK){
+        	  this.finish();
           }
+          
           return false;
     }
 	
@@ -156,7 +184,7 @@ public class VoiceLauncherService extends NetworkManagedSherlockFragmentActivity
 	
 	
 	
-	/** borrowed from MainActivity //TODO restructure so no duplication **/
+	/** tweaked from MainActivity //TODO restructure so no duplication **/
 	private void initializationDatabaseChecks(){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -194,21 +222,9 @@ public class VoiceLauncherService extends NetworkManagedSherlockFragmentActivity
 
 		// check to see if the bridge IP address is setup yet
 		if (!settings.contains(PreferenceKeys.BRIDGE_IP_ADDRESS)) {
-			if(!settings.contains(PreferenceKeys.DONE_WITH_WELCOME_DIALOG))
-			{
-				WelcomeDialogFragment wdf = new WelcomeDialogFragment();
-				wdf.show(this.getSupportFragmentManager(),
+			DiscoverHubDialogFragment wdf = new DiscoverHubDialogFragment();
+			wdf.show(this.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			}else{
-				DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-				dhdf.show(this.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			}
-		} else if(!settings.contains(PreferenceKeys.HAS_SHOWN_COMMUNITY_DIALOG)){
-			CommunityDialogFragment cdf = new CommunityDialogFragment();
-			cdf.show(this.getSupportFragmentManager(),
-				InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			
 		}
 		if (!settings.contains(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS)) {
 			Editor edit = settings.edit();
