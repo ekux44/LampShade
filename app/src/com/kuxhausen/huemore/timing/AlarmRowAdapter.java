@@ -75,7 +75,6 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 
 			view.scheduledButton = (CompoundButton) rowView
 					.findViewById(R.id.alarmOnOffCompoundButton);
-			view.scheduledButton.setOnCheckedChangeListener(this);
 			view.time = (TextView) rowView.findViewById(R.id.timeTextView);
 			view.taggedView = rowView
 					.findViewById(R.id.rowExcludingCompoundButton);
@@ -92,7 +91,9 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 		DatabaseAlarm item = getList().get(position);
 		view.taggedView.setTag(item);
 		view.scheduledButton.setTag(item);
+		view.scheduledButton.setOnCheckedChangeListener(null);
 		view.scheduledButton.setChecked(item.isScheduled());
+		view.scheduledButton.setOnCheckedChangeListener(this);
 		view.time.setText(item.getTime());
 		view.secondaryDescription.setText(item.getSecondaryDescription());
 		return rowView;
