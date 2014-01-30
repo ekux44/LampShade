@@ -29,7 +29,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
 	private AlarmRowAdapter dataSource;
-	private AlarmRow selectedRow;
+	private DatabaseAlarm selectedRow;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +88,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		LinearLayout selected = (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		selectedRow = ((AlarmRow) selected.getChildAt(0).getTag());
+		selectedRow = ((DatabaseAlarm) selected.getChildAt(0).getTag());
 		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_alarm, menu);
 	}

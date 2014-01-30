@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.timing.AlarmRow;
+import com.kuxhausen.huemore.timing.DatabaseAlarm;
 import com.kuxhausen.huemore.timing.AlarmState;
 
 import android.annotation.TargetApi;
@@ -70,7 +70,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         boolean alarmOn = false;
     	if (mCursor.moveToPosition(position)) {
     		json = mCursor.getString(0);
-    		AlarmRow aRow = new AlarmRow(mContext, gson.fromJson(json, AlarmState.class), mCursor.getInt(1));
+    		DatabaseAlarm aRow = new DatabaseAlarm(mContext, gson.fromJson(json, AlarmState.class), mCursor.getInt(1));
     		timeText = aRow.getTime();
         	subText = aRow.getSecondaryDescription();
         	alarmOn = aRow.isScheduled();

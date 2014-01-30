@@ -30,8 +30,8 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 	Gson gson = new Gson();
 
 	
-	/** super dangerous because AlarmState modified. Must always save to db after calling **/
-	public static void updateAlarmTimes(Context context, AlarmState as){
+	public static void updateAlarmTimes(Context context, DatabaseAlarm dbAlarm){
+		AlarmState as = dbAlarm.getAlarmState();
 		
 		if (!as.isRepeating()) {
 			Calendar timeAdjustedCal = Calendar.getInstance();
@@ -78,12 +78,13 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 			}
 			as.setRepeatingTimes(scheduledTimes);
 		}
+		dbAlarm.saveToDB();
 	}
 	
-	/**
-	 * must call updateAlarmTimes before calling this
-	 **/
-	public static void createAlarms(Context context, AlarmState as) {
+	public static void createAlarms(Context context, DatabaseAlarm dbAlarm) {
+		updateAlarmTimes(context, dbAlarm);
+		
+		AlarmState as = dbAlarm.getAlarmState();
 		Calendar soonestTime = null;
 
 		if (!as.isRepeating()) {
@@ -111,6 +112,8 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 				context.getString(R.string.next_scheduled_intro)
 				+ " "
 				+ DateUtils.getRelativeTimeSpanString(soonestTime.getTimeInMillis()), Toast.LENGTH_SHORT).show();
+		
+		dbAlarm.saveToDB();
 	}
 
 	private static void scheduleAlarm(Context context, AlarmState alarmState,

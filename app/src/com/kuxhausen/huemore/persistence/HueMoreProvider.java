@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.UriMatcher;
@@ -42,7 +43,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * pattern of the incoming URI
 	 */
 	// The incoming URI matches the Groups URI pattern
-	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4;
+	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -58,7 +59,7 @@ public class HueMoreProvider extends ContentProvider {
 		{
 			// Add a pattern that routes URIs terminated with "groups" to a
 			// GROUPS operation
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groups", GROUPS);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.GroupColumns.PATH_GROUPS, GROUPS);
 			// Creates a new projection map instance. The map returns a column
 			// name
 			// given a string. The two are usually equal.
@@ -76,7 +77,7 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.GroupColumns.PRECEDENCE);
 		}
 		{
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "moods", MOODS);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.MoodColumns.PATH_MOODS, MOODS);
 			sMoodsProjectionMap = new HashMap<String, String>();
 
 			sMoodsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
@@ -86,8 +87,7 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.MoodColumns.STATE);
 		}
 		{
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "groupbulbs",
-					GROUPBULBS);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
 			sGroupBulbsProjectionMap = new HashMap<String, String>();
 
 			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
@@ -101,7 +101,7 @@ public class HueMoreProvider extends ContentProvider {
 					DatabaseDefinitions.GroupColumns.PRECEDENCE);
 		}
 		{
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, "alarms", ALARMS);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.AlarmColumns.PATH_ALARMS, ALARMS);
 			sAlarmsProjectionMap = new HashMap<String, String>();
 
 			sAlarmsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
@@ -110,6 +110,9 @@ public class HueMoreProvider extends ContentProvider {
 			sAlarmsProjectionMap.put(
 					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE,
 					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE);
+		}
+		{
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.AlarmColumns.PATH_INDIVIDUAL_ALARM, INDIVIDUAL_ALARM);
 		}
 	}
 
@@ -196,11 +199,12 @@ public class HueMoreProvider extends ContentProvider {
 		if (insertId == -1) {
 			// insert failed, do update
 			// db.update("groups", null, cv);
+			//TODO
 		}
 
 		this.getContext().getContentResolver().notifyChange(uri, null);
 
-		return null;
+		return ContentUris.withAppendedId(uri, insertId);
 	}
 
 	@Override
@@ -227,6 +231,13 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
+		case INDIVIDUAL_ALARM:
+			qb.appendWhere(DatabaseDefinitions.AlarmColumns._ID + "=" + uri.getLastPathSegment());
+			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			qb.setProjectionMap(sAlarmsProjectionMap);
+			groupBy = null;
+			uri = DatabaseDefinitions.AlarmColumns.ALARMS_URI;
+			break;
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);

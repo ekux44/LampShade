@@ -8,6 +8,8 @@ import android.provider.BaseColumns;
  */
 public final class DatabaseDefinitions {
 
+	public static final String SLASH = "/";
+	
 	public static final class AlarmColumns implements BaseColumns {
 		/**
 		 * The table name offered by this provider
@@ -19,13 +21,20 @@ public final class DatabaseDefinitions {
 		 */
 		private static final String SCHEME = "content://";
 
-		public static final String PATH_ALARMS = "/alarms";
+		public static final String PATH_ALARMS = "alarms";
 		/**
 		 * The content:// style URL for this table
 		 */
-		public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY
-				+ PATH_ALARMS);
+		public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_ALARMS);
 
+		
+		public static final String PATH_INDIVIDUAL_ALARM = "alarms/#";
+		/**
+		 * The content:// style URL for this table
+		 */
+		public static final Uri INDIVIDUAL_ALARM_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_INDIVIDUAL_ALARM);
+
+		
 		/**
 		 * JSon'd HueState object of other state data to override mood
 		 */
@@ -52,19 +61,17 @@ public final class DatabaseDefinitions {
 		 */
 		private static final String SCHEME = "content://";
 
-		public static final String PATH_GROUPS = "/groups";
+		public static final String PATH_GROUPS = "groups";
 		/**
 		 * The content:// style URL for this table
 		 */
-		public static final Uri GROUPS_URI = Uri.parse(SCHEME + AUTHORITY
-				+ PATH_GROUPS);
+		public static final Uri GROUPS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPS);
 
-		public static final String PATH_GROUPBULBS = "/groupbulbs";
+		public static final String PATH_GROUPBULBS = "groupbulbs";
 		/**
 		 * The content:// style URL for this table
 		 */
-		public static final Uri GROUPBULBS_URI = Uri.parse(SCHEME + AUTHORITY
-				+ PATH_GROUPBULBS);
+		public static final Uri GROUPBULBS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH+ PATH_GROUPBULBS);
 		/**
 		 * which group this bulb row is part of
 		 */
@@ -100,13 +107,12 @@ public final class DatabaseDefinitions {
 		 */
 		private static final String SCHEME = "content://";
 
-		public static final String PATH_MOODS = "/moods";
+		public static final String PATH_MOODS = "moods";
 
 		/**
 		 * The content:// style URL for this table
 		 */
-		public static final Uri MOODS_URI = Uri.parse(SCHEME + AUTHORITY
-				+ PATH_MOODS);
+		public static final Uri MOODS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_MOODS);
 
 		/**
 		 * which mood this state row is part of

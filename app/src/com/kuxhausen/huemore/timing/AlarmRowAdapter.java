@@ -21,14 +21,14 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 
 	private Cursor cursor;
 	private Context context;
-	private ArrayList<AlarmRow> list = new ArrayList<AlarmRow>();
+	private ArrayList<DatabaseAlarm> list = new ArrayList<DatabaseAlarm>();
 	Gson gson = new Gson();
 
-	private ArrayList<AlarmRow> getList() {
+	private ArrayList<DatabaseAlarm> getList() {
 		return list;
 	}
 
-	public AlarmRow getRow(int position) {
+	public DatabaseAlarm getRow(int position) {
 		return getList().get(position);
 	}
 
@@ -46,13 +46,13 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 		super.changeCursor(c);
 		// Log.e("changeCursor", ""+c);
 		this.cursor = c;
-		list = new ArrayList<AlarmRow>();
+		list = new ArrayList<DatabaseAlarm>();
 		if (cursor != null) {
 			cursor.moveToPosition(-1);// not the same as move to first!
 			while (cursor.moveToNext()) {
 				// Log.e("changeCursor _row",
 				// gson.fromJson(cursor.getString(0),AlarmState.class).mood);
-				list.add(new AlarmRow(context, gson.fromJson(
+				list.add(new DatabaseAlarm(context, gson.fromJson(
 						cursor.getString(0), AlarmState.class), cursor
 						.getInt(1)));
 			}
@@ -75,7 +75,6 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 
 			view.scheduledButton = (CompoundButton) rowView
 					.findViewById(R.id.alarmOnOffCompoundButton);
-			view.scheduledButton.setOnCheckedChangeListener(this);
 			view.time = (TextView) rowView.findViewById(R.id.timeTextView);
 			view.taggedView = rowView
 					.findViewById(R.id.rowExcludingCompoundButton);
@@ -89,10 +88,12 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 
 		/** Set data to your Views. */
 
-		AlarmRow item = getList().get(position);
+		DatabaseAlarm item = getList().get(position);
 		view.taggedView.setTag(item);
 		view.scheduledButton.setTag(item);
+		view.scheduledButton.setOnCheckedChangeListener(null);
 		view.scheduledButton.setChecked(item.isScheduled());
+		view.scheduledButton.setOnCheckedChangeListener(this);
 		view.time.setText(item.getTime());
 		view.secondaryDescription.setText(item.getSecondaryDescription());
 		return rowView;
@@ -107,7 +108,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		AlarmRow ar = (AlarmRow) buttonView.getTag();
+		DatabaseAlarm ar = (DatabaseAlarm) buttonView.getTag();
 		if (ar.isScheduled() != isChecked) {
 			ar.toggle();
 		}

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -49,9 +50,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 	private Gson gson = new Gson();
 	private boolean[] repeats = new boolean[7];
 	private TimePicker timePick;
-	private AlarmRow priorState;
+	private DatabaseAlarm priorState;
 
-	public void onLoadLoaderManager(AlarmRow optionalState) {
+	public void onLoadLoaderManager(DatabaseAlarm optionalState) {
 		if (optionalState != null)
 			this.priorState = optionalState;
 		if (groupSpinner != null && moodSpinner != null) {
@@ -327,15 +328,14 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		} else {
 			as.setTime(projectedTime.getTimeInMillis());
 		}
-		AlarmReciever.updateAlarmTimes(getActivity(), as);
-		AlarmReciever.createAlarms(getActivity(), as);
-
 		// Defines an object to contain the new values to insert
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
 
-		getActivity().getContentResolver().insert(
-				DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
+		Uri locationOfNewAlarm = getActivity().getContentResolver().insert(DatabaseDefinitions.AlarmColumns.ALARMS_URI, mNewValues);
+		
+		DatabaseAlarm ar = new DatabaseAlarm(getActivity(), locationOfNewAlarm);
+		AlarmReciever.createAlarms(getActivity(), ar);
 	}
 
 }

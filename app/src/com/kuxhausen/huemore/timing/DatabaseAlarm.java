@@ -5,19 +5,32 @@ import java.util.Calendar;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 
-public class AlarmRow {
+public class DatabaseAlarm {
 
 	private AlarmState aState;
 	private Context c;
 	private int id;
 	Gson gson = new Gson();
 
-	public AlarmRow(Context context, AlarmState as, int db_ID) {
+	
+	public DatabaseAlarm(Context context, Uri uri){
+		c = context;
+		String[] columns = { AlarmColumns.STATE, BaseColumns._ID };
+		Cursor cursor = context.getContentResolver().query(uri, columns, null, null, null);
+
+		cursor.moveToPosition(0);
+		aState = gson.fromJson(cursor.getString(0), AlarmState.class);
+		id = cursor.getInt(1);
+	}
+	
+	public DatabaseAlarm(Context context, AlarmState as, int db_ID) {
 		c = context;
 		aState = as;
 		id = db_ID;
@@ -69,9 +82,9 @@ public class AlarmRow {
 			scheduledTime.setTimeInMillis(aState.getTime());
 			if (scheduledTime.before(Calendar.getInstance())) {
 				aState.scheduledForFuture = false;
+				saveToDB();
 				return false;
 			}
-			saveToDB();
 		}
 		return aState.scheduledForFuture;
 	}
@@ -81,8 +94,7 @@ public class AlarmRow {
 		if (isScheduled()) {
 			AlarmReciever.cancelAlarm(c, aState);
 		} else {
-			AlarmReciever.updateAlarmTimes(c, aState);
-			AlarmReciever.createAlarms(c, aState);
+			AlarmReciever.createAlarms(c, this);
 		}
 
 		aState.scheduledForFuture = !isScheduled();
@@ -106,8 +118,7 @@ public class AlarmRow {
 		ContentValues mNewValues = new ContentValues();
 		mNewValues.put(AlarmColumns.STATE, gson.toJson(aState));
 
-		c.getContentResolver().update(AlarmColumns.ALARMS_URI, mNewValues,
-				rowSelect, rowArg);
+		c.getContentResolver().update(AlarmColumns.ALARMS_URI, mNewValues, rowSelect, rowArg);
 
 	}
 }
