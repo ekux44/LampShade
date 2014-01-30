@@ -82,9 +82,9 @@ public class DatabaseAlarm {
 			scheduledTime.setTimeInMillis(aState.getTime());
 			if (scheduledTime.before(Calendar.getInstance())) {
 				aState.scheduledForFuture = false;
+				saveToDB();
 				return false;
 			}
-			saveToDB();
 		}
 		return aState.scheduledForFuture;
 	}
