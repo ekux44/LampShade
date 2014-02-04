@@ -24,7 +24,7 @@
 
     </LinearLayout>
     
-    <include layout="@layout/horizontal_divider_line"/>
+    <include layout="@layout/horizontal_divider_line_blue"/>
 
     <include layout="@layout/confirmation_bar"/>
 </LinearLayout>

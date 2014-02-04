@@ -20,7 +20,7 @@
 			    android:layout_height="wrap_content"
 			    android:text="@string/rate_on_google_play" />
 		
-			<include layout="@layout/horizontal_divider_line"/>
+			<include layout="@layout/horizontal_divider_line_blue"/>
             
 		    <TextView
 		        android:id="@+id/textView1"

@@ -59,7 +59,7 @@
             </LinearLayout>
     </ScrollView>
     
-    <include layout="@layout/horizontal_divider_line"/>
+    <include layout="@layout/horizontal_divider_line_blue"/>
 	
 	<EditText
 		    android:id="@+id/moodNameEditText"
@@ -70,7 +70,7 @@
 		    android:inputType="text" >
 	</EditText>
 	
-	<include layout="@layout/horizontal_divider_line"/>
+	<include layout="@layout/horizontal_divider_line_blue"/>
 	
     <include layout="@layout/confirmation_bar"/>
 </LinearLayout>

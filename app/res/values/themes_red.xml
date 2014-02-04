@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="red" parent="@Theme.Red">
+
+    <item name="android:editTextStyle">@style/EditTextred</item>
+
+    <item name="android:textColorHighlight">#99ff4444</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewred</item>
+
+    <item name="android:checkboxStyle">@style/CheckBoxred</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonred</item>
+
+    <item name="android:buttonStyle">@style/Buttonred</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonred</item>
+
+    <item name="android:spinnerStyle">@style/Spinnerred</item>
+
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemred</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarred</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarred</item>
+
+    <item name="android:buttonStyleToggle">@style/Togglered</item>
+
+    <item name="android:listViewStyle">@style/ListViewred</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewred.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemred</item>
+
+  </style>
+
+</resources>

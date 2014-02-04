@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-	<include layout="@layout/horizontal_divider_line"/>
+	<include layout="@layout/horizontal_divider_line_blue"/>
 	
     <TextView
         android:id="@+id/temperatureDescripterTextView"

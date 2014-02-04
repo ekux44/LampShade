@@ -5,7 +5,7 @@
 
     <include layout="@layout/pager"/>
 
-    <include layout="@layout/horizontal_divider_line"/>
+    <include layout="@layout/horizontal_divider_line_blue"/>
     
     <LinearLayout
 	    android:id="@+id/transitionTimeLayout"
@@ -30,7 +30,7 @@
 	         android:layout_weight="2"/>
 	</LinearLayout>
 	
-    <include layout="@layout/horizontal_divider_line"/>
+    <include layout="@layout/horizontal_divider_line_blue"/>
 
     <include layout="@layout/confirmation_bar"/>
 </LinearLayout>

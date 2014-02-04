@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
 
-     Copyright (C) 2011 The Android Open Source Project
-     Copyright (C) 2012 readyState Software Ltd
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-          http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
+  <style name="EditTextred" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/red_edit_text_holo_dark</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
 
-<resources>
+  <style name="AutoCompleteTextViewred" parent="android:Widget.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/red_list_selector_holo_dark</item>
+	  <item name="android:background">@drawable/red_edit_text_holo_dark</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
 
-    <style name="Theme.Red" parent="@style/Theme.Sherlock">
-        <item name="actionBarItemBackground">@drawable/selectable_background_red</item>
-        <item name="popupMenuStyle">@style/PopupMenu.Red</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.Red</item>
-        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Red</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.Red</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Red</item>
-        <item name="actionModeBackground">@drawable/cab_background_top_red</item>
-        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_red</item>
-        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Red</item>
+  <style name="CheckBoxred" parent="android:Widget.CompoundButton.CheckBox">
+      <item name="android:button">@drawable/red_btn_check_holo_dark</item>
+  </style>
 
-        
-    </style>
+  <style name="RadioButtonred" parent="android:Widget.CompoundButton.RadioButton">
+      <item name="android:button">@drawable/red_btn_radio_holo_dark</item>
+  </style>
 
-    <style name="ActionBar.Solid.Red" parent="@style/Widget.Sherlock.ActionBar.Solid">
-        <item name="background">@drawable/ab_solid_red</item>
-        <item name="backgroundStacked">@drawable/ab_stacked_solid_red</item>
-        <item name="backgroundSplit">@drawable/ab_bottom_solid_red</item>
-        <item name="progressBarStyle">@style/ProgressBar.Red</item>
-    </style>
+  <style name="Buttonred" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/red_btn_default_holo_dark</item>
+	  <item name="android:minHeight">48dip</item>
+	  <item name="android:minWidth">64dip</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
 
-    <style name="ActionBar.Transparent.Red" parent="@style/Widget.Sherlock.ActionBar">
-        <item name="background">@drawable/ab_transparent_red</item>
-        <item name="progressBarStyle">@style/ProgressBar.Red</item>
-    </style>
-	
-    <style name="PopupMenu.Red" parent="@style/Widget.Sherlock.ListPopupWindow">	
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_red</item>	
-    </style>
-	
-    <style name="DropDownListView.Red" parent="@style/Widget.Sherlock.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_red</item>
-    </style>
+  <style name="ImageButtonred" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/red_btn_default_holo_dark</item>
+  </style>
 
-    <style name="ActionBarTabStyle.Red" parent="@style/Widget.Sherlock.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_red</item>
-    </style>
-	
-    <style name="DropDownNav.Red" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
-        <item name="android:background">@drawable/spinner_background_ab_red</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_red</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_red</item>
-    </style>
-    
-    <style name="ProgressBar.Red" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_red</item>
-    </style>
-    
-    <style name="ActionButton.CloseMode.Red" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
-        <item name="android:background">@drawable/btn_cab_done_red</item>
-    </style>
-    
-    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.Red.Widget" parent="@style/Theme.Sherlock">
-        <item name="popupMenuStyle">@style/PopupMenu.Red</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.Red</item>
-    </style>
+  <style name="Spinnerred" parent="android:Widget.Spinner">
+      <item name="android:background">@drawable/red_spinner_background_holo_dark</item>
+      <item name="android:dropDownSelector">@drawable/red_list_selector_holo_dark</item>
+  </style>
+
+  <style name="SpinnerDropDownItemred" parent="android:Widget.DropDownItem.Spinner">
+      <item name="android:checkMark">@drawable/red_btn_radio_holo_dark</item>
+  </style>
+  <style name="ProgressBarred" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/red_progress_horizontal_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/red_progress_indeterminate_horizontal_holo_dark</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="SeekBarred" parent="android:Widget.SeekBar">
+      <item name="android:progressDrawable">@drawable/red_scrubber_progress_horizontal_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/red_scrubber_progress_horizontal_holo_dark</item>
+      <item name="android:minHeight">13dip</item>
+      <item name="android:maxHeight">13dip</item>
+      <item name="android:thumb">@drawable/red_scrubber_control_selector_holo_dark</item>
+      <item name="android:thumbOffset">16dip</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+  </style>
+
+  <style name="Togglered" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/red_btn_toggle_holo_dark</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="ListViewred" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/red_list_selector_holo_dark</item>
+  </style>
+
+  <style name="ListViewred.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/red_list_selector_holo_dark</item>
+  </style>
+
+  <style name="SpinnerItemred" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#ffffff</item>
+  </style>
 
 </resources>

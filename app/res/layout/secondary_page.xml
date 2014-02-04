@@ -9,7 +9,7 @@
             android:layout_weight="1"
          	layout="@layout/pager"/>
 	
-	<include layout="@layout/horizontal_divider_line"/>
+	<include layout="@layout/horizontal_divider_line_red"/>
 
     <TextView
         android:id="@+id/brightnessDescripterTextView"
@@ -27,6 +27,6 @@
         android:paddingBottom="8dp"
         android:progress="127" />
 
-    <include layout="@layout/horizontal_divider_line"/>
+    <include layout="@layout/horizontal_divider_line_red"/>
 
 </LinearLayout>

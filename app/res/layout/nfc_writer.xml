@@ -6,7 +6,7 @@
 
 	<include layout="@layout/serialized_editor"/>
 
-	<include layout="@layout/horizontal_divider_line"/>
+	<include layout="@layout/horizontal_divider_line_blue"/>
 	
     <Button
         android:id="@+id/writeToTagButton"
