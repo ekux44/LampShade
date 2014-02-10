@@ -8,23 +8,26 @@
     android:focusable="true"
     android:descendantFocusability="blocksDescendants">
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/huemore"
+    <com.kuxhausen.huemore.MoodView
+        android:id="@+id/moodPreview"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
         android:focusable="false"
-        android:focusableInTouchMode="false"/>
-
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:gravity="center_vertical"
-            android:minHeight="?android:attr/listPreferredItemHeight"
-            android:text="text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical"
+     />
+    
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:text="text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_weight="1" />
 
 </LinearLayout>
