@@ -52,7 +52,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		 */
 		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-		String[] columns = {MoodColumns.MOOD, BaseColumns._ID};
+		String[] columns = {MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
 		dataSource = new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null,
 				columns, new int[] { R.id.text1 }, 0);
 		
@@ -197,7 +197,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		switch (loaderID) {
 		case MOODS_LOADER:
 			// Returns a new CursorLoader
-			String[] columns = {MoodColumns.MOOD, BaseColumns._ID };
+			String[] columns = {MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
 			return new CursorLoader(getActivity(), // Parent activity context
 					DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
 					columns, // Projection to return

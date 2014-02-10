@@ -279,30 +279,23 @@ public class HueMoreProvider extends ContentProvider {
 					|| selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
 					|| selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
 					|| selectionArgs[0].charAt(0) == ((char) 8))){
-				BulbState resultState = new BulbState();
-					
+				
+				String mood = null;
+				
 				if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
 						|| selectionArgs[0].equals(((char) 8) + "RANDOM")) {
-					// random only handled here 
-					resultState.on = true;
-					resultState.effect = "none";
-					resultState.hue = (int) (65535 * Math.random());
-					resultState.sat = (short) (255 * (Math.random() * 5. + .25));
-					
+					mood = HueMoreProvider.getEncodedRandom();
 				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
 						|| selectionArgs[0].equals(((char) 8) + "ON")) {
-					resultState.on = true;
-					resultState.effect = "none";
+					mood = HueMoreProvider.getEncodedOn();
 				} else if(selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
 						|| selectionArgs[0].equals(((char) 8) + "OFF")) {
-					resultState.on = false;
-					resultState.effect = "none";
+					mood = HueMoreProvider.getEncodedOff();
 				}
-				Mood m = Utils.generateSimpleMood(resultState);
 				
 				String[] moodColumns = { MoodColumns.STATE };
 				MatrixCursor mc = new MatrixCursor(moodColumns);
-				Object[] tempRow = {HueUrlEncoder.encode(m)};
+				Object[] tempRow = {mood};
 				mc.addRow(tempRow);
 				mc.setNotificationUri(getContext().getContentResolver(), uri);
 				return mc;
@@ -353,13 +346,13 @@ public class HueMoreProvider extends ContentProvider {
 			return mc;
 		}
 		else if(sUriMatcher.match(uri) == MOODS && selectionArgs==null){
-			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
+			String[] columns = { MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
 			MatrixCursor c1 = new MatrixCursor(columns);
-			Object[] tempCol0 = {this.getContext().getString(R.string.cap_off),0};
+			Object[] tempCol0 = {this.getContext().getString(R.string.cap_off),0,getEncodedOff()};
 			c1.addRow(tempCol0);
-			Object[] tempCol1 = {this.getContext().getString(R.string.cap_on),0};
+			Object[] tempCol1 = {this.getContext().getString(R.string.cap_on),0,getEncodedOn()};
 			c1.addRow(tempCol1);
-			Object[] tempCol2 = {this.getContext().getString(R.string.cap_random),0};
+			Object[] tempCol2 = {this.getContext().getString(R.string.cap_random),0,getEncodedRandom()};
 			c1.addRow(tempCol2);
 			
 			Cursor[] tempC = {c1,c2};
@@ -421,6 +414,30 @@ public class HueMoreProvider extends ContentProvider {
 
 		// Returns the number of rows updated.
 		return count;
+	}
+	
+	private static String getEncodedOn(){
+		BulbState resultState = new BulbState();
+		resultState.on = true;
+		resultState.effect = "none";
+		return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
+	}
+	private static String getEncodedOff(){
+		BulbState resultState = new BulbState();
+		resultState.on = false;
+		resultState.effect = "none";
+		return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
+	}
+	/**
+	 * random only handled here 
+	 */
+	private static String getEncodedRandom(){
+		BulbState resultState = new BulbState();
+		resultState.on = true;
+		resultState.effect = "none";
+		resultState.hue = (int) (65535 * Math.random());
+		resultState.sat = (short) (255 * (Math.random() * 5. + .25));
+		return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
 	}
 
 }

@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.FutureEncodingException;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 
 public class MoodRowAdapter extends SimpleCursorAdapter{
 
@@ -59,11 +62,11 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 			cursor.moveToPosition(-1);// not the same as move to first!
 			while (cursor.moveToNext()) {
 				//Log.e("changeCursor", "row asdf");
-				//try {
-					list.add(new MoodRow(null, /*HueUrlEncoder.decode(cursor.getString(0)).second.first,*/cursor.getString(0), cursor.getInt(1)));
-				/*} catch (InvalidEncodingException e) {
+				try {
+					list.add(new MoodRow(cursor.getString(0), cursor.getInt(1), HueUrlEncoder.decode(cursor.getString(2)).second.first));
+				} catch (InvalidEncodingException e) {
 				} catch (FutureEncodingException e) {
-				}*/
+				}
 			}
 		}
 	}

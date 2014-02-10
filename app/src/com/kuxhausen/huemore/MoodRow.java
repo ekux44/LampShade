@@ -7,7 +7,7 @@ public class MoodRow {
 	int id;
 	String name;
 	
-	public MoodRow(Mood mood, String mName, int dbid){
+	public MoodRow(String mName, int dbid, Mood mood){
 		m = mood;
 		name = mName;
 		id = dbid;
