@@ -1,23 +1,21 @@
 package com.kuxhausen.huemore;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,7 +29,6 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
 
 public class MoodListFragment extends SherlockListFragment implements
@@ -49,21 +46,16 @@ public class MoodListFragment extends SherlockListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		// We need to use a different list item layout for devices older than
-		// Honeycomb
-		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-				: android.R.layout.simple_list_item_1;
-
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
 		 */
 		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-		String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
-		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
-				columns, new int[] { android.R.id.text1 }, 0);
-
+		String[] columns = {MoodColumns.MOOD, BaseColumns._ID};
+		dataSource = new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null,
+				columns, new int[] { R.id.text1 }, 0);
+		
 		setListAdapter(dataSource);
 
 		// Inflate the layout for this fragment
@@ -157,7 +149,8 @@ public class MoodListFragment extends SherlockListFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		LinearLayout selected = (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+		longSelected = (TextView) selected.getChildAt(MoodRowAdapter.TEXTVIEW_INDEX_IN_LAYOUT);
 		if (longSelected.getText().equals(this.getActivity().getString(R.string.cap_off))
 				|| longSelected.getText().equals(this.getActivity().getString(R.string.cap_on))
 				|| longSelected.getText().equals(this.getActivity().getString(R.string.cap_random))) {
@@ -204,7 +197,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		switch (loaderID) {
 		case MOODS_LOADER:
 			// Returns a new CursorLoader
-			String[] columns = { MoodColumns.MOOD, BaseColumns._ID };
+			String[] columns = {MoodColumns.MOOD, BaseColumns._ID };
 			return new CursorLoader(getActivity(), // Parent activity context
 					DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
 					columns, // Projection to return
@@ -240,7 +233,7 @@ public class MoodListFragment extends SherlockListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-
+		
 		selected = ((TextView) (v));
 		selectedPos = position;
 

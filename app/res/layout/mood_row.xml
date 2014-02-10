@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:longClickable="true"
+    android:focusable="true"
+    android:descendantFocusability="blocksDescendants">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/huemore"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:text="text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</LinearLayout>
