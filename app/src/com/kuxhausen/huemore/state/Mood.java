@@ -1,6 +1,10 @@
 package com.kuxhausen.huemore.state;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Mood implements Cloneable{
 	public Event[] events;
@@ -44,5 +48,30 @@ public class Mood implements Cloneable{
 	public Mood clone(){
 		Gson gson = new Gson();
 		return gson.fromJson(gson.toJson(this), Mood.class);
+	}
+	
+	public int getNumTimeslots(){
+		int result = 0;
+		HashSet<Integer> times = new HashSet<Integer>();
+		for(Event e : events){
+			if(e!=null && e.time!=null && times.add(e.time))
+				result++;
+		}	
+		return result;
+	}
+	public BulbState[][] getEventStatesAsSparseMatrix() {
+		int maxCol = getNumChannels();
+    	int maxRow = getNumTimeslots();
+    	
+    	HashMap<Integer, Integer> timeslotMapping = new HashMap<Integer, Integer>();
+    	BulbState[][] colorGrid = new BulbState[maxRow][maxCol]; 
+    	int curRow = -1;
+    	for(Event e : events){
+    		if(!timeslotMapping.containsKey(e.time))
+    			timeslotMapping.put(e.time, ++curRow);
+    		colorGrid[timeslotMapping.get(e.time)][e.channel] = e.state;
+    	}
+    	
+		return colorGrid;
 	}
 }

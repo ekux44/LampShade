@@ -89,6 +89,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 			// Hold the view objects in an object, that way the don't need to be "re-  finded"
 			viewHolder = new ViewHolder();
 			viewHolder.name = (TextView) moodRowView.findViewById(R.id.text1);
+			viewHolder.preview = (MoodView) moodRowView.findViewById(R.id.moodPreview);
 			moodRowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) moodRowView.getTag();
@@ -96,14 +97,17 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 
 		/** Set data to your Views. */
 		MoodRow item = getList().get(position);
-		viewHolder.name.setText(item.name);
-		
+		if(!viewHolder.name.getText().equals(item.name)){
+			viewHolder.name.setText(item.name);
+			viewHolder.preview.setMood(item.m);
+		}
 		moodRowView.setOnClickListener(new OnClickForwardingListener(moodListFrag, position));
 		return moodRowView;
 	}
 
 	protected static class ViewHolder {
 		protected TextView name;
+		protected MoodView preview;
 	}
 	
 	public class OnClickForwardingListener implements OnClickListener{

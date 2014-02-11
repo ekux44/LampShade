@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.kuxhausen.huemore.editmood.StateCell;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 /**
  * Custom view that shows a pie chart and, optionally, a label.
@@ -22,8 +24,10 @@ public class MoodView extends View {
 	private float maxCol;
 	private float maxRow;
 	private int xStart, yStart, xWidth, yWidth;
-	private float colSpacing, rowSpacing;
+	private float colSpacing = 0, rowSpacing=0;
 	private Mood mood;
+	private Paint boarderPaint;
+    private RectF boarderSize;
 	
     /**
      * Class constructor taking only a context. Use this constructor to create
@@ -65,10 +69,10 @@ public class MoodView extends View {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         // Do nothing. Do not call the superclass method--that would start a layout pass
         // on this view's children. PieChart lays out its children in onSizeChanged().
-    	xStart = l;
-    	yStart = t;
-    	xWidth = r-l;
-    	yWidth = b-t;
+    	xStart = l + this.getPaddingLeft();
+    	yStart = t + this.getPaddingTop();
+    	xWidth = r - xStart - this.getPaddingRight();
+    	yWidth = b - xStart - this.getPaddingBottom();
     }
 
     @Override
@@ -76,15 +80,16 @@ public class MoodView extends View {
         super.onDraw(canvas);
         
         for(Item i : mData){
-        	canvas.drawRoundRect(i.mSize, 20, 20, i.mPaint);
+        	canvas.drawRoundRect(i.mSize, getResources().getDisplayMetrics().density * 0, getResources().getDisplayMetrics().density * 0, i.mPaint);
         }
+        //canvas.drawRoundRect(new RectF(xStart, yStart, xStart+xWidth, yStart+yWidth), 1, 1, boarderPaint);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        xWidth = w;
-        yWidth = h;         
+        xWidth = w - this.getPaddingLeft() - this.getPaddingRight();
+        yWidth = h - this.getPaddingTop() - this.getPaddingBottom();         
         onDataChanged();
     }
 
@@ -93,12 +98,19 @@ public class MoodView extends View {
      */
     private void onDataChanged() {
         // When the data changes, we have to recalculate
+    	
+    	boarderSize.left = xStart;
+    	boarderSize.top = yStart;
+    	boarderSize.right = xStart + xWidth;
+    	boarderSize.bottom = yStart + yWidth;
+    	
     	for(Item i: mData){
-    		i.mSize.left = xStart + (i.c1/maxCol)*xWidth + colSpacing;
-    		i.mSize.top = yStart + (i.r1/maxCol)*yWidth + rowSpacing;
-    		i.mSize.right = xStart + (i.c2/maxCol)*xWidth - colSpacing;
-    		i.mSize.bottom = yStart + (i.r2/maxCol)*yWidth -rowSpacing;
-    	}	
+    		i.mSize.left = (xStart-colSpacing) + (i.c1/maxCol)*(xWidth+colSpacing) + colSpacing;
+    		i.mSize.top = (yStart-rowSpacing) + (i.r1/maxRow)*(yWidth+rowSpacing) + rowSpacing;
+    		i.mSize.right = (xStart-colSpacing) + (i.c2/maxCol)*(xWidth+colSpacing) - colSpacing;
+    		i.mSize.bottom = (yStart-rowSpacing) + (i.r2/maxRow)*(yWidth+rowSpacing) - rowSpacing;
+    	}
+    	this.invalidate();
     }
 
     /**
@@ -106,6 +118,14 @@ public class MoodView extends View {
      * called from both constructors.
      */
     private void init() {
+    	boarderPaint = new Paint(0);
+    	boarderPaint.setAntiAlias(true);
+    	boarderPaint.setStyle(Paint.Style.STROKE);
+    	boarderPaint.setStrokeWidth(1*getResources().getDisplayMetrics().density);
+    	boarderPaint.setColor(0xffffffff);
+        boarderSize = new RectF();
+    	
+    	
         if (this.isInEditMode()) {
             Resources res = getResources();
             mData.add(new Item(res.getColor(R.color.bluegrass), 0,0,1,2));
@@ -117,19 +137,36 @@ public class MoodView extends View {
             
             maxCol = 3;
             maxRow = 3;
-            colSpacing = 30/maxCol;
-            rowSpacing = 30/maxRow;
+            //colSpacing = getResources().getDisplayMetrics().density*6/maxCol;
+            //rowSpacing = getResources().getDisplayMetrics().density*6/maxRow;
             
             onDataChanged();
-        } /*else if(mood!=null && mood.events!=null && mood.events.length>0){
-        	int maxCol = mood.getNumChannels();
-        	int maxRow = mood.getNumTimeslots();
+        } else if(mood!=null && mood.events!=null && mood.events.length>0){
+        	mData.clear();
+        	BulbState[][] bsMat = mood.getEventStatesAsSparseMatrix();
+        	maxRow=bsMat.length;
+        	maxCol=bsMat[0].length;
         	
-        	HashMap<Integer, Integer> timeslotMapping = new HashMap<Integer, Integer>();
-        	int[][] colorGrid = new int[maxRow][maxCol]; 
+        	for(int r = 0; r < maxRow; r++){
+        		for(int c = 0; c < maxCol; c++){
+        			BulbState b = bsMat[r][c];
+        			if(b==null)
+        				continue;
+        			int numRowsSpanned=1;
+        			examine: for(int r2 = r+1; r2<maxRow; r2++){
+        				if(bsMat[r2][c]==null)
+        					numRowsSpanned++;
+        				else
+        					break examine;
+        			}
+        			mData.add(new Item(StateCell.getStateColor(b), r,c,r+numRowsSpanned,c+1));
+        		}
+        	}
         	
+            //colSpacing = getResources().getDisplayMetrics().density*6/maxCol;
+            //rowSpacing = getResources().getDisplayMetrics().density*6/maxRow;
         	onDataChanged();
-        }*/
+        }
     }
 
     /**
@@ -142,16 +179,17 @@ public class MoodView extends View {
         //0 indexed...
         public int c1, r1, c2, r2;
 
-        public Item(int color, int c1, int r1, int c2, int r2){
+        public Item(int color, int r1, int c1, int r2, int c2){
         	this.c1 = c1;
         	this.r1 = r1;
         	this.c2 = c2;
         	this.r2 = r2;
             // Set up the paint for the shadow
             mPaint = new Paint(0);
+            mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setColor(color);
-            mPaint.setMaskFilter(new BlurMaskFilter(12, BlurMaskFilter.Blur.NORMAL));
+            //mPaint.setMaskFilter(new BlurMaskFilter(4 * getResources().getDisplayMetrics().density, BlurMaskFilter.Blur.INNER));
             mSize = new RectF();
         }
         

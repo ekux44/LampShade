@@ -48,12 +48,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			Float[] hueSat = Utils.xyTOhs(hs.xy);
-			float[] hsv = new float[3];
-	    	hsv[0] = (float) (hueSat[0] *360) ;
-	    	hsv[1] = (float) (hueSat[1]);
-	    	hsv[2] = (hs.bri!=null)?hs.bri/255f:1f; //remember relative brightness
-	    	int color = Color.HSVToColor(hsv);
+			int color = getStateColor(hs);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
@@ -64,11 +59,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			float[] hsv = new float[3];
-	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-	    	hsv[1] = (float) (hs.sat / 255.0);
-	    	hsv[2] = 1f;
-	    	int color = Color.HSVToColor(hsv);
+			int color = getStateColor(hs);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
@@ -93,5 +84,28 @@ public class StateCell {
 			frag.registerForContextMenu(rowView);
 		rowView.setTag(position);
 		return rowView;
+	}
+	
+	//TODO add color generation support for color temp, on, off
+	public static int getStateColor(BulbState hs){
+		if(hs==null)
+			return 0;
+		if(hs.xy!=null){
+			Float[] hueSat = Utils.xyTOhs(hs.xy);
+			float[] hsv = new float[3];
+	    	hsv[0] = (float) (hueSat[0] *360) ;
+	    	hsv[1] = (float) (hueSat[1]);
+	    	hsv[2] = (hs.bri!=null)?hs.bri/255f:1f; //remember relative brightness
+	    	return Color.HSVToColor(hsv);
+		}
+		else if(hs.hue!=null && hs.sat!=null){
+			float[] hsv = new float[3];
+	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
+	    	hsv[1] = (float) (hs.sat / 255.0);
+	    	hsv[2] = 1f;
+	    	return Color.HSVToColor(hsv);		
+		} else {
+			return 0;
+		}
 	}
 }
