@@ -67,12 +67,12 @@ public class MoodView extends View {
     
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        // Do nothing. Do not call the superclass method--that would start a layout pass
-        // on this view's children. PieChart lays out its children in onSizeChanged().
+        super.onLayout(changed, l, t, r, b);
     	xStart = l + this.getPaddingLeft();
     	yStart = t + this.getPaddingTop();
     	xWidth = r - xStart - this.getPaddingRight();
     	yWidth = b - xStart - this.getPaddingBottom();
+    	onDataChanged();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MoodView extends View {
         for(Item i : mData){
         	canvas.drawRoundRect(i.mSize, getResources().getDisplayMetrics().density * 0, getResources().getDisplayMetrics().density * 0, i.mPaint);
         }
-        //canvas.drawRoundRect(new RectF(xStart, yStart, xStart+xWidth, yStart+yWidth), 1, 1, boarderPaint);
+        canvas.drawRoundRect(new RectF(xStart, yStart, xStart+xWidth, yStart+yWidth), 1, 1, boarderPaint);
     }
 
     @Override
