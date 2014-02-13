@@ -48,7 +48,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			int color = getStateColor(hs);
+			int color = getStateColor(hs, false);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
@@ -59,7 +59,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			int color = getStateColor(hs);
+			int color = getStateColor(hs, false);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
@@ -87,11 +87,19 @@ public class StateCell {
 	}
 	
 	//TODO add color generation support for color temp, on, off
-	public static int getStateColor(BulbState hs){
+	public static int getStateColor(BulbState hs, boolean sRGB){
 		if(hs==null)
 			return 0;
-		if(hs.xy!=null){
-			Float[] hueSat = Utils.xyTOhs(hs.xy);
+		if(hs.ct!=null && hs.ct!=0){
+			Float[] hueSat = Utils.xyTOhs(Utils.ctTOxy(hs.ct));
+			float[] hsv = new float[3];
+	    	hsv[0] = (float) (hueSat[0] *360) ;
+	    	hsv[1] = (float) (hueSat[1]);
+	    	hsv[2] = (hs.bri!=null)?hs.bri/255f:1f; //remember relative brightness
+	    	return Color.HSVToColor(hsv);
+		}
+		else if(hs.xy!=null){
+			Float[] hueSat = (sRGB) ? Utils.xyTOsRGBhs(hs.xy) : Utils.xyTOhs(hs.xy);
 			float[] hsv = new float[3];
 	    	hsv[0] = (float) (hueSat[0] *360) ;
 	    	hsv[1] = (float) (hueSat[1]);

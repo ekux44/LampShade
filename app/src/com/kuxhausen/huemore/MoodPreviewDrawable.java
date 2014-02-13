@@ -138,7 +138,7 @@ public class MoodPreviewDrawable extends Drawable {
         				else
         					break examine;
         			}
-        			mData.add(new Item(StateCell.getStateColor(b), r,c,r+numRowsSpanned,c+1));
+        			mData.add(new Item(StateCell.getStateColor(b, true), r,c,r+numRowsSpanned,c+1));
         		}
         	}
         	
