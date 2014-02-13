@@ -14,7 +14,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 /**
  * Custom view that shows a pie chart and, optionally, a label.
  */
-public class MoodView extends Drawable {
+public class MoodPreviewDrawable extends Drawable {
    
 	public List<Item> mData = new ArrayList<Item>();
 	private float maxCol;
@@ -29,7 +29,7 @@ public class MoodView extends Drawable {
     
     DisplayMetrics metrics;
     
-    public MoodView (DisplayMetrics mets){
+    public MoodPreviewDrawable (DisplayMetrics mets){
     	metrics = mets;
     	padding = new Rect(0, 0, (int)(8 * metrics.density), 0);
     }

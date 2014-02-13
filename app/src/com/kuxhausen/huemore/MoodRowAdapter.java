@@ -94,7 +94,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 		MoodRow item = getList().get(position);
 		if(!viewHolder.ctv.getText().equals(item.name)){
 			viewHolder.ctv.setText(item.name);
-			MoodView mDraw = new MoodView(context.getResources().getDisplayMetrics());
+			MoodPreviewDrawable mDraw = new MoodPreviewDrawable(context.getResources().getDisplayMetrics());
 			mDraw.setMood(item.m);
 			viewHolder.ctv.setCompoundDrawablesWithIntrinsicBounds(mDraw, null, null, null);
 		}
