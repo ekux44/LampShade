@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
@@ -45,6 +46,8 @@ public class MoodListFragment extends SherlockListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
@@ -53,8 +56,8 @@ public class MoodListFragment extends SherlockListFragment implements
 		getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
 		String[] columns = {MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
-		dataSource = new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null,
-				columns, new int[] { R.id.text1 }, 0);
+		dataSource = new MoodRowAdapter(this, this.getActivity(), layout, null,
+				columns, new int[] { android.R.id.text1 }, 0);
 		
 		setListAdapter(dataSource);
 
@@ -149,8 +152,7 @@ public class MoodListFragment extends SherlockListFragment implements
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		LinearLayout selected = (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		longSelected = (TextView) selected.getChildAt(MoodRowAdapter.TEXTVIEW_INDEX_IN_LAYOUT);
+		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 		if (longSelected.getText().equals(this.getActivity().getString(R.string.cap_off))
 				|| longSelected.getText().equals(this.getActivity().getString(R.string.cap_on))
 				|| longSelected.getText().equals(this.getActivity().getString(R.string.cap_random))) {

@@ -1,14 +1,10 @@
 package com.kuxhausen.huemore;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.*;
-import android.util.AttributeSet;
-import android.view.*;
-
+import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import java.lang.Override;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.kuxhausen.huemore.editmood.StateCell;
@@ -18,7 +14,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 /**
  * Custom view that shows a pie chart and, optionally, a label.
  */
-public class MoodView extends View {
+public class MoodView extends Drawable {
    
 	public List<Item> mData = new ArrayList<Item>();
 	private float maxCol;
@@ -29,68 +25,67 @@ public class MoodView extends View {
 	private Paint boarderPaint;
     private RectF boarderSize;
 	
-    /**
-     * Class constructor taking only a context. Use this constructor to create
-     * {@link MoodView} objects from your own code.
-     *
-     * @param context
-     */
-    public MoodView(Context context) {
-        super(context);
-        this.setBackgroundColor(Color.TRANSPARENT);
-        init();
+    private Rect padding;
+    
+    DisplayMetrics metrics;
+    
+    public MoodView (DisplayMetrics mets){
+    	metrics = mets;
+    	padding = new Rect(0, 0, (int)(8 * metrics.density), 0);
     }
-
-    /**
-     * Class constructor taking a context and an attribute set. This constructor
-     * is used by the layout engine to construct a {@link MoodView} from a set of
-     * XML attributes.
-     *
-     * @param context
-     * @param attrs   An attribute set which can contain attributes from
-     *                {@link com.example.android.customviews.R.styleable.MoodView} as well as attributes inherited
-     *                from {@link android.view.View}.
-     */
-    public MoodView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.setBackgroundColor(Color.TRANSPARENT);
-
-        init();
-    }
-
     
     public void setMood(Mood m){
     	mood = m;
     	init();
     }
     
+    @Override 
+    public boolean getPadding(Rect r){
+    	r.left = padding.left;
+    	r.top = padding.top;
+    	r.right = padding.right;
+    	r.bottom = padding.bottom;
+    	return true;
+    }
     
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-    	xStart = l + this.getPaddingLeft();
-    	yStart = t + this.getPaddingTop();
-    	xWidth = r - xStart - this.getPaddingRight();
-    	yWidth = b - xStart - this.getPaddingBottom();
+	public void setBounds(int l, int t, int r, int b) {
+        super.setBounds(l, t, r, b);
+    	this.getPadding(padding);
+        xStart = l + padding.left;
+    	yStart = t + padding.top;
+    	xWidth = r - xStart - padding.right;
+    	yWidth = b - xStart - padding.bottom;
     	onDataChanged();
     }
-
+    
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        
-        for(Item i : mData){
-        	canvas.drawRoundRect(i.mSize, getResources().getDisplayMetrics().density * 0, getResources().getDisplayMetrics().density * 0, i.mPaint);
-        }
-        canvas.drawRoundRect(new RectF(xStart, yStart, xStart+xWidth, yStart+yWidth), 1, 1, boarderPaint);
+	public void setBounds(Rect rect) {
+        super.setBounds(rect);
+    	this.getPadding(padding);
+        xStart = rect.left + padding.left;
+    	yStart = rect.top + padding.top;
+    	xWidth = rect.right - xStart - padding.right;
+    	yWidth = rect.bottom - xStart - padding.bottom;
+    	onDataChanged();
+    }
+    
+    @Override
+    public int getIntrinsicWidth(){
+    	return (int)(metrics.density * 32) + padding.left + padding.right;
+    }
+    @Override
+    public int getIntrinsicHeight(){
+    	return (int)(metrics.density * 32) + padding.top + padding.bottom;
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        xWidth = w - this.getPaddingLeft() - this.getPaddingRight();
-        yWidth = h - this.getPaddingTop() - this.getPaddingBottom();         
-        onDataChanged();
+	public void draw(Canvas canvas) {
+        
+        for(Item i : mData){
+        	canvas.drawRoundRect(i.mSize, metrics.density * 0, metrics.density * 0, i.mPaint);
+        }
+        //canvas.drawRoundRect(new RectF(xStart, yStart, xStart+xWidth, yStart+yWidth), 1, 1, boarderPaint);
     }
 
     /**
@@ -110,7 +105,7 @@ public class MoodView extends View {
     		i.mSize.right = (xStart-colSpacing) + (i.c2/maxCol)*(xWidth+colSpacing) - colSpacing;
     		i.mSize.bottom = (yStart-rowSpacing) + (i.r2/maxRow)*(yWidth+rowSpacing) - rowSpacing;
     	}
-    	this.invalidate();
+    	this.invalidateSelf();
     }
 
     /**
@@ -121,27 +116,11 @@ public class MoodView extends View {
     	boarderPaint = new Paint(0);
     	boarderPaint.setAntiAlias(true);
     	boarderPaint.setStyle(Paint.Style.STROKE);
-    	boarderPaint.setStrokeWidth(1*getResources().getDisplayMetrics().density);
+    	boarderPaint.setStrokeWidth(1*metrics.density);
     	boarderPaint.setColor(0xffffffff);
         boarderSize = new RectF();
     	
-    	
-        if (this.isInEditMode()) {
-            Resources res = getResources();
-            mData.add(new Item(res.getColor(R.color.bluegrass), 0,0,1,2));
-            mData.add(new Item(res.getColor(R.color.chartreuse), 1,0,2,1));
-            mData.add(new Item(res.getColor(R.color.emerald), 1,1,2,2));
-            mData.add(new Item(res.getColor(R.color.seafoam), 2,0,3,1));
-            mData.add(new Item(res.getColor(R.color.bluegrass), 2,1,3,2));
-            mData.add(new Item(res.getColor(R.color.emerald), 0,2,3,3));
-            
-            maxCol = 3;
-            maxRow = 3;
-            //colSpacing = getResources().getDisplayMetrics().density*6/maxCol;
-            //rowSpacing = getResources().getDisplayMetrics().density*6/maxRow;
-            
-            onDataChanged();
-        } else if(mood!=null && mood.events!=null && mood.events.length>0){
+       if(mood!=null && mood.events!=null && mood.events.length>0){
         	mData.clear();
         	BulbState[][] bsMat = mood.getEventStatesAsSparseMatrix();
         	maxRow=bsMat.length;
@@ -163,8 +142,8 @@ public class MoodView extends View {
         		}
         	}
         	
-            //colSpacing = getResources().getDisplayMetrics().density*6/maxCol;
-            //rowSpacing = getResources().getDisplayMetrics().density*6/maxRow;
+            //colSpacing = metrics.density*6/maxCol;
+            //rowSpacing = metrics*6/maxRow;
         	onDataChanged();
         }
     }
@@ -189,10 +168,28 @@ public class MoodView extends View {
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setColor(color);
-            //mPaint.setMaskFilter(new BlurMaskFilter(4 * getResources().getDisplayMetrics().density, BlurMaskFilter.Blur.INNER));
+            //mPaint.setMaskFilter(new BlurMaskFilter(4 * metrics.density, BlurMaskFilter.Blur.INNER));
             mSize = new RectF();
         }
         
     }
+
+	@Override
+	public int getOpacity() {
+		// TODO Auto-generated method stub
+		return PixelFormat.TRANSLUCENT;
+	}
+
+	@Override
+	public void setAlpha(int alpha) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setColorFilter(ColorFilter cf) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

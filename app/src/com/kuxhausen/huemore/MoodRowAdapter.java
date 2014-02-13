@@ -5,19 +5,15 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
@@ -30,7 +26,6 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 	Gson gson = new Gson();
 	MoodListFragment moodListFrag;
 	
-	public final static int TEXTVIEW_INDEX_IN_LAYOUT = 1;
 
 	private ArrayList<MoodRow> getList() {
 		return list;
@@ -78,18 +73,18 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LinearLayout moodRowView = (LinearLayout) convertView;
+		TextView moodRowView = (TextView) convertView;
 		ViewHolder viewHolder;
 
 		if (moodRowView == null) {
 			// Get a new instance of the row layout view
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-			moodRowView = (LinearLayout) inflater.inflate(R.layout.mood_row, null);
+			int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
+			moodRowView = (TextView) inflater.inflate(layout, null);
 
 			// Hold the view objects in an object, that way the don't need to be "re-  finded"
 			viewHolder = new ViewHolder();
-			viewHolder.name = (TextView) moodRowView.findViewById(R.id.text1);
-			viewHolder.preview = (MoodView) moodRowView.findViewById(R.id.moodPreview);
+			viewHolder.ctv = moodRowView;
 			moodRowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) moodRowView.getTag();
@@ -97,17 +92,18 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 
 		/** Set data to your Views. */
 		MoodRow item = getList().get(position);
-		if(!viewHolder.name.getText().equals(item.name)){
-			viewHolder.name.setText(item.name);
-			viewHolder.preview.setMood(item.m);
+		if(!viewHolder.ctv.getText().equals(item.name)){
+			viewHolder.ctv.setText(item.name);
+			MoodView mDraw = new MoodView(context.getResources().getDisplayMetrics());
+			mDraw.setMood(item.m);
+			viewHolder.ctv.setCompoundDrawablesWithIntrinsicBounds(mDraw, null, null, null);
 		}
 		moodRowView.setOnClickListener(new OnClickForwardingListener(moodListFrag, position));
 		return moodRowView;
 	}
 
 	protected static class ViewHolder {
-		protected TextView name;
-		protected MoodView preview;
+		protected TextView ctv;
 	}
 	
 	public class OnClickForwardingListener implements OnClickListener{
@@ -122,7 +118,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 		
 		@Override
 		public void onClick(View v) {
-			View textView = ((LinearLayout)v).getChildAt(TEXTVIEW_INDEX_IN_LAYOUT);
+			View textView = v;
 			mlf.onListItemClick(mlf.getListView(), textView, position, textView.getId());
 		}
 		
