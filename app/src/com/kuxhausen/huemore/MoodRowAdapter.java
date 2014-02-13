@@ -81,7 +81,8 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 			moodRowView = (TextView) inflater.inflate(layout, null);
-
+			moodRowView.setLongClickable(true);
+			
 			// Hold the view objects in an object, that way the don't need to be "re-  finded"
 			viewHolder = new ViewHolder();
 			viewHolder.ctv = moodRowView;
