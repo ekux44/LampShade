@@ -3,6 +3,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <com.example.android.common.view.SlidingTabLayout
+          android:id="@+id/sliding_tabs"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+    
 	<include android:id="@+id/mood_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"

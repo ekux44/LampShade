@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
@@ -56,6 +57,13 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	public String groupName;
 	public int[] groupValues;
 	
+	/**
+     * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
+     * above, but is designed to give continuous feedback to the user when scrolling.
+     */
+    private SlidingTabLayout mSlidingTabLayout;
+ 
+	
 	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
 		bulbListenerFragment = frag;
 	}
@@ -80,6 +88,12 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		// Set up the ViewPager, attaching the adapter.
 		mViewPager2 = (ViewPager) this.findViewById(R.id.mood_pager);
 		mViewPager2.setAdapter(mMoodManualPagerAdapter);
+		
+		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
+        // it's PagerAdapter set.
+        mSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setViewPager(mViewPager2);
+        mSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
 		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
