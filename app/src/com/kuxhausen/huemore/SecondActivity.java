@@ -61,7 +61,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
      * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
      * above, but is designed to give continuous feedback to the user when scrolling.
      */
-    private SlidingTabLayout mSlidingTabLayout;
+    private SlidingTabLayout mManualMoodSlidingTabLayout;
  
 	
 	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
@@ -86,14 +86,14 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
 		parrentActivity = this;
 		// Set up the ViewPager, attaching the adapter.
-		mViewPager2 = (ViewPager) this.findViewById(R.id.mood_pager);
+		mViewPager2 = (ViewPager) this.findViewById(R.id.manual_mood_pager);
 		mViewPager2.setAdapter(mMoodManualPagerAdapter);
 		
 		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
-        mSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setViewPager(mViewPager2);
-        mSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
+        mManualMoodSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
+        mManualMoodSlidingTabLayout.setViewPager(mViewPager2);
+        mManualMoodSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
 		
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);

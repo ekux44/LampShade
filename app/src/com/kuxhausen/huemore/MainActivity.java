@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
@@ -73,7 +74,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
 		parrentActivity = this;
 		// Set up the ViewPager, attaching the adapter.
-		mViewPager1 = (ViewPager) this.findViewById(R.id.group_pager);
+		mViewPager1 = (ViewPager) this.findViewById(R.id.bulb_group_pager);
 		mViewPager1.setAdapter(mGroupBulbPagerAdapter);
 		
 		SharedPreferences settings = PreferenceManager
@@ -86,6 +87,13 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				mViewPager1.setCurrentItem(BULB_LOCATION);
 		}
 		
+		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
+        // it's PagerAdapter set.
+        mBulbGroupSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.bulb_group_sliding_tabs);
+        mBulbGroupSlidingTabLayout.setViewPager(mViewPager1);
+        mBulbGroupSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.green_color));
+		
+		
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
@@ -93,12 +101,20 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
 			parrentActivity = this;
 			// Set up the ViewPager, attaching the adapter.
-			mViewPager2 = (ViewPager) this.findViewById(R.id.mood_pager);
+			mViewPager2 = (ViewPager) this.findViewById(R.id.manual_mood_pager);
 			mViewPager2.setAdapter(mMoodManualPagerAdapter);
 			
 			if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
 				mViewPager2.setCurrentItem(MOOD_LOCATION);
 			}
+			
+			// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
+	        // it's PagerAdapter set.
+	        mManualMoodSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
+	        mManualMoodSlidingTabLayout.setViewPager(mViewPager2);
+	        mManualMoodSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
+			
+			
 			brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
 			brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -178,6 +194,12 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 
 	ViewPager mViewPager1;
 	NetworkManagedSherlockFragmentActivity parrentActivity;
+	
+	/**
+     * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
+     * above, but is designed to give continuous feedback to the user when scrolling.
+     */
+    private SlidingTabLayout mBulbGroupSlidingTabLayout;
 		
 	public static class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
@@ -236,6 +258,12 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	private static ColorWheelFragment colorWheelFragment;
 
 	ViewPager mViewPager2;
+	
+	/**
+     * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
+     * above, but is designed to give continuous feedback to the user when scrolling.
+     */
+    private SlidingTabLayout mManualMoodSlidingTabLayout;
 	
 	public static class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
