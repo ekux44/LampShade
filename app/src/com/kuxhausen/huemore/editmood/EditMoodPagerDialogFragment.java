@@ -75,7 +75,7 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 	static Gson gson = new Gson();
 	private CheckBox loop;
 	
-	public final static int WHEEL_PAGE = 0, TIMED_PAGE=1, DAILY_PAGE =2;
+	public final static int TIMED_PAGE=0, DAILY_PAGE = 1;
 
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
@@ -147,10 +147,7 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 	private static int calculateRoute(Mood m){
 		if(m==null)
 			return -1;
-		if(!m.usesTiming && m.events.length == 1 && m.events[0].state.ct == null) {
-			// show simple mood page
-			return WHEEL_PAGE;
-		}else if (m.timeAddressingRepeatPolicy==true){
+		if (m.timeAddressingRepeatPolicy==true){
 			//show daily page
 			return DAILY_PAGE;
 		}else
@@ -201,18 +198,6 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 			if (newMoodFragments[i] != null)
 				return (Fragment) newMoodFragments[i];
 			switch (i) {
-			case WHEEL_PAGE:
-				ColorWheelFragment nchf = new ColorWheelFragment();
-				nchf.hideColorLoop();
-				Bundle args = new Bundle();
-				args.putBoolean(InternalArguments.SHOW_EDIT_TEXT, true);
-				if (calculateRoute(priorMood)==WHEEL_PAGE) {
-					args.putString(InternalArguments.PREVIOUS_STATE,
-							gson.toJson(priorMood.events[0].state));
-				}
-				nchf.setArguments(args);
-				newMoodFragments[i] = nchf;
-				return (Fragment) newMoodFragments[i];
 			case TIMED_PAGE:
 				EditAdvancedMoodFragment eamf = new EditAdvancedMoodFragment();
 				eamf.setTimedMode(frag);
@@ -240,14 +225,12 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
-			case WHEEL_PAGE:
-				return frag.getString(R.string.cap_simple_mood);
 			case TIMED_PAGE:
 				return frag.getString(R.string.cap_timed_mood);
 			case DAILY_PAGE:

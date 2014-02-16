@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -22,7 +21,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.SaturationBar;
 
-public class ColorWheelFragment extends SherlockFragment implements OnCreateMoodListener,
+public class ColorWheelFragment extends SherlockFragment implements
 		OnCheckedChangeListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
 
 	public interface OnColorChangedListener {
@@ -126,19 +125,6 @@ public class ColorWheelFragment extends SherlockFragment implements OnCreateMood
 			Mood m = Utils.generateSimpleMood(hs);
 			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(m, null);
 		}
-	}
-
-	@Override
-	public void onCreateMood(String groupname) {
-		this.onColorChanged(this.picker.getColor());
-
-		ContentValues mNewValues = new ContentValues();
-
-		mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, groupname);
-		mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(Utils.generateSimpleMood(hs)));
-		
-		getActivity().getContentResolver().insert(
-				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues );
 	}
 
 	@Override
