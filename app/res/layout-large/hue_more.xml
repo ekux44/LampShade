@@ -13,9 +13,9 @@
 	</LinearLayout>
 	
 	<View
-		android:layout_width="2dip"
+		android:layout_width="4dip"
 		android:layout_height="match_parent"
-		android:background="#33B5E5" />
+		android:background="#303030" />
 
 	<include
 		android:layout_width="0dp"

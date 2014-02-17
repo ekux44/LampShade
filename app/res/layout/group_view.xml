@@ -5,9 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/horizontal_divider_line_green"/>
-
-    <ListView
+	<ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="0dp"

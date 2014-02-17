@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <include layout="@layout/horizontal_divider_line_red"/>
-
         <com.larswerkman.colorpicker.ColorPicker
             android:id="@+id/picker"
             android:layout_width="match_parent"

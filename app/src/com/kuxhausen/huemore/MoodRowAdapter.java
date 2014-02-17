@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -79,8 +80,15 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 		if (moodRowView == null) {
 			// Get a new instance of the row layout view
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			
+			// create ContextThemeWrapper from the original Activity Context with the custom theme
+		    final Context contextThemeWrapper = new ContextThemeWrapper(context, R.style.red);
+		    // clone the inflater using the ContextThemeWrapper
+		    LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+			
+			
 			int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
-			moodRowView = (TextView) inflater.inflate(layout, null);
+			moodRowView = (TextView) localInflater.inflate(layout, null);
 			moodRowView.setLongClickable(true);
 			
 			// Hold the view objects in an object, that way the don't need to be "re-  finded"
