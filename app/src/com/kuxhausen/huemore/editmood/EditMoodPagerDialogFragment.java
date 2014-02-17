@@ -139,6 +139,7 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 			routeMood(priorMood);
 				
 		} else {
+			priorName = null;
 			priorMood = null;
 		}
 		loop.setOnCheckedChangeListener(this);
