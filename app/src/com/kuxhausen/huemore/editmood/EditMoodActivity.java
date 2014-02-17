@@ -49,8 +49,7 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements
-		OnClickListener {
+public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -97,7 +96,12 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		
-		nameEditText = (EditText) this.findViewById(R.id.moodNameEditText);
+		//Inflate the custom view
+		nameEditText = (EditText) LayoutInflater.from(this).inflate(R.layout.mood_name_edit_text, null);
+		getSupportActionBar().setCustomView(nameEditText);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+        
 		loop = (CheckBox)this.findViewById(R.id.loopCheckBox);
 		loop.setVisibility(View.GONE);
 		
@@ -124,13 +128,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			}
 
 		});
-		this.getSupportActionBar().setTitle(
-				this.getString(R.string.actionmenu_new_mood));
-
-		Button cancelButton = (Button) this.findViewById(R.id.cancel);
-		cancelButton.setOnClickListener(this);
-		Button okayButton = (Button) this.findViewById(R.id.okay);
-		okayButton.setOnClickListener(this);
+		
 		newMoodFragments = new OnCreateMoodListener[mEditMoodPagerAdapter.getCount()];
 
 		Bundle args = this.getIntent().getExtras();
@@ -238,38 +236,6 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			return "";
 		}
 	}
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch (v.getId()) {
-		case R.id.okay:
-			if (priorName != null) {
-				// delete old mood
-				String moodSelect = MoodColumns.MOOD + "=?";
-				String[] moodArg = { priorName };
-				this.getContentResolver().delete(
-						DatabaseDefinitions.MoodColumns.MOODS_URI,
-						moodSelect, moodArg);
-			}
-			String moodName=nameEditText.getText().toString();
-			if(moodName==null || moodName.length()<1){
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-				int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, 0);
-				Editor edit = settings.edit();
-				edit.putInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, unnamedNumber);
-				edit.commit();
-				moodName = this.getResources().getString(R.string.unnamed_mood)+" "+unnamedNumber;
-			}
-			newMoodFragments[currentPage].onCreateMood(moodName);
-			this.onBackPressed();
-			break;
-		case R.id.cancel:
-			this.onBackPressed();
-			break;
-		}
-	}
-	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -287,6 +253,30 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 				return true;
 			case R.id.action_play:
 				((OnCreateMoodListener)mEditMoodPagerAdapter.getItem(currentPage)).preview();
+				break;
+			case R.id.action_help:
+				//TODO
+				break;
+			case R.id.action_save:
+				if (priorName != null) {
+					// delete old mood
+					String moodSelect = MoodColumns.MOOD + "=?";
+					String[] moodArg = { priorName };
+					this.getContentResolver().delete(
+							DatabaseDefinitions.MoodColumns.MOODS_URI,
+							moodSelect, moodArg);
+				}
+				String moodName=nameEditText.getText().toString();
+				if(moodName==null || moodName.length()<1){
+					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+					int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, 0);
+					Editor edit = settings.edit();
+					edit.putInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, unnamedNumber);
+					edit.commit();
+					moodName = this.getResources().getString(R.string.unnamed_mood)+" "+unnamedNumber;
+				}
+				newMoodFragments[currentPage].onCreateMood(moodName);
+				break;
 		}
 		return false;
 	}

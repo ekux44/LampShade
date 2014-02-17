@@ -46,7 +46,10 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/blue" >
+            android:theme="@style/blue"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <meta-data android:name="android.support.UI_OPTIONS"
+                   android:value="splitActionBarWhenNarrow" />
         </activity>
 
         <provider
