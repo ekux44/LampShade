@@ -41,7 +41,7 @@
             android:theme="@style/red">
         </activity>
         <activity
-            android:name="com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment"
+            android:name="com.kuxhausen.huemore.editmood.EditMoodActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:noHistory="true"

@@ -25,7 +25,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment;
+import com.kuxhausen.huemore.editmood.EditMoodActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -117,7 +117,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		switch (item.getItemId()) {
 
 		case R.id.action_add_mood:
-			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
+			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
 			this.getActivity().startActivity(i);
 			return true;
 		default:
@@ -176,7 +176,7 @@ public class MoodListFragment extends SherlockListFragment implements
 					moodArg);
 			return true;
 		case R.id.contextmoodmenu_edit:
-			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
+			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
 			i.putExtra(InternalArguments.MOOD_NAME, (String) (longSelected).getText());
 			this.getActivity().startActivity(i);
 			return true;

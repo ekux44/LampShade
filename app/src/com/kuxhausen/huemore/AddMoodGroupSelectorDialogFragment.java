@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
-import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment;
+import com.kuxhausen.huemore.editmood.EditMoodActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class AddMoodGroupSelectorDialogFragment extends DialogFragment
@@ -46,7 +46,7 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment
 			dismiss();
 			break;
 		case R.id.newMoodButton:
-			Intent i = new Intent(this.getActivity(), EditMoodPagerDialogFragment.class);
+			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
 			this.getActivity().startActivity(i);
 			
 			dismiss();

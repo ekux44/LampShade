@@ -46,7 +46,7 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentActivity implements
+public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements
 		OnClickListener, OnCheckedChangeListener {
 
 	/**
@@ -187,9 +187,9 @@ public class EditMoodPagerDialogFragment extends NetworkManagedSherlockFragmentA
 	 */
 	public static class EditMoodPagerAdapter extends FragmentPagerAdapter {
 
-		EditMoodPagerDialogFragment frag;
+		EditMoodActivity frag;
 
-		public EditMoodPagerAdapter(EditMoodPagerDialogFragment editMoodPagerDialogFragment) {
+		public EditMoodPagerAdapter(EditMoodActivity editMoodPagerDialogFragment) {
 			super(editMoodPagerDialogFragment.getSupportFragmentManager());
 			frag = editMoodPagerDialogFragment;
 		}

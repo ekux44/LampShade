@@ -7,7 +7,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditMoodPagerDialogFragment.OnCreateMoodListener;
+import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
@@ -63,14 +63,14 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private int pageType;
 	private boolean dailyMode;
 	
-	public EditMoodPagerDialogFragment pager;
+	public EditMoodActivity pager;
 	
-	public void setTimedMode(EditMoodPagerDialogFragment p){
-		pageType = EditMoodPagerDialogFragment.TIMED_PAGE;
+	public void setTimedMode(EditMoodActivity p){
+		pageType = EditMoodActivity.TIMED_PAGE;
 		pager = p;
 	}
-	public void setDailyMode(EditMoodPagerDialogFragment p){
-		pageType = EditMoodPagerDialogFragment.DAILY_PAGE;
+	public void setDailyMode(EditMoodActivity p){
+		pageType = EditMoodActivity.DAILY_PAGE;
 		pager = p;
 		dailyMode = true;
 	}
@@ -135,7 +135,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		((NetworkManagedSherlockFragmentActivity)this.getActivity()).stopMood();
 	}
 	void preview(){
-		if(pageType == EditMoodPagerDialogFragment.currentPage && grid!=null)
+		if(pageType == EditMoodActivity.currentPage && grid!=null)
 			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), pager.getName());
 		
 	}
@@ -158,7 +158,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		time = -1;
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
-				if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE)
+				if(pageType == EditMoodActivity.DAILY_PAGE)
 					timeslotDuration.get(row+1).setDuration(e.time);
 				else if(time!=-1)
 					timeslotDuration.get(row).setDuration(e.time-time);
@@ -176,7 +176,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		Mood m = new Mood();
 		m.usesTiming = true; //TODO not always the case...
 		m.setNumChannels(gridCols());
-		if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE)
+		if(pageType == EditMoodActivity.DAILY_PAGE)
 			m.timeAddressingRepeatPolicy=true;
 		else
 			m.timeAddressingRepeatPolicy = false;
@@ -206,7 +206,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		return m;
 	}
 	private int getTime(int row){
-		if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE){
+		if(pageType == EditMoodActivity.DAILY_PAGE){
 			if(row<timeslotDuration.size())
 				return timeslotDuration.get(row).getDuration();
 			else
@@ -309,7 +309,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 					showChanM.events = eRay;
 					showChanM.loopIterationTimeLength = 15*showChanM.getNumChannels();
 					
-					if(pageType == EditMoodPagerDialogFragment.currentPage && grid!=null)
+					if(pageType == EditMoodActivity.currentPage && grid!=null)
 						((NetworkManagedSherlockFragmentActivity)pager).startMood(showChanM, null);
 				}
 				
@@ -323,7 +323,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
 			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
-			if(pageType==EditMoodPagerDialogFragment.DAILY_PAGE)
+			if(pageType==EditMoodActivity.DAILY_PAGE)
 				((TextView)v.findViewById(R.id.textLabel)).setText(R.string.daily_start_time);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
@@ -486,7 +486,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			
 			
 			TimeslotDuration td;
-			if(pageType == EditMoodPagerDialogFragment.DAILY_PAGE){
+			if(pageType == EditMoodActivity.DAILY_PAGE){
 				td = new TimeOfDayTimeslot(this, getSpinnerId(), gridRows()-1);
 			}
 			else{
