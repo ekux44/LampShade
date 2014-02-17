@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,6 +25,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
@@ -47,7 +50,7 @@ import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements
-		OnClickListener, OnCheckedChangeListener {
+		OnClickListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -80,6 +83,8 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
 		public void onCreateMood(String groupname);
+		
+		public void preview();
 
 	}
 
@@ -142,7 +147,6 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			priorName = null;
 			priorMood = null;
 		}
-		loop.setOnCheckedChangeListener(this);
 	}
 	
 	private static int calculateRoute(Mood m){
@@ -173,12 +177,6 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 	public void setChecked(boolean check){
 		if(loop!=null)
 			loop.setChecked(check);
-	}
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if(currentPage==TIMED_PAGE)
-			((EditAdvancedMoodFragment) mEditMoodPagerAdapter.getItem(currentPage)).preview();
 	}
 	
 	/**
@@ -272,13 +270,23 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		}
 	}
 	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.action_edit_mood, menu);
+		return true;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			this.startActivity(new Intent(this,MainActivity.class));
-			return true;
+			case android.R.id.home:
+				this.startActivity(new Intent(this,MainActivity.class));
+				return true;
+			case R.id.action_play:
+				((OnCreateMoodListener)mEditMoodPagerAdapter.getItem(currentPage)).preview();
 		}
 		return false;
 	}

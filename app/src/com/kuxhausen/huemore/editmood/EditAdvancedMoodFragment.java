@@ -134,7 +134,8 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	private void stopPreview(){
 		((NetworkManagedSherlockFragmentActivity)this.getActivity()).stopMood();
 	}
-	void preview(){
+	@Override
+	public void preview(){
 		if(pageType == EditMoodActivity.currentPage && grid!=null)
 			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), pager.getName());
 		
@@ -358,7 +359,6 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 			grid.addView(rowView, vg);
 		}
 		grid.invalidate();
-		preview();
 	}
 
 	

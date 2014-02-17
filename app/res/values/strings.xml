@@ -112,6 +112,8 @@
 	<string name="port_forwarding_instructions">To control your Hue lights over the internet, configure your wifi router settings to forward a port (default is port 80) to the Hue hub. For help, visit the LampShade.io community on Google+ or Facebook</string>
 	<string name="port_forwarding_ip_prompt">Router\'s internet IP address</string>
 	<string name="port_forwarding_port">Port:</string>
+	<string name="action_play">Preview Mood</string>
+	<string name="action_help">Help</string>
 	
 	<string-array name="update_features">
         <item>Introducing \'Daily\' moods, a new type of mood that can show different colors based on the time of day</item>
