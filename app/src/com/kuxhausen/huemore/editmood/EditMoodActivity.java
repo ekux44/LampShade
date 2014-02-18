@@ -92,7 +92,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.mood_dialog_pager);
+		setContentView(R.layout.edit_mood_activity);
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		

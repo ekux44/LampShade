@@ -29,7 +29,7 @@ public class UnlocksDialogFragment extends DialogFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.unlocks, container, false);
+		View myView = inflater.inflate(R.layout.unlocks_fragment, container, false);
 		ma = (MainActivity) this.getActivity();
 		this.getDialog().setTitle(R.string.action_unlocks);
 

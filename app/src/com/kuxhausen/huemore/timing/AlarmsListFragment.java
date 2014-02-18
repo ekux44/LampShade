@@ -49,7 +49,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 
 		setListAdapter(dataSource);
 
-		View myView = inflater.inflate(R.layout.alarm_view, null);
+		View myView = inflater.inflate(R.layout.alarms_list_fragment, null);
 
 		setHasOptionsMenu(true);
 

@@ -62,7 +62,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		setListAdapter(dataSource);
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.mood_view, container, false);
+		View myView = inflater.inflate(R.layout.moods_list_fragment, container, false);
 
 		setHasOptionsMenu(true);
 		getSherlockActivity().supportInvalidateOptionsMenu();

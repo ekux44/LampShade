@@ -52,7 +52,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		View groupDialogView = inflater.inflate(R.layout.edit_hue_color, null);
+		View groupDialogView = inflater.inflate(R.layout.colorwheel_mood_fragment, null);
 
 		picker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
 		saturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);

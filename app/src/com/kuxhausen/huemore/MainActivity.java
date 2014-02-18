@@ -68,7 +68,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.hue_more);
+		setContentView(R.layout.main_activity);
 		me = this;
 		
 		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);

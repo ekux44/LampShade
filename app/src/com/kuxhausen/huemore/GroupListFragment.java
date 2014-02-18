@@ -64,7 +64,7 @@ public class GroupListFragment extends SherlockListFragment implements
 		setListAdapter(dataSource);
 
 		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.group_view, container, false);
+		View myView = inflater.inflate(R.layout.groups_list_fragment, container, false);
 
 		setHasOptionsMenu(true);
 		return myView;

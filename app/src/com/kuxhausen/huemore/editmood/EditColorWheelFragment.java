@@ -28,7 +28,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		View myView = inflater.inflate(R.layout.edit_hue_state, null);
+		View myView = inflater.inflate(R.layout.colorwheel_state_fragment, null);
 
 		picker = (ColorPicker) myView.findViewById(R.id.picker);
 		saturationBar = (SaturationBar) myView.findViewById(R.id.saturationbar);

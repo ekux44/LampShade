@@ -76,7 +76,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.secondary_page);
+		setContentView(R.layout.secondary_activity);
 		groupValues = this.getIntent().getExtras().getIntArray(InternalArguments.GROUP_VALUES);
 		groupName = this.getIntent().getExtras().getString(InternalArguments.MOOD_NAME);
 		if(groupName!=null)

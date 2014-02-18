@@ -37,7 +37,7 @@ public class EditColorTempFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		View groupDialogView = inflater.inflate(R.layout.edit_temp_color, null);
+		View groupDialogView = inflater.inflate(R.layout.colortemp_state_fragment, null);
 
 		seekBar = (SeekBar) groupDialogView.findViewById(R.id.temperatureBar);
 		
