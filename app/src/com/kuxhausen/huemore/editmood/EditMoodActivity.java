@@ -258,6 +258,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 				return true;
 			case R.id.action_help:
 				Intent i = new Intent(this, HelpActivity.class);
+				i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_editingmoods));
 				this.startActivity(i);
 				return true;
 			case R.id.action_save:

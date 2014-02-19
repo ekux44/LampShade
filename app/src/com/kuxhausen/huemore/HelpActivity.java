@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 public class HelpActivity extends SherlockActivity implements ActionBar.OnNavigationListener  {
 
 	private TextView mSelected;
-    private String[] mLocations;
+    private String[] mPages, mTitles;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,8 @@ public class HelpActivity extends SherlockActivity implements ActionBar.OnNaviga
         setContentView(R.layout.help_fragment);
         mSelected = (TextView)findViewById(R.id.helpText);
 
-        mLocations = getResources().getStringArray(R.array.help_page_content);
+        mTitles = getResources().getStringArray(R.array.help_page_titles);
+        mPages = getResources().getStringArray(R.array.help_page_content);
 
         Context context = getSupportActionBar().getThemedContext();
         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.help_page_titles, R.layout.sherlock_spinner_item);
@@ -32,11 +34,20 @@ public class HelpActivity extends SherlockActivity implements ActionBar.OnNaviga
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setTitle(R.string.action_help);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        Bundle args = this.getIntent().getExtras();
+		if (args != null && args.containsKey(InternalArguments.HELP_PAGE)) {
+			String desiredPageTitle = args.getString(InternalArguments.HELP_PAGE);
+			for(int position = 0; position<mTitles.length; position++){
+				if(desiredPageTitle.equals(mTitles[position]))
+					getSupportActionBar().setSelectedNavigationItem(position);
+			}
+		}
     }
 
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        mSelected.setText(mLocations[itemPosition]);
+        mSelected.setText(mPages[itemPosition]);
         return true;
     }
     @Override

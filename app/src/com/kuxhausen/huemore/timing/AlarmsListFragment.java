@@ -18,6 +18,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.HelpActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
@@ -76,6 +77,11 @@ public class AlarmsListFragment extends SherlockListFragment implements
 			nadf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			nadf.onLoadLoaderManager(null);
+			return true;
+		case R.id.action_help:
+			Intent i = new Intent(this.getActivity(), HelpActivity.class);
+			i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_alarms));
+			this.startActivity(i);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
