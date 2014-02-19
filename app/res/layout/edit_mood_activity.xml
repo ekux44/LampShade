@@ -3,20 +3,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-	<LinearLayout
-	    android:id="@+id/advancedLinearLayout"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:padding="8dp" >
-		
-	    <CheckBox
+	<CheckBox
         	android:id="@+id/loopCheckBox"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
        		android:text="@string/infinite_loop" />
-	</LinearLayout>
-    
+	
     <include layout="@layout/horizontal_divider_line_blue"/>
     
     <include layout="@layout/pager"/>

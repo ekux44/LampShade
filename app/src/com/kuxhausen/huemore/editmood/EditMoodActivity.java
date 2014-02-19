@@ -105,7 +105,6 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
         
 		loop = (CheckBox)this.findViewById(R.id.loopCheckBox);
-		loop.setVisibility(View.GONE);
 		
 		mEditMoodPagerAdapter = new EditMoodPagerAdapter(this);
 
@@ -122,7 +121,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 					if(currentPage == TIMED_PAGE){
 						loop.setVisibility(View.VISIBLE);
 					} else {
-						loop.setVisibility(View.GONE);
+						loop.setVisibility(View.INVISIBLE);
 					}
 						
 				}
