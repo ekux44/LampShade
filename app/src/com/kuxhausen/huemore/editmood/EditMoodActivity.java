@@ -32,9 +32,11 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.BulbListFragment;
 import com.kuxhausen.huemore.ColorWheelFragment;
 import com.kuxhausen.huemore.GroupListFragment;
+import com.kuxhausen.huemore.HelpActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.SettingsDialogFragment;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
 import com.kuxhausen.huemore.R.string;
@@ -253,10 +255,11 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 				return true;
 			case R.id.action_play:
 				((OnCreateMoodListener)mEditMoodPagerAdapter.getItem(currentPage)).preview();
-				break;
+				return true;
 			case R.id.action_help:
-				//TODO
-				break;
+				Intent i = new Intent(this, HelpActivity.class);
+				this.startActivity(i);
+				return true;
 			case R.id.action_save:
 				if (priorName != null) {
 					// delete old mood
@@ -276,7 +279,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 					moodName = this.getResources().getString(R.string.unnamed_mood)+" "+unnamedNumber;
 				}
 				newMoodFragments[currentPage].onCreateMood(moodName);
-				break;
+				return true;
 		}
 		return false;
 	}

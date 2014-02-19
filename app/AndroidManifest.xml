@@ -44,7 +44,6 @@
             android:name="com.kuxhausen.huemore.editmood.EditMoodActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/blue"
             android:uiOptions="splitActionBarWhenNarrow" >
@@ -52,6 +51,13 @@
                    android:value="splitActionBarWhenNarrow" />
         </activity>
 
+        <activity
+            android:name="com.kuxhausen.huemore.HelpActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/blue" >
+        </activity>
+        
         <provider
             android:name="com.kuxhausen.huemore.persistence.HueMoreProvider"
             android:authorities="com.kuxhausen.provider.huemore.database"
