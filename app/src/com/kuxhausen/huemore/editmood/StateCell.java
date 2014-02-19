@@ -48,7 +48,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			int color = getStateColor(hs, false);
+			int color = getStateColor(hs, true);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
@@ -59,7 +59,7 @@ public class StateCell {
 
 			ImageView state_color = (ImageView) rowView
 					.findViewById(R.id.stateColorView);
-			int color = getStateColor(hs, false);
+			int color = getStateColor(hs, true);
 			ColorDrawable cd = new ColorDrawable(color);
 			cd.setAlpha(255);
 			if((color%0xff000000)!=0)
