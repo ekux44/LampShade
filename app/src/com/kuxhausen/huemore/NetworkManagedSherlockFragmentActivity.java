@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -26,16 +27,51 @@ public class NetworkManagedSherlockFragmentActivity extends
     
 	private String moodName;
 	private String groupName;
+	private int[] groupValues;
 	
-	private int[] bulbsCache;
 	private Integer brightnessCache;
 	
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState); // Always call the superclass first
+	    
+	    if(this.getIntent().getExtras()!=null){
+	    	String potentialGroupName = this.getIntent().getExtras().getString(InternalArguments.GROUP_NAME);
+	    	int[] potentialGroupVals = this.getIntent().getExtras().getIntArray(InternalArguments.GROUP_VALUES);
+	    	
+	    	if(potentialGroupVals!=null)
+	    		setGroup(potentialGroupVals, potentialGroupName);
+	    	
+	    }
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	    // Save the user's current game state
+	    savedInstanceState.putString(InternalArguments.GROUP_NAME, groupName);
+	    savedInstanceState.putIntArray(InternalArguments.GROUP_VALUES, groupValues);
+	    
+    	// Always call the superclass so it can save the view hierarchy state
+	    super.onSaveInstanceState(savedInstanceState);
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	    // Always call the superclass so it can restore the view hierarchy
+	    super.onRestoreInstanceState(savedInstanceState);
+	    
+	    // Restore state members from saved instance
+	    if(savedInstanceState.getIntArray(InternalArguments.GROUP_VALUES)!=null){
+	    	setGroup(savedInstanceState.getIntArray(InternalArguments.GROUP_VALUES),savedInstanceState.getString(InternalArguments.GROUP_NAME));
+	    }
+	}
+	
 	public void setGroup(int[] bulbs, String optionalName){
+		groupValues = bulbs;
 		if(mBound)
 			mService.onGroupSelected(bulbs, null);
-		else
-			bulbsCache = bulbs;
-		
+			
 		groupName = optionalName;
 	}
 	public void setBrightness(int b){
@@ -65,6 +101,9 @@ public class NetworkManagedSherlockFragmentActivity extends
 		if(groupName!=null)
 			return groupName;
 		return "";
+	}
+	public int[] getCurentGroupValues(){
+		return groupValues;
 	}
 	
 	
@@ -149,9 +188,8 @@ public class NetworkManagedSherlockFragmentActivity extends
             }
             serviceListeners.clear();
             
-            if(bulbsCache!=null){
-    			mService.onGroupSelected(bulbsCache, null);
-    			bulbsCache=null;
+            if(groupValues!=null){
+    			mService.onGroupSelected(groupValues, null);
             }
             if(brightnessCache!=null){
             	mService.setBrightness(brightnessCache);

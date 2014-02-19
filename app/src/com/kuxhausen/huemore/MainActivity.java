@@ -179,7 +179,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			// only load the moods page if the group has been sent to the service
 			Intent i = new Intent(this, SecondActivity.class);
 			i.putExtra(InternalArguments.MOOD_NAME, optionalName);
-			i.putExtra(InternalArguments.GROUP_VALUES, bulbs);
+			i.putExtra(InternalArguments.GROUP_NAME, (me).getCurentGroupName());
+			i.putExtra(InternalArguments.GROUP_VALUES, (me).getCurentGroupValues());
 			this.startActivity(i);
 		 }
 	}
@@ -421,6 +422,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 						Toast.LENGTH_SHORT).show();
 			} else {
 				Intent i = new Intent(this, NfcWriterActivity.class);
+				i.putExtra(InternalArguments.GROUP_NAME, (me).getCurentGroupName());
+				i.putExtra(InternalArguments.GROUP_VALUES, (me).getCurentGroupValues());
 				this.startActivity(i);
 			}
 			return true;

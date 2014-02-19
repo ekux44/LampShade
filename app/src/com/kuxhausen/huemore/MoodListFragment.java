@@ -118,6 +118,8 @@ public class MoodListFragment extends SherlockListFragment implements
 
 		case R.id.action_add_mood:
 			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
+			i.putExtra(InternalArguments.GROUP_NAME, ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getCurentGroupName());
+			i.putExtra(InternalArguments.GROUP_VALUES, ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getCurentGroupValues());
 			this.getActivity().startActivity(i);
 			return true;
 		default:
@@ -178,6 +180,8 @@ public class MoodListFragment extends SherlockListFragment implements
 		case R.id.contextmoodmenu_edit:
 			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
 			i.putExtra(InternalArguments.MOOD_NAME, (String) (longSelected).getText());
+			i.putExtra(InternalArguments.GROUP_NAME, ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getCurentGroupName());
+			i.putExtra(InternalArguments.GROUP_VALUES, ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getCurentGroupValues());
 			this.getActivity().startActivity(i);
 			return true;
 		default:

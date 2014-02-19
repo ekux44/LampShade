@@ -54,9 +54,6 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	Inventory lastQuerriedInventory;
 	public OnBulbListReturnedListener bulbListenerFragment;
 	
-	public String groupName;
-	public int[] groupValues;
-	
 	/**
      * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
      * above, but is designed to give continuous feedback to the user when scrolling.
@@ -77,10 +74,8 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.secondary_activity);
-		groupValues = this.getIntent().getExtras().getIntArray(InternalArguments.GROUP_VALUES);
-		groupName = this.getIntent().getExtras().getString(InternalArguments.MOOD_NAME);
-		if(groupName!=null)
-			this.getSupportActionBar().setTitle(groupName);
+		if(this.getCurentGroupName()!=null && this.getCurentGroupName().length()>0)
+			this.getSupportActionBar().setTitle(this.getCurentGroupName());
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
@@ -125,14 +120,6 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		});
 
 		
-	}
-	
-	@Override
-	public void onStart(){
-		super.onStart();
-		if(groupValues!=null){
-			this.setGroup(groupValues, groupName);
-		}
 	}
 
 	SeekBar brightnessBar;
