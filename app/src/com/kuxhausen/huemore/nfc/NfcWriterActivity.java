@@ -20,8 +20,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.HelpActivity;
+import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.SerializedEditorActivity;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class NfcWriterActivity extends SerializedEditorActivity implements
 		OnClickListener {
@@ -51,6 +57,29 @@ public class NfcWriterActivity extends SerializedEditorActivity implements
 		writeTagFilters = new IntentFilter[] { tagDetected };
 
 		setTitle(R.string.nfc);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.action_write_nfc, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.startActivity(new Intent(this,MainActivity.class));
+				return true;
+			case R.id.action_help:
+				Intent i = new Intent(this, HelpActivity.class);
+				i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_nfc));
+				this.startActivity(i);
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

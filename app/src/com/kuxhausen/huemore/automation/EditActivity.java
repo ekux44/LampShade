@@ -10,9 +10,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.HelpActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.SerializedEditorActivity;
+import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 
@@ -86,6 +91,29 @@ public class EditActivity extends SerializedEditorActivity implements
 			super.finish();
 			break;
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.action_edit_automation, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.startActivity(new Intent(this,MainActivity.class));
+				return true;
+			case R.id.action_help:
+				Intent i = new Intent(this, HelpActivity.class);
+				i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_automationpluggin));
+				this.startActivity(i);
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }
