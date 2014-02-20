@@ -36,7 +36,7 @@ public class NetworkManagedSherlockFragmentActivity extends
 	protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState); // Always call the superclass first
 	    
-	    if(this.getIntent().getExtras()!=null){
+	    if(this.getIntent()!=null && this.getIntent().getExtras()!=null){
 	    	String potentialGroupName = this.getIntent().getExtras().getString(InternalArguments.GROUP_NAME);
 	    	int[] potentialGroupVals = this.getIntent().getExtras().getIntArray(InternalArguments.GROUP_VALUES);
 	    	
