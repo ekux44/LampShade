@@ -137,7 +137,12 @@
         <item>The Tasker plugin can now be controlled with Tasker variables</item>
         <item>New Groups widget</item>
     </string-array>
-        <string-array name="repeat_days">
+   	<string-array name="mood_types">
+        <item>Simple</item>
+        <item>Timed</item>
+        <item>Daily</item>
+    </string-array>
+   	<string-array name="repeat_days">
         <item>Sunday</item>
         <item>Monday</item>
         <item>Tuesday</item>

@@ -61,10 +61,19 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	static String priorName;
 	static Mood priorMood;
 	
-	private int pageType = EditMoodActivity.TIMED_PAGE;
+	public final static int SIMPLE_PAGE = 0, TIMED_PAGE=1, DAILY_PAGE = 2;
+	
+	private int pageType = TIMED_PAGE;
 	private boolean dailyMode = false;
 	
 	public EditMoodActivity pager;
+	
+	public void setMoodMode(int spinnerPos){
+		if(pageType!=spinnerPos){
+			pageType = spinnerPos;
+			redrawGrid();
+		}
+	}
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -155,7 +164,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		time = -1;
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
-				if(pageType == EditMoodActivity.DAILY_PAGE)
+				if(pageType == DAILY_PAGE)
 					timeslotDuration.get(row+1).setDuration(e.time);
 				else if(time!=-1)
 					timeslotDuration.get(row).setDuration(e.time-time);
@@ -173,7 +182,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		Mood m = new Mood();
 		m.usesTiming = true; //TODO not always the case...
 		m.setNumChannels(gridCols());
-		if(pageType == EditMoodActivity.DAILY_PAGE)
+		if(pageType == SIMPLE_PAGE || pageType == DAILY_PAGE)
 			m.timeAddressingRepeatPolicy=true;
 		else
 			m.timeAddressingRepeatPolicy = false;
@@ -203,7 +212,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		return m;
 	}
 	private int getTime(int row){
-		if(pageType == EditMoodActivity.DAILY_PAGE){
+		if(pageType == DAILY_PAGE){
 			if(row<timeslotDuration.size())
 				return timeslotDuration.get(row).getDuration();
 			else
@@ -264,6 +273,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				v.setTag(r*this.gridCols()+c);
 				grid.addView(v, vg);
 			}
+		//timeslotDuration views
 		{
 			for(int r = 0; r<timeslotDuration.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
@@ -274,11 +284,17 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				View v = timeslotDuration.get(r).getView();
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
+				
+				
+				if(pageType == TIMED_PAGE || pageType == DAILY_PAGE){
+					v.setVisibility(View.VISIBLE);
+				} else if(pageType == SIMPLE_PAGE){
+					v.setVisibility(View.GONE);
+				}
 				grid.addView(v, vg);
-				
-				
 			}
 		}
+		//channel label
 		{
 			LayoutInflater inflater = getActivity().getLayoutInflater();
 			Button b =(Button) inflater.inflate(R.layout.grid_col_channels_label, null);
@@ -316,17 +332,19 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(b, vg);
 		}
-		{
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
-			if(pageType==EditMoodActivity.DAILY_PAGE)
-				((TextView)v.findViewById(R.id.textLabel)).setText(R.string.daily_start_time);
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(0);
-			vg.setGravity(Gravity.CENTER);
-			grid.addView(v, vg);
-		}
+		//timeslot label
+//		{
+//			LayoutInflater inflater = getActivity().getLayoutInflater();
+//			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+//			if(pageType==DAILY_PAGE)
+//				((TextView)v.findViewById(R.id.textLabel)).setText(R.string.daily_start_time);
+//			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+//			vg.columnSpec = GridLayout.spec(0);
+//			vg.rowSpec = GridLayout.spec(0);
+//			vg.setGravity(Gravity.CENTER);
+//			grid.addView(v, vg);
+//		}
+		//vertical separator
 		{
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
@@ -338,12 +356,19 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			vg.columnSpec = GridLayout.spec(1);
 			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
 			vg.setGravity(Gravity.FILL_VERTICAL);
+
+			if(pageType == TIMED_PAGE || pageType == DAILY_PAGE){
+				rowView.setVisibility(View.VISIBLE);
+			} else if(pageType == SIMPLE_PAGE){
+				rowView.setVisibility(View.GONE);
+			}
 			grid.addView(rowView, vg);		
 		}
+		//horizontal separator
 		{
 			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_horizontal_seperator, null);
-
+			
 			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
 			rowView.setImageDrawable(cd);
 			rowView.setMinimumHeight(1);
@@ -351,6 +376,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			vg.columnSpec = GridLayout.spec(0,initialCols+gridCols());
 			vg.rowSpec = GridLayout.spec(1);
 			vg.setGravity(Gravity.FILL_HORIZONTAL);
+			
 			grid.addView(rowView, vg);
 		}
 		grid.invalidate();
@@ -481,7 +507,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			
 			
 			TimeslotDuration td;
-			if(pageType == EditMoodActivity.DAILY_PAGE){
+			if(pageType == DAILY_PAGE){
 				td = new TimeOfDayTimeslot(this, getSpinnerId(), gridRows()-1);
 			}
 			else{

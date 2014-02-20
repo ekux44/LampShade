@@ -6,8 +6,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -24,19 +28,18 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 
-public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
+public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements OnItemSelectedListener {
 
 	EditMoodStateGridFragment stateGridFragment;
-	int currentPage;
 
 	private EditText nameEditText;
+	private Spinner moodTypeSpinner;
+	
 	String priorName;
 	Mood priorMood;
 	Gson gson = new Gson();
 	private CheckBox loop;
 	
-	public final static int TIMED_PAGE=0, DAILY_PAGE = 1;
-
 	public interface OnCreateMoodListener {
 		/** Called by HeadlinesFragment when a list item is selected */
 		public void onCreateMood(String groupname);
@@ -61,7 +64,8 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
         
 		loop = (CheckBox)this.findViewById(R.id.loopCheckBox);
-		
+		moodTypeSpinner = (Spinner)this.findViewById(R.id.moodTypeSpinner);
+		moodTypeSpinner.setOnItemSelectedListener(this);
 		
 		
 		// If we're being restored from a previous state,
@@ -156,5 +160,23 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 				return true;
 		}
 		return false;
+	}
+
+
+
+	@Override
+	public void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+		// TODO Auto-generated method stub
+		if(stateGridFragment!=null){
+			stateGridFragment.setMoodMode(position);
+		}
+	}
+
+
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// TODO Auto-generated method stub
+		
 	}
 }

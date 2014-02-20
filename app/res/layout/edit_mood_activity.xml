@@ -3,11 +3,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <Spinner
+        android:id="@+id/moodTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/mood_types" />
+
 	<CheckBox
-        	android:id="@+id/loopCheckBox"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-       		android:text="@string/infinite_loop" />
+		android:id="@+id/loopCheckBox"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/infinite_loop" />
 	
     <include layout="@layout/horizontal_divider_line_blue"/>
     
@@ -16,7 +22,5 @@
     	android:layout_width="match_parent"
     	android:layout_height="match_parent" >
 	</FrameLayout>
-    
-    <include layout="@layout/horizontal_divider_line_blue"/>
 
 </LinearLayout>
