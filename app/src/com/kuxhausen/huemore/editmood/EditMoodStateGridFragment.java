@@ -21,6 +21,7 @@ import com.kuxhausen.huemore.timing.Conversions;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,20 +61,16 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	static String priorName;
 	static Mood priorMood;
 	
-	private int pageType;
-	private boolean dailyMode;
+	private int pageType = EditMoodActivity.TIMED_PAGE;
+	private boolean dailyMode = false;
 	
 	public EditMoodActivity pager;
 	
-	public void setTimedMode(EditMoodActivity p){
-		pageType = EditMoodActivity.TIMED_PAGE;
-		pager = p;
-	}
-	public void setDailyMode(EditMoodActivity p){
-		pageType = EditMoodActivity.DAILY_PAGE;
-		pager = p;
-		dailyMode = true;
-	}
+	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        pager = (EditMoodActivity) activity;
+    }
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,8 +133,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	@Override
 	public void preview(){
-		if(pageType == EditMoodActivity.currentPage && grid!=null)
-			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), pager.getName());
+		((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), pager.getName());
 		
 	}
 	
@@ -310,8 +306,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 					showChanM.events = eRay;
 					showChanM.loopIterationTimeLength = 15*showChanM.getNumChannels();
 					
-					if(pageType == EditMoodActivity.currentPage && grid!=null)
-						((NetworkManagedSherlockFragmentActivity)pager).startMood(showChanM, null);
+					((NetworkManagedSherlockFragmentActivity)pager).startMood(showChanM, null);
 				}
 				
 			});

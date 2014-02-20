@@ -11,8 +11,12 @@
 	
     <include layout="@layout/horizontal_divider_line_blue"/>
     
-    <include layout="@layout/pager"/>
-
+    <FrameLayout
+    	android:id="@+id/edit_mood_fragment_container"
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent" >
+	</FrameLayout>
+    
     <include layout="@layout/horizontal_divider_line_blue"/>
 
 </LinearLayout>
