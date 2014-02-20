@@ -170,6 +170,11 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		if(stateGridFragment!=null){
 			stateGridFragment.setMoodMode(position);
 		}
+		if(position == EditMoodStateGridFragment.TIMED_PAGE){
+			loop.setVisibility(View.VISIBLE);
+		} else{
+			loop.setVisibility(View.INVISIBLE);
+		}
 	}
 
 

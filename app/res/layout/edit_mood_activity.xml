@@ -7,13 +7,15 @@
         android:id="@+id/moodTypeSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/mood_types" />
+        android:entries="@array/mood_types"
+        android:padding="8dp" />
 
 	<CheckBox
-		android:id="@+id/loopCheckBox"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/infinite_loop" />
+	    android:id="@+id/loopCheckBox"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:padding="8dp"
+	    android:text="@string/infinite_loop" />
 	
     <include layout="@layout/horizontal_divider_line_blue"/>
     
