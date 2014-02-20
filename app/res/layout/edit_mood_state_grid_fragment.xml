@@ -1,53 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.kuxhausen.huemore"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+   	xmlns:app="http://schemas.android.com/apk/res/com.kuxhausen.huemore"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-	<ScrollView
-	    android:id="@+id/scrollView1"
-	    android:layout_width="match_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="1" >
-	
-	    <HorizontalScrollView
-	        android:id="@+id/horizontalScrollView1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	        <RelativeLayout
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical" >
-				<android.support.v7.widget.GridLayout
-				    android:id="@+id/advancedGridLayout"
-				    android:layout_width="match_parent"
-				    android:layout_height="match_parent"
-				    android:minHeight="144dp"
-				    android:minWidth="144dp"
-				    app:columnCount="3"
-				    app:rowCount="1" >
-	
-				</android.support.v7.widget.GridLayout>
-				    
-				<Button
-				    android:id="@+id/addTimeslotButton"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:layout_alignLeft="@id/advancedGridLayout"
-				    android:layout_alignRight="@id/advancedGridLayout"
-				    android:layout_below="@id/advancedGridLayout"
-				    android:text="@string/add_timeslot" />
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        <android.support.v7.widget.GridLayout
+		    android:id="@+id/advancedGridLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:minHeight="144dp"
+		    android:minWidth="144dp"
+		    app:columnCount="3"
+		    app:rowCount="1" >
 
-				<Button
-				    android:id="@+id/addChannelButton"
-				    android:layout_width="48dp"
-				    android:layout_height="wrap_content"
-				    android:layout_alignBottom="@id/advancedGridLayout"
-				    android:layout_alignTop="@id/advancedGridLayout"
-				    android:layout_toRightOf="@id/advancedGridLayout"
-				    android:text="@string/add_channel" />	
-        	</RelativeLayout>
-    	</HorizontalScrollView>
-	</ScrollView>
-	
-</LinearLayout>
+		</android.support.v7.widget.GridLayout>
+			    
+	</HorizontalScrollView>
+</ScrollView>

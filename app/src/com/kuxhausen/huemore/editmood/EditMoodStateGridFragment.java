@@ -40,6 +40,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -57,7 +58,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	ArrayList<TimeslotDuration> dailyTimeslotDuration = new ArrayList<TimeslotDuration>();
 	private final static int defaultDuration = 10;
 	
-	Button addChannel, addTimeslot;
+	ImageButton addChannel, addTimeslot;
 	
 	static String priorName;
 	static Mood priorMood;
@@ -87,15 +88,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
 		
-		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
+		addTimeslot = (ImageButton) inflater.inflate(R.layout.edit_mood_down_arrow, null);
 		addTimeslot.setOnClickListener(this);
 		
-		addChannel = (Button) myView.findViewById(R.id.addChannelButton);
-		//int h = addChannel.getHeight();
-		//int w = addChannel.getWidth();
-		//addChannel.setRotation(270);
-		//addChannel.setHeight(w);
-		//addChannel.setWidth(h);
+		addChannel = (ImageButton) inflater.inflate(R.layout.edit_mood_right_arrow, null);
 		addChannel.setOnClickListener(this);
 		
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
@@ -103,8 +99,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		timedTimeslotDuration.clear();
 		dailyTimeslotDuration.clear();
 		dataRay.clear();
-		grid.setColumnCount(initialCols+1);
-		grid.setRowCount(initialRows);
+		grid.setColumnCount(initialCols+1+endingCols);
+		grid.setRowCount(initialRows+endingRows);
 		
 		addRow(defaultDuration);
 		
@@ -257,11 +253,11 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			cpdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			break;
-		case R.id.addChannelButton:
+		case R.id.rightButton:
 			addCol();
 			redrawGrid();
 			break;
-		case R.id.addTimeslotButton:
+		case R.id.downButton:
 			addRow(defaultDuration);
 			redrawGrid();
 			break;
@@ -271,6 +267,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 
 	public void redrawGrid() {
 		grid.removeAllViews();
+		LayoutInflater inflater = this.getActivity().getLayoutInflater();
 		for(int r = 0; r< gridRows(); r++)
 			for(int c = 0; c<gridCols(); c++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
@@ -280,6 +277,23 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				v.setTag(r*this.gridCols()+c);
 				grid.addView(v, vg);
 			}
+		//add timeslot button
+		if(pageType == TIMED_PAGE || pageType == DAILY_PAGE){
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(initialRows+this.gridRows()+endingRows-1);
+			vg.setGravity(Gravity.CENTER);
+			grid.addView(addTimeslot, vg);
+		}
+		//add channel button
+		{
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(initialCols+this.gridCols()+endingCols-1);
+			vg.rowSpec = GridLayout.spec(0);
+			vg.setGravity(Gravity.CENTER);
+			grid.addView(addChannel, vg);
+		}
+		
 		//timedTimeslotDuration views
 		if(pageType == TIMED_PAGE) {
 			for(int r = 0; r<timedTimeslotDuration.size(); r++){
@@ -299,7 +313,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		if (pageType == DAILY_PAGE){
 			for(int r = 0; r<dailyTimeslotDuration.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-				vg.columnSpec = GridLayout.spec(1);
+				vg.columnSpec = GridLayout.spec(0);
 				vg.rowSpec = GridLayout.spec(r+initialRows);
 				vg.setGravity(Gravity.CENTER);
 				
@@ -312,7 +326,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}		
 		//channel label
 		{
-			LayoutInflater inflater = getActivity().getLayoutInflater();
 			Button b =(Button) inflater.inflate(R.layout.grid_col_channels_label, null);
 			b.setOnClickListener(new OnClickListener(){
 
@@ -350,14 +363,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 		//vertical separator
 		if(pageType == TIMED_PAGE || pageType == DAILY_PAGE) {
-			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
 
 			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
 			rowView.setImageDrawable(cd);
 			rowView.setMinimumWidth(1);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(2);
+			vg.columnSpec = GridLayout.spec(1);
 			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
 			vg.setGravity(Gravity.FILL_VERTICAL);
 
@@ -365,7 +377,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 		//horizontal separator
 		{
-			LayoutInflater inflater = this.getActivity().getLayoutInflater();
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_horizontal_seperator, null);
 			
 			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
@@ -448,7 +459,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			timedTimeslotDuration.remove(row);
 			dailyTimeslotDuration.remove(row);
 			
-			grid.setRowCount(initialRows + gridRows()-1);
+			grid.setRowCount(initialRows+endingRows + gridRows()-1);
 		}
 		redrawGrid();
 	}
@@ -461,13 +472,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			}
 			for(StateCell kill : toRemove)
 				dataRay.remove(kill);
-			grid.setColumnCount(initialCols+gridCols()-1);
+			grid.setColumnCount(endingCols+initialCols+gridCols()-1);
 		}
 		redrawGrid();
 	}
 	private void addRow(int duration){
 		if(gridRows()<=64){
-			grid.setRowCount(initialRows + gridRows()+1);
+			grid.setRowCount(initialRows+endingRows + gridRows()+1);
 			
 			
 			TimeslotDuration tdTimed, tdDaily;
@@ -489,7 +500,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private void addCol(){
 		if(gridCols()<64){
 			int width = gridCols();
-			grid.setColumnCount(1+width+initialCols);
+			grid.setColumnCount(1+width+initialCols+endingCols);
 			for(int i = dataRay.size(); i>0; i-=width){
 				addState(i);
 			}
@@ -499,12 +510,14 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 	}
 	private final int initialRows = 2;
-	private final int initialCols = 3;
+	private final int initialCols = 2;
+	private final int endingRows = 1;
+	private final int endingCols = 1;
 	private final int gridRows(){
-		return grid.getRowCount()-initialRows;
+		return grid.getRowCount()-initialRows-endingCols;
 	}
 	private final int gridCols(){
-		return grid.getColumnCount()-initialCols;
+		return grid.getColumnCount()-initialCols-endingCols;
 	}
 	private final void setGridRows(int num, int duration){
 		while(gridRows()!=num){
