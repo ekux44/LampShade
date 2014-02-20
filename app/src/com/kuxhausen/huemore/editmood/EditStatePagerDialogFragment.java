@@ -29,7 +29,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 
 	NewMoodPagerAdapter mNewColorPagerAdapter;
 	static OnCreateColorListener[] newColorFragments;
-	EditAdvancedMoodFragment parrentMood; 
+	EditMoodStateGridFragment parrentMood; 
 
 	ViewPager mViewPager;
 	static int currentPage;
@@ -73,7 +73,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		((NetworkManagedSherlockFragmentActivity) getActivity()).startMood(m, null);
 	}
 	
-	public void setParrentMood(EditAdvancedMoodFragment eamf){
+	public void setParrentMood(EditMoodStateGridFragment eamf){
 		parrentMood = eamf;
 		if(RecentStatesFragment.extractUniques(eamf.dataRay).size()>0)
 			hasNoRecentStates = 0;

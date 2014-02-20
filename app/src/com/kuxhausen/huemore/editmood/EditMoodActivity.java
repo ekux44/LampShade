@@ -197,7 +197,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 				return (Fragment) newMoodFragments[i];
 			switch (i) {
 			case TIMED_PAGE:
-				EditAdvancedMoodFragment eamf = new EditAdvancedMoodFragment();
+				EditMoodStateGridFragment eamf = new EditMoodStateGridFragment();
 				eamf.setTimedMode(frag);
 				Bundle args1 = new Bundle();
 				if (calculateRoute(priorMood)==TIMED_PAGE) {
@@ -207,7 +207,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity {
 				newMoodFragments[i] = eamf;
 				return (Fragment) newMoodFragments[i];
 			case DAILY_PAGE:
-				EditAdvancedMoodFragment eamf2 = new EditAdvancedMoodFragment();
+				EditMoodStateGridFragment eamf2 = new EditMoodStateGridFragment();
 				eamf2.setDailyMode(frag);
 				Bundle args2 = new Bundle();
 				if (calculateRoute(priorMood)==DAILY_PAGE) {

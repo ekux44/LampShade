@@ -22,10 +22,10 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 
 	final static int MAX_MOOD_EVENT_TIME = 24*60*60*10-1;
 	int moodEventTime;
-	private EditAdvancedMoodFragment frag;
+	private EditMoodStateGridFragment frag;
 	private Button t;
 	
-	public TimeOfDayTimeslot(EditAdvancedMoodFragment frag, int id, int position){
+	public TimeOfDayTimeslot(EditMoodStateGridFragment frag, int id, int position){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);

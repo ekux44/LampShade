@@ -45,7 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.GridLayout;
 
-public class EditAdvancedMoodFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener {
+public class EditMoodStateGridFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener {
 
 	Gson gson = new Gson();
 	GridLayout grid;
@@ -79,7 +79,7 @@ public class EditAdvancedMoodFragment extends SherlockFragment implements OnClic
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		View myView = inflater.inflate(R.layout.edit_advanced_mood, null);
+		View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
 		
 		addTimeslot = (Button) myView.findViewById(R.id.addTimeslotButton);
 		addTimeslot.setOnClickListener(this);
