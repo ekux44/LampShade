@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.timing;
 
 import android.text.format.DateFormat;
+
 import java.util.Calendar;
 
 import android.content.ContentValues;
@@ -72,37 +73,21 @@ public class DatabaseAlarm {
 		return result;
 	}
 
-	public boolean isScheduled() {
-		if (aState.scheduledForFuture == null)
-			aState.scheduledForFuture = false;
-
-		// if it's a non repeating alarm in the past, mark as unchecked
-		if (!aState.isRepeating()) {
-			Calendar scheduledTime = Calendar.getInstance();
-			scheduledTime.setTimeInMillis(aState.getTime());
-			if (scheduledTime.before(Calendar.getInstance())) {
-				aState.scheduledForFuture = false;
-				saveToDB();
-				return false;
-			}
-		}
-		return aState.scheduledForFuture;
-	}
-
 	public synchronized void toggle() {
-
-		if (isScheduled()) {
+		boolean wasScheduled = aState.isScheduled();
+		
+		if (wasScheduled) {
 			AlarmReciever.cancelAlarm(c, aState);
 		} else {
 			AlarmReciever.createAlarms(c, this);
 		}
 
-		aState.scheduledForFuture = !isScheduled();
+		aState.setScheduledForFuture(!wasScheduled);
 		
 		saveToDB();
 	}
 	public void delete(){
-		if (this.isScheduled())
+		if (this.aState.isScheduled())
 			this.toggle();
 		
 		String moodSelect2 = BaseColumns._ID + "=?";

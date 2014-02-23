@@ -1,10 +1,12 @@
 package com.kuxhausen.huemore.timing;
 
+import java.util.Calendar;
+
 public class AlarmState {
 	public String mood;
 	public String group;
 	public Integer brightness;
-	public Boolean scheduledForFuture;
+	private Boolean scheduledForFuture;
 
 	/** 7 booleans which days {Sunday, ... ,Saturday} to repeat on } **/
 	private Boolean[] repeats;
@@ -12,6 +14,27 @@ public class AlarmState {
 	/** if nonrepeating, size = 1. If repeating, size = 7 **/
 	private Long[] scheduledTimes;
 
+	/** returns the value of AlarmState's boolean scheduledForFuture unless that value is out of date (ex: nonrepeating alarm with past timevalues cannot be scheduledForFuture)**/
+	public boolean isScheduled() {
+		if (this.scheduledForFuture == null)
+			this.scheduledForFuture = false;
+
+		// if it's a non repeating alarm in the past, mark as unchecked
+		if (!this.isRepeating()) {
+			Calendar scheduledTime = Calendar.getInstance();
+			scheduledTime.setTimeInMillis(this.getTime());
+			if (scheduledTime.before(Calendar.getInstance())) {
+				this.scheduledForFuture = false;
+				//saveToDB();
+				return false;
+			}
+		}
+		return this.scheduledForFuture;
+	}
+	
+	public void setScheduledForFuture(boolean value){
+		scheduledForFuture = value;
+	}
 	
 	public boolean isRepeating() {
 		boolean result = false;

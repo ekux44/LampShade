@@ -44,7 +44,6 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 	@Override
 	public void changeCursor(Cursor c) {
 		super.changeCursor(c);
-		// Log.e("changeCursor", ""+c);
 		this.cursor = c;
 		list = new ArrayList<DatabaseAlarm>();
 		if (cursor != null) {
@@ -92,7 +91,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 		view.taggedView.setTag(item);
 		view.scheduledButton.setTag(item);
 		view.scheduledButton.setOnCheckedChangeListener(null);
-		view.scheduledButton.setChecked(item.isScheduled());
+		view.scheduledButton.setChecked(item.getAlarmState().isScheduled());
 		view.scheduledButton.setOnCheckedChangeListener(this);
 		view.time.setText(item.getTime());
 		view.secondaryDescription.setText(item.getSecondaryDescription());
@@ -109,7 +108,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		DatabaseAlarm ar = (DatabaseAlarm) buttonView.getTag();
-		if (ar.isScheduled() != isChecked) {
+		if (ar.getAlarmState().isScheduled() != isChecked) {
 			ar.toggle();
 		}
 	}

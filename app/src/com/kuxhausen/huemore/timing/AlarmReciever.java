@@ -153,9 +153,9 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 					.getSystemService(Context.ALARM_SERVICE);
 			alarmMgr.cancel(pIntent);
 		}
-		if(alarmState.scheduledForFuture!=null){
+		{
 			//reverse scheduledForFuture boolean to hit both possibilities
-			alarmState.scheduledForFuture=!alarmState.scheduledForFuture;
+			alarmState.setScheduledForFuture(alarmState.isScheduled());
 			for (int i = 0; i < 8; i++) {
 				PendingIntent pIntent = calculatePendingIntent(context, alarmState,
 						i);
@@ -163,7 +163,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 						.getSystemService(Context.ALARM_SERVICE);
 				alarmMgr.cancel(pIntent);
 			}
-			alarmState.scheduledForFuture=!alarmState.scheduledForFuture;
+			alarmState.setScheduledForFuture(alarmState.isScheduled());
 		}
 	}
 

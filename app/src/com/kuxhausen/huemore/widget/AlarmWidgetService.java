@@ -62,7 +62,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public RemoteViews getViewAt(int position) {
-        // Get the data for this position from the content provider
+    	// Get the data for this position from the content provider
         String timeText = "0:00 AM";
         String subText = "Error";
         String json = "";
@@ -73,7 +73,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     		DatabaseAlarm aRow = new DatabaseAlarm(mContext, gson.fromJson(json, AlarmState.class), mCursor.getInt(1));
     		timeText = aRow.getTime();
         	subText = aRow.getSecondaryDescription();
-        	alarmOn = aRow.isScheduled();
+        	alarmOn = aRow.getAlarmState().isScheduled();
         	rowID = aRow.getID();
         }
 
@@ -117,7 +117,6 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public void onDataSetChanged() {
-    	
     	// Refresh the cursor
         if (mCursor != null) {
             mCursor.close();

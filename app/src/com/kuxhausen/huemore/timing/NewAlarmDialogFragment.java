@@ -312,7 +312,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements
 		as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
 		as.brightness = brightnessBar.getProgress();
 		as.setRepeatingDays(repeats);
-		as.scheduledForFuture = true;
+		as.setScheduledForFuture(true);
 
 		Calendar projectedTime = Calendar.getInstance();
 		projectedTime.setLenient(true);
