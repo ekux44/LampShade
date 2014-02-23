@@ -162,11 +162,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		time = -1;
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
-				if(pageType == DAILY_PAGE)
+				if(pageType == DAILY_PAGE || pageType == RELATIVE_START_TIME_PAGE){
 					dailyTimeslotDuration.get(row+1).setStartTime(e.time);
-				else if(time!=-1)
-					timedTimeslotDuration.get(row).setStartTime(e.time-time);
-				
+					timedTimeslotDuration.get(row+1).setStartTime(e.time);
+				}
 				row++;
 				time = e.time;
 			}
