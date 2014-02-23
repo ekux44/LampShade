@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
@@ -71,6 +72,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	
 	public void setMoodMode(int spinnerPos){
 		if(pageType!=spinnerPos){
+			if(spinnerPos==SIMPLE_PAGE)
+				setGridRows(1,0);
+			
 			pageType = spinnerPos;
 			redrawGrid();
 		}
@@ -142,8 +146,24 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 	}
 	
+	public static int calculateMoodType(Mood m){
+		if (m.timeAddressingRepeatPolicy==true){
+			return DAILY_PAGE;
+		}else if(!m.usesTiming && m.events.length == 1) {
+			return SIMPLE_PAGE;
+		}else
+			return TIMED_PAGE;
+	}
+
+	
 	private void loadMood(Mood mFromDB) {
+		//calculate & set the mood type
+		pageType = EditMoodStateGridFragment.calculateMoodType(mFromDB);
+		
+		//calculate & set the number of grid rows
 		this.setGridCols(mFromDB.getNumChannels());
+		
+		//calculate & set number of rows, and fill with times
 		int row = -1;
 		int time = -1;
 		for(Event e: mFromDB.events){
@@ -162,7 +182,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			if(e.time!=time){
 				if(pageType == DAILY_PAGE)
 					dailyTimeslotDuration.get(row+1).setDuration(e.time);
-				else if(pageType == TIMED_PAGE)
+				else if(time!=-1)
 					timedTimeslotDuration.get(row).setDuration(e.time-time);
 				
 				row++;
@@ -171,7 +191,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			dataRay.get(gridCols()*row + e.channel).hs = e.state;
 		}
 		
+		//set loop button
 		pager.setChecked(mFromDB.isInfiniteLooping());
+		
 		redrawGrid();
 	}
 	private Mood getMood() {		
@@ -402,6 +424,12 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_state, menu);
+		
+		android.view.MenuItem deleteTimeslot = menu.findItem(R.id.contextstatemenu_delete_timeslot);
+		if(pageType == SIMPLE_PAGE){
+			deleteTimeslot.setEnabled(false);
+			deleteTimeslot.setVisible(false);
+		}
 	}
 
 	@Override

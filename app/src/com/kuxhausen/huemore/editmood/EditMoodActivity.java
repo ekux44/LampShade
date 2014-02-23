@@ -92,6 +92,12 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			nameEditText.setText(moodName);
 			
 			priorMood = Utils.getMoodFromDatabase(moodName, this);
+			
+			moodTypeSpinner.setSelection(EditMoodStateGridFragment.calculateMoodType(priorMood));
+			if(moodTypeSpinner.getSelectedItemPosition() == EditMoodStateGridFragment.TIMED_PAGE)
+				loop.setChecked(true);
+			else
+				loop.setChecked(false);
 				
 		} else {
 			priorName = null;
