@@ -14,7 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 
-public class OffsetTimeslot implements TimeslotDuration, OnItemSelectedListener, TimeslotTimeResult{
+public class OffsetTimeslot implements TimeslotStartTime, OnItemSelectedListener, TimeslotTimeResult{
 	
 	private int duration;
 	private Spinner spin;
@@ -39,12 +39,12 @@ public class OffsetTimeslot implements TimeslotDuration, OnItemSelectedListener,
 		return spin;
 	}
 	
-	public void setDuration(int duration){
+	public void setStartTime(int duration){
 		if(timeslotValues.indexOf(duration)>-1);
 			spin.setSelection(timeslotValues.indexOf(duration));		
 		this.duration = duration;
 	}
-	public int getDuration(){
+	public int getStartTime(){
 		return duration;
 	}
 	

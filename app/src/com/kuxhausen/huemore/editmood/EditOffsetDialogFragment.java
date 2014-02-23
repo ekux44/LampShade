@@ -15,7 +15,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 public class EditOffsetDialogFragment extends SherlockDialogFragment implements OnClickListener {
 
 	public interface TimeslotTimeResult{
-		public abstract void setDuration(int duration);
+		public abstract void setStartTime(int duration);
 	}
 	
 	EditText seconds;
@@ -58,7 +58,7 @@ public class EditOffsetDialogFragment extends SherlockDialogFragment implements 
 			try{	
 				int transitionTime = Integer.parseInt(s) * 10;
 				transitionTime = Math.min(transitionTime, 36000);
-				listener.setDuration(transitionTime);
+				listener.setStartTime(transitionTime);
 			} catch (Exception e){
 			}
 			this.dismiss();

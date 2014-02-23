@@ -1,32 +1,22 @@
 package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
-import com.kuxhausen.huemore.timing.Conversions;
-
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -34,17 +24,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.GridLayout;
 
@@ -55,8 +37,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	int contextSpot;
 	
 	public ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
-	ArrayList<TimeslotDuration> timedTimeslotDuration = new ArrayList<TimeslotDuration>();
-	ArrayList<TimeslotDuration> dailyTimeslotDuration = new ArrayList<TimeslotDuration>();
+	ArrayList<TimeslotStartTime> timedTimeslotDuration = new ArrayList<TimeslotStartTime>();
+	ArrayList<TimeslotStartTime> dailyTimeslotDuration = new ArrayList<TimeslotStartTime>();
 	private final static int defaultDuration = 10;
 	
 	ImageButton addChannel, addTimeslot;
@@ -181,9 +163,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
 				if(pageType == DAILY_PAGE)
-					dailyTimeslotDuration.get(row+1).setDuration(e.time);
+					dailyTimeslotDuration.get(row+1).setStartTime(e.time);
 				else if(time!=-1)
-					timedTimeslotDuration.get(row).setDuration(e.time-time);
+					timedTimeslotDuration.get(row).setStartTime(e.time-time);
 				
 				row++;
 				time = e.time;
@@ -232,14 +214,14 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private int getTime(int row){
 		if(pageType == DAILY_PAGE){
 			if(row<dailyTimeslotDuration.size())
-				return dailyTimeslotDuration.get(row).getDuration();
+				return dailyTimeslotDuration.get(row).getStartTime();
 			else
 				return 0;
 		}
 		else if (pageType == TIMED_PAGE){
 			int time = 0;
 			for(int i = row-1; i>=0; i--){
-				time+=timedTimeslotDuration.get(i).getDuration();
+				time+=timedTimeslotDuration.get(i).getStartTime();
 			}
 			return time;
 		}
@@ -252,9 +234,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			return 0;
 		} else{
 			if(pageType == DAILY_PAGE)
-				return (dailyTimeslotDuration.get(position-1)).getDuration();
+				return (dailyTimeslotDuration.get(position-1)).getStartTime();
 			else if(pageType == TIMED_PAGE)
-				return (timedTimeslotDuration.get(position-1)).getDuration();
+				return (timedTimeslotDuration.get(position-1)).getStartTime();
 			else
 				return 0;
 		}
@@ -509,10 +491,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			grid.setRowCount(initialRows+endingRows + gridRows()+1);
 			
 			
-			TimeslotDuration tdTimed, tdDaily;
+			TimeslotStartTime tdTimed, tdDaily;
 			tdDaily = new TimeOfDayTimeslot(this, getSpinnerId(), gridRows()-1);
 			tdTimed = new OffsetTimeslot(this, getSpinnerId());
-			tdTimed.setDuration(duration);
+			tdTimed.setStartTime(duration);
 			
 			timedTimeslotDuration.add(tdTimed);
 			dailyTimeslotDuration.add(tdDaily);

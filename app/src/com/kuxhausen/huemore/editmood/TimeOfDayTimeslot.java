@@ -18,7 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 
-public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
+public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 
 	final static int MAX_MOOD_EVENT_TIME = 24*60*60*10-1;
 	int moodEventTime;
@@ -33,7 +33,7 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 		
 		moodEventTime = 0;
 		
-		setDuration(36000+frag.computeMinimumValue(position));
+		setStartTime(36000+frag.computeMinimumValue(position));
 	}
 
 	
@@ -52,12 +52,12 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 	}
 
 	@Override
-	public void setDuration(int offsetWithinDayInDeciSeconds) {		
+	public void setStartTime(int offsetWithinDayInDeciSeconds) {		
 		moodEventTime = Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds);
 	}
 
 	@Override
-	public int getDuration() {		
+	public int getStartTime() {		
 		return moodEventTime;
 	}
 	
@@ -93,7 +93,7 @@ public class TimeOfDayTimeslot implements TimeslotDuration, OnClickListener{
 			
 			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.frag.dailyTimeslotDuration.indexOf(t)));
 		//	if(previousTimeslotCal.before(c)){
-				t.setDuration(Conversions.moodDailyTimeFromCalendarMillis(c));
+				t.setStartTime(Conversions.moodDailyTimeFromCalendarMillis(c));
 		//	}
 		//	else{
 		//		t.setDuration(36000+Conversions.moodDailyTimeFromCalendarMillis(previousTimeslotCal.getTimeInMillis()));
