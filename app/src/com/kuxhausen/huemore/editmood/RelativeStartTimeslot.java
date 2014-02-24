@@ -1,26 +1,18 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.Calendar;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.editmood.EditOffsetDialogFragment.TimeslotTimeResult;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.timing.Conversions;
-
-
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TimePicker;
 
-public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener{
+public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener, TimeslotTimeResult{
 
-	final static int MAX_MOOD_EVENT_TIME = 24*60*60*10-1;
+	final static int MAX_MOOD_EVENT_TIME = (((999)*60)+59)*10;
+	/* in deci seconds */
 	int moodEventTime;
 	private EditMoodStateGridFragment frag;
 	private Button t;
@@ -33,27 +25,24 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 		
 		moodEventTime = 0;
 		
-		setStartTime(36000+frag.computeMinimumValue(position));
+		setStartTime(frag.computeMinimumValue(position));
 	}
 
 	
 	public String getTime() {
-		if(frag==null || frag.getActivity()==null)
-			return "";
-		Calendar c = Conversions.calendarMillisFromMoodDailyTime(moodEventTime);
-		return DateFormat.getTimeFormat(frag.getActivity()).format(c.getTime());
+		return getMinutes()+"m:"+getSeconds()+"s";
 	}
 	
 	@Override
 	public View getView() {
-		t.setText(getTime());
-		
+		t.setText(getTime());	
 		return t;
 	}
 
 	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {		
 		moodEventTime = Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds);
+		t.setText(getTime());
 	}
 
 	@Override
@@ -61,44 +50,22 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 		return moodEventTime;
 	}
 	
+	private int getSeconds(){
+		return (moodEventTime/10)%60;
+	}
+	
+	private int getMinutes(){
+		return moodEventTime/600;
+	}
+	
 	@Override
 	public void onClick(View v) {
-		TimePickerFragment etdf = new TimePickerFragment();
-		etdf.t = this;
-		//etdf.setTimeOfDayResultListener(this);
-		etdf.show(frag.getFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-	}
-
-	public static class TimePickerFragment extends SherlockDialogFragment implements TimePickerDialog.OnTimeSetListener {
-
-		RelativeStartTimeslot t; 
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			
-			// Use the current time as the default values for the picker
-			Calendar c = Conversions.calendarMillisFromMoodDailyTime(t.moodEventTime);
-			int hour = c.get(Calendar.HOUR_OF_DAY);
-			int minute = c.get(Calendar.MINUTE);
-			
-			// Create a new instance of TimePickerDialog and return it
-			return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
-		}
-		
-		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.MILLISECOND, 0);
-			c.set(Calendar.MINUTE, minute);
-			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-			
-			
-			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.frag.dailyTimeslotDuration.indexOf(t)));
-		//	if(previousTimeslotCal.before(c)){
-				t.setStartTime(Conversions.moodDailyTimeFromCalendarMillis(c));
-		//	}
-		//	else{
-		//		t.setDuration(36000+Conversions.moodDailyTimeFromCalendarMillis(previousTimeslotCal.getTimeInMillis()));
-		//	}
-			t.frag.redrawGrid();
-		}
+		EditOffsetDialogFragment etdf = new EditOffsetDialogFragment();
+		etdf.setTimeslotTimeResultListener(this);
+		Bundle args = new Bundle();
+		args.putInt(InternalArguments.DURATION_TIME, moodEventTime/10);
+		etdf.setArguments(args);
+		etdf.show(frag.getFragmentManager(),
+				InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 	}
 }

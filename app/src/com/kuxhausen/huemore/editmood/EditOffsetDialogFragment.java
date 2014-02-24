@@ -1,13 +1,14 @@
 package com.kuxhausen.huemore.editmood;
 
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -18,7 +19,7 @@ public class EditOffsetDialogFragment extends SherlockDialogFragment implements 
 		public abstract void setStartTime(int duration);
 	}
 	
-	EditText seconds;
+	EditText seconds, minutes;
 	private TimeslotTimeResult listener;
 	
 	public void setTimeslotTimeResultListener(TimeslotTimeResult l){
@@ -33,7 +34,7 @@ public class EditOffsetDialogFragment extends SherlockDialogFragment implements 
 		View myView = inflater.inflate(R.layout.edit_timeslot_dialog, container, false);
 	
 		seconds = (EditText)myView.findViewById(R.id.secondsEditText);
-		
+		minutes = (EditText)myView.findViewById(R.id.minutesEditText);
 		
 		Button cancelButton = (Button) myView.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
@@ -42,26 +43,32 @@ public class EditOffsetDialogFragment extends SherlockDialogFragment implements 
 		
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.DURATION_TIME)) {
-			seconds.setText(""+args.getInt(InternalArguments.DURATION_TIME));
+			seconds.setText(""+args.getInt(InternalArguments.DURATION_TIME)%60);
+			minutes.setText(""+args.getInt(InternalArguments.DURATION_TIME)/60);
+		} else{
+			seconds.setText(""+0);
+			minutes.setText(""+0);
 		}
 		
-		this.getDialog().setTitle(
-				getActivity().getString(R.string.grid_col_title_timeslot));
+		this.getDialog().setTitle(getActivity().getString(R.string.start_time));
 		return myView;
 	}
 
+	private void acceptValues(){
+		String s = seconds.getText().toString();
+		String m = minutes.getText().toString();
+		try{	
+			listener.setStartTime(((60*Integer.parseInt(m))+Integer.parseInt(s)) * 10);
+		} catch (Exception e){
+		}
+		this.dismiss();
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.okay:
-			String s = seconds.getText().toString();
-			try{	
-				int transitionTime = Integer.parseInt(s) * 10;
-				transitionTime = Math.min(transitionTime, 36000);
-				listener.setStartTime(transitionTime);
-			} catch (Exception e){
-			}
-			this.dismiss();
+			acceptValues();
 			break;
 		case R.id.cancel:
 			this.dismiss();

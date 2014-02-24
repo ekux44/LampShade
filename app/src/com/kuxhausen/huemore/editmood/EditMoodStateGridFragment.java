@@ -355,6 +355,15 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(b, vg);
 		}
+		//timeslot label
+		if(pageType == RELATIVE_START_TIME_PAGE || pageType == DAILY_PAGE) {
+			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(0);
+			vg.setGravity(Gravity.CENTER);
+			grid.addView(v, vg);
+		}
 		//vertical separator
 		if(pageType == RELATIVE_START_TIME_PAGE || pageType == DAILY_PAGE) {
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
