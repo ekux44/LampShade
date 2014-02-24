@@ -7,7 +7,6 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.timing.Conversions;
 
-
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -24,16 +23,17 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 	int moodEventTime;
 	private EditMoodStateGridFragment frag;
 	private Button t;
+	private int position;
 	
-	public TimeOfDayTimeslot(EditMoodStateGridFragment frag, int id, int position){
+	public TimeOfDayTimeslot(EditMoodStateGridFragment frag, int id, int pos){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
 		t.setOnClickListener(this);
 		
 		moodEventTime = 0;
-		
-		setStartTime(36000+frag.computeMinimumValue(position));
+		position = pos;
+		setStartTime(0);
 	}
 
 	
@@ -53,7 +53,8 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 
 	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {		
-		moodEventTime = Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds);
+		moodEventTime = Math.max(frag.computeMinimumValue(position),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
+		t.setText(getTime());
 	}
 
 	@Override
@@ -98,7 +99,7 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 		//	else{
 		//		t.setDuration(36000+Conversions.moodDailyTimeFromCalendarMillis(previousTimeslotCal.getTimeInMillis()));
 		//	}
-			t.frag.redrawGrid();
+			//t.frag.redrawGrid();
 		}
 	}
 }

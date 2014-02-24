@@ -16,16 +16,17 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 	int moodEventTime;
 	private EditMoodStateGridFragment frag;
 	private Button t;
+	private int position;
 	
-	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int id, int position){
+	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int id, int pos){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
 		t.setOnClickListener(this);
 		
 		moodEventTime = 0;
-		
-		setStartTime(frag.computeMinimumValue(position));
+		position = pos;
+		setStartTime(0);
 	}
 
 	
@@ -41,7 +42,7 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 
 	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {		
-		moodEventTime = Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds);
+		moodEventTime = Math.max(frag.computeMinimumValue(position),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
 		t.setText(getTime());
 	}
 

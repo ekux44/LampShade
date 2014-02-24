@@ -131,7 +131,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	public static int calculateMoodType(Mood m){
 		if (m.timeAddressingRepeatPolicy==true){
 			return DAILY_PAGE;
-		}else if(!m.usesTiming && m.events.length == 1) {
+		}else if(!m.usesTiming) {
 			return SIMPLE_PAGE;
 		}else
 			return RELATIVE_START_TIME_PAGE;
@@ -211,12 +211,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		return m;
 	}
 	private int getTime(int row){
-		if(pageType == DAILY_PAGE || pageType == RELATIVE_START_TIME_PAGE){
-			if(row<dailyTimeslotDuration.size())
+		if(pageType == DAILY_PAGE && row<dailyTimeslotDuration.size())
 				return dailyTimeslotDuration.get(row).getStartTime();
-			else
-				return 0;
-		}
+		else if(pageType == RELATIVE_START_TIME_PAGE && row<dailyTimeslotDuration.size())
+					return dailyTimeslotDuration.get(row).getStartTime();
 		else
 			return 0;
 	}
@@ -225,8 +223,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		if(position <=0){
 			return 0;
 		} else{
-			if(pageType == DAILY_PAGE || pageType==RELATIVE_START_TIME_PAGE)
-				return (dailyTimeslotDuration.get(position-1)).getStartTime();
+			if(pageType == DAILY_PAGE)
+				return (dailyTimeslotDuration.get(position-1)).getStartTime()+600;
+			else if (pageType==RELATIVE_START_TIME_PAGE)
+				return (dailyTimeslotDuration.get(position-1)).getStartTime()+10;
 			else
 				return 0;
 		}
