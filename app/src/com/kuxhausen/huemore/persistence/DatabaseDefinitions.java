@@ -154,6 +154,8 @@ public final class DatabaseDefinitions {
 		public static final String DURATION_TIME = "DurationTime";
 		public static final String BRIGHTNESS = "Brightness";
 		public static final String HELP_PAGE = "HelpPage";
+		public static final String ROW = "Row";
+		public static final String COLUMN = "Column";
 	}
 
 	public static final class PreferenceKeys {

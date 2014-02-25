@@ -17,13 +17,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 
-public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
+public class TimeOfDayTimeslot implements OnClickListener{
 
 	final static int MAX_MOOD_EVENT_TIME = 24*60*60*10-1;
 	int moodEventTime;
 	private EditMoodStateGridFragment frag;
 	private Button t;
-	private int position;
+	private int mPosition;
 	
 	public TimeOfDayTimeslot(EditMoodStateGridFragment frag, int id, int pos){
 		this.frag = frag;
@@ -32,7 +32,7 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 		t.setOnClickListener(this);
 		
 		moodEventTime = 0;
-		position = pos;
+		mPosition = pos;
 		setStartTime(0);
 	}
 
@@ -44,20 +44,17 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 		return DateFormat.getTimeFormat(frag.getActivity()).format(c.getTime());
 	}
 	
-	@Override
-	public View getView() {
+	public View getView(int position) {
+		mPosition = position;
 		t.setText(getTime());
-		
 		return t;
 	}
 
-	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {		
-		moodEventTime = Math.max(frag.computeMinimumValue(position),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
+		moodEventTime = Math.max(frag.computeMinimumValue(mPosition),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
 		t.setText(getTime());
 	}
 
-	@Override
 	public int getStartTime() {		
 		return moodEventTime;
 	}
@@ -66,7 +63,6 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 	public void onClick(View v) {
 		TimePickerFragment etdf = new TimePickerFragment();
 		etdf.t = this;
-		//etdf.setTimeOfDayResultListener(this);
 		etdf.show(frag.getFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 	}
 
@@ -92,14 +88,14 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			
 			
-			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.frag.dailyTimeslot.indexOf(t)));
-		//	if(previousTimeslotCal.before(c)){
+			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.mPosition));
+			
+			if(previousTimeslotCal.before(c)){
 				t.setStartTime(Conversions.moodDailyTimeFromCalendarMillis(c));
-		//	}
-		//	else{
-		//		t.setDuration(36000+Conversions.moodDailyTimeFromCalendarMillis(previousTimeslotCal.getTimeInMillis()));
-		//	}
-			//t.frag.redrawGrid();
+			}
+			else{
+				t.setStartTime(t.frag.computeMinimumValue(t.mPosition));
+			}
 		}
 	}
 }

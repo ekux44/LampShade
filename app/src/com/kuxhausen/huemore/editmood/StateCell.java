@@ -36,7 +36,7 @@ public class StateCell {
 		return copy;
 	}
 	
-	public View getView(int position, ViewGroup parent, OnClickListener l, SherlockFragment frag) {
+	public View getView(ViewGroup parent, OnClickListener l, SherlockFragment frag) {
 		View rowView;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		if(hs.ct!=null && hs.ct!=0){
@@ -82,7 +82,6 @@ public class StateCell {
 		rowView.setOnClickListener(l);
 		if(frag!=null)
 			frag.registerForContextMenu(rowView);
-		rowView.setTag(position);
 		return rowView;
 	}
 	

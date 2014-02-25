@@ -29,8 +29,8 @@ public class StateCellAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {        	
-    	View v = list.get(position).getView(position, parent, l, frag);
-    	
+    	View v = list.get(position).getView(parent, l, frag);
+    	v.setTag(position);
     	return v;
     }
 

@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.editmood.EditMoodStateGridFragment.StateRow;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 
 public class RecentStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
@@ -22,21 +24,23 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 	private ArrayList<StateCell> list;
 	private EditStatePagerDialogFragment statePager;
 	
-	public static ArrayList<StateCell> extractUniques(ArrayList<StateCell> cells){
+	public static ArrayList<StateCell> extractUniques(ArrayList<StateRow> rows){
 		ArrayList<StateCell> list = new ArrayList<StateCell>();
 		HashSet<String> bulbStateHash = new HashSet<String>();
-		for(StateCell cell : cells){
-			StateCell localCopy = cell.clone();
-			if(!bulbStateHash.contains(localCopy.hs.toString()) && (localCopy.hs.toString().length()>0)){
-				bulbStateHash.add(localCopy.hs.toString());
-				list.add(localCopy);
+		for(StateRow row: rows){
+			for(StateCell cell : row.cellRay){
+				StateCell localCopy = cell.clone();
+				if(!bulbStateHash.contains(localCopy.hs.toString()) && (localCopy.hs.toString().length()>0)){
+					bulbStateHash.add(localCopy.hs.toString());
+					list.add(localCopy);
+				}
 			}
 		}
 		return list;
 	}
 	
-	private void loadPrevious(ArrayList<StateCell> cells){
-		list = extractUniques(cells);
+	private void loadPrevious(ArrayList<StateRow> rows){
+		list = extractUniques(rows);
 	}
 	
 	@Override
@@ -92,6 +96,6 @@ public class RecentStatesFragment extends SherlockFragment implements OnCreateCo
 	@Override
 	public void setStatePager(EditStatePagerDialogFragment statePage) {
 		statePager = statePage;
-		loadPrevious(statePager.parrentMood.dataRay);
+		loadPrevious(statePager.parrentMood.moodRows);
 	}
 }

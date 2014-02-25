@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener, TimeslotTimeResult{
+public class RelativeStartTimeslot implements OnClickListener, TimeslotTimeResult{
 
 	final static int MAX_MOOD_EVENT_TIME = (((999)*60)+59)*10;
 	
@@ -18,7 +18,7 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 	int moodEventTime;
 	private EditMoodStateGridFragment frag;
 	private Button t;
-	private int position;
+	private int mPosition;
 	private boolean hangingLoopMode;
 	
 	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int id, int pos, boolean hangingLoop){
@@ -28,7 +28,7 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 		t.setOnClickListener(this);
 		
 		moodEventTime = 0;
-		position = pos;
+		mPosition = pos;
 		hangingLoopMode = hangingLoop;
 		setStartTime(0);
 	}
@@ -38,8 +38,8 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 		return getMinutes()+"m:"+getSeconds()+"s";
 	}
 	
-	@Override
-	public View getView() {
+	public View getView(int position) {
+		mPosition = position;
 		t.setText(getTime());	
 		return t;
 	}
@@ -47,13 +47,12 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {
 		if(hangingLoopMode && frag.isResumed()){
-			position = frag.relativeTimeslot.size();
+			mPosition = frag.moodRows.size();
 		}
-		moodEventTime = Math.max(frag.computeMinimumValue(position),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
+		moodEventTime = Math.max(frag.computeMinimumValue(mPosition),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
 		t.setText(getTime());
 	}
 
-	@Override
 	public int getStartTime() {		
 		return moodEventTime;
 	}
@@ -66,7 +65,6 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 		return moodEventTime/600;
 	}
 	
-	@Override
 	public void onClick(View v) {
 		EditOffsetDialogFragment etdf = new EditOffsetDialogFragment();
 		etdf.setTimeslotTimeResultListener(this);

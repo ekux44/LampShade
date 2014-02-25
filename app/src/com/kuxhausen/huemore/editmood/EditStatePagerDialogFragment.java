@@ -38,6 +38,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	Spinner transitionSpinner;
 	int[] transitionValues;
 	Gson gson = new Gson();
+	private int row, col;
 	
 	/** 1 if true, 0 if false **/
 	static int hasNoRecentStates = 1;
@@ -75,7 +76,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 	
 	public void setParrentMood(EditMoodStateGridFragment eamf){
 		parrentMood = eamf;
-		if(RecentStatesFragment.extractUniques(eamf.dataRay).size()>0)
+		if(RecentStatesFragment.extractUniques(eamf.moodRows).size()>0)
 			hasNoRecentStates = 0;
 		else
 			hasNoRecentStates = 1;
@@ -129,6 +130,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
+			row = args.getInt(InternalArguments.ROW);
+			col = args.getInt(InternalArguments.COLUMN);
 			
 			currentState = gson.fromJson(args.getString(InternalArguments.PREVIOUS_STATE),BulbState.class);
 			routeState(currentState);
@@ -230,9 +233,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			
 			Intent i = new Intent();
 			i.putExtra(InternalArguments.HUE_STATE, gson.toJson(currentState));
+			i.putExtra(InternalArguments.ROW, row);
+			i.putExtra(InternalArguments.COLUMN, col);
 			
-			if(i!=null)
-				getTargetFragment().onActivityResult(getTargetRequestCode(), -1, i);
+			getTargetFragment().onActivityResult(-1, -1, i);
 			this.dismiss();
 			break;
 		case R.id.cancel:
