@@ -39,6 +39,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	public ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
 	ArrayList<TimeslotStartTime> timedTimeslotDuration = new ArrayList<TimeslotStartTime>();
 	ArrayList<TimeslotStartTime> dailyTimeslotDuration = new ArrayList<TimeslotStartTime>();
+	RelativeStartTimeslot loopTimeslot;
 	private final static int defaultDuration = 10;
 	
 	ImageButton addChannel, addTimeslot;
@@ -90,7 +91,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 		addRow(defaultDuration);
 		
-	    redrawGrid();
 	    
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
@@ -99,6 +99,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			priorName = args.getString(InternalArguments.MOOD_NAME);
 			loadMood(Utils.getMoodFromDatabase(priorName, this.getActivity()));
 		}
+	    
+		loopTimeslot = new RelativeStartTimeslot(this,getSpinnerId(),0,true);
+		redrawGrid();
 	    
 	    return myView;
 	}
@@ -213,8 +216,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private int getTime(int row){
 		if(pageType == DAILY_PAGE && row<dailyTimeslotDuration.size())
 				return dailyTimeslotDuration.get(row).getStartTime();
-		else if(pageType == RELATIVE_START_TIME_PAGE && row<dailyTimeslotDuration.size())
-					return dailyTimeslotDuration.get(row).getStartTime();
+		else if(pageType == RELATIVE_START_TIME_PAGE && row<timedTimeslotDuration.size())
+				return timedTimeslotDuration.get(row).getStartTime();
 		else
 			return 0;
 	}
@@ -226,7 +229,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			if(pageType == DAILY_PAGE)
 				return (dailyTimeslotDuration.get(position-1)).getStartTime()+600;
 			else if (pageType==RELATIVE_START_TIME_PAGE)
-				return (dailyTimeslotDuration.get(position-1)).getStartTime()+10;
+				return (timedTimeslotDuration.get(position-1)).getStartTime()+10;
 			else
 				return 0;
 		}
@@ -317,7 +320,29 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				
 				grid.addView(v, vg);
 			}
-		}		
+		}
+		//loop timeslot view
+		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(dailyTimeslotDuration.size()+initialRows+2);
+			vg.setGravity(Gravity.CENTER);
+			
+			View v = loopTimeslot.getView();
+			if(v.getParent()!=null)
+				((ViewGroup)v.getParent()).removeView(v);
+			
+			grid.addView(v, vg);
+		}
+		//loop banner that sits beside loop timeslot
+		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
+			View v =inflater.inflate(R.layout.grid_timeslot_loop_label, null);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
+			vg.rowSpec = GridLayout.spec(dailyTimeslotDuration.size()+initialRows+2);
+			vg.setGravity(Gravity.CENTER);
+			grid.addView(v, vg);
+		}
 		//channel label
 		{
 			Button b =(Button) inflater.inflate(R.layout.grid_col_channels_label, null);
@@ -492,7 +517,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			
 			TimeslotStartTime tdTimed, tdDaily;
 			tdDaily = new TimeOfDayTimeslot(this, getSpinnerId(), gridRows()-1);
-			tdTimed = new RelativeStartTimeslot(this, getSpinnerId(), gridRows()-1);
+			tdTimed = new RelativeStartTimeslot(this, getSpinnerId(), gridRows()-1, false);
 			tdTimed.setStartTime(duration);
 			
 			timedTimeslotDuration.add(tdTimed);
@@ -520,10 +545,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	private final int initialRows = 2;
 	private final int initialCols = 2;
-	private final int endingRows = 1;
+	private final int endingRows = 2;
 	private final int endingCols = 1;
 	private final int gridRows(){
-		return grid.getRowCount()-initialRows-endingCols;
+		return grid.getRowCount()-initialRows-endingRows;
 	}
 	private final int gridCols(){
 		return grid.getColumnCount()-initialCols-endingCols;

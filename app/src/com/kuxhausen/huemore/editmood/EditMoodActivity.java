@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -28,7 +30,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 
-public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements OnItemSelectedListener {
+public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements OnItemSelectedListener, OnCheckedChangeListener {
 
 	EditMoodStateGridFragment stateGridFragment;
 
@@ -64,6 +66,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
         
 		loop = (CheckBox)this.findViewById(R.id.loopCheckBox);
+		loop.setOnCheckedChangeListener(this);
 		moodTypeSpinner = (Spinner)this.findViewById(R.id.moodTypeSpinner);
 		moodTypeSpinner.setOnItemSelectedListener(this);
 		
@@ -95,9 +98,9 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			
 			moodTypeSpinner.setSelection(EditMoodStateGridFragment.calculateMoodType(priorMood));
 			if(moodTypeSpinner.getSelectedItemPosition() == EditMoodStateGridFragment.RELATIVE_START_TIME_PAGE)
-				loop.setChecked(true);
+				setChecked(true);
 			else
-				loop.setChecked(false);
+				setChecked(false);
 				
 		} else {
 			priorName = null;
@@ -118,8 +121,9 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		return false;
 	}
 	public void setChecked(boolean check){
-		if(loop!=null)
+		if(loop!=null){
 			loop.setChecked(check);
+		}
 	}
 	
 	@Override
@@ -189,5 +193,14 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 	public void onNothingSelected(AdapterView<?> parent) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(stateGridFragment!=null){
+			stateGridFragment.redrawGrid();
+		}
 	}
 }
