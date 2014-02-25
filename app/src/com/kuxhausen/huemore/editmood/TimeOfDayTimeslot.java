@@ -92,7 +92,7 @@ public class TimeOfDayTimeslot implements TimeslotStartTime, OnClickListener{
 			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			
 			
-			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.frag.dailyTimeslotDuration.indexOf(t)));
+			Calendar previousTimeslotCal = Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.frag.dailyTimeslot.indexOf(t)));
 		//	if(previousTimeslotCal.before(c)){
 				t.setStartTime(Conversions.moodDailyTimeFromCalendarMillis(c));
 		//	}

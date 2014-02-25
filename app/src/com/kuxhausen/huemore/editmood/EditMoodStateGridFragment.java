@@ -37,8 +37,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	int contextSpot;
 	
 	public ArrayList<StateCell> dataRay = new ArrayList<StateCell>();
-	ArrayList<TimeslotStartTime> timedTimeslotDuration = new ArrayList<TimeslotStartTime>();
-	ArrayList<TimeslotStartTime> dailyTimeslotDuration = new ArrayList<TimeslotStartTime>();
+	ArrayList<TimeslotStartTime> relativeTimeslot = new ArrayList<TimeslotStartTime>();
+	ArrayList<TimeslotStartTime> dailyTimeslot = new ArrayList<TimeslotStartTime>();
 	RelativeStartTimeslot loopTimeslot;
 	private final static int defaultDuration = 10;
 	
@@ -83,8 +83,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 		grid = (GridLayout) myView.findViewById(R.id.advancedGridLayout);
 		grid.removeAllViews();
-		timedTimeslotDuration.clear();
-		dailyTimeslotDuration.clear();
+		relativeTimeslot.clear();
+		dailyTimeslot.clear();
 		dataRay.clear();
 		grid.setColumnCount(initialCols+1+endingCols);
 		grid.setRowCount(initialRows+endingRows);
@@ -166,8 +166,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		for(Event e: mFromDB.events){
 			if(e.time!=time){
 				if(pageType == DAILY_PAGE || pageType == RELATIVE_START_TIME_PAGE){
-					dailyTimeslotDuration.get(row+1).setStartTime(e.time);
-					timedTimeslotDuration.get(row+1).setStartTime(e.time);
+					dailyTimeslot.get(row+1).setStartTime(e.time);
+					relativeTimeslot.get(row+1).setStartTime(e.time);
 				}
 				row++;
 				time = e.time;
@@ -214,10 +214,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		return m;
 	}
 	private int getTime(int row){
-		if(pageType == DAILY_PAGE && row<dailyTimeslotDuration.size())
-				return dailyTimeslotDuration.get(row).getStartTime();
-		else if(pageType == RELATIVE_START_TIME_PAGE && row<timedTimeslotDuration.size())
-				return timedTimeslotDuration.get(row).getStartTime();
+		if(pageType == DAILY_PAGE && row<dailyTimeslot.size())
+				return dailyTimeslot.get(row).getStartTime();
+		else if(pageType == RELATIVE_START_TIME_PAGE && row<relativeTimeslot.size())
+				return relativeTimeslot.get(row).getStartTime();
 		else
 			return 0;
 	}
@@ -227,9 +227,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			return 0;
 		} else{
 			if(pageType == DAILY_PAGE)
-				return (dailyTimeslotDuration.get(position-1)).getStartTime()+600;
+				return (dailyTimeslot.get(position-1)).getStartTime()+600;
 			else if (pageType==RELATIVE_START_TIME_PAGE)
-				return (timedTimeslotDuration.get(position-1)).getStartTime()+10;
+				return (relativeTimeslot.get(position-1)).getStartTime()+10;
 			else
 				return 0;
 		}
@@ -293,13 +293,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 		//timedTimeslotDuration views
 		if(pageType == RELATIVE_START_TIME_PAGE) {
-			for(int r = 0; r<timedTimeslotDuration.size(); r++){
+			for(int r = 0; r<relativeTimeslot.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(0);
 				vg.rowSpec = GridLayout.spec(r+initialRows);
 				vg.setGravity(Gravity.CENTER);
 				
-				View v = timedTimeslotDuration.get(r).getView();
+				View v = relativeTimeslot.get(r).getView();
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
 				
@@ -308,13 +308,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 		//dailytimeslotDuration views
 		if (pageType == DAILY_PAGE){
-			for(int r = 0; r<dailyTimeslotDuration.size(); r++){
+			for(int r = 0; r<dailyTimeslot.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(0);
 				vg.rowSpec = GridLayout.spec(r+initialRows);
 				vg.setGravity(Gravity.CENTER);
 				
-				View v = dailyTimeslotDuration.get(r).getView();
+				View v = dailyTimeslot.get(r).getView();
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
 				
@@ -325,7 +325,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(dailyTimeslotDuration.size()+initialRows+2);
+			vg.rowSpec = GridLayout.spec(relativeTimeslot.size()+initialRows+2);
 			vg.setGravity(Gravity.CENTER);
 			
 			View v = loopTimeslot.getView();
@@ -339,7 +339,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			View v =inflater.inflate(R.layout.grid_timeslot_loop_label, null);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
-			vg.rowSpec = GridLayout.spec(dailyTimeslotDuration.size()+initialRows+2);
+			vg.rowSpec = GridLayout.spec(relativeTimeslot.size()+initialRows+2);
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(v, vg);
 		}
@@ -490,8 +490,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			for(StateCell kill : toRemove)
 				dataRay.remove(kill);
 			
-			timedTimeslotDuration.remove(row);
-			dailyTimeslotDuration.remove(row);
+			relativeTimeslot.remove(row);
+			dailyTimeslot.remove(row);
 			
 			grid.setRowCount(initialRows+endingRows + gridRows()-1);
 		}
@@ -520,8 +520,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			tdTimed = new RelativeStartTimeslot(this, getSpinnerId(), gridRows()-1, false);
 			tdTimed.setStartTime(duration);
 			
-			timedTimeslotDuration.add(tdTimed);
-			dailyTimeslotDuration.add(tdDaily);
+			relativeTimeslot.add(tdTimed);
+			dailyTimeslot.add(tdDaily);
 			
 			for(int i = gridCols(); i>0; i--){
 				addState();
@@ -547,6 +547,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private final int initialCols = 2;
 	private final int endingRows = 2;
 	private final int endingCols = 1;
+	
 	private final int gridRows(){
 		return grid.getRowCount()-initialRows-endingRows;
 	}

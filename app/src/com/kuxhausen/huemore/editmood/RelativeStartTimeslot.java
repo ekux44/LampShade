@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditOffsetDialogFragment.TimeslotTimeResult;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener, TimeslotTimeResult{
 
 	final static int MAX_MOOD_EVENT_TIME = (((999)*60)+59)*10;
+	
 	/* in deci seconds */
 	int moodEventTime;
 	private EditMoodStateGridFragment frag;
@@ -45,7 +47,7 @@ public class RelativeStartTimeslot implements TimeslotStartTime, OnClickListener
 	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {
 		if(hangingLoopMode && frag.isResumed()){
-			position = frag.timedTimeslotDuration.size();
+			position = frag.relativeTimeslot.size();
 		}
 		moodEventTime = Math.max(frag.computeMinimumValue(position),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
 		t.setText(getTime());
