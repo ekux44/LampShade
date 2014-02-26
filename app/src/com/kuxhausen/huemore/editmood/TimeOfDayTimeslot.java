@@ -36,6 +36,9 @@ public class TimeOfDayTimeslot implements OnClickListener{
 		setStartTime(0);
 	}
 
+	public void validate(){
+		setStartTime(moodEventTime);
+	}
 	
 	public String getTime() {
 		if(frag==null || frag.getActivity()==null)
@@ -46,6 +49,7 @@ public class TimeOfDayTimeslot implements OnClickListener{
 	
 	public View getView(int position) {
 		mPosition = position;
+		validate();
 		t.setText(getTime());
 		return t;
 	}
@@ -96,6 +100,7 @@ public class TimeOfDayTimeslot implements OnClickListener{
 			else{
 				t.setStartTime(t.frag.computeMinimumValue(t.mPosition));
 			}
+			t.frag.validate();
 		}
 	}
 }

@@ -105,6 +105,14 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	    return myView;
 	}
 	
+	public void validate(){
+		for(StateRow s : moodRows){
+			s.dailyTimeslot.validate();
+			s.relativeTimeslot.validate();
+		}
+		loopTimeslot.validate();
+	}
+	
 	private StateCell generateDefaultStateCell(){
 		StateCell mr = new StateCell(this.getActivity());
 		BulbState example = new BulbState();
@@ -403,30 +411,47 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			
 			grid.addView(rowView, vg);
 		}
-		//loop banner that sits beside loop timeslot
+		//loop related stuff
 		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
-			View v =inflater.inflate(R.layout.grid_timeslot_loop_label, null);
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(initialCols, gridStateCols);
-			vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
-			vg.setGravity(Gravity.CENTER);
-			grid.addView(v, vg);
-		}
-
-		//loop timeslot view
-		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
-			vg.setGravity(Gravity.CENTER);
+			//loop banner that sits beside loop timeslot
 			
-			View v = loopTimeslot.getView(moodRows.size());
-			if(v.getParent()!=null)
-				((ViewGroup)v.getParent()).removeView(v);
-			
-			grid.addView(v, vg);
+			{
+				View v =inflater.inflate(R.layout.grid_timeslot_loop_label, null);
+				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+				vg.columnSpec = GridLayout.spec(initialCols, gridStateCols);
+				vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
+				vg.setGravity(Gravity.CENTER);
+				grid.addView(v, vg);
+			}
+	
+			//loop timeslot view
+			{
+				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+				vg.columnSpec = GridLayout.spec(0);
+				vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
+				vg.setGravity(Gravity.CENTER);
+				
+				View v = loopTimeslot.getView(moodRows.size());
+				if(v.getParent()!=null)
+					((ViewGroup)v.getParent()).removeView(v);
+				
+				grid.addView(v, vg);
+			}
+			//vertical separator extended down to loop
+			{
+				ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
+	
+				ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
+				rowView.setImageDrawable(cd);
+				rowView.setMinimumWidth(1);
+				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+				vg.columnSpec = GridLayout.spec(1);
+				vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
+				vg.setGravity(Gravity.FILL_VERTICAL);
+	
+				grid.addView(rowView, vg);		
+			}
 		}
-		
 		
 		grid.invalidate();
 	}

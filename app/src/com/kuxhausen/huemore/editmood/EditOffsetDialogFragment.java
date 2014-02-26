@@ -14,15 +14,11 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class EditOffsetDialogFragment extends SherlockDialogFragment implements OnClickListener {
-
-	public interface TimeslotTimeResult{
-		public abstract void setStartTime(int duration);
-	}
 	
 	EditText seconds, minutes;
-	private TimeslotTimeResult listener;
+	private RelativeStartTimeslot listener;
 	
-	public void setTimeslotTimeResultListener(TimeslotTimeResult l){
+	public void setTimeslotTimeResultListener(RelativeStartTimeslot l){
 		listener = l;
 	}
 	
@@ -62,6 +58,7 @@ public class EditOffsetDialogFragment extends SherlockDialogFragment implements 
 		} catch (Exception e){
 		}
 		this.dismiss();
+		listener.frag.validate();
 	}
 	
 	@Override
