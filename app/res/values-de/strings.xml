@@ -5,7 +5,6 @@
     <string name="action_unlocks">Entsperren</string>
     <string name="cap_manual">MANUELL</string>
     <string name="cap_bulbs">LAMPEN</string>
-    <string name="cap_simple_mood">EINFACH</string>
     <string name="cap_hue_sat_mode">FARBTON</string>
     <string name="cap_color_temp_mode">TEMPERATUR</string>
     <string name="groups">Gruppen</string>
@@ -70,17 +69,10 @@
     <string name="cap_random">ZUFÄLLIG</string>
     <string name="broken_mood_link">Oops! Dieser Stimmungs-Link kann nicht gelesen werden</string>
     <string name="action_report_bug">Fehler melden</string>
-    <string name="cap_timed_mood">GEPLANT</string>
-    <string name="cap_multi_mood">MULTI</string>
     <string name="update_required">Um diese Stimmung anzuwenden, muss LampShade zuerst aktualisiert werden</string>
     <string name="corrupted_mood">Diese Stimmung kann nicht gelesen werden</string>
-    <string name="title_activity_edit_advanced_mood">Erweiterter Stimmungs-Editor</string>
-	<string name="contextmenu_delete_timeslot">Zeitvorgabe löschen</string>
+    <string name="contextmenu_delete_timeslot">Zeitvorgabe löschen</string>
 	<string name="contextmenu_delete_channel">Kanal löschen</string>
-	<string name="add_timeslot">+ Zeitvorgabe</string>
-	<string name="prompt_timeslot_time">Dauer</string>
-	<string name="grid_col_title_timeslot">Dauer</string>
-	<string name="add_channel">+ K A N A L</string>
 	<string name="grid_col_title_channels">Kanäle</string>
 	<string name="infinite_loop">Endlosschleife</string>
 	<string name="save">Speichern</string>
@@ -106,8 +98,6 @@
 	<string name ="widget_alarms_label">LampShade Alarms</string>
 	<string name ="widget_groups_label">LampShade Groups</string>
 	<string name ="include_brightness">Include Brightness</string>
-	<string name="cap_daily_mood">DAILY</string>
-	<string name="daily_start_time">Start Time</string>
 	
         <string-array name="repeat_days">
         <item>Sonntag</item>
@@ -134,12 +124,5 @@
         <item>1 Minute</item>
         <item>10 Minuten</item>
         <item>1 Hour</item>
-    </string-array>
-    <string-array name="timeslot_names_array">
-        <item>1 Sekunde</item>
-        <item>10 Sekunden</item>
-        <item>1 Minute</item>
-        <item>10 Minuten</item>
-        <item>Custom</item>
     </string-array>
 </resources>

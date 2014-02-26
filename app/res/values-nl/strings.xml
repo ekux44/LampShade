@@ -5,7 +5,6 @@
     <string name="action_unlocks">Ontgrendelen</string>
     <string name="cap_manual">MANUEEL</string>
     <string name="cap_bulbs">LAMPEN</string>
-    <string name="cap_simple_mood">SIMPEL</string>
     <string name="cap_hue_sat_mode">TINT</string>
     <string name="cap_color_temp_mode">TEMPERATUUR</string>
     <string name="groups">Groepen</string>
@@ -70,17 +69,10 @@
     <string name="cap_random">WILLEKEURIG</string>
     <string name="broken_mood_link">Oeps! Deze sfeer kan niet gelezen worden</string>
     <string name="action_report_bug">Fout melden</string>
-    <string name="cap_timed_mood">GEPLAND</string>
-    <string name="cap_multi_mood">MULTI</string>
     <string name="update_required">Deze sfeer heeft een nieuwere versie van Lampshade nodig</string>
     <string name="corrupted_mood">Deze sfeer kan niet gelezen worden</string>
-    <string name="title_activity_edit_advanced_mood">Geavanceerde Sfeer-Editor</string>
-	<string name="contextmenu_delete_timeslot">Verwijder tijdslot</string>
+    <string name="contextmenu_delete_timeslot">Verwijder tijdslot</string>
 	<string name="contextmenu_delete_channel">Verwijder kanaal</string>
-	<string name="add_timeslot">+ Tijdslot</string>
-	<string name="prompt_timeslot_time">Duur</string>
-	<string name="grid_col_title_timeslot">Duur</string>
-	<string name="add_channel">+ K A N A A L</string>
 	<string name="grid_col_title_channels">Kanalen</string>
 	<string name="infinite_loop">Herhaal</string>
 	<string name="save">Opslaan</string>
@@ -106,8 +98,6 @@
 	<string name ="widget_alarms_label">LampShade Alarms</string>
 	<string name ="widget_groups_label">LampShade Groups</string>
 	<string name ="include_brightness">Include Brightness</string>
-	<string name="cap_daily_mood">DAILY</string>
-	<string name="daily_start_time">Start Time</string>
 	
         <string-array name="repeat_days">
         <item>Zondag</item>
@@ -134,12 +124,5 @@
         <item>1 minuut</item>
         <item>10 minuten</item>
         <item>1 Hour</item>
-    </string-array>
-    <string-array name="timeslot_names_array">
-        <item>1 seconde</item>
-        <item>10 seconden</item>
-        <item>1 minuut</item>
-        <item>10 minuten</item>
-        <item>Willekeurig</item>
     </string-array>
 </resources>

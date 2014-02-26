@@ -5,7 +5,6 @@
     <string name="action_unlocks">Unlocks</string>
     <string name="cap_manual">MANUAL</string>
     <string name="cap_bulbs">BULBS</string>
-    <string name="cap_simple_mood">SIMPLE</string>
     <string name="cap_hue_sat_mode">HUE</string>
     <string name="cap_color_temp_mode">TEMPERATURE</string>
     <string name="groups">Groups</string>
@@ -70,17 +69,10 @@
     <string name="cap_random">RANDOM</string>
     <string name="broken_mood_link">Oops! This mood link cannot be read</string>
     <string name="action_report_bug">Report a bug</string>
-    <string name="cap_timed_mood">TIMED</string>
-    <string name="cap_multi_mood">MULTI</string>
     <string name="update_required">This mood requires an updated version of LampShade</string>
     <string name="corrupted_mood">This mood cannot be read</string>
-    <string name="title_activity_edit_advanced_mood">Advanced Mood Editor</string>
-	<string name="contextmenu_delete_timeslot">Delete timeslot</string>
+    <string name="contextmenu_delete_timeslot">Delete timeslot</string>
 	<string name="contextmenu_delete_channel">Delete channel</string>
-	<string name="add_timeslot">+ Timeslot</string>
-	<string name="prompt_timeslot_time">Duration</string>
-	<string name="grid_col_title_timeslot">Duration</string>
-	<string name="add_channel">+ C H A N N E L</string>
 	<string name="grid_col_title_channels">Channels</string>
 	<string name="infinite_loop">Loop</string>
 	<string name="save">Save</string>
@@ -106,8 +98,6 @@
 	<string name ="widget_alarms_label">LampShade Alarms</string>
 	<string name ="widget_groups_label">LampShade Groups</string>
 	<string name ="include_brightness">Include Brightness</string>
-	<string name="cap_daily_mood">DAILY</string>
-	<string name="daily_start_time">Start Time</string>
 	<string name="enable_port_forwarding">Enable remote access (Beta)</string>
 	<string name="port_forwarding_instructions">To control your Hue lights over the internet, configure your wifi router settings to forward a port (default is port 80) to the Hue hub. For help, visit the LampShade.io community on Google+ or Facebook</string>
 	<string name="port_forwarding_ip_prompt">Router\'s internet IP address</string>
@@ -168,12 +158,5 @@
         <item>1 Minute</item>
         <item>10 Minutes</item>
         <item>1 Hour</item>
-    </string-array>
-    <string-array name="timeslot_names_array">
-        <item>1 Second</item>
-        <item>10 Seconds</item>
-        <item>1 Minute</item>
-        <item>10 Minutes</item>
-        <item>Custom</item>
     </string-array>
 </resources>
