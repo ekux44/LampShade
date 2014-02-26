@@ -54,7 +54,7 @@
     <string name="alarm_repeat">Repeat:</string>
     <string name="cap_short_every_day">EVERY DAY</string>
     <string name="next_scheduled_intro">Next alarm</string>
-    <string name="update_welcome_title">New in LampShade 2.6</string>
+    <string name="update_welcome_title">New in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
     <string name="update_message">Please update HueMore to the newest version.</string>
     <string name="update_opt_out">Disable update reminders</string>
@@ -133,10 +133,10 @@
     </string-array>
 	
 	<string-array name="update_features">
-        <item>Introducing \'Daily\' moods, a new type of mood that can show different colors based on the time of day</item>
-        <item>Colors in moods can now have different relative brightnesses</item>
-        <item>The Tasker plugin can now be controlled with Tasker variables</item>
-        <item>New Groups widget</item>
+        <item>Improved mood editor</item>
+        <item>Improved asthetics</item>
+        <item>Fixed bug that occasionally prevented alarms from being unscheduled when visually turned off. Please restart your phone for this fix to take effect.</item>
+        <item>Fixed bug that occasionally caused other moods to be deleted when creating a new mood</item>
     </string-array>
    	<string-array name="mood_types">
         <item>Simple</item>

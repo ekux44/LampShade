@@ -54,7 +54,7 @@
     <string name="alarm_repeat">Herhaling:</string>
     <string name="cap_short_every_day">ELKE DAG</string>
     <string name="next_scheduled_intro">Volgende alarm</string>
-    <string name="update_welcome_title">Nieuw in LampShade 2.5</string>
+    <string name="update_welcome_title">Nieuw in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Bridge opzoeken. Dit kan enige momenten duren.</string>
     <string name="update_message">Update HueMore naar de laatste versie</string>
     <string name="update_opt_out">Schakel updateherinneringen uit</string>
@@ -109,13 +109,6 @@
 	<string name="cap_daily_mood">DAILY</string>
 	<string name="daily_start_time">Start Time</string>
 	
-	<string-array name="update_features">
-        <item>Je kunt nu geanimeerde Sferen maken!</item>
-        <item>Sferen kunnen nu gedeeld worden als links!</item>
-        <item>Wordt lid van de Lampshade Community op Facebook, G+ of Twitter om meer Sferen te ontdekken</item>
-        <item>Om het nieuwe Sfeer systeem mogelijk te maken, starten alarmen op de gezette tijd. Alle vorige alarmen zijn verwijderd.</item>
-        <item>Door grote veranderingen in de App moeten de Tasker Plugin Acties ook opnieuw ingesteld worden. Sorry voor het ongemak!</item>
-    </string-array>
         <string-array name="repeat_days">
         <item>Zondag</item>
         <item>Maandag</item>

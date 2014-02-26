@@ -54,7 +54,7 @@
     <string name="alarm_repeat">Wiederholen:</string>
     <string name="cap_short_every_day">TÄGLICH</string>
     <string name="next_scheduled_intro">Nächster Alarm</string>
-    <string name="update_welcome_title">Neuigkeiten in LampShade 2.5</string>
+    <string name="update_welcome_title">Neuigkeiten in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Es wird nach der Bridge gesucht, dies kann einen Moment dauern.</string>
     <string name="update_message">Bitte aktualisieren Sie HueMore auf die neuste Version.</string>
     <string name="update_opt_out">Update Benachrichtigungen ausschalten</string>
@@ -109,13 +109,6 @@
 	<string name="cap_daily_mood">DAILY</string>
 	<string name="daily_start_time">Start Time</string>
 	
-	<string-array name="update_features">
-        <item>Sie können nun animierte Szenen erstellen</item>
-        <item>Szenen können nun als Links geteilt werden!</item>
-        <item>Trete der LampShade.io Community auf Facebook, G+ oder Twitter bei um mehr Szenen zu entdecken</item>
-        <item>To accommodate the new mood system, alarms now start at the set time. All previous alarms have been cleared</item>
-        <item>Wegen großen Änderungen der App müssen Tasker Plugin Aktionen neu erstellt werden. Tut mir leid!</item>
-    </string-array>
         <string-array name="repeat_days">
         <item>Sonntag</item>
         <item>Montag</item>
