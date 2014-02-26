@@ -90,7 +90,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 		addRow();
 		
-	    
+		loopTimeslot = new RelativeStartTimeslot(this,getSpinnerId(),0);
+		
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
 			
@@ -99,7 +100,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			loadMood(Utils.getMoodFromDatabase(priorName, this.getActivity()));
 		}
 	    
-		loopTimeslot = new RelativeStartTimeslot(this,getSpinnerId(),0);
 		redrawGrid();
 	    
 	    return myView;
@@ -140,11 +140,11 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	
 	public static int calculateMoodType(Mood m){
-		if (m.timeAddressingRepeatPolicy==true){
-			return DAILY_PAGE;
-		}else if(!m.usesTiming) {
+		if(!m.usesTiming) {
 			return SIMPLE_PAGE;
-		}else
+		} else if (m.timeAddressingRepeatPolicy==true){
+			return DAILY_PAGE;
+		} else
 			return RELATIVE_START_TIME_PAGE;
 	}
 
@@ -275,6 +275,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 
 	public void redrawGrid() {
+		if(grid==null)
+			return;
 		grid.removeAllViews();
 		LayoutInflater inflater = this.getActivity().getLayoutInflater();
 		for(int r = 0; r< moodRows.size(); r++)
