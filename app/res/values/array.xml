@@ -15,13 +15,6 @@
         <item>6000</item>
         <item>36000</item>
     </integer-array>
-    <integer-array name="timeslot_values_array">
-        <item>10</item>
-        <item>100</item>
-        <item>600</item>
-        <item>6000</item>
-        <item>-1</item>
-    </integer-array>
     <string name="ip_address_v4_seperator">.</string>
     <string name="default_port">80</string>
     
