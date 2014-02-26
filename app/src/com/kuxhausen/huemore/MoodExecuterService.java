@@ -156,7 +156,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public void startMood(Mood m, String moodName){
 		mood = m;
 		this.moodName = moodName;
-		createNotification(moodName);
+		createNotification();
 		queue.clear();
 		loadMoodIntoQueue();
 		restartCountDownTimer();
@@ -222,12 +222,15 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	
 	
-	public void createNotification(String secondaryText) {
+	public void createNotification() {
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,
 				resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+		String secondaryText = ((groupName!=null)?groupName:"") + ((moodName!=null)?(" \u2192 " +moodName):"");
+		
+		
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this)
 				.setSmallIcon(R.drawable.lampshade_notification)
@@ -330,7 +333,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		super.onCreate();
 		volleyRQ = Volley.newRequestQueue(this);
 		restartCountDownTimer();
-		createNotification("");
+		createNotification();
 		
 		//acquire wakelock
 		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
@@ -521,7 +524,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					AlarmReciever.scheduleInternalAlarm(me, as, time);
 					suspendingTillNextEvent = true;
 				} else if (queue.peek() == null && (mood ==null || !mood.isInfiniteLooping())){
-					createNotification("");
+					moodName = null;
+					createNotification();
 					if(countDownToStopSelf<=0){
 						me.stopSelf();
 						countDownTimer = null;

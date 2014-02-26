@@ -135,7 +135,11 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	@Override
 	public void preview(){
-		((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), pager.getName());
+		String name = pager.getName();
+		if(name==null || name.length()<1){
+			name = pager.getString(R.string.hint_mood_name);
+		}
+		((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), name);
 		
 	}
 	
