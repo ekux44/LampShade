@@ -99,7 +99,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			loadMood(Utils.getMoodFromDatabase(priorName, this.getActivity()));
 		}
 	    
-		loopTimeslot = new RelativeStartTimeslot(this,getSpinnerId(),0,true);
+		loopTimeslot = new RelativeStartTimeslot(this,getSpinnerId(),0);
 		redrawGrid();
 	    
 	    return myView;
@@ -114,7 +114,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		getCell(new Pair(data.getIntExtra(InternalArguments.ROW,-1)
+		getCell(new Pair<Integer, Integer>(data.getIntExtra(InternalArguments.ROW,-1)
 				,data.getIntExtra(InternalArguments.COLUMN,-1))).hs = gson.fromJson(
 						data.getStringExtra(InternalArguments.HUE_STATE),
 						BulbState.class);
@@ -176,13 +176,16 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		//set loop button
 		pager.setChecked(mFromDB.isInfiniteLooping());
 		
-		//TODO do something with mFromDB.loopIterationTimeLength
+		loopTimeslot.setStartTime(mFromDB.loopIterationTimeLength);
 		
 		redrawGrid();
 	}
 	private Mood getMood() {		
 		Mood m = new Mood();
-		m.usesTiming = true; //TODO not always the case...
+		if(pageType == DAILY_PAGE || pageType == RELATIVE_START_TIME_PAGE)
+			m.usesTiming = true;
+		else
+			m.usesTiming = false;
 		m.setNumChannels(gridCols());
 		if(pageType == SIMPLE_PAGE || pageType == DAILY_PAGE)
 			m.timeAddressingRepeatPolicy=true;
@@ -208,7 +211,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			eRay[i] = events.get(i);
 		
 		m.events = eRay;
-		m.loopIterationTimeLength = getTime(this.gridRows());
+		m.loopIterationTimeLength = loopTimeslot.getStartTime();
 		return m;
 	}
 	private int getTime(int row){
@@ -222,6 +225,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	/** compute Minimum Value at my position**/
 	public int computeMinimumValue(int position){
+		position = Math.min(position, moodRows.size());
 		if(position <=0){
 			return 0;
 		} else{
@@ -274,18 +278,21 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				v.setTag(this.generateTag(r, c));
 				grid.addView(v, vg);
 			}
+		int gridStateRows = this.gridRows();
+		int gridStateCols = this.gridCols();
+		
 		//add timeslot button
 		if(pageType == RELATIVE_START_TIME_PAGE || pageType == DAILY_PAGE){
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(initialRows+this.gridRows()+endingRows-1);
+			vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows-1);
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(addTimeslot, vg);
 		}
 		//add channel button
 		{
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(initialCols+this.gridCols()+endingCols-1);
+			vg.columnSpec = GridLayout.spec(initialCols+gridStateCols+endingCols-1);
 			vg.rowSpec = GridLayout.spec(0);
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(addChannel, vg);
@@ -321,28 +328,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				grid.addView(v, vg);
 			}
 		}
-		//loop timeslot view
-		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(0);
-			vg.rowSpec = GridLayout.spec(moodRows.size()+initialRows+2);
-			vg.setGravity(Gravity.CENTER);
-			
-			View v = loopTimeslot.getView(moodRows.size());
-			if(v.getParent()!=null)
-				((ViewGroup)v.getParent()).removeView(v);
-			
-			grid.addView(v, vg);
-		}
-		//loop banner that sits beside loop timeslot
-		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
-			View v =inflater.inflate(R.layout.grid_timeslot_loop_label, null);
-			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
-			vg.rowSpec = GridLayout.spec(moodRows.size()+initialRows+2);
-			vg.setGravity(Gravity.CENTER);
-			grid.addView(v, vg);
-		}
+		
 		//channel label
 		{
 			Button b =(Button) inflater.inflate(R.layout.grid_col_channels_label, null);
@@ -375,7 +361,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				
 			});
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(initialCols, this.gridCols());
+			vg.columnSpec = GridLayout.spec(initialCols, gridStateCols);
 			vg.rowSpec = GridLayout.spec(0);
 			vg.setGravity(Gravity.CENTER);
 			grid.addView(b, vg);
@@ -398,7 +384,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			rowView.setMinimumWidth(1);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(1);
-			vg.rowSpec = GridLayout.spec(0, initialRows+gridRows());
+			vg.rowSpec = GridLayout.spec(0, initialRows+gridStateRows);
 			vg.setGravity(Gravity.FILL_VERTICAL);
 
 			grid.addView(rowView, vg);		
@@ -411,12 +397,37 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			rowView.setImageDrawable(cd);
 			rowView.setMinimumHeight(1);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
-			vg.columnSpec = GridLayout.spec(0,initialCols+gridCols());
+			vg.columnSpec = GridLayout.spec(0,initialCols+gridStateCols);
 			vg.rowSpec = GridLayout.spec(1);
 			vg.setGravity(Gravity.FILL_HORIZONTAL);
 			
 			grid.addView(rowView, vg);
 		}
+		//loop banner that sits beside loop timeslot
+		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
+			View v =inflater.inflate(R.layout.grid_timeslot_loop_label, null);
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(initialCols, gridStateCols);
+			vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
+			vg.setGravity(Gravity.CENTER);
+			grid.addView(v, vg);
+		}
+
+		//loop timeslot view
+		if(pageType == RELATIVE_START_TIME_PAGE && pager.isChecked()){
+			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
+			vg.columnSpec = GridLayout.spec(0);
+			vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows);
+			vg.setGravity(Gravity.CENTER);
+			
+			View v = loopTimeslot.getView(moodRows.size());
+			if(v.getParent()!=null)
+				((ViewGroup)v.getParent()).removeView(v);
+			
+			grid.addView(v, vg);
+		}
+		
+		
 		grid.invalidate();
 	}
 
@@ -454,7 +465,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 				return true;
 			case R.id.contextstatemenu_delete:
-				deleteCell(contextSpot);
+				getCell(contextSpot).hs = new BulbState();
 				redrawGrid();
 				return true;
 			case R.id.contextstatemenu_delete_timeslot:
@@ -474,11 +485,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		int r = tag.first;
 		int c = tag.second;
 		return moodRows.get(r).cellRay.get(c);
-	}
-	public void deleteCell(Pair<Integer, Integer> tag){
-		int r = tag.first;
-		int c = tag.second;
-		moodRows.get(r).cellRay.remove(c);
 	}
 	public Pair<Integer,Integer> generateTag(int r, int c){
 		return new Pair<Integer,Integer>(r, c);
@@ -509,7 +515,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				newRow.cellRay.add(generateDefaultStateCell());
 			}
 			newRow.dailyTimeslot = new TimeOfDayTimeslot(this, getSpinnerId(), gridRows()-1);
-			newRow.relativeTimeslot = new RelativeStartTimeslot(this, getSpinnerId(), gridRows()-1, false);
+			newRow.relativeTimeslot = new RelativeStartTimeslot(this, getSpinnerId(), gridRows()-1);
 			
 			moodRows.add(newRow);
 		}else{

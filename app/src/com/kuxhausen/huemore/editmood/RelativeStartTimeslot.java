@@ -19,9 +19,8 @@ public class RelativeStartTimeslot implements OnClickListener, TimeslotTimeResul
 	private EditMoodStateGridFragment frag;
 	private Button t;
 	private int mPosition;
-	private boolean hangingLoopMode;
 	
-	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int id, int pos, boolean hangingLoop){
+	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int id, int pos){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
@@ -29,7 +28,6 @@ public class RelativeStartTimeslot implements OnClickListener, TimeslotTimeResul
 		
 		moodEventTime = 0;
 		mPosition = pos;
-		hangingLoopMode = hangingLoop;
 		setStartTime(0);
 	}
 
@@ -46,9 +44,6 @@ public class RelativeStartTimeslot implements OnClickListener, TimeslotTimeResul
 
 	@Override
 	public void setStartTime(int offsetWithinDayInDeciSeconds) {
-		if(hangingLoopMode && frag.isResumed()){
-			mPosition = frag.moodRows.size();
-		}
 		moodEventTime = Math.max(frag.computeMinimumValue(mPosition),Math.min(MAX_MOOD_EVENT_TIME,offsetWithinDayInDeciSeconds));
 		t.setText(getTime());
 	}
