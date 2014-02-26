@@ -230,7 +230,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 				this)
-				.setSmallIcon(R.drawable.huemore)
+				.setSmallIcon(R.drawable.lampshade_notification)
 				.setContentTitle(
 						this.getResources().getString(R.string.app_name))
 				.setContentText(secondaryText)
