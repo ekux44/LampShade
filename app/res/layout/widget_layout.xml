@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitStart"
-            android:src="@drawable/preview" />
+            android:src="@drawable/lampshade_preview" />
 
         <TextView
             android:id="@+id/alarms_title"

@@ -68,7 +68,6 @@
         <activity
             android:name="com.kuxhausen.huemore.automation.EditActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:icon="@drawable/preview"
             android:label="@string/app_name"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden"
