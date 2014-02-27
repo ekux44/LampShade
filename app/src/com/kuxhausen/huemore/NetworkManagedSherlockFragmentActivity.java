@@ -67,12 +67,12 @@ public class NetworkManagedSherlockFragmentActivity extends
 	    }
 	}
 	
-	public void setGroup(int[] bulbs, String optionalName){
+	public void setGroup(int[] bulbs, String name){
 		groupValues = bulbs;
 		if(mBound)
-			mService.onGroupSelected(bulbs, null);
+			mService.onGroupSelected(bulbs, null, name);
 			
-		groupName = optionalName;
+		groupName = name;
 	}
 	public void setBrightness(int b){
 		if(mBound)
@@ -189,7 +189,7 @@ public class NetworkManagedSherlockFragmentActivity extends
             serviceListeners.clear();
             
             if(groupValues!=null){
-    			mService.onGroupSelected(groupValues, null);
+    			mService.onGroupSelected(groupValues, null, groupName);
             }
             if(brightnessCache!=null){
             	mService.setBrightness(brightnessCache);

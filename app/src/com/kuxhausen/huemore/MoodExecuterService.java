@@ -95,7 +95,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	boolean groupIsColorLooping=false;
 	boolean groupIsAlerting=false;
 	
-	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri){
+	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri, String groupName){
 		groupIsAlerting = false;
 		groupIsColorLooping = false;
 		group = bulbs;
@@ -107,6 +107,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			bulbRelBri[i] = MAX_REL_BRI;
 			bulbKnown[i] = KnownState.Unknown;
 		}
+		
+		this.groupName = groupName;
 		
 		if(optionalBri==null){
 			for(int i = 0; i< group.length; i++){
@@ -228,7 +230,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,
 				resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		String secondaryText = ((groupName!=null)?groupName:"") + ((moodName!=null)?(" \u2192 " +moodName):"");
+		String secondaryText = ((groupName!=null&&moodName!=null)?groupName:"") + ((moodName!=null)?(" \u2192 " +moodName):"");
 		
 		
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
@@ -376,40 +378,13 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
 					moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
 					moodName = (moodName == null) ? "Unknown Mood" : moodName;
-					groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
 					
 					if(moodPairs.first!=null && moodPairs.first.length>0){
 						int[] bulbs = new int[moodPairs.first.length];
 						for(int i = 0; i< bulbs.length; i++)
 							bulbs[i] = moodPairs.first[i];
-						onGroupSelected(bulbs, moodPairs.second.second);
-					} else if(group==null){
-						//default to the all group
-						String[] groupColumns = { GroupColumns.BULB };
-						String[] gWhereClause = {this.getResources().getString(R.string.cap_all)};
-						Cursor groupCursor = getContentResolver().query(
-								DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																					// default
-																					// content
-																					// URI
-																					// for the
-																					// provider.
-								groupColumns, // Return the note ID and title for each note.
-								GroupColumns.GROUP + "=?", // selection clause
-								gWhereClause, // selection clause args
-								null // Use the default sort order.
-								);
-
-						ArrayList<Integer> groupStates = new ArrayList<Integer>();
-						while (groupCursor.moveToNext()) {
-							groupStates.add(groupCursor.getInt(0));
-						}
-						Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-						
-						int[] bulbs = new int[bulbS.length];
-						for(int i = 0; i< bulbs.length; i++)
-							bulbs[i] = bulbS[i];
-						onGroupSelected(bulbs, null);
+						groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
+						onGroupSelected(bulbs, moodPairs.second.second, groupName);
 					}
 					if(moodPairs.second.first!=null)
 						startMood(moodPairs.second.first, moodName);				
