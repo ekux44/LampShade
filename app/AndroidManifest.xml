@@ -59,7 +59,7 @@
         </activity>
         
         <activity
-            android:name="com.kuxhausen.huemore.SettingsDialogFragment"
+            android:name="com.kuxhausen.huemore.SettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/blue" >

@@ -397,7 +397,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_settings:
-			Intent iSet = new Intent(this, SettingsDialogFragment.class);
+			Intent iSet = new Intent(this, SettingsActivity.class);
 			this.startActivity(iSet);
 			return true;
 		case R.id.action_communities:

@@ -19,7 +19,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class SettingsDialogFragment extends SherlockActivity implements
+public class SettingsActivity extends SherlockActivity implements
 		OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener {
 
 	SharedPreferences settings;
