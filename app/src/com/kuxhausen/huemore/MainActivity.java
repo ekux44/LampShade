@@ -30,7 +30,6 @@ import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.persistence.DatabaseHelper;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.registration.WelcomeDialogFragment;
@@ -41,33 +40,19 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
  */
 public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 
-	DatabaseHelper databaseHelper = new DatabaseHelper(this);
-	IabHelper mPlayHelper;
-	private MainActivity me;
-	Inventory lastQuerriedInventory;
-	SharedPreferences settings;
-	
+	protected IabHelper mPlayHelper;
+	protected Inventory lastQuerriedInventory;
+	private final MainActivity me = this;
+	private SharedPreferences mSettings;
+	private ViewPager mGroupBulbViewPager;
 	private GroupBulbPagerAdapter mGroupBulbPagerAdapter;
-	private ViewPager mViewPager1;
-	private NetworkManagedSherlockFragmentActivity parrentActivity;
-	
-	/**
-     * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
-     * above, but is designed to give continuous feedback to the user when scrolling.
-     */
-    private SlidingTabLayout mBulbGroupSlidingTabLayout;
-	
-	private SeekBar brightnessBar;
-	private boolean isTrackingTouch = false;
+    private SlidingTabLayout mGroupBulbSlidingTabLayout;
 	private MoodManualPagerAdapter mMoodManualPagerAdapter;
-	private ViewPager mViewPager2;
-	
-	/**
-     * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
-     * above, but is designed to give continuous feedback to the user when scrolling.
-     */
-    private SlidingTabLayout mManualMoodSlidingTabLayout;
-	
+	private ViewPager mMoodManualViewPager;
+    private SlidingTabLayout mMoodManualSlidingTabLayout;
+    private SeekBar mBrightnessBar;
+	private boolean mIsTrackingTouch = false;
+    
 	@Override
 	public void onConnectionStatusChanged(boolean connected){
 		this.supportInvalidateOptionsMenu();
@@ -79,29 +64,27 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main_activity);
-		me = this;
 		
 		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
-		parrentActivity = this;
 		// Set up the ViewPager, attaching the adapter.
-		mViewPager1 = (ViewPager) this.findViewById(R.id.bulb_group_pager);
-		mViewPager1.setAdapter(mGroupBulbPagerAdapter);
+		mGroupBulbViewPager = (ViewPager) this.findViewById(R.id.bulb_group_pager);
+		mGroupBulbViewPager.setAdapter(mGroupBulbPagerAdapter);
 		
-		settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
+		mSettings = PreferenceManager.getDefaultSharedPreferences(me);
 		
-		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
-			if (mViewPager1.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
-				mViewPager1.setCurrentItem(GroupBulbPagerAdapter.GROUP_LOCATION);
+		if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
+			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
+				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.GROUP_LOCATION);
 		} else {
-			if (mViewPager1.getCurrentItem() != GroupBulbPagerAdapter.BULB_LOCATION)
-				mViewPager1.setCurrentItem(GroupBulbPagerAdapter.BULB_LOCATION);
+			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.BULB_LOCATION)
+				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.BULB_LOCATION);
 		}
 		
 		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
-        mBulbGroupSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.bulb_group_sliding_tabs);
-        mBulbGroupSlidingTabLayout.setViewPager(mViewPager1);
-        mBulbGroupSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.green_color));
+        mGroupBulbSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.bulb_group_sliding_tabs);
+        mGroupBulbSlidingTabLayout.setViewPager(mGroupBulbViewPager);
+        mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.green_color));
 		
 		
 		if ((getResources().getConfiguration().screenLayout &
@@ -109,35 +92,34 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
 					
 			mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
-			parrentActivity = this;
 			// Set up the ViewPager, attaching the adapter.
-			mViewPager2 = (ViewPager) this.findViewById(R.id.manual_mood_pager);
-			mViewPager2.setAdapter(mMoodManualPagerAdapter);
+			mMoodManualViewPager = (ViewPager) this.findViewById(R.id.manual_mood_pager);
+			mMoodManualViewPager.setAdapter(mMoodManualPagerAdapter);
 			
-			if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
-				mViewPager2.setCurrentItem(MoodManualPagerAdapter.MOOD_LOCATION);
+			if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
+				mMoodManualViewPager.setCurrentItem(MoodManualPagerAdapter.MOOD_LOCATION);
 			}
 			
 			// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
 	        // it's PagerAdapter set.
-	        mManualMoodSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
-	        mManualMoodSlidingTabLayout.setViewPager(mViewPager2);
-	        mManualMoodSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
+	        mMoodManualSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
+	        mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
+	        mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
 			
 			
-			brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
-			brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			mBrightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+			mBrightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
 					me.setBrightness(seekBar.getProgress());
-					isTrackingTouch = false;
+					mIsTrackingTouch = false;
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
 					me.setBrightness(seekBar.getProgress());
-					isTrackingTouch = true;
+					mIsTrackingTouch = true;
 				}
 
 				@Override
@@ -180,8 +162,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	
 	@Override
 	public void onSaveInstanceState(Bundle outstate){
-		Editor edit = settings.edit();
-		switch(mViewPager1.getCurrentItem()){
+		Editor edit = mSettings.edit();
+		switch(mGroupBulbViewPager.getCurrentItem()){
 			case GroupBulbPagerAdapter.BULB_LOCATION:
 				edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
 				break;
@@ -189,8 +171,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
 				break;
 		}
-		if(mViewPager2!=null){
-			switch(mViewPager2.getCurrentItem()){
+		if(mMoodManualViewPager!=null){
+			switch(mMoodManualViewPager.getCurrentItem()){
 				case MoodManualPagerAdapter.MANUAL_LOCATION:
 					edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, false);
 					break;
@@ -231,8 +213,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		
 	@Override
 	public void onBrightnessChanged(int brightness) {
-		if(brightnessBar!=null && !isTrackingTouch)
-			brightnessBar.setProgress(brightness);
+		if(mBrightnessBar!=null && !mIsTrackingTouch)
+			mBrightnessBar.setProgress(brightness);
 	}
 
 	@Override
