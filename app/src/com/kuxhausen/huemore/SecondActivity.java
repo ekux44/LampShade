@@ -2,12 +2,14 @@ package com.kuxhausen.huemore;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -30,6 +32,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	IabHelper mPlayHelper;
 	Inventory lastQuerriedInventory;
 	public OnBulbListReturnedListener bulbListenerFragment;
+	SharedPreferences settings;
 	
 	/**
      * A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
@@ -74,8 +77,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
         mManualMoodSlidingTabLayout.setViewPager(mViewPager2);
         mManualMoodSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
 		
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(parrentActivity);
+		settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
 		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
 			mViewPager2.setCurrentItem(MoodManualPagerAdapter.MOOD_LOCATION);
 		}
@@ -102,6 +104,22 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 				}
 			}
 		});
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outstate){
+		Editor edit = settings.edit();
+		switch(mViewPager2.getCurrentItem()){
+			case MoodManualPagerAdapter.MANUAL_LOCATION:
+				edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, false);
+				break;
+			case MoodManualPagerAdapter.MOOD_LOCATION:
+				edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
+				break;
+		}
+		edit.commit();
+		
+		super.onSaveInstanceState(outstate);
 	}
 	
 	public void invalidateSelection() {

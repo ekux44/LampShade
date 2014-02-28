@@ -12,15 +12,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class SettingsActivity extends SherlockActivity implements
-		OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener {
+		OnClickListener, android.widget.CompoundButton.OnCheckedChangeListener {
 
 	SharedPreferences settings;
 	EditText internetIP, internetPort;
@@ -40,23 +38,7 @@ public class SettingsActivity extends SherlockActivity implements
 		rateButton.setOnClickListener(this);
 
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
-
-		RadioGroup firstViewRadioGroup = (RadioGroup) this
-				.findViewById(R.id.firstViewSettingsGroup);
-		firstViewRadioGroup.setOnCheckedChangeListener(this);
-		RadioGroup secondViewRadioGroup = (RadioGroup) this
-				.findViewById(R.id.secondViewSettingGroup);
-		secondViewRadioGroup.setOnCheckedChangeListener(this);
-
-		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false))
-			firstViewRadioGroup.check(R.id.groupsViewRadioButton);
-		else
-			firstViewRadioGroup.check(R.id.bulbsViewRadioButton);
-		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true))
-			secondViewRadioGroup.check(R.id.moodsViewRadioButton);
-		else
-			secondViewRadioGroup.check(R.id.manualViewRadioButton);
-
+        
 		enablePortFowarding = (CheckBox)this.findViewById(R.id.portForwardingCheckBox);
 		enablePortFowarding.setOnCheckedChangeListener(this);
 		
@@ -85,29 +67,6 @@ public class SettingsActivity extends SherlockActivity implements
 		case R.id.rateButton:
 			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri
 					.parse("market://details?id=" + "com.kuxhausen.huemore")));
-			break;
-		}
-	}
-
-	@Override
-	public void onCheckedChanged(RadioGroup group, int checkedId) {
-		Editor edit = settings.edit();
-		switch (checkedId) {
-		case R.id.groupsViewRadioButton:
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
-			edit.commit();
-			break;
-		case R.id.bulbsViewRadioButton:
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
-			edit.commit();
-			break;
-		case R.id.moodsViewRadioButton:
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
-			edit.commit();
-			break;
-		case R.id.manualViewRadioButton:
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, false);
-			edit.commit();
 			break;
 		}
 	}

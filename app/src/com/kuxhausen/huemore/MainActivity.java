@@ -45,6 +45,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	IabHelper mPlayHelper;
 	private MainActivity me;
 	Inventory lastQuerriedInventory;
+	SharedPreferences settings;
 	
 	private GroupBulbPagerAdapter mGroupBulbPagerAdapter;
 	private ViewPager mViewPager1;
@@ -86,8 +87,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		mViewPager1 = (ViewPager) this.findViewById(R.id.bulb_group_pager);
 		mViewPager1.setAdapter(mGroupBulbPagerAdapter);
 		
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(parrentActivity);
+		settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
+		
 		if (settings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
 			if (mViewPager1.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
 				mViewPager1.setCurrentItem(GroupBulbPagerAdapter.GROUP_LOCATION);
@@ -176,7 +177,32 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		//TODO turn off before relase
 		com.kuxhausen.huemore.testing.Tests.tests();
 	}
-
+	
+	@Override
+	public void onSaveInstanceState(Bundle outstate){
+		Editor edit = settings.edit();
+		switch(mViewPager1.getCurrentItem()){
+			case GroupBulbPagerAdapter.BULB_LOCATION:
+				edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
+				break;
+			case GroupBulbPagerAdapter.GROUP_LOCATION:
+				edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
+				break;
+		}
+		if(mViewPager2!=null){
+			switch(mViewPager2.getCurrentItem()){
+				case MoodManualPagerAdapter.MANUAL_LOCATION:
+					edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, false);
+					break;
+				case MoodManualPagerAdapter.MOOD_LOCATION:
+					edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
+					break;
+			}
+		}
+		edit.commit();
+		super.onSaveInstanceState(outstate);
+	}
+	
 	@Override
 	public void setGroup(int[] bulbs, String optionalName){
 		super.setGroup(bulbs, optionalName);
