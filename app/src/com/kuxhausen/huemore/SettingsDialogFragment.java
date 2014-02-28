@@ -1,62 +1,50 @@
 package com.kuxhausen.huemore;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class SettingsDialogFragment extends DialogFragment implements
+public class SettingsDialogFragment extends SherlockActivity implements
 		OnClickListener, OnCheckedChangeListener, android.widget.CompoundButton.OnCheckedChangeListener {
 
 	SharedPreferences settings;
-	NetworkManagedSherlockFragmentActivity ma;
-	
 	EditText internetIP, internetPort;
 	View portForwardingOptions;
 	CheckBox enablePortFowarding;
 	
-	private static final String PATTERN = 
-	        "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-	        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-	        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
-	        "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.settings, container, false);
-		ma = (NetworkManagedSherlockFragmentActivity) this.getActivity();
-		this.getDialog().setTitle(R.string.action_settings);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
+		setContentView(R.layout.settings);
+		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		this.getSupportActionBar().setTitle(R.string.action_settings);
+
+		Button rateButton = (Button) this.findViewById(R.id.rateButton);
 		rateButton.setOnClickListener(this);
 
-		settings = PreferenceManager.getDefaultSharedPreferences(ma);
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-		RadioGroup firstViewRadioGroup = (RadioGroup) myView
+		RadioGroup firstViewRadioGroup = (RadioGroup) this
 				.findViewById(R.id.firstViewSettingsGroup);
 		firstViewRadioGroup.setOnCheckedChangeListener(this);
-		RadioGroup secondViewRadioGroup = (RadioGroup) myView
+		RadioGroup secondViewRadioGroup = (RadioGroup) this
 				.findViewById(R.id.secondViewSettingGroup);
 		secondViewRadioGroup.setOnCheckedChangeListener(this);
 
@@ -69,14 +57,14 @@ public class SettingsDialogFragment extends DialogFragment implements
 		else
 			secondViewRadioGroup.check(R.id.manualViewRadioButton);
 
-		enablePortFowarding = (CheckBox)myView.findViewById(R.id.portForwardingCheckBox);
+		enablePortFowarding = (CheckBox)this.findViewById(R.id.portForwardingCheckBox);
 		enablePortFowarding.setOnCheckedChangeListener(this);
 		
-		internetIP = (EditText)myView.findViewById(R.id.portForwardingEditText);
-		internetPort = (EditText)myView.findViewById(R.id.portNumberEditText);
-		portForwardingOptions = myView.findViewById(R.id.portForwardingOptions);
+		internetIP = (EditText)this.findViewById(R.id.portForwardingEditText);
+		internetPort = (EditText)this.findViewById(R.id.portNumberEditText);
+		portForwardingOptions = this.findViewById(R.id.portForwardingOptions);
 		
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ma);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		String internetBridge = settings.getString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null);
 		if(internetBridge!=null){
 			
@@ -89,19 +77,16 @@ public class SettingsDialogFragment extends DialogFragment implements
 			enablePortFowarding.setChecked(false);
 			portForwardingOptions.setVisibility(View.GONE);
 		}
-		
-		return myView;
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.rateButton:
-			ma.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri
 					.parse("market://details?id=" + "com.kuxhausen.huemore")));
 			break;
 		}
-
 	}
 
 	@Override
@@ -124,9 +109,7 @@ public class SettingsDialogFragment extends DialogFragment implements
 			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, false);
 			edit.commit();
 			break;
-
 		}
-
 	}
 
 	@Override
@@ -144,12 +127,23 @@ public class SettingsDialogFragment extends DialogFragment implements
 		if(enablePortFowarding.isChecked()){
 			String candidateRemoteIP = internetIP.getText().toString()+":"+internetPort.getText().toString();
 			if(candidateRemoteIP.length()>1){
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ma);
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 				Editor edit = settings.edit();
 				edit.putString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, candidateRemoteIP);
 				edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, candidateRemoteIP);
 				edit.commit();
 			}
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.startActivity(new Intent(this,MainActivity.class));
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

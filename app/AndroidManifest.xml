@@ -58,6 +58,13 @@
             android:theme="@style/blue" >
         </activity>
         
+        <activity
+            android:name="com.kuxhausen.huemore.SettingsDialogFragment"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/blue" >
+        </activity>
+        
         <provider
             android:name="com.kuxhausen.huemore.persistence.HueMoreProvider"
             android:authorities="com.kuxhausen.provider.huemore.database"
