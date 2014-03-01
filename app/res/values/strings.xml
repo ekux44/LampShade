@@ -107,6 +107,7 @@
 	<string name="help_page_title">Help Pages</string>
 	<string name="minutes">Minutes</string>
 	<string name="start_time">Start Time</string>
+	<string name="show_NFC_read_page_descriptor">Show Quick Controls page when NFC tags read</string>
 	
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>
 	<string name="help_title_alarms">Alarms</string>

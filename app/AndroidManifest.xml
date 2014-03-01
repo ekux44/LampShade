@@ -108,6 +108,13 @@
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/blue"
             android:noHistory="true" >
+        </activity>
+        <activity
+            android:name="com.kuxhausen.huemore.nfc.NfcReadRouterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/blue"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -180,7 +187,7 @@
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         
-   <receiver
+   		<receiver
             android:name="com.kuxhausen.huemore.widget.GroupWidgetProvider"
             android:exported="true" android:label="@string/widget_groups_label">
             <intent-filter>

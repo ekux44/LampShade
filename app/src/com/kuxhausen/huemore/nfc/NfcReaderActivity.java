@@ -2,7 +2,6 @@ package com.kuxhausen.huemore.nfc;
 
 import java.nio.charset.Charset;
 
-import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -17,7 +16,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.kuxhausen.huemore.DecodeErrorActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
@@ -52,28 +50,33 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-			Pair<Integer[], Pair<Mood, Integer>> result = NfcReaderActivity.getGroupMoodBrightnessFromNdef(this, getIntent());
-			if(result==null){
-				this.finish();
-				return;
-			}
-			mBulbs = result.first;
-			mood = result.second.first;
-			mBrightness = result.second.second;
+		
+		Bundle b = this.getIntent().getExtras();		
+		if(b!=null && b.containsKey(InternalArguments.ENCODED_MOOD)){
+			Pair<Integer[], Pair<Mood, Integer>> result;
+			try {
+				result = HueUrlEncoder.decode(b.getString(InternalArguments.ENCODED_MOOD));
+				mBulbs = result.first;
+				mood = result.second.first;
+				mBrightness = result.second.second;
+				
+				mOnButton.setOnCheckedChangeListener(null);
+				Utils.transmit(this, mood, mBulbs, null, null, mBrightness);
+				boolean on = false;
+				if(mood.events[0].state.on!=null && mood.events[0].state.on)
+					on=true;
+				mOnButton.setChecked(on);
+				mOnButton.setOnCheckedChangeListener(this);
 			
-			mOnButton.setOnCheckedChangeListener(null);
-			Utils.transmit(this, mood, mBulbs, null, null, mBrightness);
-			boolean on = false;
-			if(mood.events[0].state.on!=null && mood.events[0].state.on)
-				on=true;
-			mOnButton.setChecked(on);
-			mOnButton.setOnCheckedChangeListener(this);
+			} catch (InvalidEncodingException e) {
+				this.finish();
+			} catch (FutureEncodingException e) {
+				this.finish();
+			}
 		}
 	}
 	
-	public static Pair<Integer[],Pair<Mood,Integer>> getGroupMoodBrightnessFromNdef(Context c, Intent input){
+	public static String getGroupMoodBrightnessFromNdef(Intent input){
 		Parcelable[] rawMsgs = input.getParcelableArrayExtra(
 				NfcAdapter.EXTRA_NDEF_MESSAGES);
 		if (rawMsgs != null) {
@@ -88,19 +91,9 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 					Charset.forName("US-ASCII"));
 			data = data.substring(data.indexOf('?') + 1);
 
-			try {
-				return HueUrlEncoder.decode(data);
-			} catch (InvalidEncodingException e) {
-				Intent i = new Intent(c,DecodeErrorActivity.class);
-				i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
-				c.startActivity(i);
-			} catch (FutureEncodingException e) {
-				Intent i = new Intent(c,DecodeErrorActivity.class);
-				i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, true);
-				c.startActivity(i);
-			}
+			return data;
 		}
-		return null;
+		return "";
 	}
 
 	@Override

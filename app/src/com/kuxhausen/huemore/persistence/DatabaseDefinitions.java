@@ -156,6 +156,7 @@ public final class DatabaseDefinitions {
 		public static final String HELP_PAGE = "HelpPage";
 		public static final String ROW = "Row";
 		public static final String COLUMN = "Column";
+		public static final String FROM_NFC = "FromNfc";
 	}
 
 	public static final class PreferenceKeys {
@@ -176,6 +177,7 @@ public final class DatabaseDefinitions {
 		public static final String UNNAMED_GROUP_NUMBER = "UNNAMED_GROUP_NUMBER";
 		public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
 		public static final String CACHED_EXECUTING_ENCODED_MOOD = "CACHED_EXECUTING_ENCODED_MOOD";
+		public static final String SHOW_ACTIVITY_ON_NFC_READ = "SHOW_ACTIVITY_ON_NFC_READ";
 	}
 
 	public static final class PlayItems {

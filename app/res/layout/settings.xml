@@ -20,19 +20,27 @@
 			    android:layout_height="wrap_content"
 			    android:text="@string/rate_on_google_play" 
 			    android:padding="8dp" />
+
+			<CheckBox
+			    android:id="@+id/showNfcReadPageCheckBox"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/show_NFC_read_page_descriptor"
+			    android:padding="8dp" />
 						
 			<CheckBox
 			    android:id="@+id/portForwardingCheckBox"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="@string/enable_port_forwarding"
-			    android:padding="8dp" />
-
+			    android:padding="8dp" />			
+			
 			<LinearLayout
 			    android:id="@+id/portForwardingOptions"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:orientation="vertical" >
+			    android:orientation="vertical"
+			    android:padding="8dp" >
 
 			    <EditText
 			        android:id="@+id/portForwardingEditText"

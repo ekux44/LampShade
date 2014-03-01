@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -28,8 +27,6 @@ import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttribu
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
@@ -52,8 +49,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	 */
 	public class LocalBinder extends Binder {
 		MoodExecuterService getService() {
-			// Return this instance of LocalService so clients can call public
-			// methods
+			// Return this instance of LocalService so clients can call public methods
 			return MoodExecuterService.this;
 		}
 	}
@@ -94,6 +90,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
 	boolean groupIsColorLooping=false;
 	boolean groupIsAlerting=false;
+	private SharedPreferences mSettings;
 	
 	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri, String groupName){
 		groupIsAlerting = false;
@@ -260,8 +257,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	private void loadMoodIntoQueue() {
 		
 		//clear out any cached upcoming resume mood
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		Editor edit = settings.edit();
+		Editor edit = mSettings.edit();
 		edit.putString(PreferenceKeys.CACHED_EXECUTING_ENCODED_MOOD,"");
 		edit.commit();
 		
@@ -342,6 +338,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
 		wakelock.acquire();
 		
+		mSettings = PreferenceManager.getDefaultSharedPreferences(me);
+		
 		//start pinging to test connectivity
 		NetworkMethods.PreformGetBulbList(this, null);
 	}
@@ -370,8 +368,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 				wakelock.acquire();
 			}
 			
-			String encodedMood = intent
-					.getStringExtra(InternalArguments.ENCODED_MOOD);
+			String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
 
 			try{
 				if (encodedMood != null) {
@@ -387,7 +384,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 						onGroupSelected(bulbs, moodPairs.second.second, groupName);
 					}
 					if(moodPairs.second.first!=null)
-						startMood(moodPairs.second.first, moodName);				
+						startMood(moodPairs.second.first, moodName);
+					
 				}
 			} catch (InvalidEncodingException e) {
 				Intent i = new Intent(this,DecodeErrorActivity.class);
