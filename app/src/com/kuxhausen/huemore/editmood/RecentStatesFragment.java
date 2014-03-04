@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,7 +12,6 @@ import android.widget.GridView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditMoodStateGridFragment.StateRow;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 
 public class RecentStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{

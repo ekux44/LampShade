@@ -1,8 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,7 +11,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class EditOffsetDialogFragment extends SherlockDialogFragment implements OnClickListener {
+public class EditTimeDialogFragment extends SherlockDialogFragment implements OnClickListener {
 	
 	EditText seconds, minutes;
 	private RelativeStartTimeslot listener;

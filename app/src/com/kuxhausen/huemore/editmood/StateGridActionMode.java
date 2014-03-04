@@ -22,7 +22,7 @@ class StateGridActionMode implements ActionMode.Callback {
 	@Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
     	
-		mDiscardButton = (ImageButton) LayoutInflater.from(mFrag.pager).inflate(R.layout.discard_image_button, null);
+		mDiscardButton = (ImageButton) LayoutInflater.from(mFrag.mEditMoodActivity).inflate(R.layout.discard_image_button, null);
 		mDiscardButton.setOnDragListener(mFrag.mDragListener);
 		mode.setCustomView(mDiscardButton);
     	

@@ -25,7 +25,7 @@ public class TimeOfDayTimeslot implements OnClickListener{
 	private Button t;
 	private int mPosition;
 	
-	public TimeOfDayTimeslot(EditMoodStateGridFragment frag, int id, int pos){
+	public TimeOfDayTimeslot(EditMoodStateGridFragment frag, int pos){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);

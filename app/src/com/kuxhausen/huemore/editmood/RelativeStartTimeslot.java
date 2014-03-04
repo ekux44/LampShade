@@ -19,7 +19,7 @@ public class RelativeStartTimeslot implements OnClickListener{
 	private Button t;
 	private int mPosition;
 	
-	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int id, int pos){
+	public RelativeStartTimeslot(EditMoodStateGridFragment frag, int pos){
 		this.frag = frag;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		t = (Button)inflater.inflate(R.layout.timeslot_date, null);
@@ -63,7 +63,7 @@ public class RelativeStartTimeslot implements OnClickListener{
 	}
 	
 	public void onClick(View v) {
-		EditOffsetDialogFragment etdf = new EditOffsetDialogFragment();
+		EditTimeDialogFragment etdf = new EditTimeDialogFragment();
 		etdf.setTimeslotTimeResultListener(this);
 		Bundle args = new Bundle();
 		args.putInt(InternalArguments.DURATION_TIME, moodEventTime/10);
