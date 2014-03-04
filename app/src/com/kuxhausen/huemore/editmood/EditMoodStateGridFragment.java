@@ -15,7 +15,9 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -53,6 +55,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private int pageType;
 	
 	public EditMoodActivity pager;
+	
+	private CellOnLongClickListener mLongListener = new CellOnLongClickListener(this);
+	private CellOnDragListener mDragListener = new CellOnDragListener(this);
 	
 	public void setMoodMode(int spinnerPos){
 		if(pageType!=spinnerPos){
@@ -278,6 +283,14 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 	}
 
+	public void switchCells(Pair<Integer, Integer> first, Pair<Integer, Integer> second){
+		StateCell temp = moodRows.get(first.first).cellRay.get(first.second);
+		moodRows.get(first.first).cellRay.set(first.second, moodRows.get(second.first).cellRay.get(second.second));
+		moodRows.get(second.first).cellRay.set(second.second, temp);
+		redrawGrid();
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void redrawGrid() {
 		if(grid==null)
 			return;
@@ -288,7 +301,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(c+initialCols);
 				vg.rowSpec = GridLayout.spec(r+initialRows);
-				View v = moodRows.get(r).cellRay.get(c).getView(grid, this, this);
+				View v = moodRows.get(r).cellRay.get(c).getView(grid, this, this,(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)?mLongListener:null);
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					v.setOnDragListener(mDragListener);
 				v.setTag(this.generateTag(r, c));
 				grid.addView(v, vg);
 			}

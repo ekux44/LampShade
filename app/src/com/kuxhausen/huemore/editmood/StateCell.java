@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class StateCell {
 		return copy;
 	}
 	
-	public View getView(ViewGroup parent, OnClickListener l, SherlockFragment frag) {
+	public View getView(ViewGroup parent, OnClickListener l, SherlockFragment frag, OnLongClickListener longL) {
 		View rowView;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		if(hs.ct!=null && hs.ct!=0){
@@ -75,11 +76,14 @@ public class StateCell {
 			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 		}
 		if(selected)
-			rowView.setBackgroundColor(0xFFFFBB33);
+			rowView.setBackgroundColor(context.getResources().getColor(R.color.blue_color));
 		else
 			rowView.setBackgroundColor(0);
 		
 		rowView.setOnClickListener(l);
+		
+		if(longL!=null)
+			rowView.setOnLongClickListener(longL);
 		if(frag!=null)
 			frag.registerForContextMenu(rowView);
 		return rowView;
