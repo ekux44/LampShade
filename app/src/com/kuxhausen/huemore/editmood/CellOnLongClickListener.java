@@ -27,6 +27,9 @@ public class CellOnLongClickListener implements OnLongClickListener{
                         null,		// no need to use local data
                         0			// flags (not currently used, set to 0)
             );
+		    
+		    //enter action mode
+		    mFrag.mActionMode = mFrag.getSherlockActivity().startActionMode(new StateGridActionMode(mFrag));
 		}
 		return true;
 	}

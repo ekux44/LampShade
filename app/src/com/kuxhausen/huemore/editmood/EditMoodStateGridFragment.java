@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import java.util.ArrayList;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
@@ -57,7 +58,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	public EditMoodActivity pager;
 	
 	private CellOnLongClickListener mLongListener = new CellOnLongClickListener(this);
-	private CellOnDragListener mDragListener = new CellOnDragListener(this);
+	CellOnDragListener mDragListener = new CellOnDragListener(this);
+	ActionMode mActionMode;
 	
 	public void setMoodMode(int spinnerPos){
 		if(pageType!=spinnerPos){
@@ -511,8 +513,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 				return true;
 			case R.id.contextstatemenu_delete:
-				getCell(contextSpot).hs = new BulbState();
-				redrawGrid();
+				deleteCell(contextSpot);
 				return true;
 			case R.id.contextstatemenu_delete_timeslot:
 				deleteRow(contextSpot.first);
@@ -534,6 +535,11 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	public Pair<Integer,Integer> generateTag(int r, int c){
 		return new Pair<Integer,Integer>(r, c);
+	}
+	
+	public void deleteCell(Pair<Integer, Integer> tag){
+		getCell(contextSpot).hs = new BulbState();
+		redrawGrid();
 	}
 	
 	private void deleteRow(int row){

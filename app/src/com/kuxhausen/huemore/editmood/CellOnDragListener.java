@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
 import com.kuxhausen.huemore.R;
-
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Build;
@@ -43,13 +42,22 @@ class CellOnDragListener implements View.OnDragListener {
                 return true;
             case DragEvent.ACTION_DROP:
                 v.setBackgroundColor(Color.TRANSPARENT);
-            	Pair<Integer, Integer> cellInDrag=mFrag.contextSpot;
+            	switch(v.getId()){
+	            	case R.id.discardImageButton:
+	            		mFrag.deleteCell(mFrag.contextSpot);
+	            		mFrag.mActionMode.finish();
+	            		return true;
+            	}
+                //todo move into a switch case one all state cells have same id
+                Pair<Integer, Integer> cellInDrag=mFrag.contextSpot;
             	Pair<Integer, Integer> cellRecievingDrop = (Pair<Integer, Integer>) v.getTag();
             	mFrag.switchCells(cellInDrag, cellRecievingDrop);
                 return true;
             case DragEvent.ACTION_DRAG_ENDED:
                 // Turns off any color tinting. the return value is ignored.
             	v.setBackgroundColor(Color.TRANSPARENT);
+            	if(mFrag.mActionMode!=null)
+            		mFrag.mActionMode.finish();
                 return true;
         };
 		return false;
