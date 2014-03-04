@@ -45,10 +45,16 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private RelativeStartTimeslot loopTimeslot;
 	private ImageButton addChannel, addTimeslot;
 	private String priorName;
-	private PageType pageType;
+	private PageType pageType = PageType.SIMPLE_PAGE;
 	public EditMoodActivity mEditMoodActivity;
-	private CellOnLongClickListener mLongListener = new CellOnLongClickListener(this);
-	CellOnDragListener mDragListener = new CellOnDragListener(this);
+	private CellOnLongClickListener mCellLongListener = new CellOnLongClickListener(this, ViewType.StateCell);
+	CellOnDragListener mCellDragListener = new CellOnDragListener(this, ViewType.StateCell);
+	private CellOnLongClickListener mChannelLongListener = new CellOnLongClickListener(this, ViewType.Channel);
+	CellOnDragListener mChannelDragListener = new CellOnDragListener(this, ViewType.Channel);
+	private CellOnLongClickListener mTimeslotLongListener = new CellOnLongClickListener(this, ViewType.Timeslot);
+	CellOnDragListener mTimeslotDragListener = new CellOnDragListener(this, ViewType.Timeslot);
+	
+	
 	ActionMode mActionMode;
 	StateGrid mStateGrid;
 	
@@ -249,7 +255,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		switch(v.getId()){
 		case R.id.clickable_layout:
 			stopPreview();
-			mStateGrid.setSelectionByTag(v);
+			mStateGrid.setStateSelectionByTag(v);
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 			cpdf.setParrentMood(this);
 			Bundle args = new Bundle();
@@ -291,9 +297,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(c+initialCols);
 				vg.rowSpec = GridLayout.spec(r+initialRows);
-				View v = moodRows.get(r).cellRay.get(c).getView(grid, this, this,(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)?mLongListener:null);
+				View v = moodRows.get(r).cellRay.get(c).getView(grid, this, this,(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)?mCellLongListener:null);
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-					v.setOnDragListener(mDragListener);
+					v.setOnDragListener(mCellDragListener);
 				v.setTag(this.generateTag(r, c));
 				grid.addView(v, vg);
 			}
@@ -328,7 +334,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				View v = moodRows.get(r).relativeTimeslot.getView(r);
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
-				
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+					v.setOnLongClickListener(mTimeslotLongListener);
+					v.setOnDragListener(mTimeslotDragListener);
+				}
 				grid.addView(v, vg);
 			}
 		}
@@ -343,7 +352,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				View v = moodRows.get(r).dailyTimeslot.getView(r);
 				if(v.getParent()!=null)
 					((ViewGroup)v.getParent()).removeView(v);
-				
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+					v.setOnLongClickListener(mTimeslotLongListener);
+					v.setOnDragListener(mTimeslotDragListener);
+				}
 				grid.addView(v, vg);
 			}
 		}
@@ -473,7 +485,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		mStateGrid.setSelectionByTag(v);
+		mStateGrid.setStateSelectionByTag(v);
 		
 		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_state, menu);

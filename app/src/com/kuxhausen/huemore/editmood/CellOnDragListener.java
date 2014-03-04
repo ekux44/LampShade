@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
 import com.kuxhausen.huemore.R;
+
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,9 +13,11 @@ import android.view.View;
 class CellOnDragListener implements View.OnDragListener {
 	
 	private EditMoodStateGridFragment mFrag;
+	private ViewType mViewType;
 	
-	public CellOnDragListener(EditMoodStateGridFragment editMoodStateGridFragment) {
+	public CellOnDragListener(EditMoodStateGridFragment editMoodStateGridFragment, ViewType viewType) {
 		mFrag = editMoodStateGridFragment;
+		mViewType = viewType;
 	}
 	
     // This is the method that the system calls when it dispatches a drag event to the listener.
@@ -27,8 +30,9 @@ class CellOnDragListener implements View.OnDragListener {
         switch(action) {
             case DragEvent.ACTION_DRAG_STARTED:
                 // Determines if this View can accept the dragged data
-                // returns true to indicate that the View can accept the dragged data.
-            	return true; 
+                if(((ViewType)event.getLocalState()).equals(mViewType))
+                	return true;
+                return false;
             case DragEvent.ACTION_DRAG_ENTERED: 
                 // Applies a background around the View. The return value is ignored.
                 v.setBackgroundColor(mFrag.getResources().getColor(R.color.blue_color));

@@ -18,7 +18,7 @@ public class StateGrid {
 		public abstract PageType getPageType();
 		public abstract void redrawGrid();
 	}
-	public void setSelectionByTag(View v){
+	public void setStateSelectionByTag(View v){
 		mSelectedCellRowCol =(Pair<Integer, Integer>) v.getTag();
 	}
 	public int getSelectedCellRow(){
