@@ -44,12 +44,12 @@ class CellOnDragListener implements View.OnDragListener {
                 v.setBackgroundColor(Color.TRANSPARENT);
             	switch(v.getId()){
 	            	case R.id.discardImageButton:
-	            		mFrag.deleteCell(mFrag.mSelectedCellRowCol);
+	            		mFrag.deleteCell(mFrag.mStateGrid.getSelectedCellRowCol());
 	            		mFrag.mActionMode.finish();
 	            		return true;
             	}
                 //todo move into a switch case one all state cells have same id
-                Pair<Integer, Integer> cellInDrag=mFrag.mSelectedCellRowCol;
+                Pair<Integer, Integer> cellInDrag=mFrag.mStateGrid.getSelectedCellRowCol();
             	Pair<Integer, Integer> cellRecievingDrop = (Pair<Integer, Integer>) v.getTag();
             	mFrag.switchCells(cellInDrag, cellRecievingDrop);
                 return true;

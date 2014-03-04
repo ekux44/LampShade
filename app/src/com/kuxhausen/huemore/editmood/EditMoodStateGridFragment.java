@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
+import com.kuxhausen.huemore.editmood.StateGrid.StateGridDisplay;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -36,11 +37,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.support.v7.widget.GridLayout;
 
-public class EditMoodStateGridFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener {
+public class EditMoodStateGridFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener, StateGridDisplay {
 
 	Gson gson = new Gson();
 	private GridLayout grid;
-	Pair<Integer, Integer> mSelectedCellRowCol;
 	public ArrayList<StateRow> moodRows = new ArrayList<StateRow>();
 	private RelativeStartTimeslot loopTimeslot;
 	private ImageButton addChannel, addTimeslot;
@@ -51,6 +51,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private CellOnLongClickListener mLongListener = new CellOnLongClickListener(this);
 	CellOnDragListener mDragListener = new CellOnDragListener(this);
 	ActionMode mActionMode;
+	StateGrid mStateGrid;
 	
 	public void setMoodMode(int spinnerPos){
 		if(pageType!=spinnerPos){
@@ -73,6 +74,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
+		
+		mStateGrid = new StateGrid(this);
 		
 		addTimeslot = (ImageButton) inflater.inflate(R.layout.edit_mood_down_arrow, null);
 		addTimeslot.setOnClickListener(this);
@@ -252,13 +255,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		switch(v.getId()){
 		case R.id.clickable_layout:
 			stopPreview();
-			mSelectedCellRowCol = (Pair<Integer, Integer>) v.getTag();
+			mStateGrid.setSelectionByTag(v);
 			EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 			cpdf.setParrentMood(this);
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.PREVIOUS_STATE, gson.toJson(this.getCell(mSelectedCellRowCol).hs));
-			args.putInt(InternalArguments.ROW, mSelectedCellRowCol.first);
-			args.putInt(InternalArguments.COLUMN, mSelectedCellRowCol.second);
+			args.putString(InternalArguments.PREVIOUS_STATE, gson.toJson(this.getCell(mStateGrid.getSelectedCellRowCol()).hs));
+			args.putInt(InternalArguments.ROW, mStateGrid.getSelectedCellRow());
+			args.putInt(InternalArguments.COLUMN, mStateGrid.getSelectedCellCol());
 			cpdf.setArguments(args);
 			cpdf.setTargetFragment(this, -1);
 			cpdf.show(getFragmentManager(),
@@ -476,7 +479,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		mSelectedCellRowCol = (Pair<Integer, Integer>) v.getTag();
+		mStateGrid.setSelectionByTag(v);
 		
 		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
 		inflater.inflate(R.menu.context_state, menu);
@@ -496,22 +499,22 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
 				cpdf.setParrentMood(this);
 				Bundle args = new Bundle();
-				args.putString(InternalArguments.PREVIOUS_STATE,gson.toJson(getCell(mSelectedCellRowCol).hs));
-				args.putInt(InternalArguments.ROW, mSelectedCellRowCol.first);
-				args.putInt(InternalArguments.COLUMN, mSelectedCellRowCol.second);
+				args.putString(InternalArguments.PREVIOUS_STATE,gson.toJson(getCell(mStateGrid.getSelectedCellRowCol()).hs));
+				args.putInt(InternalArguments.ROW, mStateGrid.getSelectedCellRow());
+				args.putInt(InternalArguments.COLUMN, mStateGrid.getSelectedCellCol());
 				cpdf.setArguments(args);
 				cpdf.show(getFragmentManager(),
 						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 				return true;
 			case R.id.contextstatemenu_delete:
-				deleteCell(mSelectedCellRowCol);
+				deleteCell(mStateGrid.getSelectedCellRowCol());
 				return true;
 			case R.id.contextstatemenu_delete_timeslot:
-				deleteRow(mSelectedCellRowCol.first);
+				deleteRow(mStateGrid.getSelectedCellRow());
 				redrawGrid();
 				return true;
 			case R.id.contextstatemenu_delete_channel:
-				deleteCol(mSelectedCellRowCol.second);
+				deleteCol(mStateGrid.getSelectedCellCol());
 				redrawGrid();
 				return true;
 			default:
@@ -529,7 +532,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	
 	public void deleteCell(Pair<Integer, Integer> tag){
-		getCell(mSelectedCellRowCol).hs = new BulbState();
+		getCell(tag).hs = new BulbState();
 		redrawGrid();
 	}
 	
@@ -614,5 +617,10 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 		getActivity().getContentResolver().insert(
 				DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
+	}
+
+	@Override
+	public int getPageType() {
+		return pageType;
 	}
 }

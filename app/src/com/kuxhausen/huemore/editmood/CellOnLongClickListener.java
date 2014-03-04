@@ -17,7 +17,7 @@ public class CellOnLongClickListener implements OnLongClickListener{
 	@Override
 	public boolean onLongClick(View v){
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
-			mFrag.mSelectedCellRowCol = (Pair<Integer, Integer>) v.getTag();
+			mFrag.mStateGrid.setSelectionByTag(v);
 			// Instantiates the drag shadow builder.
 		    View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
 	
