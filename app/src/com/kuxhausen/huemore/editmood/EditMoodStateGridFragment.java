@@ -45,20 +45,21 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private RelativeStartTimeslot loopTimeslot;
 	private ImageButton addChannel, addTimeslot;
 	private String priorName;
-	public final static int SIMPLE_PAGE = 0, RELATIVE_START_TIME_PAGE=1, DAILY_PAGE = 2;
-	private int pageType;
+	private PageType pageType;
 	public EditMoodActivity mEditMoodActivity;
 	private CellOnLongClickListener mLongListener = new CellOnLongClickListener(this);
 	CellOnDragListener mDragListener = new CellOnDragListener(this);
 	ActionMode mActionMode;
 	StateGrid mStateGrid;
 	
+	public enum PageType {SIMPLE_PAGE, RELATIVE_PAGE, DAILY_PAGE};
+	
 	public void setMoodMode(int spinnerPos){
-		if(pageType!=spinnerPos){
-			if(spinnerPos==SIMPLE_PAGE)
+		if(pageType.ordinal()!=spinnerPos){
+			if(spinnerPos==PageType.SIMPLE_PAGE.ordinal())
 				setGridRows(1);
 			
-			pageType = spinnerPos;
+			pageType = PageType.values()[spinnerPos];
 			redrawGrid();
 		}
 	}
@@ -114,13 +115,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		loopTimeslot.validate();
 	}
 	
-	private StateCell generateDefaultStateCell(){
-		StateCell mr = new StateCell(this.getActivity());
-		BulbState example = new BulbState();
-		mr.hs = example;
-		return mr;
-	}
-	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		getCell(new Pair<Integer, Integer>(data.getIntExtra(InternalArguments.ROW,-1)
@@ -144,13 +138,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		
 	}
 	
-	public static int calculateMoodType(Mood m){
+	public static PageType calculateMoodType(Mood m){
 		if(!m.usesTiming) {
-			return SIMPLE_PAGE;
+			return PageType.SIMPLE_PAGE;
 		} else if (m.timeAddressingRepeatPolicy==true){
-			return DAILY_PAGE;
+			return PageType.DAILY_PAGE;
 		} else
-			return RELATIVE_START_TIME_PAGE;
+			return PageType.RELATIVE_PAGE;
 	}
 
 	
@@ -178,7 +172,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			if(e.time!=time){
 				row++;
 				time = e.time;
-				if(pageType == DAILY_PAGE || pageType == RELATIVE_START_TIME_PAGE){
+				if(pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE){
 					moodRows.get(row).dailyTimeslot.setStartTime(e.time);
 					moodRows.get(row).relativeTimeslot.setStartTime(e.time);
 				}
@@ -195,12 +189,12 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	private Mood getMood() {		
 		Mood m = new Mood();
-		if(pageType == DAILY_PAGE || pageType == RELATIVE_START_TIME_PAGE)
+		if(pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE)
 			m.usesTiming = true;
 		else
 			m.usesTiming = false;
 		m.setNumChannels(gridCols());
-		if(pageType == SIMPLE_PAGE || pageType == DAILY_PAGE)
+		if(pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE)
 			m.timeAddressingRepeatPolicy=true;
 		else
 			m.timeAddressingRepeatPolicy = false;
@@ -229,9 +223,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	private int getTime(int row){
 		if(row>-1 && row<moodRows.size()){
-			if(pageType == DAILY_PAGE)
+			if(pageType == PageType.DAILY_PAGE)
 					return moodRows.get(row).dailyTimeslot.getStartTime();
-			else if(pageType == RELATIVE_START_TIME_PAGE)
+			else if(pageType == PageType.RELATIVE_PAGE)
 					return moodRows.get(row).relativeTimeslot.getStartTime();
 		}
 		return 0;
@@ -242,9 +236,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		if(position <=0){
 			return 0;
 		} else{
-			if(pageType == DAILY_PAGE)
+			if(pageType == PageType.DAILY_PAGE)
 				return moodRows.get(position-1).dailyTimeslot.getStartTime()+600;
-			else if (pageType==RELATIVE_START_TIME_PAGE)
+			else if (pageType==PageType.RELATIVE_PAGE)
 				return moodRows.get(position-1).relativeTimeslot.getStartTime()+10;
 		}
 		return 0;
@@ -307,7 +301,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		int gridStateCols = this.gridCols();
 		
 		//add timeslot button
-		if(pageType == RELATIVE_START_TIME_PAGE || pageType == DAILY_PAGE){
+		if(pageType == PageType.RELATIVE_PAGE || pageType == PageType.DAILY_PAGE){
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(initialRows+gridStateRows+endingRows-1);
@@ -324,7 +318,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 		
 		//timedTimeslotDuration views
-		if(pageType == RELATIVE_START_TIME_PAGE) {
+		if(pageType == PageType.RELATIVE_PAGE) {
 			for(int r = 0; r<moodRows.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(0);
@@ -339,7 +333,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			}
 		}
 		//dailytimeslotDuration views
-		if (pageType == DAILY_PAGE){
+		if (pageType == PageType.DAILY_PAGE){
 			for(int r = 0; r<moodRows.size(); r++){
 				GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 				vg.columnSpec = GridLayout.spec(0);
@@ -392,7 +386,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			grid.addView(b, vg);
 		}
 		//timeslot label
-		if(pageType == RELATIVE_START_TIME_PAGE || pageType == DAILY_PAGE) {
+		if(pageType == PageType.RELATIVE_PAGE || pageType == PageType.DAILY_PAGE) {
 			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
@@ -401,7 +395,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			grid.addView(v, vg);
 		}
 		//vertical separator
-		if(pageType == RELATIVE_START_TIME_PAGE || pageType == DAILY_PAGE) {
+		if(pageType == PageType.RELATIVE_PAGE || pageType == PageType.DAILY_PAGE) {
 			ImageView rowView = (ImageView) inflater.inflate(R.layout.grid_vertical_seperator, null);
 
 			ColorDrawable cd = new ColorDrawable(0xFFB5B5E5);
@@ -429,7 +423,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			grid.addView(rowView, vg);
 		}
 		//loop related stuff
-		if(pageType == RELATIVE_START_TIME_PAGE && mEditMoodActivity.isChecked()){
+		if(pageType == PageType.RELATIVE_PAGE && mEditMoodActivity.isChecked()){
 			//loop banner that sits beside loop timeslot
 			
 			{
@@ -485,7 +479,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		inflater.inflate(R.menu.context_state, menu);
 		
 		android.view.MenuItem deleteTimeslot = menu.findItem(R.id.contextstatemenu_delete_timeslot);
-		if(pageType == SIMPLE_PAGE){
+		if(pageType == PageType.SIMPLE_PAGE){
 			deleteTimeslot.setEnabled(false);
 			deleteTimeslot.setVisible(false);
 		}
@@ -558,7 +552,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			
 			StateRow newRow = new StateRow();
 			for(int i = gridCols(); i>0; i--){
-				newRow.cellRay.add(generateDefaultStateCell());
+				newRow.cellRay.add(new StateCell(this.getActivity()));
 			}
 			newRow.dailyTimeslot = new TimeOfDayTimeslot(this, gridRows()-1);
 			newRow.relativeTimeslot = new RelativeStartTimeslot(this, gridRows()-1);
@@ -574,7 +568,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			int width = gridCols();
 			grid.setColumnCount(1+width+initialCols+endingCols);
 			for(StateRow sr : moodRows){
-				sr.cellRay.add(generateDefaultStateCell());
+				sr.cellRay.add(new StateCell(this.getActivity()));
 			}
 		}else{
 			Toast t = Toast.makeText(getActivity(), R.string.advanced_channel_limit, Toast.LENGTH_LONG);
@@ -620,7 +614,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 
 	@Override
-	public int getPageType() {
+	public PageType getPageType() {
 		return pageType;
 	}
 }

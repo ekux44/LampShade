@@ -25,6 +25,7 @@ public class StateCell {
 	
 	public StateCell(Context ctx){
 		context = ctx;
+		hs = new BulbState();
 	}
 	
 	public StateCell clone(){

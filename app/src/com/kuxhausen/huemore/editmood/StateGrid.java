@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
+import com.kuxhausen.huemore.editmood.EditMoodStateGridFragment.PageType;
+
 import android.util.Pair;
 import android.view.View;
 
@@ -13,7 +15,7 @@ public class StateGrid {
 	}
 
 	interface StateGridDisplay {
-		public abstract int getPageType();
+		public abstract PageType getPageType();
 		public abstract void redrawGrid();
 	}
 	public void setSelectionByTag(View v){

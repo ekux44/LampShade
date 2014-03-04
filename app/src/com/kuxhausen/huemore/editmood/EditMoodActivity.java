@@ -96,8 +96,8 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			
 			priorMood = Utils.getMoodFromDatabase(moodName, this);
 			
-			moodTypeSpinner.setSelection(EditMoodStateGridFragment.calculateMoodType(priorMood));
-			if(moodTypeSpinner.getSelectedItemPosition() == EditMoodStateGridFragment.RELATIVE_START_TIME_PAGE)
+			moodTypeSpinner.setSelection(EditMoodStateGridFragment.calculateMoodType(priorMood).ordinal());
+			if(moodTypeSpinner.getSelectedItemPosition() == EditMoodStateGridFragment.PageType.RELATIVE_PAGE.ordinal())
 				setChecked(true);
 			else
 				setChecked(false);
@@ -180,7 +180,7 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		if(stateGridFragment!=null){
 			stateGridFragment.setMoodMode(position);
 		}
-		if(position == EditMoodStateGridFragment.RELATIVE_START_TIME_PAGE){
+		if(position == EditMoodStateGridFragment.PageType.RELATIVE_PAGE.ordinal()){
 			loop.setVisibility(View.VISIBLE);
 		} else{
 			loop.setVisibility(View.INVISIBLE);
