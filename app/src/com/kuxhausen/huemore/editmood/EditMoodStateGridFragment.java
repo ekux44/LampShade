@@ -48,11 +48,11 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	private PageType pageType = PageType.SIMPLE_PAGE;
 	public EditMoodActivity mEditMoodActivity;
 	private CellOnLongClickListener mCellLongListener = new CellOnLongClickListener(this, ViewType.StateCell);
-	CellOnDragListener mCellDragListener = new CellOnDragListener(this, ViewType.StateCell);
+	CellOnDragListener mCellDragListener;
 	private CellOnLongClickListener mChannelLongListener = new CellOnLongClickListener(this, ViewType.Channel);
-	CellOnDragListener mChannelDragListener = new CellOnDragListener(this, ViewType.Channel);
+	CellOnDragListener mChannelDragListener;
 	private CellOnLongClickListener mTimeslotLongListener = new CellOnLongClickListener(this, ViewType.Timeslot);
-	CellOnDragListener mTimeslotDragListener = new CellOnDragListener(this, ViewType.Timeslot);
+	CellOnDragListener mTimeslotDragListener;
 	
 	
 	ActionMode mActionMode;
@@ -81,6 +81,13 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
+		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+			mCellDragListener = new CellOnDragListener(this, ViewType.StateCell);
+			mChannelDragListener = new CellOnDragListener(this, ViewType.Channel);
+			mTimeslotDragListener = new CellOnDragListener(this, ViewType.Timeslot);
+		}
+		
 		
 		mStateGrid = new StateGridSelections(this);
 		
@@ -319,9 +326,11 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 
 	public void deleteTimeslot(int position){
-		moodRows.remove(position);
-		grid.setRowCount(initialRows+endingRows + gridRows()-1);
-		redrawGrid();
+		if(moodRows.size()>1){
+			moodRows.remove(position);
+			grid.setRowCount(initialRows+endingRows + gridRows()-1);
+			redrawGrid();
+		}
 	}
 	public void insertionMoveTimeslot(int oldPos, int newPos){
 		StateRow temp = moodRows.get(oldPos);
@@ -337,10 +346,12 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	
 	public void deleteChannel(int position){
-		for(StateRow sr : moodRows)
-			sr.cellRay.remove(position);
-		grid.setColumnCount(initialCols+endingCols + gridCols()-1);
-		redrawGrid();
+		if(moodRows.get(0).cellRay.size()>1){
+			for(StateRow sr : moodRows)
+				sr.cellRay.remove(position);
+			grid.setColumnCount(initialCols+endingCols + gridCols()-1);
+			redrawGrid();
+		}
 	}
 	public void insertionMoveChannel(int oldPos, int newPos){
 		for(StateRow sr : moodRows){
@@ -606,14 +617,14 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	
 	private void deleteRow(int row){
-		if(row>-1 && row < moodRows.size()){
+		if(row>-1 && row < moodRows.size() && moodRows.size()>1){
 			moodRows.remove(row);
 			grid.setRowCount(initialRows+endingRows + gridRows()-1);
 			redrawGrid();
 		}
 	}
 	private void deleteCol(int col){
-		if(col>-1 && !moodRows.isEmpty() && col < moodRows.get(0).cellRay.size()){
+		if(col>-1 && !moodRows.isEmpty() && col < moodRows.get(0).cellRay.size() && moodRows.get(0).cellRay.size()>1){
 			for(StateRow sr: moodRows){
 				sr.cellRay.remove(col);
 			}
