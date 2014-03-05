@@ -31,7 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -319,26 +318,39 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		redrawGrid();
 	}
 
-	public void switchTimeslots(int position1, int position2) {
-		StateRow temp = moodRows.get(position1);
-		moodRows.set(position1, moodRows.get(position2));
-		moodRows.set(position2, temp);
-		redrawGrid();
-	}
 	public void deleteTimeslot(int position){
 		moodRows.remove(position);
 		redrawGrid();
 	}
+	public void insertionMoveTimeslot(int oldPos, int newPos){
+		StateRow temp = moodRows.get(oldPos);
+		//always act on highest position first for corectness
+		if(newPos>oldPos){
+			moodRows.add(newPos, temp);
+			moodRows.remove(oldPos);
+		}else if (newPos<oldPos){
+			moodRows.remove(oldPos);
+			moodRows.add(newPos, temp);
+		}
+		redrawGrid();
+	}
+	
 	public void deleteChannel(int position){
 		for(StateRow sr : moodRows)
 			sr.cellRay.remove(position);
 		redrawGrid();
 	}
-	public void switchChannels(int position1, int position2) {
+	public void insertionMoveChannel(int oldPos, int newPos){
 		for(StateRow sr : moodRows){
-			StateCell temp = sr.cellRay.get(position1);
-			sr.cellRay.set(position1, sr.cellRay.get(position2));
-			sr.cellRay.set(position2, temp);
+			StateCell temp = sr.cellRay.get(oldPos);
+			//always act on highest position first for corectness
+			if(newPos>oldPos){
+				sr.cellRay.add(newPos, temp);
+				sr.cellRay.remove(oldPos);
+			}else if (newPos<oldPos){
+				sr.cellRay.remove(oldPos);
+				sr.cellRay.add(newPos, temp);
+			}
 		}
 		redrawGrid();
 	}

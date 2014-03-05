@@ -65,7 +65,7 @@ class CellOnDragListener implements View.OnDragListener {
 			            	mFrag.mActionMode.finish();
 			            	return true;
 			        	} else {
-		            		mFrag.switchChannels(mFrag.mStateGrid.getSelectedChannelCol(), (Integer)v.getTag());
+		            		mFrag.insertionMoveChannel(mFrag.mStateGrid.getSelectedChannelCol(), (Integer)v.getTag());
 		            		mFrag.mActionMode.finish();
 				        	return true;
 			        	}
@@ -75,7 +75,7 @@ class CellOnDragListener implements View.OnDragListener {
 			            	mFrag.mActionMode.finish();
 			            	return true;
 			        	} else {
-		            		mFrag.switchTimeslots(mFrag.mStateGrid.getSelectedTimeslotRow(), (Integer)v.getTag());
+		            		mFrag.insertionMoveTimeslot(mFrag.mStateGrid.getSelectedTimeslotRow(), (Integer)v.getTag());
 		            		mFrag.mActionMode.finish();
 				        	return true;
 			        	}
