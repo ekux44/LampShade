@@ -113,6 +113,12 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	    return myView;
 	}
 	
+	public int getGridWidth(){
+		if(grid!=null)
+			return grid.getWidth();
+		return 0;
+	}
+	
 	public void validate(){
 		for(StateRow s : moodRows){
 			s.dailyTimeslot.validate();
