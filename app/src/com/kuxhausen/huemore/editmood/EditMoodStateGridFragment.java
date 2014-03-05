@@ -320,6 +320,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 
 	public void deleteTimeslot(int position){
 		moodRows.remove(position);
+		grid.setRowCount(initialRows+endingRows + gridRows()-1);
 		redrawGrid();
 	}
 	public void insertionMoveTimeslot(int oldPos, int newPos){
@@ -338,6 +339,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	public void deleteChannel(int position){
 		for(StateRow sr : moodRows)
 			sr.cellRay.remove(position);
+		grid.setColumnCount(initialCols+endingCols + gridCols()-1);
 		redrawGrid();
 	}
 	public void insertionMoveChannel(int oldPos, int newPos){
