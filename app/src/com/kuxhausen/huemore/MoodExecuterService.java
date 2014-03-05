@@ -255,6 +255,8 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 
 	private void loadMoodIntoQueue() {
+		if(group==null)
+			return;
 		
 		//clear out any cached upcoming resume mood
 		Editor edit = mSettings.edit();
