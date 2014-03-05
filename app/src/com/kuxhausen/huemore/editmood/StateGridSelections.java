@@ -41,7 +41,6 @@ public class StateGridSelections {
 		return 0;
 	}
 	
-	
 	public void tagTimeslot(View v, int r){
 		v.setTag(r);
 	}
@@ -50,5 +49,15 @@ public class StateGridSelections {
 	}
 	public int getSelectedTimeslotRow(){
 		return mSelectedTimeslot;
+	}
+	
+	public void tagChannel(View v, int c){
+		v.setTag(c);
+	}
+	public void setChannelSelectionByTag(View v){
+		mSelectedChannel = (Integer) v.getTag();
+	}
+	public int getSelectedChannelCol(){
+		return mSelectedChannel;
 	}
 }
