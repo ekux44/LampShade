@@ -27,7 +27,7 @@ class StateGridActionMode implements ActionMode.Callback {
     	
 		mDiscardButton = (ImageButton) LayoutInflater.from(mFrag.mEditMoodActivity).inflate(R.layout.discard_image_button, null);
 		switch(mViewType){
-			case StateCell :
+			case StateCell:
 				mDiscardButton.setOnDragListener(mFrag.mCellDragListener);
 				break;
 			case Channel:

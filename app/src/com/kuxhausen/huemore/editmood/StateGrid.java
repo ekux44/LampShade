@@ -9,6 +9,9 @@ public class StateGrid {
 
 	public StateGridDisplay mStateGridDisplay;
 	private Pair<Integer, Integer> mSelectedCellRowCol;
+	private int mSelectedTimeslot;
+	private int mSelectedChannel;
+	
 	
 	public StateGrid(StateGridDisplay stateGridDisplay) {
 		mStateGridDisplay = stateGridDisplay;
@@ -18,8 +21,15 @@ public class StateGrid {
 		public abstract PageType getPageType();
 		public abstract void redrawGrid();
 	}
+	
+	public void tagStateCell(View v, int r, int c){
+		v.setTag(new Pair<Integer,Integer>(r, c));
+	}
+	public Pair<Integer, Integer> getSelectedCellRowCol(){
+		return mSelectedCellRowCol;
+	}
 	public void setStateSelectionByTag(View v){
-		mSelectedCellRowCol =(Pair<Integer, Integer>) v.getTag();
+		mSelectedCellRowCol = (Pair<Integer, Integer>) v.getTag();
 	}
 	public int getSelectedCellRow(){
 		if(mSelectedCellRowCol!=null)
@@ -31,7 +41,15 @@ public class StateGrid {
 			return mSelectedCellRowCol.second;
 		return 0;
 	}
-	public Pair<Integer, Integer> getSelectedCellRowCol(){
-		return mSelectedCellRowCol;
+	
+	
+	public void tagTimeslot(View v, int r){
+		v.setTag(r);
+	}
+	public void setTimeslotSelectionByTag(View v){
+		mSelectedTimeslot = (Integer) v.getTag();
+	}
+	public int getSelectedTimeslotRow(){
+		return mSelectedTimeslot;
 	}
 }

@@ -39,6 +39,7 @@ public class CellOnLongClickListener implements OnLongClickListener{
 			case Channel:
 				break;
 			case Timeslot:
+				mFrag.mStateGrid.setTimeslotSelectionByTag(v);
 				// Instantiates the drag shadow builder.
 			    View.DragShadowBuilder myTimeslotShadow = new TimeslotShadowBuilder(v,mFrag.getGridWidth(), mFrag.getActivity());
 			    // Starts the drag

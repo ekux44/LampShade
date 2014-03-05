@@ -291,6 +291,17 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		moodRows.get(second.first).cellRay.set(second.second, temp);
 		redrawGrid();
 	}
+
+	public void switchTimeslots(int position1, int position2) {
+		StateRow temp = moodRows.get(position1);
+		moodRows.set(position1, moodRows.get(position2));
+		moodRows.set(position2, temp);
+		redrawGrid();
+	}
+	public void deleteTimeslot(int position){
+		moodRows.remove(position);
+		redrawGrid();
+	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void redrawGrid() {
@@ -306,7 +317,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 				View v = moodRows.get(r).cellRay.get(c).getView(grid, this, this,(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)?mCellLongListener:null);
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 					v.setOnDragListener(mCellDragListener);
-				v.setTag(this.generateTag(r, c));
+				mStateGrid.tagStateCell(v, r, c);
 				grid.addView(v, vg);
 			}
 		int gridStateRows = this.gridRows();
@@ -344,6 +355,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 					v.setOnLongClickListener(mTimeslotLongListener);
 					v.setOnDragListener(mTimeslotDragListener);
 				}
+				mStateGrid.tagTimeslot(v, r);
 				grid.addView(v, vg);
 			}
 		}
@@ -362,6 +374,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 					v.setOnLongClickListener(mTimeslotLongListener);
 					v.setOnDragListener(mTimeslotDragListener);
 				}
+				mStateGrid.tagTimeslot(v, r);
 				grid.addView(v, vg);
 			}
 		}
@@ -538,9 +551,6 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		int r = tag.first;
 		int c = tag.second;
 		return moodRows.get(r).cellRay.get(c);
-	}
-	public Pair<Integer,Integer> generateTag(int r, int c){
-		return new Pair<Integer,Integer>(r, c);
 	}
 	
 	public void deleteCell(Pair<Integer, Integer> tag){

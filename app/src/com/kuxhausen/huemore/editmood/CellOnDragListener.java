@@ -46,17 +46,34 @@ class CellOnDragListener implements View.OnDragListener {
                 return true;
             case DragEvent.ACTION_DROP:
                 v.setBackgroundColor(Color.TRANSPARENT);
-            	switch(v.getId()){
-	            	case R.id.discardImageButton:
-	            		mFrag.deleteCell(mFrag.mStateGrid.getSelectedCellRowCol());
-	            		mFrag.mActionMode.finish();
-	            		return true;
+            	switch(mViewType){
+	            	case StateCell:
+		            	if(v.getId() == R.id.discardImageButton){
+			            	mFrag.deleteCell(mFrag.mStateGrid.getSelectedCellRowCol());
+			            	mFrag.mActionMode.finish();
+			            	return true;
+			        	} else {
+				            Pair<Integer, Integer> cellInDrag=mFrag.mStateGrid.getSelectedCellRowCol();
+				        	Pair<Integer, Integer> cellRecievingDrop = (Pair<Integer, Integer>) v.getTag();
+				        	mFrag.switchCells(cellInDrag, cellRecievingDrop);
+				        	mFrag.mActionMode.finish();
+				        	return true;
+			        	}
+	            	case Channel:
+	            		break;
+	            	case Timeslot:
+	            		if(v.getId() == R.id.discardImageButton){
+			            	mFrag.deleteTimeslot(mFrag.mStateGrid.getSelectedTimeslotRow());
+			            	mFrag.mActionMode.finish();
+			            	return true;
+			        	} else {
+		            		mFrag.switchTimeslots(mFrag.mStateGrid.getSelectedTimeslotRow(), (Integer)v.getTag());
+		            		mFrag.mActionMode.finish();
+				        	return true;
+			        	}
             	}
-                //todo move into a switch case one all state cells have same id
-                Pair<Integer, Integer> cellInDrag=mFrag.mStateGrid.getSelectedCellRowCol();
-            	Pair<Integer, Integer> cellRecievingDrop = (Pair<Integer, Integer>) v.getTag();
-            	mFrag.switchCells(cellInDrag, cellRecievingDrop);
-                return true;
+                
+                return false;
             case DragEvent.ACTION_DRAG_ENDED:
                 // Turns off any color tinting. the return value is ignored.
             	v.setBackgroundColor(Color.TRANSPARENT);
