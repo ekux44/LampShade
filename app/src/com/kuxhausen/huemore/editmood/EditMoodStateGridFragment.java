@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
-import com.kuxhausen.huemore.editmood.StateGrid.StateGridDisplay;
+import com.kuxhausen.huemore.editmood.StateGridSelections.StateGridDisplay;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -56,7 +56,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	
 	
 	ActionMode mActionMode;
-	StateGrid mStateGrid;
+	StateGridSelections mStateGrid;
 	
 	public enum PageType {SIMPLE_PAGE, RELATIVE_PAGE, DAILY_PAGE};
 	
@@ -82,7 +82,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		super.onCreate(savedInstanceState);
 		View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
 		
-		mStateGrid = new StateGrid(this);
+		mStateGrid = new StateGridSelections(this);
 		
 		addTimeslot = (ImageButton) inflater.inflate(R.layout.edit_mood_down_arrow, null);
 		addTimeslot.setOnClickListener(this);

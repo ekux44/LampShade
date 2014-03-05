@@ -5,15 +5,14 @@ import com.kuxhausen.huemore.editmood.EditMoodStateGridFragment.PageType;
 import android.util.Pair;
 import android.view.View;
 
-public class StateGrid {
+public class StateGridSelections {
 
 	public StateGridDisplay mStateGridDisplay;
 	private Pair<Integer, Integer> mSelectedCellRowCol;
 	private int mSelectedTimeslot;
 	private int mSelectedChannel;
 	
-	
-	public StateGrid(StateGridDisplay stateGridDisplay) {
+	public StateGridSelections(StateGridDisplay stateGridDisplay) {
 		mStateGridDisplay = stateGridDisplay;
 	}
 
