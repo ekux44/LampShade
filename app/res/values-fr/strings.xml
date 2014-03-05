@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_register_with_hub">Lier au pont</string>
+    <string name="action_unlocks">A débloquer</string>
+    <string name="cap_manual">MANUEL</string>
+    <string name="cap_bulbs">AMPOULES</string>
+    <string name="cap_hue_sat_mode">TEINTE</string>
+    <string name="cap_color_temp_mode">TEMPÉRATURE</string>
+    <string name="groups">Groupes</string>
+    <string name="moods">Ambiances</string>
+    <string name="mood_intro">Ambiance :</string>
+    <string name="group_intro">Groupe :</string>
+    <string name="accept">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="register_success">Liaison réussie</string>
+    <string name="register_fail">Impossible de se connecter au pont. Assurez-vous que l\'appareil est connecté par wi-fi au même réseau que le pont et a accès à Internet, puis réessayez.</string>
+    <string name="link_prompt">Appuyez sur le bouton de liaison sur le pont</string>
+    <string name="manual_ip_prompt">Saisissez l\'adresse IP du pont</string>
+    <string name="advanced">Paramètres avancés</string>
+    <string name="auto_discover">Connexion automatique</string>
+    <string name="contextmenu_delete">Supprimer</string>
+    <string name="contextmenu_edit">Modifier</string>
+    <string name="contextmenu_rename">Renommer</string>
+    <string name="actionmenu_new">Nouveau</string>
+    <string name="actionmenu_new_group">Nouveau groupe</string>
+    <string name="actionmenu_new_mood">Nouvelle ambiance</string>
+    <string name="actionmenu_new_color">Nouvel état</string>
+    <string name="actionmenu_new_alarm">Nouvelle alarme</string>
+    <string name="hint_mood_name">nom de l\'ambiance</string>
+    <string name="hint_group_name">nom du groupe</string>
+    <string name="hint_bulb_name">nom de l\'ampoule</string>
+    <string name="brightness">Luminosité</string>
+    <string name="temperature">Température de couleur (K)</string>
+    <string name="toggleColorLoop">Couleurs en boucle :</string>
+    <string name="promp_first_view_setting">Écran par défaut</string>
+    <string name="promp_second_view_setting">Second écran par défaut</string>
+    <string name="rate_on_google_play">Noter sur Google Play</string>
+    <string name="unlock_pro_prompt">Débloquer la version Pro !</string>
+    <string name="unlock_pro_already">Vous avez déjà la version Pro !</string>
+    <string name="unlock_pro_descriptor">La version Pro donne accès aux alarmes, au NFC et aux plug-ins pour Tasker et Locale.</string>
+    <string name="nfc_tag_detected">Tag détecté</string>
+    <string name="nfc_tag_not_detected">Tag non trouvé</string>
+    <string name="nfc_tag_write_prompt">Écrire sur un tag</string>
+    <string name="nfc_tag_write_success">Enregistré sur le tag</string>
+    <string name="nfc_tag_write_fail">L\'écriture sur le tag a échoué</string>
+    <string name="nfc_disabled">Le NFC n\'est pas activé. Veuillez l\'activer dans les paramètres de l\'appareil.</string>
+    <string name="nfc_read_done">Terminé</string>
+    <string name="nfc_tag_read_success">Tag NFC lu</string>
+    <string name="nfc_tag_not_supported">Votre appareil ne permet pas d\'écrire des données sur ce tag NFC !</string>
+    <string name="alarms">Alarmes</string>
+    <string name="transition_intro">Fondu entrant :</string>
+    <string name="alarm_repeat">Répéter :</string>
+    <string name="cap_short_every_day">TOUS LES JOURS</string>
+    <string name="next_scheduled_intro">Prochaine alarme</string>
+    <string name="update_welcome_title">Nouveautés de LampShade 2.7</string>
+    <string name="hub_discovery_disclaimer">Recherche du pont. Cela peut prendre une minute…</string>
+    <string name="update_message">Veuillez mettre à jour HueMore vers la dernière version.</string>
+    <string name="update_opt_out">Désactiver les rappels de mise à jour</string>
+    <string name="update">Mise à jour</string>
+    <string name="action_hub_status">État du pont</string>
+    <string name="reset_hub_connection">Réinitialiser la connexion au pont</string>
+    <string name="hub_connection">Connecté au pont avec l\'adresse réseau</string>
+    <string name="hub_connection_error">Non connecté au pont !</string>
+    <string name="empty_view_text">Aucune alarme trouvée…</string>
+    <string name="cap_all">TOUTES</string>
+    <string name="cap_on">ON</string>
+    <string name="cap_off">OFF</string>
+    <string name="cap_random">ALÉATOIRE</string>
+    <string name="broken_mood_link">Oups ! Impossible de lire cette ambiance</string>
+    <string name="action_report_bug">Signaler un bug</string>
+    <string name="update_required">Cette ambiance requiert une version à jour de LampShade</string>
+    <string name="corrupted_mood">Impossible de lire cette ambiance</string>
+    <string name="contextmenu_delete_timeslot">Supprimer la plage de temps</string>
+	<string name="contextmenu_delete_channel">Supprimer le canal</string>
+	<string name="grid_col_title_channels">Canaux</string>
+	<string name="infinite_loop">Boucle</string>
+	<string name="save">Enregistrer</string>
+	<string name="cap_sample_state">EXEMPLE</string>
+	<string name="cap_recent_state">RÉCENTS</string>
+	<string name="share">Partager</string>
+	<string name="seconds">Secondes</string>
+	<string name="preview">Aperçu</string>
+	<string name="advanced_timeslot_limit">Désolé, les ambiances sont limitées à 64 plages de temps dans cette version</string>
+	<string name="advanced_channel_limit">Désolé, les ambiances sont limitées à 64 canaux dans cette version</string>
+	<string name="community_facebook">LampShade.io sur Facebook</string>
+	<string name="community_google_plus">LampShade.io sur Google+</string>
+	<string name="community_twitter">LampShade.io sur Twitter</string>
+	<string name="action_communities">Communauté et assistance</string>
+	<string name="community_message">Rejoignez la communauté LampShade.io en ligne pour partager des ambiances et discuter des fonctionnalités de LampShade.io</string>
+	<string name="action_welcome">Bienvenue</string>
+	<string name="welcome_message">Bienvenue dans LampShade.io, une application puissante pour contrôler le système d\'éclairage domotique Hue de Philips</string>
+	<string name="welcome_get_started">Connexion à mon Hue</string>
+	<string name="welcome_get_hue">Acheter Philips Hue</string>
+	<string name="unnamed_group">Groupe sans nom</string>
+	<string name="unnamed_mood">Ambiance sans nom</string>
+	<string name="empty_group_list_text">Aucun groupe trouvé…</string>
+	<string name ="widget_alarms_label">LampShade Alarms</string>
+	<string name ="widget_groups_label">LampShade Groups</string>
+	<string name ="include_brightness">Include Brightness</string>
+	<string name="enable_port_forwarding">Activer l\'accès distant (Beta)</string>
+	<string name="port_forwarding_instructions">Pour contrôler vos lampes Hue via Internet, configurer votre routeur pour  rediriger un port (le port 80 par défaut) vers le pont Hue. Pour obtenir de l\'aide, consultez la communauté LampShade.io sur Google+ ou Facebook</string>
+	<string name="port_forwarding_ip_prompt">Adresse IP du routeur</string>
+	<string name="port_forwarding_port">Port :</string>
+	<string name="action_play">Aperçu de l\'ambiance</string>
+	<string name="action_help">Aide</string>
+	<string name="help_page_title">Pages d\'aide</string>
+	<string name="minutes">Minutes</string>
+	<string name="start_time">Temps de lancement</string>
+	<string name="show_NFC_read_page_descriptor">Show Quick Controls page when NFC tags read</string>
+	
+	<string name="help_title_editingmoods">Création et modification des ambiances</string>
+	<string name="help_title_alarms">Alarmes</string>
+	<string name="help_title_nfc">Utilisation des tags NFC</string>
+	<string name="help_title_automationpluggin">Plug-in pour Tasker/Locale/Llama</string>
+	<string name="help_title_faq">FAQ</string>
+	
+	<string-array name="help_page_content">
+	    <item>Les ambiances contiennent des états lumineux comme des commandes de couleur ou d\'allumage/extinction.\n\nLorsqu\'une ambiance est utilisée sur un groupe ou une ampoule, ces états sont appliqués.\n\nLes états sont réglés pour prendre effet immédiatement, en fonction d\'une durée après le lancement de l\'ambiance, ou à des heures spécifiques de la journée quand l\'ambiance est utilisée.\n\nLes canaux (colonnes d\'états) vous permettent d\'utiliser plusieurs couleurs en même temps. À chaque fois qu\'une ambiance est utilisée sur un groupe, les lampes du groupes sont assignées équitablement entre les différents canaux selon un algorithme round-robin.</item>
+        <item>(Fonctionnalité payante)\nLes alarmes vous permettent de programmer des ambiances à déclencher dans le futur.\n\nLes alarmes peuvent être configurées pour être répétées certains jours chaque semaine.\n\nLorsque vous utilisez une alarme avec une ambiance qui modifie la luminosité au fil du temps (par exemple Gentle Sunrise), la barre de luminosité de l\'alarme règle le niveau maximum de luminosité pour cette ambiance.\n\nLes alarmes sont stockées dans votre appareil, elles ne peuvent donc fonctionner que si votre appareil peut contrôler les lampes via le réseau.</item>
+        <item>(Fonctionnalité payante)\nLampShade permet d\'enregistrer des ambiances sur des tags NFC.\n\nQuand un ensemble ambiance+groupe+luminosité est enregistré dans un tag, ils seront appliqués à chaque fois que vous toucherez le tag avec votre appareil Android (si celui-ci est déverrouillé).\n\nPour utiliser cette fonctionnalité, votre appareil doit prendre en charge l\'écriture de tags NFC et vous devez avoir des tags sur lesquels votre appareil peut écrire.</item>
+        <item>(Fonctionnalité payante)\nLe plug-in d\'automatisation de LampShade prend en charge plusieurs applications, dont Tasker, Locale et Llama. Ces applications utilisent le plug-in pour appliquer des ambiances selon différents critères, comme la position GPS, les notifications entrantes, et bien d\'autres.\n\nLe plug-in est accessible depuis ces applications et propose une page permettant de choisir sur quel groupe appliquer quelle ambiance et à quelle luminosité.</item>
+		<item>Page de FAQ bientôt disponible</item>
+    </string-array>
+	
+	<string-array name="update_features">
+        <item>Éditeur d\'ambiances amélioré</item>
+        <item>Interface améliorée</item>
+        <item>Correction du bug qui empêchait parfois les alarmes d\'être déprogrammées si visuellement désactivées. Veuillez redémarrer votre téléphone pour que ce correctif fonctionne.</item>
+        <item>Correction d\'un bug qui causait occasionnellement la suppression d\'autres ambiances lors de la création d\'une nouvelle ambiance</item>
+    </string-array>
+   	<string-array name="mood_types">
+        <item>Simple</item>
+        <item>Temporisé</item>
+        <item>Quotidien</item>
+    </string-array>
+   	<string-array name="repeat_days">
+        <item>Dimanche</item>
+        <item>Lundi</item>
+        <item>Mardi</item>
+        <item>Mercredi</item>
+        <item>Jeudi</item>
+        <item>Vendredi</item>
+        <item>Samedi</item>
+    </string-array>
+    <string-array name="cap_short_repeat_days">
+        <item>DIM</item>
+        <item>LUN</item>
+        <item>MAR</item>
+        <item>MER</item>
+        <item>JEU</item>
+        <item>VEN</item>
+        <item>SAM</item>
+    </string-array>
+    <string-array name="transition_names_array">
+        <item>Par défaut</item>
+        <item>1 seconde</item>
+        <item>10 secondes</item>
+        <item>1 minute</item>
+        <item>10 minutes</item>
+        <item>1 heure</item>
+    </string-array>
+</resources>
