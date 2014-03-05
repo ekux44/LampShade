@@ -120,6 +120,12 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			return grid.getWidth();
 		return 0;
 	}
+
+	public int getGridHeight() {
+		if(grid!=null)
+			return grid.getHeight();
+		return 0;
+	}
 	
 	public void validate(){
 		for(StateRow s : moodRows){
@@ -321,6 +327,19 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	public void deleteTimeslot(int position){
 		moodRows.remove(position);
+		redrawGrid();
+	}
+	public void deleteChannel(int position){
+		for(StateRow sr : moodRows)
+			sr.cellRay.remove(position);
+		redrawGrid();
+	}
+	public void switchChannels(int position1, int position2) {
+		for(StateRow sr : moodRows){
+			StateCell temp = sr.cellRay.get(position1);
+			sr.cellRay.set(position1, sr.cellRay.get(position2));
+			sr.cellRay.set(position2, temp);
+		}
 		redrawGrid();
 	}
 	

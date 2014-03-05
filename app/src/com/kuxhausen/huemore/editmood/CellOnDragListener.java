@@ -60,7 +60,15 @@ class CellOnDragListener implements View.OnDragListener {
 				        	return true;
 			        	}
 	            	case Channel:
-	            		break;
+	            		if(v.getId() == R.id.discardImageButton){
+			            	mFrag.deleteChannel(mFrag.mStateGrid.getSelectedChannelCol());
+			            	mFrag.mActionMode.finish();
+			            	return true;
+			        	} else {
+		            		mFrag.switchChannels(mFrag.mStateGrid.getSelectedChannelCol(), (Integer)v.getTag());
+		            		mFrag.mActionMode.finish();
+				        	return true;
+			        	}
 	            	case Timeslot:
 	            		if(v.getId() == R.id.discardImageButton){
 			            	mFrag.deleteTimeslot(mFrag.mStateGrid.getSelectedTimeslotRow());

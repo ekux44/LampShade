@@ -37,12 +37,13 @@ public class CellOnLongClickListener implements OnLongClickListener{
 			    v.startDrag(null, myCellShadow, mViewType, 0);
 			    break;
 			case Channel:
+				mFrag.mStateGrid.setChannelSelectionByTag(v);
+				View.DragShadowBuilder myChannelShadow = new ChannelShadowBuilder(v,mFrag.getGridHeight(), mFrag.getActivity());
+			    v.startDrag(null, myChannelShadow, mViewType, 0);
 				break;
 			case Timeslot:
 				mFrag.mStateGrid.setTimeslotSelectionByTag(v);
-				// Instantiates the drag shadow builder.
 			    View.DragShadowBuilder myTimeslotShadow = new TimeslotShadowBuilder(v,mFrag.getGridWidth(), mFrag.getActivity());
-			    // Starts the drag
 			    v.startDrag(null, myTimeslotShadow, mViewType, 0);
 				break;
 			}
@@ -58,12 +59,10 @@ public class CellOnLongClickListener implements OnLongClickListener{
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private static class TimeslotShadowBuilder extends View.DragShadowBuilder {
 
-		    // The drag shadow image, defined as a drawable thing
 		    private static Drawable shadow;
 		    private static ShapeDrawable outline;
 		    private static int mWidth;
 		    
-		        // Defines the constructor for myDragShadowBuilder
 		        public TimeslotShadowBuilder(View v, int pxWidth, Context c) {
 
 		            // Stores the View parameter passed to myDragShadowBuilder.
@@ -71,7 +70,6 @@ public class CellOnLongClickListener implements OnLongClickListener{
 
 		            // Creates a draggable image that will fill the Canvas provided by the system.
 		            shadow = new ColorDrawable(Color.LTGRAY);
-		            
 		            
 		            RectShape outlineShape = new RectShape();
 		            outline = new ShapeDrawable(outlineShape);
@@ -82,24 +80,17 @@ public class CellOnLongClickListener implements OnLongClickListener{
 		            mWidth = pxWidth;
 		        }
 
-		        // Defines a callback that sends the drag shadow dimensions and touch point back to the
-		        // system.
+		        // Defines a callback that sends the drag shadow dimensions and touch point back to the system.
 		        @Override
 		        public void onProvideShadowMetrics (Point size, Point touch){
-		            // Defines local variables
-		            int width, height;
-
-		            // Sets the width of the shadow to half the width of the original View
-		            width = getView().getWidth();// / 2;
-
-		            // Sets the height of the shadow to half the height of the original View
-		            height = getView().getHeight();// / 2;
+		            int width = getView().getWidth();
+		            int height = getView().getHeight();
 
 		            // The drag shadow is a ColorDrawable. This sets its dimensions to be the same as the
-		            // Canvas that the system will provide. As a result, the drag shadow will fill the
-		            // Canvas.
+		            // Canvas that the system will provide. As a result, the drag shadow will fill the Canvas.
 		            shadow.setBounds(width, 0, width+mWidth, height);
 		            outline.setBounds(0, 0, width, height);
+		            
 		            // Sets the size parameter's width and height values. These get back to the system
 		            // through the size parameter.
 		            size.set(width+mWidth, height);
@@ -118,5 +109,58 @@ public class CellOnLongClickListener implements OnLongClickListener{
 		            outline.draw(canvas);
 		        }
 	}
-	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private static class ChannelShadowBuilder extends View.DragShadowBuilder {
+
+		    private static Drawable shadow;
+		    private static ShapeDrawable outline;
+		    private static int mHeight;
+		    
+		        public ChannelShadowBuilder(View v, int pxHeight, Context c) {
+
+		            // Stores the View parameter passed to myDragShadowBuilder.
+		            super(v);
+
+		            // Creates a draggable image that will fill the Canvas provided by the system.
+		            shadow = new ColorDrawable(Color.LTGRAY);
+		            
+		            RectShape outlineShape = new RectShape();
+		            outline = new ShapeDrawable(outlineShape);
+		            outline.getPaint().setColor(Color.LTGRAY);
+		            outline.getPaint().setStyle(Style.STROKE);
+		            outline.getPaint().setStrokeWidth(4 *  c.getResources().getDisplayMetrics().density);
+		            
+		            mHeight = pxHeight;
+		        }
+
+		        // Defines a callback that sends the drag shadow dimensions and touch point back to the system.
+		        @Override
+		        public void onProvideShadowMetrics (Point size, Point touch){
+		            int width = getView().getWidth();
+		            int height = getView().getHeight();
+
+		            // The drag shadow is a ColorDrawable. This sets its dimensions to be the same as the
+		            // Canvas that the system will provide. As a result, the drag shadow will fill the Canvas.
+		            shadow.setBounds(0, height, width, height+mHeight);
+		            outline.setBounds(0, 0, width, height);
+		            
+		            // Sets the size parameter's width and height values. These get back to the system
+		            // through the size parameter.
+		            size.set(width, height+mHeight);
+ 
+		            // Sets the touch point's position to be in the middle of the drag shadow
+		            touch.set(width / 2, height / 2);
+		        }
+
+		        // Defines a callback that draws the drag shadow in a Canvas that the system constructs
+		        // from the dimensions passed in onProvideShadowMetrics().
+		        @Override
+		        public void onDrawShadow(Canvas canvas) {
+		        	super.onDrawShadow(canvas);
+		            // Draws the ColorDrawable in the Canvas passed in from the system.
+		            shadow.draw(canvas);
+		            outline.draw(canvas);
+		        }
+	}
+
 }
