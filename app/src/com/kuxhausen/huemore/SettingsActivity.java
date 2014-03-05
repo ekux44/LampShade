@@ -100,6 +100,11 @@ public class SettingsActivity extends SherlockActivity implements
 				edit.putString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, candidateRemoteIP);
 				edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, candidateRemoteIP);
 			}
+		} else{
+			if(settings.contains(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS)){
+				edit.remove(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS);
+				edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, settings.getString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, ""));
+			}
 		}
 		edit.putBoolean(PreferenceKeys.SHOW_ACTIVITY_ON_NFC_READ, mEnableNfcReadPage.isChecked());
 		edit.commit();
