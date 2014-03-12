@@ -19,6 +19,7 @@
     <string name="default_port">80</string>
     
     <string-array name="help_page_titles">
+	    <item>@string/help_title_gettingstarted</item>
 	    <item>@string/help_title_editingmoods</item>
         <item>@string/help_title_alarms</item>
         <item>@string/help_title_nfc</item>
