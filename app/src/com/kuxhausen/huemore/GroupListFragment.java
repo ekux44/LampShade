@@ -129,7 +129,7 @@ public class GroupListFragment extends SherlockListFragment implements
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-		if (longSelected.getText().equals(this.getActivity().getString(R.string.cap_all))) {
+		if (longSelected.getText().toString().equals(this.getActivity().getString(R.string.cap_all))) {
 			return;
 		}
 		android.view.MenuInflater inflater = this.getActivity()
@@ -147,7 +147,7 @@ public class GroupListFragment extends SherlockListFragment implements
 
 		case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
 			String groupSelect = GroupColumns.GROUP + "=?";
-			String[] groupArg = { (String) (longSelected).getText() };
+			String[] groupArg = {longSelected.getText().toString()};
 			getActivity().getContentResolver().delete(
 					DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
 					groupSelect, groupArg);
@@ -155,8 +155,7 @@ public class GroupListFragment extends SherlockListFragment implements
 		case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
 			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.GROUP_NAME,
-					(String) (longSelected).getText());
+			args.putString(InternalArguments.GROUP_NAME, longSelected.getText().toString());
 			ngdf.setArguments(args);
 			ngdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -175,7 +174,7 @@ public class GroupListFragment extends SherlockListFragment implements
 
 		// Look up bulbs for that mood from database
 		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { (String) ((TextView) (v)).getText() };
+		String[] gWhereClause = { selected.getText().toString() };
 		Cursor cursor = getActivity().getContentResolver().query(
 				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
 																	// default

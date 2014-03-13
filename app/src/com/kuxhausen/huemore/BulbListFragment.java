@@ -108,10 +108,9 @@ public class BulbListFragment extends SherlockListFragment implements
 		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here
 			EditBulbDialogFragment ngdf = new EditBulbDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.BULB_NAME,
-					(String) (longSelected).getText());
+			args.putString(InternalArguments.BULB_NAME, longSelected.getText().toString());
 			args.putInt(InternalArguments.BULB_NUMBER, 1 + rayAdapter
-					.getPosition((String) (longSelected).getText()));
+					.getPosition(longSelected.getText().toString()));
 			ngdf.setArguments(args);
 			ngdf.setBulbsFragment(this);
 			ngdf.show(getFragmentManager(),
