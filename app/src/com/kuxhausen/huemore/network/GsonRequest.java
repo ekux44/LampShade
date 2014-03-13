@@ -81,8 +81,9 @@ public class GsonRequest<T> extends Request<T> {
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
-            String json = new String(
-                    response.data, HttpHeaderParser.parseCharset(response.headers));
+            //Philips Hue not declaring its reponse as UTF-8 in the headder, so many override
+        	String json = new String(
+                    response.data, PROTOCOL_CHARSET/*HttpHeaderParser.parseCharset(response.headers)*/);
             return Response.success(
                     gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
