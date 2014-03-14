@@ -28,7 +28,7 @@ Upcoming Development goals:
 Tested on:
 • Nexus 5
 • Nexus 7
-• Samsung Galexy Tab 10.1
+• Samsung Galaxy Tab 10.1
 • Android 2.3 emulator
 
 
