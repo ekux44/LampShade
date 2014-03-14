@@ -71,7 +71,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 				listener.stateChanged();
 		}
 		Mood m = Utils.generateSimpleMood(currentState);
-		((NetworkManagedSherlockFragmentActivity) getActivity()).startMood(m, null);
+		if(this.getActivity()!=null)
+			((NetworkManagedSherlockFragmentActivity) getActivity()).startMood(m, null);
 	}
 	
 	public void setParrentMood(EditMoodStateGridFragment eamf){
@@ -236,7 +237,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			i.putExtra(InternalArguments.ROW, row);
 			i.putExtra(InternalArguments.COLUMN, col);
 			
-			getTargetFragment().onActivityResult(-1, -1, i);
+			if(this.getTargetFragment()!=null)
+				getTargetFragment().onActivityResult(-1, -1, i);
 			this.dismiss();
 			break;
 		case R.id.cancel:
