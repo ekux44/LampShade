@@ -1,0 +1,37 @@
+LampShade provides convenient and useful controls for smart home lighting.
+Currently supports: Philips Hue
+
+LampShade.io lets you:
+• Control entire rooms with groups
+• Set the mood with beautiful, animated color patterns
+• Create custom moods and share with the LampShade community
+
+The pro version (in-app purchase) adds:
+• Lockscreen and homescreen widgets
+• Lighting alarm clock
+• NFC tag support to trigger moods
+• Automation Plugin that supports Tasker, Locale and Llama.
+
+
+LampShade.io is available in Dutch, English, French, and German through community translations.
+
+Don't forget to enable automatic updates so you can experience upcoming features when they're released!
+
+Upcoming Development goals:
+• More widgets
+• Voice controls
+• Ability to play multiple moods simultaneously
+• Better support for remote use when away from home
+• Syncing across devices
+• Support for other smart lightbulb products
+
+Tested on:
+• Nexus 5
+• Nexus 7
+• Samsung Galexy Tab 10.1
+• Android 2.3 emulator
+
+
+LampShade.io was formerly known as HueMore
+Copyright 2013-2014 Eric Kuxhausen.
+All rights reserved.
