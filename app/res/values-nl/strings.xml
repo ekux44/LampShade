@@ -53,7 +53,7 @@
     <string name="alarm_repeat">Herhaling:</string>
     <string name="cap_short_every_day">ELKE DAG</string>
     <string name="next_scheduled_intro">Volgende alarm</string>
-    <string name="update_welcome_title">Nieuw in LampShade 2.7</string>
+    <string name="update_welcome_title">New in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Bridge opzoeken. Dit kan enige momenten duren.</string>
     <string name="update_message">Update HueMore naar de laatste versie</string>
     <string name="update_opt_out">Schakel updateherinneringen uit</string>
@@ -82,7 +82,7 @@
 	<string name="seconds">Seconden</string>
 	<string name="preview">voorbeeld</string>
 	<string name="advanced_timeslot_limit">Sorry, moods are limited to 64 timeslots in this version</string>
-	<string name="advanced_channel_limit">Sorry, moods are limited to 64 channels in this version</string>
+	<string name="advanced_channel_limit">Sorry, deze versie ondersteunt maximaal 64 kanalen</string>
 	<string name="community_facebook">LampShade.io op Facebook</string>
 	<string name="community_google_plus">LampShade.io op Google+</string>
 	<string name="community_twitter">LampShade.io op Twitter</string>
@@ -98,8 +98,43 @@
 	<string name ="widget_alarms_label">LampShade Alarms</string>
 	<string name ="widget_groups_label">LampShade Groups</string>
 	<string name ="include_brightness">Include Brightness</string>
+	<string name="enable_port_forwarding">Enable remote access (Beta)</string>
+	<string name="port_forwarding_instructions">To control your Hue lights over the internet, configure your wifi router settings to forward a port (default is port 80) to the Hue hub. For help, visit the LampShade.io community on Google+ or Facebook</string>
+	<string name="port_forwarding_ip_prompt">Router\'s internet IP address</string>
+	<string name="port_forwarding_port">Port:</string>
+	<string name="action_play">Preview Mood</string>
+	<string name="action_help">Help</string>
+	<string name="help_page_title">Help Pages</string>
+	<string name="minutes">Minutes</string>
+	<string name="start_time">Starttijd</string>
+	<string name="show_NFC_read_page_descriptor">Show Quick Controls page when NFC tags read</string>
 	
-        <string-array name="repeat_days">
+	<string name="help_title_gettingstarted">Getting Started</string>
+	<string name="help_title_editingmoods">Creating and Editing Moods</string>
+	<string name="help_title_alarms">Alarms</string>
+	<string name="help_title_nfc">Using with NFC Tags</string>
+	<string name="help_title_automationpluggin">Pluggin for Tasker/Locale/Llama</string>
+	<string name="help_title_faq">FAQ</string>
+	
+	<string name="help_content_gettingstarted">Once you have wirelessly connected to your lights, you can begin controlling them.\n\nFirst, click on a light bulb or bulb group to select it.\n\nNext, you are shown a page of moods you may play on your selected bulb(s). Moods can be simple color paterns or dynamic lighting animations.\n\nDynamic moods will continue playing until stopped. To view ongoing moods, look for the LampShade icon in your device\'s notification bar. To stop a mood, play a simple mood(such as ON or OFF) on the same bulb(s).</string>
+	<string name="help_content_editingmoods">Moods contain lighting states such as colors and on/off commands.\n\nWhile a mood is played on a group or bulb, these states take effect.\n\nThe states are set to take effect either immediately, over time relative to when the playing starts, or at specific times of the day while the mood is playing.\n\nChannels (columns of states) allow you to play multiple colors at the same time. Each time a mood is played on a group, the group\'s lights will be assigned equally among the channels, round-robin style.</string>
+	<string name="help_content_alarms">(Paid Feature)\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
+	<string name="help_content_nfc">(Paid Feature)\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
+	<string name="help_content_automationpluggin">(Paid Feature)\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
+	<string name="help_content_faq">Q. Why aren't my Philips lights changing to bright green?\nA. The Philips Hue regular and downlight models only contain Blue, Red and Yellow LEDs so they cannot display intense greens.\n\nQ. Why aren't my Philips lights changing to dark reds or blues?\nA. Your Philips lights might be running outdated software. Use the offcial Philips app to update the firmware on your hub and lightbulbs.\n\nQ. Do LampShade alarms work when I'm away from home?\nA. LampShade alarms can only take effect when LampShade is connected to your lights. They will only work when away from home if you are using the remote access feature.</string>
+	
+	<string-array name="update_features">
+        <item>Improved mood editor</item>
+        <item>Improved asthetics</item>
+        <item>Fixed bug that occasionally prevented alarms from being unscheduled when visually turned off. Please restart your phone for this fix to take effect.</item>
+        <item>Fixed bug that occasionally caused other moods to be deleted when creating a new mood</item>
+    </string-array>
+   	<string-array name="mood_types">
+        <item>Simple</item>
+        <item>Timed</item>
+        <item>Daily</item>
+    </string-array>
+   	<string-array name="repeat_days">
         <item>Zondag</item>
         <item>Maandag</item>
         <item>Dinsdag</item>
@@ -123,6 +158,6 @@
         <item>10 seconden</item>
         <item>1 minuut</item>
         <item>10 minuten</item>
-        <item>1 Hour</item>
+        <item>1 uur</item>
     </string-array>
 </resources>
