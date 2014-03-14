@@ -95,9 +95,9 @@
 	<string name="unnamed_group">Unnamed Group</string>
 	<string name="unnamed_mood">Unnamed Mood</string>
 	<string name="empty_group_list_text">No groups found…</string>
-	<string name ="widget_alarms_label">LampShade Alarms</string>
-	<string name ="widget_groups_label">LampShade Groups</string>
-	<string name ="include_brightness">Include Brightness</string>
+	<string name="widget_alarms_label">LampShade Alarms</string>
+	<string name="widget_groups_label">LampShade Groups</string>
+	<string name="include_brightness">Include Brightness</string>
 	<string name="enable_port_forwarding">Enable remote access (Beta)</string>
 	<string name="port_forwarding_instructions">To control your Hue lights over the internet, configure your wifi router settings to forward a port (default is port 80) to the Hue hub. For help, visit the LampShade.io community on Google+ or Facebook</string>
 	<string name="port_forwarding_ip_prompt">Router\'s internet IP address</string>
@@ -106,7 +106,8 @@
 	<string name="action_help">Help</string>
 	<string name="help_page_title">Help Pages</string>
 	<string name="minutes">Minutes</string>
-	<string name="start_time">Start Time</string>
+	<string name="daily_mood_start_time">Start Time</string>
+	<string name="timed_mood_start_time">Start Time</string>
 	<string name="show_NFC_read_page_descriptor">Show Quick Controls page when NFC tags read</string>
 	
 	<string name="help_title_gettingstarted">Getting Started</string>

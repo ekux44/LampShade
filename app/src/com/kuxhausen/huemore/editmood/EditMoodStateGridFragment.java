@@ -476,7 +476,12 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 		//timeslot label
 		if(pageType == PageType.RELATIVE_PAGE || pageType == PageType.DAILY_PAGE) {
-			View v =inflater.inflate(R.layout.grid_col_timeslot_label, null);
+			View v = null;
+			if(pageType == PageType.RELATIVE_PAGE){
+				v = inflater.inflate(R.layout.grid_col_timed_timeslot_label, null);
+			}else if(pageType == PageType.DAILY_PAGE){
+				v = inflater.inflate(R.layout.grid_col_daily_timeslot_label, null);
+			}
 			GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
 			vg.columnSpec = GridLayout.spec(0);
 			vg.rowSpec = GridLayout.spec(0);

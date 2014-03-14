@@ -4,6 +4,5 @@
     android:layout_height="match_parent"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:text="@string/start_time" >
-
+    android:text="@string/timed_mood_start_time" >
 </TextView>
