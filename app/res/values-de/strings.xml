@@ -95,10 +95,10 @@
 	<string name="unnamed_group">Unbenannte Gruppe</string>
 	<string name="unnamed_mood">Unbenannte Szene</string>
 	<string name="empty_group_list_text">Keine Gruppen gefunden...</string>
-	<stringname ="widget_alarms_label">LampShade Alarms</string>
+	<string name ="widget_alarms_label">LampShade Alarms</string>
 	<string name ="widget_groups_label">LampShade Groups</string>
 	<string name ="include_brightness">Include Brightness</string>
-	<string  name="enable_port_forwarding">Fernzugriff erlauben (Beta)</string>
+	<string name="enable_port_forwarding">Fernzugriff erlauben (Beta)</string>
 	<string name="port_forwarding_instructions">Damit Sie die Hue Lichter von unterwegs steuern können, muss der Hue Bridge Port von Aussen erreichbar sein. Dies kann man beispielsweise mit einer Port Weiterleitung erreichen. Falls Sie Hilfe benötigen, dann besuchen Sie die LampShade.io Community auf Google+ oder Facebook</string>
 	<string name="port_forwarding_ip_prompt">Interne IP Adresse des Routers</string>
 	<string name="port_forwarding_port">Port:</string>
@@ -121,7 +121,6 @@
 	<string name="help_content_alarms">(Paid Feature)\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
 	<string name="help_content_nfc">(Paid Feature)\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
 	<string name="help_content_automationpluggin">(Paid Feature)\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
-	<string name="help_content_faq">Q. Why aren't my Philips lights changing to bright green?\nA. The Philips Hue regular and downlight models only contain Blue, Red and Yellow LEDs so they cannot display intense greens.\n\nQ. Why aren't my Philips lights changing to dark reds or blues?\nA. Your Philips lights might be running outdated software. Use the offcial Philips app to update the firmware on your hub and lightbulbs.\n\nQ. Do LampShade alarms work when I'm away from home?\nA. LampShade alarms can only take effect when LampShade is connected to your lights. They will only work when away from home if you are using the remote access feature.</string>
 	
 	<string-array name="update_features">
         <item>Verbesserter Szenen-Editor</item>
