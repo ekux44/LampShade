@@ -18,11 +18,11 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
-import com.larswerkman.colorpicker.ColorPicker;
-import com.larswerkman.colorpicker.SaturationBar;
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.SaturationBar;
 
 public class ColorWheelFragment extends SherlockFragment implements
-		OnCheckedChangeListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
+		OnCheckedChangeListener, com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color, int hue);
@@ -57,7 +57,7 @@ public class ColorWheelFragment extends SherlockFragment implements
 		picker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
 		saturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);
 		picker.addSaturationBar(saturationBar);
-
+		picker.setShowOldCenterColor(false);
 
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
@@ -89,7 +89,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 			hs.xy = Utils.hsTOxy(input);
 			
 			picker.setColor(Color.HSVToColor(hsv));
-			picker.setOldCenterColor(Color.HSVToColor(hsv));
 			saturationBar.setSaturation(hsv[1]);
 		}
 		if(bs.xy!=null){
@@ -101,7 +100,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 			int rgb = Color.HSVToColor(hsv);
 			
 			picker.setColor(rgb);
-			picker.setOldCenterColor(rgb);
 			
 			saturationBar.setSaturation(hsv[1]);
 		}
@@ -139,8 +137,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	@Override
 	public void onColorChanged(int rgb) {
-		picker.setOldCenterColor(rgb);
-		
 		float[] hsv = new float[3];
 		int red = ((rgb>>>16)&0xFF);
 		int green = ((rgb>>>8)&0xFF);

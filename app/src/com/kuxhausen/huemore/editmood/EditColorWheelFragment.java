@@ -11,12 +11,12 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.api.BulbState;
-import com.larswerkman.colorpicker.ColorPicker;
-import com.larswerkman.colorpicker.SaturationBar;
-import com.larswerkman.colorpicker.ValueBar;
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.SaturationBar;
+import com.larswerkman.holocolorpicker.ValueBar;
 
 public class EditColorWheelFragment extends SherlockFragment implements
-		OnCreateColorListener, com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener {
+		OnCreateColorListener, com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
 	ColorPicker picker;
 	SaturationBar saturationBar;
@@ -35,6 +35,7 @@ public class EditColorWheelFragment extends SherlockFragment implements
 		picker.addSaturationBar(saturationBar);
 		valueBar = (ValueBar) myView.findViewById(R.id.valuebar);
 		picker.addValueBar(valueBar);
+		picker.setShowOldCenterColor(false);
 		picker.setOnColorChangedListener(this);
 		
 		return myView;
@@ -42,8 +43,6 @@ public class EditColorWheelFragment extends SherlockFragment implements
 
 	@Override
 	public void onColorChanged(int rgb) {
-		picker.setOldCenterColor(rgb);
-		
 		float[] newHSV = new float[3];
 		int red = ((rgb>>>16)&0xFF);
 		int green = ((rgb>>>8)&0xFF);
@@ -79,7 +78,6 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			if(picker!=null&&saturationBar!=null&&valueBar!=null){
 				picker.setOnColorChangedListener(null);
 				picker.setColor(rgb);
-				picker.setOldCenterColor(rgb);
 				saturationBar.setSaturation(hsv[1]);
 				picker.setOnColorChangedListener(this);
 				picker.invalidate();
@@ -100,7 +98,6 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			if(picker!=null&&saturationBar!=null&&valueBar!=null){
 				picker.setOnColorChangedListener(null);
 				picker.setColor(rgb);
-				picker.setOldCenterColor(rgb);
 				saturationBar.setSaturation(hsv[1]);
 				picker.setOnColorChangedListener(this);
 				picker.invalidate();
