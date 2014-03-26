@@ -1,5 +1,13 @@
 package com.kuxhausen.huemore.net;
 
-public class DeviceManager {
+import android.content.Context;
 
+public class DeviceManager {
+	
+	public DeviceManager(Context c){
+		//load all connections from the database 
+		
+		
+	}
+	
 }
