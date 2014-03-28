@@ -1,8 +1,13 @@
 package com.kuxhausen.huemore.network;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
+import android.util.Pair;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -12,9 +17,13 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.net.hue.HubConnection;
+import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.Bridge;
@@ -26,6 +35,23 @@ import com.kuxhausen.huemore.state.api.RegistrationRequest;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class NetworkMethods {
+	
+	
+	public static HubData getBridgeAndHash(Context c){
+		ArrayList<HubData> hubs = new ArrayList<HubData>();
+		Gson gson = new Gson();
+		
+		String[] columns = {BaseColumns._ID, NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.JSON_COLUMN};
+		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE};
+		Cursor cursor = c.getContentResolver().query(NetConnectionColumns.URI, columns, NetConnectionColumns.TYPE_COLUMN + " = ?", selectionArgs, null);
+		cursor.moveToPosition(-1);// not the same as move to first!
+		while (cursor.moveToNext()) {
+			return gson.fromJson(cursor.getString(4), HubData.class);
+		}
+		
+		return null;
+	}
+	
 	public static void PreformTransmitGroupMood(MoodExecuterService service, Integer bulb, BulbState bs){
 		if (service == null || bulb == null || bs == null)
 			return;
@@ -33,12 +59,10 @@ public class NetworkMethods {
 		Integer[] bulbs = {bulb};
 		//TODO reimplement with support for Moods
 		
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(service);
-		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
-				null);
-		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
-
+		HubData hub = getBridgeAndHash(service);
+		String bridge = hub.localHubAddress;
+		String hash = hub.hashedUsername;
+		
 		if (bridge == null)
 			return;
 		
@@ -58,13 +82,10 @@ public class NetworkMethods {
 		if (service == null)
 			return;
 
-		// Get username and IP from preferences cache
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(service);
-		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
-				null);
-		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
-
+		HubData hub = getBridgeAndHash(service);
+		String bridge = hub.localHubAddress;
+		String hash = hub.hashedUsername;
+		
 		if (bridge == null)
 			return;
 		
@@ -80,13 +101,10 @@ public class NetworkMethods {
 		if (service == null || bulbAtt == null)
 			return;
 
-		// Get username and IP from preferences cache
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(service);
-		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
-				null);
-		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
-
+		HubData hub = getBridgeAndHash(service);
+		String bridge = hub.localHubAddress;
+		String hash = hub.hashedUsername;
+		
 		if (bridge == null)
 			return;
 		
@@ -103,13 +121,10 @@ public class NetworkMethods {
 		if (service == null)
 			return;
 
-		// Get username and IP from preferences cache
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(service);
-		String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,
-				null);
-		String hash = settings.getString(PreferenceKeys.HASHED_USERNAME, "");
-
+		HubData hub = getBridgeAndHash(service);
+		String bridge = hub.localHubAddress;
+		String hash = hub.hashedUsername;
+		
 		if (bridge == null)
 			return;
 		

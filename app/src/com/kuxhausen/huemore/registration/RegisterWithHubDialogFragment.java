@@ -5,17 +5,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -26,9 +22,10 @@ import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.api.Bridge;
 import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
@@ -163,16 +160,17 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				rsdf.show(getFragmentManager(),
 						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
-				// Add username and IP to preferences cache
-				SharedPreferences settings = PreferenceManager
-						.getDefaultSharedPreferences(parrentActivity);
-
-				Editor edit = settings.edit();
-				edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, bridgeIP);
-				edit.putString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, bridgeIP);
-				edit.putString(PreferenceKeys.HASHED_USERNAME, username);
-				edit.commit();
-
+				// Add connection to the database
+				HubData hubData = new HubData();
+				hubData.localHubAddress = bridgeIP;
+				hubData.hashedUsername = username;
+				
+				ContentValues cv = new ContentValues();
+				cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
+				cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
+				
+				RegisterWithHubDialogFragment.this.getActivity().getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, cv);
+				
 				// done with registration dialog
 				dismiss();
 				}

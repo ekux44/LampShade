@@ -1,17 +1,20 @@
 package com.kuxhausen.huemore;
 
 import android.annotation.TargetApi;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
+import android.database.Cursor;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -21,13 +24,18 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.android.common.view.SlidingTabLayout;
+import com.google.gson.Gson;
 import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
+import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.network.ConnectionStatusDialogFragment;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.DeprecatedPreferenceKeys;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -39,7 +47,8 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
  * @author Eric Kuxhausen
  */
 public class MainActivity extends NetworkManagedSherlockFragmentActivity{
-
+	private final static Gson gson = new Gson();
+	
 	protected IabHelper mPlayHelper;
 	protected Inventory lastQuerriedInventory;
 	private final MainActivity me = this;
@@ -378,9 +387,25 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	private void initializationDatabaseChecks(){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (settings.contains(PreferenceKeys.BRIDGE_IP_ADDRESS) && !settings.contains(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS)) {
+		if(settings.contains(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS)){
+			HubData hubData = new HubData();
+			hubData.localHubAddress = settings.getString(DeprecatedPreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, null);
+			hubData.portForwardedAddress = settings.getString(DeprecatedPreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null);
+			hubData.hashedUsername = settings.getString(DeprecatedPreferenceKeys.HASHED_USERNAME, null);
+			if(hubData.localHubAddress==null)
+				hubData.localHubAddress = settings.getString(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS, null);
+			
+			if(hubData.hashedUsername!=null && (hubData.localHubAddress!=null || hubData.portForwardedAddress!=null)){
+				ContentValues cv = new ContentValues();
+				cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
+				cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
+				this.getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, cv);
+			}
 			Editor edit = settings.edit();
-			edit.putString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS, null));
+			edit.remove(DeprecatedPreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS);
+			edit.remove(DeprecatedPreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS);
+			edit.remove(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS);
+			edit.remove(DeprecatedPreferenceKeys.HASHED_USERNAME);
 			edit.commit();
 		}
 		
@@ -414,7 +439,9 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		}
 
 		// check to see if the bridge IP address is setup yet
-		if (!settings.contains(PreferenceKeys.BRIDGE_IP_ADDRESS)) {
+		String[] columns = {BaseColumns._ID, NetConnectionColumns.TYPE_COLUMN};
+		Cursor cursor = getContentResolver().query(NetConnectionColumns.URI, columns, null, null, null);
+		if(cursor.getCount()<=0){
 			if(!settings.contains(PreferenceKeys.DONE_WITH_WELCOME_DIALOG))
 			{
 				WelcomeDialogFragment wdf = new WelcomeDialogFragment();

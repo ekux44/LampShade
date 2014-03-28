@@ -58,7 +58,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		
 		parrentActivity.registerOnServiceConnectedListener(this);
 		
-		SharedPreferences settings = PreferenceManager
+/*		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(parrentActivity);
 		String localBridge = settings.getString(PreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, null);
 		String internetBridge = settings.getString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null);
@@ -77,7 +77,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		}else{
 			rb.setVisibility(View.GONE);
 		}
-		
+*/		
 		return myView;
 	}
 	
@@ -99,9 +99,9 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		connectionStatus = status;
 		if(status){
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
-			String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,"");
+//			String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,"");
 			
-			connectionStatusMessage.setText(this.getString(R.string.hub_connection)+": "+bridge);
+//			connectionStatusMessage.setText(this.getString(R.string.hub_connection)+": "+bridge);
 			leftButton.setText(R.string.reset_hub_connection);
 			rightButton.setText(R.string.accept);
 			checkingConnectionInProgress.setVisibility(View.GONE);
@@ -154,7 +154,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
 		Editor edit = settings.edit();
 		switch(checkedId){
-		case R.id.internetIP:
+/*		case R.id.internetIP:
 			edit.putString(PreferenceKeys.BRIDGE_IP_ADDRESS, settings.getString(PreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null));
 			edit.commit();
 			this.dismiss();
@@ -164,6 +164,6 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 			edit.commit();
 			this.dismiss();
 			break;
-		}
+*/		}
 	}
 }

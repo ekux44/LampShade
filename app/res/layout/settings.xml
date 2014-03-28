@@ -27,56 +27,7 @@
 			    android:layout_height="wrap_content"
 			    android:text="@string/show_NFC_read_page_descriptor"
 			    android:padding="8dp" />
-						
-			<CheckBox
-			    android:id="@+id/portForwardingCheckBox"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/enable_port_forwarding"
-			    android:padding="8dp" />			
 			
-			<LinearLayout
-			    android:id="@+id/portForwardingOptions"
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="vertical"
-			    android:padding="8dp" >
-
-			    <EditText
-			        android:id="@+id/portForwardingEditText"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:ems="10"
-			        android:hint="@string/port_forwarding_ip_prompt" >
-			    </EditText>
-
-			    <LinearLayout
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:orientation="horizontal"
-			        android:layout_gravity="center" >
-
-			        <TextView
-			            android:layout_width="wrap_content"
-			            android:layout_height="wrap_content"
-			            android:text="@string/port_forwarding_port" />
-
-			        <EditText
-			            android:id="@+id/portNumberEditText"
-			            android:layout_width="0dp"
-			            android:layout_height="wrap_content"
-			            android:layout_weight="1"
-			            android:ems="10"
-			            android:inputType="number"
-			            android:text="80" />
-			    </LinearLayout>
-
-			    <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/port_forwarding_instructions" />
-			</LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
