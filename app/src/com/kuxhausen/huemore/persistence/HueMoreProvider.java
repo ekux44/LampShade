@@ -2,7 +2,6 @@ package com.kuxhausen.huemore.persistence;
 
 import java.util.HashMap;
 
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -20,6 +19,8 @@ import android.provider.BaseColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -33,7 +34,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * A projection map used to select columns from the database
 	 */
 	private static HashMap<String, String> sGroupsProjectionMap,
-			sMoodsProjectionMap, sGroupBulbsProjectionMap, sAlarmsProjectionMap;
+			sMoodsProjectionMap, sGroupBulbsProjectionMap, sAlarmsProjectionMap, sNetBulbsProjectionMap, sNetConnectionsProjectionMap;
 	/**
 	 * A UriMatcher instance
 	 */
@@ -43,7 +44,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * pattern of the incoming URI
 	 */
 	// The incoming URI matches the Groups URI pattern
-	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5;
+	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5, NETBULBS = 6, NETCONNECTIONS = 7;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -114,6 +115,26 @@ public class HueMoreProvider extends ContentProvider {
 		{
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.AlarmColumns.PATH_INDIVIDUAL_ALARM, INDIVIDUAL_ALARM);
 		}
+		{
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
+			sGroupBulbsProjectionMap = new HashMap<String, String>();
+
+			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+			sGroupBulbsProjectionMap.put(NetBulbColumns.NAME_COLUMN, NetBulbColumns.NAME_COLUMN);
+			sGroupBulbsProjectionMap.put(NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN);
+			sGroupBulbsProjectionMap.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.TYPE_COLUMN);
+			sGroupBulbsProjectionMap.put(NetBulbColumns.JSON_COLUMN, NetBulbColumns.JSON_COLUMN);
+		}
+		{
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
+			sGroupBulbsProjectionMap = new HashMap<String, String>();
+
+			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+			sGroupBulbsProjectionMap.put(NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.NAME_COLUMN);
+			sGroupBulbsProjectionMap.put(NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.DEVICE_ID_COLUMN);
+			sGroupBulbsProjectionMap.put(NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.TYPE_COLUMN);
+			sGroupBulbsProjectionMap.put(NetConnectionColumns.JSON_COLUMN, NetConnectionColumns.JSON_COLUMN);
+		}
 	}
 
 	@Override
@@ -130,6 +151,14 @@ public class HueMoreProvider extends ContentProvider {
 		 */
 		switch (sUriMatcher.match(uri)) {
 
+		case NETCONNECTIONS:
+			table = NetConnectionColumns.TABLE_NAME;
+			toNotify = NetConnectionColumns.URI;
+			break;
+		case NETBULBS:
+			table = NetBulbColumns.TABLE_NAME;
+			toNotify = NetBulbColumns.URI;
+			break;	
 		case ALARMS:
 			table = (DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			toNotify = DatabaseDefinitions.AlarmColumns.ALARMS_URI;
@@ -172,6 +201,16 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
+		case NETCONNECTIONS:
+			qb.setTables(NetConnectionColumns.TABLE_NAME);
+			qb.setProjectionMap(sNetConnectionsProjectionMap);
+			table = NetConnectionColumns.TABLE_NAME;
+			break;
+		case NETBULBS:
+			qb.setTables(NetBulbColumns.TABLE_NAME);
+			qb.setProjectionMap(sNetBulbsProjectionMap);
+			table = NetBulbColumns.TABLE_NAME;
+			break;
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
@@ -231,6 +270,16 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
+		case NETCONNECTIONS:
+			qb.setTables(NetConnectionColumns.TABLE_NAME);
+			qb.setProjectionMap(sNetConnectionsProjectionMap);
+			groupBy = null;
+			break;
+		case NETBULBS:
+			qb.setTables(NetBulbColumns.TABLE_NAME);
+			qb.setProjectionMap(sNetBulbsProjectionMap);
+			groupBy = null;
+			break;
 		case INDIVIDUAL_ALARM:
 			qb.appendWhere(DatabaseDefinitions.AlarmColumns._ID + "=" + uri.getLastPathSegment());
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
@@ -389,6 +438,13 @@ public class HueMoreProvider extends ContentProvider {
 
 		// Does the update based on the incoming URI pattern
 		switch (sUriMatcher.match(uri)) {
+			case NETCONNECTIONS:
+				count = db.update(NetConnectionColumns.TABLE_NAME, values, selection, selectionArgs);
+				break;
+			case NETBULBS:
+				count = db.update(NetBulbColumns.TABLE_NAME, values, selection, selectionArgs);
+				break;
+				
 			case ALARMS:
 				// Does the update and returns the number of rows updated.
 				count = db.update(AlarmColumns.TABLE_NAME, // The database table

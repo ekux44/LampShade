@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
@@ -22,7 +24,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "huemore.db";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	Gson gson = new Gson();
 
 	public DatabaseHelper(Context context) {
@@ -340,6 +342,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					db.insert(MoodColumns.TABLE_NAME, null, cv);
 				}
 				
+			}
+			case 5:
+			{
+				db.execSQL("CREATE TABLE " + NetBulbColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+						+ NetBulbColumns.NAME_COLUMN + " TEXT,"
+						+ NetBulbColumns.DEVICE_ID_COLUMN + " TEXT,"
+						+ NetBulbColumns.TYPE_COLUMN + " INTEGER,"
+						+ NetBulbColumns.JSON_COLUMN + " TEXT"
+						+ ");");
+				
+				db.execSQL("CREATE TABLE " + NetConnectionColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+						+ NetConnectionColumns.NAME_COLUMN + " TEXT,"
+						+ NetConnectionColumns.DEVICE_ID_COLUMN + " TEXT,"
+						+ NetConnectionColumns.TYPE_COLUMN + " INTEGER,"
+						+ NetConnectionColumns.JSON_COLUMN + " TEXT"
+						+ ");");
 			}
 		}
 	}

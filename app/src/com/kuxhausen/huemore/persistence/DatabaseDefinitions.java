@@ -92,9 +92,6 @@ public final class DatabaseDefinitions {
 		}
 	}
 
-	/**
-	 * Notes table
-	 */
 	public static final class MoodColumns implements BaseColumns {
 
 		/**
@@ -128,7 +125,54 @@ public final class DatabaseDefinitions {
 		private MoodColumns() {
 		}
 	}
+	
+	public static final class NetBulbColumns implements BaseColumns {
 
+		public static final String TABLE_NAME = "netbulbs";
+
+		private static final String SCHEME = "content://";
+
+		public static final String PATH = "netbulbs";
+
+		public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
+
+		public static final String NAME_COLUMN = "D_NAME_COLUMN";
+		public static final String DEVICE_ID_COLUMN = "D_DEVICE_ID_COLUMN";
+		public static final String TYPE_COLUMN = "D_TYPE_COLUMN";
+		public static final String JSON_COLUMN = "D_JSON_COLUMN";
+		
+		public static final class NetBulbType{
+			public static final int PHILIPS_HUE = 1;
+			public static final int LIFX = 2;
+		}
+		
+		// This class cannot be instantiated
+		private NetBulbColumns() {
+		}
+	}
+
+	public static final class NetConnectionColumns implements BaseColumns {
+
+		public static final String TABLE_NAME = "netconnection";
+
+		private static final String SCHEME = "content://";
+
+		public static final String PATH = "netconnection";
+
+		public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
+
+		public static final String NAME_COLUMN = "D_NAME_COLUMN";
+		public static final String DEVICE_ID_COLUMN = "D_DEVICE_ID_COLUMN";
+		//uses NetBulbType
+		public static final String TYPE_COLUMN = "D_TYPE_COLUMN";
+		public static final String JSON_COLUMN = "D_JSON_COLUMN";
+		
+		// This class cannot be instantiated
+		private NetConnectionColumns() {
+		}
+	}
+
+	
 	public static final class InternalArguments {
 		public static final String GROUP_NAME = "Group_Name";
 		public static final String GROUP_VALUES = "Group_Values";
@@ -160,10 +204,6 @@ public final class DatabaseDefinitions {
 	}
 
 	public static final class PreferenceKeys {
-		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
-		public static final String LOCAL_BRIDGE_IP_ADDRESS = "Local_Bridge_IP_Address";
-		public static final String INTERNET_BRIDGE_IP_ADDRESS = "Internet_Bridge_IP_Address";
-		public static final String HASHED_USERNAME = "Hashed_Username";
 		public static final String DEFAULT_TO_GROUPS = "default_to_groups";
 		public static final String DEFAULT_TO_MOODS = "default_to_moods";
 		public static final String FIRST_RUN = "First_Run";
@@ -178,6 +218,12 @@ public final class DatabaseDefinitions {
 		public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
 		public static final String CACHED_EXECUTING_ENCODED_MOOD = "CACHED_EXECUTING_ENCODED_MOOD";
 		public static final String SHOW_ACTIVITY_ON_NFC_READ = "SHOW_ACTIVITY_ON_NFC_READ";
+		
+		//deprecated but may be leftover from earlier versions
+		public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
+		public static final String LOCAL_BRIDGE_IP_ADDRESS = "Local_Bridge_IP_Address";
+		public static final String INTERNET_BRIDGE_IP_ADDRESS = "Internet_Bridge_IP_Address";
+		public static final String HASHED_USERNAME = "Hashed_Username";
 	}
 
 	public static final class PlayItems {
