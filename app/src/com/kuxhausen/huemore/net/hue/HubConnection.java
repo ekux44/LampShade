@@ -56,6 +56,6 @@ public class HubConnection implements Connection{
 		for(HubConnection h : hubs)
 			h.initializeConnection(c);
 		
-		return null;
+		return hubs;
 	}
 }
