@@ -40,7 +40,6 @@ public class HubConnection implements Connection{
 	public static ArrayList<HubConnection> loadHubConnections(Context c){
 		ArrayList<HubConnection> hubs = new ArrayList<HubConnection>();
 		
-		
 		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE};
 		Cursor cursor = c.getContentResolver().query(NetConnectionColumns.URI, columns, NetConnectionColumns.TYPE_COLUMN + " = ?", selectionArgs, null);
 		cursor.moveToPosition(-1);// not the same as move to first!

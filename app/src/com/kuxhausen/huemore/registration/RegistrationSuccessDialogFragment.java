@@ -23,7 +23,7 @@ public class RegistrationSuccessDialogFragment extends DialogFragment {
 					public void onClick(DialogInterface dialog, int id) {
 						if (ma.getBulbListenerFragment() != null) {
 							
-							NetworkMethods.PreformGetBulbList(ma.getService(), ma.getBulbListenerFragment());
+							NetworkMethods.PreformGetBulbList(ma, ma.getService().getRequestQueue(), ma.getService(), ma.getBulbListenerFragment());
 						}
 					}
 				});

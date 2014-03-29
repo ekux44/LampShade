@@ -70,12 +70,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	private DeviceManager mDeviceManager;
 	private MoodPlayer mMoodPlayer;
 	
-	public synchronized void onGroupSelected(int[] bulbs, Integer optionalBri, String groupName){
-		mMoodPlayer.onGroupSelected(bulbs, optionalBri, groupName);
+	public void onGroupSelected(int[] bulbs, Integer optionalBri, String groupName){
+		mDeviceManager.onGroupSelected(bulbs, optionalBri, groupName);
 	}
 	/** doesn't notify listeners **/
 	public synchronized void setBrightness(int brightness){
-		mMoodPlayer.setBrightness(brightness);
+		mDeviceManager.setBrightness(brightness);
 	}
 
 	public interface OnBrightnessChangedListener {
@@ -85,12 +85,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	/** announce brightness to any listeners **/
 	public void onBrightnessChanged(){
 		for(OnBrightnessChangedListener l : brightnessListeners){
-			l.onBrightnessChanged(mMoodPlayer.getMaxBrightness());
+			l.onBrightnessChanged(mDeviceManager.getMaxBrightness());
 		}
 	}
 	public void registerBrightnessListener(OnBrightnessChangedListener l){
-		if(mMoodPlayer.getMaxBrightness()!=null)
-			l.onBrightnessChanged(mMoodPlayer.getMaxBrightness());
+		if(mDeviceManager.getMaxBrightness()!=null)
+			l.onBrightnessChanged(mDeviceManager.getMaxBrightness());
 		brightnessListeners.add(l);
 	}
 	
@@ -99,15 +99,15 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	
 	public void startMood(Mood m, String moodName){
-		mMoodPlayer.startMood(m, moodName);
+		mMoodPlayer.playMood(mDeviceManager.getSelectedGroup(), mDeviceManager.getSelectedGroupName(), m, moodName);
 	}
 	public void stopMood(){
-		mMoodPlayer.stopMood();
+		mMoodPlayer.cancelMood(mDeviceManager.getSelectedGroup());
 	}
 	
 	@Override
 	public void onAttributesReturned(BulbAttributes result, int bulbNumber) {
-		mMoodPlayer.onAttributesReturned(result, bulbNumber);
+		mDeviceManager.onAttributesReturned(result, bulbNumber);
 	}
 	
 	@Override
@@ -119,7 +119,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		}
 		if(!connected){
 			//TODO rate limit
-			NetworkMethods.PreformGetBulbList(this, null);
+			NetworkMethods.PreformGetBulbList(this, getRequestQueue(), this, null);
 		}
 	}
 	public boolean hasHubConnection(){
@@ -152,7 +152,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 
 	public RequestQueue getRequestQueue() {
-		return mMoodPlayer.getRequestQueue();
+		return mDeviceManager.getRequestQueue();
 	}
 
 	@Override
@@ -174,11 +174,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		mMoodPlayer = new MoodPlayer(this,mDeviceManager);
 		
 		//start pinging to test connectivity
-		NetworkMethods.PreformGetBulbList(this, null);
+		NetworkMethods.PreformGetBulbList(this, getRequestQueue(), this, null);
 	}
 	@Override
 	public void onDestroy() {
 		mMoodPlayer.onDestroy();
+		mDeviceManager.onDestroy();
 		if(wakelock!=null)
 			wakelock.release();
 		super.onDestroy();
