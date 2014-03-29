@@ -35,6 +35,7 @@ import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
@@ -43,7 +44,7 @@ import com.kuxhausen.huemore.timing.AlarmReciever;
 import com.kuxhausen.huemore.timing.AlarmState;
 import com.kuxhausen.huemore.timing.Conversions;
 
-public class MoodExecuterService extends Service implements ConnectionMonitor, OnBulbAttributesReturnedListener, OnActiveMoodsChangedListener{
+public class MoodExecuterService extends Service implements ConnectionMonitor, OnActiveMoodsChangedListener{
 
 	/**
 	 * Class used for the client Binder. Because we know this service always
@@ -71,7 +72,10 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	private MoodPlayer mMoodPlayer;
 	
 	public void onGroupSelected(int[] bulbs, Integer optionalBri, String groupName){
-		mDeviceManager.onGroupSelected(bulbs, optionalBri, groupName);
+		Group g = new Group();
+		g.groupAsLegacyArray = bulbs;
+		
+		mDeviceManager.onGroupSelected(g, optionalBri, groupName);
 	}
 	/** doesn't notify listeners **/
 	public synchronized void setBrightness(int brightness){
@@ -103,11 +107,6 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	}
 	public void stopMood(){
 		mMoodPlayer.cancelMood(mDeviceManager.getSelectedGroup());
-	}
-	
-	@Override
-	public void onAttributesReturned(BulbAttributes result, int bulbNumber) {
-		mDeviceManager.onAttributesReturned(result, bulbNumber);
 	}
 	
 	@Override
