@@ -121,7 +121,8 @@ public class ColorWheelFragment extends SherlockFragment implements
 	public void preview() {
 		if(isAdded()){
 			Mood m = Utils.generateSimpleMood(hs);
-			((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(m, null);
+			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, m, null);
 		}
 	}
 

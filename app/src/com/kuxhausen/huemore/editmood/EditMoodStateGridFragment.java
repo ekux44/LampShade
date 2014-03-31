@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
@@ -152,7 +153,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 	}
 	
 	private void stopPreview(){
-		((NetworkManagedSherlockFragmentActivity)this.getActivity()).stopMood();
+		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+		service.getMoodPlayer().cancelMood(service.getDeviceManager().getSelectedGroup());
 	}
 	@Override
 	public void preview(){
@@ -160,8 +162,9 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		if(name==null || name.length()<1){
 			name = mEditMoodActivity.getString(R.string.hint_mood_name);
 		}
-		((NetworkManagedSherlockFragmentActivity)this.getActivity()).startMood(getMood(), name);
 		
+		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, getMood(), name);
 	}
 	
 	public static PageType calculateMoodType(Mood m){
@@ -312,7 +315,8 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			Event[] eRay = {e};
 			showChanM.events = eRay;
 			
-			((NetworkManagedSherlockFragmentActivity)mEditMoodActivity).startMood(showChanM, null);
+			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, showChanM, null);
 			break;
 		}
 		

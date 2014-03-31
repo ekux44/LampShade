@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.android.volley.RequestQueue;
 import com.kuxhausen.huemore.net.hue.HubConnection;
-import com.kuxhausen.huemore.net.hue.HubConnection.KnownState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.api.BulbState;
 

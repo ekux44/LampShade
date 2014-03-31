@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -71,8 +72,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 				listener.stateChanged();
 		}
 		Mood m = Utils.generateSimpleMood(currentState);
-		if(this.getActivity()!=null)
-			((NetworkManagedSherlockFragmentActivity) getActivity()).startMood(m, null);
+		if(this.getActivity()!=null){
+			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, m, null);
+		}
 	}
 	
 	public void setParrentMood(EditMoodStateGridFragment eamf){

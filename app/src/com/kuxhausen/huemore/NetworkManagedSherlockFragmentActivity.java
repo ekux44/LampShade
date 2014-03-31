@@ -10,27 +10,19 @@ import android.os.Bundle;
 import android.os.IBinder;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.MoodExecuterService.LocalBinder;
 import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
-import com.kuxhausen.huemore.state.Mood;
 
 public class NetworkManagedSherlockFragmentActivity extends
 		SherlockFragmentActivity implements OnConnectionStatusChangedListener, OnBrightnessChangedListener{
 
-    
-	private String moodName;
 	private String groupName;
 	private int[] groupValues;
 	
 	private Integer brightnessCache;
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +34,6 @@ public class NetworkManagedSherlockFragmentActivity extends
 	    	
 	    	if(potentialGroupVals!=null)
 	    		setGroup(potentialGroupVals, potentialGroupName);
-	    	
 	    }
 	}
 	
@@ -80,23 +71,7 @@ public class NetworkManagedSherlockFragmentActivity extends
 		else
 			brightnessCache = b;
 	}
-	public void startMood(Mood m, String optionalName){
-		Intent intent = new Intent(this, MoodExecuterService.class);
-		intent.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,null,null));
-		intent.putExtra(InternalArguments.MOOD_NAME, optionalName);
-		this.startService(intent);
-	}
-	public void stopMood(){
-		if(mBound){
-			mService.stopMood();
-		}
-	}
 	
-	public String getCurentMoodName(){
-		if(moodName!=null)
-			return moodName;
-		return "";
-	}
 	public String getCurentGroupName(){
 		if(groupName!=null)
 			return groupName;

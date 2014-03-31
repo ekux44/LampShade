@@ -1,48 +1,31 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.PriorityQueue;
-import java.util.Stack;
-
-import alt.android.os.CountDownTimer;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.MoodPlayer;
-import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.QueueEvent;
-import com.kuxhausen.huemore.state.api.BulbAttributes;
-import com.kuxhausen.huemore.state.api.BulbState;
 import com.kuxhausen.huemore.timing.AlarmReciever;
-import com.kuxhausen.huemore.timing.AlarmState;
-import com.kuxhausen.huemore.timing.Conversions;
 
 public class MoodExecuterService extends Service implements ConnectionMonitor, OnActiveMoodsChangedListener{
 
@@ -102,11 +85,11 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		brightnessListeners.remove(l);
 	}
 	
-	public void startMood(Mood m, String moodName){
-		mMoodPlayer.playMood(mDeviceManager.getSelectedGroup(), mDeviceManager.getSelectedGroupName(), m, moodName);
+	public MoodPlayer getMoodPlayer(){
+		return mMoodPlayer;
 	}
-	public void stopMood(){
-		mMoodPlayer.cancelMood(mDeviceManager.getSelectedGroup());
+	public DeviceManager getDeviceManager(){
+		return mDeviceManager;
 	}
 	
 	@Override
@@ -214,7 +197,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 					if(moodPairs.second.first!=null){
 						String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
 						moodName = (moodName == null) ? "Unknown Mood" : moodName;
-						startMood(moodPairs.second.first, moodName);
+						mMoodPlayer.playMood(mDeviceManager.getSelectedGroup(), mDeviceManager.getSelectedGroupName(), moodPairs.second.first, moodName);
 					}
 					
 				}
