@@ -46,7 +46,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		
 		
 		//junk?
-		me = (MoodExecuterService)c;
 		mDeviceManager = dm;
 		volleyRQ = Volley.newRequestQueue(mContext);
 		restartCountDownTimer();
@@ -95,14 +94,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	
 	
 	private DeviceManager mDeviceManager;
-	private MoodExecuterService me;
-	
 	private RequestQueue volleyRQ;
 	private static CountDownTimer countDownTimer;
 	private final static int TRANSMITS_PER_SECOND = 10;
 	private final static int MAX_STOP_SELF_COUNDOWN = TRANSMITS_PER_SECOND*3;
-	private static int countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
-	private static boolean suspendingTillNextEvent = false;
 	public enum KnownState {Unknown, ToSend, Getting, Synched};	
 	public Integer maxBrightness;
 	public int[] bulbBri;
@@ -147,13 +142,13 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		if(optionalBri==null){
 			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
 				bulbKnown[i] = KnownState.Getting;
-				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), me, this, selectedGroup.groupAsLegacyArray[i]);
+				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), mDeviceManager, this, selectedGroup.groupAsLegacyArray[i]);
 			}
 		} else {
 			maxBrightness = optionalBri;
 			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++)
 				bulbKnown[i] = KnownState.ToSend;
-			me.onBrightnessChanged();
+			mDeviceManager.onBrightnessChanged();
 		}
 	}
 	
@@ -193,7 +188,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 					bulbRelBri[i] = MAX_REL_BRI;
 				}
 				
-				me.onBrightnessChanged();
+				mDeviceManager.onBrightnessChanged();
 			}	
 		}	
 	}
@@ -225,8 +220,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			countDownTimer.cancel();
 
 		transientIndex = 0;
-		countDownToStopSelf = MAX_STOP_SELF_COUNDOWN;
-		suspendingTillNextEvent = false;
 		// runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
 
@@ -266,7 +259,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 						state.bri = bulbBri[bulbInGroup];
 						bulbKnown[bulbInGroup] = KnownState.Synched;
 					}					
-					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), me, bulb, state);
+					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), mDeviceManager, bulb, state);
 				} else if (hasTransientChanges()) {
 					boolean sentSomething = false;
 					while (!sentSomething) {
@@ -275,7 +268,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 							bulbBri[transientIndex] = (bulbRelBri[transientIndex] * maxBrightness)/ MAX_REL_BRI;
 							bs.bri = bulbBri[transientIndex];
 							
-							NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), me, mDeviceManager.getSelectedGroup().groupAsLegacyArray[transientIndex], bs);
+							NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), mDeviceManager, mDeviceManager.getSelectedGroup().groupAsLegacyArray[transientIndex], bs);
 							bulbKnown[transientIndex] = KnownState.Synched;
 							sentSomething = true;
 						}

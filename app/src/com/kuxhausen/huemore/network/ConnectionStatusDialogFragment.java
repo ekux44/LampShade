@@ -91,7 +91,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 	public void onDetach(){
 		super.onDetach();
 		if(parrentActivity.boundToService())
-			parrentActivity.getService().connectionListeners.remove(this);
+			parrentActivity.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
 	}
 
 	@Override
@@ -145,8 +145,8 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 
 	@Override
 	public void onServiceConnected() {
-		this.onConnectionStatusChanged(parrentActivity.getService().hasHubConnection());
-		parrentActivity.getService().connectionListeners.add(this);
+		this.onConnectionStatusChanged(parrentActivity.getService().getDeviceManager().hasHubConnection());
+		parrentActivity.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
 	}
 
 	@Override

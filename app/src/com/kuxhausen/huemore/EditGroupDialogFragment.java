@@ -214,7 +214,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onServiceConnected() {
-		NetworkMethods.PreformGetBulbList(parrentActivity,parrentActivity.getService().getRequestQueue(), parrentActivity.getService(), this);
+		NetworkMethods.PreformGetBulbList(parrentActivity,parrentActivity.getService().getRequestQueue(), parrentActivity.getService().getDeviceManager(), this);
 	}
 
 }

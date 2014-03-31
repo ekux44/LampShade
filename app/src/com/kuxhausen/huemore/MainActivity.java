@@ -121,13 +121,15 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					me.setBrightness(seekBar.getProgress());
+					MoodExecuterService service = MainActivity.this.getService();
+					service.getDeviceManager().setBrightness(seekBar.getProgress());
 					mIsTrackingTouch = false;
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					me.setBrightness(seekBar.getProgress());
+					MoodExecuterService service = MainActivity.this.getService();
+					service.getDeviceManager().setBrightness(seekBar.getProgress());
 					mIsTrackingTouch = true;
 				}
 
@@ -135,7 +137,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				public void onProgressChanged(SeekBar seekBar, int progress,
 						boolean fromUser) {
 					if(fromUser){
-						me.setBrightness(seekBar.getProgress());
+						MoodExecuterService service = MainActivity.this.getService();
+						service.getDeviceManager().setBrightness(seekBar.getProgress());
 					}
 				}
 			});
@@ -268,7 +271,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			}
 		}
 		
-		if(this.boundToService() && this.getService().hasHubConnection()){
+		if(this.boundToService() && this.getService().getDeviceManager().hasHubConnection()){
 			MenuItem connectionErrorItem = menu.findItem(R.id.action_register_with_hub);
 			if (connectionErrorItem != null) {
 				connectionErrorItem.setEnabled(false);

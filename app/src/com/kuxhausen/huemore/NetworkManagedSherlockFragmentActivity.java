@@ -11,7 +11,7 @@ import android.os.IBinder;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.kuxhausen.huemore.MoodExecuterService.LocalBinder;
-import com.kuxhausen.huemore.MoodExecuterService.OnBrightnessChangedListener;
+import com.kuxhausen.huemore.net.DeviceManager.OnBrightnessChangedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -21,8 +21,6 @@ public class NetworkManagedSherlockFragmentActivity extends
 
 	private String groupName;
 	private int[] groupValues;
-	
-	private Integer brightnessCache;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +62,6 @@ public class NetworkManagedSherlockFragmentActivity extends
 			mService.onGroupSelected(bulbs, null, name);
 			
 		groupName = name;
-	}
-	public void setBrightness(int b){
-		if(mBound)
-			mService.setBrightness(b);
-		else
-			brightnessCache = b;
 	}
 	
 	public String getCurentGroupName(){
@@ -138,8 +130,8 @@ public class NetworkManagedSherlockFragmentActivity extends
 		
 		// Unbind from the service
         if (mBound) {
-        	mService.connectionListeners.remove(this);
-        	mService.removeBrightnessListener(this);
+        	mService.getDeviceManager().removeOnConnectionStatusChangedListener(this);
+        	mService.getDeviceManager().removeBrightnessListener(this);
             unbindService(mConnection);
             mBound = false;
         }
@@ -155,8 +147,8 @@ public class NetworkManagedSherlockFragmentActivity extends
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-            mService.connectionListeners.add(NetworkManagedSherlockFragmentActivity.this);
-            mService.registerBrightnessListener(NetworkManagedSherlockFragmentActivity.this);
+            mService.getDeviceManager().addOnConnectionStatusChangedListener(NetworkManagedSherlockFragmentActivity.this);
+            mService.getDeviceManager().registerBrightnessListener(NetworkManagedSherlockFragmentActivity.this);
             
             for(OnServiceConnectedListener l: serviceListeners){
             	l.onServiceConnected();
@@ -165,10 +157,6 @@ public class NetworkManagedSherlockFragmentActivity extends
             
             if(groupValues!=null){
     			mService.onGroupSelected(groupValues, null, groupName);
-            }
-            if(brightnessCache!=null){
-            	mService.setBrightness(brightnessCache);
-            	brightnessCache=null;
             }
         }
 

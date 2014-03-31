@@ -1,46 +1,30 @@
 package com.kuxhausen.huemore;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.nfc.NdefMessage;
-import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-
 import com.actionbarsherlock.view.MenuItem;
-import com.kuxhausen.huemore.DecodeErrorActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -49,9 +33,7 @@ import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -93,13 +75,15 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				me.setBrightness(seekBar.getProgress());
+				MoodExecuterService service = SharedMoodReaderActivity.this.getService();
+				service.getDeviceManager().setBrightness(seekBar.getProgress());
 				isTrackingTouch = false;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				me.setBrightness(seekBar.getProgress());
+				MoodExecuterService service = SharedMoodReaderActivity.this.getService();
+				service.getDeviceManager().setBrightness(seekBar.getProgress());
 				isTrackingTouch = true;
 			}
 
@@ -107,7 +91,8 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if(fromUser){
-					me.setBrightness(seekBar.getProgress());
+					MoodExecuterService service = SharedMoodReaderActivity.this.getService();
+					service.getDeviceManager().setBrightness(seekBar.getProgress());
 				}
 			}
 		});

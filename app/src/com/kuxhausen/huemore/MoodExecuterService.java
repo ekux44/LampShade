@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -16,9 +15,7 @@ import com.android.volley.RequestQueue;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.MoodPlayer;
-import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
-import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -27,7 +24,7 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.timing.AlarmReciever;
 
-public class MoodExecuterService extends Service implements ConnectionMonitor, OnActiveMoodsChangedListener{
+public class MoodExecuterService extends Service implements OnActiveMoodsChangedListener{
 
 	/**
 	 * Class used for the client Binder. Because we know this service always
@@ -42,15 +39,9 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	
 	// Binder given to clients
 	private final IBinder mBinder = new LocalBinder();
-
 	private final static int notificationId = 1337;
 	
-	WakeLock wakelock;
-	private boolean hasHubConnection = false;
-	public ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
-	
-	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
-	
+	private WakeLock mWakelock;
 	private DeviceManager mDeviceManager;
 	private MoodPlayer mMoodPlayer;
 	
@@ -60,52 +51,12 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		
 		mDeviceManager.onGroupSelected(g, optionalBri, groupName);
 	}
-	/** doesn't notify listeners **/
-	public synchronized void setBrightness(int brightness){
-		mDeviceManager.setBrightness(brightness);
-	}
 
-	public interface OnBrightnessChangedListener {
-		public void onBrightnessChanged(int brightness);
-	}
-	
-	/** announce brightness to any listeners **/
-	public void onBrightnessChanged(){
-		for(OnBrightnessChangedListener l : brightnessListeners){
-			l.onBrightnessChanged(mDeviceManager.getMaxBrightness());
-		}
-	}
-	public void registerBrightnessListener(OnBrightnessChangedListener l){
-		if(mDeviceManager.getMaxBrightness()!=null)
-			l.onBrightnessChanged(mDeviceManager.getMaxBrightness());
-		brightnessListeners.add(l);
-	}
-	
-	public void removeBrightnessListener(OnBrightnessChangedListener l){
-		brightnessListeners.remove(l);
-	}
-	
 	public MoodPlayer getMoodPlayer(){
 		return mMoodPlayer;
 	}
 	public DeviceManager getDeviceManager(){
 		return mDeviceManager;
-	}
-	
-	@Override
-	public void setHubConnectionState(boolean connected){
-		if(hasHubConnection!=connected){
-			hasHubConnection = connected;
-			for(OnConnectionStatusChangedListener l : connectionListeners)
-				l.onConnectionStatusChanged(connected);	
-		}
-		if(!connected){
-			//TODO rate limit
-			NetworkMethods.PreformGetBulbList(this, getRequestQueue(), this, null);
-		}
-	}
-	public boolean hasHubConnection(){
-		return hasHubConnection;
 	}
 	
 	@Override
@@ -116,8 +67,7 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 	public void createNotification() {
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MainActivity.class);
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0,
-				resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		String secondaryText = ((mMoodPlayer.getGroupName()!=null&&mMoodPlayer.getMoodName()!=null)?mMoodPlayer.getGroupName():"") + ((mMoodPlayer.getMoodName()!=null)?(" \u2192 " +mMoodPlayer.getMoodName()):"");
 		
@@ -148,22 +98,22 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		
 		//acquire wakelock
 		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-		wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
-		wakelock.acquire();
+		mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
+		mWakelock.acquire();
 		
 		//Initialize DeviceManager and Mood Player
 		mDeviceManager = new DeviceManager(this);
 		mMoodPlayer = new MoodPlayer(this,mDeviceManager);
 		
 		//start pinging to test connectivity
-		NetworkMethods.PreformGetBulbList(this, getRequestQueue(), this, null);
+		NetworkMethods.PreformGetBulbList(this, getRequestQueue(), mDeviceManager, null);
 	}
 	@Override
 	public void onDestroy() {
 		mMoodPlayer.onDestroy();
 		mDeviceManager.onDestroy();
-		if(wakelock!=null)
-			wakelock.release();
+		if(mWakelock!=null)
+			mWakelock.release();
 		super.onDestroy();
 	}
 	@Override
@@ -174,11 +124,11 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 			FireReceiver.completeWakefulIntent(intent);
 
 			//if doesn't already have a wakelock, acquire one
-			if(this.wakelock==null){
+			if(this.mWakelock==null){
 				//acquire wakelock
 				PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-				wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
-				wakelock.acquire();
+				mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
+				mWakelock.acquire();
 			}
 			
 			String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
@@ -213,6 +163,4 @@ public class MoodExecuterService extends Service implements ConnectionMonitor, O
 		}
 		return super.onStartCommand(intent, flags, startId);
 	}
-
-
 }

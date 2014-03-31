@@ -82,7 +82,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 						BulbAttributes bAttrs = new BulbAttributes();
 						bAttrs.name = nameEditText.getText().toString();
 						
-						NetworkMethods.PreformSetBulbAttributes(parrentActivity.getService(), parrentActivity.getService().getRequestQueue(), parrentActivity.getService(), bulbNumber, bAttrs);
+						NetworkMethods.PreformSetBulbAttributes(parrentActivity.getService(), parrentActivity.getService().getRequestQueue(), parrentActivity.getService().getDeviceManager(), bulbNumber, bAttrs);
 						
 						BulbState bs = new BulbState();
 						bs.alert = "none";

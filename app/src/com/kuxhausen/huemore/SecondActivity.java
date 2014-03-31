@@ -69,13 +69,15 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				me.setBrightness(seekBar.getProgress());
+				MoodExecuterService service = SecondActivity.this.getService();
+				service.getDeviceManager().setBrightness(seekBar.getProgress());
 				mIsTrackingTouch = false;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				me.setBrightness(seekBar.getProgress());
+				MoodExecuterService service = SecondActivity.this.getService();
+				service.getDeviceManager().setBrightness(seekBar.getProgress());
 				mIsTrackingTouch = true;
 			}
 
@@ -83,7 +85,8 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if(fromUser){
-					me.setBrightness(seekBar.getProgress());
+					MoodExecuterService service = SecondActivity.this.getService();
+					service.getDeviceManager().setBrightness(seekBar.getProgress());
 				}
 			}
 		});

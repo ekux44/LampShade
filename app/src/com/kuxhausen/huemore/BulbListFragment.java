@@ -55,7 +55,7 @@ public class BulbListFragment extends SherlockListFragment implements
 	}
 
 	public void refreshList() {
-		NetworkMethods.PreformGetBulbList(parrentActivity, parrentActivity.getService().getRequestQueue(), parrentActivity.getService(), this);
+		NetworkMethods.PreformGetBulbList(parrentActivity, parrentActivity.getService().getRequestQueue(), parrentActivity.getService().getDeviceManager(), this);
 	}
 
 	@Override
