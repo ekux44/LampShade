@@ -20,7 +20,7 @@ public class DeviceManager implements ConnectionMonitor{
 	private Group selectedGroup;
 	private String selectedGroupName;
 	private ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
-	public ArrayList<OnBrightnessChangedListener> brightnessListeners = new ArrayList<OnBrightnessChangedListener>();
+	public ArrayList<OnStateChangedListener> brightnessListeners = new ArrayList<OnStateChangedListener>();
 	
 	
 	public DeviceManager(Context c){
@@ -78,26 +78,29 @@ public class DeviceManager implements ConnectionMonitor{
 		return hasHubConnection;
 	}
 
-	public interface OnBrightnessChangedListener {
-		public void onBrightnessChanged(int brightness);
+	public interface OnStateChangedListener {
+		public void onStateChanged();
 	}
 	
 	/** announce brightness to any listeners **/
-	public void onBrightnessChanged(){
-		for(OnBrightnessChangedListener l : brightnessListeners){
-			l.onBrightnessChanged(getMaxBrightness());
+	public void onStateChanged(){
+		for(OnStateChangedListener l : brightnessListeners){
+			l.onStateChanged();
 		}
 	}
-	public void registerBrightnessListener(OnBrightnessChangedListener l){
-		if(getMaxBrightness()!=null)
-			l.onBrightnessChanged(getMaxBrightness());
+	public void registerBrightnessListener(OnStateChangedListener l){
 		brightnessListeners.add(l);
 	}
 	
-	public void removeBrightnessListener(OnBrightnessChangedListener l){
+	public void removeBrightnessListener(OnStateChangedListener l){
 		brightnessListeners.remove(l);
 	}
 	
+	public Integer getBrightness(Group g){
+		//TODO
+		
+		return null;
+	}
 	
 	//TODO clean up/remove everything below this line
 	

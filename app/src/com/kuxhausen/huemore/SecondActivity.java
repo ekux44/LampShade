@@ -14,6 +14,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.android.common.view.SlidingTabLayout;
+import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -114,9 +115,13 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	}
 	
 	@Override
-	public void onBrightnessChanged(int brightness) {
-		if(mBrightnessBar!=null && !mIsTrackingTouch)
-			mBrightnessBar.setProgress(brightness);
+	public void onStateChanged() {
+		if(mBrightnessBar!=null && !mIsTrackingTouch){
+			DeviceManager dm = this.getService().getDeviceManager();
+			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
+			if(candidateBrightness!=null)
+				mBrightnessBar.setProgress(candidateBrightness);
+		}
 	}
 	
 	@Override

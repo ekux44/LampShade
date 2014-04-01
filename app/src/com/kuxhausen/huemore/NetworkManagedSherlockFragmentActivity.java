@@ -11,13 +11,13 @@ import android.os.IBinder;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.kuxhausen.huemore.MoodExecuterService.LocalBinder;
-import com.kuxhausen.huemore.net.DeviceManager.OnBrightnessChangedListener;
+import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class NetworkManagedSherlockFragmentActivity extends
-		SherlockFragmentActivity implements OnConnectionStatusChangedListener, OnBrightnessChangedListener{
+		SherlockFragmentActivity implements OnConnectionStatusChangedListener, OnStateChangedListener{
 
 	private String groupName;
 	private int[] groupValues;
@@ -112,7 +112,7 @@ public class NetworkManagedSherlockFragmentActivity extends
 	}
     
     @Override
-	public void onBrightnessChanged(int brightness) {
+	public void onStateChanged() {
     	//override in subclass if needed
 	}
 

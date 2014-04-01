@@ -29,6 +29,7 @@ import com.kuxhausen.huemore.billing.IabHelper;
 import com.kuxhausen.huemore.billing.IabResult;
 import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
+import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.network.ConnectionStatusDialogFragment;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
@@ -224,9 +225,13 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	}
 		
 	@Override
-	public void onBrightnessChanged(int brightness) {
-		if(mBrightnessBar!=null && !mIsTrackingTouch)
-			mBrightnessBar.setProgress(brightness);
+	public void onStateChanged() {
+		if(mBrightnessBar!=null && !mIsTrackingTouch){
+			DeviceManager dm = this.getService().getDeviceManager();
+			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
+			if(candidateBrightness!=null)
+				mBrightnessBar.setProgress(candidateBrightness);
+		}
 	}
 
 	@Override

@@ -148,7 +148,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			maxBrightness = optionalBri;
 			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++)
 				bulbKnown[i] = KnownState.ToSend;
-			mDeviceManager.onBrightnessChanged();
+			mDeviceManager.onStateChanged();
 		}
 	}
 	
@@ -188,7 +188,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 					bulbRelBri[i] = MAX_REL_BRI;
 				}
 				
-				mDeviceManager.onBrightnessChanged();
+				mDeviceManager.onStateChanged();
 			}	
 		}	
 	}

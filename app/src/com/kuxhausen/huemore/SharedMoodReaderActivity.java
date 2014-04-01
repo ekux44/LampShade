@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,11 +21,13 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -42,7 +45,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	// Identifies a particular Loader being used in this component
 	private static final int GROUPS_LOADER = 0;
 
-	private SeekBar brightnessBar;
+	private SeekBar mBrightnessBar;
 	private Spinner groupSpinner;
 	private SimpleCursorAdapter groupDataSource;
 	
@@ -51,7 +54,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	Button previewButton;
 	Mood sharedMood;
 	
-	boolean isTrackingTouch = false;
+	boolean mIsTrackingTouch = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +73,21 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		LoaderManager lm = getSupportLoaderManager();
 		lm.initLoader(GROUPS_LOADER, null, this);
 
-		brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
-		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+		mBrightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+		mBrightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				MoodExecuterService service = SharedMoodReaderActivity.this.getService();
 				service.getDeviceManager().setBrightness(seekBar.getProgress());
-				isTrackingTouch = false;
+				mIsTrackingTouch = false;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				MoodExecuterService service = SharedMoodReaderActivity.this.getService();
 				service.getDeviceManager().setBrightness(seekBar.getProgress());
-				isTrackingTouch = true;
+				mIsTrackingTouch = true;
 			}
 
 			@Override
@@ -117,10 +120,15 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	}
 
 	@Override
-	public void onBrightnessChanged(int brightness) {
-		if(brightnessBar!=null && !isTrackingTouch)
-			brightnessBar.setProgress(brightness);
+	public void onStateChanged() {
+		if(mBrightnessBar!=null && !mIsTrackingTouch){
+			DeviceManager dm = this.getService().getDeviceManager();
+			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
+			if(candidateBrightness!=null)
+				mBrightnessBar.setProgress(candidateBrightness);
+		}
 	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
