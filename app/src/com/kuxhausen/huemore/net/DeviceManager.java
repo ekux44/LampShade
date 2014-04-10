@@ -97,15 +97,24 @@ public class DeviceManager implements ConnectionMonitor{
 	}
 	
 	public Integer getBrightness(Group g){
-		//TODO
-		
+		//TODO	
 		return null;
+	}
+	
+	public Integer getMaxBrightness(Group g){
+		//TODO
+		return ((HubConnection)mConnections.get(0)).getMaxBrightness();
+	}
+	
+	/** doesn't notify listeners **/
+	public void setBrightness(Group g, int brightness){
+		//TODO
+		((HubConnection)mConnections.get(0)).setBrightness(brightness, selectedGroup);
 	}
 	
 	//TODO clean up/remove everything below this line
 	
 	private boolean hasHubConnection = false;
-	
 	
 	public void transmit(int bulb, BulbState bs){
 		((HubConnection)mConnections.get(0)).queue.add(new Pair<Integer,BulbState>(bulb,bs));
@@ -113,15 +122,6 @@ public class DeviceManager implements ConnectionMonitor{
 	
 	public RequestQueue getRequestQueue() {
 		return ((HubConnection)mConnections.get(0)).getRequestQueue();
-	}
-
-	public Integer getMaxBrightness(){
-		return ((HubConnection)mConnections.get(0)).getMaxBrightness();
-	}
-	
-	/** doesn't notify listeners **/
-	public synchronized void setBrightness(int brightness){
-		((HubConnection)mConnections.get(0)).setBrightness(brightness, selectedGroup);
 	}
 
 }
