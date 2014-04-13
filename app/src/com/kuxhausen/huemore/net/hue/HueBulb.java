@@ -35,4 +35,10 @@ public class HueBulb implements NetworkBulb {
 		return null;
 	}
 
+	@Override
+	public ConnectivityState getConnectivityState() {
+		// TODO Auto-generated method stub
+		return ConnectivityState.Unknown;
+	}
+
 }

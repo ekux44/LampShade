@@ -349,6 +349,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 						+ NetBulbColumns.NAME_COLUMN + " TEXT,"
 						+ NetBulbColumns.DEVICE_ID_COLUMN + " TEXT,"
+						+ NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + " TEXT,"
 						+ NetBulbColumns.TYPE_COLUMN + " INTEGER,"
 						+ NetBulbColumns.JSON_COLUMN + " TEXT"
 						+ ");");

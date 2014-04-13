@@ -16,6 +16,8 @@ public interface NetworkBulb {
 		public abstract void onStateChanged(BulbState bulbState);
 	}
 	
+	public abstract ConnectivityState getConnectivityState();
+	
 	public abstract void setState(BulbState bs);
 	
 	public abstract BulbState getState();

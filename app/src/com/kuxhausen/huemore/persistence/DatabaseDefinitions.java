@@ -138,6 +138,7 @@ public final class DatabaseDefinitions {
 
 		public static final String NAME_COLUMN = "D_NAME_COLUMN";
 		public static final String DEVICE_ID_COLUMN = "D_DEVICE_ID_COLUMN";
+		public static final String CONNECTION_DEVICE_ID_COLUMN = "D_CONNECTION_DEVICE_ID_COLUMN";
 		public static final String TYPE_COLUMN = "D_TYPE_COLUMN";
 		public static final String JSON_COLUMN = "D_JSON_COLUMN";
 		
