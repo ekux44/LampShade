@@ -54,7 +54,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 		checkingConnectionInProgress = (ProgressBar)myView.findViewById(R.id.checkingConnectionProgressBar);
 		
 		//just so the UI is filled
-		this.onConnectionStatusChanged(false);
+		this.onConnectionStatusChanged();
 		
 		parrentActivity.registerOnServiceConnectedListener(this);
 		
@@ -95,8 +95,8 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 	}
 
 	@Override
-	public void onConnectionStatusChanged(boolean status) {
-		connectionStatus = status;
+	public void onConnectionStatusChanged() {
+/*		connectionStatus = status;
 		if(status){
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
 //			String bridge = settings.getString(PreferenceKeys.BRIDGE_IP_ADDRESS,"");
@@ -112,7 +112,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 			rightButton.setText(R.string.reset_hub_connection);
 			checkingConnectionInProgress.setVisibility(View.VISIBLE);
 		}
-		
+*/		
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class ConnectionStatusDialogFragment extends DialogFragment implements On
 
 	@Override
 	public void onServiceConnected() {
-		this.onConnectionStatusChanged(parrentActivity.getService().getDeviceManager().hasHubConnection());
+		this.onConnectionStatusChanged();
 		parrentActivity.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
 	}
 

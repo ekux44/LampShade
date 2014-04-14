@@ -4,33 +4,24 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Event;
-import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbAttributes;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditBulbDialogFragment extends DialogFragment {
 
 	EditText nameEditText;
-	int bulbNumber;
-	BulbListFragment bulbF;
+	NetworkBulb netBulb;
 
 	private NetworkManagedSherlockFragmentActivity parrentActivity;
-
-	public void setBulbsFragment(BulbListFragment bf) {
-		bulbF = bf;
-	}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -60,39 +51,29 @@ public class EditBulbDialogFragment extends DialogFragment {
 				.findViewById(R.id.editText1);
 
 		Bundle args = this.getArguments();
-		if (args != null && args.containsKey(InternalArguments.BULB_NAME)) {
-			String groupName = args.getString(InternalArguments.BULB_NAME);
-			bulbNumber = args.getInt(InternalArguments.BULB_NUMBER);
-			nameEditText.setText(groupName);
-		}
+		String netBulbDeviceId = args.getString(InternalArguments.NET_BULB_DEVICE_ID);
+		
+		netBulb = parrentActivity.getService().getDeviceManager().getNetworkBulb(netBulbDeviceId);
 		
 		BulbState bs = new BulbState();
 		bs.alert = "lselect";
 		bs.on = true;
-		Mood m = Utils.generateSimpleMood(bs);
 		
-		Integer[] bulbS = { bulbNumber };
-		Utils.transmit(parrentActivity, m, bulbS, null, null, null);
+		netBulb.setState(bs);
+		
 		
 		builder.setPositiveButton(R.string.accept,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
-						BulbAttributes bAttrs = new BulbAttributes();
-						bAttrs.name = nameEditText.getText().toString();
-						
-						NetworkMethods.PreformSetBulbAttributes(parrentActivity.getService(), parrentActivity.getService().getRequestQueue(), parrentActivity.getService().getDeviceManager(), bulbNumber, bAttrs);
+						netBulb.rename(nameEditText.getText().toString());
 						
 						BulbState bs = new BulbState();
-						bs.alert = "none";
-
-						Mood m = Utils.generateSimpleMood(bs);
+						bs.alert = "lselect";
+						bs.on = true;
 						
-						Integer[] bulbS = { bulbNumber };
-						Utils.transmit(parrentActivity, m, bulbS, null, null, null);
-						
-						bulbF.refreshList();
+						netBulb.setState(bs);
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {

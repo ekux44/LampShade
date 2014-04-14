@@ -1,8 +1,6 @@
 package com.kuxhausen.huemore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,33 +11,36 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.app.DialogFragment;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
-import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.state.api.Bulb;
 
-public class EditGroupDialogFragment extends DialogFragment implements
-		OnBulbListReturnedListener, OnServiceConnectedListener {
+public class EditGroupDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
-	ArrayList<String> bulbNameList;
+	private static final int BULBS_LOADER = 0;
+	private static final String[] columns = { NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID };
+
+	public CursorAdapter dataSource;
+
 	ListView bulbsListView;
-	ArrayAdapter<String> rayAdapter;
 	EditText nameEditText;
-	Bulb[] bulbArray;
-	HashMap<String, Integer> nameToBulb;
+	
 	Boolean[] preChecked;
 	String initialName;
 
@@ -59,9 +60,6 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		bulbNameList = new ArrayList<String>();
-		nameToBulb = new HashMap<String, Integer>();
-
 		// Use the Builder class for convenient dialog construction
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -71,14 +69,17 @@ public class EditGroupDialogFragment extends DialogFragment implements
 		bulbsListView = ((ListView) groupDialogView
 				.findViewById(R.id.listView1));
 		bulbsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-		rayAdapter = new ArrayAdapter<String>(this.getActivity(),
-				android.R.layout.simple_list_item_multiple_choice, bulbNameList);
-		bulbsListView.setAdapter(rayAdapter);
+		
+		getLoaderManager().initLoader(BULBS_LOADER, null, this);
+
+		dataSource = new SimpleCursorAdapter(this.getActivity(), android.R.layout.simple_list_item_multiple_choice, null,
+				columns, new int[] { android.R.id.text1 }, 0);
+
+		bulbsListView.setAdapter(dataSource);
+
 		builder.setView(groupDialogView);
 
 		nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
-
-		parrentActivity.registerOnServiceConnectedListener(this);
 
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.GROUP_NAME)) {
@@ -134,12 +135,10 @@ public class EditGroupDialogFragment extends DialogFragment implements
 						}
 
 						ArrayList<Integer> checkedBulbs = new ArrayList<Integer>();
-						SparseBooleanArray set = bulbsListView
-								.getCheckedItemPositions();
-						for (int i = 0; i < rayAdapter.getCount(); i++) {
+						SparseBooleanArray set = bulbsListView.getCheckedItemPositions();
+						for (int i = 0; i < dataSource.getCount(); i++) {
 							if (set.get(i)) {
-								checkedBulbs.add(nameToBulb.get((rayAdapter
-										.getItem(i))));
+								checkedBulbs.add(1+i);
 							}
 						}
 
@@ -194,27 +193,47 @@ public class EditGroupDialogFragment extends DialogFragment implements
 	}
 
 	@Override
-	public void onListReturned(Bulb[] result) {
-		if (result == null)
-			return;
-		bulbArray = result;
-
-		for (int i = 0; i < bulbArray.length; i++) {
-			// bulbNameList.add(bulb.name);
-			Bulb bulb = bulbArray[i];
-			nameToBulb.put(bulb.name, bulb.number);
-			rayAdapter.add(bulb.name);
-			if (preChecked != null && preChecked[i] != null
-					&& preChecked[i] == true)
-				bulbsListView.setItemChecked(i, true);
-
+	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
+		/*
+		 * Takes action based on the ID of the Loader that's being created
+		 */
+		switch (loaderID) {
+		case BULBS_LOADER:
+			// Returns a new CursorLoader
+			return new CursorLoader(getActivity(), // Parent activity context
+					DatabaseDefinitions.NetBulbColumns.URI, // Table
+					columns, // Projection to return
+					null, // No selection clause
+					null, // No selection arguments
+					null // Default sort order
+			);
+		default:
+			// An invalid id was passed in
+			return null;
 		}
-
 	}
 
 	@Override
-	public void onServiceConnected() {
-		NetworkMethods.PreformGetBulbList(parrentActivity,parrentActivity.getService().getRequestQueue(), parrentActivity.getService().getDeviceManager(), this);
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+		/*
+		 * Moves the query results into the adapter, causing the ListView
+		 * fronting this adapter to re-display
+		 */
+		dataSource.changeCursor(cursor);
+		
+		for (int i = 0; i < cursor.getCount(); i++) {
+			if (preChecked != null && preChecked[i] != null && preChecked[i] == true)
+				bulbsListView.setItemChecked(i, true);
+
+		}
 	}
 
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		/*
+		 * Clears out the adapter's reference to the Cursor. This prevents
+		 * memory leaks.
+		 */
+		dataSource.changeCursor(null);
+	}
 }

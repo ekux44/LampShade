@@ -64,7 +64,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	private boolean mIsTrackingTouch = false;
     
 	@Override
-	public void onConnectionStatusChanged(boolean connected){
+	public void onConnectionStatusChanged(){
 		this.supportInvalidateOptionsMenu();
 	}
 	
@@ -276,13 +276,13 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			}
 		}
 		
-		if(this.boundToService() && this.getService().getDeviceManager().hasHubConnection()){
+		/*if(this.boundToService() && this.getService().getDeviceManager().isFully){
 			MenuItem connectionErrorItem = menu.findItem(R.id.action_register_with_hub);
 			if (connectionErrorItem != null) {
 				connectionErrorItem.setEnabled(false);
 				connectionErrorItem.setVisible(false);
 			}
-		}else{
+		}*/else{
 			MenuItem connectionItem = menu.findItem(R.id.action_connected_with_hub);
 			if (connectionItem != null) {
 				connectionItem.setEnabled(false);

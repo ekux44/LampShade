@@ -202,6 +202,7 @@ public final class DatabaseDefinitions {
 		public static final String ROW = "Row";
 		public static final String COLUMN = "Column";
 		public static final String FROM_NFC = "FromNfc";
+		public static final String NET_BULB_DEVICE_ID = "NET_BULB_DEVICE_ID";
 	}
 
 	public static final class PreferenceKeys {

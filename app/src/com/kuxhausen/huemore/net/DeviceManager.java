@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.net;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.android.volley.RequestQueue;
 import com.kuxhausen.huemore.net.hue.HubConnection;
@@ -13,7 +14,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 import android.content.Context;
 import android.util.Pair;
 
-public class DeviceManager implements ConnectionMonitor{
+public class DeviceManager{
 	
 	private ArrayList<Connection> mConnections;
 	private Context mContext;
@@ -21,7 +22,7 @@ public class DeviceManager implements ConnectionMonitor{
 	private String selectedGroupName;
 	private ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	public ArrayList<OnStateChangedListener> brightnessListeners = new ArrayList<OnStateChangedListener>();
-	
+	private HashMap<String, NetworkBulb> bulbMap = new HashMap<String, NetworkBulb>();
 	
 	public DeviceManager(Context c){
 		mContext = c;
@@ -30,8 +31,7 @@ public class DeviceManager implements ConnectionMonitor{
 		mConnections = new ArrayList<Connection>();
 		mConnections.addAll(HubConnection.loadHubConnections(c, this));
 		
-		//do something with bulbs
-		
+		onBulbsListChanged();
 		
 	}
 	
@@ -62,21 +62,11 @@ public class DeviceManager implements ConnectionMonitor{
 		connectionListeners.remove(l);
 	}
 	
-	@Override
-	public void setHubConnectionState(boolean connected){
-		if(hasHubConnection!=connected){
-			hasHubConnection = connected;
+	public void onConnectionChanged(){
 			for(OnConnectionStatusChangedListener l : connectionListeners)
-				l.onConnectionStatusChanged(connected);	
-		}
-		if(!connected){
-			//TODO rate limit
-			NetworkMethods.PreformGetBulbList(mContext, getRequestQueue(), this, null);
-		}
+				l.onConnectionStatusChanged();	
 	}
-	public boolean hasHubConnection(){
-		return hasHubConnection;
-	}
+	
 
 	public interface OnStateChangedListener {
 		public void onStateChanged();
@@ -112,9 +102,20 @@ public class DeviceManager implements ConnectionMonitor{
 		((HubConnection)mConnections.get(0)).setBrightness(brightness, selectedGroup);
 	}
 	
-	//TODO clean up/remove everything below this line
+	public void onBulbsListChanged(){
+		for(Connection con : mConnections){
+			ArrayList<NetworkBulb> conBulbs = con.getBulbs();
+			for(NetworkBulb bulb: conBulbs){
+				bulbMap.put(bulb.getUniqueId(), bulb);
+			}
+		}
+	}
 	
-	private boolean hasHubConnection = false;
+	public NetworkBulb getNetworkBulb(String bulbDeviceId) {
+		return bulbMap.get(bulbDeviceId);
+	}
+	
+	//TODO clean up/remove everything below this line
 	
 	public void transmit(int bulb, BulbState bs){
 		((HubConnection)mConnections.get(0)).queue.add(new Pair<Integer,BulbState>(bulb,bs));
@@ -123,5 +124,4 @@ public class DeviceManager implements ConnectionMonitor{
 	public RequestQueue getRequestQueue() {
 		return ((HubConnection)mConnections.get(0)).getRequestQueue();
 	}
-
 }

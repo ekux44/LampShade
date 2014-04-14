@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import alt.android.os.CountDownTimer;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
@@ -16,18 +17,23 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
+import com.kuxhausen.huemore.net.NetworkBulb;
+import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
+import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.Group;
+import com.kuxhausen.huemore.state.api.Bulb;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
 import com.kuxhausen.huemore.state.api.BulbState;
 
-public class HubConnection implements Connection, OnBulbAttributesReturnedListener{
+public class HubConnection implements Connection, OnBulbAttributesReturnedListener, ConnectionMonitor, OnBulbListReturnedListener{
 
-	private static final String[] columns = {BaseColumns._ID, NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.JSON_COLUMN};
+	private static final String[] columns = {NetConnectionColumns._ID, NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.JSON_COLUMN};
+	private static final String[] bulbColumns = {NetBulbColumns._ID, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN};
 	private static final Integer type = NetBulbColumns.NetBulbType.PHILIPS_HUE;
 	private static final Gson gson = new Gson();
 	
@@ -36,6 +42,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	private HubData mData;
 	private Context mContext;
 	
+	private ArrayList<HueBulb> mBulbList;
 	
 	public HubConnection(Context c, Integer baseId, String name, String deviceId, HubData data, DeviceManager dm){
 		mContext = c;
@@ -43,6 +50,19 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		mName = name;
 		mDeviceId = deviceId;
 		mData = data;
+		
+		mBulbList = new ArrayList<HueBulb>();
+		
+		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE, mDeviceId};
+		Cursor cursor = c.getContentResolver().query(NetConnectionColumns.URI, bulbColumns, NetBulbColumns.TYPE_COLUMN + " = ? AND "+NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + " = ?", selectionArgs, null);
+		cursor.moveToPosition(-1);// not the same as move to first!
+		while (cursor.moveToNext()) {
+			Long bulbBaseId = cursor.getLong(0);
+			String bulbName = cursor.getString(3);
+			String bulbDeviceId = cursor.getString(4);
+			HueBulbData bulbData = gson.fromJson(cursor.getString(5), HueBulbData.class);
+			mBulbList.add(new HueBulb(c,bulbBaseId,bulbName,bulbDeviceId,bulbData, this));
+		}
 		
 		
 		//junk?
@@ -57,7 +77,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	
 	@Override
 	public void initializeConnection(Context c) {
-		// TODO Auto-generated method stub
+		
+		NetworkMethods.PreformGetBulbList(mContext, getRequestQueue(), this, this);
 	}
 	
 	@Override
@@ -72,7 +93,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		ArrayList<HubConnection> hubs = new ArrayList<HubConnection>();
 		
 		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE};
-		Cursor cursor = c.getContentResolver().query(NetConnectionColumns.URI, columns, NetConnectionColumns.TYPE_COLUMN + " = ?", selectionArgs, null);
+		Cursor cursor = c.getContentResolver().query(NetBulbColumns.URI, columns, NetConnectionColumns.TYPE_COLUMN + " = ?", selectionArgs, null);
 		cursor.moveToPosition(-1);// not the same as move to first!
 		while (cursor.moveToNext()) {
 			Integer baseId = cursor.getInt(0);
@@ -89,8 +110,23 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		return hubs;
 	}
 	
+
+	@Override
+	public ArrayList<NetworkBulb> getBulbs() {
+		ArrayList<NetworkBulb> result = new ArrayList<NetworkBulb>(mBulbList.size());
+		result.addAll(mBulbList);
+		return result;
+	}
 	
-	
+
+	@Override
+	public void setHubConnectionState(boolean connected){
+		mDeviceManager.onConnectionChanged();
+		if(!connected){
+			//TODO rate limit
+			NetworkMethods.PreformGetBulbList(mContext, getRequestQueue(), this, null);
+		}
+	}
 	
 	
 	private DeviceManager mDeviceManager;
@@ -142,7 +178,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		if(optionalBri==null){
 			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
 				bulbKnown[i] = KnownState.Getting;
-				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), mDeviceManager, this, selectedGroup.groupAsLegacyArray[i]);
+				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), this, this, selectedGroup.groupAsLegacyArray[i]);
 			}
 		} else {
 			maxBrightness = optionalBri;
@@ -259,7 +295,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 						state.bri = bulbBri[bulbInGroup];
 						bulbKnown[bulbInGroup] = KnownState.Synched;
 					}					
-					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), mDeviceManager, bulb, state);
+					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), HubConnection.this, bulb, state);
 				} else if (hasTransientChanges()) {
 					boolean sentSomething = false;
 					while (!sentSomething) {
@@ -268,7 +304,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 							bulbBri[transientIndex] = (bulbRelBri[transientIndex] * maxBrightness)/ MAX_REL_BRI;
 							bs.bri = bulbBri[transientIndex];
 							
-							NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), mDeviceManager, mDeviceManager.getSelectedGroup().groupAsLegacyArray[transientIndex], bs);
+							NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), HubConnection.this, mDeviceManager.getSelectedGroup().groupAsLegacyArray[transientIndex], bs);
 							bulbKnown[transientIndex] = KnownState.Synched;
 							sentSomething = true;
 						}
@@ -278,5 +314,47 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			}
 		};
 		countDownTimer.start();
+	}
+
+	@Override
+	public void onListReturned(Bulb[] result) {
+		outer: for(int i = 0; i<result.length; i++){
+			Bulb fromHue = result[i];
+			
+			for(int j = 0; j<mBulbList.size(); j++){	
+				NetworkBulb fromMemory = mBulbList.get(j);
+				
+				//check to see if this bulb is already in our database
+				if(fromMemory.getUniqueId().equals(""+ fromHue.number)){
+					if(!fromMemory.getName().equals(fromHue.name)){
+						//same bulb but has been renamed by another device
+						//must update our version
+						
+						ContentValues cv = new ContentValues();
+						cv.put(NetBulbColumns.NAME_COLUMN, fromHue.name);
+						String[] selectionArgs = {""+fromHue.number};
+						mContext.getContentResolver().update(NetBulbColumns.URI, cv, NetBulbColumns.DEVICE_ID_COLUMN + " = ?", selectionArgs);
+					}
+					continue outer;
+				}
+			}
+			//if we reach this point, must not already be in memory, so add to database and memory
+			String bulbName = fromHue.name;
+			String bulbDeviceId = fromHue.number+"";
+			
+			ContentValues cv = new ContentValues();
+			cv.put(NetBulbColumns.NAME_COLUMN, bulbName);
+			cv.put(NetBulbColumns.DEVICE_ID_COLUMN, bulbDeviceId);
+			cv.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, mDeviceId);
+			cv.put(NetBulbColumns.JSON_COLUMN, gson.toJson(new HueBulbData()));
+			cv.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
+			String[] selectionArgs = {""+fromHue.number};
+			long bulbBaseId = Long.parseLong(mContext.getContentResolver().insert(NetBulbColumns.URI, cv).getLastPathSegment());
+			
+			mBulbList.add(new HueBulb(mContext,bulbBaseId,bulbName,bulbDeviceId, new HueBulbData(), this));
+			
+		}
+		
+		
 	}
 }

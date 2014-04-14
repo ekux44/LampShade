@@ -15,7 +15,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
@@ -25,20 +24,12 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 
 	private final SecondActivity me = this;
-	private OnBulbListReturnedListener mBulbListenerFragment;
 	private SharedPreferences mSettings;
 	private ViewPager mMoodManualViewPager;
 	private MoodManualPagerAdapter mMoodManualPagerAdapter;
 	private SlidingTabLayout mMoodManualSlidingTabLayout;
 	private SeekBar mBrightnessBar;
 	private boolean mIsTrackingTouch = false;
-	
-	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
-		mBulbListenerFragment = frag;
-	}
-	public OnBulbListReturnedListener getBulbListenerFragment(){
-		return mBulbListenerFragment;
-	}
 	
 	/** Called when the activity is first created. */
 	@Override

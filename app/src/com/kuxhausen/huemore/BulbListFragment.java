@@ -3,8 +3,15 @@ package com.kuxhausen.huemore;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.BaseColumns;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,22 +23,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
-import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.state.api.Bulb;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 
-public class BulbListFragment extends SherlockListFragment implements
-	OnBulbListReturnedListener, OnServiceConnectedListener{
+public class BulbListFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
+	private static final int BULBS_LOADER = 0;
+	private static final String[] columns = { NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID };
+
+	public CursorAdapter dataSource;
+	
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
 	private NetworkManagedSherlockFragmentActivity parrentActivity;
 
 	ArrayList<String> bulbNameList;
-	ArrayAdapter<String> rayAdapter;
-	Bulb[] bulbArray;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,20 +49,17 @@ public class BulbListFragment extends SherlockListFragment implements
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
+		getLoaderManager().initLoader(BULBS_LOADER, null, this);
+
+		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
+				columns, new int[] { android.R.id.text1 }, 0);
+
+		setListAdapter(dataSource);
+		
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.bulb_view, container, false);
-
-		bulbNameList = new ArrayList<String>();
-		rayAdapter = new ArrayAdapter<String>(this.getActivity(), layout,
-				bulbNameList);
-		setListAdapter(rayAdapter);
-		parrentActivity.setBulbListenerFragment(this);
-		parrentActivity.registerOnServiceConnectedListener(this);
+		
 		return myView;
-	}
-
-	public void refreshList() {
-		NetworkMethods.PreformGetBulbList(parrentActivity, parrentActivity.getService().getRequestQueue(), parrentActivity.getService().getDeviceManager(), this);
 	}
 
 	@Override
@@ -67,15 +71,7 @@ public class BulbListFragment extends SherlockListFragment implements
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		// When in two-pane layout, set the listview to highlight the selected
-		// list item
-		// (We do this during onStart because at the point the listview is
-		// available.)
-		// if (getFragmentManager().findFragmentById(R.id.groups_fragment) !=
-		// null) {
 		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-		// }
 	}
 
 	public void invalidateSelection() {
@@ -106,13 +102,18 @@ public class BulbListFragment extends SherlockListFragment implements
 		switch (item.getItemId()) {
 
 		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here
+			AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
+			
+			String[] selectionArgs = {""+info.id};
+			Cursor c = parrentActivity.getContentResolver().query(NetBulbColumns.URI, columns, NetBulbColumns._ID + " = ?", selectionArgs, null);
+			String deviceId = c.getString(c.getColumnIndex(NetBulbColumns.DEVICE_ID_COLUMN));
+			
+			
 			EditBulbDialogFragment ngdf = new EditBulbDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.BULB_NAME, longSelected.getText().toString());
-			args.putInt(InternalArguments.BULB_NUMBER, 1 + rayAdapter
-					.getPosition(longSelected.getText().toString()));
+			args.putString(InternalArguments.NET_BULB_DEVICE_ID, deviceId);
 			ngdf.setArguments(args);
-			ngdf.setBulbsFragment(this);
 			ngdf.show(getFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
@@ -135,26 +136,43 @@ public class BulbListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onListReturned(Bulb[] result) {
-		if (result == null){
-//			refreshList();
-			return;
+	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
+		/*
+		 * Takes action based on the ID of the Loader that's being created
+		 */
+		switch (loaderID) {
+		case BULBS_LOADER:
+			// Returns a new CursorLoader
+			return new CursorLoader(getActivity(), // Parent activity context
+					DatabaseDefinitions.NetBulbColumns.URI, // Table
+					columns, // Projection to return
+					null, // No selection clause
+					null, // No selection arguments
+					null // Default sort order
+			);
+		default:
+			// An invalid id was passed in
+			return null;
 		}
-		bulbArray = result;
-
-		rayAdapter.clear();
-		for (int i = 0; i < bulbArray.length; i++) {
-			// bulbNameList.add(bulb.name);
-			Bulb bulb = bulbArray[i];
-			rayAdapter.add(bulb.name);
-		}
-
-		registerForContextMenu(getListView());
-		getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 	}
 
 	@Override
-	public void onServiceConnected() {
-		refreshList();		
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+		/*
+		 * Moves the query results into the adapter, causing the ListView
+		 * fronting this adapter to re-display
+		 */
+		dataSource.changeCursor(cursor);
+		registerForContextMenu(getListView());
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		/*
+		 * Clears out the adapter's reference to the Cursor. This prevents
+		 * memory leaks.
+		 */
+		// unregisterForContextMenu(getListView());
+		dataSource.changeCursor(null);
 	}
 }

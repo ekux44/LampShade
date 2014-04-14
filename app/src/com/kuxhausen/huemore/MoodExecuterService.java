@@ -105,8 +105,6 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 		mDeviceManager = new DeviceManager(this);
 		mMoodPlayer = new MoodPlayer(this,mDeviceManager);
 		
-		//start pinging to test connectivity
-		NetworkMethods.PreformGetBulbList(this, getRequestQueue(), mDeviceManager, null);
 	}
 	@Override
 	public void onDestroy() {

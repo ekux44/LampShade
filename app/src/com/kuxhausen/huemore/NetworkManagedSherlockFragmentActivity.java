@@ -12,7 +12,6 @@ import android.os.IBinder;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.kuxhausen.huemore.MoodExecuterService.LocalBinder;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
-import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
@@ -73,17 +72,6 @@ public class NetworkManagedSherlockFragmentActivity extends
 		return groupValues;
 	}
 	
-	
-	public OnBulbListReturnedListener bulbListenerFragment;
-	
-	public void setBulbListenerFragment(OnBulbListReturnedListener frag){
-		bulbListenerFragment = frag;
-	}
-	public OnBulbListReturnedListener getBulbListenerFragment(){
-		return bulbListenerFragment;
-	}
-	
-	
 	private MoodExecuterService mService = new MoodExecuterService();
     private boolean mBound = false;
 	private ArrayList<OnServiceConnectedListener> serviceListeners = new ArrayList<OnServiceConnectedListener>();
@@ -107,7 +95,7 @@ public class NetworkManagedSherlockFragmentActivity extends
 	}
 	
     @Override
-	public void onConnectionStatusChanged(boolean status) {
+	public void onConnectionStatusChanged() {
 		//override in subclass if needed
 	}
     
