@@ -37,14 +37,14 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	private static final Integer type = NetBulbColumns.NetBulbType.PHILIPS_HUE;
 	private static final Gson gson = new Gson();
 	
-	private Integer mBaseId;
+	private Long mBaseId;
 	private String mName, mDeviceId;
 	private HubData mData;
 	private Context mContext;
 	
 	private ArrayList<HueBulb> mBulbList;
 	
-	public HubConnection(Context c, Integer baseId, String name, String deviceId, HubData data, DeviceManager dm){
+	public HubConnection(Context c, Long baseId, String name, String deviceId, HubData data, DeviceManager dm){
 		mContext = c;
 		mBaseId = baseId;
 		mName = name;
@@ -53,8 +53,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		
 		mBulbList = new ArrayList<HueBulb>();
 		
-		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE, mDeviceId};
-		Cursor cursor = c.getContentResolver().query(NetConnectionColumns.URI, bulbColumns, NetBulbColumns.TYPE_COLUMN + " = ? AND "+NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + " = ?", selectionArgs, null);
+		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE};//, mDeviceId};
+		//TODO fix selection once hub id fixed
+		Cursor cursor = c.getContentResolver().query(NetBulbColumns.URI, bulbColumns, null,null,null);///*NetBulbColumns.TYPE_COLUMN + " = ?"/* AND "+NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + " = ?"*/, selectionArgs, null);
 		cursor.moveToPosition(-1);// not the same as move to first!
 		while (cursor.moveToNext()) {
 			Long bulbBaseId = cursor.getLong(0);
@@ -93,10 +94,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		ArrayList<HubConnection> hubs = new ArrayList<HubConnection>();
 		
 		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE};
-		Cursor cursor = c.getContentResolver().query(NetBulbColumns.URI, columns, NetConnectionColumns.TYPE_COLUMN + " = ?", selectionArgs, null);
+		Cursor cursor = c.getContentResolver().query(NetConnectionColumns.URI, columns, NetConnectionColumns.TYPE_COLUMN + " = ?", selectionArgs, null);
 		cursor.moveToPosition(-1);// not the same as move to first!
 		while (cursor.moveToNext()) {
-			Integer baseId = cursor.getInt(0);
+			Long baseId = cursor.getLong(0);
 			String name = cursor.getString(2);
 			String deviceId = cursor.getString(3);
 			HubData data = gson.fromJson(cursor.getString(4), HubData.class);

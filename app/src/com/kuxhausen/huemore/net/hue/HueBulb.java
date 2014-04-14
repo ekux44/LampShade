@@ -41,8 +41,7 @@ public class HueBulb implements NetworkBulb {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return mName;
 	}
 
 	@Override
@@ -56,8 +55,7 @@ public class HueBulb implements NetworkBulb {
 
 	@Override
 	public String getUniqueId() {
-		// TODO Auto-generated method stub
-		return null;
+		return mDeviceId;
 	}
 
 	@Override
