@@ -4,7 +4,7 @@ import com.kuxhausen.huemore.state.api.BulbState;
 
 public interface NetworkBulb {
 	
-	enum ConnectivityState {
+	public enum ConnectivityState {
 		Unknown, Unreachable, Connected
 	}
 	
@@ -26,6 +26,6 @@ public interface NetworkBulb {
 	
 	public abstract void rename(String name);
 	
-	public abstract String getUniqueId();
+	public abstract Long getBaseId();
 	
 }

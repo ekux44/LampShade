@@ -51,9 +51,9 @@ public class EditBulbDialogFragment extends DialogFragment {
 				.findViewById(R.id.editText1);
 
 		Bundle args = this.getArguments();
-		String netBulbDeviceId = args.getString(InternalArguments.NET_BULB_DEVICE_ID);
+		Long netBulbBaseId = args.getLong(InternalArguments.NET_BULB_DATABASE_ID);
 		
-		netBulb = parrentActivity.getService().getDeviceManager().getNetworkBulb(netBulbDeviceId);
+		netBulb = parrentActivity.getService().getDeviceManager().getNetworkBulb(netBulbBaseId);
 		
 		BulbState bs = new BulbState();
 		bs.alert = "lselect";

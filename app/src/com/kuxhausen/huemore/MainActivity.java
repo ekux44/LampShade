@@ -42,6 +42,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.registration.WelcomeDialogFragment;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 
 /**
@@ -199,8 +200,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	}
 	
 	@Override
-	public void setGroup(int[] bulbs, String optionalName){
-		super.setGroup(bulbs, optionalName);
+	public void setGroup(Group g){
+		super.setGroup(g);
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
@@ -208,9 +209,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		 }else if( this.boundToService()){
 			// only load the moods page if the group has been sent to the service
 			Intent i = new Intent(this, SecondActivity.class);
-			i.putExtra(InternalArguments.MOOD_NAME, optionalName);
-			i.putExtra(InternalArguments.GROUP_NAME, (me).getCurentGroupName());
-			i.putExtra(InternalArguments.GROUP_VALUES, (me).getCurentGroupValues());
 			this.startActivity(i);
 		 }
 	}	
@@ -331,8 +329,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 						Toast.LENGTH_SHORT).show();
 			} else {
 				Intent i = new Intent(this, NfcWriterActivity.class);
-				i.putExtra(InternalArguments.GROUP_NAME, (me).getCurentGroupName());
-				i.putExtra(InternalArguments.GROUP_VALUES, (me).getCurentGroupValues());
 				this.startActivity(i);
 			}
 			return true;

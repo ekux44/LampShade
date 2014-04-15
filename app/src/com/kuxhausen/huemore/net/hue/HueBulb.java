@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.net.hue;
 
 import android.content.Context;
+import android.util.Pair;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.network.NetworkMethods;
@@ -17,6 +18,10 @@ public class HueBulb implements NetworkBulb {
 	private Context mContext;
 	private HubConnection mConnection;
 	
+	//TODO chance once a better Device Id implemented
+	public int getHubBulbNumber(){
+		return Integer.parseInt(mDeviceId);
+	}
 	
 	public HueBulb(Context c, Long bulbBaseId, String bulbName, String bulbDeviceId, HueBulbData bulbData, HubConnection hubConnection) {
 		mContext = c;
@@ -29,14 +34,14 @@ public class HueBulb implements NetworkBulb {
 
 	@Override
 	public void setState(BulbState bs) {
-		// TODO Auto-generated method stub
-		
+		mConnection.queue.add(new Pair<Integer,BulbState>(getHubBulbNumber(),bs));
 	}
 
 	@Override
 	public BulbState getState() {
+		BulbState bs = new BulbState();
 		// TODO Auto-generated method stub
-		return null;
+		return bs;
 	}
 
 	@Override
@@ -54,14 +59,12 @@ public class HueBulb implements NetworkBulb {
 	}
 
 	@Override
-	public String getUniqueId() {
-		return mDeviceId;
+	public Long getBaseId() {
+		return mBaseId;
 	}
 
 	@Override
 	public ConnectivityState getConnectivityState() {
-		// TODO Auto-generated method stub
-		return ConnectivityState.Unknown;
+		return mConnection.getConnectivityState();
 	}
-
 }

@@ -1,7 +1,7 @@
 package com.kuxhausen.huemore.network;
 
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity.OnServiceConnectedListener;
+import com.kuxhausen.huemore.OnServiceConnectedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;

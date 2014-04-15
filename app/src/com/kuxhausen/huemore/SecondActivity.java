@@ -17,6 +17,7 @@ import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.state.Group;
 
 /**
  * @author Eric Kuxhausen
@@ -37,8 +38,6 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.secondary_activity);
-		if(this.getCurentGroupName()!=null && this.getCurentGroupName().length()>0)
-			this.getSupportActionBar().setTitle(this.getCurentGroupName());
 		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
@@ -106,7 +105,16 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
 	}
 	
 	@Override
+	public void onServiceConnected() {
+		super.onServiceConnected();
+		Group currentlySelected = this.getService().getDeviceManager().getSelectedGroup();
+		if(currentlySelected!=null)
+			this.getSupportActionBar().setTitle(currentlySelected.getName());
+	}
+	
+	@Override
 	public void onStateChanged() {
+		super.onStateChanged();
 		if(mBrightnessBar!=null && !mIsTrackingTouch){
 			DeviceManager dm = this.getService().getDeviceManager();
 			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());

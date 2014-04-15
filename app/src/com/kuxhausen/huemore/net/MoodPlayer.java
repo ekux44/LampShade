@@ -88,12 +88,13 @@ public class MoodPlayer{
 		edit.putString(PreferenceKeys.CACHED_EXECUTING_ENCODED_MOOD,"");
 		edit.commit();
 		
-		ArrayList<Integer>[] channels = new ArrayList[mood.getNumChannels()];
+		ArrayList<Long>[] channels = new ArrayList[mood.getNumChannels()];
 		for (int i = 0; i < channels.length; i++)
-			channels[i] = new ArrayList<Integer>();
+			channels[i] = new ArrayList<Long>();
 
-		for (int i = 0; i < group.groupAsLegacyArray.length; i++) {
-			channels[i % mood.getNumChannels()].add(group.groupAsLegacyArray[i]);
+		long[] bulbBaseIds = group.getNetworkBulbDatabaseIds();
+		for (int i = 0; i < bulbBaseIds.length; i++) {
+			channels[i % mood.getNumChannels()].add(bulbBaseIds[i]);
 		}
 
 		if(mood.timeAddressingRepeatPolicy){
@@ -103,9 +104,9 @@ public class MoodPlayer{
 			
 			for (int i= mood.events.length-1; i>=0; i--) {
 				Event e = mood.events[i];
-				for (Integer bNum : channels[e.channel]) {
+				for (Long bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
-					qe.bulb = bNum;
+					qe.bulbBaseId = bNum;
 					
 					qe.nanoTime = Conversions.nanoEventTimeFromMoodDailyTime(e.time);
 					if(qe.nanoTime>System.nanoTime()){
@@ -122,9 +123,9 @@ public class MoodPlayer{
 			if(earliestEventStillApplicable == Long.MIN_VALUE && mood.events.length>0){
 				//haven't found a previous state to start with, time to roll over and add last evening event
 				Event e = mood.events[mood.events.length-1];
-				for (Integer bNum : channels[e.channel]) {
+				for (Long bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
-					qe.bulb = bNum;
+					qe.bulbBaseId = bNum;
 					qe.nanoTime = System.nanoTime();
 					pendingEvents.add(qe);
 				}
@@ -135,9 +136,9 @@ public class MoodPlayer{
 			}
 		}else{
 			for (Event e : mood.events) {
-				for (Integer bNum : channels[e.channel]) {
+				for (Long bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
-					qe.bulb = bNum;
+					qe.bulbBaseId = bNum;
 					
 					// 10^8 * e.time
 					qe.nanoTime = System.nanoTime()+(e.time*100000000l);
@@ -167,8 +168,7 @@ public class MoodPlayer{
 					while(queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime())
 					{
 						QueueEvent e = queue.poll();
-						mDeviceManager.transmit(e.bulb, e.event.state);
-						
+						mDeviceManager.getNetworkBulb(e.bulbBaseId).setState(e.event.state);
 					}
 				} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
 					loadMoodIntoQueue();

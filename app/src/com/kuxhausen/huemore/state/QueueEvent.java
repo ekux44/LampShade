@@ -1,7 +1,7 @@
 package com.kuxhausen.huemore.state;
 
 public class QueueEvent implements Comparable<QueueEvent>{
-	public int bulb;
+	public Long bulbBaseId;
 	public Long nanoTime;
 	public Event event;
 	

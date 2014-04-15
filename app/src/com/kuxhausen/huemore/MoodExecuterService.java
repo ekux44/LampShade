@@ -45,13 +45,6 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 	private DeviceManager mDeviceManager;
 	private MoodPlayer mMoodPlayer;
 	
-	public void onGroupSelected(int[] bulbs, Integer optionalBri, String groupName){
-		Group g = new Group();
-		g.groupAsLegacyArray = bulbs;
-		
-		mDeviceManager.onGroupSelected(g, optionalBri, groupName);
-	}
-
 	public MoodPlayer getMoodPlayer(){
 		return mMoodPlayer;
 	}
@@ -140,7 +133,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 						for(int i = 0; i< bulbs.length; i++)
 							bulbs[i] = moodPairs.first[i];
 						String groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
-						onGroupSelected(bulbs, moodPairs.second.second, groupName);
+						mDeviceManager.onGroupSelected(Group.loadFromLegacyData(bulbs,groupName,this), moodPairs.second.second);
 					}
 					if(moodPairs.second.first!=null){
 						String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);

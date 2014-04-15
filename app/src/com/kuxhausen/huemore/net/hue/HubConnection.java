@@ -18,6 +18,7 @@ import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.NetworkBulb;
+import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
@@ -161,85 +162,73 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		return volleyRQ;
 	}
 	
-	public synchronized void onGroupSelected(Group selectedGroup, Integer optionalBri, String groupName){
-		
-		groupIsAlerting = false;
-		groupIsColorLooping = false;
-		maxBrightness = null;
-		bulbBri = new int[selectedGroup.groupAsLegacyArray.length];
-		bulbRelBri = new int[selectedGroup.groupAsLegacyArray.length];
-		bulbKnown = new KnownState[selectedGroup.groupAsLegacyArray.length];
-		for(int i = 0; i < bulbRelBri.length; i++){
-			bulbRelBri[i] = MAX_REL_BRI;
-			bulbKnown[i] = KnownState.Unknown;
-		}
-		
-		this.groupName = groupName;
-		
-		if(optionalBri==null){
-			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
-				bulbKnown[i] = KnownState.Getting;
-				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), this, this, selectedGroup.groupAsLegacyArray[i]);
-			}
-		} else {
-			maxBrightness = optionalBri;
-			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++)
-				bulbKnown[i] = KnownState.ToSend;
-			mDeviceManager.onStateChanged();
-		}
+	public synchronized void onGroupSelected(Group selectedGroup, Integer optionalBri){
+//		
+//		groupIsAlerting = false;
+//		groupIsColorLooping = false;
+//		maxBrightness = null;
+//		bulbBri = new int[selectedGroup.groupAsLegacyArray.length];
+//		bulbRelBri = new int[selectedGroup.groupAsLegacyArray.length];
+//		bulbKnown = new KnownState[selectedGroup.groupAsLegacyArray.length];
+//		for(int i = 0; i < bulbRelBri.length; i++){
+//			bulbRelBri[i] = MAX_REL_BRI;
+//			bulbKnown[i] = KnownState.Unknown;
+//		}
+//		
+//		this.groupName = groupName;
+//		
+//		if(optionalBri==null){
+//			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
+//				bulbKnown[i] = KnownState.Getting;
+//				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), this, this, selectedGroup.groupAsLegacyArray[i]);
+//			}
+//		} else {
+//			maxBrightness = optionalBri;
+//			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++)
+//				bulbKnown[i] = KnownState.ToSend;
+//			mDeviceManager.onStateChanged();
+//		}
 	}
 	
 	/** doesn't notify listeners **/
 	public synchronized void setBrightness(int brightness, Group selectedGroup){
 		
-		maxBrightness = brightness;
-		if(selectedGroup.groupAsLegacyArray!=null){
-			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
-				bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
-				bulbKnown[i] = KnownState.ToSend;
-			}
-		}
+//		maxBrightness = brightness;
+//		if(selectedGroup.groupAsLegacyArray!=null){
+//			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
+//				bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
+//				bulbKnown[i] = KnownState.ToSend;
+//			}
+//		}
 	}
 	
 	public void onAttributesReturned(BulbAttributes result, int bulbNumber) {
-		//figure out which bulb in group (if that group is still selected)
-		int index = calculateBulbPositionInGroup(bulbNumber, mDeviceManager.getSelectedGroup());
-		//if group is still expected this, save 
-		if(index>-1 && bulbKnown[index]==KnownState.Getting){
-			bulbKnown[index] = KnownState.Synched;
-			bulbBri[index] = result.state.bri;
-			
-			//if all expected get brightnesses have returned, compute maxbri and notify listeners
-			boolean anyOutstandingGets = false;
-			for(KnownState ks : bulbKnown)
-				anyOutstandingGets |= (ks == KnownState.Getting);
-			if(!anyOutstandingGets){
-				//todo calc more intelligent bri when mood known
-				int briSum = 0;
-				for(int bri : bulbBri)
-					briSum +=bri;
-				maxBrightness = briSum/mDeviceManager.getSelectedGroup().groupAsLegacyArray.length;
-				
-				for(int i = 0; i< mDeviceManager.getSelectedGroup().groupAsLegacyArray.length; i++){
-					bulbBri[i]= maxBrightness;
-					bulbRelBri[i] = MAX_REL_BRI;
-				}
-				
-				mDeviceManager.onStateChanged();
-			}	
-		}	
-	}
-	/** finds bulb index within group[] **/
-	private int calculateBulbPositionInGroup(int bulbNumber, Group selectedGroup){
-		if(selectedGroup==null || selectedGroup.groupAsLegacyArray==null)
-			return -1;
-		
-		int index = -1;
-		for(int j = 0; j< selectedGroup.groupAsLegacyArray.length; j++){
-			if(selectedGroup.groupAsLegacyArray[j]==bulbNumber)
-				index = j;
-		}
-		return index;
+//		//figure out which bulb in group (if that group is still selected)
+//		int index = calculateBulbPositionInGroup(bulbNumber, mDeviceManager.getSelectedGroup());
+//		//if group is still expected this, save 
+//		if(index>-1 && bulbKnown[index]==KnownState.Getting){
+//			bulbKnown[index] = KnownState.Synched;
+//			bulbBri[index] = result.state.bri;
+//			
+//			//if all expected get brightnesses have returned, compute maxbri and notify listeners
+//			boolean anyOutstandingGets = false;
+//			for(KnownState ks : bulbKnown)
+//				anyOutstandingGets |= (ks == KnownState.Getting);
+//			if(!anyOutstandingGets){
+//				//todo calc more intelligent bri when mood known
+//				int briSum = 0;
+//				for(int bri : bulbBri)
+//					briSum +=bri;
+//				maxBrightness = briSum/mDeviceManager.getSelectedGroup().groupAsLegacyArray.length;
+//				
+//				for(int i = 0; i< mDeviceManager.getSelectedGroup().groupAsLegacyArray.length; i++){
+//					bulbBri[i]= maxBrightness;
+//					bulbRelBri[i] = MAX_REL_BRI;
+//				}
+//				
+//				mDeviceManager.onStateChanged();
+//			}	
+//		}	
 	}
 	
 	private boolean hasTransientChanges() {
@@ -266,6 +255,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
 			@Override
 			public void onTick(long millisUntilFinished) {
+				/*
+				
 				if (queue.peek()!=null) {
 					Pair<Integer,BulbState> e = queue.poll();
 					int bulb = e.first;
@@ -312,6 +303,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 						transientIndex = (transientIndex + 1) % mDeviceManager.getSelectedGroup().groupAsLegacyArray.length;
 					}
 				} 
+				
+				*/
 			}
 		};
 		countDownTimer.start();
@@ -326,7 +319,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 				NetworkBulb fromMemory = mBulbList.get(j);
 				
 				//check to see if this bulb is already in our database
-				if(fromMemory.getUniqueId().equals(""+ fromHue.number)){
+				if(fromMemory instanceof HueBulb
+						&& ((HueBulb)fromMemory).getHubBulbNumber()==fromHue.number){
 					if(!fromMemory.getName().equals(fromHue.name)){
 						//same bulb but has been renamed by another device
 						//must update our version
@@ -357,5 +351,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		}
 		
 		
+	}
+
+	public ConnectivityState getConnectivityState() {
+		return ConnectivityState.Unknown;
 	}
 }

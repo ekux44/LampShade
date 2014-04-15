@@ -14,62 +14,13 @@ import com.kuxhausen.huemore.MoodExecuterService.LocalBinder;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.state.Group;
 
-public class NetworkManagedSherlockFragmentActivity extends
-		SherlockFragmentActivity implements OnConnectionStatusChangedListener, OnStateChangedListener{
+public class NetworkManagedSherlockFragmentActivity extends SherlockFragmentActivity implements OnConnectionStatusChangedListener, OnStateChangedListener, OnServiceConnectedListener{
 
-	private String groupName;
-	private int[] groupValues;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState); // Always call the superclass first
-	    
-	    if(this.getIntent()!=null && this.getIntent().getExtras()!=null){
-	    	String potentialGroupName = this.getIntent().getExtras().getString(InternalArguments.GROUP_NAME);
-	    	int[] potentialGroupVals = this.getIntent().getExtras().getIntArray(InternalArguments.GROUP_VALUES);
-	    	
-	    	if(potentialGroupVals!=null)
-	    		setGroup(potentialGroupVals, potentialGroupName);
-	    }
-	}
-	
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-	    // Save the user's current game state
-	    savedInstanceState.putString(InternalArguments.GROUP_NAME, groupName);
-	    savedInstanceState.putIntArray(InternalArguments.GROUP_VALUES, groupValues);
-	    
-    	// Always call the superclass so it can save the view hierarchy state
-	    super.onSaveInstanceState(savedInstanceState);
-	}
-	
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-	    // Always call the superclass so it can restore the view hierarchy
-	    super.onRestoreInstanceState(savedInstanceState);
-	    
-	    // Restore state members from saved instance
-	    if(savedInstanceState.getIntArray(InternalArguments.GROUP_VALUES)!=null){
-	    	setGroup(savedInstanceState.getIntArray(InternalArguments.GROUP_VALUES),savedInstanceState.getString(InternalArguments.GROUP_NAME));
-	    }
-	}
-	
-	public void setGroup(int[] bulbs, String name){
-		groupValues = bulbs;
+	public void setGroup(Group g){
 		if(mBound)
-			mService.onGroupSelected(bulbs, null, name);
-			
-		groupName = name;
-	}
-	
-	public String getCurentGroupName(){
-		if(groupName!=null)
-			return groupName;
-		return "";
-	}
-	public int[] getCurentGroupValues(){
-		return groupValues;
+			mService.getDeviceManager().onGroupSelected(g, null);
 	}
 	
 	private MoodExecuterService mService = new MoodExecuterService();
@@ -92,6 +43,11 @@ public class NetworkManagedSherlockFragmentActivity extends
 	}
 	public boolean boundToService(){
 		return mBound;
+	}
+	
+	@Override
+	public void onServiceConnected() {
+		//override in subclass if needed
 	}
 	
     @Override
@@ -142,10 +98,6 @@ public class NetworkManagedSherlockFragmentActivity extends
             	l.onServiceConnected();
             }
             serviceListeners.clear();
-            
-            if(groupValues!=null){
-    			mService.onGroupSelected(groupValues, null, groupName);
-            }
         }
 
         @Override
@@ -153,8 +105,4 @@ public class NetworkManagedSherlockFragmentActivity extends
             mBound = false;
         }
     };
-    
-    public interface OnServiceConnectedListener{
-    	public abstract void onServiceConnected();
-    }
 }

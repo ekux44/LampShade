@@ -26,6 +26,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
+import com.kuxhausen.huemore.state.Group;
 
 public class BulbListFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -103,19 +104,12 @@ public class BulbListFragment extends SherlockListFragment implements LoaderMana
 
 		case R.id.contextgroupmenu_rename: // <-- your custom menu item id here
 			AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-
-			
-			String[] selectionArgs = {""+info.id};
-			Cursor c = parrentActivity.getContentResolver().query(NetBulbColumns.URI, columns, NetBulbColumns._ID + " = ?", selectionArgs, null);
-			String deviceId = c.getString(c.getColumnIndex(NetBulbColumns.DEVICE_ID_COLUMN));
-			
 			
 			EditBulbDialogFragment ngdf = new EditBulbDialogFragment();
 			Bundle args = new Bundle();
-			args.putString(InternalArguments.NET_BULB_DEVICE_ID, deviceId);
+			args.putLong(InternalArguments.NET_BULB_DATABASE_ID, info.id);
 			ngdf.setArguments(args);
-			ngdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 		default:
 			return super.onContextItemSelected(item);
@@ -127,9 +121,9 @@ public class BulbListFragment extends SherlockListFragment implements LoaderMana
 		selected = ((TextView) (v));
 		selectedPos = position;
 
-		// Notify the parent activity of selected item
-		int[] iPos = { position + 1 };
-		parrentActivity.setGroup(iPos, selected.getText().toString());
+		long[] bulbIds = {dataSource.getItemId(position)};
+		Group g = new Group(bulbIds, selected.getText().toString());
+		parrentActivity.setGroup(g);
 		
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);

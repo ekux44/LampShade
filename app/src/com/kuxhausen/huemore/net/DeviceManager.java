@@ -5,14 +5,9 @@ import java.util.HashMap;
 
 import com.android.volley.RequestQueue;
 import com.kuxhausen.huemore.net.hue.HubConnection;
-import com.kuxhausen.huemore.network.ConnectionMonitor;
-import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.state.api.BulbState;
-
 import android.content.Context;
-import android.util.Pair;
 
 public class DeviceManager{
 	
@@ -22,7 +17,7 @@ public class DeviceManager{
 	private String selectedGroupName;
 	private ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	public ArrayList<OnStateChangedListener> brightnessListeners = new ArrayList<OnStateChangedListener>();
-	private HashMap<String, NetworkBulb> bulbMap = new HashMap<String, NetworkBulb>();
+	private HashMap<Long, NetworkBulb> bulbMap = new HashMap<Long, NetworkBulb>();
 	
 	public DeviceManager(Context c){
 		mContext = c;
@@ -47,11 +42,11 @@ public class DeviceManager{
 		return selectedGroupName;
 	}
 	
-	public void onGroupSelected(Group group, Integer optionalBri, String groupName){
+	public void onGroupSelected(Group group, Integer optionalBri){
 		selectedGroup = group;
-		selectedGroupName = groupName;
+		selectedGroupName = group.getName();
 		
-		((HubConnection)mConnections.get(0)).onGroupSelected(selectedGroup,optionalBri,groupName);
+		((HubConnection)mConnections.get(0)).onGroupSelected(selectedGroup,optionalBri);
 	}
 	
 	public void addOnConnectionStatusChangedListener(OnConnectionStatusChangedListener l){
@@ -106,20 +101,16 @@ public class DeviceManager{
 		for(Connection con : mConnections){
 			ArrayList<NetworkBulb> conBulbs = con.getBulbs();
 			for(NetworkBulb bulb: conBulbs){
-				bulbMap.put(bulb.getUniqueId(), bulb);
+				bulbMap.put(bulb.getBaseId(), bulb);
 			}
 		}
 	}
 	
-	public NetworkBulb getNetworkBulb(String bulbDeviceId) {
+	public NetworkBulb getNetworkBulb(Long bulbDeviceId) {
 		return bulbMap.get(bulbDeviceId);
 	}
 	
 	//TODO clean up/remove everything below this line
-	
-	public void transmit(int bulb, BulbState bs){
-		((HubConnection)mConnections.get(0)).queue.add(new Pair<Integer,BulbState>(bulb,bs));
-	}
 	
 	public RequestQueue getRequestQueue() {
 		return ((HubConnection)mConnections.get(0)).getRequestQueue();

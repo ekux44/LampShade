@@ -30,6 +30,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.state.Group;
 
 public class GroupListFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
@@ -172,32 +173,8 @@ public class GroupListFragment extends SherlockListFragment implements
 		selected = ((TextView) (v));
 		selectedPos = position;
 
-		// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { selected.getText().toString() };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (cursor.moveToNext()) {
-			groupStates.add(cursor.getInt(0));
-		}
-		int[] bulbS = new int[groupStates.size()];
-		for(int i = 0; i< bulbS.length; i++)
-			bulbS[i] = groupStates.get(i);
-
 		// Notify the parent activity of selected bulbs
-		gbpfCallback.setGroup(bulbS, selected.getText().toString());
+		gbpfCallback.setGroup(Group.loadFromDatabase(selected.getText().toString(), this.gbpfCallback));
 
 		// Set the item as checked to be highlighted when in two-pane layout
 		getListView().setItemChecked(selectedPos, true);
