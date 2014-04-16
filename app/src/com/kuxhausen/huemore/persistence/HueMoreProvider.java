@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.ContentProvider;
@@ -58,62 +59,41 @@ public class HueMoreProvider extends ContentProvider {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
 		{
-			// Add a pattern that routes URIs terminated with "groups" to a
-			// GROUPS operation
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.GroupColumns.PATH_GROUPS, GROUPS);
-			// Creates a new projection map instance. The map returns a column
-			// name
-			// given a string. The two are usually equal.
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
 			sGroupsProjectionMap = new HashMap<String, String>();
 
-			// Maps the string "_ID" to the column name "_ID"
 			sGroupsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-
-			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.GROUP,
-					DatabaseDefinitions.GroupColumns.GROUP);
-			sGroupsProjectionMap.put(DatabaseDefinitions.GroupColumns.BULB,
-					DatabaseDefinitions.GroupColumns.BULB);
-			sGroupsProjectionMap.put(
-					DatabaseDefinitions.GroupColumns.PRECEDENCE,
-					DatabaseDefinitions.GroupColumns.PRECEDENCE);
+			sGroupsProjectionMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
+			sGroupsProjectionMap.put(GroupColumns.BULB, GroupColumns.BULB);
+			sGroupsProjectionMap.put(GroupColumns.PRECEDENCE,GroupColumns.PRECEDENCE);
 		}
 		{
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.MoodColumns.PATH_MOODS, MOODS);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
 			sMoodsProjectionMap = new HashMap<String, String>();
 
 			sMoodsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.MOOD,
-					DatabaseDefinitions.MoodColumns.MOOD);
-			sMoodsProjectionMap.put(DatabaseDefinitions.MoodColumns.STATE,
-					DatabaseDefinitions.MoodColumns.STATE);
+			sMoodsProjectionMap.put(MoodColumns.MOOD, MoodColumns.MOOD);
+			sMoodsProjectionMap.put(MoodColumns.STATE, MoodColumns.STATE);
 		}
 		{
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
 			sGroupBulbsProjectionMap = new HashMap<String, String>();
 
 			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-			sGroupBulbsProjectionMap.put(
-					DatabaseDefinitions.GroupColumns.GROUP,
-					DatabaseDefinitions.GroupColumns.GROUP);
-			sGroupBulbsProjectionMap.put(DatabaseDefinitions.GroupColumns.BULB,
-					DatabaseDefinitions.GroupColumns.BULB);
-			sGroupBulbsProjectionMap.put(
-					DatabaseDefinitions.GroupColumns.PRECEDENCE,
-					DatabaseDefinitions.GroupColumns.PRECEDENCE);
+			sGroupBulbsProjectionMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
+			sGroupBulbsProjectionMap.put(GroupColumns.BULB, GroupColumns.BULB);
+			sGroupBulbsProjectionMap.put(GroupColumns.PRECEDENCE, GroupColumns.PRECEDENCE);
 		}
 		{
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.AlarmColumns.PATH_ALARMS, ALARMS);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
 			sAlarmsProjectionMap = new HashMap<String, String>();
 
 			sAlarmsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-			sAlarmsProjectionMap.put(DatabaseDefinitions.AlarmColumns.STATE,
-					DatabaseDefinitions.AlarmColumns.STATE);
-			sAlarmsProjectionMap.put(
-					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE,
-					DatabaseDefinitions.AlarmColumns.INTENT_REQUEST_CODE);
+			sAlarmsProjectionMap.put(AlarmColumns.STATE, AlarmColumns.STATE);
+			sAlarmsProjectionMap.put(AlarmColumns.INTENT_REQUEST_CODE, AlarmColumns.INTENT_REQUEST_CODE);
 		}
 		{
-			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, DatabaseDefinitions.AlarmColumns.PATH_INDIVIDUAL_ALARM, INDIVIDUAL_ALARM);
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM, INDIVIDUAL_ALARM);
 		}
 		{
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
@@ -140,11 +120,9 @@ public class HueMoreProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		// Constructs a new query builder and sets its table name
+		ArrayList<Uri> toNotify = new ArrayList<Uri>();
+		
 		String table = null;
-
-		Uri toNotify = uri;// todo restructure so that GROUPS and GROUPBULBS
-							// share notifications
 
 		/**
 		 * Choose the projection and adjust the "where" clause based on URI
@@ -154,34 +132,38 @@ public class HueMoreProvider extends ContentProvider {
 
 		case NETCONNECTIONS:
 			table = NetConnectionColumns.TABLE_NAME;
-			toNotify = NetConnectionColumns.URI;
+			toNotify.add(NetConnectionColumns.URI);
 			break;
 		case NETBULBS:
 			table = NetBulbColumns.TABLE_NAME;
-			toNotify = NetBulbColumns.URI;
+			toNotify.add(NetBulbColumns.URI);
 			break;	
 		case ALARMS:
-			table = (DatabaseDefinitions.AlarmColumns.TABLE_NAME);
-			toNotify = DatabaseDefinitions.AlarmColumns.ALARMS_URI;
+			table = (AlarmColumns.TABLE_NAME);
+			toNotify.add(AlarmColumns.ALARMS_URI);
+			toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
 			break;
 		case GROUPBULBS:
-			table = (DatabaseDefinitions.GroupColumns.TABLE_NAME);
-			toNotify = DatabaseDefinitions.GroupColumns.GROUPS_URI;
+			table = (GroupColumns.TABLE_NAME);
+			toNotify.add(GroupColumns.GROUPS_URI);
+			toNotify.add(GroupColumns.GROUPBULBS_URI);
 			break;
 		case MOODS:
 			table = (DatabaseDefinitions.MoodColumns.TABLE_NAME);
-			toNotify = DatabaseDefinitions.MoodColumns.MOODS_URI;
+			toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
 			break;
-
+		default:
+			// If the URI doesn't match any of the known patterns, throw an exception.
+			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-		db.delete(table, selection, selectionArgs);
+		int rowsAffected = db.delete(table, selection, selectionArgs);
 
-		this.getContext().getContentResolver().notifyChange(uri, null);
-		this.getContext().getContentResolver().notifyChange(toNotify, null);
+		for(Uri me : toNotify)
+			this.getContext().getContentResolver().notifyChange(me, null);
 
-		return 0;
+		return rowsAffected;
 	}
 
 	@Override
@@ -192,6 +174,8 @@ public class HueMoreProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
+		ArrayList<Uri> toNotify = new ArrayList<Uri>();
+
 		String table = null;
 
 		// Constructs a new query builder and sets its table name
@@ -206,30 +190,36 @@ public class HueMoreProvider extends ContentProvider {
 			qb.setTables(NetConnectionColumns.TABLE_NAME);
 			qb.setProjectionMap(sNetConnectionsProjectionMap);
 			table = NetConnectionColumns.TABLE_NAME;
+			toNotify.add(NetConnectionColumns.URI);
 			break;
 		case NETBULBS:
 			qb.setTables(NetBulbColumns.TABLE_NAME);
 			qb.setProjectionMap(sNetBulbsProjectionMap);
 			table = NetBulbColumns.TABLE_NAME;
+			toNotify.add(NetBulbColumns.URI);
 			break;
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
 			table = DatabaseDefinitions.AlarmColumns.TABLE_NAME;
+			toNotify.add(AlarmColumns.ALARMS_URI);
+			toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
 			break;
 		case GROUPS:
 			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
 			table = DatabaseDefinitions.GroupColumns.TABLE_NAME;
+			toNotify.add(GroupColumns.GROUPS_URI);
+			toNotify.add(GroupColumns.GROUPBULBS_URI);
 			break;
 		case MOODS:
 			qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
 			qb.setProjectionMap(sMoodsProjectionMap);
 			table = DatabaseDefinitions.MoodColumns.TABLE_NAME;
+			toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
 			break;
 		default:
-			// If the URI doesn't match any of the known patterns, throw an
-			// exception.
+			// If the URI doesn't match any of the known patterns, throw an exception.
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
@@ -242,17 +232,15 @@ public class HueMoreProvider extends ContentProvider {
 			//TODO
 		}
 
-		this.getContext().getContentResolver().notifyChange(uri, null);
+		for(Uri me : toNotify)
+			this.getContext().getContentResolver().notifyChange(me, null);
 
 		return ContentUris.withAppendedId(uri, insertId);
 	}
 
 	@Override
 	public boolean onCreate() {
-		// Creates a new helper object. Note that the database itself isn't
-		// opened until
-		// something tries to access it, and it's only created if it doesn't
-		// already exist.
+		// Creates a new helper object. Note that the database itself isn't opened until something tries to access it, and it's only created if it doesn't already exist.
 		mOpenHelper = new DatabaseHelper(getContext());
 
 		// Assumes that any failures will be reported by a thrown exception.
@@ -260,8 +248,7 @@ public class HueMoreProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection,
-			String[] selectionArgs, String sortOrder) {
+	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
 		// Constructs a new query builder and sets its table name
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -282,21 +269,21 @@ public class HueMoreProvider extends ContentProvider {
 			groupBy = null;
 			break;
 		case INDIVIDUAL_ALARM:
-			qb.appendWhere(DatabaseDefinitions.AlarmColumns._ID + "=" + uri.getLastPathSegment());
-			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			qb.appendWhere(AlarmColumns._ID + "=" + uri.getLastPathSegment());
+			qb.setTables(AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
 			groupBy = null;
-			uri = DatabaseDefinitions.AlarmColumns.ALARMS_URI;
+			uri = AlarmColumns.ALARMS_URI;
 			break;
 		case ALARMS:
-			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
+			qb.setTables(AlarmColumns.TABLE_NAME);
 			qb.setProjectionMap(sAlarmsProjectionMap);
 			groupBy = null;
 			break;
 		case GROUPS:
-			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
+			qb.setTables(GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
-			groupBy = DatabaseDefinitions.GroupColumns.GROUP;
+			groupBy = GroupColumns.GROUP;
 			break;
 		case GROUPBULBS:
 			if((selection!=null) && selectionArgs.length>0 && (
@@ -319,7 +306,7 @@ public class HueMoreProvider extends ContentProvider {
 				mc.setNotificationUri(getContext().getContentResolver(), uri);
 				return mc;
 			}
-			qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
+			qb.setTables(GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
 			groupBy = null;
 			break;
@@ -351,7 +338,7 @@ public class HueMoreProvider extends ContentProvider {
 				return mc;
 			}
 			else {
-			qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
+			qb.setTables(MoodColumns.TABLE_NAME);
 			qb.setProjectionMap(sMoodsProjectionMap);
 			groupBy = null;
 			}
@@ -444,29 +431,15 @@ public class HueMoreProvider extends ContentProvider {
 				break;
 			case NETBULBS:
 				count = db.update(NetBulbColumns.TABLE_NAME, values, selection, selectionArgs);
-				break;
-				
+				break;				
 			case ALARMS:
-				// Does the update and returns the number of rows updated.
-				count = db.update(AlarmColumns.TABLE_NAME, // The database table
-															// name.
-						values, // A map of column names and new values to use.
-						selection, // The where clause column names.
-						selectionArgs // The where clause column values to select
-										// on.
-						);
+				count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);
 				break;
-			// If the incoming pattern is invalid, throws an exception.
 			default:
+				// If the incoming pattern is invalid, throws an exception.
 				throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
-		/*
-		 * Gets a handle to the content resolver object for the current context,
-		 * and notifies it that the incoming URI changed. The object passes this
-		 * along to the resolver framework, and observers that have registered
-		 * themselves for the provider are notified.
-		 */
 		getContext().getContentResolver().notifyChange(uri, null);
 
 		// Returns the number of rows updated.
