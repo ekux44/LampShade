@@ -36,6 +36,7 @@ import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.DeprecatedPreferenceKeys;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -400,11 +401,21 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				hubData.localHubAddress = settings.getString(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS, null);
 			
 			if(hubData.hashedUsername!=null && (hubData.localHubAddress!=null || hubData.portForwardedAddress!=null)){
-				ContentValues cv = new ContentValues();
-				cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
-				cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
-				this.getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, cv);
+				ContentValues connectionValues = new ContentValues();
+				connectionValues.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
+				connectionValues.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
+				long connectionId = Long.parseLong(this.getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, connectionValues).getLastPathSegment());
+				
+				//also update any migrated NetBulbs to point to this NetConnection
+				ContentValues bulbValues = new ContentValues();
+				bulbValues.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, connectionId);
+				this.getContentResolver().update(NetBulbColumns.URI, bulbValues, null, null);
+			} else{
+				//remove any NetBulbs because there is no NetConnection
+				this.getContentResolver().delete(NetBulbColumns.URI, null, null);
 			}
+			
+			
 			Editor edit = settings.edit();
 			edit.remove(DeprecatedPreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS);
 			edit.remove(DeprecatedPreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS);
