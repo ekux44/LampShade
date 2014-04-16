@@ -154,15 +154,8 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 						
 						for (int i = 0; i < checkedBulbs.size(); i++) {
 							
-							// Defines an object to contain the new values to
-							// insert
 							ContentValues mNewValues = new ContentValues();
 
-							/*
-							 * Sets the values of each column and inserts the
-							 * word. The arguments to the "put" method are
-							 * "column name" and "value"
-							 */
 							mNewValues.put(
 									DatabaseDefinitions.GroupColumns.GROUP,
 									groupName);

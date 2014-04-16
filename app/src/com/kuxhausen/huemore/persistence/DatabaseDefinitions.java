@@ -11,15 +11,8 @@ public final class DatabaseDefinitions {
 	public static final String SLASH = "/";
 	
 	public static final class AlarmColumns implements BaseColumns {
-		/**
-		 * The table name offered by this provider
-		 */
+		
 		public static final String TABLE_NAME = "alarms";
-
-		/**
-		 * The scheme part for this provider's URI
-		 */
-		private static final String SCHEME = "content://";
 
 		public static final String PATH_ALARMS = "alarms";
 		/**
@@ -51,42 +44,36 @@ public final class DatabaseDefinitions {
 	}
 
 	public static final class GroupColumns implements BaseColumns {
-		/**
-		 * The table name offered by this provider
-		 */
 		public static final String TABLE_NAME = "groups";
 
-		/**
-		 * The scheme part for this provider's URI
-		 */
-		private static final String SCHEME = "content://";
-
+		
 		public static final String PATH_GROUPS = "groups";
-		/**
-		 * The content:// style URL for this table
-		 */
 		public static final Uri GROUPS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPS);
 
 		public static final String PATH_GROUPBULBS = "groupbulbs";
-		/**
-		 * The content:// style URL for this table
-		 */
 		public static final Uri GROUPBULBS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH+ PATH_GROUPBULBS);
+		
 		/**
 		 * which group this bulb row is part of
 		 */
 		public static final String GROUP = "Dgroup";
 
 		/**
-		 * which bulb. currently using bulb number until better method found
+		 * depcricated. which bulb. currently using bulb number until better method found
 		 */
 		public static final String BULB = "Dbulb";
 
 		/**
-		 * order in which bulb configurations should be used when applying mood
+		 * order in which bulb configurations should be used when applying mood (lowest number = first)
 		 */
 		public static final String PRECEDENCE = "Dprecedence";
 
+		/**
+		 * Points to the NetBulb table entry for this bulb
+		 */
+		public static final String BULB_DATABASE_ID = "Dbulb_database_id";
+
+		
 		// This class cannot be instantiated
 		private GroupColumns() {
 		}
@@ -94,9 +81,6 @@ public final class DatabaseDefinitions {
 
 	public static final class MoodColumns implements BaseColumns {
 
-		/**
-		 * The table name offered by this provider
-		 */
 		public static final String TABLE_NAME = "moods";
 
 		/**
@@ -130,8 +114,6 @@ public final class DatabaseDefinitions {
 
 		public static final String TABLE_NAME = "netbulbs";
 
-		private static final String SCHEME = "content://";
-
 		public static final String PATH = "netbulbs";
 
 		public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
@@ -155,8 +137,6 @@ public final class DatabaseDefinitions {
 	public static final class NetConnectionColumns implements BaseColumns {
 
 		public static final String TABLE_NAME = "netconnection";
-
-		private static final String SCHEME = "content://";
 
 		public static final String PATH = "netconnection";
 
@@ -239,6 +219,8 @@ public final class DatabaseDefinitions {
 	}
 
 	public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";
+	private static final String SCHEME = "content://";
+
 
 	// This class cannot be instantiated
 	private DatabaseDefinitions() {

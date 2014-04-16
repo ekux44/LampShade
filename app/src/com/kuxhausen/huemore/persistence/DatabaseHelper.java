@@ -9,9 +9,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Pair;
 import android.util.SparseArray;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
@@ -78,13 +80,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY," + MoodColumns.MOOD
 						+ " TEXT," + MoodColumns.STATE + " TEXT" + ");");
-				
-				String[] gSelectionArgs = { "ALL", ((char) 8) + "ALL" };
-				db.delete(GroupColumns.TABLE_NAME,
-						DatabaseDefinitions.GroupColumns.GROUP + "=? or "
-								+ DatabaseDefinitions.GroupColumns.GROUP + "=?",
-						gSelectionArgs);
-		
 				
 				//remove standard moods that are no longer correct
 				String[] moodsToRemove = {"OFF", "Reading", "Relax", "Concentrate",
@@ -263,14 +258,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					} catch (Exception e) {
 					}
 				}
-				
-				//remove any nameless groups
-				
-				String[] gSelectionArgs = { ""};
-				db.delete(GroupColumns.TABLE_NAME,
-						DatabaseDefinitions.GroupColumns.GROUP + "=?",
-						gSelectionArgs);
-				
 			}
 			case 4:
 			{
@@ -361,6 +348,92 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ NetConnectionColumns.TYPE_COLUMN + " INTEGER,"
 						+ NetConnectionColumns.JSON_COLUMN + " TEXT"
 						+ ");");
+				
+				
+				/**Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
+				
+				String[] oldGroupColumns = {GroupColumns._ID, GroupColumns.GROUP, GroupColumns.PRECEDENCE, GroupColumns.BULB};
+				Cursor oldGroupCursor = db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, oldGroupColumns, null, null, null, null, null);
+				
+				//load all the old group data into here <name, list of hue hub bulb <precedence, hub bulb number>>
+				HashMap<String, ArrayList<Pair<Integer, Integer>>> oldGroupMap = new HashMap<String, ArrayList<Pair<Integer, Integer>>>();
+				
+				while (oldGroupCursor.moveToNext()) {
+					
+					String name = oldGroupCursor.getString(1);
+					
+					int precedence = 0;
+					try {
+						precedence = oldGroupCursor.getInt(2);
+					} catch (Exception e){
+					}
+					Integer bulbNumber = oldGroupCursor.getInt(3);
+					
+					if(!oldGroupMap.containsKey(name)){
+						oldGroupMap.put(name, new ArrayList<Pair<Integer, Integer>>());	
+					}
+					oldGroupMap.get(name).add(new Pair<Integer,Integer>(precedence, bulbNumber));
+				}
+				
+				
+				/* remove any illegal group names */
+				{
+					oldGroupMap.remove("");
+					oldGroupMap.remove("ALL");
+					oldGroupMap.remove(((char) 8) + "ALL");
+					
+				}
+				
+				/* now add placeholder entries for every bulb referenced in the groups **/
+				
+				// <hub bulb number, database id for corresponding NetBulb entry>
+				HashMap<Integer,Long> hubIdToBaseIdMapping = new HashMap<Integer,Long>();
+				for(String groupName : oldGroupMap.keySet()){
+					for(Pair<Integer,Integer> oldPair : oldGroupMap.get(groupName)){
+						int hubBulbNumber = oldPair.second;
+						if(!hubIdToBaseIdMapping.containsKey(hubBulbNumber)){
+							ContentValues netBulbValues = new ContentValues();
+							
+							netBulbValues.put(NetBulbColumns.NAME_COLUMN,"");
+							netBulbValues.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
+							netBulbValues.putNull(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN);
+							netBulbValues.put(NetBulbColumns.DEVICE_ID_COLUMN, ""+hubBulbNumber);
+							netBulbValues.put(NetBulbColumns.JSON_COLUMN, gson.toJson(new HueBulbData()));
+							
+							long baseId = db.insert(NetBulbColumns.TABLE_NAME, null, netBulbValues);
+							hubIdToBaseIdMapping.put(hubBulbNumber, baseId);
+						}
+					}
+						
+				}
+				
+				
+				/* rebuild the sql tables */
+				db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
+				
+				db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+						+ GroupColumns.GROUP + " TEXT," 
+						+ GroupColumns.PRECEDENCE + " INTEGER,"
+						+ GroupColumns.BULB_DATABASE_ID + " INTEGER" + ");");
+				
+				
+				/* now add the groups to the new table*/ 
+				for(String groupName : oldGroupMap.keySet()){
+					for(Pair<Integer,Integer> oldPair : oldGroupMap.get(groupName)){
+						int bulbPrecidence = oldPair.first;
+						long bulbBaseId = hubIdToBaseIdMapping.get(oldPair.second);
+						
+						ContentValues groupValues = new ContentValues();
+						groupValues.put(GroupColumns.GROUP, groupName);
+						groupValues.put(GroupColumns.PRECEDENCE, bulbPrecidence);
+						groupValues.put(GroupColumns.BULB_DATABASE_ID, bulbBaseId);
+						db.insert(GroupColumns.TABLE_NAME, null, groupValues);
+						
+					}
+				}
+				
+				
 			}
 		}
 	}
