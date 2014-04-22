@@ -19,7 +19,6 @@ public class NfcReadRouterActivity extends Activity {
 		String encodedMood = NfcReaderActivity.getGroupMoodBrightnessFromNdef(this.getIntent());
 		Intent srv = new Intent(con, MoodExecuterService.class);
 		srv.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
-		srv.putExtra(InternalArguments.FROM_NFC, true);
 		con.startService(srv);
 		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(con);

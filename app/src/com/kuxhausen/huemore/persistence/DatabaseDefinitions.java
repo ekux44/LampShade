@@ -151,9 +151,6 @@ public final class DatabaseDefinitions {
 	
 	public static final class InternalArguments {
 		public static final String GROUP_NAME = "Group_Name";
-		public static final String GROUP_VALUES = "Group_Values";
-		public static final String BULB_NAME = "Bulb_Name";
-		public static final String BULB_NUMBER = "Bulb_Number";
 		public static final String MOOD_NAME = "Mood_Name";
 		public static final String ENCODED_MOOD = "Encoded_Mood";
 		public static final String BRIDGES = "Bridges";
@@ -163,20 +160,15 @@ public final class DatabaseDefinitions {
 		public static final String FALLBACK_USERNAME_HASH = "f01623452466afd4eba5c1ed0a0a9395";
 		public final static String ALARM_DETAILS = "alarmDetailsBundle";
 		public final static String HUE_STATE = "HueState";
-		public final static String SHOW_EDIT_TEXT = "ShowEditText";
 		public final static String PREVIOUS_STATE = "PreviousState";
 		public final static String PROMPT_UPGRADE = "PromptUpgrade";
-		public final static String TRANSIENT_NETWORK_REQUEST = "TransienteNetworkRequest";
-		public final static String PERMANENT_NETWORK_REQUEST = "PermanentNetworkRequest";
 		public final static String ALARM_ID = "AlarmId";
 		public final static String ALARM_JSON = "AlarmJson";
 		public final static String DECODER_ERROR_UPGRADE = "DecoderErrorUpgrade";
 		public static final String DURATION_TIME = "DurationTime";
-		public static final String BRIGHTNESS = "Brightness";
 		public static final String HELP_PAGE = "HelpPage";
 		public static final String ROW = "Row";
 		public static final String COLUMN = "Column";
-		public static final String FROM_NFC = "FromNfc";
 		public static final String NET_BULB_DATABASE_ID = "NET_BULB_DATABASE_ID";
 		public static final String MAX_BRIGHTNESS = "MAX_BRIGHTNESS";
 	}
@@ -196,8 +188,7 @@ public final class DatabaseDefinitions {
 		public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
 		public static final String CACHED_EXECUTING_ENCODED_MOOD = "CACHED_EXECUTING_ENCODED_MOOD";
 		public static final String SHOW_ACTIVITY_ON_NFC_READ = "SHOW_ACTIVITY_ON_NFC_READ";
-		
-			}
+		}
 	
 	/**
 	 * These preference keys were used in previous versions and might still exist on users devices

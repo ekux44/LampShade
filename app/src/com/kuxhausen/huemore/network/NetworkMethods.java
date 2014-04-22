@@ -60,7 +60,7 @@ public class NetworkMethods {
 			
 			GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(bs), LightsPutResponse[].class, null,
 					new BasicSuccessListener<LightsPutResponse[]>(monitor), new BasicErrorListener(monitor));
-			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+			req.setTag("");
 			queue.add(req);
 		}
 	}
@@ -80,7 +80,7 @@ public class NetworkMethods {
 		
 		GsonRequest<BulbAttributes> req = new GsonRequest<BulbAttributes>(Method.GET, url, null, BulbAttributes.class, null,
 				new BulbAttributesSuccessListener(monitor, listener, bulb), new BasicErrorListener(monitor));
-		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		req.setTag("");
 		queue.add(req);
 	}
 	
@@ -100,7 +100,7 @@ public class NetworkMethods {
 		
 		GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(bulbAtt), LightsPutResponse[].class, null,
 				new BasicSuccessListener<LightsPutResponse[]>(monitor), new BasicErrorListener(monitor));
-		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		req.setTag("");
 		queue.add(req);
 	}
 	
@@ -119,7 +119,7 @@ public class NetworkMethods {
 		
 		GsonRequest<BulbList> req = new GsonRequest<BulbList>(Method.GET, url, null, BulbList.class, null,
 				new BulbListSuccessListener(monitor, listener, context), new BasicErrorListener(monitor));
-		req.setTag(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		req.setTag("");
 		queue.add(req);
 	}
 	
@@ -138,7 +138,7 @@ public class NetworkMethods {
 			
 			GsonRequest<RegistrationResponse[]> req = new GsonRequest<RegistrationResponse[]>(Method.POST, url, registrationRequest, RegistrationResponse[].class, null,
 					listeners[i], null);
-			req.setTag(InternalArguments.TRANSIENT_NETWORK_REQUEST);
+			req.setTag("");
 			queue.add(req);
 		}
 	}	

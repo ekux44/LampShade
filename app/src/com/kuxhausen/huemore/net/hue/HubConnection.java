@@ -84,8 +84,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	public void onDestroy() {
 		if(countDownTimer!=null)
 			countDownTimer.cancel();
-		volleyRQ.cancelAll(InternalArguments.TRANSIENT_NETWORK_REQUEST);
-		volleyRQ.cancelAll(InternalArguments.PERMANENT_NETWORK_REQUEST);
+		volleyRQ.cancelAll("");
 	}
 	
 	public static ArrayList<HubConnection> loadHubConnections(Context c, DeviceManager dm){
