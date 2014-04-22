@@ -170,18 +170,20 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 		 */
 		dataSource.changeCursor(cursor);
 		
-		Group g = Group.loadFromDatabase(initialName, parrentActivity);
+		if(initialName!=null){
+			Group g = Group.loadFromDatabase(initialName, parrentActivity);
+					
+			cursor.moveToFirst();
+			for (int i = 0; i < cursor.getCount(); i++) {
 				
-		cursor.moveToFirst();
-		for (int i = 0; i < cursor.getCount(); i++) {
-			
-			if(g.getNetworkBulbDatabaseIds().contains(cursor.getLong(2))){
-				bulbsListView.setItemChecked(i, true);
-			} else{
-				bulbsListView.setItemChecked(i, false);
+				if(g.getNetworkBulbDatabaseIds().contains(cursor.getLong(2))){
+					bulbsListView.setItemChecked(i, true);
+				} else{
+					bulbsListView.setItemChecked(i, false);
+				}
+				
+				cursor.moveToNext();
 			}
-			
-			cursor.moveToNext();
 		}
 	}
 

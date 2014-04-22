@@ -1,7 +1,9 @@
 package com.kuxhausen.huemore.net.hue;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 import alt.android.os.CountDownTimer;
@@ -42,6 +44,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	private String mName, mDeviceId;
 	private HubData mData;
 	private Context mContext;
+	private LinkedHashSet<HueBulb> mChangedQueue;
 	
 	private ArrayList<HueBulb> mBulbList;
 	
@@ -53,6 +56,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		mData = data;
 		
 		mBulbList = new ArrayList<HueBulb>();
+		mChangedQueue = new LinkedHashSet<HueBulb>();
 		
 		String[] selectionArgs = {""+NetBulbColumns.NetBulbType.PHILIPS_HUE};//, mDeviceId};
 		//TODO fix selection once hub id fixed
@@ -130,33 +134,16 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		}
 	}
 	
+	protected LinkedHashSet<HueBulb> getChangedQueue(){
+		return mChangedQueue;
+	}
 	
 	private DeviceManager mDeviceManager;
 	private RequestQueue volleyRQ;
 	private static CountDownTimer countDownTimer;
 	private final static int TRANSMITS_PER_SECOND = 10;
-	private final static int MAX_STOP_SELF_COUNDOWN = TRANSMITS_PER_SECOND*3;
 	public enum KnownState {Unknown, ToSend, Getting, Synched};	
-	public Integer maxBrightness;
-	public int[] bulbBri;
-	public int[] bulbRelBri;
-	public KnownState[] bulbKnown;
-	public String groupName;
-	private static int MAX_REL_BRI = 255;
 	
-	boolean groupIsColorLooping=false;
-	boolean groupIsAlerting=false;
-	public Queue<Pair<Integer,BulbState>> queue = new LinkedList<Pair<Integer,BulbState>>();
-	int transientIndex = 0;
-	
-	
-	public String getGroupName(){
-		return groupName;
-	}
-	
-	public Integer getMaxBrightness(){
-		return maxBrightness;
-	}
 	
 	public RequestQueue getRequestQueue() {
 		return volleyRQ;
@@ -231,21 +218,12 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 //		}	
 	}
 	
-	private boolean hasTransientChanges() {
-		if(bulbKnown==null)
-			return false;		
-		boolean result = false;
-		for (KnownState ks : bulbKnown)
-			result |= (ks==KnownState.ToSend);
-		return result;
-	}
 	
 	public void restartCountDownTimer() {
 		
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
-		transientIndex = 0;
 		// runs at the rate to execute 15 op/sec
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
 
@@ -255,56 +233,11 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				/*
-				
-				if (queue.peek()!=null) {
-					Pair<Integer,BulbState> e = queue.poll();
-					int bulb = e.first;
-					BulbState state = e.second;
-					
-					//remove effect=none except when meaningful (after spotting an effect=colorloop)
-					if(state.effect!=null && state.effect.equals("colorloop")){
-						groupIsColorLooping = true;
-					}else if(!groupIsColorLooping){
-						state.effect = null;
-					}
-					//remove alert=none except when meaningful (after spotting an alert=colorloop)
-					if(state.alert!=null && (state.alert.equals("select")||state.alert.equals("lselect"))){
-						groupIsAlerting = true;
-					}else if(!groupIsAlerting){
-						state.alert = null;
-					}
-					
-					
-					int bulbInGroup = calculateBulbPositionInGroup(bulb, mDeviceManager.getSelectedGroup());
-					if(bulbInGroup>-1 && maxBrightness!=null){
-						//convert relative brightness into absolute brightness
-						if(state.bri!=null)
-							bulbRelBri[bulbInGroup] = state.bri;
-						else
-							bulbRelBri[bulbInGroup] = MAX_REL_BRI;
-						bulbBri[bulbInGroup] = (bulbRelBri[bulbInGroup] * maxBrightness)/ MAX_REL_BRI;
-						state.bri = bulbBri[bulbInGroup];
-						bulbKnown[bulbInGroup] = KnownState.Synched;
-					}					
-					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), HubConnection.this, bulb, state);
-				} else if (hasTransientChanges()) {
-					boolean sentSomething = false;
-					while (!sentSomething) {
-						if(bulbKnown[transientIndex] == KnownState.ToSend){
-							BulbState bs = new BulbState();
-							bulbBri[transientIndex] = (bulbRelBri[transientIndex] * maxBrightness)/ MAX_REL_BRI;
-							bs.bri = bulbBri[transientIndex];
-							
-							NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), HubConnection.this, mDeviceManager.getSelectedGroup().groupAsLegacyArray[transientIndex], bs);
-							bulbKnown[transientIndex] = KnownState.Synched;
-							sentSomething = true;
-						}
-						transientIndex = (transientIndex + 1) % mDeviceManager.getSelectedGroup().groupAsLegacyArray.length;
-					}
-				} 
-				
-				*/
+				if(mChangedQueue.size()>0){
+					HueBulb changedFirst = mChangedQueue.iterator().next();
+					mChangedQueue.remove(changedFirst);
+					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), HubConnection.this, changedFirst.getHubBulbNumber(), changedFirst.desiredState);
+				}
 			}
 		};
 		countDownTimer.start();

@@ -3,13 +3,17 @@ package com.kuxhausen.huemore.net;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.android.volley.RequestQueue;
+import android.net.Uri;
+import android.os.Handler;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.Group;
-import android.content.Context;
 
-public class DeviceManager{
+import android.content.Context;
+import android.database.ContentObserver;
+
+public class DeviceManager {
 	
 	private ArrayList<Connection> mConnections;
 	private Context mContext;
@@ -17,17 +21,33 @@ public class DeviceManager{
 	private String selectedGroupName;
 	private ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	public ArrayList<OnStateChangedListener> brightnessListeners = new ArrayList<OnStateChangedListener>();
-	private HashMap<Long, NetworkBulb> bulbMap = new HashMap<Long, NetworkBulb>();
+	private HashMap<Long, NetworkBulb> bulbMap;
+	private MyObserver mConnectionObserver;
 	
 	public DeviceManager(Context c){
 		mContext = c;
 		
+		mConnectionObserver = new MyObserver(null);
+		mContext.getContentResolver().registerContentObserver(DatabaseDefinitions.NetConnectionColumns.URI, true, mConnectionObserver);
+		
+		loadEverythingFromDatabase();
+	}
+	
+	public void loadEverythingFromDatabase(){
+		
 		//load all connections from the database 
 		mConnections = new ArrayList<Connection>();
-		mConnections.addAll(HubConnection.loadHubConnections(c, this));
+		mConnections.addAll(HubConnection.loadHubConnections(mContext, this));
+		
+		//load all network bulbs from the connections
+		bulbMap = new HashMap<Long, NetworkBulb>();
+		for(Connection con : mConnections){
+			for(NetworkBulb bulb :con.getBulbs()){
+				bulbMap.put(bulb.getBaseId(), bulb);
+			}
+		}
 		
 		onBulbsListChanged();
-		
 	}
 	
 	public void onDestroy() {
@@ -109,4 +129,18 @@ public class DeviceManager{
 		return bulbMap.get(bulbDeviceId);
 	}
 	
+	class MyObserver extends ContentObserver {
+		public MyObserver(Handler handler) {
+			super(handler);
+		}
+		
+		@Override
+		public void onChange(boolean selfChange) {
+			this.onChange(selfChange, null);
+		}
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			loadEverythingFromDatabase();
+		}     
+	}
 }

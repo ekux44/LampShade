@@ -94,6 +94,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 		//Initialize DeviceManager and Mood Player
 		mDeviceManager = new DeviceManager(this);
 		mMoodPlayer = new MoodPlayer(this,mDeviceManager);
+		mMoodPlayer.addOnActiveMoodsChangedListener(this);
 		
 	}
 	@Override

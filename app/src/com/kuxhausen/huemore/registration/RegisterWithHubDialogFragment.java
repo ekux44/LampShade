@@ -172,6 +172,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				ContentValues cv = new ContentValues();
 				cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
 				cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
+				cv.put(DatabaseDefinitions.NetConnectionColumns.NAME_COLUMN, "?");
 				
 				RegisterWithHubDialogFragment.this.getActivity().getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, cv);
 				

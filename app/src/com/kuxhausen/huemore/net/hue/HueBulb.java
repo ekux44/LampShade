@@ -18,6 +18,9 @@ public class HueBulb implements NetworkBulb {
 	private Context mContext;
 	private HubConnection mConnection;
 	
+	public BulbState desiredState;
+	
+	
 	//TODO chance once a better Device Id implemented
 	public int getHubBulbNumber(){
 		return Integer.parseInt(mDeviceId);
@@ -34,7 +37,8 @@ public class HueBulb implements NetworkBulb {
 
 	@Override
 	public void setState(BulbState bs) {
-		mConnection.queue.add(new Pair<Integer,BulbState>(getHubBulbNumber(),bs));
+		desiredState = bs;
+		mConnection.getChangedQueue().add(this);
 	}
 
 	@Override

@@ -49,6 +49,7 @@ public class MoodPlayer{
 		queue.clear();
 		
 		//update notifications
+		notifyMoodsChanged();
 	}
 	
 	public void addOnActiveMoodsChangedListener(OnActiveMoodsChangedListener l){
@@ -157,7 +158,7 @@ public class MoodPlayer{
 		if (countDownTimer != null)
 			countDownTimer.cancel();
 
-		// runs at the rate to execute 15 op/sec
+		// runs at the rate to execute 10 times per second
 		countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / MOODS_TIMES_PER_SECOND)) {
 
 			@Override

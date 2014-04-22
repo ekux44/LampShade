@@ -22,7 +22,6 @@ public class RegistrationSuccessDialogFragment extends DialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 							
-							//NetworkMethods.PreformGetBulbList(ma, ma.getService().getRequestQueue(), ma.getService().getDeviceManager(), ma.getBulbListenerFragment());
 					}
 				});
 		builder.setMessage(R.string.register_success);
