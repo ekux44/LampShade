@@ -164,7 +164,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 		}
 		
 		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
-		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, getMood(), name);
+		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(), name, null);
 	}
 	
 	public static PageType calculateMoodType(Mood m){
@@ -316,7 +316,7 @@ public class EditMoodStateGridFragment extends SherlockFragment implements OnCli
 			showChanM.events = eRay;
 			
 			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
-			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, showChanM, null);
+			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM, null, null);
 			break;
 		}
 		

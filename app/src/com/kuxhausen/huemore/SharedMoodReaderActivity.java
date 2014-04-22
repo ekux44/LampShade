@@ -36,6 +36,7 @@ import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
 public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -164,7 +165,9 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.previewButton:
-				Utils.transmit(me, sharedMood, getBulbs(), name.getText().toString(), ((TextView) groupSpinner.getSelectedView()).getText().toString(), null);
+				Group g = Group.loadFromDatabase(((TextView) groupSpinner.getSelectedView()).getText().toString(), me);
+				this.getService().getMoodPlayer().playMood(g, sharedMood, name.getText().toString(), null);
+
 				break;
 			case R.id.okay:
 				String moodName = name.getText().toString();
@@ -187,32 +190,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 				break;
 		}
 	}
-	
-	public Integer[] getBulbs(){
-		// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { ((TextView) groupSpinner.getSelectedView())
-				.getText().toString() };
-		Cursor groupCursor = getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (groupCursor.moveToNext()) {
-			groupStates.add(groupCursor.getInt(0));
-		}
-		return groupStates.toArray(new Integer[groupStates.size()]);
-	}
-	
+		
 	/**
 	 * Callback that's invoked when the system has initialized the Loader and is
 	 * ready to start the query. This usually happens when initLoader() is

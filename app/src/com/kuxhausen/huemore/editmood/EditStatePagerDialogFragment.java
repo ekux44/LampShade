@@ -20,8 +20,10 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -71,10 +73,16 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 			if(listener!=initiator && listener!=null)
 				listener.stateChanged();
 		}
-		Mood m = Utils.generateSimpleMood(currentState);
+		
 		if(this.getActivity()!=null){
 			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
-			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, m, null);
+			if(service!=null){
+				DeviceManager dm = service.getDeviceManager();
+				Group g = dm.getSelectedGroup();
+				for(Long bulbId : g.getNetworkBulbDatabaseIds()){
+					dm.getNetworkBulb(bulbId).setState(currentState);
+				}
+			}
 		}
 	}
 	

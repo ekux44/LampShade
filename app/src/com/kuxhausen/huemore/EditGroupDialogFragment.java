@@ -30,6 +30,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.state.Group;
 
 public class EditGroupDialogFragment extends DialogFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -41,9 +42,10 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 	ListView bulbsListView;
 	EditText nameEditText;
 	
-	Boolean[] preChecked;
 	String initialName;
-
+	
+	ArrayList<Long> includedNetBulbIds = new ArrayList<Long>();
+	
 	private NetworkManagedSherlockFragmentActivity parrentActivity;
 
 	@Override
@@ -83,40 +85,8 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 
 		Bundle args = this.getArguments();
 		if (args != null && args.containsKey(InternalArguments.GROUP_NAME)) {
-			String groupName = args.getString(InternalArguments.GROUP_NAME);
-
-			// Look up bulbs for that mood from database
-			String[] groupColumns = { GroupColumns.BULB };
-			String[] gWhereClause = { groupName };
-			Cursor groupCursor = this.getActivity().getContentResolver()
-					.query(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use
-																			// the
-																			// default
-																			// content
-																			// URI
-																			// for
-																			// the
-																			// provider.
-							groupColumns, // Return the note ID and title for
-											// each note.
-							GroupColumns.GROUP + "=?", // selection clause
-							gWhereClause, // selection clause args
-							null // Use the default sort order.
-					);
-
-			ArrayList<Integer> groupStates = new ArrayList<Integer>();
-			while (groupCursor.moveToNext()) {
-				groupStates.add(groupCursor.getInt(0));
-			}
-			Integer[] bulbS = groupStates.toArray(new Integer[groupStates
-					.size()]);
-			preChecked = new Boolean[50];
-			for (int checkedSpot : bulbS) {
-				preChecked[checkedSpot - 1] = true;// have to account by the off
-													// by one in bulb Numbers
-			}
-			nameEditText.setText(groupName);
-			initialName = groupName;
+			initialName = args.getString(InternalArguments.GROUP_NAME);
+			nameEditText.setText(initialName);
 		}
 
 		builder.setPositiveButton(R.string.accept,
@@ -128,18 +98,7 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 						if (initialName != null) {
 							String groupSelect = GroupColumns.GROUP + "=?";
 							String[] groupArg = { initialName };
-							getActivity()
-									.getContentResolver()
-									.delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-											groupSelect, groupArg);
-						}
-
-						ArrayList<Integer> checkedBulbs = new ArrayList<Integer>();
-						SparseBooleanArray set = bulbsListView.getCheckedItemPositions();
-						for (int i = 0; i < dataSource.getCount(); i++) {
-							if (set.get(i)) {
-								checkedBulbs.add(1+i);
-							}
+							getActivity().getContentResolver().delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,groupSelect, groupArg);
 						}
 
 						String groupName = nameEditText.getText().toString();
@@ -152,27 +111,24 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 							groupName = parrentActivity.getResources().getString(R.string.unnamed_group)+" "+unnamedNumber;
 						}
 						
-						for (int i = 0; i < checkedBulbs.size(); i++) {
+						
+						
+						SparseBooleanArray set = bulbsListView.getCheckedItemPositions();
+						Cursor cursor = dataSource.getCursor();
+						cursor.moveToFirst();
+						for (int i = 0; i < cursor.getCount(); i++) {
+							if(set.get(i)){
+								ContentValues mNewValues = new ContentValues();
+
+								mNewValues.put(DatabaseDefinitions.GroupColumns.GROUP,groupName);
+								mNewValues.put(DatabaseDefinitions.GroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
+								mNewValues.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,i);
+
+								getActivity().getContentResolver().insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,mNewValues);
+							}
 							
-							ContentValues mNewValues = new ContentValues();
-
-							mNewValues.put(
-									DatabaseDefinitions.GroupColumns.GROUP,
-									groupName);
-							mNewValues.put(
-									DatabaseDefinitions.GroupColumns.BULB,
-									checkedBulbs.get(i));
-							mNewValues
-									.put(DatabaseDefinitions.GroupColumns.PRECEDENCE,
-											i);
-
-							getActivity().getContentResolver()
-									.insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
-											mNewValues // the values to insert
-									);
-
+							cursor.moveToNext();
 						}
-
 					}
 				}).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
@@ -214,10 +170,18 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 		 */
 		dataSource.changeCursor(cursor);
 		
+		Group g = Group.loadFromDatabase(initialName, parrentActivity);
+				
+		cursor.moveToFirst();
 		for (int i = 0; i < cursor.getCount(); i++) {
-			if (preChecked != null && preChecked[i] != null && preChecked[i] == true)
+			
+			if(g.getNetworkBulbDatabaseIds().contains(cursor.getLong(2))){
 				bulbsListView.setItemChecked(i, true);
-
+			} else{
+				bulbsListView.setItemChecked(i, false);
+			}
+			
+			cursor.moveToNext();
 		}
 	}
 

@@ -64,8 +64,9 @@ public class HueMoreProvider extends ContentProvider {
 
 			sGroupsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 			sGroupsProjectionMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
-			sGroupsProjectionMap.put(GroupColumns.BULB, GroupColumns.BULB);
 			sGroupsProjectionMap.put(GroupColumns.PRECEDENCE,GroupColumns.PRECEDENCE);
+			sGroupsProjectionMap.put(GroupColumns.BULB_DATABASE_ID, GroupColumns.BULB_DATABASE_ID);
+			
 		}
 		{
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
@@ -81,8 +82,8 @@ public class HueMoreProvider extends ContentProvider {
 
 			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 			sGroupBulbsProjectionMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
-			sGroupBulbsProjectionMap.put(GroupColumns.BULB, GroupColumns.BULB);
 			sGroupBulbsProjectionMap.put(GroupColumns.PRECEDENCE, GroupColumns.PRECEDENCE);
+			sGroupsProjectionMap.put(GroupColumns.BULB_DATABASE_ID, GroupColumns.BULB_DATABASE_ID);
 		}
 		{
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
@@ -197,6 +198,7 @@ public class HueMoreProvider extends ContentProvider {
 			qb.setProjectionMap(sNetBulbsProjectionMap);
 			table = NetBulbColumns.TABLE_NAME;
 			toNotify.add(NetBulbColumns.URI);
+			toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
 			break;
 		case ALARMS:
 			qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
@@ -250,6 +252,9 @@ public class HueMoreProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
+		// Opens the database object in "read" mode, since no writes need to be done.
+		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		
 		// Constructs a new query builder and sets its table name
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		String groupBy = null;
@@ -290,21 +295,20 @@ public class HueMoreProvider extends ContentProvider {
 					selectionArgs[0].equals(this.getContext().getString(R.string.cap_all)) 
 					|| selectionArgs[0].charAt(0) == ((char) 8))){
 				
-				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-				int numBulbs = settings.getInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS, 1);
+				qb.setTables(NetBulbColumns.TABLE_NAME);
+				String[] groupColumns = {NetBulbColumns._ID +" AS "+ GroupColumns.BULB_DATABASE_ID};
 				
-				//TODO dynamically handle columns to return
-				//String[] groupColumns = { GroupColumns.GROUP, GroupColumns.BULB };
-				String[] groupColumns = { GroupColumns.BULB };
-				MatrixCursor mc = new MatrixCursor(groupColumns);
+				Cursor c = qb.query(db,
+						groupColumns, // using our own projection for 'All' mood as it's hitting a different database.
+						null,
+						null,
+						groupBy,
+						null,
+						sortOrder 
+						);
 				
-				for(int i = 0; i< numBulbs; i++){
-					Object[] tempRow = {i +1};
-					mc.addRow(tempRow);
-				}
-				
-				mc.setNotificationUri(getContext().getContentResolver(), uri);
-				return mc;
+				c.setNotificationUri(getContext().getContentResolver(), uri);
+				return c;
 			}
 			qb.setTables(GroupColumns.TABLE_NAME);
 			qb.setProjectionMap(sGroupsProjectionMap);
@@ -349,9 +353,6 @@ public class HueMoreProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
-		// Opens the database object in "read" mode, since no writes need to be
-		// done.
-		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 		/*
 		 * Performs the query. If no problems occur trying to read the database,
 		 * then a Cursor object is returned; otherwise, the cursor variable

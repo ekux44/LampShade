@@ -99,26 +99,8 @@ public class GroupWidgetProvider extends AppWidgetProvider {
             
         	String group = intent.getStringExtra(InternalArguments.GROUP_NAME);
         	String mood = intent.getStringExtra(InternalArguments.MOOD_NAME);
-        	
-        	// Look up bulbs for that mood from database
-			String[] groupColumns = { GroupColumns.BULB };
-			String[] gWhereClause = { group };
-			Cursor groupCursor = ctx.getContentResolver()
-					.query(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-							groupColumns, GroupColumns.GROUP + "=?",
-							gWhereClause, null);
-
-			ArrayList<Integer> groupStates = new ArrayList<Integer>();
-			while (groupCursor.moveToNext()) {
-				groupStates.add(groupCursor.getInt(0));
-			}
-			Integer[] bulbS = groupStates.toArray(new Integer[groupStates
-					.size()]);
-
-			Mood m = Utils.getMoodFromDatabase(mood, ctx);	
-			
+        				
 			Intent trasmitter = new Intent(ctx, MoodExecuterService.class);
-			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS, null));
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, mood);
 			trasmitter.putExtra(InternalArguments.GROUP_NAME, group);
 			ctx.startService(trasmitter);

@@ -22,9 +22,9 @@ public class Tests {
 		Integer[] b2 = null;
 		Integer bri2 = null;
 		try {
-			m2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1, bri1)).second.first;
-			b2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1, bri1)).first;
-			bri2 = HueUrlEncoder.decode(HueUrlEncoder.encode(m1, b1, bri1)).second.second;
+			m2 = HueUrlEncoder.decode(HueUrlEncoder.encodeLegacy(m1, b1, bri1)).second.first;
+			b2 = HueUrlEncoder.decode(HueUrlEncoder.encodeLegacy(m1, b1, bri1)).first;
+			bri2 = HueUrlEncoder.decode(HueUrlEncoder.encodeLegacy(m1, b1, bri1)).second.second;
 					
 		} catch (InvalidEncodingException e) {
 			Log.e("error","InvalidEncodingException");

@@ -20,6 +20,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.timing.AlarmReciever;
@@ -123,33 +124,40 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 			}
 			
 			String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
-
-			try{
-				if (encodedMood != null) {
+			String groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
+			String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+			Integer maxBri = intent.getIntExtra(InternalArguments.MAX_BRIGHTNESS, -1);
+			if(maxBri==-1)
+				maxBri = null;
+			
+			if (encodedMood != null) {
+				try{
 					Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
 					
-					if(moodPairs.first!=null && moodPairs.first.length>0){
+					if(moodPairs.second.first!=null){
 						int[] bulbs = new int[moodPairs.first.length];
 						for(int i = 0; i< bulbs.length; i++)
 							bulbs[i] = moodPairs.first[i];
-						String groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
-						mDeviceManager.onGroupSelected(Group.loadFromLegacyData(bulbs,groupName,this), moodPairs.second.second);
-					}
-					if(moodPairs.second.first!=null){
-						String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
-						moodName = (moodName == null) ? "Unknown Mood" : moodName;
-						mMoodPlayer.playMood(mDeviceManager.getSelectedGroup(), mDeviceManager.getSelectedGroupName(), moodPairs.second.first, moodName);
-					}
+						Group g = Group.loadFromLegacyData(bulbs,groupName,this);
 					
+						
+						moodName = (moodName == null) ? "Unknown Mood" : moodName;
+						mMoodPlayer.playMood(g, moodPairs.second.first, moodName, moodPairs.second.second);
+					}
+				} catch (InvalidEncodingException e) {
+					Intent i = new Intent(this,DecodeErrorActivity.class);
+					i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
+					startActivity(i);
+				} catch (FutureEncodingException e) {
+					Intent i = new Intent(this,DecodeErrorActivity.class);
+					i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, true);
+					startActivity(i);
 				}
-			} catch (InvalidEncodingException e) {
-				Intent i = new Intent(this,DecodeErrorActivity.class);
-				i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, false);
-				startActivity(i);
-			} catch (FutureEncodingException e) {
-				Intent i = new Intent(this,DecodeErrorActivity.class);
-				i.putExtra(InternalArguments.DECODER_ERROR_UPGRADE, true);
-				startActivity(i);
+			} else if(moodName!=null && groupName!=null){
+				Group g = Group.loadFromDatabase(groupName, this);
+				Mood m = Utils.getMoodFromDatabase(moodName, this);
+				
+				mMoodPlayer.playMood(g, m, moodName, maxBri);
 			}
 		}
 		return super.onStartCommand(intent, flags, startId);

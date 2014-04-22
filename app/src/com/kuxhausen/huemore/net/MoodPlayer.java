@@ -30,11 +30,12 @@ public class MoodPlayer{
 		mSettings = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 	
-	public void playMood(Group g, String gName, Mood m, String mName){
-		groupName = gName;
+	public void playMood(Group g, Mood m, String mName, Integer maxBri){
 		moodName = mName;
 		mood = m;
 		group = g;
+		
+		//TODO do something with maxBri
 		
 		queue.clear();
 		loadMoodIntoQueue();
@@ -67,9 +68,10 @@ public class MoodPlayer{
 	
 	public Mood mood;
 	private String moodName;
-	private String groupName;
 	public String getGroupName(){
-		return groupName;
+		if(group!=null)
+			return group.getName();
+		return "";
 	}
 	public String getMoodName(){
 		return moodName;
@@ -92,9 +94,9 @@ public class MoodPlayer{
 		for (int i = 0; i < channels.length; i++)
 			channels[i] = new ArrayList<Long>();
 
-		long[] bulbBaseIds = group.getNetworkBulbDatabaseIds();
-		for (int i = 0; i < bulbBaseIds.length; i++) {
-			channels[i % mood.getNumChannels()].add(bulbBaseIds[i]);
+		ArrayList<Long> bulbBaseIds = group.getNetworkBulbDatabaseIds();
+		for (int i = 0; i < bulbBaseIds.size(); i++) {
+			channels[i % mood.getNumChannels()].add(bulbBaseIds.get(i));
 		}
 
 		if(mood.timeAddressingRepeatPolicy){

@@ -9,13 +9,16 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.holocolorpicker.ColorPicker;
@@ -120,9 +123,14 @@ public class ColorWheelFragment extends SherlockFragment implements
 
 	public void preview() {
 		if(isAdded()){
-			Mood m = Utils.generateSimpleMood(hs);
 			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
-			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, m, null);
+			if(service!=null){
+				DeviceManager dm = service.getDeviceManager();
+				Group g = dm.getSelectedGroup();
+				for(Long bulbId : g.getNetworkBulbDatabaseIds()){
+					dm.getNetworkBulb(bulbId).setState(hs);
+				}
+			}
 		}
 	}
 

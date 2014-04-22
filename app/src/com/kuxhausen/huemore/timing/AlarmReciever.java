@@ -205,25 +205,8 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 					intent.getExtras().getString(
 							InternalArguments.ALARM_DETAILS), AlarmState.class);
 
-			// Look up bulbs for that mood from database
-			String[] groupColumns = { GroupColumns.BULB };
-			String[] gWhereClause = { as.group };
-			Cursor groupCursor = context.getContentResolver()
-					.query(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-							groupColumns, GroupColumns.GROUP + "=?",
-							gWhereClause, null);
-
-			ArrayList<Integer> groupStates = new ArrayList<Integer>();
-			while (groupCursor.moveToNext()) {
-				groupStates.add(groupCursor.getInt(0));
-			}
-			Integer[] bulbS = groupStates.toArray(new Integer[groupStates
-					.size()]);
-
-			Mood m = Utils.getMoodFromDatabase(as.mood, context);	
-
 			Intent trasmitter = new Intent(context, MoodExecuterService.class);
-			trasmitter.putExtra(InternalArguments.ENCODED_MOOD, HueUrlEncoder.encode(m,bulbS, as.brightness));
+			trasmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, as.brightness);
 			trasmitter.putExtra(InternalArguments.MOOD_NAME, as.mood);
 			trasmitter.putExtra(InternalArguments.GROUP_NAME, as.group);
 			startWakefulService(context, trasmitter);

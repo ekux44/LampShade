@@ -5,9 +5,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.state.Event;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -19,9 +22,32 @@ public class HueUrlEncoder {
 	
 	public static String encode(Mood mood)
 	{
-		return encode(mood, null, null);
+		return encodeLegacy(mood, null, null);
 	}
-	public static String encode(Mood m, Integer[] bulbsAffected, Integer brightness){
+	
+	public static String encode(Mood m, Group g, Integer brightness, Context c){
+		
+		
+		Integer[] legacyArray = new Integer[50];
+		String[] projections = {DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN};
+		
+		for(Long l : g.getNetworkBulbDatabaseIds()){
+			String[] selectionArgs = {""+l, ""+DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
+			Cursor cursor = c.getContentResolver().query(DatabaseDefinitions.NetBulbColumns.URI, projections, DatabaseDefinitions.NetBulbColumns._ID + " =? AND "+DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN +" =?", selectionArgs, null);
+			
+			if(cursor.moveToFirst()){
+				String s = cursor.getString(0);
+				int hueBulbNum = Integer.parseInt(s);
+				legacyArray[hueBulbNum] = hueBulbNum;
+			}
+		}
+		
+		
+		return encodeLegacy(m, legacyArray, brightness);
+	}
+	
+	
+	public static String encodeLegacy(Mood m, Integer[] bulbsAffected, Integer brightness){
 		Mood mood = m.clone();
 		
 		if (mood == null)

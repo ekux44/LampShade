@@ -244,7 +244,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		// Notify the parent activity of selected item
 		String moodName =  selected.getText().toString();
 		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
-		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), null, Utils.getMoodFromDatabase(moodName, getActivity()),moodName);
+		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), Utils.getMoodFromDatabase(moodName, getActivity()),moodName, null);
 		
 		getSherlockActivity().supportInvalidateOptionsMenu();
 	}

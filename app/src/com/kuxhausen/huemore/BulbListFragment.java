@@ -121,7 +121,8 @@ public class BulbListFragment extends SherlockListFragment implements LoaderMana
 		selected = ((TextView) (v));
 		selectedPos = position;
 
-		long[] bulbIds = {dataSource.getItemId(position)};
+		ArrayList<Long> bulbIds = new ArrayList<Long>();
+		bulbIds.add(dataSource.getItemId(position));
 		Group g = new Group(bulbIds, selected.getText().toString());
 		parrentActivity.setGroup(g);
 		

@@ -59,11 +59,6 @@ public final class DatabaseDefinitions {
 		public static final String GROUP = "Dgroup";
 
 		/**
-		 * depcricated. which bulb. currently using bulb number until better method found
-		 */
-		public static final String BULB = "Dbulb";
-
-		/**
 		 * order in which bulb configurations should be used when applying mood (lowest number = first)
 		 */
 		public static final String PRECEDENCE = "Dprecedence";
@@ -183,6 +178,7 @@ public final class DatabaseDefinitions {
 		public static final String COLUMN = "Column";
 		public static final String FROM_NFC = "FromNfc";
 		public static final String NET_BULB_DATABASE_ID = "NET_BULB_DATABASE_ID";
+		public static final String MAX_BRIGHTNESS = "MAX_BRIGHTNESS";
 	}
 
 	public static final class PreferenceKeys {

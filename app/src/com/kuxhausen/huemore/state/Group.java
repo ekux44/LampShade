@@ -1,62 +1,48 @@
 package com.kuxhausen.huemore.state;
 
+import java.util.ArrayList;
+
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+
 import android.content.Context;
+import android.database.Cursor;
 
 public class Group {
 	
 	private String mName;
-	private long[] mNetworkBulbDatabaseIds;
+	private ArrayList<Long> mNetworkBulbDatabaseIds;
 	
 	public String getName(){
 		return mName;
 	}
-	public long[] getNetworkBulbDatabaseIds(){
+	public ArrayList<Long> getNetworkBulbDatabaseIds(){
 		return mNetworkBulbDatabaseIds;
 	}
 	
-	public Group(long[] netBulbBaseIds, String name){
+	public Group(ArrayList<Long> netBulbBaseIds, String name){
 		mNetworkBulbDatabaseIds = netBulbBaseIds;
 		mName = name;
 	}
 	
 	public static Group loadFromDatabase(String name, Context c){
-		// TODO Auto-generated method stub
 		
-		Group result = new Group(new long[0], name);
-		
-		
-		/*// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { selected.getText().toString() };
-		Cursor cursor = getActivity().getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
+		String[] groupColumns = { GroupColumns.BULB_DATABASE_ID };
+		String[] gWhereClause = { name };
+		Cursor cursor = c.getContentResolver().query(GroupColumns.GROUPBULBS_URI, groupColumns, GroupColumns.GROUP + "=?", gWhereClause, null);
 
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
+		ArrayList<Long> netBulbDbIds = new ArrayList<Long>();
 		while (cursor.moveToNext()) {
-			groupStates.add(cursor.getInt(0));
+			netBulbDbIds.add(cursor.getLong(0));
 		}
-		int[] bulbS = new int[groupStates.size()];
-		for(int i = 0; i< bulbS.length; i++)
-			bulbS[i] = groupStates.get(i);
-		 */
-
+		
+		Group result = new Group(netBulbDbIds, name);
 		return result;
 	}
 	
 	public static Group loadFromLegacyData(int[] bulbs, String groupName, Context c) {
 		// TODO Auto-generated method stub
 		
-		Group result = new Group(new long[0], groupName);
+		Group result = new Group(new ArrayList<Long>(), groupName);
 		
 		return result;
 	}

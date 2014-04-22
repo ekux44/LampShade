@@ -42,8 +42,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
 				+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
-				+ GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
-				+ " INTEGER," + GroupColumns.BULB + " INTEGER" + ");");
+				+ GroupColumns.GROUP + " TEXT," 
+				+ GroupColumns.PRECEDENCE+ " INTEGER," 
+				+ "Dbulb" + " INTEGER" + ");");
 		
 		this.onUpgrade(db, 1, DATABASE_VERSION);
 	}
@@ -352,8 +353,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				
 				/**Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
 				
-				String[] oldGroupColumns = {GroupColumns._ID, GroupColumns.GROUP, GroupColumns.PRECEDENCE, GroupColumns.BULB};
-				Cursor oldGroupCursor = db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, oldGroupColumns, null, null, null, null, null);
+				String[] oldGroupColumns = {GroupColumns._ID, GroupColumns.GROUP, GroupColumns.PRECEDENCE, "Dbulb"};
+				Cursor oldGroupCursor = db.query(DatabaseDefinitions.GroupColumns.TABLE_NAME, oldGroupColumns, null, null, null, null, null);
 				
 				//load all the old group data into here <name, list of hue hub bulb <precedence, hub bulb number>>
 				HashMap<String, ArrayList<Pair<Integer, Integer>>> oldGroupMap = new HashMap<String, ArrayList<Pair<Integer, Integer>>>();
@@ -394,7 +395,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						if(!hubIdToBaseIdMapping.containsKey(hubBulbNumber)){
 							ContentValues netBulbValues = new ContentValues();
 							
-							netBulbValues.put(NetBulbColumns.NAME_COLUMN,"");
+							netBulbValues.put(NetBulbColumns.NAME_COLUMN,"?");
 							netBulbValues.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
 							netBulbValues.putNull(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN);
 							netBulbValues.put(NetBulbColumns.DEVICE_ID_COLUMN, ""+hubBulbNumber);

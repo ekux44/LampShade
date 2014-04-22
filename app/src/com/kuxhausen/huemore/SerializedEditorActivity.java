@@ -1,15 +1,11 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -26,16 +22,14 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActivity implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener {
@@ -129,37 +123,16 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 	public void preview() {
 		
 		String groupName = ((TextView) groupSpinner.getSelectedView()).getText().toString();
-		// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { groupName };
-		Cursor groupCursor = getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (groupCursor.moveToNext()) {
-			groupStates.add(groupCursor.getInt(0));
-		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-
-		String moodName = ((TextView) moodSpinner.getSelectedView())
-				.getText().toString();
+		Group g = Group.loadFromDatabase(groupName, context);
+		
+		String moodName = ((TextView) moodSpinner.getSelectedView()).getText().toString();
 		Mood m = Utils.getMoodFromDatabase(moodName, this);
 		
 		Integer brightness = null;
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			brightness = brightnessBar.getProgress();
 		
-		Utils.transmit(context, m, bulbS, moodName, groupName, brightness);
+		this.getService().getMoodPlayer().playMood(g, m, moodName, brightness);
 	}
 
 	public String getSerializedByNamePreview() {
@@ -196,29 +169,9 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 	public String getSerializedByValue() {
 		String url = "lampshade.io/nfc?";
 
-		// Look up bulbs for that mood from database
-		String[] groupColumns = { GroupColumns.BULB };
-		String[] gWhereClause = { ((TextView) groupSpinner.getSelectedView())
-				.getText().toString() };
-		Cursor groupCursor = getContentResolver().query(
-				DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, // Use the
-																	// default
-																	// content
-																	// URI
-																	// for the
-																	// provider.
-				groupColumns, // Return the note ID and title for each note.
-				GroupColumns.GROUP + "=?", // selection clause
-				gWhereClause, // selection clause args
-				null // Use the default sort order.
-				);
-
-		ArrayList<Integer> groupStates = new ArrayList<Integer>();
-		while (groupCursor.moveToNext()) {
-			groupStates.add(groupCursor.getInt(0));
-		}
-		Integer[] bulbS = groupStates.toArray(new Integer[groupStates.size()]);
-
+		
+		Group g = Group.loadFromDatabase(((TextView) groupSpinner.getSelectedView()).getText().toString(), context);
+		
 		Mood m = Utils.getMoodFromDatabase( ((TextView) moodSpinner.getSelectedView())
 				.getText().toString(), this);
 		
@@ -226,7 +179,7 @@ public class SerializedEditorActivity extends NetworkManagedSherlockFragmentActi
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			brightness = brightnessBar.getProgress();
 		
-		String data = HueUrlEncoder.encode(m, bulbS, brightness);
+		String data = HueUrlEncoder.encode(m, g, brightness, context);
 		return url + data;
 	}
 
