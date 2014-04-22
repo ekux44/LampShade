@@ -18,7 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
@@ -35,13 +37,15 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
-	public NetworkManagedSherlockFragmentActivity parrentActivity;
 	Bridge[] bridges = null;
 	Gson gson = new Gson();
+	RequestQueue rq;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		parrentActivity = (NetworkManagedSherlockFragmentActivity) this.getActivity();
+		
+		rq = Volley.newRequestQueue(this.getActivity());
+		
 		if (this.getArguments() != null) {
 			bridges = gson.fromJson(
 					this.getArguments().getString(InternalArguments.BRIDGES),
@@ -75,7 +79,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 				if (isAdded()) {
 					progressBar
 							.setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
-					NetworkMethods.PreformRegister(parrentActivity.getService().getRequestQueue(), getListeners(getUserName()), bridges, getUserName(), getDeviceType());
+					NetworkMethods.PreformRegister(rq, getListeners(getUserName()), bridges, getUserName(), getDeviceType());
 				}
 			}
 
@@ -83,7 +87,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			public void onFinish() {
 				if (isAdded()) {
 					// try one last time
-					NetworkMethods.PreformRegister(parrentActivity.getService().getRequestQueue(), getListeners(getUserName()), bridges, getUserName(), getDeviceType());
+					NetworkMethods.PreformRegister(rq, getListeners(getUserName()), bridges, getUserName(), getDeviceType());
 					
 					// launch the failed registration dialog
 					RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();

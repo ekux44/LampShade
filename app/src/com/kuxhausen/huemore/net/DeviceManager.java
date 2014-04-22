@@ -46,7 +46,7 @@ public class DeviceManager{
 		selectedGroup = group;
 		selectedGroupName = group.getName();
 		
-		((HubConnection)mConnections.get(0)).onGroupSelected(selectedGroup,optionalBri);
+		//TODO
 	}
 	
 	public void addOnConnectionStatusChangedListener(OnConnectionStatusChangedListener l){
@@ -83,18 +83,17 @@ public class DeviceManager{
 	
 	public Integer getBrightness(Group g){
 		//TODO	
-		return null;
+		return 100;
 	}
 	
 	public Integer getMaxBrightness(Group g){
 		//TODO
-		return ((HubConnection)mConnections.get(0)).getMaxBrightness();
+		return 100;
 	}
 	
 	/** doesn't notify listeners **/
 	public void setBrightness(Group g, int brightness){
 		//TODO
-		((HubConnection)mConnections.get(0)).setBrightness(brightness, selectedGroup);
 	}
 	
 	public void onBulbsListChanged(){
@@ -110,9 +109,4 @@ public class DeviceManager{
 		return bulbMap.get(bulbDeviceId);
 	}
 	
-	//TODO clean up/remove everything below this line
-	
-	public RequestQueue getRequestQueue() {
-		return ((HubConnection)mConnections.get(0)).getRequestQueue();
-	}
 }

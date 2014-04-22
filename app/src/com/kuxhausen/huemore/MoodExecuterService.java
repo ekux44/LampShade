@@ -77,10 +77,6 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 
 	}
 
-	public RequestQueue getRequestQueue() {
-		return mDeviceManager.getRequestQueue();
-	}
-
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
@@ -135,10 +131,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 					Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
 					
 					if(moodPairs.second.first!=null){
-						int[] bulbs = new int[moodPairs.first.length];
-						for(int i = 0; i< bulbs.length; i++)
-							bulbs[i] = moodPairs.first[i];
-						Group g = Group.loadFromLegacyData(bulbs,groupName,this);
+						Group g = Group.loadFromLegacyData(moodPairs.first,groupName,this);
 					
 						
 						moodName = (moodName == null) ? "Unknown Mood" : moodName;

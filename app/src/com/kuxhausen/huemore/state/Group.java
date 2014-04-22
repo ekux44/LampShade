@@ -39,7 +39,7 @@ public class Group {
 		return result;
 	}
 	
-	public static Group loadFromLegacyData(int[] bulbs, String groupName, Context c) {
+	public static Group loadFromLegacyData(Integer[] bulbs, String groupName, Context c) {
 		// TODO Auto-generated method stub
 		
 		Group result = new Group(new ArrayList<Long>(), groupName);

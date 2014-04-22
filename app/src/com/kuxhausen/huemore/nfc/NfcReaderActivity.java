@@ -17,13 +17,16 @@ import android.widget.ToggleButton;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 
@@ -55,13 +58,18 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 		if(b!=null && b.containsKey(InternalArguments.ENCODED_MOOD)){
 			Pair<Integer[], Pair<Mood, Integer>> result;
 			try {
-				result = HueUrlEncoder.decode(b.getString(InternalArguments.ENCODED_MOOD));
+				String encodedMood = b.getString(InternalArguments.ENCODED_MOOD);
+				result = HueUrlEncoder.decode(encodedMood);
 				mBulbs = result.first;
 				mood = result.second.first;
 				mBrightness = result.second.second;
 				
 				mOnButton.setOnCheckedChangeListener(null);
-				Utils.transmit(this, mood, mBulbs, null, null, mBrightness);
+								
+				Intent intent = new Intent(this, MoodExecuterService.class);
+				intent.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
+		        this.startService(intent);
+
 				boolean on = false;
 				if(mood.events[0].state.on!=null && mood.events[0].state.on)
 					on=true;
@@ -111,8 +119,15 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		BulbState bs = new BulbState();
 		bs.on = isChecked;
-		Mood m = Utils.generateSimpleMood(bs);		
-		Utils.transmit(this, m, mBulbs, null, null, mBrightness);
+		
+		MoodExecuterService service = this.getService();
+		if(service!=null){
+			DeviceManager dm = service.getDeviceManager();
+			Group g = Group.loadFromLegacyData(mBulbs, null, this);
+			for(Long bulbId : g.getNetworkBulbDatabaseIds()){
+				dm.getNetworkBulb(bulbId).setState(bs);
+			}
+		}
 	}
 
 	@Override
