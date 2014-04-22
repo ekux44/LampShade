@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.network;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
+
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;

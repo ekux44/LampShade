@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -29,7 +27,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
 
 public class GroupListFragment extends SherlockListFragment implements

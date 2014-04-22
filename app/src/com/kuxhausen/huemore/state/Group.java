@@ -2,10 +2,10 @@ package com.kuxhausen.huemore.state;
 
 import java.util.ArrayList;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-
 import android.content.Context;
 import android.database.Cursor;
+
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 
 public class Group {
 	

@@ -1,13 +1,13 @@
 package com.kuxhausen.huemore.editmood;
 
-import com.kuxhausen.huemore.R;
-
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.View;
+
+import com.kuxhausen.huemore.R;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class CellOnDragListener implements View.OnDragListener {

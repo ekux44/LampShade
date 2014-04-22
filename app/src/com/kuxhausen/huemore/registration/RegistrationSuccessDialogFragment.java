@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment;
 
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.NetworkMethods;
 
 public class RegistrationSuccessDialogFragment extends DialogFragment {
 	NetworkManagedSherlockFragmentActivity ma;

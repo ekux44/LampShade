@@ -1,11 +1,5 @@
 package com.kuxhausen.huemore.widget;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
@@ -17,6 +11,12 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 /**
  * This is the service that provides the factory to be bound to the collection service.

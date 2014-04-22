@@ -1,15 +1,15 @@
 package com.kuxhausen.huemore.nfc;
 
-import com.kuxhausen.huemore.MoodExecuterService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
+import com.kuxhausen.huemore.MoodExecuterService;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class NfcReadRouterActivity extends Activity {
 	@Override

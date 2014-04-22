@@ -5,10 +5,10 @@ import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Build;
@@ -16,14 +16,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.widget.RemoteViews;
+
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
-import com.kuxhausen.huemore.timing.DatabaseAlarm;
 import com.kuxhausen.huemore.timing.AlarmState;
+import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
 /**
  * Our data observer just notifies an update for all weather widgets when it detects a change.

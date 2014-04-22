@@ -21,11 +21,10 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;

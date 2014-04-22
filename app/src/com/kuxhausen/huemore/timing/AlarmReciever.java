@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.timing;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import android.app.AlarmManager;
@@ -8,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.text.format.DateUtils;
@@ -17,13 +15,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Mood;
 
 public class AlarmReciever extends WakefulBroadcastReceiver {
 

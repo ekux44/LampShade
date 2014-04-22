@@ -22,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.network.NetworkMethods;

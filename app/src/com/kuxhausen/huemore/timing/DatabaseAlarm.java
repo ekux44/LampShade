@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.timing;
 
-import android.text.format.DateFormat;
-
 import java.util.Calendar;
 
 import android.content.ContentValues;
@@ -9,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.format.DateFormat;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;

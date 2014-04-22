@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore;
 
-import android.content.ContentValues;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,14 +11,10 @@ import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;

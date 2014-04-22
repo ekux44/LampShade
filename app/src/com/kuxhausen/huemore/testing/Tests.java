@@ -1,18 +1,11 @@
 package com.kuxhausen.huemore.testing;
 
-import java.util.BitSet;
-
-import android.graphics.Color;
 import android.util.Log;
-import android.util.Pair;
 
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Tests {
 	

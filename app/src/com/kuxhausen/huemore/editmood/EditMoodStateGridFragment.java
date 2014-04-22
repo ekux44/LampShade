@@ -2,6 +2,25 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.ArrayList;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayout;
+import android.util.Pair;
+import android.view.ContextMenu;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.google.gson.Gson;
@@ -17,25 +36,6 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.api.BulbState;
-
-import android.os.Build;
-import android.os.Bundle;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Pair;
-import android.view.ContextMenu;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Toast;
-import android.support.v7.widget.GridLayout;
 
 public class EditMoodStateGridFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener, StateGridDisplay {
 

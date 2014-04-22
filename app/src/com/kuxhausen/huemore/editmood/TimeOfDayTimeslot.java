@@ -2,11 +2,6 @@ package com.kuxhausen.huemore.editmood;
 
 import java.util.Calendar;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.timing.Conversions;
-
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -16,6 +11,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
+
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.timing.Conversions;
 
 public class TimeOfDayTimeslot implements OnClickListener{
 

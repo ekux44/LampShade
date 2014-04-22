@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
+import alt.android.os.CountDownTimer;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
+
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Event;
@@ -11,12 +17,6 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.timing.Conversions;
-
-import alt.android.os.CountDownTimer;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 
 public class MoodPlayer{
 

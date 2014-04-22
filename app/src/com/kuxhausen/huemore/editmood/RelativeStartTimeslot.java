@@ -1,13 +1,13 @@
 package com.kuxhausen.huemore.editmood;
 
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class RelativeStartTimeslot implements OnClickListener{
 

@@ -6,14 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.kuxhausen.huemore.MoodExecuterService.LocalBinder;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.Group;
 
 public class NetworkManagedSherlockFragmentActivity extends SherlockFragmentActivity implements OnConnectionStatusChangedListener, OnStateChangedListener, OnServiceConnectedListener{

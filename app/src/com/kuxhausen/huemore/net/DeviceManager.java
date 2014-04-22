@@ -3,15 +3,15 @@ package com.kuxhausen.huemore.net;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Context;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
+
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.Group;
-
-import android.content.Context;
-import android.database.ContentObserver;
 
 public class DeviceManager {
 	

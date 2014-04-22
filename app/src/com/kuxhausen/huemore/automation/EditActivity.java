@@ -17,7 +17,6 @@ import com.kuxhausen.huemore.HelpActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.SerializedEditorActivity;
-import com.kuxhausen.huemore.editmood.EditMoodActivity.OnCreateMoodListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 

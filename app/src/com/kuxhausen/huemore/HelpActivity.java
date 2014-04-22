@@ -1,15 +1,15 @@
 package com.kuxhausen.huemore;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class HelpActivity extends SherlockActivity implements ActionBar.OnNavigationListener  {
 

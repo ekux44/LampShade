@@ -1,16 +1,8 @@
 package com.kuxhausen.huemore.network;
 
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
-import com.kuxhausen.huemore.OnServiceConnectedListener;
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -24,6 +16,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.OnServiceConnectedListener;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 
 public class ConnectionStatusDialogFragment extends DialogFragment implements OnConnectionStatusChangedListener, OnClickListener, OnServiceConnectedListener, OnCheckedChangeListener{
 	

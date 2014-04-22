@@ -11,11 +11,9 @@ import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
-import com.android.volley.RequestQueue;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.MoodPlayer;
-import com.kuxhausen.huemore.network.NetworkMethods;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;

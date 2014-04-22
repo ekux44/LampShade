@@ -2,36 +2,29 @@ package com.kuxhausen.huemore.net.hue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import alt.android.os.CountDownTimer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.BaseColumns;
-import android.util.Pair;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
+import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.network.ConnectionMonitor;
 import com.kuxhausen.huemore.network.NetworkMethods;
-import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.api.Bulb;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HubConnection implements Connection, OnBulbAttributesReturnedListener, ConnectionMonitor, OnBulbListReturnedListener{
 

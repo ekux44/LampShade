@@ -1,9 +1,9 @@
 package com.kuxhausen.huemore.editmood;
 
-import com.kuxhausen.huemore.editmood.EditMoodStateGridFragment.PageType;
-
 import android.util.Pair;
 import android.view.View;
+
+import com.kuxhausen.huemore.editmood.EditMoodStateGridFragment.PageType;
 
 public class StateGridSelections {
 

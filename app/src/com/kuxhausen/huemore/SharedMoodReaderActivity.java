@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,10 +21,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.kuxhausen.huemore.MainActivity;
-import com.kuxhausen.huemore.MoodExecuterService;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -35,7 +29,6 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
-import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 

@@ -1,34 +1,28 @@
 
 package com.kuxhausen.huemore.widget;
 
-import java.util.ArrayList;
-
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.content.Intent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.widget.RemoteViews;
+
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Mood;
 
 
 /**

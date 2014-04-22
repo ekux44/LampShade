@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.net.hue;
 
 import android.content.Context;
-import android.util.Pair;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.network.NetworkMethods;
