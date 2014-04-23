@@ -56,17 +56,7 @@ public class StateCell {
 			if((color%0xff000000)!=0)
 				state_color.setImageDrawable(cd);
 		}
-		else if(hs.hue!=null && hs.sat!=null){
-			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
-
-			ImageView state_color = (ImageView) rowView
-					.findViewById(R.id.stateColorView);
-			int color = getStateColor(hs, true);
-			ColorDrawable cd = new ColorDrawable(color);
-			cd.setAlpha(255);
-			if((color%0xff000000)!=0)
-				state_color.setImageDrawable(cd);		
-		}else if (hs.on!=null){
+		else if (hs.on!=null){
 			rowView = inflater.inflate(R.layout.edit_mood_on_row, parent, false);
 			TextView stateText = (TextView) rowView.findViewById(R.id.onTextView);
 			if(hs.on!=null && hs.on)
@@ -110,13 +100,7 @@ public class StateCell {
 	    	hsv[2] = (hs.bri!=null)?hs.bri/255f:1f; //remember relative brightness
 	    	return Color.HSVToColor(hsv);
 		}
-		else if(hs.hue!=null && hs.sat!=null){
-			float[] hsv = new float[3];
-	    	hsv[0] = (float) ((hs.hue *360)/ 65535.0) ;
-	    	hsv[1] = (float) (hs.sat / 255.0);
-	    	hsv[2] = 1f;
-	    	return Color.HSVToColor(hsv);		
-		} else {
+		else {
 			return 0;
 		}
 	}

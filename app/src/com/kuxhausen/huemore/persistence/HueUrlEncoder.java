@@ -138,10 +138,10 @@ public class HueUrlEncoder {
 			mBitSet.incrementingSet(bs.bri != null);
 			
 			// Put hue flag
-			mBitSet.incrementingSet(bs.hue != null);
+			mBitSet.incrementingSet(false);
 			
 			// Put sat flag
-			mBitSet.incrementingSet(bs.sat != null);
+			mBitSet.incrementingSet(false);
 
 			// Put xy flag
 			mBitSet.incrementingSet(bs.xy != null);
@@ -167,17 +167,7 @@ public class HueUrlEncoder {
 		if (bs.bri != null) {
 			mBitSet.addNumber(bs.bri,8);
 		}
-		
-		/** Put 16 bit hue **/
-		if (bs.hue != null) {
-			mBitSet.addNumber(bs.hue,16);
-		}
-
-		/** Put 8 bit sat **/
-		if (bs.sat != null) {
-			mBitSet.addNumber(bs.sat,8);
-		}
-		
+				
 		/** Put 64 bit xy **/
 		if (bs.xy != null) {
 			int x = Float
@@ -298,15 +288,22 @@ public class HueUrlEncoder {
 			bs.bri = mBitSet.extractNumber(8);
 		}
 	
+		Integer hue = null;
 		/** Get 16 bit hue **/
 		if (propertiesFlags[2]) {
-			bs.hue = mBitSet.extractNumber(16);
+			hue = mBitSet.extractNumber(16);
 		}
-		
 
+		Integer sat = null;
 		/** Get 8 bit sat **/
 		if (propertiesFlags[3]) {
-			bs.sat = (short) mBitSet.extractNumber(8);
+			sat = mBitSet.extractNumber(8);
+		}
+		//convert hue, sat into xy approximation
+		if(hue!=null && sat!=null){
+			float[] hsv = { (hue * 360) / 65535, sat / 255f, 1 };
+			Float[] input = {hsv[0]/360f, hsv[1]};
+			bs.xy = Utils.hsTOxy(input);
 		}
 		
 		/** Get 64 bit xy **/

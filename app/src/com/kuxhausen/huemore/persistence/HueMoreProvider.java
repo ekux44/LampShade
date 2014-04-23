@@ -463,8 +463,12 @@ public class HueMoreProvider extends ContentProvider {
 		BulbState resultState = new BulbState();
 		resultState.on = true;
 		resultState.effect = "none";
-		resultState.hue = (int) (65535 * Math.random());
-		resultState.sat = (short) (255 * (Math.random() * 5. + .25));
+		
+		float[] hsv = { (float)(65535 * Math.random() * 360) / 65535,  (float) (Math.random() * 5. + .25), 1 };
+		Float[] input = {hsv[0]/360f, hsv[1]};
+		resultState.xy = Utils.hsTOxy(input);
+		
+		
 		return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
 	}
 

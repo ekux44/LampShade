@@ -57,8 +57,6 @@ public class EditColorWheelFragment extends SherlockFragment implements
 			state.bri = (int) (newHSV[2]*255f);
 		state.on= true;
 		state.xy = newXY;
-		state.hue = null;
-		state.sat = null;
 		state.ct = null;
 		if(EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE-EditStatePagerDialogFragment.hasNoRecentStates))
 			statePager.setState(state, this, "wheel");
@@ -67,26 +65,6 @@ public class EditColorWheelFragment extends SherlockFragment implements
 	@Override
 	public boolean stateChanged() {
 		BulbState state = statePager.getState();
-		if (state.hue != null && state.sat!=null){
-			
-			float[] hsv = { (state.hue * 360) / 65535, state.sat / 255f, 1 };
-			Float[] input = {hsv[0]/360f, hsv[1]};
-			state.xy = Utils.hsTOxy(input);
-			state.on = true;
-			
-			int rgb = Color.HSVToColor(hsv);
-			if(picker!=null&&saturationBar!=null&&valueBar!=null){
-				picker.setOnColorChangedListener(null);
-				picker.setColor(rgb);
-				saturationBar.setSaturation(hsv[1]);
-				picker.setOnColorChangedListener(this);
-				picker.invalidate();
-			}
-			
-			state.hue = null;
-			state.sat = null;
-			return true;
-		}
 		if(state.xy!=null){
 			Float[] hueSat = Utils.xyTOhs(state.xy);
 			//don't forget relative brightness if set

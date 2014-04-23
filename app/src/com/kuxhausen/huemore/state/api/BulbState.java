@@ -19,12 +19,12 @@ public class BulbState {
 	 * 0 and 65535. Both 0 and 65535 are red, 25500 is green and 46920 is blue.
 	 * e.g. �hue�: 50000 will set the light to a specific hue.
 	 */
-	public Integer hue;
+	private Integer hue;
 	/**
 	 * Saturation of the light. 255 is the most saturated (colored) and 0 is the
 	 * least saturated (white).
 	 */
-	public Short sat;
+	private Short sat;
 	/**
 	 * The x and y coordinates of a color in CIE color space. The first entry is
 	 * the x coordinate and the second entry is the y coordinate. Both x and y

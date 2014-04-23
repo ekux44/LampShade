@@ -80,15 +80,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 	}
 	
 	public void loadPrevious(BulbState bs){
-		if (bs.hue != null && bs.sat!=null){
-			
-			float[] hsv = { (bs.hue * 360) / 65535, bs.sat / 255f, 1 };
-			Float[] input = {hsv[0]/360f, hsv[1]};
-			hs.xy = Utils.hsTOxy(input);
-			
-			picker.setColor(Color.HSVToColor(hsv));
-			saturationBar.setSaturation(hsv[1]);
-		}
 		if(bs.xy!=null){
 			hs.xy = bs.xy;
 			
@@ -149,8 +140,6 @@ public class ColorWheelFragment extends SherlockFragment implements
 		
 		Float[] input = {hsv[0]/360f, hsv[1]};
 		hs.xy = Utils.hsTOxy(input);
-		hs.hue = null;
-		hs.sat = null;
 		preview();
 	}
 }
