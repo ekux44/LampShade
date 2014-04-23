@@ -1,5 +1,8 @@
 package com.kuxhausen.huemore.net.hue;
 
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+
 import android.content.Context;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
@@ -17,12 +20,13 @@ public class HueBulb implements NetworkBulb {
 	private Context mContext;
 	private HubConnection mConnection;
 	
-	public BulbState desiredState;
-	
+	public BulbState desiredState = new BulbState();
+	public ArrayList<PendingStateChange> ongoing = new ArrayList<PendingStateChange>();
+	public BulbState confirmed = new BulbState();
 	
 	//TODO chance once a better Device Id implemented
-	public int getHubBulbNumber(){
-		return Integer.parseInt(mDeviceId);
+	public String getHubBulbNumber(){
+		return mDeviceId;
 	}
 	
 	public HueBulb(Context c, Long bulbBaseId, String bulbName, String bulbDeviceId, HueBulbData bulbData, HubConnection hubConnection) {

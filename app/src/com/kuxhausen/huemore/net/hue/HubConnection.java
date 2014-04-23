@@ -1,6 +1,8 @@
 package com.kuxhausen.huemore.net.hue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import alt.android.os.CountDownTimer;
@@ -25,6 +27,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumn
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.api.Bulb;
 import com.kuxhausen.huemore.state.api.BulbAttributes;
+import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HubConnection implements Connection, OnBulbAttributesReturnedListener, ConnectionMonitor, OnBulbListReturnedListener{
 
@@ -38,7 +41,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	private HubData mData;
 	private Context mContext;
 	private LinkedHashSet<HueBulb> mChangedQueue;
-	
 	private ArrayList<HueBulb> mBulbList;
 	
 	public HubConnection(Context c, Long baseId, String name, String deviceId, HubData data, DeviceManager dm){
@@ -226,9 +228,15 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			@Override
 			public void onTick(long millisUntilFinished) {
 				if(mChangedQueue.size()>0){
-					HueBulb changedFirst = mChangedQueue.iterator().next();
-					mChangedQueue.remove(changedFirst);
-					NetworkMethods.PreformTransmitGroupMood(mContext, getRequestQueue(), HubConnection.this, changedFirst.getHubBulbNumber(), changedFirst.desiredState);
+					HueBulb selected = mChangedQueue.iterator().next();
+					mChangedQueue.remove(selected);
+					
+					BulbState toSend = getSendState(selected);
+					if(toSend!=null){
+						PendingStateChange stateChange = new PendingStateChange(toSend,selected,System.nanoTime());
+						NetworkMethods.preformTransmitPendingState(mContext, getRequestQueue(), HubConnection.this, stateChange);
+						selected.ongoing.add(stateChange);
+					}
 				}
 			}
 		};
@@ -245,7 +253,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 				
 				//check to see if this bulb is already in our database
 				if(fromMemory instanceof HueBulb
-						&& ((HueBulb)fromMemory).getHubBulbNumber()==fromHue.number){
+						&& ((HueBulb)fromMemory).getHubBulbNumber().equals(fromHue.number)){
 					if(!fromMemory.getName().equals(fromHue.name)){
 						//same bulb but has been renamed by another device
 						//must update our version
@@ -274,11 +282,40 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			mBulbList.add(new HueBulb(mContext,bulbBaseId,bulbName,bulbDeviceId, new HueBulbData(), this));
 			
 		}
-		
-		
 	}
 
 	public ConnectivityState getConnectivityState() {
 		return ConnectivityState.Unknown;
+	}
+
+	public void reportStateChangeFailure(PendingStateChange mRequest) {
+		mChangedQueue.add(mRequest.hubBulb);
+	}
+
+	public void reportStateChangeSucess(PendingStateChange request) {
+		HueBulb affected = request.hubBulb;
+		
+		//merge successful changes onto confirmed
+		affected.confirmed.merge(request.sentState);
+		
+		//if more changes should be sent, do so		
+		if(getSendState(affected)!=null){
+			mChangedQueue.add(affected);
+		}
+	}
+	
+	/**
+	 * returns the BulbState delta between current+pending and desired
+	 * if no delta, return null
+	 */
+	private BulbState getSendState(HueBulb hBulb){
+		BulbState projectedState = hBulb.confirmed.clone();
+		for(PendingStateChange p : hBulb.ongoing){
+			projectedState.merge(p.sentState);
+		}
+		BulbState dif = projectedState.delta(hBulb.desiredState);
+		if(dif.toString()!=null && dif.toString().length()>0)
+			return dif;
+		return null;
 	}
 }

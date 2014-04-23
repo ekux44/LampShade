@@ -17,7 +17,7 @@ public class BulbState {
 	/**
 	 * The hue value to set light to. The hue value is a wrapping value between
 	 * 0 and 65535. Both 0 and 65535 are red, 25500 is green and 46920 is blue.
-	 * e.g. “hue”: 50000 will set the light to a specific hue.
+	 * e.g. ï¿½hueï¿½: 50000 will set the light to a specific hue.
 	 */
 	public Integer hue;
 	/**
@@ -39,9 +39,9 @@ public class BulbState {
 	public Integer ct;
 
 	/**
-	 * The alert effect, is a temporary change to the bulb’s state, and has one
-	 * of the following values: “none” – The light is not performing an alert
-	 * effect. “select” – The light is performing one breathe cycle. “lselect” –
+	 * The alert effect, is a temporary change to the bulbï¿½s state, and has one
+	 * of the following values: ï¿½noneï¿½ ï¿½ The light is not performing an alert
+	 * effect. ï¿½selectï¿½ ï¿½ The light is performing one breathe cycle. ï¿½lselectï¿½ ï¿½
 	 * The light is performing breathe cycles for 30 seconds or until an
 	 * "alert": "none" command is received.
 	 */
@@ -53,7 +53,7 @@ public class BulbState {
 	public String effect;
 
 	/**
-	 * The duration of the transition from the light’s current state to the new
+	 * The duration of the transition from the lightï¿½s current state to the new
 	 * state. This is given as a multiple of 100ms and defaults to 4 (400ms).
 	 * For example, setting transistiontime:10 will make the transition last 1
 	 * second.
@@ -115,6 +115,31 @@ public class BulbState {
 			ct = other.ct;
 		}
 	}
+	
+	/** return a BulbState with the values of o when the differ from this object */
+	public BulbState delta(BulbState o){
+		BulbState delta = new BulbState();
+		
+		if(o.on!=null && (on==null || !on.equals(o.on)))
+			delta.on = o.on;
+		if(o.bri!=null && (bri==null || !bri.equals(o.bri)))
+			delta.bri = o.bri;
+		if(o.alert!=null && (alert==null || !alert.equals(o.alert)))
+			delta.alert = o.alert;
+		if(o.effect!=null && (effect==null || !effect.equals(o.effect)))
+			delta.effect = o.effect;
+		if(o.transitiontime!=null && (transitiontime==null || !transitiontime.equals(o.transitiontime)))
+			delta.transitiontime = o.transitiontime;
+		
+		
+		if(o.xy!=null && (xy==null || !xy.equals(o.xy))){
+			delta.xy = o.xy;
+		} else if(o.ct!=null && (ct==null || !ct.equals(o.ct))){
+			delta.ct = o.ct;
+		}
+		return delta;
+	}
+	
 	public String getCT(){
 		return (1000000 / ct)+"K";
 		

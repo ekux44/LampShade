@@ -8,7 +8,9 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.HubData;
+import com.kuxhausen.huemore.net.hue.PendingStateChange;
 import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -39,12 +41,9 @@ public class NetworkMethods {
 		return null;
 	}
 	
-	public static void PreformTransmitGroupMood(Context context, RequestQueue queue, ConnectionMonitor monitor, Integer bulb, BulbState bs){
-		if (queue == null || bulb == null || bs == null)
+	public static void preformTransmitPendingState(Context context, RequestQueue queue, HubConnection connection, PendingStateChange pState){
+		if (queue == null)
 			return;
-		
-		Integer[] bulbs = {bulb};
-		//TODO reimplement with support for Moods
 		
 		HubData hub = getBridgeAndHash(context);
 		String bridge = hub.localHubAddress;
@@ -54,15 +53,13 @@ public class NetworkMethods {
 			return;
 		
 		Gson gson = new Gson();
-		for (int i = 0; i < bulbs.length; i++) {
-			String url = "http://" + bridge + "/api/" + hash
-					+ "/lights/" + bulbs[i] + "/state";
+		
+		String url = "http://" + bridge + "/api/" + hash + "/lights/" + pState.hubBulb.getHubBulbNumber() + "/state";
 			
-			GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(bs), LightsPutResponse[].class, null,
-					new BasicSuccessListener<LightsPutResponse[]>(monitor), new BasicErrorListener(monitor));
-			req.setTag("");
-			queue.add(req);
-		}
+		GsonRequest<LightsPutResponse[]> req = new GsonRequest<LightsPutResponse[]>(Method.PUT, url,gson.toJson(pState.sentState), LightsPutResponse[].class, null,
+				new StateSuccessListener(connection,pState), new StateErrorListener(connection,pState));
+		req.setTag("");
+		queue.add(req);
 	}
 	
 	public static void PreformGetBulbAttributes(Context context, RequestQueue queue, ConnectionMonitor monitor, OnBulbAttributesReturnedListener listener, int bulb){
