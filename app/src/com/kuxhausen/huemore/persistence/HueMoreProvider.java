@@ -103,6 +103,7 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupBulbsProjectionMap.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.TYPE_COLUMN);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.JSON_COLUMN, NetBulbColumns.JSON_COLUMN);
+			sGroupBulbsProjectionMap.put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS, NetBulbColumns.CURRENT_MAX_BRIGHTNESS);
 		}
 		{
 			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);

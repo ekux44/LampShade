@@ -191,7 +191,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ NetBulbColumns.DEVICE_ID_COLUMN + " TEXT,"
 						+ NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + " TEXT,"
 						+ NetBulbColumns.TYPE_COLUMN + " INTEGER,"
-						+ NetBulbColumns.JSON_COLUMN + " TEXT"
+						+ NetBulbColumns.JSON_COLUMN + " TEXT,"
+						+ NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER"
 						+ ");");
 				
 				db.execSQL("CREATE TABLE " + NetConnectionColumns.TABLE_NAME + " ("

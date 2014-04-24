@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
@@ -94,6 +95,7 @@ public class DeviceManager {
 	}
 	public void registerBrightnessListener(OnStateChangedListener l){
 		brightnessListeners.add(l);
+		l.onStateChanged();
 	}
 	
 	public void removeBrightnessListener(OnStateChangedListener l){
@@ -101,18 +103,26 @@ public class DeviceManager {
 	}
 	
 	public Integer getBrightness(Group g){
-		//TODO	
-		return 100;
-	}
-	
-	public Integer getMaxBrightness(Group g){
-		//TODO
-		return 100;
+		int briSum = 0;
+		int briNum = 0;
+		
+		for(Long bulbId : g.getNetworkBulbDatabaseIds()){
+			briSum += bulbMap.get(bulbId).getCurrentMaxBrightness();
+			briNum++;
+		}
+		
+		int bri = 100;
+		if(briNum>0){
+			bri = briSum/briNum;
+		}			
+		return briSum;
 	}
 	
 	/** doesn't notify listeners **/
-	public void setBrightness(Group g, int brightness){
-		//TODO
+	public void setBrightness(Group g, int bri){
+		for(Long bulbId : g.getNetworkBulbDatabaseIds()){
+			bulbMap.get(bulbId).setCurrentMaxBrightness(bri);
+		}
 	}
 	
 	public void onBulbsListChanged(){

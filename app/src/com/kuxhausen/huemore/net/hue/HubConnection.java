@@ -32,7 +32,7 @@ import com.kuxhausen.huemore.state.Group;
 public class HubConnection implements Connection, OnBulbAttributesReturnedListener, ConnectionMonitor, OnBulbListReturnedListener{
 
 	private static final String[] columns = {NetConnectionColumns._ID, NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.JSON_COLUMN};
-	private static final String[] bulbColumns = {NetBulbColumns._ID, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN};
+	private static final String[] bulbColumns = {NetBulbColumns._ID, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN, NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
 	private static final Integer type = NetBulbColumns.NetBulbType.PHILIPS_HUE;
 	private static final Gson gson = new Gson();
 	
@@ -62,7 +62,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			String bulbName = cursor.getString(3);
 			String bulbDeviceId = cursor.getString(4);
 			HueBulbData bulbData = gson.fromJson(cursor.getString(5), HueBulbData.class);
-			mBulbList.add(new HueBulb(c,bulbBaseId,bulbName,bulbDeviceId,bulbData, this));
+			int currentMaxBri = cursor.getInt(6);
+			mBulbList.add(new HueBulb(c,bulbBaseId,bulbName,bulbDeviceId,bulbData, this, currentMaxBri));
 		}
 		
 		
@@ -70,6 +71,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		mDeviceManager = dm;
 		volleyRQ = Volley.newRequestQueue(mContext);
 		restartCountDownTimer();
+		
+		//initalized state
+		this.mDeviceManager.onStateChanged();
 	}
 	
 	public void saveConnection(){
@@ -141,46 +145,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	
 	public RequestQueue getRequestQueue() {
 		return volleyRQ;
-	}
-	
-	public synchronized void onGroupSelected(Group selectedGroup, Integer optionalBri){
-//		
-//		groupIsAlerting = false;
-//		groupIsColorLooping = false;
-//		maxBrightness = null;
-//		bulbBri = new int[selectedGroup.groupAsLegacyArray.length];
-//		bulbRelBri = new int[selectedGroup.groupAsLegacyArray.length];
-//		bulbKnown = new KnownState[selectedGroup.groupAsLegacyArray.length];
-//		for(int i = 0; i < bulbRelBri.length; i++){
-//			bulbRelBri[i] = MAX_REL_BRI;
-//			bulbKnown[i] = KnownState.Unknown;
-//		}
-//		
-//		this.groupName = groupName;
-//		
-//		if(optionalBri==null){
-//			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
-//				bulbKnown[i] = KnownState.Getting;
-//				NetworkMethods.PreformGetBulbAttributes(mContext, getRequestQueue(), this, this, selectedGroup.groupAsLegacyArray[i]);
-//			}
-//		} else {
-//			maxBrightness = optionalBri;
-//			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++)
-//				bulbKnown[i] = KnownState.ToSend;
-//			mDeviceManager.onStateChanged();
-//		}
-	}
-	
-	/** doesn't notify listeners **/
-	public synchronized void setBrightness(int brightness, Group selectedGroup){
-		
-//		maxBrightness = brightness;
-//		if(selectedGroup.groupAsLegacyArray!=null){
-//			for(int i = 0; i< selectedGroup.groupAsLegacyArray.length; i++){
-//				bulbBri[i] = (maxBrightness * bulbRelBri[i])/MAX_REL_BRI; 
-//				bulbKnown[i] = KnownState.ToSend;
-//			}
-//		}
 	}
 	
 	public void onAttributesReturned(BulbAttributes result, int bulbNumber) {
@@ -276,10 +240,11 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			cv.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, mDeviceId);
 			cv.put(NetBulbColumns.JSON_COLUMN, gson.toJson(new HueBulbData()));
 			cv.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
+			cv.put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
 			String[] selectionArgs = {""+fromHue.number};
 			long bulbBaseId = Long.parseLong(mContext.getContentResolver().insert(NetBulbColumns.URI, cv).getLastPathSegment());
 			
-			mBulbList.add(new HueBulb(mContext,bulbBaseId,bulbName,bulbDeviceId, new HueBulbData(), this));
+			mBulbList.add(new HueBulb(mContext,bulbBaseId,bulbName,bulbDeviceId, new HueBulbData(), this, 100));
 			
 		}
 	}
@@ -302,6 +267,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		if(getSendState(affected)!=null){
 			mChangedQueue.add(affected);
 		}
+		
+		//notify changes
+		this.mDeviceManager.onStateChanged();
 	}
 	
 	/**

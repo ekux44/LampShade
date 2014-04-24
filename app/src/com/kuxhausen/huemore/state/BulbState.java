@@ -90,7 +90,7 @@ public class BulbState {
 		return result;
 	}
 	
-	/* when in doubt, override, only allow 1 of three color modes**/
+	/** when in doubt, override, only allow 1 of three color modes**/
 	public void merge(BulbState other){
 		on = (other.on!=null) ? other.on : on;
 		bri = (other.bri!=null) ? other.bri : bri;

@@ -28,4 +28,10 @@ public interface NetworkBulb {
 	
 	public abstract Long getBaseId();
 	
+	/** @result 0-100*/
+	public abstract int getCurrentMaxBrightness();
+	
+	/** @param maxBri 0-100*/
+	public abstract void setCurrentMaxBrightness(int maxBri);
+	
 }

@@ -53,9 +53,9 @@
                 android:id="@+id/brightnessBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="255"
                 android:paddingBottom="8dp"
-                android:progress="127" />
+                android:max="100"
+                android:progress="50" />
             </LinearLayout>
     </ScrollView>
     
