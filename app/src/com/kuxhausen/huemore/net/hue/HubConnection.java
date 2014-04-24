@@ -17,17 +17,17 @@ import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
-import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
-import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.network.ConnectionMonitor;
-import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.net.hue.api.Bulb;
+import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
+import com.kuxhausen.huemore.net.hue.api.ConnectionMonitor;
+import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
+import com.kuxhausen.huemore.net.hue.api.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
+import com.kuxhausen.huemore.net.hue.api.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.state.api.Bulb;
-import com.kuxhausen.huemore.state.api.BulbAttributes;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HubConnection implements Connection, OnBulbAttributesReturnedListener, ConnectionMonitor, OnBulbListReturnedListener{
 

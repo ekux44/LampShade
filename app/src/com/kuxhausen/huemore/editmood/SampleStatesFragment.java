@@ -13,7 +13,7 @@ import android.widget.GridView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
 

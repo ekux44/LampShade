@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -17,9 +17,8 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
-import com.kuxhausen.huemore.OnServiceConnectedListener;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 

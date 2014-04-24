@@ -6,9 +6,9 @@ import java.util.PriorityQueue;
 import android.content.Context;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
-import com.kuxhausen.huemore.network.NetworkMethods;
-import com.kuxhausen.huemore.state.api.BulbAttributes;
-import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
+import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class HueBulb implements NetworkBulb {
 

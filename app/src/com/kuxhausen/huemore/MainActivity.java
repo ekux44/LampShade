@@ -31,7 +31,6 @@ import com.kuxhausen.huemore.billing.Inventory;
 import com.kuxhausen.huemore.billing.Purchase;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.hue.HubData;
-import com.kuxhausen.huemore.network.ConnectionStatusDialogFragment;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.DeprecatedPreferenceKeys;

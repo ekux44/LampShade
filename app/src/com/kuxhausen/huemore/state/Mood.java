@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class Mood implements Cloneable{
 	public Event[] events;

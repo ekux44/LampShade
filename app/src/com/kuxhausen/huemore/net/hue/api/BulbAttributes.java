@@ -1,4 +1,6 @@
-package com.kuxhausen.huemore.state.api;
+package com.kuxhausen.huemore.net.hue.api;
+
+import com.kuxhausen.huemore.state.BulbState;
 
 public class BulbAttributes {
 

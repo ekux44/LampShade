@@ -15,7 +15,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
-import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class EditColorTempFragment extends Fragment implements
 		OnSeekBarChangeListener, OnCreateColorListener {

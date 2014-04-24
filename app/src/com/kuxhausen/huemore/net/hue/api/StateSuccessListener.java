@@ -1,9 +1,8 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
 import com.android.volley.Response.Listener;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.PendingStateChange;
-import com.kuxhausen.huemore.state.api.LightsPutResponse;
 
 public class StateSuccessListener extends BasicSuccessListener<LightsPutResponse[]>{
 	

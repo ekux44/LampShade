@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class EditBulbDialogFragment extends DialogFragment {
 

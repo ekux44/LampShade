@@ -24,11 +24,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HubData;
-import com.kuxhausen.huemore.network.NetworkMethods;
+import com.kuxhausen.huemore.net.hue.api.Bridge;
+import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
+import com.kuxhausen.huemore.net.hue.api.RegistrationResponse;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.state.api.Bridge;
-import com.kuxhausen.huemore.state.api.RegistrationResponse;
 
 public class RegisterWithHubDialogFragment extends DialogFragment {
 

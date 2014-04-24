@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
 import android.util.Log;
 

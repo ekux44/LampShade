@@ -15,10 +15,10 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.network.HubSearch;
-import com.kuxhausen.huemore.network.HubSearch.OnHubFoundListener;
+import com.kuxhausen.huemore.net.hue.api.Bridge;
+import com.kuxhausen.huemore.net.hue.api.HubSearch;
+import com.kuxhausen.huemore.net.hue.api.HubSearch.OnHubFoundListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.state.api.Bridge;
 
 public class DiscoverHubDialogFragment extends DialogFragment implements
 		OnHubFoundListener {

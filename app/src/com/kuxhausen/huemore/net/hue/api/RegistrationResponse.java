@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.state.api;
+package com.kuxhausen.huemore.net.hue.api;
 
 public class RegistrationResponse {
 	public ResponseError error;

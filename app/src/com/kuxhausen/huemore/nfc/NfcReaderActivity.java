@@ -25,9 +25,9 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnCheckedChangeListener, OnClickListener {
 

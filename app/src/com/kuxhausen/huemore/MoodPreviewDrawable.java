@@ -13,8 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 
 import com.kuxhausen.huemore.editmood.StateCell;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 /**
  * Custom view that shows a pie chart and, optionally, a label.

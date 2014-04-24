@@ -33,9 +33,9 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class EditMoodStateGridFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener, StateGridDisplay {
 

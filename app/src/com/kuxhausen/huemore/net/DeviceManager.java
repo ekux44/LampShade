@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Handler;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
-import com.kuxhausen.huemore.network.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.Group;
 

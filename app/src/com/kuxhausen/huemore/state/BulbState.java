@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.state.api;
+package com.kuxhausen.huemore.state;
 
 import com.google.gson.Gson;
 

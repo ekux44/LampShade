@@ -14,8 +14,8 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.state.api.BulbState;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
 

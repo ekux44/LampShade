@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;

@@ -1,6 +1,5 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
-import com.kuxhausen.huemore.state.api.BulbAttributes;
 
 public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttributes> {
 

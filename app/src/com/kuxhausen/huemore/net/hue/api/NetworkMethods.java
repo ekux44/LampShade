@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -11,18 +11,12 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.net.hue.PendingStateChange;
-import com.kuxhausen.huemore.network.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
-import com.kuxhausen.huemore.network.BulbListSuccessListener.OnBulbListReturnedListener;
+import com.kuxhausen.huemore.net.hue.api.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
+import com.kuxhausen.huemore.net.hue.api.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.state.api.Bridge;
-import com.kuxhausen.huemore.state.api.BulbAttributes;
-import com.kuxhausen.huemore.state.api.BulbList;
-import com.kuxhausen.huemore.state.api.BulbState;
-import com.kuxhausen.huemore.state.api.LightsPutResponse;
-import com.kuxhausen.huemore.state.api.RegistrationRequest;
-import com.kuxhausen.huemore.state.api.RegistrationResponse;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class NetworkMethods {
 	

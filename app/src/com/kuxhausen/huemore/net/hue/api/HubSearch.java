@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +22,6 @@ import org.apache.http.params.HttpParams;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.state.api.Bridge;
 
 public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 

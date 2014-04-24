@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.net;
 
-import com.kuxhausen.huemore.state.api.BulbState;
+import com.kuxhausen.huemore.state.BulbState;
 
 public interface NetworkBulb {
 	

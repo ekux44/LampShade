@@ -9,10 +9,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Pair;
 
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.state.api.BulbState;
 
 public class HueUrlEncoder {
 

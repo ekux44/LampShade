@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.network;
+package com.kuxhausen.huemore.net.hue.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,8 +6,6 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.state.api.Bulb;
-import com.kuxhausen.huemore.state.api.BulbList;
 
 public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
 
