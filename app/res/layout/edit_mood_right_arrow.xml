@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rightButton"
-    style="@style/Widget.Sherlock.ActionButton"
+    style="@style/Widget.AppCompat.ActionButton"
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:padding="8dp"
