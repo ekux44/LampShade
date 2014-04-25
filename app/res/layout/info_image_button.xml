@@ -4,5 +4,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	style="@style/Widget.AppCompat.ActionButton"
-    android:src="@drawable/action_about" >
+    android:src="@drawable/ic_action_about" >
 </ImageButton>

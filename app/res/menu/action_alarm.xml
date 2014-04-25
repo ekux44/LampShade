@@ -9,7 +9,7 @@
 		/>
     <item
         android:id="@+id/action_add_alarm"
-        android:icon="@drawable/device_access_add_alarm"
+        android:icon="@drawable/ic_action_add_alarm"
         app:showAsAction="always"
         android:orderInCategory="2"
         android:title="@string/actionmenu_new_alarm"

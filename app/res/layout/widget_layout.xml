@@ -56,7 +56,7 @@
             android:adjustViewBounds="true"
             android:paddingLeft="8dp"
             android:scaleType="fitStart"
-            android:src="@drawable/device_access_alarms" />
+            android:src="@drawable/ic_action_alarms" />
 
     </LinearLayout>
     <ImageView
