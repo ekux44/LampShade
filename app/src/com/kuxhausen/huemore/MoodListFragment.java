@@ -10,6 +10,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.ContextMenu;
@@ -94,7 +95,7 @@ public class MoodListFragment extends ListFragment implements
 				&& !selected.getText().equals(this.getActivity().getString(R.string.cap_on))
 				&& !selected.getText().equals(this.getActivity().getString(R.string.cap_random))) {
 			/** Getting the actionprovider associated with the menu item whose id is share */
-			mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share).getActionProvider();
+			mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
 	
 			/** Getting the target intent */
 			Intent intent = getDefaultShareIntent(""+selected.getText());
