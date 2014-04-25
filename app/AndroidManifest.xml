@@ -26,7 +26,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/Theme.Blueactionbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,14 +38,14 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/Theme.Blueactionbar">
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.editmood.EditMoodActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.Blueactionbar"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data android:name="android.support.UI_OPTIONS"
                    android:value="splitActionBarWhenNarrow" />
@@ -55,14 +55,14 @@
             android:name="com.kuxhausen.huemore.HelpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.Blueactionbar" >
         </activity>
         
         <activity
             android:name="com.kuxhausen.huemore.SettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.Blueactionbar" >
         </activity>
         
         <provider
@@ -79,7 +79,7 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.Blueactionbar" >
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
@@ -95,26 +95,26 @@
             android:name="com.kuxhausen.huemore.DecodeErrorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.Blueactionbar" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcWriterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.Blueactionbar" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.Blueactionbar"
             android:noHistory="true" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcReadRouterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.Blueactionbar"
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -141,7 +141,7 @@
             android:name="com.kuxhausen.huemore.SharedMoodReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.Blueactionbar"
             android:noHistory="true" >
 
             <intent-filter>
@@ -160,7 +160,7 @@
             android:name="com.kuxhausen.huemore.timing.AlarmListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat" >
+            android:theme="@style/Theme.Blueactionbar" >
         </activity>
 
         <receiver android:name="com.kuxhausen.huemore.timing.BootSetter" >
