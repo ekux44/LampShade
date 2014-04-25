@@ -3,7 +3,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="BlueWidgets" parent="Theme.AppCompat">
+  <style name="BlueWidgets" parent="Theme.Blueactionbar">
 
     <item name="android:editTextStyle">@style/EditTextBlueWidgets</item>
 

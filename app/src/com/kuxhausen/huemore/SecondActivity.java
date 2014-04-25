@@ -49,7 +49,7 @@ public class SecondActivity extends NetworkManagedSherlockFragmentActivity {
         // it's PagerAdapter set.
         mMoodManualSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
         mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
-        mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
+        mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.redwidgets_color));
 		
 		mSettings = PreferenceManager.getDefaultSharedPreferences(me);
 		if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {

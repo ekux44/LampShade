@@ -67,7 +67,7 @@ public class StateCell {
 			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 		}
 		if(selected)
-			rowView.setBackgroundColor(context.getResources().getColor(R.color.blue_color));
+			rowView.setBackgroundColor(context.getResources().getColor(R.color.bluewidgets_color));
 		else
 			rowView.setBackgroundColor(0);
 		

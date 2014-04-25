@@ -3,7 +3,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="BlueWidgets" parent="@style/_BlueWidgets">
+  <style name="BlueWidgets" parent="Theme.Blueactionbar">
 
     <item name="android:textSelectHandleLeft">@drawable/bluewidgets_text_select_handle_left</item>
     <item name="android:textSelectHandleRight">@drawable/bluewidgets_text_select_handle_right</item>
