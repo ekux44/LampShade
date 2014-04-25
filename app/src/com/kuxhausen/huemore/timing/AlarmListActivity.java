@@ -3,8 +3,8 @@ package com.kuxhausen.huemore.timing;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -14,7 +14,7 @@ import com.kuxhausen.huemore.persistence.Utils;
  * stupid list wrapper to work around the non-existence of a
  * ListFragmentActivity
  **/
-public class AlarmListActivity extends SherlockFragmentActivity {
+public class AlarmListActivity extends ActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayout;
 import android.util.Pair;
 import android.view.ContextMenu;
@@ -21,8 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.ActionMode;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
@@ -37,7 +37,7 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
-public class EditMoodStateGridFragment extends SherlockFragment implements OnClickListener, OnCreateMoodListener, StateGridDisplay {
+public class EditMoodStateGridFragment extends Fragment implements OnClickListener, OnCreateMoodListener, StateGridDisplay {
 
 	Gson gson = new Gson();
 	private GridLayout grid;

@@ -3,15 +3,16 @@ package com.kuxhausen.huemore;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class HelpActivity extends SherlockActivity implements ActionBar.OnNavigationListener  {
+public class HelpActivity extends ActionBarActivity implements OnNavigationListener  {
 
 	private TextView mSelected;
     private String[] mPages, mTitles;
@@ -27,8 +28,8 @@ public class HelpActivity extends SherlockActivity implements ActionBar.OnNaviga
         mPages = getResources().getStringArray(R.array.help_page_content);
 
         Context context = getSupportActionBar().getThemedContext();
-        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.help_page_titles, R.layout.sherlock_spinner_item);
-        list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.help_page_titles, android.R.layout.simple_spinner_item);
+        list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(list, this);

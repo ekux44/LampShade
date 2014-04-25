@@ -5,4 +5,4 @@
         android:layout_height="48dp"
         android:padding="8dp"
         android:src="@drawable/ic_action_expand"
-        style="@style/Widget.Sherlock.ActionButton" />
+        style="@style/Widget.AppCompat.ActionButton" />

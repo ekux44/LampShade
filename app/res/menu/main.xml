@@ -1,54 +1,55 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
         android:id="@+id/action_connected_with_hub"
         android:icon="@drawable/content_import_export"
         android:orderInCategory="5"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/action_hub_status"/>
     <item
         android:id="@+id/action_register_with_hub"
-        android:icon="@drawable/alerts_and_states_error"
+        android:icon="@drawable/ic_action_error"
         android:orderInCategory="5"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/action_register_with_hub"/>
     <item
         android:id="@+id/action_unlocks"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_unlocks"/>
     <item
         android:id="@+id/action_communities"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_communities"/>
     
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_settings"/>
     <item
         android:id="@+id/action_nfc"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/nfc"/>
     <item
         android:id="@+id/action_alarms"
-        android:icon="@drawable/device_access_alarms"
+        android:icon="@drawable/ic_action_alarms"
         android:orderInCategory="10"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/alarms"/>
     <item
         android:id="@+id/action_add_both"
-        android:icon="@drawable/content_new"
+        android:icon="@drawable/ic_action_new"
         android:orderInCategory="1"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/actionmenu_new_mood"/>
 	<item
         android:id="@+id/action_report_bug"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_report_bug" android:visible="false" android:enabled="false"/>
     
 </menu>

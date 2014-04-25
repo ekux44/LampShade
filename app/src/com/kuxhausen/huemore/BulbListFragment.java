@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -21,13 +22,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.state.Group;
 
-public class BulbListFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class BulbListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
 	private static final int BULBS_LOADER = 0;
 	private static final String[] columns = { NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID };

@@ -4,27 +4,28 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.support.v7.app.ActionBarActivity;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.HelpActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class AlarmsListFragment extends SherlockListFragment implements
+public class AlarmsListFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
 	// Identifies a particular Loader being used in this component
@@ -56,7 +57,8 @@ public class AlarmsListFragment extends SherlockListFragment implements
 
 		getActivity().setTitle(R.string.alarms);
 
-		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		((ActionBarActivity)this.getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return myView;
 	}
 
@@ -70,7 +72,7 @@ public class AlarmsListFragment extends SherlockListFragment implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.startActivity(new Intent(this.getSherlockActivity(),MainActivity.class));
+			this.startActivity(new Intent(this.getActivity(),MainActivity.class));
 			return true;
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();

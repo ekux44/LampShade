@@ -5,6 +5,7 @@ import java.util.Calendar;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TimePicker;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.timing.Conversions;
@@ -70,7 +70,7 @@ public class TimeOfDayTimeslot implements OnClickListener{
 		etdf.show(frag.getFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 	}
 
-	public static class TimePickerFragment extends SherlockDialogFragment implements TimePickerDialog.OnTimeSetListener {
+	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
 		TimeOfDayTimeslot t; 
 		@Override

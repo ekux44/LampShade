@@ -15,14 +15,14 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.HelpActivity;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.R;
@@ -61,7 +61,7 @@ public class NfcWriterActivity extends SerializedEditorActivity implements
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.action_write_nfc, menu);
 		return true;
 	}

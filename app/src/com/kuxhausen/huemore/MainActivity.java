@@ -16,13 +16,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.example.android.common.view.SlidingTabLayout;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.billing.IabHelper;
@@ -95,7 +95,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
         // it's PagerAdapter set.
         mGroupBulbSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.bulb_group_sliding_tabs);
         mGroupBulbSlidingTabLayout.setViewPager(mGroupBulbViewPager);
-        mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.green_color));
+        mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.greenwidgets_color));
 		
 		
 		if ((getResources().getConfiguration().screenLayout &
@@ -115,7 +115,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	        // it's PagerAdapter set.
 	        mMoodManualSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
 	        mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
-	        mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.red_color));
+	        mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.redwidgets_color));
 			
 			
 			mBrightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
@@ -234,7 +234,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main, menu);
 		if (Utils.hasProVersion(this)) {
 			// has pro version

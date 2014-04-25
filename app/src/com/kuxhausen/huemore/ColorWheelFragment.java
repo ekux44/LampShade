@@ -2,6 +2,7 @@ package com.kuxhausen.huemore;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -19,7 +19,7 @@ import com.kuxhausen.huemore.state.Group;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
 
-public class ColorWheelFragment extends SherlockFragment implements
+public class ColorWheelFragment extends Fragment implements
 		OnCheckedChangeListener, com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
 	public interface OnColorChangedListener {

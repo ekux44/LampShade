@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
@@ -38,7 +38,7 @@ public class StateCell {
 		return copy;
 	}
 	
-	public View getView(ViewGroup parent, OnClickListener l, SherlockFragment frag, OnLongClickListener longL) {
+	public View getView(ViewGroup parent, OnClickListener l, Fragment frag, OnLongClickListener longL) {
 		View rowView;
 		LayoutInflater inflater = frag.getActivity().getLayoutInflater();
 		if(hs.ct!=null && hs.ct!=0){
@@ -67,7 +67,7 @@ public class StateCell {
 			rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 		}
 		if(selected)
-			rowView.setBackgroundColor(context.getResources().getColor(R.color.blue_color));
+			rowView.setBackgroundColor(context.getResources().getColor(R.color.bluewidgets_color));
 		else
 			rowView.setBackgroundColor(0);
 		

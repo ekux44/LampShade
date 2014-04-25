@@ -35,7 +35,7 @@ class CellOnDragListener implements View.OnDragListener {
                 return false;
             case DragEvent.ACTION_DRAG_ENTERED: 
                 // Applies a background around the View. The return value is ignored.
-                v.setBackgroundColor(mFrag.getResources().getColor(R.color.blue_color));
+                v.setBackgroundColor(mFrag.getResources().getColor(R.color.bluewidgets_color));
                 return true;
             case DragEvent.ACTION_DRAG_LOCATION:
             	// Ignore the event

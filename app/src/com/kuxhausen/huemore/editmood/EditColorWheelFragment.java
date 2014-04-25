@@ -2,11 +2,11 @@ package com.kuxhausen.huemore.editmood;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -15,7 +15,7 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
-public class EditColorWheelFragment extends SherlockFragment implements
+public class EditColorWheelFragment extends Fragment implements
 		OnCreateColorListener, com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
 	ColorPicker picker;

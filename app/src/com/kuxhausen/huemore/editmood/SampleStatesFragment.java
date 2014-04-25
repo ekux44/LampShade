@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.editmood;
 import java.util.ArrayList;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +11,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.BulbState;
 
-public class SampleStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
+public class SampleStatesFragment extends Fragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
 	private StateCellAdapter adapter;

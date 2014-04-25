@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="GreenWidgets" parent="Theme.Blueactionbar">
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarGreenWidgets</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarGreenWidgets</item>
+
+    <item name="android:listChoiceBackgroundIndicator">@drawable/greenwidgets_list_selector_holo_dark</item>
+
+    <item name="android:activatedBackgroundIndicator">@drawable/greenwidgets_activated_background_holo_dark</item>
+
+    <item name="android:fastScrollThumbDrawable">@drawable/greenwidgets_fastscroll_thumb_holo</item>
+
+  </style>
+
+</resources>

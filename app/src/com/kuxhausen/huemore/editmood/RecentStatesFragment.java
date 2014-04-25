@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 
-public class RecentStatesFragment extends SherlockFragment implements OnCreateColorListener, OnClickListener{
+public class RecentStatesFragment extends Fragment implements OnCreateColorListener, OnClickListener{
 
 	private GridView g;
 	private StateCellAdapter adapter;

@@ -17,11 +17,11 @@
 
     <SeekBar
         android:id="@+id/brightnessBar"
-        style="@style/SeekBarred"
+        style="@style/SeekBarRedWidgets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
         android:max="100"
+        android:paddingBottom="8dp"
         android:progress="50" />
 
     <include layout="@layout/horizontal_divider_line_red"/>

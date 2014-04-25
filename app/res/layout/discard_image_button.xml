@@ -3,6 +3,6 @@
     android:id="@+id/discardImageButton"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/Widget.Sherlock.ActionButton"
+    style="@style/Widget.AppCompat.ActionButton"
     android:src="@drawable/ic_action_discard" >
 </ImageButton>
