@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="RedWidgets" parent="Theme.AppCompat">
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarRedWidgets</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarRedWidgets</item>
+
+    <item name="android:listChoiceBackgroundIndicator">@drawable/redwidgets_list_selector_holo_dark</item>
+
+    <item name="android:activatedBackgroundIndicator">@drawable/redwidgets_activated_background_holo_dark</item>
+
+    <item name="android:fastScrollThumbDrawable">@drawable/redwidgets_fastscroll_thumb_holo</item>
+
+  </style>
+
+</resources>

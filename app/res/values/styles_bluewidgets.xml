@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="EditTextBlueWidgets" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/bluewidgets_edit_text_holo_dark</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="AutoCompleteTextViewBlueWidgets" parent="android:Widget.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/bluewidgets_list_selector_holo_dark</item>
+	  <item name="android:background">@drawable/bluewidgets_edit_text_holo_dark</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="CheckBoxBlueWidgets" parent="android:Widget.CompoundButton.CheckBox">
+      <item name="android:button">@drawable/bluewidgets_btn_check_holo_dark</item>
+  </style>
+
+  <style name="RadioButtonBlueWidgets" parent="android:Widget.CompoundButton.RadioButton">
+      <item name="android:button">@drawable/bluewidgets_btn_radio_holo_dark</item>
+  </style>
+
+  <style name="ButtonBlueWidgets" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/bluewidgets_btn_default_holo_dark</item>
+	  <item name="android:minHeight">48dip</item>
+	  <item name="android:minWidth">64dip</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="ImageButtonBlueWidgets" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/bluewidgets_btn_default_holo_dark</item>
+  </style>
+
+  <style name="SpinnerBlueWidgets" parent="android:Widget.Spinner">
+      <item name="android:background">@drawable/bluewidgets_spinner_background_holo_dark</item>
+      <item name="android:dropDownSelector">@drawable/bluewidgets_list_selector_holo_dark</item>
+  </style>
+
+  <style name="SpinnerDropDownItemBlueWidgets" parent="android:Widget.DropDownItem.Spinner">
+      <item name="android:checkMark">@drawable/bluewidgets_btn_radio_holo_dark</item>
+  </style>
+  <style name="ProgressBarBlueWidgets" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/bluewidgets_progress_horizontal_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/bluewidgets_progress_indeterminate_horizontal_holo_dark</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="SeekBarBlueWidgets" parent="android:Widget.SeekBar">
+      <item name="android:progressDrawable">@drawable/bluewidgets_scrubber_progress_horizontal_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/bluewidgets_scrubber_progress_horizontal_holo_dark</item>
+      <item name="android:minHeight">13dip</item>
+      <item name="android:maxHeight">13dip</item>
+      <item name="android:thumb">@drawable/bluewidgets_scrubber_control_selector_holo_dark</item>
+      <item name="android:thumbOffset">16dip</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+  </style>
+
+  <style name="RatingBarBlueWidgets" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/bluewidgets_ratingbar_full_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/bluewidgets_ratingbar_full_holo_dark</item>
+  </style>
+
+  <style name="ToggleBlueWidgets" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/bluewidgets_btn_toggle_holo_dark</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#ffffff</item>
+  </style>
+
+  <style name="ListViewBlueWidgets" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/bluewidgets_list_selector_holo_dark</item>
+  </style>
+
+  <style name="ListViewBlueWidgets.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/bluewidgets_list_selector_holo_dark</item>
+  </style>
+
+  <style name="SpinnerItemBlueWidgets" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#ffffff</item>
+  </style>
+
+</resources>

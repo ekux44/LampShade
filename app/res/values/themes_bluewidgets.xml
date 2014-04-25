@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="BlueWidgets" parent="Theme.AppCompat">
+
+    <item name="android:editTextStyle">@style/EditTextBlueWidgets</item>
+
+    <item name="android:textColorHighlight">#9933b5e5</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewBlueWidgets</item>
+
+    <item name="android:checkboxStyle">@style/CheckBoxBlueWidgets</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonBlueWidgets</item>
+
+    <item name="android:buttonStyle">@style/ButtonBlueWidgets</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonBlueWidgets</item>
+
+    <item name="android:spinnerStyle">@style/SpinnerBlueWidgets</item>
+
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemBlueWidgets</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarBlueWidgets</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarBlueWidgets</item>
+
+    <item name="android:ratingBarStyle">@style/RatingBarBlueWidgets</item>
+
+    <item name="android:buttonStyleToggle">@style/ToggleBlueWidgets</item>
+
+    <item name="android:listViewStyle">@style/ListViewBlueWidgets</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewBlueWidgets.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemBlueWidgets</item>
+
+  </style>
+
+</resources>

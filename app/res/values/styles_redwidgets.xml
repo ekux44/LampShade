@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="ProgressBarRedWidgets" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/redwidgets_progress_horizontal_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/redwidgets_progress_indeterminate_horizontal_holo_dark</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="SeekBarRedWidgets" parent="android:Widget.SeekBar">
+      <item name="android:progressDrawable">@drawable/redwidgets_scrubber_progress_horizontal_holo_dark</item>
+      <item name="android:indeterminateDrawable">@drawable/redwidgets_scrubber_progress_horizontal_holo_dark</item>
+      <item name="android:minHeight">13dip</item>
+      <item name="android:maxHeight">13dip</item>
+      <item name="android:thumb">@drawable/redwidgets_scrubber_control_selector_holo_dark</item>
+      <item name="android:thumbOffset">16dip</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+  </style>
+
+  <style name="ListViewRedWidgets" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/redwidgets_list_selector_holo_dark</item>
+  </style>
+
+  <style name="ListViewRedWidgets.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/redwidgets_list_selector_holo_dark</item>
+  </style>
+
+  <style name="SpinnerItemRedWidgets" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#ffffff</item>
+  </style>
+
+</resources>
