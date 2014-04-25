@@ -35,6 +35,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	private static final String[] bulbColumns = {NetBulbColumns._ID, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN, NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
 	private static final Integer type = NetBulbColumns.NetBulbType.PHILIPS_HUE;
 	private static final Gson gson = new Gson();
+	private static final int MAX_NUM_CONCURRENT_REQUESTS_PER_BULB = 1;
 	
 	private Long mBaseId;
 	private String mName, mDeviceId;
@@ -42,6 +43,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	private Context mContext;
 	private LinkedHashSet<HueBulb> mChangedQueue;
 	private ArrayList<HueBulb> mBulbList;
+	
 	
 	public HubConnection(Context c, Long baseId, String name, String deviceId, HubData data, DeviceManager dm){
 		mContext = c;
@@ -196,7 +198,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 					mChangedQueue.remove(selected);
 					
 					BulbState toSend = getSendState(selected);
-					if(toSend!=null){
+					if(toSend!=null && selected.ongoing.size()<=MAX_NUM_CONCURRENT_REQUESTS_PER_BULB){
 						PendingStateChange stateChange = new PendingStateChange(toSend,selected,System.nanoTime());
 						NetworkMethods.preformTransmitPendingState(mContext, getRequestQueue(), HubConnection.this, stateChange);
 						selected.ongoing.add(stateChange);
@@ -259,6 +261,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
 	public void reportStateChangeSucess(PendingStateChange request) {
 		HueBulb affected = request.hubBulb;
+		
+		//remove successful changes from pending
+		affected.ongoing.remove(request);
 		
 		//merge successful changes onto confirmed
 		affected.confirmed.merge(request.sentState);
