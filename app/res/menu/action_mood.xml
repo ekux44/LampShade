@@ -12,6 +12,6 @@
         android:title="@string/share"
         android:orderInCategory="2"
         app:showAsAction="always"
-        app:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
     />
 </menu>
