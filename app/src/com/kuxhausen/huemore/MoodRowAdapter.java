@@ -79,13 +79,15 @@ public class MoodRowAdapter extends SimpleCursorAdapter{
 
 		if (moodRowView == null) {
 			// Get a new instance of the row layout view
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			LayoutInflater localInflater = ((Activity) context).getLayoutInflater();
 			
+			//TODO reenable after finishing migrating to ActionBarCompat
+			/*
 			// create ContextThemeWrapper from the original Activity Context with the custom theme
 		    final Context contextThemeWrapper = new ContextThemeWrapper(context, R.style.red);
 		    // clone the inflater using the ContextThemeWrapper
 		    LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-			
+			*/
 			
 			int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 			moodRowView = (TextView) localInflater.inflate(layout, null);

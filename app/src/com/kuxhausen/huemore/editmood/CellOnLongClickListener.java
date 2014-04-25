@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Build;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 
@@ -48,7 +49,7 @@ public class CellOnLongClickListener implements OnLongClickListener{
 				break;
 			}
 		    //enter action mode
-		    mFrag.mActionMode = mFrag.getSherlockActivity().startActionMode(new StateGridActionMode(mFrag,mViewType));
+		    mFrag.mActionMode = ((ActionBarActivity)mFrag.getActivity()).startSupportActionMode(new StateGridActionMode(mFrag,mViewType));
 		}
 		return true;
 	}

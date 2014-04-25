@@ -2,12 +2,12 @@ package com.kuxhausen.huemore.editmood;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.R;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -58,4 +58,5 @@ class StateGridActionMode implements ActionMode.Callback {
     @Override
     public void onDestroyActionMode(ActionMode mode) {
     }
+
 }

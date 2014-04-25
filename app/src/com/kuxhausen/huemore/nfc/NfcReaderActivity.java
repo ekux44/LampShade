@@ -8,6 +8,7 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Pair;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,7 +16,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.MainActivity;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;

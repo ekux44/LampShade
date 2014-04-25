@@ -6,16 +6,16 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class SettingsActivity extends SherlockActivity implements OnClickListener {
+public class SettingsActivity extends ActionBarActivity implements OnClickListener {
 
 	SharedPreferences mSettings;
 	private CheckBox mEnableNfcReadPage;

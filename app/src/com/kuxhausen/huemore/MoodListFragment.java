@@ -6,12 +6,17 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -19,18 +24,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.kuxhausen.huemore.editmood.EditMoodActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 
-public class MoodListFragment extends SherlockListFragment implements
+public class MoodListFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
 	// Identifies a particular Loader being used in this component
@@ -63,7 +63,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		View myView = inflater.inflate(R.layout.moods_list_fragment, container, false);
 
 		setHasOptionsMenu(true);
-		getSherlockActivity().supportInvalidateOptionsMenu();
+		getActivity().supportInvalidateOptionsMenu();
 		return myView;
 	}
 
@@ -141,8 +141,8 @@ public class MoodListFragment extends SherlockListFragment implements
 			getListView().setItemChecked(selectedPos, false);
 		selectedPos = -1;
 		selected = null;
-		if(getSherlockActivity()!=null)
-			getSherlockActivity().supportInvalidateOptionsMenu();
+		if(getActivity()!=null)
+			getActivity().supportInvalidateOptionsMenu();
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class MoodListFragment extends SherlockListFragment implements
 		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
 		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), Utils.getMoodFromDatabase(moodName, getActivity()),moodName, null);
 		
-		getSherlockActivity().supportInvalidateOptionsMenu();
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 }
