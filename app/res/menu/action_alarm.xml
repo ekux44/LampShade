@@ -1,15 +1,16 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 	<item
 		android:id="@+id/action_help"
 		android:title="@string/action_help"
 		android:icon="@drawable/ic_action_help"
 		android:orderInCategory="1"
-		android:showAsAction="always"
+		app:showAsAction="always"
 		/>
     <item
         android:id="@+id/action_add_alarm"
         android:icon="@drawable/device_access_add_alarm"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:orderInCategory="2"
         android:title="@string/actionmenu_new_alarm"
         />
