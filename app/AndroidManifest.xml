@@ -20,7 +20,7 @@
         android:installLocation="internalOnly"
         android:label="@string/app_name" >
         <activity
-            android:name="com.kuxhausen.huemore.MainActivity"
+            android:name="com.kuxhausen.huemore.NavigationDrawerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
