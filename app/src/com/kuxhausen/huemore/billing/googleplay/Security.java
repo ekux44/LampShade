@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.kuxhausen.huemore.billing;
+package com.kuxhausen.huemore.billing.googleplay;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;

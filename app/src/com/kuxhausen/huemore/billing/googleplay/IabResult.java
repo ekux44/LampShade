@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.kuxhausen.huemore.billing;
+package com.kuxhausen.huemore.billing.googleplay;
 
 /**
  * Represents the result of an in-app billing operation. A result is composed of

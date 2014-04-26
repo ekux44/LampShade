@@ -1,20 +1,15 @@
 package com.kuxhausen.huemore;
 
-import android.annotation.TargetApi;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources.NotFoundException;
-import android.database.Cursor;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,23 +20,14 @@ import android.widget.Toast;
 
 import com.example.android.common.view.SlidingTabLayout;
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.billing.IabHelper;
-import com.kuxhausen.huemore.billing.IabResult;
-import com.kuxhausen.huemore.billing.Inventory;
-import com.kuxhausen.huemore.billing.Purchase;
+import com.kuxhausen.huemore.billing.BillingManager;
+import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.DeprecatedPreferenceKeys;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
-import com.kuxhausen.huemore.registration.WelcomeDialogFragment;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.timing.AlarmListActivity;
 
@@ -51,9 +37,10 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
 public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	private final static Gson gson = new Gson();
 	
-	protected IabHelper mPlayHelper;
-	protected Inventory lastQuerriedInventory;
 	private final MainActivity me = this;
+	
+	private BillingManager mBillingManager;
+	
 	private SharedPreferences mSettings;
 	private ViewPager mGroupBulbViewPager;
 	private GroupBulbPagerAdapter mGroupBulbPagerAdapter;
@@ -147,8 +134,8 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		 }
 		
 		
-		initializationDatabaseChecks();
-		initializeBillingCode();
+		PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
+		mBillingManager = new BillingManager(this);
 		
 		/*
 		Calendar currentTime = Calendar.getInstance();
@@ -361,234 +348,19 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	
 	@Override
 	public void onDestroy() {
-		if (mPlayHelper != null) {
-			try {
-				mPlayHelper.dispose();
-			} catch (IllegalArgumentException e) {
-			}
-		}
-		mPlayHelper = null;
-		//Log.d("asdf", "mPlayHelperDestroyed" + (mPlayHelper == null));
+		if(mBillingManager!=null)
+			mBillingManager.onDestroy();
+		
 		super.onDestroy();
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + ","
-		// + data);
-
-		// Pass on the activity result to the helper for handling
-		if (!mPlayHelper.handleActivityResult(requestCode, resultCode, data)) {
-			// not handled, so handle it ourselves (here's where you'd
-			// perform any handling of activity results not related to in-app
-			// billing...
-			super.onActivityResult(requestCode, resultCode, data);
-		} else {
-			// Log.d(TAG, "onActivityResult handled by IABUtil.");
-		}
+		if(mBillingManager!=null)
+			mBillingManager.onActivityResult(requestCode,resultCode,data);
 	}
 	
-	private void initializationDatabaseChecks(){
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-
-		if(settings.contains(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS)){
-			HubData hubData = new HubData();
-			hubData.localHubAddress = settings.getString(DeprecatedPreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS, null);
-			hubData.portForwardedAddress = settings.getString(DeprecatedPreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS, null);
-			hubData.hashedUsername = settings.getString(DeprecatedPreferenceKeys.HASHED_USERNAME, null);
-			if(hubData.localHubAddress==null)
-				hubData.localHubAddress = settings.getString(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS, null);
-			
-			if(hubData.hashedUsername!=null && (hubData.localHubAddress!=null || hubData.portForwardedAddress!=null)){
-				ContentValues connectionValues = new ContentValues();
-				connectionValues.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
-				connectionValues.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
-				long connectionId = Long.parseLong(this.getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, connectionValues).getLastPathSegment());
-				
-				//also update any migrated NetBulbs to point to this NetConnection
-				ContentValues bulbValues = new ContentValues();
-				bulbValues.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, connectionId);
-				this.getContentResolver().update(NetBulbColumns.URI, bulbValues, null, null);
-			} else{
-				//remove any NetBulbs because there is no NetConnection
-				this.getContentResolver().delete(NetBulbColumns.URI, null, null);
-			}
-			
-			
-			Editor edit = settings.edit();
-			edit.remove(DeprecatedPreferenceKeys.LOCAL_BRIDGE_IP_ADDRESS);
-			edit.remove(DeprecatedPreferenceKeys.INTERNET_BRIDGE_IP_ADDRESS);
-			edit.remove(DeprecatedPreferenceKeys.BRIDGE_IP_ADDRESS);
-			edit.remove(DeprecatedPreferenceKeys.HASHED_USERNAME);
-			edit.commit();
-		}
-		
-		/*{ //debug mode only
-			Editor edit = settings.edit();
-			edit.putInt(PreferencesKeys.BULBS_UNLOCKED, 50);
-			edit.commit();
-		}*/
-		
-		if (!settings.contains(PreferenceKeys.FIRST_RUN)) {
-			// Mark no longer first run in preferences cache
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferenceKeys.FIRST_RUN, false);
-			edit.putInt(PreferenceKeys.BULBS_UNLOCKED,
-					PreferenceKeys.ALWAYS_FREE_BULBS);// TODO load from google store
-			edit.commit();
-		} else if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1)< this.getResources().getInteger(R.integer.major_update_version)){
-			UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
-			ucdf.show(this.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-		}
-		if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
-			edit.commit();
-		}
-		if (!settings.contains(PreferenceKeys.DEFAULT_TO_MOODS)) {
-			Editor edit = settings.edit();
-			edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
-			edit.commit();
-		}
-
-		// check to see if the bridge IP address is setup yet
-		String[] columns = {BaseColumns._ID, NetConnectionColumns.TYPE_COLUMN};
-		Cursor cursor = getContentResolver().query(NetConnectionColumns.URI, columns, null, null, null);
-		if(cursor.getCount()<=0){
-			if(!settings.contains(PreferenceKeys.DONE_WITH_WELCOME_DIALOG))
-			{
-				WelcomeDialogFragment wdf = new WelcomeDialogFragment();
-				wdf.show(this.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			}else{
-				DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-				dhdf.show(this.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			}
-		} else if(!settings.contains(PreferenceKeys.HAS_SHOWN_COMMUNITY_DIALOG)){
-			CommunityDialogFragment cdf = new CommunityDialogFragment();
-			cdf.show(this.getSupportFragmentManager(),
-				InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			
-		}
-		if (!settings.contains(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS)) {
-			Editor edit = settings.edit();
-			edit.putInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS,1);
-			edit.commit();
-		}
-		
-		Editor edit = settings.edit();
-		try {
-			edit.putInt(PreferenceKeys.VERSION_NUMBER, this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
-		} catch (NameNotFoundException e) {
-		}
-		edit.commit();
-	}
-
-	private void initializeBillingCode(){
-		String firstChunk = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgPUhHgGEdnpyPMAWgP3Xw/jHkReU1O0n6d4rtcULxOrVl/hcZlOsVyByMIZY5wMD84gmMXjbz8pFb4RymFTP7Yp8LSEGiw6DOXc7ydNd0lbZ4WtKyDEwwaio1wRbRPxdU7/4JBpMCh9L6geYx6nYLt0ExZEFxULV3dZJpIlEkEYaNGk/64gc0l34yybccYfORrWzu8u+";
-		String secondChunk = "5YxJ5k1ikIJJ2I7/2Rp5AXkj2dWybmT+AGx83zh8+iMGGawEQerGtso9NUqpyZWU08EO9DcF8r2KnFwjmyWvqJ2JzbqCMNt0A08IGQNOrd16/C/65GE6J/EtsggkNIgQti6jD7zd3b2NAQIDAQAB";
-		String base64EncodedPublicKey = firstChunk + secondChunk;
-		// compute your public key and store it in base64EncodedPublicKey
-		mPlayHelper = new IabHelper(this, base64EncodedPublicKey);
-		//Log.d("asdf", "mPlayHelperCreated" + (mPlayHelper != null));
-		mPlayHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-			@Override
-			public void onIabSetupFinished(IabResult result) {
-				if (!result.isSuccess()) {
-					// Oh noes, there was a problem.
-					// Log.d("asdf", "Problem setting up In-app Billing: "+
-					// result);
-				} else {
-					// Hooray, IAB is fully set up!
-					mPlayHelper.queryInventoryAsync(mGotInventoryListener);
-				}
-			}
-		});
-	}
-	
-	// Listener that's called when we finish querying the items and subscriptions we own
-	IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
-		@Override
-		public void onQueryInventoryFinished(IabResult result,
-				Inventory inventory) {
-
-			// Log.d("asdf", "Query inventory finished.");
-			if (result.isFailure()) {
-				// handle error
-				return;
-			} else {
-				// Log.d("asdf", "Query inventory was successful.");
-				lastQuerriedInventory = inventory;
-				int numUnlocked = PreferenceKeys.ALWAYS_FREE_BULBS;
-				if (inventory.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
-					numUnlocked = Math.max(50, numUnlocked);
-				if (inventory.hasPurchase(PlayItems.BUY_ME_A_BULB_DONATION_1))
-					numUnlocked = Math.max(50, numUnlocked);
-				// update UI accordingly
-
-				// Get preferences cache
-				SharedPreferences settings = PreferenceManager
-						.getDefaultSharedPreferences(me);
-				int previousMax = settings.getInt(
-						PreferenceKeys.BULBS_UNLOCKED,
-						PreferenceKeys.ALWAYS_FREE_BULBS);
-				if (numUnlocked > previousMax) {
-					// Update the number held in settings
-					Editor edit = settings.edit();
-					edit.putInt(PreferenceKeys.BULBS_UNLOCKED, numUnlocked);
-					edit.commit();
-
-				}
-			}
-			/*
-			 * Check for items we own. Notice that for each purchase, we check
-			 * the developer payload to see if it's correct! See
-			 * verifyDeveloperPayload().
-			 */
-			/*
-			 * // Do we have the premium upgrade? Purchase premiumPurchase =
-			 * inventory.getPurchase(SKU_PREMIUM); mIsPremium = (premiumPurchase
-			 * != null && verifyDeveloperPayload(premiumPurchase)); Log.d(TAG,
-			 * "User is " + (mIsPremium ? "PREMIUM" : "NOT PREMIUM"));
-			 * 
-			 * 
-			 * updateUi(); setWaitScreen(false); Log.d(TAG,
-			 * "Initial inventory query finished; enabling main UI.");
-			 */
-		}
-	};
-
-	/** Verifies the developer payload of a purchase. */
-	boolean verifyDeveloperPayload(Purchase p) {
-		String payload = p.getDeveloperPayload();
-		/*
-		 * TODO: verify that the developer payload of the purchase is correct.
-		 * It will be the same one that you sent when initiating the purchase.
-		 * 
-		 * WARNING: Locally generating a random string when starting a purchase
-		 * and verifying it here might seem like a good approach, but this will
-		 * fail in the case where the user purchases an item on one device and
-		 * then uses your app on a different device, because on the other device
-		 * you will not have access to the random string you originally
-		 * generated.
-		 * 
-		 * So a good developer payload has these characteristics:
-		 * 
-		 * 1. If two different users purchase an item, the payload is different
-		 * between them, so that one user's purchase can't be replayed to
-		 * another user.
-		 * 
-		 * 2. The payload must be such that you can verify it even when the app
-		 * wasn't the one who initiated the purchase flow (so that items
-		 * purchased by the user on one device work on other devices owned by
-		 * the user).
-		 * 
-		 * Using your own server to store and verify developer payloads across
-		 * app installations is recommended.
-		 */
-		return true;
+	public BillingManager getBillingManager(){
+		return mBillingManager;
 	}
 }

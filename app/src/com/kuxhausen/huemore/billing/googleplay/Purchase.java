@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.kuxhausen.huemore.billing;
+package com.kuxhausen.huemore.billing.googleplay;
 
 import org.json.JSONException;
 import org.json.JSONObject;

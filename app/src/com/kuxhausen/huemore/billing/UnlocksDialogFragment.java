@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.billing;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -12,9 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.kuxhausen.huemore.billing.IabHelper;
-import com.kuxhausen.huemore.billing.IabResult;
-import com.kuxhausen.huemore.billing.Purchase;
+import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.id;
+import com.kuxhausen.huemore.R.layout;
+import com.kuxhausen.huemore.R.string;
+import com.kuxhausen.huemore.billing.googleplay.IabHelper;
+import com.kuxhausen.huemore.billing.googleplay.IabResult;
+import com.kuxhausen.huemore.billing.googleplay.Purchase;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
@@ -24,13 +29,16 @@ public class UnlocksDialogFragment extends DialogFragment implements
 	SharedPreferences settings;
 	MainActivity ma;
 	Button fiveMoreButton;
-
+	BillingManager bm;
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.unlocks_fragment, container, false);
 		ma = (MainActivity) this.getActivity();
+		bm = ma.getBillingManager();
 		this.getDialog().setTitle(R.string.action_unlocks);
 
 		settings = PreferenceManager.getDefaultSharedPreferences(ma);
@@ -45,12 +53,12 @@ public class UnlocksDialogFragment extends DialogFragment implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.fiveMoreButton:
-			if (ma.lastQuerriedInventory == null)
-				ma.mPlayHelper.queryInventoryAsync(ma.mGotInventoryListener);
+			if (bm.lastQuerriedInventory == null)
+				bm.mPlayHelper.queryInventoryAsync(bm.mGotInventoryListener);
 			else {
-				if (!ma.lastQuerriedInventory
+				if (!bm.lastQuerriedInventory
 						.hasPurchase(PlayItems.FIVE_BULB_UNLOCK_1))
-					ma.mPlayHelper.launchPurchaseFlow(this.ma,
+					bm.mPlayHelper.launchPurchaseFlow(this.ma,
 							PlayItems.FIVE_BULB_UNLOCK_1, 10009,
 							mPurchaseFinishedListener, "");
 				else
@@ -66,7 +74,7 @@ public class UnlocksDialogFragment extends DialogFragment implements
 	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
 		@Override
 		public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-			ma.mPlayHelper.queryInventoryAsync(ma.mGotInventoryListener);
+			bm.mPlayHelper.queryInventoryAsync(bm.mGotInventoryListener);
 		}
 	};
 
