@@ -24,7 +24,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mDrawerTitles = {"Replace me1", "ReplaceMe2"};
+    private String[] mDrawerTitles;
     //private Fragment[] mFragments = new Fragment[mDrawerTitles.length];
 
     @Override
@@ -32,6 +32,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
+        mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_titles);
+        
         mTitle = mDrawerTitle = getTitle();
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -158,4 +160,10 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    
+    
+    @Override
+	public void onConnectionStatusChanged(){
+		this.supportInvalidateOptionsMenu();
+	}
 }

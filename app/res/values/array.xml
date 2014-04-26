@@ -35,6 +35,14 @@
         <item>@string/help_content_faq</item>
     </string-array>
 	
+    <string-array name="navigation_drawer_titles">
+	    <item>@string/action_bulbs</item>
+	    <item>@string/groups</item>
+        <item>@string/action_connections</item>
+        <item>@string/action_settings</item>
+        <item>@string/action_help</item>
+    </string-array>
+    
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     
