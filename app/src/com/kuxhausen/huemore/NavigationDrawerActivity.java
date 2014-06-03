@@ -124,6 +124,9 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     		case 1:
     			selectedFrag = new GroupListFragment();
     			break;
+    		case 3:
+    			selectedFrag = new SettingsActivity();
+    			break;
     	}
     	
         FragmentManager fragmentManager = getSupportFragmentManager();

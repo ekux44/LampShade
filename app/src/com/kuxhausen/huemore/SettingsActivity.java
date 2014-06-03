@@ -6,38 +6,37 @@ import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class SettingsActivity extends ActionBarActivity implements OnClickListener {
+public class SettingsActivity extends Fragment implements OnClickListener {
 
 	SharedPreferences mSettings;
 	private CheckBox mEnableNfcReadPage;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.settings);
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View myView = inflater.inflate(R.layout.settings, container, false);
 		
-		this.getSupportActionBar().setTitle(R.string.action_settings);
-
-		Button rateButton = (Button) this.findViewById(R.id.rateButton);
+		this.getActivity().setTitle(R.string.action_settings);
+		
+		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
 		rateButton.setOnClickListener(this);
 
-		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+		mSettings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         
-		mEnableNfcReadPage = (CheckBox)this.findViewById(R.id.showNfcReadPageCheckBox);
+		mEnableNfcReadPage = (CheckBox)myView.findViewById(R.id.showNfcReadPageCheckBox);
 		if(mSettings.getBoolean(PreferenceKeys.SHOW_ACTIVITY_ON_NFC_READ, true)){
 			mEnableNfcReadPage.setChecked(true);
 		}
+		return myView;
 	}
 
 	@Override
@@ -57,16 +56,5 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		Editor edit = mSettings.edit();
 		edit.putBoolean(PreferenceKeys.SHOW_ACTIVITY_ON_NFC_READ, mEnableNfcReadPage.isChecked());
 		edit.commit();
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				this.startActivity(new Intent(this,MainActivity.class));
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 }
