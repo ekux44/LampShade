@@ -4,10 +4,10 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,7 +114,9 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     }
 
     private void selectItem(int position) {
-        // update the main content by replacing fragments
+        this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    	
+    	// update the main content by replacing fragments
     	
     	Fragment selectedFrag =null;
     	switch(position){
@@ -126,6 +128,9 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     			break;
     		case 3:
     			selectedFrag = new SettingsActivity();
+    			break;
+    		case 4:
+    			selectedFrag = new HelpActivity();
     			break;
     	}
     	
