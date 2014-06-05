@@ -39,8 +39,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	
 	private final MainActivity me = this;
 	
-	private BillingManager mBillingManager;
-	
 	private SharedPreferences mSettings;
 	private ViewPager mGroupBulbViewPager;
 	private GroupBulbPagerAdapter mGroupBulbPagerAdapter;
@@ -135,7 +133,6 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		
 		
 		PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
-		mBillingManager = new BillingManager(this);
 		
 		/*
 		Calendar currentTime = Calendar.getInstance();
@@ -344,23 +341,5 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-	
-	@Override
-	public void onDestroy() {
-		if(mBillingManager!=null)
-			mBillingManager.onDestroy();
-		
-		super.onDestroy();
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(mBillingManager!=null)
-			mBillingManager.onActivityResult(requestCode,resultCode,data);
-	}
-	
-	public BillingManager getBillingManager(){
-		return mBillingManager;
 	}
 }

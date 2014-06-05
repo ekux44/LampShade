@@ -43,6 +43,15 @@
         <item>@string/action_help</item>
     </string-array>
     
+    <string-array name="navigation_drawer_pro_titles">
+	    <item>@string/action_bulbs</item>
+	    <item>@string/groups</item>
+        <item>@string/action_connections</item>
+        <item>@string/action_settings</item>
+        <item>@string/action_help</item>
+        <item>@string/alarms</item>
+    </string-array>
+    
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     

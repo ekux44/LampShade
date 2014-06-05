@@ -1,5 +1,10 @@
 package com.kuxhausen.huemore;
 
+import com.kuxhausen.huemore.billing.BillingManager;
+import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.timing.AlarmsListFragment;
+
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -27,13 +32,25 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     private String[] mDrawerTitles;
     //private Fragment[] mFragments = new Fragment[mDrawerTitles.length];
 
+    private BillingManager mBillingManager;
+	
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
-        mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_titles);
+        mBillingManager = new BillingManager(this);
         
+
+        
+		if(Utils.hasProVersion(this)){
+			mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_pro_titles);
+		}
+		else{
+			mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_titles);
+		}
+		
         mTitle = mDrawerTitle = getTitle();
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -132,6 +149,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     		case 4:
     			selectedFrag = new HelpActivity();
     			break;
+    		case 5:
+    			selectedFrag = new AlarmsListFragment();
     	}
     	
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -173,5 +192,24 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     @Override
 	public void onConnectionStatusChanged(){
 		this.supportInvalidateOptionsMenu();
+	}
+    
+    
+    @Override
+	public void onDestroy() {
+		if(mBillingManager!=null)
+			mBillingManager.onDestroy();
+		
+		super.onDestroy();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(mBillingManager!=null)
+			mBillingManager.onActivityResult(requestCode,resultCode,data);
+	}
+	
+	public BillingManager getBillingManager(){
+		return mBillingManager;
 	}
 }
