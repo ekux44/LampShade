@@ -10,10 +10,14 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
@@ -34,10 +38,9 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
 /**
  * @author Eric Kuxhausen
  */
-public class MainActivity extends NetworkManagedSherlockFragmentActivity{
-	private final static Gson gson = new Gson();
+public class MainActivity extends Fragment{
 	
-	private final MainActivity me = this;
+	private NavigationDrawerActivity parrentA;
 	
 	private SharedPreferences mSettings;
 	private ViewPager mGroupBulbViewPager;
@@ -49,24 +52,26 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
     private SeekBar mBrightnessBar;
 	private boolean mIsTrackingTouch = false;
     
-	@Override
+	/*@Override
 	public void onConnectionStatusChanged(){
 		this.supportInvalidateOptionsMenu();
-	}
+	}*/
 	
-	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.main_activity);
 		
-		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
+		View myView = inflater.inflate(R.layout.main_activity, null);
+		
+		parrentA = (NavigationDrawerActivity) this.getActivity();
+		
+		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(parrentA);
 		// Set up the ViewPager, attaching the adapter.
-		mGroupBulbViewPager = (ViewPager) this.findViewById(R.id.bulb_group_pager);
+		mGroupBulbViewPager = (ViewPager) myView.findViewById(R.id.bulb_group_pager);
 		mGroupBulbViewPager.setAdapter(mGroupBulbPagerAdapter);
 		
-		mSettings = PreferenceManager.getDefaultSharedPreferences(me);
+		mSettings = PreferenceManager.getDefaultSharedPreferences(parrentA);
 		
 		if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
 			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
@@ -78,7 +83,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		
 		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
-        mGroupBulbSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.bulb_group_sliding_tabs);
+        mGroupBulbSlidingTabLayout = (SlidingTabLayout) myView.findViewById(R.id.bulb_group_sliding_tabs);
         mGroupBulbSlidingTabLayout.setViewPager(mGroupBulbViewPager);
         mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.greenwidgets_color));
 		
@@ -87,9 +92,9 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
 					
-			mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
+			mMoodManualPagerAdapter = new MoodManualPagerAdapter(parrentA);
 			// Set up the ViewPager, attaching the adapter.
-			mMoodManualViewPager = (ViewPager) this.findViewById(R.id.manual_mood_pager);
+			mMoodManualViewPager = (ViewPager) myView.findViewById(R.id.manual_mood_pager);
 			mMoodManualViewPager.setAdapter(mMoodManualPagerAdapter);
 			
 			if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
@@ -98,24 +103,24 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			
 			// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
 	        // it's PagerAdapter set.
-	        mMoodManualSlidingTabLayout = (SlidingTabLayout) this.findViewById(R.id.manual_mood_sliding_tabs);
+	        mMoodManualSlidingTabLayout = (SlidingTabLayout) myView.findViewById(R.id.manual_mood_sliding_tabs);
 	        mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
 	        mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.redwidgets_color));
 			
 			
-			mBrightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+			mBrightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 			mBrightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					DeviceManager dm = MainActivity.this.getService().getDeviceManager();
+					DeviceManager dm = parrentA.getService().getDeviceManager();
 					dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
 					mIsTrackingTouch = false;
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					DeviceManager dm = MainActivity.this.getService().getDeviceManager();
+					DeviceManager dm = parrentA.getService().getDeviceManager();
 					dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
 					mIsTrackingTouch = true;
 				}
@@ -124,38 +129,20 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				public void onProgressChanged(SeekBar seekBar, int progress,
 						boolean fromUser) {
 					if(fromUser){
-						DeviceManager dm = MainActivity.this.getService().getDeviceManager();
+						DeviceManager dm = parrentA.getService().getDeviceManager();
 						dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
 					}
 				}
 			});
 		 }
-		
-		
-		PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
-		
-		/*
-		Calendar currentTime = Calendar.getInstance();
-		Calendar updateTime = Calendar.getInstance();
-		updateTime.set(Calendar.MONTH, Calendar.NOVEMBER); //TODO remember to change this when releasing new versions
-		
-		if(currentTime.after(updateTime) && !settings.getBoolean(PreferenceKeys.UPDATE_OPT_OUT, false)){
-			PromptUpdateDialogFragment updates = new PromptUpdateDialogFragment();
-			updates.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-		}
-		*/
+		setHasOptionsMenu(true);
+		return myView;
+	}
 
-		Bundle b = this.getIntent().getExtras();
-		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
-				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
-			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-		}
-		
-		//TODO turn off before relase
-		com.kuxhausen.huemore.testing.Tests.tests();
+	@Override
+	public void onResume() {
+		super.onResume();
+		this.setHasOptionsMenu(true);
 	}
 	
 	@Override
@@ -183,16 +170,15 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		super.onSaveInstanceState(outstate);
 	}
 	
-	@Override
+	//don't forget to forward to this from parent NetworkManagedSherlockActivity
 	public void setGroup(Group g){
-		super.setGroup(g);
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
 			invalidateSelection();
-		 }else if( this.boundToService()){
+		 }else if( parrentA.boundToService()){
 			// only load the moods page if the group has been sent to the service
-			Intent i = new Intent(this, SecondActivity.class);
+			Intent i = new Intent(parrentA, SecondActivity.class);
 			this.startActivity(i);
 		 }
 	}	
@@ -206,10 +192,10 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 		}
 	}
 		
-	@Override
+	//don't forget to forward to this from parent NetworkManagedSherlockActivity
 	public void onStateChanged() {
 		if(mBrightnessBar!=null && !mIsTrackingTouch){
-			DeviceManager dm = this.getService().getDeviceManager();
+			DeviceManager dm = parrentA.getService().getDeviceManager();
 			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
 			if(candidateBrightness!=null)
 				mBrightnessBar.setProgress(candidateBrightness);
@@ -217,10 +203,11 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.main, menu);
-		if (Utils.hasProVersion(this)) {
+	
+		/*if (Utils.hasProVersion(parrentA)) {
 			// has pro version
 
 			// hide unlocks button
@@ -248,7 +235,7 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				alarmItem.setEnabled(false);
 				alarmItem.setVisible(false);
 			}
-		}
+		}*/
 
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
 			MenuItem bothItem = menu.findItem(R.id.action_add_both);
@@ -264,21 +251,20 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 				connectionErrorItem.setEnabled(false);
 				connectionErrorItem.setVisible(false);
 			}
-		}*/else{
+		}else{
 			MenuItem connectionItem = menu.findItem(R.id.action_connected_with_hub);
 			if (connectionItem != null) {
 				connectionItem.setEnabled(false);
 				connectionItem.setVisible(false);
 			}
-		}
-		return true;
+		}*/
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.action_connected_with_hub:
+		/*case R.id.action_connected_with_hub:
 			ConnectionStatusDialogFragment csdf1 = new ConnectionStatusDialogFragment();
 			csdf1.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -292,17 +278,17 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			Intent iSet = new Intent(this, SettingsActivity.class);
 			this.startActivity(iSet);
 			return true;
-		case R.id.action_communities:
+		*/case R.id.action_communities:
 			CommunityDialogFragment communities = new CommunityDialogFragment();
-			communities.show(getSupportFragmentManager(),
+			communities.show(parrentA.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_add_both:
 			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
-			addBoth.show(getSupportFragmentManager(),
+			addBoth.show(parrentA.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
-		case R.id.action_unlocks:
+		/*case R.id.action_unlocks:
 			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
 			unlocks.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -332,13 +318,13 @@ public class MainActivity extends NetworkManagedSherlockFragmentActivity{
 			          "?subject=" + Uri.encode(getResources().getString(R.string.app_name)
 			        		  + " " + versionName
 			        		  + " " + getResources().getString(R.string.report_bug_email_subject))/* + 
-			          "&body=" + Uri.encode("the body of the message")*/;
+			          "&body=" + Uri.encode("the body of the message")*//*;
 			Uri uri = Uri.parse(uriText);
 
 			send.setData(uri);
 			startActivity(Intent.createChooser(send, "Send mail..."));
 			return true;
-		default:
+		*/default:
 			return super.onOptionsItemSelected(item);
 		}
 	}

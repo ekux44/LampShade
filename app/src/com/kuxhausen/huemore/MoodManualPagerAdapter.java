@@ -2,6 +2,7 @@ package com.kuxhausen.huemore;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.ActionBarActivity;
 
 public class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
@@ -10,9 +11,9 @@ public class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
 	private MoodListFragment moodListFragment;
 	private ColorWheelFragment colorWheelFragment;	
-	private NetworkManagedSherlockFragmentActivity frag;
+	private ActionBarActivity frag;
 	
-	public MoodManualPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
+	public MoodManualPagerAdapter(ActionBarActivity godObject) {
 		super(godObject.getSupportFragmentManager());
 		frag = godObject;
 	}

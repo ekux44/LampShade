@@ -1,7 +1,11 @@
 package com.kuxhausen.huemore;
 
 import com.kuxhausen.huemore.billing.BillingManager;
+import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.timing.AlarmsListFragment;
 
 import android.content.Intent;
@@ -31,7 +35,11 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     private CharSequence mTitle;
     private String[] mDrawerTitles;
     //private Fragment[] mFragments = new Fragment[mDrawerTitles.length];
-
+    
+    public int mSelectedItemPosition;
+    public final static int BULB_FRAG = 0, GROUP_FRAG=1, CONNECTIONS_FRAG = 2, SETTINGS_FRAG = 3, HELP_FRAG = 4, ALARM_FRAG = 5, NFC_FRAG = 6;
+    public final static String BASE_FRAG_TAG = "FragTag";
+    
     private BillingManager mBillingManager;
 	
     
@@ -91,6 +99,16 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         if (savedInstanceState == null) {
             selectItem(0);
         }
+        
+        PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
+        
+        Bundle b = this.getIntent().getExtras();
+		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
+				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
+			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
+			unlocks.show(getSupportFragmentManager(),
+					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		}
     }
 
     @Override
@@ -131,30 +149,40 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     }
 
     private void selectItem(int position) {
-        this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    	//TODO find better hack
+    	if(position == GROUP_FRAG)
+    		position = BULB_FRAG;
+    	
+    	mSelectedItemPosition = position;
+    	this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
     	
     	// update the main content by replacing fragments
     	
-    	Fragment selectedFrag =null;
-    	switch(position){
-    		case 0:
-    			selectedFrag = new BulbListFragment();
-    			break;
-    		case 1:
-    			selectedFrag = new GroupListFragment();
-    			break;
-    		case 3:
-    			selectedFrag = new SettingsActivity();
-    			break;
-    		case 4:
-    			selectedFrag = new HelpActivity();
-    			break;
-    		case 5:
-    			selectedFrag = new AlarmsListFragment();
+    	String selectedFragTag = BASE_FRAG_TAG+position;
+    	
+    	Fragment selectedFrag = getSupportFragmentManager().findFragmentByTag(selectedFragTag);
+    	
+    	if(selectedFrag==null){
+	    	switch(position){
+	    		case BULB_FRAG:
+	    			selectedFrag = new MainActivity();
+	    			break;
+	    		case GROUP_FRAG:
+	    			selectedFrag = new MainActivity();
+	    			break;
+	    		case SETTINGS_FRAG:
+	    			selectedFrag = new SettingsActivity();
+	    			break;
+	    		case HELP_FRAG:
+	    			selectedFrag = new HelpActivity();
+	    			break;
+	    		case ALARM_FRAG:
+	    			selectedFrag = new AlarmsListFragment();
+	    	}
     	}
     	
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, selectedFrag).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, selectedFrag,selectedFragTag).commit();
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
@@ -188,6 +216,37 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     }
 
     
+    @Override
+	public void onStateChanged() {
+    	super.onStateChanged();
+    	
+    	//forward setGroup notifications to MainActivity
+    	if(mSelectedItemPosition == BULB_FRAG){
+    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
+    		if(frag!=null)
+    			frag.onStateChanged();
+    	} else if(mSelectedItemPosition == GROUP_FRAG){
+    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
+    		if(frag!=null)
+    			frag.onStateChanged();
+    	}
+    }
+    
+    @Override
+	public void setGroup(Group g){
+    	super.setGroup(g);
+    	
+    	//forward setGroup notifications to MainActivity
+    	if(mSelectedItemPosition == BULB_FRAG){
+    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
+    		if(frag!=null)
+    			frag.setGroup(g);
+    	} else if(mSelectedItemPosition == GROUP_FRAG){
+    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
+    		if(frag!=null)
+    			frag.setGroup(g);
+    	}
+    }
     
     @Override
 	public void onConnectionStatusChanged(){

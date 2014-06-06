@@ -2,6 +2,7 @@ package com.kuxhausen.huemore;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.ActionBarActivity;
 
 public class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
@@ -10,9 +11,9 @@ public class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 
 	private GroupListFragment groupListFragment;
 	private BulbListFragment bulbListFragment;
-	private NetworkManagedSherlockFragmentActivity frag;
+	private ActionBarActivity frag;
 
-	public GroupBulbPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
+	public GroupBulbPagerAdapter(ActionBarActivity godObject) {
 		super(godObject.getSupportFragmentManager());
 		frag = godObject;
 	}
