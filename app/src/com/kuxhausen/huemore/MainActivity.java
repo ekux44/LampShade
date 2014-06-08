@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.net.DeviceManager;
+import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -38,7 +39,7 @@ import com.kuxhausen.huemore.timing.AlarmListActivity;
 /**
  * @author Eric Kuxhausen
  */
-public class MainActivity extends Fragment{
+public class MainActivity extends Fragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
 	
 	private NavigationDrawerActivity parrentA;
 	
@@ -66,7 +67,7 @@ public class MainActivity extends Fragment{
 		
 		parrentA = (NavigationDrawerActivity) this.getActivity();
 		
-		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(parrentA);
+		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
 		// Set up the ViewPager, attaching the adapter.
 		mGroupBulbViewPager = (ViewPager) myView.findViewById(R.id.bulb_group_pager);
 		mGroupBulbViewPager.setAdapter(mGroupBulbPagerAdapter);
@@ -92,7 +93,7 @@ public class MainActivity extends Fragment{
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
 					
-			mMoodManualPagerAdapter = new MoodManualPagerAdapter(parrentA);
+			mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
 			// Set up the ViewPager, attaching the adapter.
 			mMoodManualViewPager = (ViewPager) myView.findViewById(R.id.manual_mood_pager);
 			mMoodManualViewPager.setAdapter(mMoodManualPagerAdapter);
@@ -135,14 +136,22 @@ public class MainActivity extends Fragment{
 				}
 			});
 		 }
-		setHasOptionsMenu(true);
 		return myView;
 	}
-
+	
 	@Override
-	public void onResume() {
+	public void onResume(){
 		super.onResume();
+		parrentA.registerOnServiceConnectedListener(this);
 		this.setHasOptionsMenu(true);
+	}
+	@Override
+	public void onServiceConnected() {
+		parrentA.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
+	}
+	public void onPause(){
+		super.onPause();
+		parrentA.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
 	}
 	
 	@Override
@@ -169,19 +178,6 @@ public class MainActivity extends Fragment{
 		edit.commit();
 		super.onSaveInstanceState(outstate);
 	}
-	
-	//don't forget to forward to this from parent NetworkManagedSherlockActivity
-	public void setGroup(Group g){
-		if ((getResources().getConfiguration().screenLayout &
-				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
-				 Configuration.SCREENLAYOUT_SIZE_LARGE){
-			invalidateSelection();
-		 }else if( parrentA.boundToService()){
-			// only load the moods page if the group has been sent to the service
-			Intent i = new Intent(parrentA, SecondActivity.class);
-			this.startActivity(i);
-		 }
-	}	
 				
 	public void invalidateSelection() {
 		if ((getResources().getConfiguration().screenLayout &
@@ -192,8 +188,7 @@ public class MainActivity extends Fragment{
 		}
 	}
 		
-	//don't forget to forward to this from parent NetworkManagedSherlockActivity
-	public void onStateChanged() {
+	public void onConnectionStatusChanged() {
 		if(mBrightnessBar!=null && !mIsTrackingTouch){
 			DeviceManager dm = parrentA.getService().getDeviceManager();
 			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());

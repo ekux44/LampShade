@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,7 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActivity{
+public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActivity implements OnBackStackChangedListener{
 
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -99,6 +100,10 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         if (savedInstanceState == null) {
             selectItem(0);
         }
+        
+        
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        
         
         PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
         
@@ -216,36 +221,42 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     }
 
     
-    @Override
-	public void onStateChanged() {
-    	super.onStateChanged();
-    	
-    	//forward setGroup notifications to MainActivity
-    	if(mSelectedItemPosition == BULB_FRAG){
-    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
-    		if(frag!=null)
-    			frag.onStateChanged();
-    	} else if(mSelectedItemPosition == GROUP_FRAG){
-    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
-    		if(frag!=null)
-    			frag.onStateChanged();
-    	}
-    }
+
+	@Override
+	public void onBackStackChanged() {
+		if(getSupportFragmentManager().getBackStackEntryCount()>0){
+			mDrawerToggle.setDrawerIndicatorEnabled(false);
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		}else{
+			mDrawerToggle.setDrawerIndicatorEnabled(true);
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		}
+		
+	}
     
     @Override
 	public void setGroup(Group g){
     	super.setGroup(g);
     	
-    	//forward setGroup notifications to MainActivity
+    	MainActivity frag = null;
     	if(mSelectedItemPosition == BULB_FRAG){
-    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
-    		if(frag!=null)
-    			frag.setGroup(g);
+    		frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
     	} else if(mSelectedItemPosition == GROUP_FRAG){
-    		MainActivity frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
-    		if(frag!=null)
-    			frag.setGroup(g);
+    		frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
     	}
+    	if(frag!=null){
+			if ((getResources().getConfiguration().screenLayout &
+					 Configuration.SCREENLAYOUT_SIZE_MASK) >=
+					 Configuration.SCREENLAYOUT_SIZE_LARGE){
+				frag.invalidateSelection();
+			 }else if(boundToService()){
+				 SecondActivity drillDownFrag = new SecondActivity();
+				 
+				 FragmentManager fragmentManager = getSupportFragmentManager();
+			     fragmentManager.beginTransaction().addToBackStack("prevoius").replace(R.id.content_frame, drillDownFrag).commit();
+
+			 }
+		}
     }
     
     @Override

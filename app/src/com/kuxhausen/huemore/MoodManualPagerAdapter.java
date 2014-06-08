@@ -2,34 +2,26 @@ package com.kuxhausen.huemore;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.ActionBarActivity;
 
 public class MoodManualPagerAdapter extends FragmentPagerAdapter {
 
 	public static final int MOOD_LOCATION = 1;
 	public static final int MANUAL_LOCATION = 0;
 
-	private MoodListFragment moodListFragment;
-	private ColorWheelFragment colorWheelFragment;	
-	private ActionBarActivity frag;
+	private Fragment frag;
 	
-	public MoodManualPagerAdapter(ActionBarActivity godObject) {
-		super(godObject.getSupportFragmentManager());
-		frag = godObject;
+	public MoodManualPagerAdapter(Fragment f) {
+		super(f.getChildFragmentManager());
+		frag = f;
 	}
 
 	@Override
 	public Fragment getItem(int i) {
 		switch (i) {
 		case MOOD_LOCATION:
-			if (moodListFragment == null)
-				moodListFragment = new MoodListFragment();
-			return moodListFragment;
+			return new MoodListFragment();
 		case MANUAL_LOCATION:
-			if (colorWheelFragment == null) {
-				colorWheelFragment = new ColorWheelFragment();
-			}
-			return colorWheelFragment;
+			return new ColorWheelFragment();
 		default:
 			return null;
 		}
