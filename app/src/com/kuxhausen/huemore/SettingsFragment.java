@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class SettingsFragment extends Fragment implements OnClickListener {
@@ -29,7 +31,13 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		
 		Button rateButton = (Button) myView.findViewById(R.id.rateButton);
 		rateButton.setOnClickListener(this);
+		
+		Button unlocksButton = (Button) myView.findViewById(R.id.action_unlocks);
+		unlocksButton.setOnClickListener(this);
 
+		Button communitiesButton = (Button) myView.findViewById(R.id.action_communities);
+		communitiesButton.setOnClickListener(this);		
+		
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         
 		mEnableNfcReadPage = (CheckBox)myView.findViewById(R.id.showNfcReadPageCheckBox);
@@ -46,6 +54,13 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			this.startActivity(new Intent(Intent.ACTION_VIEW, Uri
 					.parse("market://details?id=" + "com.kuxhausen.huemore")));
 			break;
+		case R.id.action_unlocks:
+			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
+			unlocks.show(getChildFragmentManager(),	InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+			break;
+		case R.id.action_communities:
+			CommunityDialogFragment communities = new CommunityDialogFragment();
+			communities.show(getChildFragmentManager(),	InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 		}
 	}
 

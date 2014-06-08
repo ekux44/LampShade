@@ -204,12 +204,6 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 		/*if (Utils.hasProVersion(parrentA)) {
 			// has pro version
 
-			// hide unlocks button
-			MenuItem unlocksItem = menu.findItem(R.id.action_unlocks);
-			if (unlocksItem != null) {
-				unlocksItem.setEnabled(false);
-				unlocksItem.setVisible(false);
-			}
 			if (NfcAdapter.getDefaultAdapter(this) == null) {
 				// hide nfc link if nfc not supported
 				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
@@ -224,11 +218,6 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 				nfcItem.setEnabled(false);
 				nfcItem.setVisible(false);
 			}
-			MenuItem alarmItem = menu.findItem(R.id.action_alarms);
-			if (alarmItem != null) {
-				alarmItem.setEnabled(false);
-				alarmItem.setVisible(false);
-			}
 		}*/
 
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
@@ -238,56 +227,19 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 				bothItem.setVisible(false);
 			}
 		}
-		
-		/*if(this.boundToService() && this.getService().getDeviceManager().isFully){
-			MenuItem connectionErrorItem = menu.findItem(R.id.action_register_with_hub);
-			if (connectionErrorItem != null) {
-				connectionErrorItem.setEnabled(false);
-				connectionErrorItem.setVisible(false);
-			}
-		}else{
-			MenuItem connectionItem = menu.findItem(R.id.action_connected_with_hub);
-			if (connectionItem != null) {
-				connectionItem.setEnabled(false);
-				connectionItem.setVisible(false);
-			}
-		}*/
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		/*case R.id.action_connected_with_hub:
-			ConnectionStatusDialogFragment csdf1 = new ConnectionStatusDialogFragment();
-			csdf1.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
-		case R.id.action_register_with_hub:
-			ConnectionStatusDialogFragment csdf2 = new ConnectionStatusDialogFragment();
-			csdf2.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
-		case R.id.action_settings:
-			Intent iSet = new Intent(this, SettingsActivity.class);
-			this.startActivity(iSet);
-			return true;
-		*/case R.id.action_communities:
-			CommunityDialogFragment communities = new CommunityDialogFragment();
-			communities.show(mParent.getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
+		
 		case R.id.action_add_both:
 			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
 			addBoth.show(mParent.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
-		/*case R.id.action_unlocks:
-			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-			unlocks.show(getSupportFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			return true;
-		case R.id.action_nfc:
+		/*case R.id.action_nfc:
 			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
 				Toast.makeText(this, this.getString(R.string.nfc_disabled),
 						Toast.LENGTH_SHORT).show();
@@ -295,28 +247,6 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 				Intent i = new Intent(this, NfcWriterActivity.class);
 				this.startActivity(i);
 			}
-			return true;
-		case R.id.action_alarms:
-			Intent i = new Intent(this, AlarmListActivity.class);
-			this.startActivity(i);
-			return true;
-		case R.id.action_report_bug:
-			Intent send = new Intent(Intent.ACTION_SENDTO);
-			String versionName = "";
-			try {
-				versionName = this.getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-			} catch (NotFoundException e) {
-			} catch (NameNotFoundException e) {
-			}
-			String uriText = "mailto:" + Uri.encode(getResources().getString(R.string.developer_email)) + 
-			          "?subject=" + Uri.encode(getResources().getString(R.string.app_name)
-			        		  + " " + versionName
-			        		  + " " + getResources().getString(R.string.report_bug_email_subject))/* + 
-			          "&body=" + Uri.encode("the body of the message")*//*;
-			Uri uri = Uri.parse(uriText);
-
-			send.setData(uri);
-			startActivity(Intent.createChooser(send, "Send mail..."));
 			return true;
 		*/default:
 			return super.onOptionsItemSelected(item);
