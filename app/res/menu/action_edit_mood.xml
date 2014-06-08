@@ -6,7 +6,7 @@
 		android:title="@string/action_help"
 		android:icon="@drawable/ic_action_help"
 		android:orderInCategory="1"
-		app:showAsAction="always"
+		app:showAsAction="ifRoom"
 		/>
 	
     <item
@@ -14,7 +14,7 @@
 		android:title="@string/save"
 		android:icon="@drawable/ic_action_save"
 		android:orderInCategory="2"
-		app:showAsAction="always"
+		app:showAsAction="ifRoom"
 		/>
     
 	<item
@@ -22,6 +22,6 @@
 		android:title="@string/action_play"
 		android:icon="@drawable/ic_action_play"
 		android:orderInCategory="3"
-		app:showAsAction="always"
+		app:showAsAction="ifRoom"
 		/>
 </menu>

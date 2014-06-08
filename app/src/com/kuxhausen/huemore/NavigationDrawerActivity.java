@@ -2,6 +2,7 @@ package com.kuxhausen.huemore;
 
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
+import com.kuxhausen.huemore.editmood.EditMoodActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -159,7 +160,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     		position = BULB_FRAG;
     	
     	mSelectedItemPosition = position;
-    	this.getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    	cleanUpActionBar();
     	
     	// update the main content by replacing fragments
     	
@@ -220,10 +221,13 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    
+    private void cleanUpActionBar(){
+    	getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+    }
 
 	@Override
 	public void onBackStackChanged() {
+		cleanUpActionBar();
 		if(getSupportFragmentManager().getBackStackEntryCount()>0){
 			mDrawerToggle.setDrawerIndicatorEnabled(false);
 			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -232,6 +236,23 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 		}
 		
+	}
+	
+	public void showHelp(String pageName){
+		//TODO
+		//i.putExtra(InternalArguments.HELP_PAGE, pageName);
+	}
+	
+	public void showEditMood(String moodName){
+		EditMoodActivity frag = new EditMoodActivity();
+		if(moodName!=null){
+			Bundle b = new Bundle();
+			b.putString(InternalArguments.MOOD_NAME, moodName);
+			frag.setArguments(b);
+		}
+		FragmentManager fragmentManager = getSupportFragmentManager();
+	    fragmentManager.beginTransaction().addToBackStack("prevoius").replace(R.id.content_frame, frag).commit();
+
 	}
     
     @Override

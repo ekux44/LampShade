@@ -34,6 +34,8 @@ import com.kuxhausen.huemore.persistence.Utils;
 public class MoodListFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
+	NavigationDrawerActivity parrentA;
+	
 	// Identifies a particular Loader being used in this component
 	private static final int MOODS_LOADER = 0;
 	public CursorAdapter dataSource;
@@ -45,6 +47,8 @@ public class MoodListFragment extends ListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		parrentA = (NavigationDrawerActivity) this.getActivity();
 		
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 
@@ -116,8 +120,7 @@ public class MoodListFragment extends ListFragment implements
 		switch (item.getItemId()) {
 
 		case R.id.action_add_mood:
-			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
-			this.getActivity().startActivity(i);
+			parrentA.showEditMood(null);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -175,8 +178,7 @@ public class MoodListFragment extends ListFragment implements
 					moodArg);
 			return true;
 		case R.id.contextmoodmenu_edit:
-			Intent i = new Intent(this.getActivity(), EditMoodActivity.class);
-			this.getActivity().startActivity(i);
+			parrentA.showEditMood(longSelected.getText().toString());
 			return true;
 		default:
 			return super.onContextItemSelected(item);

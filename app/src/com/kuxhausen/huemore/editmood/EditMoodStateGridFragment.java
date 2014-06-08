@@ -39,6 +39,8 @@ import com.kuxhausen.huemore.state.Mood;
 
 public class EditMoodStateGridFragment extends Fragment implements OnClickListener, OnCreateMoodListener, StateGridDisplay {
 
+	EditMoodActivity parentFrag;
+	
 	Gson gson = new Gson();
 	private GridLayout grid;
 	public ArrayList<StateRow> moodRows = new ArrayList<StateRow>();
@@ -47,7 +49,6 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 	private ArrayList<ImageButton> channelButtons = new ArrayList<ImageButton>();
 	private String priorName;
 	private PageType pageType = PageType.SIMPLE_PAGE;
-	public EditMoodActivity mEditMoodActivity;
 	private CellOnLongClickListener mCellLongListener = new CellOnLongClickListener(this, ViewType.StateCell);
 	CellOnDragListener mCellDragListener;
 	private CellOnLongClickListener mChannelLongListener = new CellOnLongClickListener(this, ViewType.Channel);
@@ -58,7 +59,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 	
 	ActionMode mActionMode;
 	StateGridSelections mStateGrid;
-	
+
 	public enum PageType {SIMPLE_PAGE, RELATIVE_PAGE, DAILY_PAGE};
 	
 	public void setMoodMode(int spinnerPos){
@@ -70,12 +71,6 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 			redrawGrid();
 		}
 	}
-	
-	@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mEditMoodActivity = (EditMoodActivity) activity;
-    }
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,6 +117,10 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 	    return myView;
 	}
 	
+	public void setParentFragment(EditMoodActivity frag){
+		parentFrag = frag;
+	}
+	
 	public int getGridWidth(){
 		if(grid!=null)
 			return grid.getWidth();
@@ -158,9 +157,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 	}
 	@Override
 	public void preview(){
-		String name = mEditMoodActivity.getName();
+		String name = parentFrag.getName();
 		if(name==null || name.length()<1){
-			name = mEditMoodActivity.getString(R.string.hint_mood_name);
+			name = parentFrag.getString(R.string.hint_mood_name);
 		}
 		
 		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
@@ -210,7 +209,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 		}
 		
 		//set loop button
-		mEditMoodActivity.setChecked(mFromDB.isInfiniteLooping());
+		parentFrag.setChecked(mFromDB.isInfiniteLooping());
 		
 		loopTimeslot.setStartTime(mFromDB.loopIterationTimeLength);
 		
@@ -227,7 +226,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 			m.timeAddressingRepeatPolicy=true;
 		else
 			m.timeAddressingRepeatPolicy = false;
-		m.setInfiniteLooping(mEditMoodActivity.isChecked());
+		m.setInfiniteLooping(parentFrag.isChecked());
 		
 		ArrayList<Event> events = new ArrayList<Event>();
 		for(int r = 0; r<moodRows.size(); r++){
@@ -521,7 +520,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 			grid.addView(rowView, vg);
 		}
 		//loop related stuff
-		if(pageType == PageType.RELATIVE_PAGE && mEditMoodActivity.isChecked()){
+		if(pageType == PageType.RELATIVE_PAGE && parentFrag.isChecked()){
 			//loop banner that sits beside loop timeslot
 			
 			{
