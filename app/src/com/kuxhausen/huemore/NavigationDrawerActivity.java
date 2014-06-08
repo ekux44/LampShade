@@ -99,7 +99,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            selectItem(0, null);
         }
         
         
@@ -150,11 +150,11 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            selectItem(position, null);
         }
     }
 
-    private void selectItem(int position) {
+    private void selectItem(int position, Bundle b) {
     	//TODO find better hack
     	if(position == GROUP_FRAG)
     		position = BULB_FRAG;
@@ -187,9 +187,13 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    	}
     	}
     	
+    	if(b!=null)
+    		selectedFrag.setArguments(b);
+    	
         FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.beginTransaction().replace(R.id.content_frame, selectedFrag,selectedFragTag).commit();
-
+        
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mDrawerTitles[position]);
@@ -239,8 +243,21 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	}
 	
 	public void showHelp(String pageName){
-		//TODO
-		//i.putExtra(InternalArguments.HELP_PAGE, pageName);
+		Bundle b = new Bundle();
+		b.putString(InternalArguments.HELP_PAGE, pageName);
+		selectItem(HELP_FRAG, b);
+		
+		//TODO find a way of showing help page without clearning back stack yet still enabling nav drawer
+		/*
+		HelpActivity frag = new HelpActivity();
+		if(pageName!=null){
+			Bundle b = new Bundle();
+			b.putString(InternalArguments.HELP_PAGE, pageName);
+			frag.setArguments(b);
+		}
+		FragmentManager fragmentManager = getSupportFragmentManager();
+	    fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, frag).commit();
+		*/
 	}
 	
 	public void showEditMood(String moodName){
@@ -251,7 +268,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 			frag.setArguments(b);
 		}
 		FragmentManager fragmentManager = getSupportFragmentManager();
-	    fragmentManager.beginTransaction().addToBackStack("prevoius").replace(R.id.content_frame, frag).commit();
+	    fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, frag).commit();
 
 	}
     
