@@ -280,6 +280,11 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 		}
     }
     
+    public void markSelected(int position){
+    	mDrawerList.setItemChecked(position, true);
+        setTitle(mDrawerTitles[position]);
+    }
+    
     @Override
 	public void onConnectionStatusChanged(){
 		this.supportInvalidateOptionsMenu();

@@ -1,17 +1,14 @@
 package com.kuxhausen.huemore;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
-import android.content.res.Resources.NotFoundException;
-import android.net.Uri;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,28 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Toast;
 
 import com.example.android.common.view.SlidingTabLayout;
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.billing.BillingManager;
-import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
-import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.persistence.PreferenceInitializer;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.timing.AlarmListActivity;
 
 /**
  * @author Eric Kuxhausen
  */
 public class MainActivity extends Fragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
 	
-	private NavigationDrawerActivity parrentA;
+	private NavigationDrawerActivity mParent;
 	
 	private SharedPreferences mSettings;
 	private ViewPager mGroupBulbViewPager;
@@ -52,7 +40,8 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
     private SlidingTabLayout mMoodManualSlidingTabLayout;
     private SeekBar mBrightnessBar;
 	private boolean mIsTrackingTouch = false;
-    
+    private ForwardingPageListener mForwardPage;
+	
 	/*@Override
 	public void onConnectionStatusChanged(){
 		this.supportInvalidateOptionsMenu();
@@ -65,14 +54,14 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 		
 		View myView = inflater.inflate(R.layout.main_activity, null);
 		
-		parrentA = (NavigationDrawerActivity) this.getActivity();
+		mParent = (NavigationDrawerActivity) this.getActivity();
 		
 		mGroupBulbPagerAdapter = new GroupBulbPagerAdapter(this);
 		// Set up the ViewPager, attaching the adapter.
 		mGroupBulbViewPager = (ViewPager) myView.findViewById(R.id.bulb_group_pager);
 		mGroupBulbViewPager.setAdapter(mGroupBulbPagerAdapter);
 		
-		mSettings = PreferenceManager.getDefaultSharedPreferences(parrentA);
+		mSettings = PreferenceManager.getDefaultSharedPreferences(mParent);
 		
 		if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
 			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
@@ -88,7 +77,11 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
         mGroupBulbSlidingTabLayout.setViewPager(mGroupBulbViewPager);
         mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.greenwidgets_color));
 		
-		
+        //add custom page changed lister to sych bulb/group tabs with nav drawer
+        mForwardPage = new ForwardingPageListener();
+        mGroupBulbSlidingTabLayout.setOnPageChangeListener(mForwardPage);
+        
+        
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
@@ -114,14 +107,14 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					DeviceManager dm = parrentA.getService().getDeviceManager();
+					DeviceManager dm = mParent.getService().getDeviceManager();
 					dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
 					mIsTrackingTouch = false;
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					DeviceManager dm = parrentA.getService().getDeviceManager();
+					DeviceManager dm = mParent.getService().getDeviceManager();
 					dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
 					mIsTrackingTouch = true;
 				}
@@ -130,7 +123,7 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 				public void onProgressChanged(SeekBar seekBar, int progress,
 						boolean fromUser) {
 					if(fromUser){
-						DeviceManager dm = parrentA.getService().getDeviceManager();
+						DeviceManager dm = mParent.getService().getDeviceManager();
 						dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
 					}
 				}
@@ -142,16 +135,16 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 	@Override
 	public void onResume(){
 		super.onResume();
-		parrentA.registerOnServiceConnectedListener(this);
+		mParent.registerOnServiceConnectedListener(this);
 		this.setHasOptionsMenu(true);
 	}
 	@Override
 	public void onServiceConnected() {
-		parrentA.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
+		mParent.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
 	}
 	public void onPause(){
 		super.onPause();
-		parrentA.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+		mParent.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
 	}
 	
 	@Override
@@ -190,7 +183,7 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 		
 	public void onConnectionStatusChanged() {
 		if(mBrightnessBar!=null && !mIsTrackingTouch){
-			DeviceManager dm = parrentA.getService().getDeviceManager();
+			DeviceManager dm = mParent.getService().getDeviceManager();
 			Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
 			if(candidateBrightness!=null)
 				mBrightnessBar.setProgress(candidateBrightness);
@@ -275,12 +268,12 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 			return true;
 		*/case R.id.action_communities:
 			CommunityDialogFragment communities = new CommunityDialogFragment();
-			communities.show(parrentA.getSupportFragmentManager(),
+			communities.show(mParent.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		case R.id.action_add_both:
 			AddMoodGroupSelectorDialogFragment addBoth = new AddMoodGroupSelectorDialogFragment();
-			addBoth.show(parrentA.getSupportFragmentManager(),
+			addBoth.show(mParent.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
 		/*case R.id.action_unlocks:
@@ -322,5 +315,19 @@ public class MainActivity extends Fragment implements OnConnectionStatusChangedL
 		*/default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	class ForwardingPageListener extends SimpleOnPageChangeListener{
+
+		@Override
+		public void onPageSelected(int arg0) {
+			
+			if(arg0 == GroupBulbPagerAdapter.BULB_LOCATION){
+				mParent.markSelected(NavigationDrawerActivity.BULB_FRAG);
+			} else if(arg0 == GroupBulbPagerAdapter.GROUP_LOCATION){
+				mParent.markSelected(NavigationDrawerActivity.GROUP_FRAG);
+			}
+		}
+		
 	}
 }
