@@ -23,8 +23,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.kuxhausen.huemore.HelpActivity;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.HelpFragment;
+import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.SerializedEditorActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -71,10 +71,10 @@ public class NfcWriterActivity extends SerializedEditorActivity implements
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				this.startActivity(new Intent(this,MainActivity.class));
+				this.startActivity(new Intent(this,MainFragment.class));
 				return true;
 			case R.id.action_help:
-				Intent i = new Intent(this, HelpActivity.class);
+				Intent i = new Intent(this, HelpFragment.class);
 				i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_nfc));
 				this.startActivity(i);
 				return true;

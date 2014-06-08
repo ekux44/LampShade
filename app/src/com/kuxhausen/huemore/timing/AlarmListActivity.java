@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -52,7 +52,7 @@ public class AlarmListActivity extends ActionBarActivity {
 
 		}
 		if(!Utils.hasProVersion(this)) {
-			Intent i = new Intent(this, MainActivity.class);
+			Intent i = new Intent(this, MainFragment.class);
 			i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
 			startActivity(i);
 			setResult(Activity.RESULT_CANCELED);

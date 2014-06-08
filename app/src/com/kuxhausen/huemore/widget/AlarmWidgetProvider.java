@@ -18,7 +18,7 @@ import android.os.HandlerThread;
 import android.widget.RemoteViews;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -134,7 +134,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
                     openAlarmsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setOnClickPendingIntent(R.id.alarms_icon, openAlarmsPendingIntent);
             
-            final Intent openHueMoreIntent = new Intent(context, MainActivity.class);
+            final Intent openHueMoreIntent = new Intent(context, MainFragment.class);
             final PendingIntent openHueMorePendingIntent = PendingIntent.getActivity(context, 0,
             		openHueMoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);

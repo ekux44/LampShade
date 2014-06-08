@@ -22,8 +22,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.HelpActivity;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.HelpFragment;
+import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
@@ -34,7 +34,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 
-public class EditMoodActivity extends Fragment implements OnItemSelectedListener, OnCheckedChangeListener {
+public class EditMoodFragment extends Fragment implements OnItemSelectedListener, OnCheckedChangeListener {
 
 	private NavigationDrawerActivity parrentA;
 	

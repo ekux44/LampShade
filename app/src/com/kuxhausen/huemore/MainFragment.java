@@ -27,7 +27,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 /**
  * @author Eric Kuxhausen
  */
-public class MainActivity extends Fragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
+public class MainFragment extends Fragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
 	
 	private NavigationDrawerActivity mParent;
 	

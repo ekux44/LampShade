@@ -19,8 +19,8 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.support.v7.app.ActionBarActivity;
 
-import com.kuxhausen.huemore.HelpActivity;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.HelpFragment;
+import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -72,7 +72,7 @@ public class AlarmsListFragment extends ListFragment implements
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.startActivity(new Intent(this.getActivity(),MainActivity.class));
+			this.startActivity(new Intent(this.getActivity(),MainFragment.class));
 			return true;
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
@@ -81,7 +81,7 @@ public class AlarmsListFragment extends ListFragment implements
 			nadf.onLoadLoaderManager(null);
 			return true;
 		case R.id.action_help:
-			Intent i = new Intent(this.getActivity(), HelpActivity.class);
+			Intent i = new Intent(this.getActivity(), HelpFragment.class);
 			i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_alarms));
 			this.startActivity(i);
 			return true;

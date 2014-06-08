@@ -2,7 +2,7 @@ package com.kuxhausen.huemore;
 
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
-import com.kuxhausen.huemore.editmood.EditMoodActivity;
+import com.kuxhausen.huemore.editmood.EditMoodFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -171,16 +171,16 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     	if(selectedFrag==null){
 	    	switch(position){
 	    		case BULB_FRAG:
-	    			selectedFrag = new MainActivity();
+	    			selectedFrag = new MainFragment();
 	    			break;
 	    		case GROUP_FRAG:
-	    			selectedFrag = new MainActivity();
+	    			selectedFrag = new MainFragment();
 	    			break;
 	    		case SETTINGS_FRAG:
-	    			selectedFrag = new SettingsActivity();
+	    			selectedFrag = new SettingsFragment();
 	    			break;
 	    		case HELP_FRAG:
-	    			selectedFrag = new HelpActivity();
+	    			selectedFrag = new HelpFragment();
 	    			break;
 	    		case ALARM_FRAG:
 	    			selectedFrag = new AlarmsListFragment();
@@ -261,7 +261,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	}
 	
 	public void showEditMood(String moodName){
-		EditMoodActivity frag = new EditMoodActivity();
+		EditMoodFragment frag = new EditMoodFragment();
 		if(moodName!=null){
 			Bundle b = new Bundle();
 			b.putString(InternalArguments.MOOD_NAME, moodName);
@@ -276,11 +276,11 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	public void setGroup(Group g){
     	super.setGroup(g);
     	
-    	MainActivity frag = null;
+    	MainFragment frag = null;
     	if(mSelectedItemPosition == BULB_FRAG){
-    		frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
+    		frag = ((MainFragment)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
     	} else if(mSelectedItemPosition == GROUP_FRAG){
-    		frag = ((MainActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
+    		frag = ((MainFragment)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
     	}
     	if(frag!=null){
 			if ((getResources().getConfiguration().screenLayout &
@@ -288,7 +288,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 					 Configuration.SCREENLAYOUT_SIZE_LARGE){
 				frag.invalidateSelection();
 			 }else if(boundToService()){
-				 SecondActivity drillDownFrag = new SecondActivity();
+				 SecondaryFragment drillDownFrag = new SecondaryFragment();
 				 
 				 FragmentManager fragmentManager = getSupportFragmentManager();
 			     fragmentManager.beginTransaction().addToBackStack("prevoius").replace(R.id.content_frame, drillDownFrag).commit();

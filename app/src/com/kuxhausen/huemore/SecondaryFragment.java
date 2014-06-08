@@ -27,7 +27,7 @@ import com.kuxhausen.huemore.state.Group;
 /**
  * @author Eric Kuxhausen
  */
-public class SecondActivity extends Fragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
+public class SecondaryFragment extends Fragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
 
 	private NavigationDrawerActivity parrentA;
 	

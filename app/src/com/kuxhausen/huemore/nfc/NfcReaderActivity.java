@@ -16,7 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
@@ -107,7 +107,7 @@ public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity im
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				this.startActivity(new Intent(this,MainActivity.class));
+				this.startActivity(new Intent(this,MainFragment.class));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

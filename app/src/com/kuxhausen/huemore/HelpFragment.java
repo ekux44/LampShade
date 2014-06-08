@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class HelpActivity extends Fragment implements OnNavigationListener  {
+public class HelpFragment extends Fragment implements OnNavigationListener  {
 
 	private TextView mSelected;
     private String[] mPages, mTitles;

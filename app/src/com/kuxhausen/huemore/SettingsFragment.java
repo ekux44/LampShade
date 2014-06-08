@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
-public class SettingsActivity extends Fragment implements OnClickListener {
+public class SettingsFragment extends Fragment implements OnClickListener {
 
 	SharedPreferences mSettings;
 	private CheckBox mEnableNfcReadPage;
