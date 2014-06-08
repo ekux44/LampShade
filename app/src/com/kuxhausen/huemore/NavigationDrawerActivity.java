@@ -155,25 +155,21 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     }
 
     private void selectItem(int position, Bundle b) {
-    	//TODO find better hack
-    	if(position == GROUP_FRAG)
-    		position = BULB_FRAG;
+    	//this allows Bulb & Group to show up twice in NavBar but share fragment
+    	int actualPosition = position;
+    	if(actualPosition == GROUP_FRAG)
+    		actualPosition = BULB_FRAG;
     	
     	mSelectedItemPosition = position;
     	cleanUpActionBar();
     	
-    	// update the main content by replacing fragments
+    	String selectedFragTag = BASE_FRAG_TAG + actualPosition;
     	
-    	String selectedFragTag = BASE_FRAG_TAG+position;
-    	
-    	Fragment selectedFrag = getSupportFragmentManager().findFragmentByTag(selectedFragTag);
-    	
+    	Fragment selectedFrag = getSupportFragmentManager().findFragmentByTag(selectedFragTag);	
+    		
     	if(selectedFrag==null){
-	    	switch(position){
+	    	switch(actualPosition){
 	    		case BULB_FRAG:
-	    			selectedFrag = new MainFragment();
-	    			break;
-	    		case GROUP_FRAG:
 	    			selectedFrag = new MainFragment();
 	    			break;
 	    		case SETTINGS_FRAG:
@@ -189,6 +185,12 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     	
     	if(b!=null)
     		selectedFrag.setArguments(b);
+    	
+    	if(position == BULB_FRAG){
+    		((MainFragment)selectedFrag).setTab(GroupBulbPagerAdapter.BULB_LOCATION);
+    	} else if(position == GROUP_FRAG){
+    		((MainFragment)selectedFrag).setTab(GroupBulbPagerAdapter.GROUP_LOCATION);
+    	}
     	
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

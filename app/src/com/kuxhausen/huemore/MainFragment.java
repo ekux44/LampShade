@@ -63,14 +63,6 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 		
 		mSettings = PreferenceManager.getDefaultSharedPreferences(mParent);
 		
-		if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
-			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
-				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.GROUP_LOCATION);
-		} else {
-			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.BULB_LOCATION)
-				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.BULB_LOCATION);
-		}
-		
 		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         mGroupBulbSlidingTabLayout = (SlidingTabLayout) myView.findViewById(R.id.bulb_group_sliding_tabs);
@@ -81,6 +73,15 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         mForwardPage = new ForwardingPageListener();
         mGroupBulbSlidingTabLayout.setOnPageChangeListener(mForwardPage);
         
+        //Switch to preferred tab (after setting tab listeners)
+        if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
+			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
+				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.GROUP_LOCATION);
+		} else {
+			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.BULB_LOCATION)
+				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.BULB_LOCATION);
+		}
+		
         
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
@@ -180,7 +181,12 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 					.invalidateSelection();
 		}
 	}
-		
+	
+	public void setTab(int tabNum){
+		if(mGroupBulbViewPager!=null)
+			mGroupBulbViewPager.setCurrentItem(tabNum);
+	}
+	
 	public void onConnectionStatusChanged() {
 		if(mBrightnessBar!=null && !mIsTrackingTouch){
 			DeviceManager dm = mParent.getService().getDeviceManager();
