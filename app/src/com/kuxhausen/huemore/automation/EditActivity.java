@@ -4,24 +4,41 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.provider.BaseColumns;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-import com.kuxhausen.huemore.HelpFragment;
-import com.kuxhausen.huemore.MainFragment;
+import com.google.gson.Gson;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
+import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.SerializedEditorActivity;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
+import com.kuxhausen.huemore.state.GroupMoodBrightness;
+import com.kuxhausen.huemore.state.Mood;
 
-public class EditActivity extends SerializedEditorActivity implements
-		OnClickListener {
+public class EditActivity extends NetworkManagedSherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener, OnClickListener {
 
 	// don't change value
 	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.EXTRA_BUNDLE_SERIALIZED_BY_NAME";
@@ -38,9 +55,24 @@ public class EditActivity extends SerializedEditorActivity implements
 	private Button okayButton, cancelButton;
 
 	Context context;
+	Gson gson = new Gson();
+
+	// Identifies a particular Loader being used in this component
+	private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
+
+	private SeekBar brightnessBar;
+	private CheckBox brightnessCheckBox;
+	private TextView brightnessDescripterTextView;
+	private Spinner groupSpinner, moodSpinner;
+	private SimpleCursorAdapter groupDataSource, moodDataSource;
+
+	private GroupMoodBrightness priorGMB;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.edit_automation);
 		SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		// check full version unlocked
@@ -53,20 +85,67 @@ public class EditActivity extends SerializedEditorActivity implements
 					com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(
 					EXTRA_BUNDLE_SERIALIZED_BY_NAME));
 		}
-		setContentView(R.layout.edit_automation);
-		super.onCreate(savedInstanceState);
-
+		
 		okayButton = (Button) this.findViewById(R.id.okay);
 		okayButton.setOnClickListener(this);
 
 		cancelButton = (Button) this.findViewById(R.id.cancel);
 		cancelButton.setOnClickListener(this);
 		if(!Utils.hasProVersion(this)) {
-			Intent i = new Intent(this, MainFragment.class);
+			Intent i = new Intent(this, NavigationDrawerActivity.class);
 			i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
 			startActivity(i);
 			setResult(Activity.RESULT_CANCELED);
 		}
+		
+		// We need to use a different list item layout for devices older than Honeycomb
+			int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
+					: android.R.layout.simple_list_item_1;
+			
+			LoaderManager lm = getSupportLoaderManager();
+			lm.initLoader(GROUPS_LOADER, null, this);
+			lm.initLoader(MOODS_LOADER, null, this);
+
+			brightnessBar = (SeekBar) this.findViewById(R.id.brightnessBar);
+			brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					//preview();
+				}
+
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+				}
+
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+				}
+			});
+			
+			brightnessDescripterTextView = (TextView)this.findViewById(R.id.brightnessDescripterTextView);
+			
+			brightnessCheckBox = (CheckBox)this.findViewById(R.id.includeBrightnessCheckBox);
+			brightnessCheckBox.setOnCheckedChangeListener(this);
+			
+			groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
+			String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
+			groupDataSource = new SimpleCursorAdapter(this, layout, null, gColumns,
+					new int[] { android.R.id.text1 }, 0);
+			groupDataSource
+					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			groupSpinner.setAdapter(groupDataSource);
+
+			moodSpinner = (Spinner) this.findViewById(R.id.moodSpinner);
+			String[] mColumns = { MoodColumns.MOOD, BaseColumns._ID };
+			moodDataSource = new SimpleCursorAdapter(this, layout, null, mColumns,
+					new int[] { android.R.id.text1 }, 0);
+			moodDataSource
+					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			moodSpinner.setAdapter(moodDataSource);
+
+			this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -91,28 +170,145 @@ public class EditActivity extends SerializedEditorActivity implements
 			break;
 		}
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.action_edit_automation, menu);
-		return true;
-	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				this.startActivity(new Intent(this,MainFragment.class));
-				return true;
-			case R.id.action_help:
-				Intent i = new Intent(this, HelpFragment.class);
-				i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_automationpluggin));
-				this.startActivity(i);
+				this.startActivity(new Intent(this,NavigationDrawerActivity.class));
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void preview() {
+		
+		String groupName = ((TextView) groupSpinner.getSelectedView()).getText().toString();
+		Group g = Group.loadFromDatabase(groupName, context);
+		
+		String moodName = ((TextView) moodSpinner.getSelectedView()).getText().toString();
+		Mood m = Utils.getMoodFromDatabase(moodName, this);
+		
+		Integer brightness = null;
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			brightness = brightnessBar.getProgress();
+		
+		this.getService().getMoodPlayer().playMood(g, m, moodName, brightness);
+	}
+
+	public String getSerializedByNamePreview() {
+		GroupMoodBrightness gmb = new GroupMoodBrightness();
+		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText()
+				.toString();
+		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText()
+				.toString();
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			gmb.brightness = brightnessBar.getProgress();
+		
+		String preview = gmb.group + " \u2192 " + gmb.mood;
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			preview+=" @ "+ ((gmb.brightness * 100) / 255) + "%";
+		return preview;
+	}
+
+	public void setSerializedByName(String s) {
+		priorGMB = gson.fromJson(s, GroupMoodBrightness.class);
+
+	}
+
+	public String getSerializedByName() {
+		GroupMoodBrightness gmb = new GroupMoodBrightness();
+		gmb.group = ((TextView) groupSpinner.getSelectedView()).getText()
+				.toString();
+		gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText()
+				.toString();
+		if(brightnessBar.getVisibility()==View.VISIBLE)
+			gmb.brightness = brightnessBar.getProgress();
+		return gson.toJson(gmb);
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
+		switch (loaderID) {
+			case GROUPS_LOADER:
+				String[] gColumns = { GroupColumns.GROUP, BaseColumns._ID };
+				return new CursorLoader(this, GroupColumns.GROUPS_URI, gColumns, null, null, null);
+			case MOODS_LOADER:
+				String[] mColumns = { MoodColumns.MOOD, BaseColumns._ID };
+				return new CursorLoader(this, DatabaseDefinitions.MoodColumns.MOODS_URI, mColumns, null, null, null);
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		switch (loader.getId()) {
+			case GROUPS_LOADER:
+				if (groupDataSource != null) {
+					groupDataSource.changeCursor(cursor);
+				}
+				break;
+			case MOODS_LOADER:
+				if (moodDataSource != null) {
+					moodDataSource.changeCursor(cursor);
+				}
+				break;
+		}
+
+		if (priorGMB != null) {
+
+			// apply prior state
+			int moodPos = 0;
+			for (int i = 0; i < moodDataSource.getCount(); i++) {
+				if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
+						priorGMB.mood))
+					moodPos = i;
+			}
+			moodSpinner.setSelection(moodPos);
+
+			int groupPos = 0;
+			for (int i = 0; i < groupDataSource.getCount(); i++) {
+				if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(
+						priorGMB.group))
+					groupPos = i;
+			}
+			groupSpinner.setSelection(groupPos);
+			if(priorGMB.brightness!=null)
+				brightnessBar.setProgress(priorGMB.brightness);
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		/*
+		 * Clears out the adapter's reference to the Cursor. This prevents
+		 * memory leaks.
+		 */
+		// unregisterForContextMenu(getListView());
+		switch (loader.getId()) {
+			case GROUPS_LOADER:
+				if (groupDataSource != null) {
+					groupDataSource.changeCursor(null);
+				}
+				break;
+			case MOODS_LOADER:
+				if (moodDataSource != null) {
+					moodDataSource.changeCursor(null);
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(isChecked){
+			brightnessBar.setVisibility(View.VISIBLE);
+			brightnessDescripterTextView.setVisibility(View.VISIBLE);
+		} else {
+			brightnessBar.setVisibility(View.INVISIBLE);
+			brightnessDescripterTextView.setVisibility(View.INVISIBLE);
+		}
+	}
 }
