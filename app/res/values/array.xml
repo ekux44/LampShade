@@ -50,6 +50,7 @@
         <item>@string/action_settings</item>
         <item>@string/action_help</item>
         <item>@string/alarms</item>
+        <item>@string/nfc</item>
     </string-array>
     
     <string name="drawer_open">Open navigation drawer</string>

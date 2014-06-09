@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
+import com.kuxhausen.huemore.nfc.NfcWriterActivity;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -11,6 +12,7 @@ import com.kuxhausen.huemore.timing.AlarmsListFragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActivity implements OnBackStackChangedListener{
 
@@ -180,6 +183,10 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    			break;
 	    		case ALARM_FRAG:
 	    			selectedFrag = new AlarmsListFragment();
+	    			break;
+	    		case NFC_FRAG:
+	    			selectedFrag = new NfcWriterActivity();
+	    			break;
 	    	}
     	}
     	
@@ -298,6 +305,17 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 			 }
 		}
     }
+    
+    @Override
+	protected void onNewIntent(Intent intent) {
+		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+			NfcWriterActivity frag = ((NfcWriterActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+NFC_FRAG));
+			if(frag!=null){
+				frag.setMyTag(intent.getParcelableExtra(NfcAdapter.EXTRA_TAG));
+			}
+			Toast.makeText(this, this.getString(R.string.nfc_tag_detected), Toast.LENGTH_SHORT).show();
+		}
+	}
     
     public void markSelected(int position){
     	mDrawerList.setItemChecked(position, true);
