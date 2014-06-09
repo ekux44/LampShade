@@ -53,7 +53,7 @@ import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 
 
-public class NfcWriterActivity extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener, OnClickListener {
+public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener, OnClickListener {
 	
 	private Button sendButton;
 	private NfcAdapter nfcAdapter;

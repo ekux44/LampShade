@@ -65,12 +65,6 @@
             android:theme="@style/BlueWidgets" >
         </activity>
         <activity
-            android:name="com.kuxhausen.huemore.nfc.NfcWriterActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
-        </activity>
-        <activity
             android:name="com.kuxhausen.huemore.nfc.NfcReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"

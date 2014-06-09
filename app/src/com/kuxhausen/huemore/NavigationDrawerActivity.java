@@ -3,7 +3,7 @@ package com.kuxhausen.huemore;
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
-import com.kuxhausen.huemore.nfc.NfcWriterActivity;
+import com.kuxhausen.huemore.nfc.NfcWriterFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -185,7 +185,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    			selectedFrag = new AlarmsListFragment();
 	    			break;
 	    		case NFC_FRAG:
-	    			selectedFrag = new NfcWriterActivity();
+	    			selectedFrag = new NfcWriterFragment();
 	    			break;
 	    	}
     	}
@@ -309,7 +309,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     @Override
 	protected void onNewIntent(Intent intent) {
 		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-			NfcWriterActivity frag = ((NfcWriterActivity)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+NFC_FRAG));
+			NfcWriterFragment frag = ((NfcWriterFragment)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+NFC_FRAG));
 			if(frag!=null){
 				frag.setMyTag(intent.getParcelableExtra(NfcAdapter.EXTRA_TAG));
 			}
