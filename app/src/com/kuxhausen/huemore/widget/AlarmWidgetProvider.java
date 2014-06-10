@@ -23,7 +23,6 @@ import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.timing.AlarmListActivity;
 import com.kuxhausen.huemore.timing.AlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
 

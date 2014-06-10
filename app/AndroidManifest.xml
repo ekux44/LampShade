@@ -117,13 +117,6 @@
         <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever" >
         </receiver>
 
-        <activity
-            android:name="com.kuxhausen.huemore.timing.AlarmListActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
-        </activity>
-
         <receiver android:name="com.kuxhausen.huemore.timing.BootSetter" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
