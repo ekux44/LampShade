@@ -101,22 +101,32 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
-            selectItem(0, null);
-        }
+        Bundle b = this.getIntent().getExtras();
         
+        if (savedInstanceState == null) {
+        	selectItem(0, null);
+        }
         
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         
         
         PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
         
-        Bundle b = this.getIntent().getExtras();
+        
 		if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
 				&& b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
 			UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
 			unlocks.show(getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+		}
+    }
+    
+    public void onResume(){
+    	super.onResume();
+    	Bundle b = this.getIntent().getExtras();
+		if(b!=null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)){
+			selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
+        	this.getIntent().removeExtra(InternalArguments.NAV_DRAWER_PAGE);
 		}
     }
 
@@ -188,10 +198,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    			selectedFrag = new NfcWriterFragment();
 	    			break;
 	    	}
+	    	selectedFrag.setArguments(b);
     	}
-    	
-    	if(b!=null)
-    		selectedFrag.setArguments(b);
     	
     	if(position == BULB_FRAG){
     		((MainFragment)selectedFrag).setTab(GroupBulbPagerAdapter.BULB_LOCATION);
@@ -248,13 +256,13 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 			mDrawerToggle.setDrawerIndicatorEnabled(true);
 			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 		}
-		
 	}
 	
 	public void showHelp(String pageName){
 		Bundle b = new Bundle();
 		b.putString(InternalArguments.HELP_PAGE, pageName);
 		selectItem(HELP_FRAG, b);
+		
 		
 		//TODO find a way of showing help page without clearning back stack yet still enabling nav drawer
 		/*
@@ -308,7 +316,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     
     @Override
 	protected void onNewIntent(Intent intent) {
-		if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+		setIntent(intent);
+    	if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 			NfcWriterFragment frag = ((NfcWriterFragment)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+NFC_FRAG));
 			if(frag!=null){
 				frag.setMyTag(intent.getParcelableExtra(NfcAdapter.EXTRA_TAG));

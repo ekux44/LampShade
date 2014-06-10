@@ -145,7 +145,8 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 	}
 	public void onPause(){
 		super.onPause();
-		mParent.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+		if(mParent.boundToService())
+			mParent.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
 	}
 	
 	@Override

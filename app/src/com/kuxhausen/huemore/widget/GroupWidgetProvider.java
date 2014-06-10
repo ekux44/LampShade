@@ -20,6 +20,7 @@ import android.widget.RemoteViews;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.MoodExecuterService;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -120,9 +121,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
             // view of the collection view.
             rv.setEmptyView(R.id.group_list, R.id.empty_view);
 
-            // Bind a click listener template for the contents of the weather list.  Note that we
-            // need to update the intent's data if we set an extra, since the extras will be
-            // ignored otherwise.
+            
             final Intent onClickIntent = new Intent(context, GroupWidgetProvider.class);
             onClickIntent.setAction(GroupWidgetProvider.CLICK_ACTION);
             onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -131,9 +130,10 @@ public class GroupWidgetProvider extends AppWidgetProvider {
                     onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setPendingIntentTemplate(R.id.group_list, onClickPendingIntent);
 
-            final Intent openHueMoreIntent = new Intent(context, MainFragment.class);
-            final PendingIntent openHueMorePendingIntent = PendingIntent.getActivity(context, 0,
-            		openHueMoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
+            openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE, NavigationDrawerActivity.GROUP_FRAG);
+            openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            final PendingIntent openHueMorePendingIntent = PendingIntent.getActivity(context, -1, openHueMoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
         }
     	return rv;
