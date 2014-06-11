@@ -174,6 +174,7 @@ public final class DatabaseDefinitions {
 		public static final String NET_BULB_DATABASE_ID = "NET_BULB_DATABASE_ID";
 		public static final String MAX_BRIGHTNESS = "MAX_BRIGHTNESS";
 		public static final String NAV_DRAWER_PAGE = "NAV_DRAWER_PAGE";
+		public static final String GROUPBULB_TAB = "GROUPBULB_TAB";
 	}
 
 	public static final class PreferenceKeys {

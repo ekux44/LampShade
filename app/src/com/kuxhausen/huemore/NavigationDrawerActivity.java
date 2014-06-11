@@ -5,15 +5,19 @@ import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
 import com.kuxhausen.huemore.nfc.NfcWriterFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.timing.AlarmsListFragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,7 +50,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     public final static String BASE_FRAG_TAG = "FragTag";
     
     private BillingManager mBillingManager;
-	
+    
+    private SharedPreferences mSettings;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,6 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         setContentView(R.layout.activity_navigation_drawer);
 
         mBillingManager = new BillingManager(this);
-        
-
         
 		if(Utils.hasProVersion(this)){
 			mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_pro_titles);
@@ -101,11 +104,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        Bundle b = this.getIntent().getExtras();
-        
-        if (savedInstanceState == null) {
-        	selectItem(0, null);
-        }
+        Bundle b = getIntent().getExtras();
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         
@@ -123,10 +123,16 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     
     public void onResume(){
     	super.onResume();
-    	Bundle b = this.getIntent().getExtras();
-		if(b!=null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)){
+    	Bundle b = getIntent().getExtras();
+    	if(b!=null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)){
 			selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
-        	this.getIntent().removeExtra(InternalArguments.NAV_DRAWER_PAGE);
+        	b.remove(InternalArguments.NAV_DRAWER_PAGE);
+		} else {
+			if(mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
+	         	selectItem(GROUP_FRAG, b);
+	         } else {
+	         	selectItem(BULB_FRAG, b);
+	         }
 		}
     }
 
@@ -168,6 +174,18 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     }
 
     private void selectItem(int position, Bundle b) {
+    	if(b==null)
+    		b = new Bundle();
+    	
+    	//record the groupbulb tab state and pass in bundle to main
+    	if(position == GROUP_FRAG){
+    		b.putInt(InternalArguments.GROUPBULB_TAB, GroupBulbPagerAdapter.GROUP_LOCATION);
+    		saveTab(GroupBulbPagerAdapter.GROUP_LOCATION);
+    	} else if (position == BULB_FRAG){
+    		b.putInt(InternalArguments.GROUPBULB_TAB, GroupBulbPagerAdapter.BULB_LOCATION);
+    		saveTab(GroupBulbPagerAdapter.BULB_LOCATION);
+    	}
+    	
     	//this allows Bulb & Group to show up twice in NavBar but share fragment
     	int actualPosition = position;
     	if(actualPosition == GROUP_FRAG)
@@ -199,13 +217,11 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    			break;
 	    	}
 	    	selectedFrag.setArguments(b);
-    	}
-    	
-    	//pass on bulb/group tab data to main activity
-    	if(position == BULB_FRAG){
-    		((MainFragment)selectedFrag).setTab(GroupBulbPagerAdapter.BULB_LOCATION);
-    	} else if(position == GROUP_FRAG){
-    		((MainFragment)selectedFrag).setTab(GroupBulbPagerAdapter.GROUP_LOCATION);
+    	} else{
+    		//if can't pass groupbulb tab data in bundle because frag already exists, pass directly
+    		if(actualPosition == BULB_FRAG){
+    			((MainFragment)selectedFrag).setTab(b.getInt(InternalArguments.GROUPBULB_TAB));
+    		}
     	}
     	
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -324,9 +340,30 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 		}
 	}
     
-    public void markSelected(int position){
-    	mDrawerList.setItemChecked(position, true);
-        setTitle(mDrawerTitles[position]);
+    public void markSelected(int pagerPosition){
+    	int drawerPosition;
+		if(pagerPosition == GroupBulbPagerAdapter.BULB_LOCATION){
+			drawerPosition = NavigationDrawerActivity.BULB_FRAG;
+		} else{
+			drawerPosition = NavigationDrawerActivity.GROUP_FRAG;
+		}
+    	mDrawerList.setItemChecked(drawerPosition, true);
+        setTitle(mDrawerTitles[drawerPosition]);
+        saveTab(pagerPosition);
+    }
+    
+    public void saveTab(int position){
+    	Editor edit = mSettings.edit();
+		switch(position){
+			case GroupBulbPagerAdapter.BULB_LOCATION:
+				edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false);
+				break;
+			case GroupBulbPagerAdapter.GROUP_LOCATION:
+				edit.putBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, true);
+				break;
+		}
+		edit.commit();
+		
     }
     
     @Override
@@ -352,4 +389,5 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	public BillingManager getBillingManager(){
 		return mBillingManager;
 	}
+	
 }

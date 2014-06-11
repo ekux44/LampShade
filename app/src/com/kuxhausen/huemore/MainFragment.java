@@ -41,7 +41,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
     private SeekBar mBrightnessBar;
 	private boolean mIsTrackingTouch = false;
     private ForwardingPageListener mForwardPage;
-	
+    
 	/*@Override
 	public void onConnectionStatusChanged(){
 		this.supportInvalidateOptionsMenu();
@@ -61,7 +61,6 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 		mGroupBulbViewPager = (ViewPager) myView.findViewById(R.id.bulb_group_pager);
 		mGroupBulbViewPager.setAdapter(mGroupBulbPagerAdapter);
 		
-		mSettings = PreferenceManager.getDefaultSharedPreferences(mParent);
 		
 		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
@@ -72,17 +71,8 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         //add custom page changed lister to sych bulb/group tabs with nav drawer
         mForwardPage = new ForwardingPageListener();
         mGroupBulbSlidingTabLayout.setOnPageChangeListener(mForwardPage);
-        
-        //Switch to preferred tab (after setting tab listeners)
-        if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
-			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.GROUP_LOCATION)
-				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.GROUP_LOCATION);
-		} else {
-			if (mGroupBulbViewPager.getCurrentItem() != GroupBulbPagerAdapter.BULB_LOCATION)
-				mGroupBulbViewPager.setCurrentItem(GroupBulbPagerAdapter.BULB_LOCATION);
-		}
 		
-        
+        mSettings = PreferenceManager.getDefaultSharedPreferences(mParent);
 		if ((getResources().getConfiguration().screenLayout &
 				 Configuration.SCREENLAYOUT_SIZE_MASK) >=
 				 Configuration.SCREENLAYOUT_SIZE_LARGE){
@@ -138,6 +128,11 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 		super.onResume();
 		mParent.registerOnServiceConnectedListener(this);
 		this.setHasOptionsMenu(true);
+		Bundle b = this.getArguments();
+		if(b!=null && b.containsKey(InternalArguments.GROUPBULB_TAB)){
+			mGroupBulbViewPager.setCurrentItem(b.getInt(InternalArguments.GROUPBULB_TAB));
+			b.remove(InternalArguments.GROUPBULB_TAB);
+		}
 	}
 	@Override
 	public void onServiceConnected() {
@@ -257,13 +252,8 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 	class ForwardingPageListener extends SimpleOnPageChangeListener{
 
 		@Override
-		public void onPageSelected(int arg0) {
-			
-			if(arg0 == GroupBulbPagerAdapter.BULB_LOCATION){
-				mParent.markSelected(NavigationDrawerActivity.BULB_FRAG);
-			} else if(arg0 == GroupBulbPagerAdapter.GROUP_LOCATION){
-				mParent.markSelected(NavigationDrawerActivity.GROUP_FRAG);
-			}
+		public void onPageSelected(int pagerPosition) {
+			mParent.markSelected(pagerPosition);
 		}
 		
 	}
