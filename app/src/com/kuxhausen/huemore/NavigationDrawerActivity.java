@@ -164,7 +164,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             selectItem(position, null);
-        }
+       }
     }
 
     private void selectItem(int position, Bundle b) {
@@ -201,6 +201,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    	selectedFrag.setArguments(b);
     	}
     	
+    	//pass on bulb/group tab data to main activity
     	if(position == BULB_FRAG){
     		((MainFragment)selectedFrag).setTab(GroupBulbPagerAdapter.BULB_LOCATION);
     	} else if(position == GROUP_FRAG){
@@ -263,7 +264,6 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 		b.putString(InternalArguments.HELP_PAGE, pageName);
 		selectItem(HELP_FRAG, b);
 		
-		
 		//TODO find a way of showing help page without clearning back stack yet still enabling nav drawer
 		/*
 		HelpActivity frag = new HelpActivity();
@@ -285,7 +285,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 			frag.setArguments(b);
 		}
 		FragmentManager fragmentManager = getSupportFragmentManager();
-	    fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame, frag).commit();
+	    fragmentManager.beginTransaction().addToBackStack("mood").replace(R.id.content_frame, frag).commit();
 
 	}
     
@@ -294,10 +294,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     	super.setGroup(g);
     	
     	MainFragment frag = null;
-    	if(mSelectedItemPosition == BULB_FRAG){
+    	if(mSelectedItemPosition == BULB_FRAG || mSelectedItemPosition == GROUP_FRAG){
     		frag = ((MainFragment)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+BULB_FRAG));
-    	} else if(mSelectedItemPosition == GROUP_FRAG){
-    		frag = ((MainFragment)getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG+GROUP_FRAG));
     	}
     	if(frag!=null){
 			if ((getResources().getConfiguration().screenLayout &
@@ -308,7 +306,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 				 SecondaryFragment drillDownFrag = new SecondaryFragment();
 				 
 				 FragmentManager fragmentManager = getSupportFragmentManager();
-			     fragmentManager.beginTransaction().addToBackStack("prevoius").replace(R.id.content_frame, drillDownFrag).commit();
+			     fragmentManager.beginTransaction().addToBackStack("group").replace(R.id.content_frame, drillDownFrag).commit();
 
 			 }
 		}
