@@ -147,7 +147,7 @@ public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActi
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.startActivity(new Intent(this,MainFragment.class));
+			this.startActivity(new Intent(this,NavigationDrawerActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
