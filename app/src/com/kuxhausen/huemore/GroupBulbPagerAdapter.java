@@ -8,28 +8,20 @@ public class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 	public static final int GROUP_LOCATION = 1;
 	public static final int BULB_LOCATION = 0;
 
-	private GroupListFragment groupListFragment;
-	private BulbListFragment bulbListFragment;
-	private NetworkManagedSherlockFragmentActivity frag;
+	private Fragment frag;
 
-	public GroupBulbPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
-		super(godObject.getSupportFragmentManager());
-		frag = godObject;
+	public GroupBulbPagerAdapter(Fragment f) {
+		super(f.getChildFragmentManager());
+		frag = f;
 	}
 
 	@Override
 	public Fragment getItem(int i) {
 		switch (i) {
 		case GROUP_LOCATION:
-			if (groupListFragment == null) {
-				groupListFragment = new GroupListFragment();
-			}
-			return groupListFragment;
+			return new GroupListFragment();
 		case BULB_LOCATION:
-			if (bulbListFragment == null) {
-				bulbListFragment = new BulbListFragment();
-			}
-			return bulbListFragment;
+			return new BulbListFragment();
 		default:
 			return null;
 		}
@@ -47,7 +39,6 @@ public class GroupBulbPagerAdapter extends FragmentPagerAdapter {
 			return frag.getString(R.string.groups).toUpperCase();
 		case BULB_LOCATION:
 			return frag.getString(R.string.cap_bulbs);
-
 		}
 		return "";
 	}

@@ -58,7 +58,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 	
 	public void createNotification() {
 		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, MainActivity.class);
+		Intent resultIntent = new Intent(this, MainFragment.class);
 		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		String secondaryText = ((mMoodPlayer.getGroupName()!=null&&mMoodPlayer.getMoodName()!=null)?mMoodPlayer.getGroupName():"") + ((mMoodPlayer.getMoodName()!=null)?(" \u2192 " +mMoodPlayer.getMoodName()):"");

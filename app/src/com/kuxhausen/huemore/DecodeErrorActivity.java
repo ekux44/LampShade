@@ -51,7 +51,7 @@ public class DecodeErrorActivity extends ActionBarActivity implements OnClickLis
 		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			this.startActivity(new Intent(this,MainActivity.class));
+			this.startActivity(new Intent(this,MainFragment.class));
 			return true;
 		}
 		return false;

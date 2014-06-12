@@ -5,11 +5,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
@@ -19,8 +22,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.HelpActivity;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.HelpFragment;
+import com.kuxhausen.huemore.MainFragment;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
@@ -30,8 +34,10 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 
-public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity implements OnItemSelectedListener, OnCheckedChangeListener {
+public class EditMoodFragment extends Fragment implements OnItemSelectedListener, OnCheckedChangeListener {
 
+	private NavigationDrawerActivity parrentA;
+	
 	EditMoodStateGridFragment stateGridFragment;
 
 	private EditText nameEditText;
@@ -50,24 +56,24 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 
 	}
 
-	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.edit_mood_activity);
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		View myView = inflater.inflate(R.layout.edit_mood_activity, null);
+	
+		parrentA = (NavigationDrawerActivity) this.getActivity();
+		
+		parrentA.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		
 		//Inflate the custom view
-		nameEditText = (EditText) LayoutInflater.from(this).inflate(R.layout.mood_name_edit_text, null);
-		getSupportActionBar().setCustomView(nameEditText);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		nameEditText = (EditText) LayoutInflater.from(parrentA).inflate(R.layout.mood_name_edit_text, null);
+		
         
-		loop = (CheckBox)this.findViewById(R.id.loopCheckBox);
+		loop = (CheckBox)myView.findViewById(R.id.loopCheckBox);
 		loop.setOnCheckedChangeListener(this);
-		moodTypeSpinner = (Spinner)this.findViewById(R.id.moodTypeSpinner);
+		moodTypeSpinner = (Spinner)myView.findViewById(R.id.moodTypeSpinner);
 		moodTypeSpinner.setOnItemSelectedListener(this);
 		
 		
@@ -75,26 +81,28 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		// then we don't need to do anything and should return or else
 		// we could end up with overlapping fragments.
 		if (savedInstanceState != null) {
-			stateGridFragment = (EditMoodStateGridFragment)	getSupportFragmentManager().findFragmentById(R.id.edit_mood_fragment_container);
+			stateGridFragment = (EditMoodStateGridFragment)	parrentA.getSupportFragmentManager().findFragmentById(R.id.edit_mood_fragment_container);
+			stateGridFragment.setParentFragment(this);
 		} else {
 			stateGridFragment = new EditMoodStateGridFragment();
+			stateGridFragment.setParentFragment(this);
 			
 			// In case this activity was started with special instructions from an Intent, pass the Intent's extras to the fragment as arguments
-			stateGridFragment.setArguments(getIntent().getExtras());
+			stateGridFragment.setArguments(getArguments());
 
 			// Add the fragment to the 'fragment_container' FrameLayout
-			getSupportFragmentManager()
+			getChildFragmentManager()
 					.beginTransaction()
 					.add(R.id.edit_mood_fragment_container, stateGridFragment, EditMoodStateGridFragment.class.getName()).commit();
 		}
 		
-		Bundle args = this.getIntent().getExtras();
+		Bundle args = getArguments();
 		if (args != null && args.containsKey(InternalArguments.MOOD_NAME)) {
 			String moodName = args.getString(InternalArguments.MOOD_NAME);
 			priorName = moodName;
 			nameEditText.setText(moodName);
 			
-			priorMood = Utils.getMoodFromDatabase(moodName, this);
+			priorMood = Utils.getMoodFromDatabase(moodName, parrentA);
 			
 			moodTypeSpinner.setSelection(EditMoodStateGridFragment.calculateMoodType(priorMood).ordinal());
 			if(moodTypeSpinner.getSelectedItemPosition() == EditMoodStateGridFragment.PageType.RELATIVE_PAGE.ordinal())
@@ -106,9 +114,25 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 			priorName = null;
 			priorMood = null;
 		}
+		return myView;
+	}
+	@Override
+	public void onResume(){
+		super.onResume();
+		this.setHasOptionsMenu(true);
+		
+		parrentA.getSupportActionBar().setCustomView(nameEditText);
+		parrentA.getSupportActionBar().setDisplayShowCustomEnabled(true);
+		parrentA.getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 	
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		parrentA.getSupportActionBar().setDisplayShowCustomEnabled(false);
+		parrentA.getSupportActionBar().setDisplayShowTitleEnabled(true);
+	}
 	
 	public String getName(){
 		if(nameEditText!=null)
@@ -127,10 +151,9 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.action_edit_mood, menu);
-		return true;
 	}
 
 	@Override
@@ -138,28 +161,26 @@ public class EditMoodActivity extends NetworkManagedSherlockFragmentActivity imp
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				this.startActivity(new Intent(this,MainActivity.class));
+				parrentA.onBackPressed();
 				return true;
 			case R.id.action_play:
 				stateGridFragment.preview();
 				return true;
 			case R.id.action_help:
-				Intent i = new Intent(this, HelpActivity.class);
-				i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_editingmoods));
-				this.startActivity(i);
+				parrentA.showHelp(this.getResources().getString(R.string.help_title_editingmoods));
 				return true;
 			case R.id.action_save:
 				if (priorName != null) {
 					// delete old mood
 					String moodSelect = MoodColumns.MOOD + "=?";
 					String[] moodArg = { priorName };
-					this.getContentResolver().delete(
+					parrentA.getContentResolver().delete(
 							DatabaseDefinitions.MoodColumns.MOODS_URI,
 							moodSelect, moodArg);
 				}
 				String moodName=nameEditText.getText().toString();
 				if(moodName==null || moodName.length()<1){
-					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentA);
 					int unnamedNumber = 1+settings.getInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, 0);
 					Editor edit = settings.edit();
 					edit.putInt(PreferenceKeys.UNNAMED_MOOD_NUMBER, unnamedNumber);

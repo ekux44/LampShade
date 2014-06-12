@@ -19,8 +19,9 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.support.v7.app.ActionBarActivity;
 
-import com.kuxhausen.huemore.HelpActivity;
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.HelpFragment;
+import com.kuxhausen.huemore.MainFragment;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -28,6 +29,9 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 public class AlarmsListFragment extends ListFragment implements
 		LoaderManager.LoaderCallbacks<Cursor> {
 
+	private NavigationDrawerActivity mParrent;
+	
+	
 	// Identifies a particular Loader being used in this component
 	private static final int ALARMS_LOADER = 0;
 	private AlarmRowAdapter dataSource;
@@ -38,6 +42,8 @@ public class AlarmsListFragment extends ListFragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mParrent = (NavigationDrawerActivity) this.getActivity();
+		
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
@@ -71,9 +77,6 @@ public class AlarmsListFragment extends ListFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			this.startActivity(new Intent(this.getActivity(),MainActivity.class));
-			return true;
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),
@@ -81,9 +84,7 @@ public class AlarmsListFragment extends ListFragment implements
 			nadf.onLoadLoaderManager(null);
 			return true;
 		case R.id.action_help:
-			Intent i = new Intent(this.getActivity(), HelpActivity.class);
-			i.putExtra(InternalArguments.HELP_PAGE, this.getResources().getString(R.string.help_title_alarms));
-			this.startActivity(i);
+			mParrent.showHelp(this.getResources().getString(R.string.help_title_alarms));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

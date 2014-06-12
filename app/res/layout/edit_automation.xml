@@ -4,7 +4,83 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/serialized_editor" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/groupTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/group_intro" />
+
+                <Spinner
+                    android:id="@+id/groupSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/moodsPromptTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/mood_intro" />
+
+                <Spinner
+                    android:id="@+id/moodSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/includeBrightnessCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:checked="true"
+                android:padding="8dp"
+                android:text="@string/include_brightness" />
+
+            <TextView
+                android:id="@+id/brightnessDescripterTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="8dp"
+                android:text="@string/brightness" />
+
+            <SeekBar
+                android:id="@+id/brightnessBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="255"
+                android:paddingBottom="8dp"
+                android:progress="127" />
+        </LinearLayout>
+    </ScrollView>
+
 
     <include layout="@layout/horizontal_divider_line_blue"/>
 

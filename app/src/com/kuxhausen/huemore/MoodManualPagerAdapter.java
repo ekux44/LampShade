@@ -8,27 +8,20 @@ public class MoodManualPagerAdapter extends FragmentPagerAdapter {
 	public static final int MOOD_LOCATION = 1;
 	public static final int MANUAL_LOCATION = 0;
 
-	private MoodListFragment moodListFragment;
-	private ColorWheelFragment colorWheelFragment;	
-	private NetworkManagedSherlockFragmentActivity frag;
+	private Fragment frag;
 	
-	public MoodManualPagerAdapter(NetworkManagedSherlockFragmentActivity godObject) {
-		super(godObject.getSupportFragmentManager());
-		frag = godObject;
+	public MoodManualPagerAdapter(Fragment f) {
+		super(f.getChildFragmentManager());
+		frag = f;
 	}
 
 	@Override
 	public Fragment getItem(int i) {
 		switch (i) {
 		case MOOD_LOCATION:
-			if (moodListFragment == null)
-				moodListFragment = new MoodListFragment();
-			return moodListFragment;
+			return new MoodListFragment();
 		case MANUAL_LOCATION:
-			if (colorWheelFragment == null) {
-				colorWheelFragment = new ColorWheelFragment();
-			}
-			return colorWheelFragment;
+			return new ColorWheelFragment();
 		default:
 			return null;
 		}

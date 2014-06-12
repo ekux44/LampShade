@@ -20,7 +20,7 @@
         android:installLocation="internalOnly"
         android:label="@string/app_name" >
         <activity
-            android:name="com.kuxhausen.huemore.MainActivity"
+            android:name="com.kuxhausen.huemore.NavigationDrawerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -32,38 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.kuxhausen.huemore.SecondActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/RedWidgets">
-        </activity>
-        <activity
-            android:name="com.kuxhausen.huemore.editmood.EditMoodActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data android:name="android.support.UI_OPTIONS"
-                   android:value="splitActionBarWhenNarrow" />
-        </activity>
-
-        <activity
-            android:name="com.kuxhausen.huemore.HelpActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
-        </activity>
-        
-        <activity
-            android:name="com.kuxhausen.huemore.SettingsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
-        </activity>
-        
         <provider
             android:name="com.kuxhausen.huemore.persistence.HueMoreProvider"
             android:authorities="com.kuxhausen.provider.huemore.database"
@@ -92,12 +60,6 @@
 
         <activity
             android:name="com.kuxhausen.huemore.DecodeErrorActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
-        </activity>
-        <activity
-            android:name="com.kuxhausen.huemore.nfc.NfcWriterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/BlueWidgets" >
@@ -154,13 +116,6 @@
         
         <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever" >
         </receiver>
-
-        <activity
-            android:name="com.kuxhausen.huemore.timing.AlarmListActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
-        </activity>
 
         <receiver android:name="com.kuxhausen.huemore.timing.BootSetter" >
             <intent-filter>

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.kuxhausen.huemore.MainActivity;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.id;
 import com.kuxhausen.huemore.R.layout;
@@ -27,7 +27,7 @@ public class UnlocksDialogFragment extends DialogFragment implements
 		OnClickListener {
 
 	SharedPreferences settings;
-	MainActivity ma;
+	NavigationDrawerActivity ma;
 	Button fiveMoreButton;
 	BillingManager bm;
 	
@@ -37,7 +37,7 @@ public class UnlocksDialogFragment extends DialogFragment implements
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View myView = inflater.inflate(R.layout.unlocks_fragment, container, false);
-		ma = (MainActivity) this.getActivity();
+		ma = (NavigationDrawerActivity) this.getActivity();
 		bm = ma.getBillingManager();
 		this.getDialog().setTitle(R.string.action_unlocks);
 
