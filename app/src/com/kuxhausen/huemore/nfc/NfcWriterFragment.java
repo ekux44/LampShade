@@ -83,6 +83,16 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 		
 		context = (NavigationDrawerActivity) this.getActivity();
 		
+		//TODO deal with NFC not supported on this device
+		/*if (NfcAdapter.getDefaultAdapter(this) == null) {
+			// hide nfc link if nfc not supported
+			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
+			if (nfcItem != null) {
+				nfcItem.setEnabled(false);
+				nfcItem.setVisible(false);
+			}
+		*/
+		
 		
 		// We need to use a different list item layout for devices older than Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
