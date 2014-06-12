@@ -197,25 +197,6 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.main, menu);
 	
-		/*if (Utils.hasProVersion(parrentA)) {
-			// has pro version
-
-			if (NfcAdapter.getDefaultAdapter(this) == null) {
-				// hide nfc link if nfc not supported
-				MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-				if (nfcItem != null) {
-					nfcItem.setEnabled(false);
-					nfcItem.setVisible(false);
-				}
-			}
-		} else {
-			MenuItem nfcItem = menu.findItem(R.id.action_nfc);
-			if (nfcItem != null) {
-				nfcItem.setEnabled(false);
-				nfcItem.setVisible(false);
-			}
-		}*/
-
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
 			MenuItem bothItem = menu.findItem(R.id.action_add_both);
 			if (bothItem != null) {
@@ -235,16 +216,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 			addBoth.show(mParent.getSupportFragmentManager(),
 					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			return true;
-		/*case R.id.action_nfc:
-			if (!NfcAdapter.getDefaultAdapter(this).isEnabled()) {
-				Toast.makeText(this, this.getString(R.string.nfc_disabled),
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Intent i = new Intent(this, NfcWriterActivity.class);
-				this.startActivity(i);
-			}
-			return true;
-		*/default:
+		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}

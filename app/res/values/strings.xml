@@ -111,6 +111,8 @@
 	<string name="show_NFC_read_page_descriptor">Show Quick Controls page when NFC tags read</string>
 	<string name="action_connections">Connections</string>
 	<string name="action_bulbs">Bulbs</string>
+	<string name="actionmenu_new_connection">Connect to a smart lighting device</string>
+	<string name="prompt_new_connection_type">Select device type</string>
 	
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>

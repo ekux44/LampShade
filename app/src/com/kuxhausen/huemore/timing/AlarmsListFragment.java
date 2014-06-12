@@ -77,9 +77,6 @@ public class AlarmsListFragment extends ListFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			this.startActivity(new Intent(this.getActivity(),MainFragment.class));
-			return true;
 		case R.id.action_add_alarm:
 			NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
 			nadf.show(getFragmentManager(),

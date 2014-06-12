@@ -3,6 +3,8 @@ package com.kuxhausen.huemore;
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
+import com.kuxhausen.huemore.net.ConnectionListFragment;
+import com.kuxhausen.huemore.net.NewConnectionFragment;
 import com.kuxhausen.huemore.nfc.NfcWriterFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -203,6 +205,9 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	    		case BULB_FRAG:
 	    			selectedFrag = new MainFragment();
 	    			break;
+	    		case CONNECTIONS_FRAG:
+	    			selectedFrag = new ConnectionListFragment();
+	    			break;
 	    		case SETTINGS_FRAG:
 	    			selectedFrag = new SettingsFragment();
 	    			break;
@@ -389,5 +394,4 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
 	public BillingManager getBillingManager(){
 		return mBillingManager;
 	}
-	
 }
