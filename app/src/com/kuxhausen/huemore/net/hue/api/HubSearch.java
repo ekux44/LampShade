@@ -78,7 +78,7 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
 				try {
 					result = gson.fromJson(jSon, Bridge[].class);
-				} catch (NullPointerException e) {
+				} catch (Exception e) {
 				}
 			}
 		} catch (ClientProtocolException e) {
