@@ -20,6 +20,8 @@ import com.kuxhausen.huemore.timing.Conversions;
 
 public class MoodPlayer{
 
+	// if the next even is happening in less than 5 seconds, stay awake for it
+	private final static long IMMIMENT_EVENT_WAKE_THRESHOLD_IN_NANOSEC = 5000000000l;
 	private Context mContext;
 	private DeviceManager mDeviceManager;
 	private ArrayList<OnActiveMoodsChangedListener> moodsChangedListeners = new ArrayList<OnActiveMoodsChangedListener>();
@@ -183,5 +185,19 @@ public class MoodPlayer{
 		};
 		countDownTimer.start();
 	}
-	
+
+	public boolean hasImminentPendingWork() {
+		//IF queue has imminent events or queue about to be reloaded
+		if((!queue.isEmpty() && (queue.peek().nanoTime - System.nanoTime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_NANOSEC)
+			|| (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime))
+			return true;
+		return false;
+	}
+
+	/**
+	 * to save power, service is shutting down so ongoing moods should be schedule to be restarted in time for their next events
+	 */
+	public void saveOngoingAndScheduleResores() {
+		// TODO Auto-generated method stub
+	}
 }

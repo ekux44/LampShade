@@ -304,4 +304,14 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		// TODO Auto-generated method stub
 		return "more placeholder";
 	}
+
+	@Override
+	public boolean hasPendingWork() {
+		boolean hasPendingWork = false;
+		for(HueBulb hb : mBulbList){
+			if(!hb.ongoing.isEmpty())
+				hasPendingWork = true;
+		}
+		return hasPendingWork;
+	}
 }

@@ -21,6 +21,7 @@ public class DeviceManager {
 	private String selectedGroupName;
 	private ArrayList<OnConnectionStatusChangedListener> connectionListeners = new ArrayList<OnConnectionStatusChangedListener>();
 	public ArrayList<OnStateChangedListener> brightnessListeners = new ArrayList<OnStateChangedListener>();
+	public ArrayList<OnStateChangedListener> stateListeners = new ArrayList<OnStateChangedListener>();
 	private HashMap<Long, NetworkBulb> bulbMap;
 	private MyObserver mConnectionObserver;
 	
@@ -97,6 +98,14 @@ public class DeviceManager {
 			l.onStateChanged();
 		}
 	}
+	public void registerStateListener(OnStateChangedListener l){
+		stateListeners.add(l);
+	}
+	
+	public void removeStateListener(OnStateChangedListener l){
+		stateListeners.remove(l);
+	}
+	
 	public void registerBrightnessListener(OnStateChangedListener l){
 		brightnessListeners.add(l);
 		l.onStateChanged();

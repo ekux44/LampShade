@@ -111,7 +111,8 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
 	}
 	public void onPause(){
 		super.onPause();
-		parrentA.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+		if(parrentA.boundToService())
+			parrentA.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
 	}
 	
 	@Override

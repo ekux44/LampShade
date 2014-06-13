@@ -10,4 +10,7 @@ public interface Connection {
 	public abstract ArrayList<NetworkBulb> getBulbs();
 	public abstract String mainDescription();
 	public abstract String subDescription();
+	
+	/** return true if device should be kept awake for this connection to continue **/
+	public abstract boolean hasPendingWork();
 }
