@@ -252,6 +252,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	}
 
 	public ConnectivityState getConnectivityState() {
+		//TODO
 		return ConnectivityState.Unknown;
 	}
 
@@ -290,5 +291,17 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		if(dif.toString()!=null && dif.toString().length()>0)
 			return dif;
 		return null;
+	}
+
+	@Override
+	public String mainDescription() {
+		// TODO Auto-generated method stub
+		return "placeholder";
+	}
+
+	@Override
+	public String subDescription() {
+		// TODO Auto-generated method stub
+		return "more placeholder";
 	}
 }

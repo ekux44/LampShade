@@ -8,4 +8,6 @@ public interface Connection {
 	public abstract void initializeConnection(Context c);
 	public abstract void onDestroy();
 	public abstract ArrayList<NetworkBulb> getBulbs();
+	public abstract String mainDescription();
+	public abstract String subDescription();
 }

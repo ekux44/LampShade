@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.net;
 
+import java.util.ArrayList;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,12 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
+import com.kuxhausen.huemore.OnServiceConnectedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class ConnectionListFragment extends ListFragment {
+public class ConnectionListFragment extends ListFragment implements OnConnectionStatusChangedListener, OnServiceConnectedListener{
 
 	private NavigationDrawerActivity mParent;
+	private ArrayAdapter<Connection> aa;
+	private int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,19 +31,7 @@ public class ConnectionListFragment extends ListFragment {
 
 		mParent = (NavigationDrawerActivity) this.getActivity();
 		
-		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
-
-		String[] test123 = {"test 1", "test 2", "test 3"};
-		ArrayAdapter<String> aa = new ArrayAdapter<String>(mParent, layout, test123);
-		setListAdapter(aa);
-
 		View myView = inflater.inflate(R.layout.connections_list_fragment, null);
-
-		setHasOptionsMenu(true);
-		getActivity().supportInvalidateOptionsMenu();
-		
-		mParent.getSupportActionBar().setHomeButtonEnabled(false);
-		
 		return myView;
 	}
 	
@@ -58,6 +52,37 @@ public class ConnectionListFragment extends ListFragment {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		mParent.registerOnServiceConnectedListener(this);
+		
+		this.setHasOptionsMenu(true);
+		getActivity().supportInvalidateOptionsMenu();
+		mParent.getSupportActionBar().setHomeButtonEnabled(false);
+		
+	}
+	@Override
+	public void onServiceConnected() {
+		mParent.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
+		this.onConnectionStatusChanged();
+	}
+	public void onPause(){
+		super.onPause();
+		if(mParent.boundToService())
+			mParent.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+	}
+
+	@Override
+	public void onConnectionStatusChanged() {
+		ArrayList<Connection> connections = mParent.getService().getDeviceManager().getConnections();
+		if(connections == null)
+			return;
+		aa = new ConnectionRowAdapter(mParent, layout, connections);
+		setListAdapter(aa);
+
 	}
 
 }

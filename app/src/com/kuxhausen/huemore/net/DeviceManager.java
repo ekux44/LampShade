@@ -69,6 +69,10 @@ public class DeviceManager {
 		//TODO
 	}
 	
+	public ArrayList<Connection> getConnections(){
+		return mConnections;
+	}
+	
 	public void addOnConnectionStatusChangedListener(OnConnectionStatusChangedListener l){
 		connectionListeners.add(l);
 	}
