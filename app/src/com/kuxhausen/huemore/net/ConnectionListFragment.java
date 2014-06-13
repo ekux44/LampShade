@@ -61,7 +61,6 @@ public class ConnectionListFragment extends ListFragment implements OnConnection
 		
 		this.setHasOptionsMenu(true);
 		getActivity().supportInvalidateOptionsMenu();
-		mParent.getSupportActionBar().setHomeButtonEnabled(false);
 		
 	}
 	@Override
