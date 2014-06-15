@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.automation.FireReceiver;
@@ -145,16 +144,11 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 		if(mMoodPlayer.hasImminentPendingWork())
 			shouldStayAwake = true;
 		
-		Log.e("ccc","shoudlStayAwakeMood "+shouldStayAwake);
-		
-		
 		for(Connection c : mDeviceManager.getConnections()){
 			if(c.hasPendingWork())
 				shouldStayAwake = true;
 		}
 		
-		
-		Log.e("ccc","shoudlStayAwakeM&D "+shouldStayAwake);
 		
 		if(shouldStayAwake){
 			if(mWakelock == null){
@@ -165,17 +159,22 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 			}
 		} else {
 			if(!mBound){
-				//not bound, so service may die after releasing wakelock
+				//not bound, so service may sleep after releasing wakelock
 				//save ongoing moods
 				mMoodPlayer.saveOngoingAndScheduleResores();
-				this.stopSelf();
 			}
 			
 			if(mWakelock!=null){
 				mWakelock.release();
 				mWakelock = null;
 			}
-			//if unbound, sleep 
+			
+			if(!mBound && mMoodPlayer.getPlayingMoods().isEmpty()){
+				
+				//with no ongoing moods and not bound, go ahead and completely shut down				
+				//this.stopSelf();
+				//doesn't work because it gets triggered before a service finishes binding and can't be undone.
+			}
 		}
 	}
 	
