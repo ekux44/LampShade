@@ -132,7 +132,7 @@ public class BulbState {
 			delta.transitiontime = o.transitiontime;
 		
 		
-		if(o.xy!=null && (xy==null || !xy.equals(o.xy))){
+		if(o.xy!=null && (xy==null || !(xy[0].equals(o.xy[0]) && xy[1].equals(o.xy[1])))){
 			delta.xy = o.xy;
 		} else if(o.ct!=null && (ct==null || !ct.equals(o.ct))){
 			delta.ct = o.ct;

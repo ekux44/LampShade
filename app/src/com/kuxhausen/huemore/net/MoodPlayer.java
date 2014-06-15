@@ -179,6 +179,7 @@ public class MoodPlayer{
 					loadMoodIntoQueue();
 				} else if (queue.peek() == null && mood != null && !mood.isInfiniteLooping()){
 					moodName = null;
+					mood = null;
 					notifyMoodsChanged();
 				}
 			}

@@ -288,6 +288,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			projectedState.merge(p.sentState);
 		}
 		BulbState dif = projectedState.delta(hBulb.desiredState);
+		
 		if(dif.toString()!=null && dif.toString().length()>0)
 			return dif;
 		return null;
@@ -309,8 +310,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	public boolean hasPendingWork() {
 		boolean hasPendingWork = false;
 		for(HueBulb hb : mBulbList){
-			if(!hb.ongoing.isEmpty())
+			if(!hb.ongoing.isEmpty()){
 				hasPendingWork = true;
+			}
 		}
 		return hasPendingWork;
 	}

@@ -168,6 +168,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 				//not bound, so service may die after releasing wakelock
 				//save ongoing moods
 				mMoodPlayer.saveOngoingAndScheduleResores();
+				this.stopSelf();
 			}
 			
 			if(mWakelock!=null){
@@ -189,6 +190,8 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 	public void onActiveMoodsChanged(){
 		createNotification();
 		calculateWakeNeeds();
+		
+		Log.e("ccc","onActiveMoodsChanged");
 	}
 	@Override
 	public void onStateChanged() {
