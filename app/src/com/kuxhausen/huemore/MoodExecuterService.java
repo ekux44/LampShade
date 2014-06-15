@@ -186,35 +186,33 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 		return mDeviceManager;
 	}
 	
-	@Override
-	public void onActiveMoodsChanged(){
-		createNotification();
-		calculateWakeNeeds();
-		
-		Log.e("ccc","onActiveMoodsChanged");
-	}
+	
 	@Override
 	public void onStateChanged() {
 		calculateWakeNeeds();
 	}
 	
-	public void createNotification() {
-		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, MainFragment.class);
-		PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		String secondaryText = ((mMoodPlayer.getGroupName()!=null&&mMoodPlayer.getMoodName()!=null)?mMoodPlayer.getGroupName():"") + ((mMoodPlayer.getMoodName()!=null)?(" \u2192 " +mMoodPlayer.getMoodName()):"");
+	public void onActiveMoodsChanged(){
+		Log.e("ccc","onActiveMoodsChanged");
 		
+		if(mMoodPlayer.getPlayingMoods().isEmpty()){
+			this.stopForeground(true);
+		} else{
+			// Creates an explicit intent for an Activity in your app
+			Intent resultIntent = new Intent(this, MainFragment.class);
+			PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			
+			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+					this)
+					.setSmallIcon(R.drawable.lampshade_notification)
+					.setContentTitle(
+							this.getResources().getString(R.string.app_name))
+					.setContentText(mMoodPlayer.getPlayingMoods().get(0).toString())
+					.setContentIntent(resultPendingIntent);
+			this.startForeground(notificationId, mBuilder.build());
+		}
 		
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this)
-				.setSmallIcon(R.drawable.lampshade_notification)
-				.setContentTitle(
-						this.getResources().getString(R.string.app_name))
-				.setContentText(secondaryText)
-				.setContentIntent(resultPendingIntent);
-		this.startForeground(notificationId, mBuilder.build());
-
+		calculateWakeNeeds();
 	}
 	
 	

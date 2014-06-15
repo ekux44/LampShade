@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.net;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
@@ -25,6 +26,8 @@ public class MoodPlayer{
 	private Context mContext;
 	private DeviceManager mDeviceManager;
 	private ArrayList<OnActiveMoodsChangedListener> moodsChangedListeners = new ArrayList<OnActiveMoodsChangedListener>();
+	ArrayList<PlayingMood> mPlayingMoods = new ArrayList<PlayingMood>();
+	
 	
 	public MoodPlayer(Context c, DeviceManager m){	
 		mContext = c;
@@ -33,11 +36,23 @@ public class MoodPlayer{
 	}
 	
 	public void playMood(Group g, Mood m, String mName, Integer maxBri){
-		moodName = mName;
+		PlayingMood pm = new PlayingMood();
+		pm.group = g;
+		pm.mood = m;
+		pm.moodName = mName;
+		
+		pm.initialMaxBri = maxBri;
+		
+		for(int i = 0; i< mPlayingMoods.size(); i++){
+			if(mPlayingMoods.get(i).group.conflictsWith(pm.group)){
+				//TODO remove mood at i and unschedule;
+			}
+		}
+		
+		mPlayingMoods.add(pm);
+		
 		mood = m;
 		group = g;
-		
-		//TODO do something with maxBri
 		
 		queue.clear();
 		loadMoodIntoQueue();
@@ -69,18 +84,10 @@ public class MoodPlayer{
 	
 	}
 	
-	public Mood mood;
-	private String moodName;
-	public String getGroupName(){
-		if(group!=null)
-			return group.getName();
-		return "";
-	}
-	public String getMoodName(){
-		return moodName;
-	}
+	private Mood mood;
+	private Group group;
+	
 	PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
-	Group group;
 	private SharedPreferences mSettings;
 	Long moodLoopIterationEndNanoTime = 0L;
 	private static CountDownTimer countDownTimer;
@@ -178,8 +185,8 @@ public class MoodPlayer{
 				} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
 					loadMoodIntoQueue();
 				} else if (queue.peek() == null && mood != null && !mood.isInfiniteLooping()){
-					moodName = null;
 					mood = null;
+					mPlayingMoods.clear();
 					notifyMoodsChanged();
 				}
 			}
@@ -200,5 +207,9 @@ public class MoodPlayer{
 	 */
 	public void saveOngoingAndScheduleResores() {
 		// TODO Auto-generated method stub
+	}
+	
+	public List<PlayingMood> getPlayingMoods(){
+		return mPlayingMoods;
 	}
 }

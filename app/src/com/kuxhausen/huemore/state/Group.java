@@ -46,4 +46,14 @@ public class Group {
 		
 		return result;
 	}
+	
+	public boolean conflictsWith(Group other){
+		for(Long mBulbId : mNetworkBulbDatabaseIds){
+			for(Long oBulbId : other.mNetworkBulbDatabaseIds){
+				if(mBulbId.equals(oBulbId))
+					return true;
+			}
+		}
+		return false;
+	}
 }
