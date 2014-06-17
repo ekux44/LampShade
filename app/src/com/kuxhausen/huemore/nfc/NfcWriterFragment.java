@@ -98,10 +98,6 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 		
-		LoaderManager lm = context.getSupportLoaderManager();
-		lm.initLoader(GROUPS_LOADER, null, this);
-		lm.initLoader(MOODS_LOADER, null, this);
-
 		brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
 		brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -252,6 +248,10 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 	public void onResume() {
 		super.onResume();
 		WriteModeOn();
+		
+		LoaderManager lm = context.getSupportLoaderManager();
+		lm.initLoader(GROUPS_LOADER, null, this);
+		lm.initLoader(MOODS_LOADER, null, this);
 	}
 
 	private void WriteModeOn() {
