@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,14 +42,20 @@ public class GroupListFragment extends ListFragment implements
 	private NetworkManagedSherlockFragmentActivity gbpfCallback;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		// We need to use a different list item layout for devices older than
-		// Honeycomb
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
+		// create ContextThemeWrapper from the original Activity Context with the custom theme
+	    final Context contextThemeWrapper = new ContextThemeWrapper(this.getActivity(), R.style.GreenWidgets);
+	    // clone the inflater using the ContextThemeWrapper
+	    LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+		
+		// We need to use a different list item layout for devices older than Honeycomb
 		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
+		// Inflate the layout for this fragment
+		View myView = localInflater.inflate(R.layout.groups_list_fragment, null);
+		
 		/*
 		 * Initializes the CursorLoader. The GROUPS_LOADER value is eventually
 		 * passed to onCreateLoader().
@@ -56,13 +64,10 @@ public class GroupListFragment extends ListFragment implements
 
 		String[] columns = { GroupColumns.GROUP, BaseColumns._ID };
 
-		dataSource = new SimpleCursorAdapter(this.getActivity(), layout, null,
+		dataSource = new SimpleCursorAdapter(contextThemeWrapper, layout, null,
 				columns, new int[] { android.R.id.text1 }, 0);
 
 		setListAdapter(dataSource);
-
-		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.groups_list_fragment, container, false);
 
 		setHasOptionsMenu(true);
 		return myView;

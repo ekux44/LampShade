@@ -192,8 +192,6 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 	}
 	
 	public void onActiveMoodsChanged(){
-		Log.e("ccc","onActiveMoodsChanged");
-		
 		if(mMoodPlayer.getPlayingMoods().isEmpty()){
 			this.stopForeground(true);
 		} else{
