@@ -14,13 +14,13 @@ import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.UpdateChangesDialogFragment;
 import com.kuxhausen.huemore.net.hue.HubData;
+import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
+import com.kuxhausen.huemore.onboarding.WelcomeDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.DeprecatedPreferenceKeys;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
-import com.kuxhausen.huemore.registration.WelcomeDialogFragment;
 
 public class PreferenceInitializer {
 

@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
+import com.kuxhausen.huemore.net.MoodExecuterService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;

@@ -2,8 +2,8 @@ package com.kuxhausen.huemore.net;
 
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.registration.DiscoverHubDialogFragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;

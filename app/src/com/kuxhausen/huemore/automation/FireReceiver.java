@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MoodExecuterService;
+import com.kuxhausen.huemore.net.MoodExecuterService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 

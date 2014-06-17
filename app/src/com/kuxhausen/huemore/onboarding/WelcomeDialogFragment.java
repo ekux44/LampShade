@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.registration;
+package com.kuxhausen.huemore.onboarding;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 

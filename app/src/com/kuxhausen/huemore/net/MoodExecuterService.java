@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore;
+package com.kuxhausen.huemore.net;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,11 +11,14 @@ import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
+import com.kuxhausen.huemore.DecodeErrorActivity;
+import com.kuxhausen.huemore.MainFragment;
+import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.R.drawable;
+import com.kuxhausen.huemore.R.string;
 import com.kuxhausen.huemore.automation.FireReceiver;
-import com.kuxhausen.huemore.net.Connection;
-import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
-import com.kuxhausen.huemore.net.MoodPlayer;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -32,7 +35,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 	 * runs in the same process as its clients, we don't need to deal with IPC.
 	 */
 	public class LocalBinder extends Binder {
-		MoodExecuterService getService() {
+		public MoodExecuterService getService() {
 			// Return this instance of LocalService so clients can call public methods
 			return MoodExecuterService.this;
 		}

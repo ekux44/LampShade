@@ -24,11 +24,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MoodExecuterService;
 import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.editmood.StateGridSelections.StateGridDisplay;
+import com.kuxhausen.huemore.net.MoodExecuterService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
