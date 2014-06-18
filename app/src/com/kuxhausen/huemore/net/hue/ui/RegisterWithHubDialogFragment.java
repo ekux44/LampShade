@@ -36,10 +36,15 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 	public final long period_in_milliseconds = 1000;
 	public ProgressBar progressBar;
 	public CountDownTimer countDownTimer;
-	Bridge[] bridges = null;
+	Bridge[] bridges;
 	Gson gson = new Gson();
 	RequestQueue rq;
-
+	HubData mHubData;
+	
+	public void setHubData(HubData hd) {
+		mHubData = hd;
+	}
+	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		
@@ -49,16 +54,26 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 			bridges = gson.fromJson(
 					this.getArguments().getString(InternalArguments.BRIDGES),
 					Bridge[].class);
+		} else if(mHubData!=null){
+			Bridge[] fakes = new Bridge[2];
+			fakes[0] = new Bridge();
+			fakes[0].internalipaddress = mHubData.localHubAddress;
+			fakes[1] = new Bridge();
+			fakes[1].internalipaddress = mHubData.portForwardedAddress;
+			
+			bridges = fakes;
+			
+		} else{
+			this.dismiss();
 		}
-		// Use the Builder class for convenient dialog construction
+		
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View registerWithHubView = inflater.inflate(R.layout.register_with_hub,
-				null);
+		View registerWithHubView = inflater.inflate(R.layout.register_with_hub, null);
 		builder.setView(registerWithHubView);
-		progressBar = (ProgressBar) registerWithHubView
-				.findViewById(R.id.timerProgressBar);
+		progressBar = (ProgressBar) registerWithHubView.findViewById(R.id.timerProgressBar);
 		
 		builder.setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
@@ -68,8 +83,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 					}
 				});
 		
-		countDownTimer = new CountDownTimer(length_in_milliseconds,
-				period_in_milliseconds) {
+		countDownTimer = new CountDownTimer(length_in_milliseconds,period_in_milliseconds) {
 			private boolean warned = false;
 
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -164,13 +178,19 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
 						InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
 				// Add connection to the database
-				HubData hubData = new HubData();
-				hubData.localHubAddress = bridgeIP;
-				hubData.hashedUsername = username;
-				
+				if(mHubData == null){
+					mHubData = new HubData();
+				}
+				if(mHubData.portForwardedAddress!=null && bridgeIP.equals(mHubData.portForwardedAddress)){
+					//don't need to adjust addresses
+				} else{
+					mHubData.localHubAddress = bridgeIP;
+				}
+				mHubData.hashedUsername = username;
 				ContentValues cv = new ContentValues();
+				
 				cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN, DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
-				cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(hubData));
+				cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(mHubData));
 				cv.put(DatabaseDefinitions.NetConnectionColumns.NAME_COLUMN, "?");
 				
 				RegisterWithHubDialogFragment.this.getActivity().getContentResolver().insert(DatabaseDefinitions.NetConnectionColumns.URI, cv);

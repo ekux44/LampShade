@@ -55,6 +55,7 @@ public class ConnectionRowAdapter extends ArrayAdapter<Connection> {
 
 		/** Set data to your Views. */
 		Connection c = list.get(position);
+		holder.mainText.setTag(c);
 		
 		holder.mainText.setText(c.mainDescription());
 		holder.secondaryText.setText(c.subDescription());

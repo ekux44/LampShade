@@ -15,7 +15,6 @@
         <item>6000</item>
         <item>36000</item>
     </integer-array>
-    <string name="ip_address_v4_seperator">.</string>
     <string name="default_port">80</string>
     
     <string-array name="help_page_titles">

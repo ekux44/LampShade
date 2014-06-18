@@ -316,4 +316,12 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		}
 		return hasPendingWork;
 	}
+	
+	public HubData getHubData(){
+		return mData;
+	}
+	
+	public void updateConfiguration(HubData newPaths){
+		//TODO
+	}
 }

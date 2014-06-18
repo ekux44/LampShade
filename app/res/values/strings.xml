@@ -16,7 +16,6 @@
     <string name="register_success">Link successful</string>
     <string name="register_fail">Could not connect to bridge. Please make sure this device is connected to the same wifi as the hub and has internet access, then try again.</string>
     <string name="link_prompt">Press the link button on your hub</string>
-    <string name="manual_ip_prompt">Enter the hub IP address</string>
     <string name="advanced">Advanced</string>
     <string name="auto_discover">Auto-Connect</string>
     <string name="contextmenu_delete">Delete</string>
@@ -113,6 +112,11 @@
 	<string name="action_bulbs">Bulbs</string>
 	<string name="actionmenu_new_connection">Connect to a smart lighting device</string>
 	<string name="prompt_new_connection_type">Select device type</string>
+	<string name="prompt_local_address">Local address of Hub</string>
+	<string name="hint_local_address">IP Address</string>
+	<string name="prompt_remote_address">Remote access address (optional)</string>
+	<string name="hint_remote_address">IP Address or URL</string>
+	<string name="toast_hue_connection_updated">Connection Updated</string>
 	
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>
