@@ -85,8 +85,13 @@ public class MoodPlayer{
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				for(PlayingMood pm : mPlayingMoods)
-					pm.onTick();
+				for(int i = 0; i<mPlayingMoods.size(); i++){
+					boolean ongoing = mPlayingMoods.get(i).onTick();
+					if(!ongoing){
+						mPlayingMoods.remove(i);
+						i--;
+					}
+				}
 			}
 		};
 		countDownTimer.start();

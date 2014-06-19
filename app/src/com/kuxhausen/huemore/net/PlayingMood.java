@@ -117,7 +117,10 @@ public class PlayingMood {
 		moodLoopIterationEndNanoTime = System.nanoTime()+(mood.loopIterationTimeLength*100000000l);
 	}
 	
-	public void onTick(){
+	/**
+	 * @return false if done playing
+	 */
+	public boolean onTick(){
 		if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
 			while(queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime())
 			{
@@ -127,8 +130,9 @@ public class PlayingMood {
 		} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
 			loadMoodIntoQueue();
 		} else if (queue.peek() == null && mood != null && !mood.isInfiniteLooping()){
-			mChangedListener.cancelMood(group);
+			return false;
 		}
+		return true;
 	}
 	
 	public boolean hasImminentPendingWork() {
