@@ -49,6 +49,8 @@ public class HueBulb implements NetworkBulb {
 		if(preBriAdjusted.bri!=null)
 			preBriAdjusted.bri = (int)(preBriAdjusted.bri * mCurrentMaxBri/100f);
 		desiredState.merge(preBriAdjusted);
+		
+		Log.e("play", bs.toString());
 		mConnection.getChangedQueue().add(this);
 	}
 

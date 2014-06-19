@@ -7,7 +7,7 @@ import android.database.Cursor;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 
-public class Group {
+public class Group{
 	
 	private String mName;
 	private ArrayList<Long> mNetworkBulbDatabaseIds;
@@ -54,6 +54,12 @@ public class Group {
 					return true;
 			}
 		}
+		return false;
+	}
+	
+	public boolean equals(Group g){
+		if(this.mName.equals(g.getName()))
+			return true;
 		return false;
 	}
 }
