@@ -117,6 +117,7 @@
 	<string name="prompt_remote_address">Remote access address (optional)</string>
 	<string name="hint_remote_address">IP Address or URL</string>
 	<string name="toast_hue_connection_updated">Connection Updated</string>
+	<string name="notification_overflow_more">more</string>
 	
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>

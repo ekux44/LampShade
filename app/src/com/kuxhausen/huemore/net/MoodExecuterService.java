@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.net;
 
+import java.util.List;
+
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -9,10 +11,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.InboxStyle;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.DecodeErrorActivity;
 import com.kuxhausen.huemore.MainFragment;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.R.drawable;
@@ -199,9 +203,10 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 			this.stopForeground(true);
 		} else{
 			// Creates an explicit intent for an Activity in your app
-			Intent resultIntent = new Intent(this, MainFragment.class);
+			Intent resultIntent = new Intent(this, NavigationDrawerActivity.class);
 			PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
+			//create basic compatibility notification
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					this)
 					.setSmallIcon(R.drawable.lampshade_notification)
@@ -209,6 +214,19 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 							this.getResources().getString(R.string.app_name))
 					.setContentText(mMoodPlayer.getPlayingMoods().get(0).toString())
 					.setContentIntent(resultPendingIntent);
+			
+			//now create rich notification for supported devices
+			List<PlayingMood> playing = mMoodPlayer.getPlayingMoods();
+			InboxStyle iStyle = new NotificationCompat.InboxStyle();
+			for(int i = 0; (i<5 && i<playing.size()); i++){
+				iStyle.addLine(playing.get(i).toString());
+			}
+			if(playing.size()>5){
+				iStyle.setSummaryText("+"+(playing.size()-5)+" "+this.getResources().getString(R.string.notification_overflow_more));
+			}
+			mBuilder.setStyle(iStyle);
+			
+			
 			this.startForeground(notificationId, mBuilder.build());
 		}
 		
