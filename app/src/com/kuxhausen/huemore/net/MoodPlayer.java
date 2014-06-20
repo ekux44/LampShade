@@ -90,6 +90,9 @@ public class MoodPlayer{
 					if(!ongoing){
 						mPlayingMoods.remove(i);
 						i--;
+						
+						//update notifications
+						onActiveMoodsChanged();
 					}
 				}
 			}
