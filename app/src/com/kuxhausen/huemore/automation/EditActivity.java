@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -38,7 +38,7 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 
-public class EditActivity extends NetworkManagedSherlockFragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener, OnClickListener {
+public class EditActivity extends NetworkManagedActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener, OnClickListener {
 
 	// don't change value
 	protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME = "com.kuxhausen.huemore.EXTRA_BUNDLE_SERIALIZED_BY_NAME";

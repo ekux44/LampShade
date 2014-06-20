@@ -17,7 +17,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
 import com.kuxhausen.huemore.MainFragment;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.MoodExecuterService;
@@ -29,7 +29,7 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
-public class NfcReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnCheckedChangeListener, OnClickListener {
+public class NfcReaderActivity extends NetworkManagedActivity implements OnCheckedChangeListener, OnClickListener {
 
 	private Integer[] mBulbs;
 	private Mood mood;

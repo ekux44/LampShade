@@ -19,7 +19,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 	EditText nameEditText;
 	NetworkBulb netBulb;
 
-	private NetworkManagedSherlockFragmentActivity parrentActivity;
+	private NetworkManagedActivity parrentActivity;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -28,7 +28,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (NetworkManagedSherlockFragmentActivity) activity;
+			parrentActivity = (NetworkManagedActivity) activity;
 		} catch (ClassCastException e) {
 		}
 	}

@@ -39,7 +39,7 @@ public class GroupListFragment extends ListFragment implements
 	public CursorAdapter dataSource;
 	public TextView selected, longSelected; // updated on long click
 	public int selectedPos = -1;
-	private NetworkManagedSherlockFragmentActivity gbpfCallback;
+	private NetworkManagedActivity gbpfCallback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,7 +116,7 @@ public class GroupListFragment extends ListFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		gbpfCallback = (NetworkManagedSherlockFragmentActivity) activity;
+		gbpfCallback = (NetworkManagedActivity) activity;
 	}
 
 	public void invalidateSelection() {

@@ -15,7 +15,7 @@ import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
 import com.kuxhausen.huemore.net.MoodExecuterService.LocalBinder;
 import com.kuxhausen.huemore.state.Group;
 
-public class NetworkManagedSherlockFragmentActivity extends ActionBarActivity implements OnConnectionStatusChangedListener, OnStateChangedListener, OnServiceConnectedListener{
+public class NetworkManagedActivity extends ActionBarActivity implements OnConnectionStatusChangedListener, OnStateChangedListener, OnServiceConnectedListener{
 
 	public void setGroup(Group g){
 		if(mBound)
@@ -92,8 +92,8 @@ public class NetworkManagedSherlockFragmentActivity extends ActionBarActivity im
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-            mService.getDeviceManager().addOnConnectionStatusChangedListener(NetworkManagedSherlockFragmentActivity.this);
-            mService.getDeviceManager().registerBrightnessListener(NetworkManagedSherlockFragmentActivity.this);
+            mService.getDeviceManager().addOnConnectionStatusChangedListener(NetworkManagedActivity.this);
+            mService.getDeviceManager().registerBrightnessListener(NetworkManagedActivity.this);
             
             for(OnServiceConnectedListener l: serviceListeners){
             	l.onServiceConnected();

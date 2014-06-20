@@ -38,7 +38,7 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
 	
 	public TextView selected, longSelected; // updated on long click
 	private int selectedPos = -1;
-	private NetworkManagedSherlockFragmentActivity parrentActivity;
+	private NetworkManagedActivity parrentActivity;
 
 	ArrayList<String> bulbNameList;
 
@@ -69,7 +69,7 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		parrentActivity = (NetworkManagedSherlockFragmentActivity) activity;
+		parrentActivity = (NetworkManagedActivity) activity;
 	}
 
 	@Override

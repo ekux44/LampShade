@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.editmood.StateGridSelections.StateGridDisplay;
@@ -152,7 +152,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 	}
 	
 	private void stopPreview(){
-		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+		MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
 		service.getMoodPlayer().cancelMood(service.getDeviceManager().getSelectedGroup());
 	}
 	@Override
@@ -162,7 +162,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 			name = parentFrag.getString(R.string.hint_mood_name);
 		}
 		
-		MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+		MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
 		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(), name, null);
 	}
 	
@@ -314,7 +314,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 			Event[] eRay = {e};
 			showChanM.events = eRay;
 			
-			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+			MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
 			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM, null, null);
 			break;
 		}

@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.CommunityDialogFragment;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.UpdateChangesDialogFragment;
 import com.kuxhausen.huemore.net.hue.HubData;
@@ -25,7 +25,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 public class PreferenceInitializer {
 
 	
-	public static void initializedPreferencesAndShowDialogs(NetworkManagedSherlockFragmentActivity act){
+	public static void initializedPreferencesAndShowDialogs(NetworkManagedActivity act){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(act);
 		Gson gson = new Gson();
 		

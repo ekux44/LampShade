@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.net;
 
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 public class NewConnectionFragment extends DialogFragment implements OnItemClickListener{
 
-	private NetworkManagedSherlockFragmentActivity mParent;
+	private NetworkManagedActivity mParent;
 	private String[] deviceTypes;
 	private ListView mTypeList;
 	
@@ -48,7 +48,7 @@ public class NewConnectionFragment extends DialogFragment implements OnItemClick
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			mParent = (NetworkManagedSherlockFragmentActivity) activity;
+			mParent = (NetworkManagedActivity) activity;
 		} catch (ClassCastException e) {
 		}
 	}

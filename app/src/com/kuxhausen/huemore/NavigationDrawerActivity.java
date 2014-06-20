@@ -36,7 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActivity implements OnBackStackChangedListener{
+public class NavigationDrawerActivity extends NetworkManagedActivity implements OnBackStackChangedListener{
 
 	private DrawerLayout mDrawerLayout;
 	private View mDrawerView;

@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.HelpFragment;
 import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;

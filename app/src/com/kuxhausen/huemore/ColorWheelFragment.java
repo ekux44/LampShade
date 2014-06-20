@@ -110,7 +110,7 @@ public class ColorWheelFragment extends Fragment implements
 
 	public void preview() {
 		if(isAdded()){
-			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+			MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
 			if(service!=null){
 				DeviceManager dm = service.getDeviceManager();
 				Group g = dm.getSelectedGroup();

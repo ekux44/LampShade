@@ -47,7 +47,7 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 	
 	ArrayList<Long> includedNetBulbIds = new ArrayList<Long>();
 	
-	private NetworkManagedSherlockFragmentActivity parrentActivity;
+	private NetworkManagedActivity parrentActivity;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -56,7 +56,7 @@ public class EditGroupDialogFragment extends DialogFragment implements LoaderMan
 		// This makes sure that the container activity has implemented
 		// the callback interface. If not, it throws an exception.
 		try {
-			parrentActivity = (NetworkManagedSherlockFragmentActivity) activity;
+			parrentActivity = (NetworkManagedActivity) activity;
 		} catch (ClassCastException e) {
 		}
 	}

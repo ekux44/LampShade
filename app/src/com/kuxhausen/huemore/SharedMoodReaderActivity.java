@@ -32,7 +32,7 @@ import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
-public class SharedMoodReaderActivity extends NetworkManagedSherlockFragmentActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class SharedMoodReaderActivity extends NetworkManagedActivity implements OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
 	private SharedMoodReaderActivity me;
 

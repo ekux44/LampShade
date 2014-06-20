@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.NetworkManagedSherlockFragmentActivity;
+import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.MoodExecuterService;
@@ -73,7 +73,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements
 		}
 		
 		if(this.getActivity()!=null){
-			MoodExecuterService service = ((NetworkManagedSherlockFragmentActivity)this.getActivity()).getService();
+			MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
 			if(service!=null){
 				DeviceManager dm = service.getDeviceManager();
 				Group g = dm.getSelectedGroup();
