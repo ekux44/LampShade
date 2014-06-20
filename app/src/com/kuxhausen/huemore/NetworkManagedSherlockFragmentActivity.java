@@ -66,6 +66,7 @@ public class NetworkManagedSherlockFragmentActivity extends ActionBarActivity im
         Intent intent = new Intent(this, MoodExecuterService.class);
         startService(intent);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        this.registerOnServiceConnectedListener(this);
 	}
 
 	@Override

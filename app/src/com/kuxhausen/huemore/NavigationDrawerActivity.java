@@ -39,9 +39,11 @@ import android.widget.Toast;
 public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActivity implements OnBackStackChangedListener{
 
 	private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+	private View mDrawerView;
+    private ListView mDrawerList, mNotificationList;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    private NotificationRowAdapter mNotificationAdapter;
+    
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mDrawerTitles;
@@ -72,7 +74,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         mTitle = mDrawerTitle = getTitle();
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -81,6 +83,11 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
                 R.layout.drawer_list_item, mDrawerTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+        mDrawerView = findViewById(R.id.left_drawer);
+        
+        mNotificationList =(ListView)findViewById(R.id.notification_list);
+        
+        
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -149,7 +156,7 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerView);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -236,8 +243,14 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mDrawerTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        mDrawerLayout.closeDrawer(mDrawerView);
     }
+    
+    @Override
+	public void onServiceConnected() {
+    	mNotificationAdapter = new NotificationRowAdapter(this, getService().getMoodPlayer());
+    	mNotificationList.setAdapter(mNotificationAdapter);
+	}
 
     @Override
     public void setTitle(CharSequence title) {
@@ -379,7 +392,8 @@ public class NavigationDrawerActivity extends NetworkManagedSherlockFragmentActi
     
     @Override
 	public void onDestroy() {
-		if(mBillingManager!=null)
+		mNotificationAdapter.onDestroy();
+    	if(mBillingManager!=null)
 			mBillingManager.onDestroy();
 		
 		super.onDestroy();
