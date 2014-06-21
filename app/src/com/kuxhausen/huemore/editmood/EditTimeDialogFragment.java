@@ -45,7 +45,7 @@ public class EditTimeDialogFragment extends DialogFragment implements OnClickLis
 			minutes.setText(""+0);
 		}
 		
-		this.getDialog().setTitle(getActivity().getString(R.string.start_time));
+		this.getDialog().setTitle(getActivity().getString(R.string.timed_mood_start_time));
 		return myView;
 	}
 
