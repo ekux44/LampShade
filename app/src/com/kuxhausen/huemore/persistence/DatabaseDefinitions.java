@@ -118,8 +118,7 @@ public final class DatabaseDefinitions {
 		public static final String TYPE_COLUMN = "D_TYPE_COLUMN";
 		public static final String JSON_COLUMN = "D_JSON_COLUMN";
 		/** holds a values 0-100 **/
-		public static final String CURRENT_MAX_BRIGHTNESS = "D_CURRENT_MAX_BRIGHTNESS";
-		
+		public static final String CURRENT_MAX_BRIGHTNESS = "D_CURRENT_MAX_BRIGHTNESS";		
 		/**
 		 * Points to the NetConnection table entry for this bulb
 		 */
@@ -153,7 +152,43 @@ public final class DatabaseDefinitions {
 		private NetConnectionColumns() {
 		}
 	}
+	
+	/*
+	 * This table is used to store ongoing/playing moods details while the app power naps
+	 */
+	public static final class PlayingMood implements BaseColumns {
 
+		public static final String TABLE_NAME = "playingmood";
+
+		public static final String PATH = "playingmood";
+
+		public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
+
+		/**
+		 * the mood name, may not exist in the group table
+		 */
+		public static final String COL_GROUP_NAME = "D_GROUP_NAME_COLUMN";
+		/**
+		 * json encoded group object
+		 */
+		public static final String COL_GROUP_VALUE = "D_GROUP_VALUE_COLUMN";
+		/**
+		 * the mood name, may not exist in the mood table
+		 */
+		public static final String COL_MOOD_NAME = "D_MOOD_NAME_COLUMN";
+		/**
+		 * the URL-ENCODE mood value
+		 */
+		public static final String COL_MOOD_VALUE = "D_MOOD_VALUE_COLUMN";
+		/**
+		 * the original mood start time measured in miliseconds using SystemClock elapsedRealTime()
+		 */
+		public static final String COL_MILI_TIME_STARTED = "D_MILI_TIME_START_COLUMN";
+		
+		// This class cannot be instantiated
+		private PlayingMood() {
+		}
+	}
 	
 	public static final class InternalArguments {
 		public static final String GROUP_NAME = "Group_Name";

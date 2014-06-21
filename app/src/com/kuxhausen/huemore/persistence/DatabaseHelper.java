@@ -19,6 +19,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -209,8 +210,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ NetBulbColumns.CONNECTION_DATABASE_ID + " INTEGER,"
 						+ NetBulbColumns.TYPE_COLUMN + " INTEGER,"
 						+ NetBulbColumns.JSON_COLUMN + " TEXT,"
-						+ NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER"
-						+ "FOREIGN KEY ("+NetBulbColumns.CONNECTION_DATABASE_ID+") REFERENCES "+NetConnectionColumns.TABLE_NAME+" ("+NetConnectionColumns._ID+" ) ON DELETE CASCADE "
+						+ NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER,"
+						+ " FOREIGN KEY ("+NetBulbColumns.CONNECTION_DATABASE_ID+") REFERENCES "+NetConnectionColumns.TABLE_NAME+" ("+NetConnectionColumns._ID+" ) ON DELETE CASCADE "
 						+ ");");
 				
 				/**Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
@@ -279,7 +280,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ GroupColumns.GROUP + " TEXT," 
 						+ GroupColumns.PRECEDENCE + " INTEGER,"
 						+ GroupColumns.BULB_DATABASE_ID + " INTEGER,"
-						+ "FOREIGN KEY ("+GroupColumns.BULB_DATABASE_ID+") REFERENCES "+NetBulbColumns.TABLE_NAME+" ("+NetBulbColumns._ID+" ) ON DELETE CASCADE " 
+						+ " FOREIGN KEY ("+GroupColumns.BULB_DATABASE_ID+") REFERENCES "+NetBulbColumns.TABLE_NAME+" ("+NetBulbColumns._ID+" ) ON DELETE CASCADE " 
 						+");");
 				
 				
@@ -298,6 +299,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					}
 				}
 				
+				db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+						+ PlayingMood.COL_GROUP_NAME + " TEXT,"
+						+ PlayingMood.COL_GROUP_VALUE + " TEXT," 
+						+ PlayingMood.COL_MOOD_NAME + " TEXT,"
+						+ PlayingMood.COL_MOOD_VALUE + " TEXT,"
+						+ PlayingMood.COL_MILI_TIME_STARTED + " INTEGER" 
+						+");");
 				
 			}
 		}

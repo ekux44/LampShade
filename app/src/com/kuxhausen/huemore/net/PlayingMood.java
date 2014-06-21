@@ -146,4 +146,7 @@ public class PlayingMood {
 	public Group getGroup(){
 		return group;
 	}
+	public Mood getMood(){
+		return mood;
+	}
 }
