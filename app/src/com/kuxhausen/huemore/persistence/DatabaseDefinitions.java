@@ -115,11 +115,15 @@ public final class DatabaseDefinitions {
 
 		public static final String NAME_COLUMN = "D_NAME_COLUMN";
 		public static final String DEVICE_ID_COLUMN = "D_DEVICE_ID_COLUMN";
-		public static final String CONNECTION_DEVICE_ID_COLUMN = "D_CONNECTION_DEVICE_ID_COLUMN";
 		public static final String TYPE_COLUMN = "D_TYPE_COLUMN";
 		public static final String JSON_COLUMN = "D_JSON_COLUMN";
 		/** holds a values 0-100 **/
 		public static final String CURRENT_MAX_BRIGHTNESS = "D_CURRENT_MAX_BRIGHTNESS";
+		
+		/**
+		 * Points to the NetConnection table entry for this bulb
+		 */
+		public static final String CONNECTION_DATABASE_ID = "Dconnection_database_id";
 		
 		public static final class NetBulbType{
 			public static final int PHILIPS_HUE = 1;

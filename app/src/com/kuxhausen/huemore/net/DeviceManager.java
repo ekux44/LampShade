@@ -165,4 +165,18 @@ public class DeviceManager {
 			loadEverythingFromDatabase();
 		}     
 	}
+
+	/**
+	 * Safely deletes references to connection's bulbs & connection, then deletes from database
+	 * @param selected connection to delete
+	 */
+	public void delete(Connection selected) {
+		// TODO Auto-generated method stub
+		for(NetworkBulb nb : selected.getBulbs()){
+			bulbMap.remove(nb.getBaseId());
+		}
+		this.mConnections.remove(selected);
+		
+		selected.delete();
+	}
 }

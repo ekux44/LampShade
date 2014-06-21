@@ -33,7 +33,7 @@ import com.kuxhausen.huemore.state.Group;
 public class HubConnection implements Connection, OnBulbAttributesReturnedListener, ConnectionMonitor, OnBulbListReturnedListener{
 
 	private static final String[] columns = {NetConnectionColumns._ID, NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.JSON_COLUMN};
-	private static final String[] bulbColumns = {NetBulbColumns._ID, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN, NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
+	private static final String[] bulbColumns = {NetBulbColumns._ID, NetBulbColumns.CONNECTION_DATABASE_ID, NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN, NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
 	private static final Integer type = NetBulbColumns.NetBulbType.PHILIPS_HUE;
 	private static final Gson gson = new Gson();
 	private static final int MAX_NUM_CONCURRENT_REQUESTS_PER_BULB = 1;
@@ -94,6 +94,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 		if(countDownTimer!=null)
 			countDownTimer.cancel();
 		volleyRQ.cancelAll("");
+		mChangedQueue = null;
+		mBulbList = null;
 	}
 	
 	public static ArrayList<HubConnection> loadHubConnections(Context c, DeviceManager dm){
@@ -141,7 +143,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	
 	private DeviceManager mDeviceManager;
 	private RequestQueue volleyRQ;
-	private static CountDownTimer countDownTimer;
+	private CountDownTimer countDownTimer;
 	private final static int TRANSMITS_PER_SECOND = 10;
 	public enum KnownState {Unknown, ToSend, Getting, Synched};	
 	
@@ -242,7 +244,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 			ContentValues cv = new ContentValues();
 			cv.put(NetBulbColumns.NAME_COLUMN, bulbName);
 			cv.put(NetBulbColumns.DEVICE_ID_COLUMN, bulbDeviceId);
-			cv.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, mDeviceId);
+			cv.put(NetBulbColumns.CONNECTION_DATABASE_ID, mBaseId);
 			cv.put(NetBulbColumns.JSON_COLUMN, gson.toJson(new HueBulbData()));
 			cv.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
 			cv.put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
@@ -326,5 +328,14 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 	
 	public void updateConfiguration(HubData newPaths){
 		//TODO
+	}
+
+	@Override
+	public void delete() {
+		this.onDestroy();
+		
+		String selector = NetConnectionColumns._ID + "=?";
+		String[] selectionArgs = {""+mBaseId};
+		mContext.getContentResolver().delete(NetConnectionColumns.URI, selector, selectionArgs);
 	}
 }

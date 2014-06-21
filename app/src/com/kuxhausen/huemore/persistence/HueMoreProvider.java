@@ -100,7 +100,7 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.NAME_COLUMN, NetBulbColumns.NAME_COLUMN);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN);
-			sGroupBulbsProjectionMap.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN);
+			sGroupBulbsProjectionMap.put(NetBulbColumns.CONNECTION_DATABASE_ID, NetBulbColumns.CONNECTION_DATABASE_ID);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.TYPE_COLUMN);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.JSON_COLUMN, NetBulbColumns.JSON_COLUMN);
 			sGroupBulbsProjectionMap.put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS, NetBulbColumns.CURRENT_MAX_BRIGHTNESS);

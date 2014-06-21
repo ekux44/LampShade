@@ -45,7 +45,7 @@ public class PreferenceInitializer {
 				
 				//also update any migrated NetBulbs to point to this NetConnection
 				ContentValues bulbValues = new ContentValues();
-				bulbValues.put(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN, connectionId);
+				bulbValues.put(NetBulbColumns.CONNECTION_DATABASE_ID, connectionId);
 				act.getContentResolver().update(NetBulbColumns.URI, bulbValues, null, null);
 			} else{
 				//remove any NetBulbs because there is no NetConnection

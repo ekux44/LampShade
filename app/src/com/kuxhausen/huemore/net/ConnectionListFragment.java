@@ -109,13 +109,11 @@ public class ConnectionListFragment extends ListFragment implements OnConnection
 				editFrag.setPriorConnection((HubConnection) selectedRow);
 				editFrag.show(getFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 			} else{
-				
 				//TODO hook into other supported systems
 			}
-			
 			return true;
 		case R.id.contextconnectionsmenu_delete:
-			//TODO
+			mParent.getService().getDeviceManager().delete(selectedRow);
 			return true;
 		default:
 			return super.onContextItemSelected(item);

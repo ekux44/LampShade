@@ -13,4 +13,7 @@ public interface Connection {
 	
 	/** return true if device should be kept awake for this connection to continue **/
 	public abstract boolean hasPendingWork();
+	
+	/** eliminate database presence and shut down any network activities **/
+	public abstract void delete();
 }

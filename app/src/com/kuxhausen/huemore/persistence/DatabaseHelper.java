@@ -34,6 +34,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
+	public void onOpen(SQLiteDatabase db){
+		super.onOpen(db);
+		if(!db.isReadOnly()){
+			//Enable foreign key constraints
+			db.execSQL("PRAGMA foreign_keys=ON;");
+		}
+	}
+	
+	@Override
 	public void onCreate(SQLiteDatabase db) {
 
 		db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " ("
@@ -185,16 +194,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 			case 5:
 			{
-				db.execSQL("CREATE TABLE " + NetBulbColumns.TABLE_NAME + " ("
-						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
-						+ NetBulbColumns.NAME_COLUMN + " TEXT,"
-						+ NetBulbColumns.DEVICE_ID_COLUMN + " TEXT,"
-						+ NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + " TEXT,"
-						+ NetBulbColumns.TYPE_COLUMN + " INTEGER,"
-						+ NetBulbColumns.JSON_COLUMN + " TEXT,"
-						+ NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER"
-						+ ");");
-				
 				db.execSQL("CREATE TABLE " + NetConnectionColumns.TABLE_NAME + " ("
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 						+ NetConnectionColumns.NAME_COLUMN + " TEXT,"
@@ -203,6 +202,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ NetConnectionColumns.JSON_COLUMN + " TEXT"
 						+ ");");
 				
+				db.execSQL("CREATE TABLE " + NetBulbColumns.TABLE_NAME + " ("
+						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
+						+ NetBulbColumns.NAME_COLUMN + " TEXT,"
+						+ NetBulbColumns.DEVICE_ID_COLUMN + " TEXT,"
+						+ NetBulbColumns.CONNECTION_DATABASE_ID + " INTEGER,"
+						+ NetBulbColumns.TYPE_COLUMN + " INTEGER,"
+						+ NetBulbColumns.JSON_COLUMN + " TEXT,"
+						+ NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER"
+						+ "FOREIGN KEY ("+NetBulbColumns.CONNECTION_DATABASE_ID+") REFERENCES "+NetConnectionColumns.TABLE_NAME+" ("+NetConnectionColumns._ID+" ) ON DELETE CASCADE "
+						+ ");");
 				
 				/**Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
 				
@@ -250,7 +259,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 							
 							netBulbValues.put(NetBulbColumns.NAME_COLUMN,"?");
 							netBulbValues.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
-							netBulbValues.putNull(NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN);
+							netBulbValues.putNull(NetBulbColumns.CONNECTION_DATABASE_ID);
 							netBulbValues.put(NetBulbColumns.DEVICE_ID_COLUMN, ""+hubBulbNumber);
 							netBulbValues.put(NetBulbColumns.JSON_COLUMN, gson.toJson(new HueBulbData()));
 							
@@ -269,7 +278,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
 						+ GroupColumns.GROUP + " TEXT," 
 						+ GroupColumns.PRECEDENCE + " INTEGER,"
-						+ GroupColumns.BULB_DATABASE_ID + " INTEGER" + ");");
+						+ GroupColumns.BULB_DATABASE_ID + " INTEGER,"
+						+ "FOREIGN KEY ("+GroupColumns.BULB_DATABASE_ID+") REFERENCES "+NetBulbColumns.TABLE_NAME+" ("+NetBulbColumns._ID+" ) ON DELETE CASCADE " 
+						+");");
 				
 				
 				/* now add the groups to the new table*/ 
