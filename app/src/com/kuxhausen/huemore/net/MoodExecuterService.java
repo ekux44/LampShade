@@ -10,8 +10,10 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
+import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.DecodeErrorActivity;
@@ -120,7 +122,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 					
 						
 						moodName = (moodName == null) ? "Unknown Mood" : moodName;
-						mMoodPlayer.playMood(g, moodPairs.second.first, moodName, moodPairs.second.second);
+						mMoodPlayer.playMood(g, moodPairs.second.first, moodName, moodPairs.second.second, null);
 					}
 				} catch (InvalidEncodingException e) {
 					Intent i = new Intent(this,DecodeErrorActivity.class);
@@ -135,7 +137,11 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 				Group g = Group.loadFromDatabase(groupName, this);
 				Mood m = Utils.getMoodFromDatabase(moodName, this);
 				
-				mMoodPlayer.playMood(g, m, moodName, maxBri);
+				mMoodPlayer.playMood(g, m, moodName, maxBri, null);
+			}
+			else if(intent.hasExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS) 
+					&& intent.getExtras().getBoolean(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS)){
+				mMoodPlayer.restoreFromSaved();
 			}
 		}
 		calculateWakeNeeds();
@@ -150,12 +156,13 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 		
 		if(mMoodPlayer.hasImminentPendingWork())
 			shouldStayAwake = true;
+		Log.e("na","MoodPlayer StayAwake="+shouldStayAwake);
 		
 		for(Connection c : mDeviceManager.getConnections()){
 			if(c.hasPendingWork())
 				shouldStayAwake = true;
 		}
-		
+		Log.e("na","MP & DM StayAwake="+shouldStayAwake);
 		
 		if(shouldStayAwake){
 			if(mWakelock == null){
@@ -167,7 +174,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 		} else {
 			if(!mBound){
 				//not bound, so service may sleep after releasing wakelock
-				//save ongoing moods
+				//save ongoing moods and schedule a broadcast to restart service before next playing mood event
 				mMoodPlayer.saveOngoingAndScheduleResores();
 			}
 			
@@ -195,6 +202,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 	
 	@Override
 	public void onStateChanged() {
+		Log.e("state","heard onStateChanged");
 		calculateWakeNeeds();
 	}
 	
@@ -228,6 +236,7 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
 			
 			
 			this.startForeground(notificationId, mBuilder.build());
+			
 		}
 		
 		calculateWakeNeeds();

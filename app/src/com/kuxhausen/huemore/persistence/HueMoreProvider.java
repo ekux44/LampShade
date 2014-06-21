@@ -21,6 +21,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
 
@@ -32,7 +33,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * A projection map used to select columns from the database
 	 */
 	private static HashMap<String, String> sGroupsProjectionMap,
-			sMoodsProjectionMap, sGroupBulbsProjectionMap, sAlarmsProjectionMap, sNetBulbsProjectionMap, sNetConnectionsProjectionMap;
+			sMoodsProjectionMap, sGroupBulbsProjectionMap, sAlarmsProjectionMap, sNetBulbsProjectionMap, sNetConnectionsProjectionMap, sPlayingMoodProjectionMap;
 	/**
 	 * A UriMatcher instance
 	 */
@@ -42,7 +43,7 @@ public class HueMoreProvider extends ContentProvider {
 	 * pattern of the incoming URI
 	 */
 	// The incoming URI matches the Groups URI pattern
-	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5, NETBULBS = 6, NETCONNECTIONS = 7;
+	private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5, NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
 
 	/**
 	 * A block that instantiates and sets static objects
@@ -115,6 +116,17 @@ public class HueMoreProvider extends ContentProvider {
 			sGroupBulbsProjectionMap.put(NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.TYPE_COLUMN);
 			sGroupBulbsProjectionMap.put(NetConnectionColumns.JSON_COLUMN, NetConnectionColumns.JSON_COLUMN);
 		}
+		{
+			sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
+			sGroupBulbsProjectionMap = new HashMap<String, String>();
+
+			sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
+			sGroupBulbsProjectionMap.put(PlayingMood.COL_GROUP_VALUE, PlayingMood.COL_GROUP_VALUE);
+			sGroupBulbsProjectionMap.put(PlayingMood.COL_MOOD_NAME, PlayingMood.COL_MOOD_NAME);
+			sGroupBulbsProjectionMap.put(PlayingMood.COL_MOOD_VALUE, PlayingMood.COL_MOOD_VALUE);
+			sGroupBulbsProjectionMap.put(PlayingMood.COL_INITIAL_MAX_BRI, PlayingMood.COL_INITIAL_MAX_BRI);
+			sGroupBulbsProjectionMap.put(PlayingMood.COL_MILI_TIME_STARTED, PlayingMood.COL_MILI_TIME_STARTED);
+		}
 	}
 
 	@Override
@@ -128,7 +140,10 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
-
+		case PLAYINGMOOD:
+			table = PlayingMood.TABLE_NAME;
+			toNotify.add(PlayingMood.URI);
+			break;
 		case NETCONNECTIONS:
 			table = NetConnectionColumns.TABLE_NAME;
 			toNotify.add(NetConnectionColumns.URI);
@@ -185,6 +200,12 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
+		case PLAYINGMOOD:
+			qb.setTables(PlayingMood.TABLE_NAME);
+			qb.setProjectionMap(sPlayingMoodProjectionMap);
+			table = PlayingMood.TABLE_NAME;
+			toNotify.add(PlayingMood.URI);
+			break;
 		case NETCONNECTIONS:
 			qb.setTables(NetConnectionColumns.TABLE_NAME);
 			qb.setProjectionMap(sNetConnectionsProjectionMap);
@@ -261,6 +282,11 @@ public class HueMoreProvider extends ContentProvider {
 		 * pattern-matching.
 		 */
 		switch (sUriMatcher.match(uri)) {
+		case PLAYINGMOOD:
+			qb.setTables(PlayingMood.TABLE_NAME);
+			qb.setProjectionMap(sPlayingMoodProjectionMap);
+			groupBy = null;
+			break;
 		case NETCONNECTIONS:
 			qb.setTables(NetConnectionColumns.TABLE_NAME);
 			qb.setProjectionMap(sNetConnectionsProjectionMap);

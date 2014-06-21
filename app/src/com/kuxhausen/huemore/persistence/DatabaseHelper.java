@@ -301,10 +301,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				
 				db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " ("
 						+ BaseColumns._ID + " INTEGER PRIMARY KEY,"
-						+ PlayingMood.COL_GROUP_NAME + " TEXT,"
 						+ PlayingMood.COL_GROUP_VALUE + " TEXT," 
 						+ PlayingMood.COL_MOOD_NAME + " TEXT,"
 						+ PlayingMood.COL_MOOD_VALUE + " TEXT,"
+						+ PlayingMood.COL_INITIAL_MAX_BRI + " INTEGER,"
 						+ PlayingMood.COL_MILI_TIME_STARTED + " INTEGER" 
 						+");");
 				

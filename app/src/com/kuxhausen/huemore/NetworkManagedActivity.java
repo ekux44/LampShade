@@ -93,6 +93,7 @@ public class NetworkManagedActivity extends ActionBarActivity implements OnConne
             mService = binder.getService();
             mBound = true;
             mService.getDeviceManager().addOnConnectionStatusChangedListener(NetworkManagedActivity.this);
+            mService.getDeviceManager().registerStateListener(NetworkManagedActivity.this);
             mService.getDeviceManager().registerBrightnessListener(NetworkManagedActivity.this);
             
             for(OnServiceConnectedListener l: serviceListeners){

@@ -92,11 +92,17 @@ public class DeviceManager {
 		public void onStateChanged();
 	}
 	
-	/** announce brightness to any listeners **/
+	/** announce state changes to any listeners **/
 	public void onStateChanged(){
+		//only send brightnessListeners brightness state changes
 		for(OnStateChangedListener l : brightnessListeners){
 			l.onStateChanged();
 		}
+		
+		for(OnStateChangedListener l : stateListeners){
+			l.onStateChanged();
+		}
+		Log.e("state","stateChanged");
 	}
 	public void registerStateListener(OnStateChangedListener l){
 		stateListeners.add(l);

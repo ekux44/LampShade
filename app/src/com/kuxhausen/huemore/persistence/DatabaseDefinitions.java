@@ -165,10 +165,6 @@ public final class DatabaseDefinitions {
 		public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
 
 		/**
-		 * the mood name, may not exist in the group table
-		 */
-		public static final String COL_GROUP_NAME = "D_GROUP_NAME_COLUMN";
-		/**
 		 * json encoded group object
 		 */
 		public static final String COL_GROUP_VALUE = "D_GROUP_VALUE_COLUMN";
@@ -180,6 +176,9 @@ public final class DatabaseDefinitions {
 		 * the URL-ENCODE mood value
 		 */
 		public static final String COL_MOOD_VALUE = "D_MOOD_VALUE_COLUMN";
+		
+		public static final String COL_INITIAL_MAX_BRI = "D_COL_INITIAL_MAX_BRI";
+		
 		/**
 		 * the original mood start time measured in miliseconds using SystemClock elapsedRealTime()
 		 */
@@ -214,6 +213,7 @@ public final class DatabaseDefinitions {
 		public static final String MAX_BRIGHTNESS = "MAX_BRIGHTNESS";
 		public static final String NAV_DRAWER_PAGE = "NAV_DRAWER_PAGE";
 		public static final String GROUPBULB_TAB = "GROUPBULB_TAB";
+		public static final String FLAG_AWAKEN_PLAYING_MOODS = "FLAG_AWAKEN_PLAYING_MOODS";
 	}
 
 	public static final class PreferenceKeys {

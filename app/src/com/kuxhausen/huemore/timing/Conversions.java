@@ -2,6 +2,8 @@ package com.kuxhausen.huemore.timing;
 
 import java.util.Calendar;
 
+import android.os.SystemClock;
+
 
 public class Conversions {
 
@@ -30,15 +32,15 @@ public class Conversions {
 		
 		return startOfDay;
 	}
-	public static long nanoEventTimeFromMoodDailyTime(int dailyMoodDeciSeconds){
+	public static long miliEventTimeFromMoodDailyTime(int dailyMoodDeciSeconds){
 		
 		Calendar event = calendarMillisFromMoodDailyTime(dailyMoodDeciSeconds);
 		
 		Calendar current = Calendar.getInstance();
 		
-		Long nanoOffsetFromNow = (event.getTimeInMillis() - current.getTimeInMillis())*1000000L;
+		Long miliOffsetFromNow = event.getTimeInMillis() - current.getTimeInMillis();
 		
-		return System.nanoTime() + nanoOffsetFromNow;
+		return SystemClock.elapsedRealtime() + miliOffsetFromNow;
 	}
 	
 }

@@ -2,7 +2,10 @@ package com.kuxhausen.huemore.state;
 
 public class QueueEvent implements Comparable<QueueEvent>{
 	public Long bulbBaseId;
-	public Long nanoTime;
+	/** 
+	 * event start time measured in SystemClock.elapsedRealtime() 
+	 */
+	public Long miliTime;
 	public Event event;
 	
 	public QueueEvent(Event e){
@@ -10,6 +13,6 @@ public class QueueEvent implements Comparable<QueueEvent>{
 	}
 	@Override
 	public int compareTo(QueueEvent another) {
-		return nanoTime.compareTo(another.nanoTime);
+		return miliTime.compareTo(another.miliTime);
 	}
 }

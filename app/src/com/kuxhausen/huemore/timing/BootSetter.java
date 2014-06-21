@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
@@ -32,6 +33,10 @@ public class BootSetter extends BroadcastReceiver {
 				}
 				
 			}
+			
+			
+			//clear out any playing moods stopped at shutdown
+			context.getContentResolver().delete(DatabaseDefinitions.PlayingMood.URI, null, null);
 		}
 	}
 

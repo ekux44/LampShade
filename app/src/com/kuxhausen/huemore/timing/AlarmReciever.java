@@ -129,13 +129,14 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 				AlarmManager.INTERVAL_DAY * 7, pIntent);
 	}
 	
-	public static void scheduleInternalAlarm(Context context, AlarmState alarmState,
-			Long timeInMillis) {
+	public static void scheduleInternalAlarm(Context context, Long wakeupTimeInElapsedRealtimeMilis) {
 
-		PendingIntent pIntent = calculatePendingIntent(context, alarmState, 8);
-		AlarmManager alarmMgr = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
+		Intent intent = new Intent(context, AlarmReciever.class);
+		intent.setAction("com.kuxhausen.huemore." +8);
+		
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 8, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+		alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, wakeupTimeInElapsedRealtimeMilis, pendingIntent);
 	}
 
 	public static void cancelAlarm(Context context, AlarmState alarmState) {
@@ -178,20 +179,9 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction() != null && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.8\\..*")) {
-			AlarmState as = gson.fromJson(
-					intent.getExtras().getString(
-							InternalArguments.ALARM_DETAILS), AlarmState.class);
-
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(context);
-			String encodedMood = settings.getString(PreferenceKeys.CACHED_EXECUTING_ENCODED_MOOD,null);
-			if(encodedMood!=null && encodedMood.length()>0){
 				Intent trasmitter = new Intent(context, MoodExecuterService.class);
-				trasmitter.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
-				trasmitter.putExtra(InternalArguments.MOOD_NAME, as.mood);
-				trasmitter.putExtra(InternalArguments.GROUP_NAME, as.group);
+				trasmitter.putExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS, true);
 				startWakefulService(context, trasmitter);
-			}
 		}
 		else if (intent.getAction() != null && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.\\d\\..*")) {
 			AlarmState as = gson.fromJson(

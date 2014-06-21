@@ -194,7 +194,7 @@ public class EditActivity extends NetworkManagedActivity implements LoaderManage
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			brightness = brightnessBar.getProgress();
 		
-		this.getService().getMoodPlayer().playMood(g, m, moodName, brightness);
+		this.getService().getMoodPlayer().playMood(g, m, moodName, brightness, null);
 	}
 
 	public String getSerializedByNamePreview() {

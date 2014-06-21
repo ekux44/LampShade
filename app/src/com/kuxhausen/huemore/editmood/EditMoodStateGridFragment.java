@@ -163,7 +163,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 		}
 		
 		MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
-		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(), name, null);
+		service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(), name, null, null);
 	}
 	
 	public static PageType calculateMoodType(Mood m){
@@ -315,7 +315,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 			showChanM.events = eRay;
 			
 			MoodExecuterService service = ((NetworkManagedActivity)this.getActivity()).getService();
-			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM, null, null);
+			service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM, null, null, null);
 			break;
 		}
 		

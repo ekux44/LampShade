@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
+import android.os.SystemClock;
+
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
@@ -13,9 +15,10 @@ import com.kuxhausen.huemore.timing.Conversions;
 /** used to store activity data about an ongoing mood and format the data for consumption by visualizations/notefications **/
 public class PlayingMood {
 	
-	// if the next even is happening in less than 5 seconds, stay awake for it
-	private final static long IMMIMENT_EVENT_WAKE_THRESHOLD_IN_NANOSEC = 5000000000l;
+	// if the next even is happening in less than 1/2 seconds, stay awake for it
+	private final static long IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC = 500l;
 	
+	/** should never be null **/
 	private Mood mood;
 	private String moodName;
 	private Group group;	
@@ -26,9 +29,9 @@ public class PlayingMood {
 	private DeviceManager mDeviceManager;
 	
 	private PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
-	private Long moodLoopIterationEndNanoTime = 0L;
+	private Long moodLoopIterationEndMiliTime = 0L;
 		
-	public PlayingMood(MoodPlayer mp, DeviceManager dm, Group g, Mood m, String mName, Integer maxBri){
+	public PlayingMood(MoodPlayer mp, DeviceManager dm, Group g, Mood m, String mName, Integer maxBri, Long timeStartedInRealtimeElapsedMilis){
 		mChangedListener = mp;
 		mDeviceManager = dm;
 		group = g;
@@ -37,7 +40,16 @@ public class PlayingMood {
 		
 		initialMaxBri = maxBri;
 		
-		loadMoodIntoQueue();
+		if(timeStartedInRealtimeElapsedMilis!=null){
+			if(mood.isInfiniteLooping()){
+				//if entire loops could have occurred since the timeStarm started, fast forward to the currently ongoing loop
+				while(timeStartedInRealtimeElapsedMilis < (SystemClock.elapsedRealtime() + (mood.loopIterationTimeLength*100))){
+					timeStartedInRealtimeElapsedMilis += (mood.loopIterationTimeLength*100);
+				}	
+			}
+		}
+		
+		loadMoodIntoQueue(timeStartedInRealtimeElapsedMilis);
 	}
 	
 	public String getMoodName(){
@@ -55,7 +67,8 @@ public class PlayingMood {
 		return getGroupName()+" \u2190 "+getMoodName();
 	}
 	
-	private void loadMoodIntoQueue() {
+	//if null, parameter ignored
+	private void loadMoodIntoQueue(Long timeLoopStartedInRealtimeElapsedMilis) {
 		ArrayList<Long>[] channels = new ArrayList[mood.getNumChannels()];
 		for (int i = 0; i < channels.length; i++)
 			channels[i] = new ArrayList<Long>();
@@ -76,13 +89,13 @@ public class PlayingMood {
 					QueueEvent qe = new QueueEvent(e);
 					qe.bulbBaseId = bNum;
 					
-					qe.nanoTime = Conversions.nanoEventTimeFromMoodDailyTime(e.time);
-					if(qe.nanoTime>System.nanoTime()){
+					qe.miliTime = Conversions.miliEventTimeFromMoodDailyTime(e.time);
+					if(qe.miliTime>SystemClock.elapsedRealtime()){
 						pendingEvents.add(qe);
 					}
-					else if(qe.nanoTime>=earliestEventStillApplicable){
-						earliestEventStillApplicable = qe.nanoTime;
-						qe.nanoTime = System.nanoTime();
+					else if(qe.miliTime>=earliestEventStillApplicable){
+						earliestEventStillApplicable = qe.miliTime;
+						qe.miliTime = SystemClock.elapsedRealtime();
 						pendingEvents.add(qe);
 					}
 				}
@@ -94,7 +107,7 @@ public class PlayingMood {
 				for (Long bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
 					qe.bulbBaseId = bNum;
-					qe.nanoTime = System.nanoTime();
+					qe.miliTime = SystemClock.elapsedRealtime();
 					pendingEvents.add(qe);
 				}
 			}
@@ -104,32 +117,39 @@ public class PlayingMood {
 			}
 		}else{
 			for (Event e : mood.events) {
+				
+				
 				for (Long bNum : channels[e.channel]) {
 					QueueEvent qe = new QueueEvent(e);
 					qe.bulbBaseId = bNum;
 					
-					// 10^8 * e.time
-					qe.nanoTime = System.nanoTime()+(e.time*100000000l);
-					queue.add(qe);
+					//if no preset mood start time, use present time
+					if(timeLoopStartedInRealtimeElapsedMilis==null)
+						timeLoopStartedInRealtimeElapsedMilis = SystemClock.elapsedRealtime();
+					qe.miliTime = timeLoopStartedInRealtimeElapsedMilis+(e.time*100l);
+					
+					//if event in future or present (+/- 100ms, add to queue
+					if(qe.miliTime+100>SystemClock.elapsedRealtime())
+						queue.add(qe);
 				}
 			}
 		}
-		moodLoopIterationEndNanoTime = System.nanoTime()+(mood.loopIterationTimeLength*100000000l);
+		moodLoopIterationEndMiliTime = SystemClock.elapsedRealtime()+(mood.loopIterationTimeLength*100l);
 	}
 	
 	/**
 	 * @return false if done playing
 	 */
 	public boolean onTick(){
-		if (queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime()) {
-			while(queue.peek()!=null && queue.peek().nanoTime <= System.nanoTime())
+		if (queue.peek()!=null && queue.peek().miliTime <= SystemClock.elapsedRealtime()) {
+			while(queue.peek()!=null && queue.peek().miliTime <= SystemClock.elapsedRealtime())
 			{
 				QueueEvent e = queue.poll();
 				mDeviceManager.getNetworkBulb(e.bulbBaseId).setState(e.event.state);
 			}
-		} else if (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime) {
-			loadMoodIntoQueue();
-		} else if (queue.peek() == null && mood != null && !mood.isInfiniteLooping()){
+		} else if (queue.peek() == null && mood.isInfiniteLooping() && SystemClock.elapsedRealtime()>moodLoopIterationEndMiliTime) {
+			loadMoodIntoQueue(null);
+		} else if (queue.peek() == null && !mood.isInfiniteLooping()){
 			return false;
 		}
 		return true;
@@ -137,8 +157,8 @@ public class PlayingMood {
 	
 	public boolean hasImminentPendingWork() {
 		//IF queue has imminent events or queue about to be reloaded
-		if((!queue.isEmpty() && (queue.peek().nanoTime - System.nanoTime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_NANOSEC)
-			|| (queue.peek() == null && mood != null && mood.isInfiniteLooping() && System.nanoTime()>moodLoopIterationEndNanoTime))
+		if((!queue.isEmpty() && (queue.peek().miliTime - SystemClock.elapsedRealtime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC)
+			|| (queue.peek() == null && mood.isInfiniteLooping() && SystemClock.elapsedRealtime()>moodLoopIterationEndMiliTime))
 			return true;
 		return false;
 	}
@@ -148,5 +168,16 @@ public class PlayingMood {
 	}
 	public Mood getMood(){
 		return mood;
+	}
+
+	/** 
+	 * @return next event time is millis referenced in SystemClock.elapsedRealtime()
+	 */
+	public long getNextEventTime() {
+		if(!queue.isEmpty())
+			return queue.peek().miliTime;
+		else if (mood.isInfiniteLooping())
+			return moodLoopIterationEndMiliTime;
+		return Long.MAX_VALUE;
 	}
 }

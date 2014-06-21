@@ -159,7 +159,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
 		switch (v.getId()) {
 			case R.id.previewButton:
 				Group g = Group.loadFromDatabase(((TextView) groupSpinner.getSelectedView()).getText().toString(), me);
-				this.getService().getMoodPlayer().playMood(g, sharedMood, name.getText().toString(), null);
+				this.getService().getMoodPlayer().playMood(g, sharedMood, name.getText().toString(), null, null);
 
 				break;
 			case R.id.okay:

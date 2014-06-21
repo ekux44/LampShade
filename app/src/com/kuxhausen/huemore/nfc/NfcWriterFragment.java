@@ -282,7 +282,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 		if(brightnessBar.getVisibility()==View.VISIBLE)
 			brightness = brightnessBar.getProgress();
 		
-		context.getService().getMoodPlayer().playMood(g, m, moodName, brightness);
+		context.getService().getMoodPlayer().playMood(g, m, moodName, brightness, null);
 	}
 
 	public String getSerializedByValue() {
