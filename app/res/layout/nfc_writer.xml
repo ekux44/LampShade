@@ -87,6 +87,9 @@
         android:id="@+id/writeToTagButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/nfc_tag_write_prompt" />
+        android:text="@string/nfc_tag_write_prompt" 
+        style="@style/Widget.AppCompat.ActionButton"/>
+    
+    <include layout="@layout/horizontal_divider_line_blue"/>
 
 </LinearLayout>
