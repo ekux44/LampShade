@@ -64,30 +64,31 @@ public class ConnectionRowAdapter extends ArrayAdapter<Connection> {
     holder.secondaryText.setText(c.subDescription());
 
     boolean anyConnected = false;
-    boolean anyPending = false;
+    boolean anyUnknown = false;
     for (NetworkBulb nb : c.getBulbs()) {
       switch (nb.getConnectivityState()) {
-        case Unknown:
-          anyPending = true;
-          break;
-        case Unreachable:
-          break;
         case Connected:
           anyConnected = true;
           break;
+        case Unknown:
+          anyUnknown = true;
+          break;
+        case Unreachable:
+          break;
       }
     }
+
     if (anyConnected) {
-      holder.connectivingSpinner.setVisibility(View.GONE);
       holder.connectedIcon.setVisibility(View.VISIBLE);
+      holder.connectivingSpinner.setVisibility(View.GONE);
       holder.unreachableIcon.setVisibility(View.GONE);
-    } else if (anyPending) {
-      holder.connectivingSpinner.setVisibility(View.VISIBLE);
+    } else if (anyUnknown) {
       holder.connectedIcon.setVisibility(View.GONE);
+      holder.connectivingSpinner.setVisibility(View.VISIBLE);
       holder.unreachableIcon.setVisibility(View.GONE);
     } else {
-      holder.connectivingSpinner.setVisibility(View.GONE);
       holder.connectedIcon.setVisibility(View.GONE);
+      holder.connectivingSpinner.setVisibility(View.GONE);
       holder.unreachableIcon.setVisibility(View.VISIBLE);
     }
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import com.kuxhausen.huemore.net.hue.Route;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
 public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
@@ -18,8 +19,9 @@ public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
   private final OnBulbListReturnedListener listener;
   private final Context context;
 
-  public BulbListSuccessListener(ConnectionMonitor parrentA, OnBulbListReturnedListener l, Context c) {
-    super(parrentA);
+  public BulbListSuccessListener(ConnectionMonitor parrentA, OnBulbListReturnedListener l,
+      Context c, Route r) {
+    super(parrentA, r);
     listener = l;
     context = c;
   }

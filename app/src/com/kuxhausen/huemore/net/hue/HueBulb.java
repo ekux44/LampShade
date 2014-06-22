@@ -70,8 +70,9 @@ public class HueBulb implements NetworkBulb {
     BulbAttributes bAttrs = new BulbAttributes();
     bAttrs.name = name;
 
-    NetworkMethods.PreformSetBulbAttributes(mContext, mConnection.getRequestQueue(), mConnection,
-        Integer.parseInt(mDeviceId), bAttrs);
+    for (Route route : mConnection.getBestRoutes())
+      NetworkMethods.PreformSetBulbAttributes(route, mConnection.mData.hashedUsername, mContext,
+          mConnection.getRequestQueue(), mConnection, Integer.parseInt(mDeviceId), bAttrs);
   }
 
   @Override

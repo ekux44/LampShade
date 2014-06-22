@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.net.hue.api;
 
+import com.kuxhausen.huemore.net.hue.Route;
+
 
 public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttributes> {
 
@@ -13,8 +15,8 @@ public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttr
   private final OnBulbAttributesReturnedListener listener;
 
   public BulbAttributesSuccessListener(ConnectionMonitor parrentA,
-      OnBulbAttributesReturnedListener l, int bNum) {
-    super(parrentA);
+      OnBulbAttributesReturnedListener l, int bNum, Route r) {
+    super(parrentA, r);
     listener = l;
     bulbNum = bNum;
   }

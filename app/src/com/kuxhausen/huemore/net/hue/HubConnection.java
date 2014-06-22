@@ -2,15 +2,18 @@ package com.kuxhausen.huemore.net.hue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import alt.android.os.CountDownTimer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.SystemClock;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.NetworkBulb;
@@ -41,11 +44,13 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   private Long mBaseId;
   private String mName, mDeviceId;
-  private HubData mData;
+  HubData mData;
   private Context mContext;
   private LinkedHashSet<HueBulb> mChangedQueue;
   private ArrayList<HueBulb> mBulbList;
-
+  private ArrayList<Route> myRoutes;
+  private long lastDisconnectedPingInElapsedRealtime;
+  private static final long discounnectedPingIntervalMilis = 1000;
 
   public HubConnection(Context c, Long baseId, String name, String deviceId, HubData data,
       DeviceManager dm) {
@@ -57,6 +62,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     mBulbList = new ArrayList<HueBulb>();
     mChangedQueue = new LinkedHashSet<HueBulb>();
+    myRoutes = new ArrayList<Route>();
 
     String selection =
         NetBulbColumns.TYPE_COLUMN + " = ?  AND " + NetBulbColumns.CONNECTION_DATABASE_ID + " = ?";
@@ -87,8 +93,31 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   @Override
   public void initializeConnection(Context c) {
+    myRoutes.clear();
+    if (mData != null && mData.localHubAddress != null)
+      myRoutes.add(new Route(mData.localHubAddress, ConnectivityState.Unknown));
+    if (mData != null && mData.portForwardedAddress != null)
+      myRoutes.add(new Route(mData.portForwardedAddress, ConnectivityState.Unknown));
 
-    NetworkMethods.PreformGetBulbList(mContext, getRequestQueue(), this, this);
+    for (Route route : getBestRoutes())
+      NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
+          this, this);
+  }
+
+  public List<Route> getBestRoutes() {
+    ConnectivityState bestSoFar = ConnectivityState.Unreachable;
+    ArrayList<Route> result = new ArrayList<Route>();
+
+    for (Route route : myRoutes) {
+      if (route.state == bestSoFar)
+        result.add(route);
+      else if (route.isMoreConnectedThan(bestSoFar)) {
+        result.clear();
+        result.add(route);
+      }
+    }
+
+    return result;
   }
 
   @Override
@@ -133,13 +162,20 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
 
   @Override
-  public void setHubConnectionState(boolean connected) {
-
+  public void setHubConnectionState(Route r, boolean connected) {
+    if (connected)
+      r.state = ConnectivityState.Connected;
+    else
+      r.state = ConnectivityState.Unreachable;
 
     mDeviceManager.onConnectionChanged();
-    if (!connected) {
-      // TODO rate limit
-      NetworkMethods.PreformGetBulbList(mContext, getRequestQueue(), this, null);
+    if (!getBestRoutes().isEmpty() && getBestRoutes().get(0).state != ConnectivityState.Connected) {
+      if (SystemClock.elapsedRealtime() - lastDisconnectedPingInElapsedRealtime > discounnectedPingIntervalMilis) {
+        lastDisconnectedPingInElapsedRealtime = SystemClock.elapsedRealtime();
+        for (Route route : getBestRoutes())
+          NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext,
+              getRequestQueue(), this, this);
+      }
     }
   }
 
@@ -214,8 +250,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
             PendingStateChange stateChange =
                 new PendingStateChange(toSend, selected, System.nanoTime());
-            NetworkMethods.preformTransmitPendingState(mContext, getRequestQueue(),
-                HubConnection.this, stateChange);
+            for (Route route : getBestRoutes())
+              NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
+                  getRequestQueue(), HubConnection.this, stateChange);
             selected.ongoing.add(stateChange);
           }
         }
@@ -271,8 +308,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   }
 
   public ConnectivityState getConnectivityState() {
-    // TODO
-    return ConnectivityState.Unknown;
+    if (this.getBestRoutes().isEmpty())
+      return ConnectivityState.Unreachable;
+    else
+      return this.getBestRoutes().get(0).state;
   }
 
   public void reportStateChangeFailure(PendingStateChange mRequest) {
@@ -315,13 +354,13 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   @Override
   public String mainDescription() {
     // TODO Auto-generated method stub
-    return "placeholder";
+    // return "placeholder";
+    return this.getConnectivityState().name();
   }
 
   @Override
   public String subDescription() {
-    // TODO Auto-generated method stub
-    return "more placeholder";
+    return this.mContext.getResources().getString(R.string.device_hue);
   }
 
   @Override
@@ -339,8 +378,22 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     return mData;
   }
 
+  /**
+   * saves new HubData and reinitializes connections
+   * 
+   * @param newPaths
+   */
   public void updateConfiguration(HubData newPaths) {
-    // TODO
+    mData = newPaths;
+
+    ContentValues cv = new ContentValues();
+    cv.put(NetConnectionColumns.JSON_COLUMN, gson.toJson(mData));
+
+    String selector = NetConnectionColumns._ID + "=?";
+    String[] selectionArgs = {"" + mBaseId};
+    mContext.getContentResolver().update(NetConnectionColumns.URI, cv, selector, selectionArgs);
+
+    initializeConnection(mContext);
   }
 
   @Override

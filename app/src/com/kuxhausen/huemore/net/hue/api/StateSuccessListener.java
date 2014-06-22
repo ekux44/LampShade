@@ -2,14 +2,15 @@ package com.kuxhausen.huemore.net.hue.api;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.PendingStateChange;
+import com.kuxhausen.huemore.net.hue.Route;
 
 public class StateSuccessListener extends BasicSuccessListener<LightsPutResponse[]> {
 
   HubConnection mHubConnection;
   PendingStateChange mRequest;
 
-  public StateSuccessListener(HubConnection hubConnection, PendingStateChange request) {
-    super(hubConnection);
+  public StateSuccessListener(HubConnection hubConnection, PendingStateChange request, Route r) {
+    super(hubConnection, r);
     mHubConnection = hubConnection;
     mRequest = request;
   }
