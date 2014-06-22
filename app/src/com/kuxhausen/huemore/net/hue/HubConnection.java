@@ -35,7 +35,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       NetBulbColumns.CONNECTION_DATABASE_ID, NetBulbColumns.TYPE_COLUMN,
       NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN,
       NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
-  private static final Integer type = NetBulbColumns.NetBulbType.PHILIPS_HUE;
+  private static final Integer TYPE = NetBulbColumns.NetBulbType.PHILIPS_HUE;
   private static final Gson gson = new Gson();
   private static final int MAX_NUM_CONCURRENT_REQUESTS_PER_BULB = 1;
 
@@ -58,17 +58,12 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     mBulbList = new ArrayList<HueBulb>();
     mChangedQueue = new LinkedHashSet<HueBulb>();
 
-    String[] selectionArgs = {"" + NetBulbColumns.NetBulbType.PHILIPS_HUE};// , mDeviceId};
-    // TODO fix selection once hub id fixed
-    Cursor cursor = c.getContentResolver().query(NetBulbColumns.URI, bulbColumns, null, null, null);// /*NetBulbColumns.TYPE_COLUMN
-                                                                                                    // +
-                                                                                                    // " = ?"/*
-                                                                                                    // AND
-                                                                                                    // "+NetBulbColumns.CONNECTION_DEVICE_ID_COLUMN + "
-                                                                                                    // =
-                                                                                                    // ?"*/,
-                                                                                                    // selectionArgs,
-                                                                                                    // null);
+    String selection =
+        NetBulbColumns.TYPE_COLUMN + " = ?  AND " + NetBulbColumns.CONNECTION_DATABASE_ID + " = ?";
+    String[] selectionArgs = {"" + TYPE, "" + mBaseId};
+    Cursor cursor =
+        c.getContentResolver().query(NetBulbColumns.URI, bulbColumns, selection, selectionArgs,
+            null);
     cursor.moveToPosition(-1);// not the same as move to first!
     while (cursor.moveToNext()) {
       Long bulbBaseId = cursor.getLong(0);
@@ -88,10 +83,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     // initalized state
     this.mDeviceManager.onStateChanged();
-  }
-
-  public void saveConnection() {
-    // TODO Auto-generated method stub
   }
 
   @Override
@@ -143,6 +134,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   @Override
   public void setHubConnectionState(boolean connected) {
+
+
     mDeviceManager.onConnectionChanged();
     if (!connected) {
       // TODO rate limit
@@ -215,7 +208,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
           HueBulb selected = mChangedQueue.iterator().next();
           mChangedQueue.remove(selected);
 
-          BulbState toSend = getSendState(selected);
+          // TODO re enable sendState optimization after further api transience testing
+          BulbState toSend = selected.desiredState;// getSendState(selected);
           if (toSend != null && selected.ongoing.size() <= MAX_NUM_CONCURRENT_REQUESTS_PER_BULB) {
 
             PendingStateChange stateChange =

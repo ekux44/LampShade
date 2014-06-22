@@ -67,7 +67,6 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public void rename(String name) {
-    // TODO Auto-generated method stub
     BulbAttributes bAttrs = new BulbAttributes();
     bAttrs.name = name;
 
