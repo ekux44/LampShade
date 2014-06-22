@@ -213,6 +213,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     } else {
       // Creates an explicit intent for an Activity in your app
       Intent resultIntent = new Intent(this, NavigationDrawerActivity.class);
+      resultIntent.putExtra(InternalArguments.FLAG_SHOW_NAV_DRAWER, true);
       PendingIntent resultPendingIntent =
           PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

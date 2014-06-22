@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -140,6 +141,10 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       } else {
         selectItem(BULB_FRAG, b);
       }
+    }
+
+    if (b != null && b.getBoolean(InternalArguments.FLAG_SHOW_NAV_DRAWER)) {
+      mDrawerLayout.openDrawer(Gravity.LEFT);
     }
   }
 
