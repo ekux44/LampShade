@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.CommunityDialogFragment;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.UpdateChangesDialogFragment;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.onboarding.WelcomeDialogFragment;
@@ -84,8 +83,7 @@ public class PreferenceInitializer {
       edit.commit();
     } else if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1) < act.getResources().getInteger(
         R.integer.major_update_version)) {
-      UpdateChangesDialogFragment ucdf = new UpdateChangesDialogFragment();
-      ucdf.show(act.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+      //TODO show any kind of update release notes, etc
     }
     if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
       Editor edit = settings.edit();
