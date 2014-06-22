@@ -29,112 +29,111 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
-public class NfcReaderActivity extends NetworkManagedActivity implements OnCheckedChangeListener, OnClickListener {
+public class NfcReaderActivity extends NetworkManagedActivity implements OnCheckedChangeListener,
+    OnClickListener {
 
-	private Integer[] mBulbs;
-	private Mood mood;
-	private Integer mBrightness;
-	private ToggleButton mOnButton;
-	private Button mDoneButton;
+  private Integer[] mBulbs;
+  private Mood mood;
+  private Integer mBrightness;
+  private ToggleButton mOnButton;
+  private Button mDoneButton;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.nfc_reader);
-		this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		mOnButton = (ToggleButton) this.findViewById(R.id.onToggleButton);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.nfc_reader);
+    this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		mDoneButton = (Button) this.findViewById(R.id.doneButton);
-		mDoneButton.setOnClickListener(this);
-	}
+    mOnButton = (ToggleButton) this.findViewById(R.id.onToggleButton);
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		
-		Bundle b = this.getIntent().getExtras();		
-		if(b!=null && b.containsKey(InternalArguments.ENCODED_MOOD)){
-			Pair<Integer[], Pair<Mood, Integer>> result;
-			try {
-				String encodedMood = b.getString(InternalArguments.ENCODED_MOOD);
-				result = HueUrlEncoder.decode(encodedMood);
-				mBulbs = result.first;
-				mood = result.second.first;
-				mBrightness = result.second.second;
-				
-				mOnButton.setOnCheckedChangeListener(null);
-								
-				Intent intent = new Intent(this, MoodExecuterService.class);
-				intent.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
-		        this.startService(intent);
+    mDoneButton = (Button) this.findViewById(R.id.doneButton);
+    mDoneButton.setOnClickListener(this);
+  }
 
-				boolean on = false;
-				if(mood.events[0].state.on!=null && mood.events[0].state.on)
-					on=true;
-				mOnButton.setChecked(on);
-				mOnButton.setOnCheckedChangeListener(this);
-			
-			} catch (InvalidEncodingException e) {
-				this.finish();
-			} catch (FutureEncodingException e) {
-				this.finish();
-			}
-		}
-	}
-	
-	public static String getGroupMoodBrightnessFromNdef(Intent input){
-		Parcelable[] rawMsgs = input.getParcelableArrayExtra(
-				NfcAdapter.EXTRA_NDEF_MESSAGES);
-		if (rawMsgs != null) {
-			NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
-			for (int i = 0; i < rawMsgs.length; i++) {
-				msgs[i] = (NdefMessage) rawMsgs[i];
-			}
-			
-			byte[] payload = msgs[0].getRecords()[0].getPayload();
-			
-			String data = new String(payload, 1, payload.length - 1,
-					Charset.forName("US-ASCII"));
-			data = data.substring(data.indexOf('?') + 1);
+  @Override
+  public void onResume() {
+    super.onResume();
 
-			return data;
-		}
-		return "";
-	}
+    Bundle b = this.getIntent().getExtras();
+    if (b != null && b.containsKey(InternalArguments.ENCODED_MOOD)) {
+      Pair<Integer[], Pair<Mood, Integer>> result;
+      try {
+        String encodedMood = b.getString(InternalArguments.ENCODED_MOOD);
+        result = HueUrlEncoder.decode(encodedMood);
+        mBulbs = result.first;
+        mood = result.second.first;
+        mBrightness = result.second.second;
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				this.startActivity(new Intent(this,MainFragment.class));
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
+        mOnButton.setOnCheckedChangeListener(null);
 
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		BulbState bs = new BulbState();
-		bs.on = isChecked;
-		
-		MoodExecuterService service = this.getService();
-		if(service!=null){
-			DeviceManager dm = service.getDeviceManager();
-			Group g = Group.loadFromLegacyData(mBulbs, null, this);
-			for(Long bulbId : g.getNetworkBulbDatabaseIds()){
-				dm.getNetworkBulb(bulbId).setState(bs);
-			}
-		}
-	}
+        Intent intent = new Intent(this, MoodExecuterService.class);
+        intent.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
+        this.startService(intent);
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.doneButton:
-			onBackPressed();
-		}
+        boolean on = false;
+        if (mood.events[0].state.on != null && mood.events[0].state.on)
+          on = true;
+        mOnButton.setChecked(on);
+        mOnButton.setOnCheckedChangeListener(this);
 
-	}
+      } catch (InvalidEncodingException e) {
+        this.finish();
+      } catch (FutureEncodingException e) {
+        this.finish();
+      }
+    }
+  }
+
+  public static String getGroupMoodBrightnessFromNdef(Intent input) {
+    Parcelable[] rawMsgs = input.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+    if (rawMsgs != null) {
+      NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+      for (int i = 0; i < rawMsgs.length; i++) {
+        msgs[i] = (NdefMessage) rawMsgs[i];
+      }
+
+      byte[] payload = msgs[0].getRecords()[0].getPayload();
+
+      String data = new String(payload, 1, payload.length - 1, Charset.forName("US-ASCII"));
+      data = data.substring(data.indexOf('?') + 1);
+
+      return data;
+    }
+    return "";
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        this.startActivity(new Intent(this, MainFragment.class));
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
+  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    BulbState bs = new BulbState();
+    bs.on = isChecked;
+
+    MoodExecuterService service = this.getService();
+    if (service != null) {
+      DeviceManager dm = service.getDeviceManager();
+      Group g = Group.loadFromLegacyData(mBulbs, null, this);
+      for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
+        dm.getNetworkBulb(bulbId).setState(bs);
+      }
+    }
+  }
+
+  @Override
+  public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.doneButton:
+        onBackPressed();
+    }
+
+  }
 }

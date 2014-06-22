@@ -9,32 +9,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 public class StateCellAdapter extends BaseAdapter {
-    public StateCellAdapter(OnClickListener l, ArrayList<StateCell> list, Fragment frag) {
-      	this.l = l;
-      	this.list = list;
-      	this.frag = frag;
-    }
+  public StateCellAdapter(OnClickListener l, ArrayList<StateCell> list, Fragment frag) {
+    this.l = l;
+    this.list = list;
+    this.frag = frag;
+  }
 
-    public int getCount() {
-        return list.size();
-    }
+  public int getCount() {
+    return list.size();
+  }
 
-    public Object getItem(int position) {
-        return list.get(position);
-    }
+  public Object getItem(int position) {
+    return list.get(position);
+  }
 
-    public long getItemId(int position) {
-        return position;
-    }
+  public long getItemId(int position) {
+    return position;
+  }
 
-    public View getView(int position, View convertView, ViewGroup parent) {        	
-    	View v = list.get(position).getView(parent, l, frag, null);
-    	v.setTag(position);
-    	return v;
-    }
+  public View getView(int position, View convertView, ViewGroup parent) {
+    View v = list.get(position).getView(parent, l, frag, null);
+    v.setTag(position);
+    return v;
+  }
 
-    private OnClickListener l;
-    private ArrayList<StateCell> list;
-    private Fragment frag;
+  private OnClickListener l;
+  private ArrayList<StateCell> list;
+  private Fragment frag;
 }
-

@@ -16,71 +16,70 @@ import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class ConfigureHubDialogFragment extends DialogFragment{
+public class ConfigureHubDialogFragment extends DialogFragment {
 
-	private HubConnection mPriorConnection;
-	private Context mContext;
-	private EditText mLocalAddress;
-	private EditText mRemoteAddress;
+  private HubConnection mPriorConnection;
+  private Context mContext;
+  private EditText mLocalAddress;
+  private EditText mRemoteAddress;
 
-	public void setPriorConnection(HubConnection hubConnect){
-		mPriorConnection = hubConnect;
-	}
-	
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		mContext = this.getActivity();
-		// Use the Builder class for convenient dialog construction
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+  public void setPriorConnection(HubConnection hubConnect) {
+    mPriorConnection = hubConnect;
+  }
 
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View registerWithHubView = inflater.inflate(R.layout.configure_hub, null);
-			
-		mLocalAddress = (EditText)registerWithHubView.findViewById(R.id.localEditText);
-		mRemoteAddress = (EditText)registerWithHubView.findViewById(R.id.remoteEditText);
-		
-		if(mPriorConnection!=null){
-			String local = mPriorConnection.getHubData().localHubAddress;
-			if(local!=null)
-				mLocalAddress.setText(local);
-			String remote = mPriorConnection.getHubData().portForwardedAddress;
-			if(remote!=null)
-				mRemoteAddress.setText(remote);
-		}
-		
-		builder.setView(registerWithHubView);
-		builder.setPositiveButton(R.string.accept,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						HubData hd = new HubData();
-						hd.localHubAddress = mLocalAddress.getText().toString();
-						hd.portForwardedAddress = mRemoteAddress.getText().toString();
-						
-						if(mPriorConnection!=null){
-							hd.hashedUsername = mPriorConnection.getHubData().hashedUsername;
-							
-							mPriorConnection.updateConfiguration(hd);
-							Toast t = Toast.makeText(mContext, R.string.toast_hue_connection_updated, Toast.LENGTH_SHORT);
-							t.show();
-							
-						}else{
-							RegisterWithHubDialogFragment registerFrag = new RegisterWithHubDialogFragment();
-							registerFrag.setHubData(hd);
-							registerFrag.show(getFragmentManager(),InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-						}
-						
-						dismiss();
-					}
-				});
-		builder.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						dismiss();
-					}
-				});
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    mContext = this.getActivity();
+    // Use the Builder class for convenient dialog construction
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-		return builder.create();
-	}
+    LayoutInflater inflater = getActivity().getLayoutInflater();
+    View registerWithHubView = inflater.inflate(R.layout.configure_hub, null);
+
+    mLocalAddress = (EditText) registerWithHubView.findViewById(R.id.localEditText);
+    mRemoteAddress = (EditText) registerWithHubView.findViewById(R.id.remoteEditText);
+
+    if (mPriorConnection != null) {
+      String local = mPriorConnection.getHubData().localHubAddress;
+      if (local != null)
+        mLocalAddress.setText(local);
+      String remote = mPriorConnection.getHubData().portForwardedAddress;
+      if (remote != null)
+        mRemoteAddress.setText(remote);
+    }
+
+    builder.setView(registerWithHubView);
+    builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int id) {
+        HubData hd = new HubData();
+        hd.localHubAddress = mLocalAddress.getText().toString();
+        hd.portForwardedAddress = mRemoteAddress.getText().toString();
+
+        if (mPriorConnection != null) {
+          hd.hashedUsername = mPriorConnection.getHubData().hashedUsername;
+
+          mPriorConnection.updateConfiguration(hd);
+          Toast t =
+              Toast.makeText(mContext, R.string.toast_hue_connection_updated, Toast.LENGTH_SHORT);
+          t.show();
+
+        } else {
+          RegisterWithHubDialogFragment registerFrag = new RegisterWithHubDialogFragment();
+          registerFrag.setHubData(hd);
+          registerFrag.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+        }
+
+        dismiss();
+      }
+    });
+    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int id) {
+        dismiss();
+      }
+    });
+
+    return builder.create();
+  }
 }

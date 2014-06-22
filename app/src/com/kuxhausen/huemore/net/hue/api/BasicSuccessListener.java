@@ -2,18 +2,18 @@ package com.kuxhausen.huemore.net.hue.api;
 
 import com.android.volley.Response.Listener;
 
-public class BasicSuccessListener<T> implements Listener<T>{
-	
-	ConnectionMonitor parrent;
+public class BasicSuccessListener<T> implements Listener<T> {
 
-	public BasicSuccessListener(ConnectionMonitor parrentA){
-		parrent = parrentA;
-	}
+  ConnectionMonitor parrent;
 
-	@Override
-	public void onResponse(T response) {
-		if(parrent!=null)
-			parrent.setHubConnectionState(true);
-	}	
+  public BasicSuccessListener(ConnectionMonitor parrentA) {
+    parrent = parrentA;
+  }
+
+  @Override
+  public void onResponse(T response) {
+    if (parrent != null)
+      parrent.setHubConnectionState(true);
+  }
 
 }

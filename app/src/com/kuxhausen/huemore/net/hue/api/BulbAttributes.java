@@ -4,10 +4,9 @@ import com.kuxhausen.huemore.state.BulbState;
 
 public class BulbAttributes {
 
-	public BulbState state;
-	public String type;
-	public String name;
+  public BulbState state;
+  public String type;
+  public String name;
 
-	public BulbAttributes() {
-	}
+  public BulbAttributes() {}
 }

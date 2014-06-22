@@ -10,39 +10,34 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class RegistrationFailDialogFragment extends DialogFragment {
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setPositiveButton(R.string.auto_discover,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
-						dhdf.show(getFragmentManager(),
-								InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    builder.setPositiveButton(R.string.auto_discover, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int id) {
+        DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
+        dhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
-						dismiss();
-					}
-				});
-		builder.setNeutralButton(R.string.advanced,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						ConfigureHubDialogFragment mrwhdf = new ConfigureHubDialogFragment();
-						mrwhdf.show(getFragmentManager(),
-								InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-						dismiss();
-					}
-				});
-		builder.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
+        dismiss();
+      }
+    });
+    builder.setNeutralButton(R.string.advanced, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int id) {
+        ConfigureHubDialogFragment mrwhdf = new ConfigureHubDialogFragment();
+        mrwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+        dismiss();
+      }
+    });
+    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int id) {
 
-						dismiss();
-					}
-				});
-		builder.setMessage(R.string.register_fail);
-		return builder.create();
-	}
+        dismiss();
+      }
+    });
+    builder.setMessage(R.string.register_fail);
+    return builder.create();
+  }
 }

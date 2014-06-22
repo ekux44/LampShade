@@ -13,44 +13,40 @@ import android.widget.Button;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
-public class AddMoodGroupSelectorDialogFragment extends DialogFragment
-		implements OnClickListener {
+public class AddMoodGroupSelectorDialogFragment extends DialogFragment implements OnClickListener {
 
-	Button newGroup, newMood;
+  Button newGroup, newMood;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View myView = inflater.inflate(R.layout.add_new_selector, container,
-				false);
-		// this.getDialog().setTitle(R.string.);
-		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    // Inflate the layout for this fragment
+    View myView = inflater.inflate(R.layout.add_new_selector, container, false);
+    // this.getDialog().setTitle(R.string.);
+    getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-		Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
-		newGroup.setOnClickListener(this);
+    Button newGroup = (Button) myView.findViewById(R.id.newGroupButton);
+    newGroup.setOnClickListener(this);
 
-		Button newMood = (Button) myView.findViewById(R.id.newMoodButton);
-		newMood.setOnClickListener(this);
+    Button newMood = (Button) myView.findViewById(R.id.newMoodButton);
+    newMood.setOnClickListener(this);
 
-		return myView;
-	}
+    return myView;
+  }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.newGroupButton:
-			EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
-			ngdf.show(getFragmentManager(),
-					InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-			dismiss();
-			break;
-		case R.id.newMoodButton:
-			Intent i = new Intent(this.getActivity(), EditMoodFragment.class);
-			this.getActivity().startActivity(i);
-			
-			dismiss();
-			break;
-		}
-	}
+  @Override
+  public void onClick(View v) {
+    switch (v.getId()) {
+      case R.id.newGroupButton:
+        EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
+        ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+        dismiss();
+        break;
+      case R.id.newMoodButton:
+        Intent i = new Intent(this.getActivity(), EditMoodFragment.class);
+        this.getActivity().startActivity(i);
+
+        dismiss();
+        break;
+    }
+  }
 }
