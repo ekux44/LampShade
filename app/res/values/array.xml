@@ -5,8 +5,6 @@
     <string name="nfc">NFC</string>
     <string name="color_temp_initial_value">3200</string>
     <string name="cap_short_none"></string>
-    <string name="developer_email">erickuxhausen+lampshade@gmail.com</string>
-    <string name="report_bug_email_subject">bug</string>
     <integer-array name="transition_values_array">
         <item>4</item>
         <item>10</item>
@@ -15,7 +13,6 @@
         <item>6000</item>
         <item>36000</item>
     </integer-array>
-    <string name="default_port">80</string>
     
     <string-array name="help_page_titles">
 	    <item>@string/help_title_gettingstarted</item>
