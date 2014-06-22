@@ -7,7 +7,6 @@ import alt.android.os.CountDownTimer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -218,7 +217,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
           BulbState toSend = getSendState(selected);
           if (toSend != null && selected.ongoing.size() <= MAX_NUM_CONCURRENT_REQUESTS_PER_BULB) {
-            Log.e("send", toSend.toString());
 
             PendingStateChange stateChange =
                 new PendingStateChange(toSend, selected, System.nanoTime());

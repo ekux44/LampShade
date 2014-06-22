@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
+import android.os.Looper;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
@@ -30,8 +30,7 @@ public class DeviceManager {
   public DeviceManager(Context c) {
     mContext = c;
 
-    Log.e("dm", "about to set up MO");
-    mConnectionObserver = new MyObserver(null);
+    mConnectionObserver = new MyObserver(new Handler(Looper.getMainLooper()));
     mContext.getContentResolver().registerContentObserver(NetConnectionColumns.URI, true,
         mConnectionObserver);
 
@@ -108,7 +107,6 @@ public class DeviceManager {
     for (OnStateChangedListener l : stateListeners) {
       l.onStateChanged();
     }
-    Log.e("state", "stateChanged");
   }
 
   public void registerStateListener(OnStateChangedListener l) {
@@ -171,19 +169,16 @@ public class DeviceManager {
   class MyObserver extends ContentObserver {
     public MyObserver(Handler handler) {
       super(handler);
-      Log.e("dm.mo", "constructor");
     }
 
     @Override
     public void onChange(boolean selfChange) {
-      Log.e("dm.mo", "onChange(bool)");
       this.onChange(selfChange, null);
     }
 
     @Override
     public void onChange(boolean selfChange, Uri uri) {
       loadEverythingFromDatabase();
-      Log.e("dm.mo", "onChange(bool, uri)");
     }
   }
 
