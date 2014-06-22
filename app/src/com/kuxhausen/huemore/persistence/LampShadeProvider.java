@@ -30,19 +30,17 @@ public class LampShadeProvider extends ContentProvider {
   DatabaseHelper mOpenHelper;
 
   /**
-   * A projection map used to select columns from the database
+   * Projection maps used to select columns from the database
    */
-  private static HashMap<String, String> sGroupsProjectionMap, sMoodsProjectionMap,
-      sGroupBulbsProjectionMap, sAlarmsProjectionMap, sNetBulbsProjectionMap,
-      sNetConnectionsProjectionMap, sPlayingMoodProjectionMap;
+  private static HashMap<String, String> sGroupsMap, sMoodsMap, sGroupBulbsMap, sAlarmsMap,
+      sNetBulbsMap, sNetConnectionsMap, sPlayingMoodMap;
   /**
    * A UriMatcher instance
    */
   private static final UriMatcher sUriMatcher;
-  /*
+  /**
    * Constants used by the Uri matcher to choose an action based on the pattern of the incoming URI
    */
-  // The incoming URI matches the Groups URI pattern
   private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5,
       NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
 
@@ -59,39 +57,39 @@ public class LampShadeProvider extends ContentProvider {
 
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
-      sGroupsProjectionMap = new HashMap<String, String>();
+      sGroupsMap = new HashMap<String, String>();
 
-      sGroupsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sGroupsProjectionMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
-      sGroupsProjectionMap.put(GroupColumns.PRECEDENCE, GroupColumns.PRECEDENCE);
-      sGroupsProjectionMap.put(GroupColumns.BULB_DATABASE_ID, GroupColumns.BULB_DATABASE_ID);
+      sGroupsMap.put(BaseColumns._ID, BaseColumns._ID);
+      sGroupsMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
+      sGroupsMap.put(GroupColumns.PRECEDENCE, GroupColumns.PRECEDENCE);
+      sGroupsMap.put(GroupColumns.BULB_DATABASE_ID, GroupColumns.BULB_DATABASE_ID);
 
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
-      sMoodsProjectionMap = new HashMap<String, String>();
+      sMoodsMap = new HashMap<String, String>();
 
-      sMoodsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sMoodsProjectionMap.put(MoodColumns.MOOD, MoodColumns.MOOD);
-      sMoodsProjectionMap.put(MoodColumns.STATE, MoodColumns.STATE);
+      sMoodsMap.put(BaseColumns._ID, BaseColumns._ID);
+      sMoodsMap.put(MoodColumns.MOOD, MoodColumns.MOOD);
+      sMoodsMap.put(MoodColumns.STATE, MoodColumns.STATE);
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY,
           DatabaseDefinitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
-      sGroupBulbsProjectionMap = new HashMap<String, String>();
+      sGroupBulbsMap = new HashMap<String, String>();
 
-      sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sGroupBulbsProjectionMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
-      sGroupBulbsProjectionMap.put(GroupColumns.PRECEDENCE, GroupColumns.PRECEDENCE);
-      sGroupsProjectionMap.put(GroupColumns.BULB_DATABASE_ID, GroupColumns.BULB_DATABASE_ID);
+      sGroupBulbsMap.put(BaseColumns._ID, BaseColumns._ID);
+      sGroupBulbsMap.put(GroupColumns.GROUP, GroupColumns.GROUP);
+      sGroupBulbsMap.put(GroupColumns.PRECEDENCE, GroupColumns.PRECEDENCE);
+      sGroupBulbsMap.put(GroupColumns.BULB_DATABASE_ID, GroupColumns.BULB_DATABASE_ID);
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
-      sAlarmsProjectionMap = new HashMap<String, String>();
+      sAlarmsMap = new HashMap<String, String>();
 
-      sAlarmsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sAlarmsProjectionMap.put(AlarmColumns.STATE, AlarmColumns.STATE);
-      sAlarmsProjectionMap.put(AlarmColumns.INTENT_REQUEST_CODE, AlarmColumns.INTENT_REQUEST_CODE);
+      sAlarmsMap.put(BaseColumns._ID, BaseColumns._ID);
+      sAlarmsMap.put(AlarmColumns.STATE, AlarmColumns.STATE);
+      sAlarmsMap.put(AlarmColumns.INTENT_REQUEST_CODE, AlarmColumns.INTENT_REQUEST_CODE);
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
@@ -99,45 +97,39 @@ public class LampShadeProvider extends ContentProvider {
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
-      sGroupBulbsProjectionMap = new HashMap<String, String>();
+      sNetBulbsMap = new HashMap<String, String>();
 
-      sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sGroupBulbsProjectionMap.put(NetBulbColumns.NAME_COLUMN, NetBulbColumns.NAME_COLUMN);
-      sGroupBulbsProjectionMap
-          .put(NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN);
-      sGroupBulbsProjectionMap.put(NetBulbColumns.CONNECTION_DATABASE_ID,
-          NetBulbColumns.CONNECTION_DATABASE_ID);
-      sGroupBulbsProjectionMap.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.TYPE_COLUMN);
-      sGroupBulbsProjectionMap.put(NetBulbColumns.JSON_COLUMN, NetBulbColumns.JSON_COLUMN);
-      sGroupBulbsProjectionMap.put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS,
-          NetBulbColumns.CURRENT_MAX_BRIGHTNESS);
+      sNetBulbsMap.put(BaseColumns._ID, BaseColumns._ID);
+      sNetBulbsMap.put(NetBulbColumns.NAME_COLUMN, NetBulbColumns.NAME_COLUMN);
+      sNetBulbsMap.put(NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN);
+      sNetBulbsMap
+          .put(NetBulbColumns.CONNECTION_DATABASE_ID, NetBulbColumns.CONNECTION_DATABASE_ID);
+      sNetBulbsMap.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.TYPE_COLUMN);
+      sNetBulbsMap.put(NetBulbColumns.JSON_COLUMN, NetBulbColumns.JSON_COLUMN);
+      sNetBulbsMap
+          .put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS, NetBulbColumns.CURRENT_MAX_BRIGHTNESS);
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
-      sGroupBulbsProjectionMap = new HashMap<String, String>();
+      sNetConnectionsMap = new HashMap<String, String>();
 
-      sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sGroupBulbsProjectionMap.put(NetConnectionColumns.NAME_COLUMN,
-          NetConnectionColumns.NAME_COLUMN);
-      sGroupBulbsProjectionMap.put(NetConnectionColumns.DEVICE_ID_COLUMN,
+      sNetConnectionsMap.put(BaseColumns._ID, BaseColumns._ID);
+      sNetConnectionsMap.put(NetConnectionColumns.NAME_COLUMN, NetConnectionColumns.NAME_COLUMN);
+      sNetConnectionsMap.put(NetConnectionColumns.DEVICE_ID_COLUMN,
           NetConnectionColumns.DEVICE_ID_COLUMN);
-      sGroupBulbsProjectionMap.put(NetConnectionColumns.TYPE_COLUMN,
-          NetConnectionColumns.TYPE_COLUMN);
-      sGroupBulbsProjectionMap.put(NetConnectionColumns.JSON_COLUMN,
-          NetConnectionColumns.JSON_COLUMN);
+      sNetConnectionsMap.put(NetConnectionColumns.TYPE_COLUMN, NetConnectionColumns.TYPE_COLUMN);
+      sNetConnectionsMap.put(NetConnectionColumns.JSON_COLUMN, NetConnectionColumns.JSON_COLUMN);
     }
     {
       sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
-      sGroupBulbsProjectionMap = new HashMap<String, String>();
+      sPlayingMoodMap = new HashMap<String, String>();
 
-      sGroupBulbsProjectionMap.put(BaseColumns._ID, BaseColumns._ID);
-      sGroupBulbsProjectionMap.put(PlayingMood.COL_GROUP_VALUE, PlayingMood.COL_GROUP_VALUE);
-      sGroupBulbsProjectionMap.put(PlayingMood.COL_MOOD_NAME, PlayingMood.COL_MOOD_NAME);
-      sGroupBulbsProjectionMap.put(PlayingMood.COL_MOOD_VALUE, PlayingMood.COL_MOOD_VALUE);
-      sGroupBulbsProjectionMap
-          .put(PlayingMood.COL_INITIAL_MAX_BRI, PlayingMood.COL_INITIAL_MAX_BRI);
-      sGroupBulbsProjectionMap.put(PlayingMood.COL_MILI_TIME_STARTED,
-          PlayingMood.COL_MILI_TIME_STARTED);
+      sPlayingMoodMap.put(BaseColumns._ID, BaseColumns._ID);
+      sPlayingMoodMap.put(PlayingMood.COL_GROUP_VALUE, PlayingMood.COL_GROUP_VALUE);
+      sPlayingMoodMap.put(PlayingMood.COL_MOOD_NAME, PlayingMood.COL_MOOD_NAME);
+      sPlayingMoodMap.put(PlayingMood.COL_MOOD_VALUE, PlayingMood.COL_MOOD_VALUE);
+      sPlayingMoodMap.put(PlayingMood.COL_INITIAL_MAX_BRI, PlayingMood.COL_INITIAL_MAX_BRI);
+      sPlayingMoodMap.put(PlayingMood.COL_MILI_TIME_STARTED, PlayingMood.COL_MILI_TIME_STARTED);
     }
   }
 
@@ -158,6 +150,9 @@ public class LampShadeProvider extends ContentProvider {
       case NETCONNECTIONS:
         table = NetConnectionColumns.TABLE_NAME;
         toNotify.add(NetConnectionColumns.URI);
+        toNotify.add(NetBulbColumns.URI);
+        toNotify.add(GroupColumns.GROUPS_URI);
+        toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case NETBULBS:
         table = NetBulbColumns.TABLE_NAME;
@@ -212,40 +207,40 @@ public class LampShadeProvider extends ContentProvider {
     switch (sUriMatcher.match(uri)) {
       case PLAYINGMOOD:
         qb.setTables(PlayingMood.TABLE_NAME);
-        qb.setProjectionMap(sPlayingMoodProjectionMap);
+        qb.setProjectionMap(sPlayingMoodMap);
         table = PlayingMood.TABLE_NAME;
         toNotify.add(PlayingMood.URI);
         break;
       case NETCONNECTIONS:
         qb.setTables(NetConnectionColumns.TABLE_NAME);
-        qb.setProjectionMap(sNetConnectionsProjectionMap);
+        qb.setProjectionMap(sNetConnectionsMap);
         table = NetConnectionColumns.TABLE_NAME;
         toNotify.add(NetConnectionColumns.URI);
         break;
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
-        qb.setProjectionMap(sNetBulbsProjectionMap);
+        qb.setProjectionMap(sNetBulbsMap);
         table = NetBulbColumns.TABLE_NAME;
         toNotify.add(NetBulbColumns.URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
         qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
-        qb.setProjectionMap(sAlarmsProjectionMap);
+        qb.setProjectionMap(sAlarmsMap);
         table = DatabaseDefinitions.AlarmColumns.TABLE_NAME;
         toNotify.add(AlarmColumns.ALARMS_URI);
         toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPS:
         qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
-        qb.setProjectionMap(sGroupsProjectionMap);
+        qb.setProjectionMap(sGroupsMap);
         table = DatabaseDefinitions.GroupColumns.TABLE_NAME;
         toNotify.add(GroupColumns.GROUPS_URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
         qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
-        qb.setProjectionMap(sMoodsProjectionMap);
+        qb.setProjectionMap(sMoodsMap);
         table = DatabaseDefinitions.MoodColumns.TABLE_NAME;
         toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
         break;
@@ -295,34 +290,34 @@ public class LampShadeProvider extends ContentProvider {
     switch (sUriMatcher.match(uri)) {
       case PLAYINGMOOD:
         qb.setTables(PlayingMood.TABLE_NAME);
-        qb.setProjectionMap(sPlayingMoodProjectionMap);
+        qb.setProjectionMap(sPlayingMoodMap);
         groupBy = null;
         break;
       case NETCONNECTIONS:
         qb.setTables(NetConnectionColumns.TABLE_NAME);
-        qb.setProjectionMap(sNetConnectionsProjectionMap);
+        qb.setProjectionMap(sNetConnectionsMap);
         groupBy = null;
         break;
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
-        qb.setProjectionMap(sNetBulbsProjectionMap);
+        qb.setProjectionMap(sNetBulbsMap);
         groupBy = null;
         break;
       case INDIVIDUAL_ALARM:
         qb.appendWhere(AlarmColumns._ID + "=" + uri.getLastPathSegment());
         qb.setTables(AlarmColumns.TABLE_NAME);
-        qb.setProjectionMap(sAlarmsProjectionMap);
+        qb.setProjectionMap(sAlarmsMap);
         groupBy = null;
         uri = AlarmColumns.ALARMS_URI;
         break;
       case ALARMS:
         qb.setTables(AlarmColumns.TABLE_NAME);
-        qb.setProjectionMap(sAlarmsProjectionMap);
+        qb.setProjectionMap(sAlarmsMap);
         groupBy = null;
         break;
       case GROUPS:
         qb.setTables(GroupColumns.TABLE_NAME);
-        qb.setProjectionMap(sGroupsProjectionMap);
+        qb.setProjectionMap(sGroupsMap);
         groupBy = GroupColumns.GROUP;
         break;
       case GROUPBULBS:
@@ -342,7 +337,7 @@ public class LampShadeProvider extends ContentProvider {
           return c;
         }
         qb.setTables(GroupColumns.TABLE_NAME);
-        qb.setProjectionMap(sGroupsProjectionMap);
+        qb.setProjectionMap(sGroupsMap);
         groupBy = null;
         break;
       case MOODS:
@@ -374,7 +369,7 @@ public class LampShadeProvider extends ContentProvider {
           return mc;
         } else {
           qb.setTables(MoodColumns.TABLE_NAME);
-          qb.setProjectionMap(sMoodsProjectionMap);
+          qb.setProjectionMap(sMoodsMap);
           groupBy = null;
         }
         break;
