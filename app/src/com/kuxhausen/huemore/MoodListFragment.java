@@ -241,8 +241,10 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     // Notify the parent activity of selected item
     String moodName = selected.getText().toString();
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
-    service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(),
-        Utils.getMoodFromDatabase(moodName, getActivity()), moodName, null, null);
+
+    if (service.getDeviceManager().getSelectedGroup() != null)
+      service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(),
+          Utils.getMoodFromDatabase(moodName, getActivity()), moodName, null, null);
 
     getActivity().supportInvalidateOptionsMenu();
   }

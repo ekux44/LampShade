@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -10,15 +9,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
-import com.kuxhausen.huemore.editmood.EditMoodFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class AddMoodGroupSelectorDialogFragment extends DialogFragment implements OnClickListener {
 
   Button newGroup, newMood;
+  NavigationDrawerActivity mParent;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    mParent = (NavigationDrawerActivity) this.getActivity();
+
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.add_new_selector, container, false);
     // this.getDialog().setTitle(R.string.);
@@ -42,9 +43,7 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment implement
         dismiss();
         break;
       case R.id.newMoodButton:
-        Intent i = new Intent(this.getActivity(), EditMoodFragment.class);
-        this.getActivity().startActivity(i);
-
+        mParent.showEditMood(null);
         dismiss();
         break;
     }

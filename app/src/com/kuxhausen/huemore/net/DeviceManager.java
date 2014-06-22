@@ -127,6 +127,8 @@ public class DeviceManager {
   }
 
   public Integer getBrightness(Group g) {
+    if (g == null)
+      return null;
     int briSum = 0;
     int briNum = 0;
 
@@ -144,6 +146,8 @@ public class DeviceManager {
 
   /** doesn't notify listeners **/
   public void setBrightness(Group g, int bri) {
+    if (g == null)
+      return;
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
       bulbMap.get(bulbId).setCurrentMaxBrightness(bri);
     }
