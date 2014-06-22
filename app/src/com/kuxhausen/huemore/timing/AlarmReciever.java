@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class AlarmReciever extends WakefulBroadcastReceiver {
@@ -169,7 +169,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     if (intent.getAction() != null
         && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.8\\..*")) {
-      Intent trasmitter = new Intent(context, MoodExecuterService.class);
+      Intent trasmitter = new Intent(context, ConnectivityService.class);
       trasmitter.putExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS, true);
       startWakefulService(context, trasmitter);
     } else if (intent.getAction() != null
@@ -178,7 +178,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
           gson.fromJson(intent.getExtras().getString(InternalArguments.ALARM_DETAILS),
               AlarmState.class);
 
-      Intent trasmitter = new Intent(context, MoodExecuterService.class);
+      Intent trasmitter = new Intent(context, ConnectivityService.class);
       trasmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, as.brightness);
       trasmitter.putExtra(InternalArguments.MOOD_NAME, as.mood);
       trasmitter.putExtra(InternalArguments.GROUP_NAME, as.group);

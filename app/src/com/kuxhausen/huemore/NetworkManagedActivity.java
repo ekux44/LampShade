@@ -10,8 +10,8 @@ import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
-import com.kuxhausen.huemore.net.MoodExecuterService;
-import com.kuxhausen.huemore.net.MoodExecuterService.LocalBinder;
+import com.kuxhausen.huemore.net.ConnectivityService;
+import com.kuxhausen.huemore.net.ConnectivityService.LocalBinder;
 import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.state.Group;
 
@@ -23,7 +23,7 @@ public class NetworkManagedActivity extends ActionBarActivity implements
       mService.getDeviceManager().onGroupSelected(g, null);
   }
 
-  private MoodExecuterService mService = new MoodExecuterService();
+  private ConnectivityService mService = new ConnectivityService();
   private boolean mBound = false;
   private ArrayList<OnServiceConnectedListener> serviceListeners =
       new ArrayList<OnServiceConnectedListener>();
@@ -36,7 +36,7 @@ public class NetworkManagedActivity extends ActionBarActivity implements
       serviceListeners.add(l);
   }
 
-  public MoodExecuterService getService() {
+  public ConnectivityService getService() {
     if (mBound)
       return mService;
     else
@@ -66,7 +66,7 @@ public class NetworkManagedActivity extends ActionBarActivity implements
   public void onStart() {
     super.onStart();
     // Bind to LocalService
-    Intent intent = new Intent(this, MoodExecuterService.class);
+    Intent intent = new Intent(this, ConnectivityService.class);
     startService(intent);
     bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     this.registerOnServiceConnectedListener(this);

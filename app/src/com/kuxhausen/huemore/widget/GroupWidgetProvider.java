@@ -19,7 +19,7 @@ import android.widget.RemoteViews;
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
@@ -94,7 +94,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       String group = intent.getStringExtra(InternalArguments.GROUP_NAME);
       String mood = intent.getStringExtra(InternalArguments.MOOD_NAME);
 
-      Intent trasmitter = new Intent(ctx, MoodExecuterService.class);
+      Intent trasmitter = new Intent(ctx, ConnectivityService.class);
       trasmitter.putExtra(InternalArguments.MOOD_NAME, mood);
       trasmitter.putExtra(InternalArguments.GROUP_NAME, group);
       ctx.startService(trasmitter);

@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <provider
-            android:name="com.kuxhausen.huemore.persistence.HueMoreProvider"
+            android:name="com.kuxhausen.huemore.persistence.LampShadeProvider"
             android:authorities="com.kuxhausen.provider.huemore.database"
             android:exported="true" >
         </provider>
@@ -162,9 +162,10 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
  		       
         <service
-            android:name="com.kuxhausen.huemore.net.MoodExecuterService"
+            android:name="com.kuxhausen.huemore.net.ConnectivityService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false"
+            android:icon="@drawable/lampshade" >
         </service>
     </application>
 

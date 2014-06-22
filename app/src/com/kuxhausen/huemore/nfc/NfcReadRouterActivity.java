@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 
@@ -17,7 +17,7 @@ public class NfcReadRouterActivity extends Activity {
     super.onCreate(savedInstanceState);
     Context con = getApplicationContext();
     String encodedMood = NfcReaderActivity.getGroupMoodBrightnessFromNdef(this.getIntent());
-    Intent srv = new Intent(con, MoodExecuterService.class);
+    Intent srv = new Intent(con, ConnectivityService.class);
     srv.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
     con.startService(srv);
 

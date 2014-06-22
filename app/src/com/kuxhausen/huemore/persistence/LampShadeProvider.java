@@ -25,7 +25,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
 
-public class HueMoreProvider extends ContentProvider {
+public class LampShadeProvider extends ContentProvider {
 
   DatabaseHelper mOpenHelper;
 
@@ -357,13 +357,13 @@ public class HueMoreProvider extends ContentProvider {
 
           if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
               || selectionArgs[0].equals(((char) 8) + "RANDOM")) {
-            mood = HueMoreProvider.getEncodedRandom();
+            mood = LampShadeProvider.getEncodedRandom();
           } else if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
               || selectionArgs[0].equals(((char) 8) + "ON")) {
-            mood = HueMoreProvider.getEncodedOn();
+            mood = LampShadeProvider.getEncodedOn();
           } else if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
               || selectionArgs[0].equals(((char) 8) + "OFF")) {
-            mood = HueMoreProvider.getEncodedOff();
+            mood = LampShadeProvider.getEncodedOff();
           }
 
           String[] moodColumns = {MoodColumns.STATE};

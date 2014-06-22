@@ -20,7 +20,7 @@ import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -66,7 +66,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
 
         mOnButton.setOnCheckedChangeListener(null);
 
-        Intent intent = new Intent(this, MoodExecuterService.class);
+        Intent intent = new Intent(this, ConnectivityService.class);
         intent.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
         this.startService(intent);
 
@@ -118,7 +118,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
     BulbState bs = new BulbState();
     bs.on = isChecked;
 
-    MoodExecuterService service = this.getService();
+    ConnectivityService service = this.getService();
     if (service != null) {
       DeviceManager dm = service.getDeviceManager();
       Group g = Group.loadFromLegacyData(mBulbs, null, this);

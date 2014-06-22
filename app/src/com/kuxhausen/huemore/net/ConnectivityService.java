@@ -30,7 +30,7 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.timing.AlarmReciever;
 
-public class MoodExecuterService extends Service implements OnActiveMoodsChangedListener,
+public class ConnectivityService extends Service implements OnActiveMoodsChangedListener,
     OnStateChangedListener {
 
   /**
@@ -38,9 +38,9 @@ public class MoodExecuterService extends Service implements OnActiveMoodsChanged
    * as its clients, we don't need to deal with IPC.
    */
   public class LocalBinder extends Binder {
-    public MoodExecuterService getService() {
+    public ConnectivityService getService() {
       // Return this instance of LocalService so clients can call public methods
-      return MoodExecuterService.this;
+      return ConnectivityService.this;
     }
   }
 

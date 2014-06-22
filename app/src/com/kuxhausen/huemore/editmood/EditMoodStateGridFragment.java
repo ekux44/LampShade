@@ -27,7 +27,7 @@ import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.editmood.StateGridSelections.StateGridDisplay;
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -155,7 +155,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   }
 
   private void stopPreview() {
-    MoodExecuterService service = ((NetworkManagedActivity) this.getActivity()).getService();
+    ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
     service.getMoodPlayer().cancelMood(service.getDeviceManager().getSelectedGroup());
   }
 
@@ -166,7 +166,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       name = parentFrag.getString(R.string.hint_mood_name);
     }
 
-    MoodExecuterService service = ((NetworkManagedActivity) this.getActivity()).getService();
+    ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
     service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(),
         name, null, null);
   }
@@ -322,7 +322,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         Event[] eRay = {e};
         showChanM.events = eRay;
 
-        MoodExecuterService service = ((NetworkManagedActivity) this.getActivity()).getService();
+        ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
         service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM,
             null, null, null);
         break;

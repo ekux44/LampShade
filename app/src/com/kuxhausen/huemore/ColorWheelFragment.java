@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
@@ -106,7 +106,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
 
   public void preview() {
     if (isAdded()) {
-      MoodExecuterService service = ((NetworkManagedActivity) this.getActivity()).getService();
+      ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
       if (service != null) {
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();

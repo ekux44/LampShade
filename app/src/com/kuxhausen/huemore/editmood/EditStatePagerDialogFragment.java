@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
@@ -74,7 +74,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     }
 
     if (this.getActivity() != null) {
-      MoodExecuterService service = ((NetworkManagedActivity) this.getActivity()).getService();
+      ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
       if (service != null) {
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();

@@ -25,7 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.net.MoodExecuterService;
+import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -240,7 +240,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
     // Notify the parent activity of selected item
     String moodName = selected.getText().toString();
-    MoodExecuterService service = ((NetworkManagedActivity) this.getActivity()).getService();
+    ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
     service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(),
         Utils.getMoodFromDatabase(moodName, getActivity()), moodName, null, null);
 
