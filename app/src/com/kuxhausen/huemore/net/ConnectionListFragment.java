@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.OnServiceConnectedListener;
@@ -39,6 +40,8 @@ public class ConnectionListFragment extends ListFragment implements
     mParent = (NavigationDrawerActivity) this.getActivity();
 
     View myView = inflater.inflate(R.layout.connections_list_fragment, null);
+    ListView mList = (ListView) myView.findViewById(android.R.id.list);
+    registerForContextMenu(mList);
     return myView;
   }
 
@@ -90,7 +93,6 @@ public class ConnectionListFragment extends ListFragment implements
       return;
     aa = new ConnectionRowAdapter(mParent, layout, connections);
     setListAdapter(aa);
-    registerForContextMenu(getListView());
   }
 
   @Override

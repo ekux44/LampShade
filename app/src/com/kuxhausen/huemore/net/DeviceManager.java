@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.Group;
 
 public class DeviceManager {
@@ -30,9 +30,10 @@ public class DeviceManager {
   public DeviceManager(Context c) {
     mContext = c;
 
+    Log.e("dm", "about to set up MO");
     mConnectionObserver = new MyObserver(null);
-    mContext.getContentResolver().registerContentObserver(
-        DatabaseDefinitions.NetConnectionColumns.URI, true, mConnectionObserver);
+    mContext.getContentResolver().registerContentObserver(NetConnectionColumns.URI, true,
+        mConnectionObserver);
 
     loadEverythingFromDatabase();
   }
@@ -55,6 +56,7 @@ public class DeviceManager {
   }
 
   public void onDestroy() {
+    mContext.getContentResolver().unregisterContentObserver(mConnectionObserver);
     for (Connection c : mConnections)
       c.onDestroy();
   }
@@ -169,16 +171,19 @@ public class DeviceManager {
   class MyObserver extends ContentObserver {
     public MyObserver(Handler handler) {
       super(handler);
+      Log.e("dm.mo", "constructor");
     }
 
     @Override
     public void onChange(boolean selfChange) {
+      Log.e("dm.mo", "onChange(bool)");
       this.onChange(selfChange, null);
     }
 
     @Override
     public void onChange(boolean selfChange, Uri uri) {
       loadEverythingFromDatabase();
+      Log.e("dm.mo", "onChange(bool, uri)");
     }
   }
 
@@ -195,5 +200,6 @@ public class DeviceManager {
     this.mConnections.remove(selected);
 
     selected.delete();
+    this.onConnectionChanged();
   }
 }
