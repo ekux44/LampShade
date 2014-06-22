@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Pair;
-import android.util.SparseArray;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.hue.HueBulbData;

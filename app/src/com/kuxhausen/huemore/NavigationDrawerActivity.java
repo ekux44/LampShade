@@ -1,18 +1,5 @@
 package com.kuxhausen.huemore;
 
-import com.kuxhausen.huemore.billing.BillingManager;
-import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
-import com.kuxhausen.huemore.editmood.EditMoodFragment;
-import com.kuxhausen.huemore.net.ConnectionListFragment;
-import com.kuxhausen.huemore.net.NewConnectionFragment;
-import com.kuxhausen.huemore.nfc.NfcWriterFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
-import com.kuxhausen.huemore.persistence.PreferenceInitializer;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.timing.AlarmsListFragment;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -35,6 +22,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.kuxhausen.huemore.billing.BillingManager;
+import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
+import com.kuxhausen.huemore.editmood.EditMoodFragment;
+import com.kuxhausen.huemore.net.ConnectionListFragment;
+import com.kuxhausen.huemore.nfc.NfcWriterFragment;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.PreferenceInitializer;
+import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.Group;
+import com.kuxhausen.huemore.timing.AlarmsListFragment;
 
 public class NavigationDrawerActivity extends NetworkManagedActivity implements
     OnBackStackChangedListener {

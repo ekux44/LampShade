@@ -3,7 +3,6 @@ package com.kuxhausen.huemore.editmood;
 import java.util.ArrayList;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;

@@ -17,7 +17,6 @@ import android.os.HandlerThread;
 import android.widget.RemoteViews;
 
 import com.google.gson.Gson;
-import com.kuxhausen.huemore.MainFragment;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.MoodExecuterService;

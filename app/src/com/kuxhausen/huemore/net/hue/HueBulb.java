@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.net.hue;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 import android.content.ContentValues;
 import android.content.Context;

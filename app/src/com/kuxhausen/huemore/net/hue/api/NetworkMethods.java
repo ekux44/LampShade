@@ -13,10 +13,8 @@ import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.net.hue.PendingStateChange;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.net.hue.api.BulbListSuccessListener.OnBulbListReturnedListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.state.BulbState;
 
 public class NetworkMethods {
 

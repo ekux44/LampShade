@@ -1,10 +1,5 @@
 package com.kuxhausen.huemore.net;
 
-import com.kuxhausen.huemore.NetworkManagedActivity;
-import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,6 +13,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.kuxhausen.huemore.NetworkManagedActivity;
+import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class NewConnectionFragment extends DialogFragment implements OnItemClickListener {
 

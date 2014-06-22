@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.MoodPlayer;
 import com.kuxhausen.huemore.net.PlayingMood;
 

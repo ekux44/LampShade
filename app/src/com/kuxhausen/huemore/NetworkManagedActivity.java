@@ -9,10 +9,10 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 
-import com.kuxhausen.huemore.net.MoodExecuterService;
-import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
+import com.kuxhausen.huemore.net.MoodExecuterService;
 import com.kuxhausen.huemore.net.MoodExecuterService.LocalBinder;
+import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.state.Group;
 
 public class NetworkManagedActivity extends ActionBarActivity implements

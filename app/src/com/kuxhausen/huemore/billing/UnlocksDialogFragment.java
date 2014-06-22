@@ -14,9 +14,6 @@ import android.widget.Toast;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.R.id;
-import com.kuxhausen.huemore.R.layout;
-import com.kuxhausen.huemore.R.string;
 import com.kuxhausen.huemore.billing.googleplay.IabHelper;
 import com.kuxhausen.huemore.billing.googleplay.IabResult;
 import com.kuxhausen.huemore.billing.googleplay.Purchase;

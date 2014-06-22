@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.net.hue.api;
 
-import com.android.volley.Response.Listener;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.PendingStateChange;
 
