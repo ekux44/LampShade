@@ -150,4 +150,19 @@ public class BulbState {
       return new BulbState();
     }
   }
+
+  public BulbState cloneWithDefaults() {
+    BulbState clone = this.clone();
+    if (clone.on == null)
+      clone.on = true;
+    if (clone.bri == null)
+      clone.bri = 255;
+    if (clone.alert == null)
+      clone.alert = "none";
+    if (clone.effect == null)
+      clone.effect = "none";
+    if (clone.transitiontime == null)
+      clone.transitiontime = 4;
+    return clone;
+  }
 }

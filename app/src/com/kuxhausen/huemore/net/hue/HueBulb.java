@@ -45,7 +45,7 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public void setState(BulbState bs) {
-    BulbState preBriAdjusted = bs.clone();
+    BulbState preBriAdjusted = bs.cloneWithDefaults();
     if (preBriAdjusted.bri != null)
       preBriAdjusted.bri = (int) (preBriAdjusted.bri * mCurrentMaxBri / 100f);
     desiredState.merge(preBriAdjusted);
