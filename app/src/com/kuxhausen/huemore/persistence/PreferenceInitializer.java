@@ -83,7 +83,7 @@ public class PreferenceInitializer {
       edit.commit();
     } else if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1) < act.getResources().getInteger(
         R.integer.major_update_version)) {
-      //TODO show any kind of update release notes, etc
+      // TODO show any kind of update release notes, etc
     }
     if (!settings.contains(PreferenceKeys.DEFAULT_TO_GROUPS)) {
       Editor edit = settings.edit();

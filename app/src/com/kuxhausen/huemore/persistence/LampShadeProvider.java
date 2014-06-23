@@ -144,11 +144,15 @@ public class LampShadeProvider extends ContentProvider {
         qb.setTables(NetConnectionColumns.TABLE_NAME);
         table = NetConnectionColumns.TABLE_NAME;
         toNotify.add(NetConnectionColumns.URI);
+
+        toNotify.add(GroupColumns.GROUPS_URI);
+        toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
         table = NetBulbColumns.TABLE_NAME;
         toNotify.add(NetBulbColumns.URI);
+        toNotify.add(GroupColumns.GROUPS_URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
@@ -336,9 +340,16 @@ public class LampShadeProvider extends ContentProvider {
     } else if (sUriMatcher.match(uri) == GROUPS) {
       String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
       MatrixCursor c1 = new MatrixCursor(columns);
-      Object[] tempCol0 = {this.getContext().getString(R.string.cap_all), 0};
-      c1.addRow(tempCol0);
 
+      SQLiteQueryBuilder querryBulbs = new SQLiteQueryBuilder();
+      querryBulbs.setTables(NetBulbColumns.TABLE_NAME);
+      String[] groupColumns = {NetBulbColumns._ID};
+      Cursor c = querryBulbs.query(db, groupColumns, null, null, null, null, null);
+      // only show All group if there are any NetBulbs
+      if (c.getCount() > 0) {
+        Object[] tempCol0 = {this.getContext().getString(R.string.cap_all), 0};
+        c1.addRow(tempCol0);
+      }
       Cursor[] tempC = {c1, c2};
       cRay = tempC;
     } else {
@@ -358,6 +369,7 @@ public class LampShadeProvider extends ContentProvider {
 
   @Override
   public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    ArrayList<Uri> toNotify = new ArrayList<Uri>();
 
     // Opens the database object in "write" mode.
     SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -367,19 +379,26 @@ public class LampShadeProvider extends ContentProvider {
     switch (sUriMatcher.match(uri)) {
       case NETCONNECTIONS:
         count = db.update(NetConnectionColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(NetConnectionColumns.URI);
         break;
       case NETBULBS:
         count = db.update(NetBulbColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(NetBulbColumns.URI);
+        toNotify.add(GroupColumns.GROUPS_URI);
+        toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
         count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(AlarmColumns.ALARMS_URI);
+        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       default:
         // If the incoming pattern is invalid, throws an exception.
         throw new IllegalArgumentException("Unknown URI " + uri);
     }
 
-    getContext().getContentResolver().notifyChange(uri, null);
+    for (Uri me : toNotify)
+      this.getContext().getContentResolver().notifyChange(me, null);
 
     // Returns the number of rows updated.
     return count;

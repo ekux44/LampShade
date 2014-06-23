@@ -149,13 +149,14 @@ public class DeviceManager {
     if (g == null)
       return;
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      //upon upgrading from v2.7, bulbs may not exist until reconnection
-      if(bulbMap.containsKey(bulbId))
+      // upon upgrading from v2.7, bulbs may not exist until reconnection
+      if (bulbMap.containsKey(bulbId))
         bulbMap.get(bulbId).setCurrentMaxBrightness(bri);
     }
   }
 
   public void onBulbsListChanged() {
+    bulbMap.clear();
     for (Connection con : mConnections) {
       ArrayList<NetworkBulb> conBulbs = con.getBulbs();
       for (NetworkBulb bulb : conBulbs) {

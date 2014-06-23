@@ -305,6 +305,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
           this, 100));
 
     }
+
+    // manually force reload the list of known bulbs
+    // Note test this by trying to play moods on newly connected connections
+    this.mDeviceManager.onBulbsListChanged();
   }
 
   public ConnectivityState getConnectivityState() {
