@@ -149,7 +149,9 @@ public class DeviceManager {
     if (g == null)
       return;
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      bulbMap.get(bulbId).setCurrentMaxBrightness(bri);
+      //upon upgrading from v2.7, bulbs may not exist until reconnection
+      if(bulbMap.containsKey(bulbId))
+        bulbMap.get(bulbId).setCurrentMaxBrightness(bri);
     }
   }
 
