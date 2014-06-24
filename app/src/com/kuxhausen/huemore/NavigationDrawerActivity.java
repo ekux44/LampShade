@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -54,6 +55,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public final static int BULB_FRAG = 0, GROUP_FRAG = 1, CONNECTIONS_FRAG = 2, SETTINGS_FRAG = 3,
       HELP_FRAG = 4, ALARM_FRAG = 5, NFC_FRAG = 6;
   public final static String BASE_FRAG_TAG = "FragTag";
+  public Tag myTag;
 
   private BillingManager mBillingManager;
 
@@ -353,13 +355,10 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   protected void onNewIntent(Intent intent) {
     setIntent(intent);
     if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-      NfcWriterFragment frag =
-          ((NfcWriterFragment) getSupportFragmentManager().findFragmentByTag(
-              BASE_FRAG_TAG + NFC_FRAG));
-      if (frag != null) {
-        frag.setMyTag(intent.getParcelableExtra(NfcAdapter.EXTRA_TAG));
-      }
+      myTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
       Toast.makeText(this, this.getString(R.string.nfc_tag_detected), Toast.LENGTH_SHORT).show();
+
     }
   }
 

@@ -16,7 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
-import com.kuxhausen.huemore.MainFragment;
+import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
@@ -106,7 +106,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case android.R.id.home:
-        this.startActivity(new Intent(this, MainFragment.class));
+        this.startActivity(new Intent(this, NavigationDrawerActivity.class));
         return true;
       default:
         return super.onOptionsItemSelected(item);

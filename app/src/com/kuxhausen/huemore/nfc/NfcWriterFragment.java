@@ -16,7 +16,6 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -61,7 +60,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   PendingIntent pendingIntent;
   IntentFilter writeTagFilters[];
   boolean writeMode;
-  Tag myTag;
+
   NavigationDrawerActivity context;
 
   Gson gson = new Gson();
@@ -173,11 +172,11 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
       case R.id.writeToTagButton:
         preview();
         try {
-          if (myTag == null) {
+          if (context.myTag == null) {
             Toast.makeText(context, context.getString(R.string.nfc_tag_not_detected),
                 Toast.LENGTH_SHORT).show();
           } else {
-            write(getSerializedByValue(), myTag);
+            write(getSerializedByValue(), context.myTag);
             Toast.makeText(context, context.getString(R.string.nfc_tag_write_success),
                 Toast.LENGTH_SHORT).show();
           }
@@ -252,10 +251,6 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     writeMode = false;
     if (nfcAdapter != null)
       nfcAdapter.disableForegroundDispatch(context);
-  }
-
-  public void setMyTag(Parcelable parcelable) {
-    myTag = (Tag) parcelable;
   }
 
   public void preview() {
