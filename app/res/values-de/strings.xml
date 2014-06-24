@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Einstellungen</string>
-    <string name="action_register_with_hub">Bei Bridge registrieren</string>
     <string name="action_unlocks">Entsperren</string>
     <string name="cap_manual">MANUELL</string>
     <string name="cap_bulbs">LAMPEN</string>
@@ -16,13 +15,11 @@
     <string name="register_success">Verbindung erfolgreich</string>
     <string name="register_fail">Keine Verbindung zur Bridge möglich. Stellen Sie sicher, dass Sie sich mit der Bridge im selben WiFi befinden und dass die Bridge Internetzugriff hat. Versuchen Sie es anschließend erneut.</string>
     <string name="link_prompt">Betätigen Sie den Link Knopf auf der Bridge.</string>
-    <string name="manual_ip_prompt">Gebe die IP Adresse der Bridge ein</string>
     <string name="advanced">Erweitert</string>
     <string name="auto_discover">Automatisches Verbinden</string>
     <string name="contextmenu_delete">Löschen</string>
     <string name="contextmenu_edit">Ändern</string>
     <string name="contextmenu_rename">Umbenennen</string>
-    <string name="actionmenu_new">Neue</string>
     <string name="actionmenu_new_group">Neue Gruppe</string>
     <string name="actionmenu_new_mood">Neue Szene</string>
     <string name="actionmenu_new_color">Neue Farbe</string>
@@ -33,8 +30,6 @@
     <string name="brightness">Helligkeit</string>
     <string name="temperature">Farbtemperatur (K)</string>
     <string name="toggleColorLoop">Farbschlaufe:</string>
-    <string name="promp_first_view_setting">Standard Startmenü</string>
-    <string name="promp_second_view_setting">Standard Einstellungsmenü</string>
     <string name="rate_on_google_play">In Google Play bewerten</string>
     <string name="unlock_pro_prompt">Pro Version freischalten!</string>
     <string name="unlock_pro_already">Du hast bereits die Pro Version!</string>
@@ -60,7 +55,6 @@
     <string name="update">Aktualisieren</string>
     <string name="action_hub_status">Bridge Status</string>
     <string name="reset_hub_connection">Verbindung zur Bridge zurücksetzen</string>
-    <string name="hub_connection">Verbunden mit einer Bridge bei Netzwerkadresse.</string>
     <string name="hub_connection_error">Mit keiner Bridge verbunden!</string>
     <string name="empty_view_text">Keine Alarme gefunden...</string>
     <string name="cap_all">ALLE</string>
@@ -68,7 +62,6 @@
     <string name="cap_off">AUS</string>
     <string name="cap_random">ZUFÄLLIG</string>
     <string name="broken_mood_link">Oops! Dieser Stimmungs-Link kann nicht gelesen werden</string>
-    <string name="action_report_bug">Fehler melden</string>
     <string name="update_required">Um diese Stimmung anzuwenden, muss LampShade zuerst aktualisiert werden</string>
     <string name="corrupted_mood">Diese Szene kann nicht gelesen werden</string>
     <string name="contextmenu_delete_timeslot">Zeitvorgabe löschen</string>
@@ -95,21 +88,27 @@
 	<string name="unnamed_group">Unbenannte Gruppe</string>
 	<string name="unnamed_mood">Unbenannte Szene</string>
 	<string name="empty_group_list_text">Keine Gruppen gefunden...</string>
-	<string name ="widget_alarms_label">LampShade Alarms</string>
-	<string name ="widget_groups_label">LampShade Groups</string>
-	<string name ="include_brightness">Include Brightness</string>
-	<string name="enable_port_forwarding">Fernzugriff erlauben (Beta)</string>
-	<string name="port_forwarding_instructions">Damit Sie die Hue Lichter von unterwegs steuern können, muss der Hue Bridge Port von Aussen erreichbar sein. Dies kann man beispielsweise mit einer Port Weiterleitung erreichen. Falls Sie Hilfe benötigen, dann besuchen Sie die LampShade.io Community auf Google+ oder Facebook</string>
-	<string name="port_forwarding_ip_prompt">Interne IP Adresse des Routers</string>
-	<string name="port_forwarding_port">Port:</string>
+	<string name="widget_alarms_label">LampShade Alarme</string>
+	<string name="widget_groups_label">LampShade Gruppen</string>
+	<string name="include_brightness">Include Brightness</string>
 	<string name="action_play">Vorschau der Szene</string>
 	<string name="action_help">Hilfe</string>
-	<string name="help_page_title">Online-Hilfe</string>
 	<string name="minutes">Minuten</string>
-	<string name="start_time">Start Zeit</string>
+	<string name="daily_mood_start_time">Startzeit</string>
+	<string name="timed_mood_start_time">Startzeit</string>
 	<string name="show_NFC_read_page_descriptor">Zeige Schnellzugriffe, wenn NFC Tags gelesen worden sind</string>
+	<string name="action_connections">Verbindungen</string>
+	<string name="action_bulbs">Lampen</string>
+	<string name="actionmenu_new_connection">Connect to a smart lighting device</string>
+	<string name="prompt_new_connection_type">Gerätetyp auswählen</string>
+	<string name="prompt_local_address">IP Adresse der Bridge</string>
+	<string name="hint_local_address">IP Adresse</string>
+	<string name="prompt_remote_address">Remote Zugriff Adresse (optional)</string>
+	<string name="hint_remote_address">IP Adresse oder URL</string>
+	<string name="toast_hue_connection_updated">Verbindung aktualisiert</string>
+	<string name="notification_overflow_more">mehr</string>
 	
-	<string name="help_title_gettingstarted">Getting Started</string>
+	<string name="help_title_gettingstarted">Einstieg</string>
 	<string name="help_title_editingmoods">Szenen erstellen oder bearbeiten</string>
 	<string name="help_title_alarms">Alarme</string>
 	<string name="help_title_nfc">Benutzung mit NFC Tags</string>
@@ -121,14 +120,9 @@
 	<string name="help_content_alarms">(Paid Feature)\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
 	<string name="help_content_nfc">(Paid Feature)\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
 	<string name="help_content_automationpluggin">(Paid Feature)\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
+	<string name="help_content_faq">Q. Why aren\'t my Philips lights changing to bright green?\nA. The Philips Hue regular and downlight models only contain Blue, Red and Yellow LEDs so they cannot display intense greens.\n\nQ. Why aren\'t my Philips lights changing to dark reds or blues?\nA. Your Philips lights might be running outdated software. Use the offcial Philips app to update the firmware on your hub and lightbulbs.\n\nQ. Do LampShade alarms work when I\'m away from home?\nA. LampShade alarms can only take effect when LampShade is connected to your lights. They will only work when away from home if you are using the remote access feature.</string>
 	
-	<string-array name="update_features">
-        <item>Verbesserter Szenen-Editor</item>
-        <item>Verbesserte Darstellung</item>
-        <item>Fehler behoben, der gelegentlich dafür sorgte, dass Alarme nicht ausgelöst worden sind, wenn das Display ausgeschaltet war. Bitte starten Sie Ihr Gerät neu, damit die Änderungen aktiv werden.</item>
-        <item>Fehler behoben, der gelegentlich dafür sorgte, dass Szenen gelöscht worden sind, wenn eine neue erstellt worden ist.</item>
-    </string-array>
-   	<string-array name="mood_types">
+	<string-array name="mood_types">
         <item>Einfach</item>
         <item>Zeitgesteuert</item>
         <item>Täglich</item>

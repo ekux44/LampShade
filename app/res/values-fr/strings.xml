@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Paramètres</string>
-    <string name="action_register_with_hub">Lier au pont</string>
     <string name="action_unlocks">À débloquer</string>
     <string name="cap_manual">MANUEL</string>
     <string name="cap_bulbs">AMPOULES</string>
@@ -16,13 +15,11 @@
     <string name="register_success">Liaison réussie</string>
     <string name="register_fail">Impossible de se connecter au pont. Assurez-vous que l\'appareil est connecté par wi-fi au même réseau que le pont et a accès à Internet, puis réessayez.</string>
     <string name="link_prompt">Appuyez sur le bouton de liaison sur le pont</string>
-    <string name="manual_ip_prompt">Saisissez l\'adresse IP du pont</string>
     <string name="advanced">Paramètres avancés</string>
     <string name="auto_discover">Connexion automatique</string>
     <string name="contextmenu_delete">Supprimer</string>
     <string name="contextmenu_edit">Modifier</string>
     <string name="contextmenu_rename">Renommer</string>
-    <string name="actionmenu_new">Nouveau</string>
     <string name="actionmenu_new_group">Nouveau groupe</string>
     <string name="actionmenu_new_mood">Nouvelle ambiance</string>
     <string name="actionmenu_new_color">Nouvel état</string>
@@ -33,8 +30,6 @@
     <string name="brightness">Luminosité</string>
     <string name="temperature">Température de couleur (K)</string>
     <string name="toggleColorLoop">Couleurs en boucle :</string>
-    <string name="promp_first_view_setting">Écran par défaut</string>
-    <string name="promp_second_view_setting">Second écran par défaut</string>
     <string name="rate_on_google_play">Noter sur Google Play</string>
     <string name="unlock_pro_prompt">Débloquer la version Pro !</string>
     <string name="unlock_pro_already">Vous avez déjà la version Pro !</string>
@@ -60,7 +55,6 @@
     <string name="update">Mise à jour</string>
     <string name="action_hub_status">État du pont</string>
     <string name="reset_hub_connection">Réinitialiser la connexion au pont</string>
-    <string name="hub_connection">Connecté au pont avec l\'adresse réseau</string>
     <string name="hub_connection_error">Non connecté au pont !</string>
     <string name="empty_view_text">Aucune alarme trouvée…</string>
     <string name="cap_all">TOUTES</string>
@@ -68,7 +62,6 @@
     <string name="cap_off">OFF</string>
     <string name="cap_random">ALÉATOIRE</string>
     <string name="broken_mood_link">Oups ! Impossible de lire cette ambiance</string>
-    <string name="action_report_bug">Signaler un bug</string>
     <string name="update_required">Cette ambiance requiert une version à jour de LampShade</string>
     <string name="corrupted_mood">Impossible de lire cette ambiance</string>
     <string name="contextmenu_delete_timeslot">Supprimer la plage de temps</string>
@@ -95,40 +88,41 @@
 	<string name="unnamed_group">Groupe sans nom</string>
 	<string name="unnamed_mood">Ambiance sans nom</string>
 	<string name="empty_group_list_text">Aucun groupe trouvé…</string>
-	<string name ="widget_alarms_label">LampShade Alarms</string>
-	<string name ="widget_groups_label">LampShade Groups</string>
-	<string name ="include_brightness">Include Brightness</string>
-	<string name="enable_port_forwarding">Activer l\'accès distant (Beta)</string>
-	<string name="port_forwarding_instructions">Pour contrôler vos lampes Hue via Internet, configurez votre routeur afin de rediriger un port (le port 80 par défaut) vers le pont Hue. Pour obtenir de l\'aide, consultez la communauté LampShade.io sur Google+ ou Facebook.</string>
-	<string name="port_forwarding_ip_prompt">Adresse IP du routeur</string>
-	<string name="port_forwarding_port">Port :</string>
+	<string name="widget_alarms_label">Alarmes LampShade</string>
+	<string name="widget_groups_label">Groupes LampShade</string>
+	<string name="include_brightness">Inclure la luminosité</string>
 	<string name="action_play">Aperçu de l\'ambiance</string>
 	<string name="action_help">Aide</string>
-	<string name="help_page_title">Pages d\'aide</string>
 	<string name="minutes">Minutes</string>
-	<string name="start_time">Temps de lancement</string>
+	<string name="daily_mood_start_time">Heure</string>
+	<string name="timed_mood_start_time">Temps</string>
 	<string name="show_NFC_read_page_descriptor">Afficher les Contrôles rapides à la lecture de tags NFC</string>
+	<string name="action_connections">Connexions</string>
+	<string name="action_bulbs">Ampoules</string>
+	<string name="actionmenu_new_connection">Connecter un appareil d\'éclairage intelligent</string>
+	<string name="prompt_new_connection_type">Sélectionner le type d\'appareil</string>
+	<string name="prompt_local_address">Adresse locale du pont</string>
+	<string name="hint_local_address">Adresse IP</string>
+	<string name="prompt_remote_address">Adresse d\'accès distant (facultatif)</string>
+	<string name="hint_remote_address">Adresse IP ou URL</string>
+	<string name="toast_hue_connection_updated">Connexion mise à jour</string>
+	<string name="notification_overflow_more">plus</string>
 	
-	<string name="help_title_gettingstarted">Getting Started</string>
+	<string name="help_title_gettingstarted">Démarrage rapide</string>
 	<string name="help_title_editingmoods">Création et modification des ambiances</string>
 	<string name="help_title_alarms">Alarmes</string>
 	<string name="help_title_nfc">Utilisation des tags NFC</string>
 	<string name="help_title_automationpluggin">Plug-in pour Tasker/Locale/Llama</string>
 	<string name="help_title_faq">FAQ</string>
 	
-	<string name="help_content_gettingstarted">Once you have wirelessly connected to your lights, you can begin controlling them.\n\nFirst, click on a light bulb or bulb group to select it.\n\nNext, you are shown a page of moods you may play on your selected bulb(s). Moods can be simple color paterns or dynamic lighting animations.\n\nDynamic moods will continue playing until stopped. To view ongoing moods, look for the LampShade icon in your device\'s notification bar. To stop a mood, play a simple mood(such as ON or OFF) on the same bulb(s).</string>
-	<string name="help_content_editingmoods">Moods contain lighting states such as colors and on/off commands.\n\nWhile a mood is played on a group or bulb, these states take effect.\n\nThe states are set to take effect either immediately, over time relative to when the playing starts, or at specific times of the day while the mood is playing.\n\nChannels (columns of states) allow you to play multiple colors at the same time. Each time a mood is played on a group, the group\'s lights will be assigned equally among the channels, round-robin style.</string>
-	<string name="help_content_alarms">(Paid Feature)\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
-	<string name="help_content_nfc">(Paid Feature)\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
-	<string name="help_content_automationpluggin">(Paid Feature)\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
+	<string name="help_content_gettingstarted">Une fois connecté sans fil à vos lampes, vous pouvez en prendre le contrôle.\n\nCommencez par appuyer sur une ampoule ou un groupe d\'ampoule pour les sélectionner.\n\nSur la page suivante, vous pouvez choisir l\'ambiance à utiliser sur votre ou vos ampoule(s). Les ambiances peuvent être de simples couleurs ou des animations lumineuses dynamiques.\n\nLes ambiances dynamiques restent actives jusqu\'à ce que vous les arrêtiez. Pour voir les ambiances en cours, observez l\'icône de LampShade dans la barre de notification de votre appareil. Pour arrêter une ambiance, appliquez une ambiance simple (comme ON ou OFF) aux mêmes ampoules.</string>
+	<string name="help_content_editingmoods">Les ambiances contiennent des états lumineux comme des commandes de couleur ou d\'allumage/extinction.\n\nLorsqu\'une ambiance est utilisée sur un groupe ou une ampoule, ces états sont appliqués.\n\nLes états sont réglés pour prendre effet immédiatement, en fonction d\'une durée après le lancement de l\'ambiance, ou à des heures spécifiques de la journée quand l\'ambiance est utilisée.\n\nLes canaux (colonnes d\'états) vous permettent d\'utiliser plusieurs couleurs en même temps. À chaque fois qu\'une ambiance est utilisée sur un groupe, les lampes du groupes sont assignées équitablement entre les différents canaux, selon un algorithme round-robin.</string>
+	<string name="help_content_alarms">(Fonctionnalité payante)\nLes alarmes vous permettent de programmer des ambiances à déclencher dans le futur.\n\nLes alarmes peuvent être réglées pour être répétées certains jours chaque semaine.\n\nLorsque vous utilisez une alarme avec une ambiance qui modifie la luminosité au fil du temps (par exemple Gentle Sunrise), la barre de luminosité de l\'alarme règle le niveau de luminosité maximal pour cette ambiance.\n\nLes alarmes sont stockées sur votre appareil, elles ne peuvent donc fonctionner que si celui-ci peut contrôler les lampes via le réseau.</string>
+	<string name="help_content_nfc">(Fonctionnalité payante)\n\LampShade permet d\'enregistrer des ambiances sur des tags NFC.\n\nQuand un trio ambiance + groupe + luminosité est enregistré sur un tag, il sera appliqué à chaque fois que vous toucherez le tag avec votre appareil Android (si celui-ci est déverrouillé).\n\nPour utiliser cette fonctionnalité, votre appareil doit prendre en charge l\'écriture de tags NFC et vous devez avoir des tags sur lesquels votre appareil peut écrire.</string>
+	<string name="help_content_automationpluggin">(Fonctionnalité payante)\nLe plug-in d\'automatisation de LampShade prend en charge plusieurs applications, dont Tasker, Locale et Llama. Ces applications peuvent utiliser le plug-in pour appliquer des ambiances selon différents critères tels que la position GPS, les notifications entrantes, et bien d\'autres.\n\nLe plug-in est accessible depuis ces applications et propose une page permettant de choisir quelle ambiance déclencher, sur quel groupe et à quelle luminosité.</string>
+	<string name="help_content_faq">Q : Pourquoi mes lampes Philips ne changent pas pour un vert vif ?\nR : Les ampoules Philips Hue basiques et pour spots contiennent uniquement des LED bleues, rouges et jaunes, elles ne peuvent donc pas fournir un éclairage vert intense.\n\nQ : Pourquoi mes lampes Philips ne changent pas pour des rouges et bleus sombres ?\nR : Vos lampes Philips tournent peut-être avec une ancienne version de logiciel interne. Utilisez l\'application officielle de Philips pour mettre à jour le firmware de votre pont et de vos ampoules.\n\nQ : Les alarmes de LampShade fonctionnent-elles quand je ne suis pas à la maison ?\nR : Les alarmes de LampShade ne fonctionnent que si LampShade est connecté à vos lampes. Elles ne fonctionneront depuis l\'extérieur que si vous utilisez la fonction d\'accès à distance.</string>
 	
-	<string-array name="update_features">
-        <item>Éditeur d\'ambiances amélioré</item>
-        <item>Interface améliorée</item>
-        <item>Correction du bug qui empêchait parfois les alarmes d\'être déprogrammées si visuellement désactivées. Veuillez redémarrer votre téléphone pour que ce correctif fonctionne.</item>
-        <item>Correction d\'un bug qui causait occasionnellement la suppression d\'autres ambiances lors de la création d\'une nouvelle ambiance</item>
-    </string-array>
-   	<string-array name="mood_types">
+	<string-array name="mood_types">
         <item>Simple</item>
         <item>Temporisé</item>
         <item>Quotidien</item>
