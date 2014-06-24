@@ -52,6 +52,13 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   private long lastDisconnectedPingInElapsedRealtime;
   private static final long discounnectedPingIntervalMilis = 1000;
 
+  /**
+   * once STALL_THRESHOLD many consecutive send failures have occured, stop reporting pendingWork
+   * that keeps device awake reset everytime a send succeeds
+   */
+  private long stallCount;
+  private final static long STALL_THRESHOLD = 100;
+
   public HubConnection(Context c, Long baseId, String name, String deviceId, HubData data,
       DeviceManager dm) {
     mContext = c;
@@ -319,10 +326,12 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   }
 
   public void reportStateChangeFailure(PendingStateChange mRequest) {
+    this.stallCount++;
     mChangedQueue.add(mRequest.hubBulb);
   }
 
   public void reportStateChangeSucess(PendingStateChange request) {
+    this.stallCount = 0;
     HueBulb affected = request.hubBulb;
 
     // remove successful changes from pending
@@ -369,6 +378,11 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   @Override
   public boolean hasPendingWork() {
+    if (stallCount > STALL_THRESHOLD) {
+      // pending work completely stalled, so don't report it and keep device awake
+      return false;
+    }
+
     boolean hasPendingWork = false;
     for (HueBulb hb : mBulbList) {
       if (!hb.ongoing.isEmpty()) {
