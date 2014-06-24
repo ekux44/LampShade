@@ -135,7 +135,12 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     super.onResume();
     Bundle b = getIntent().getExtras();
     if (b != null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)) {
-      selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
+
+      if (b.getInt(InternalArguments.NAV_DRAWER_PAGE) != NavigationDrawerActivity.ALARM_FRAG
+          || Utils.hasProVersion(this)) {
+        // quick and dirty hack to prevent free users from hitting alarms, TODO redo
+        selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
+      }
       b.remove(InternalArguments.NAV_DRAWER_PAGE);
     } else {
       if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
