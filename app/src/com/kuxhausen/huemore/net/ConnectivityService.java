@@ -219,7 +219,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
       // create basic compatibility notification
       NotificationCompat.Builder mBuilder =
-          new NotificationCompat.Builder(this).setSmallIcon(R.drawable.lampshade_notification)
+          new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_notification_whiteshade)
               .setContentTitle(this.getResources().getString(R.string.app_name))
               .setContentText(mMoodPlayer.getPlayingMoods().get(0).toString())
               .setContentIntent(resultPendingIntent);
