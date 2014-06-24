@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
 
 public class Group {
@@ -43,10 +44,26 @@ public class Group {
   }
 
   public static Group loadFromLegacyData(Integer[] bulbs, String groupName, Context c) {
-    // TODO Auto-generated method stub
+    ArrayList<Long> netBulbDbIds = new ArrayList<Long>();
 
-    Group result = new Group(new ArrayList<Long>(), groupName);
+    String[] projections = {DatabaseDefinitions.NetBulbColumns._ID};
+    for (Integer deviceId : bulbs) {
+      String[] selectionArgs =
+          {"" + deviceId, "" + DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
 
+      Cursor cursor =
+          c.getContentResolver().query(
+              DatabaseDefinitions.NetBulbColumns.URI,
+              projections,
+              DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN + " =? AND "
+                  + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null);
+
+      if (cursor.moveToFirst()) {
+        netBulbDbIds.add(cursor.getLong(0));
+      }
+    }
+
+    Group result = new Group(netBulbDbIds, groupName);
     return result;
   }
 
