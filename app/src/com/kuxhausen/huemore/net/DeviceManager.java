@@ -145,13 +145,14 @@ public class DeviceManager {
   }
 
   /** doesn't notify listeners **/
-  public void setBrightness(Group g, int bri) {
+  public void setBrightness(Group g, int bri, boolean maxBriMode) {
     if (g == null)
       return;
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
       // upon upgrading from v2.7, bulbs may not exist until reconnection
-      if (bulbMap.containsKey(bulbId))
-        bulbMap.get(bulbId).setCurrentMaxBrightness(bri);
+      if (bulbMap.containsKey(bulbId)) {
+        bulbMap.get(bulbId).setCurrentMaxBrightness(bri, maxBriMode);
+      }
     }
   }
 

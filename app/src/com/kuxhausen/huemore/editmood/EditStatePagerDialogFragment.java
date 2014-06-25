@@ -75,8 +75,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
 
     if (this.getActivity() != null) {
       ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
-      if (service != null && service.getDeviceManager().getSelectedGroup()!=null) {
-        //TODO warn users with toast if no selected group
+      if (service != null && service.getDeviceManager().getSelectedGroup() != null) {
+        // TODO warn users with toast if no selected group
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {

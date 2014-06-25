@@ -91,23 +91,35 @@ public class HueBulb implements NetworkBulb {
   }
 
   @Override
-  public void setCurrentMaxBrightness(int maxBri) {
-    maxBri = Math.max(1, maxBri); // guard to keep maxBri above 0
+  public void setCurrentMaxBrightness(int bri, boolean maxBriMode) {
+    boolean addToQueue = false;
+    bri = Math.max(1, bri); // guard to keep maxBri above 0
 
-    if (mCurrentMaxBri != maxBri) {
+    if (mCurrentMaxBri != bri) {
       int oldVal = mCurrentMaxBri;
-      mCurrentMaxBri = maxBri;
+      mCurrentMaxBri = bri;
       ContentValues cv = new ContentValues();
       cv.put(DatabaseDefinitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, mCurrentMaxBri);
       String[] selectionArgs = {"" + mBaseId};
       mContext.getContentResolver().update(DatabaseDefinitions.NetBulbColumns.URI, cv,
           DatabaseDefinitions.NetBulbColumns._ID + " =?", selectionArgs);
 
-      // update the desired brightness value and add to change queue
-      if (desiredState.bri == null)
-        desiredState.bri = (int) (255 * (oldVal / 100f));
-      desiredState.bri = (int) (desiredState.bri * (mCurrentMaxBri / (float) oldVal));
-      mConnection.getChangedQueue().add(this);
+      if (maxBriMode) {
+        // update the desired brightness value and add to change queue
+        if (desiredState.bri == null) {
+          int trueBrightness = (int) (255 * (oldVal / 100f));
+          desiredState.bri = (int) (trueBrightness * (2.55f * mCurrentMaxBri));
+          addToQueue = true;
+        }
+      }
     }
+
+    if (!maxBriMode && (desiredState.bri == null || desiredState.bri != ((int) 2.55f * bri))) {
+      desiredState.bri = ((int) 2.55f * bri);
+      addToQueue = true;
+    }
+
+    if (addToQueue)
+      mConnection.getChangedQueue().add(this);
   }
 }

@@ -23,7 +23,17 @@
         android:max="100"
         android:paddingBottom="8dp"
         android:progress="50" />
-
+	
+	<SeekBar
+        android:id="@+id/maxBrightnessBar"
+        style="@style/SeekBarBlueWidgets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:paddingBottom="8dp"
+        android:progress="50"
+        android:visibility="gone" />
+    
     <include layout="@layout/horizontal_divider_line_red"/>
 
 </LinearLayout>

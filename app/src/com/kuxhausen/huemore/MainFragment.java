@@ -16,18 +16,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.state.Group;
 
 /**
  * @author Eric Kuxhausen
  */
 public class MainFragment extends Fragment implements OnConnectionStatusChangedListener,
-    OnServiceConnectedListener {
+    OnServiceConnectedListener, OnActiveMoodsChangedListener {
 
   private NavigationDrawerActivity mParent;
 
@@ -38,9 +40,10 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
   private MoodManualPagerAdapter mMoodManualPagerAdapter;
   private ViewPager mMoodManualViewPager;
   private SlidingTabLayout mMoodManualSlidingTabLayout;
-  private SeekBar mBrightnessBar;
+  private SeekBar mBrightnessBar, mMaxBrightnessBar;
   private boolean mIsTrackingTouch = false;
   private ForwardingPageListener mForwardPage;
+  private TextView mBrightnessDescriptor;
 
   /*
    * @Override public void onConnectionStatusChanged(){ this.supportInvalidateOptionsMenu(); }
@@ -93,20 +96,21 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
           R.color.redwidgets_color));
 
 
+      mBrightnessDescriptor = (TextView) myView.findViewById(R.id.brightnessDescripterTextView);
       mBrightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
       mBrightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
           DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), false);
           mIsTrackingTouch = false;
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
           DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), false);
           mIsTrackingTouch = true;
         }
 
@@ -114,10 +118,37 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
+            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), false);
           }
         }
       });
+
+      mMaxBrightnessBar = (SeekBar) myView.findViewById(R.id.maxBrightnessBar);
+      mMaxBrightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+          DeviceManager dm = mParent.getService().getDeviceManager();
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), true);
+          mIsTrackingTouch = false;
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+          DeviceManager dm = mParent.getService().getDeviceManager();
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), true);
+          mIsTrackingTouch = true;
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+          if (fromUser) {
+            DeviceManager dm = mParent.getService().getDeviceManager();
+            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), true);
+          }
+        }
+      });
+
     }
     return myView;
   }
@@ -132,17 +163,48 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
       mGroupBulbViewPager.setCurrentItem(b.getInt(InternalArguments.GROUPBULB_TAB));
       b.remove(InternalArguments.GROUPBULB_TAB);
     }
+
+    if (mBrightnessBar != null)
+      setMode();
   }
 
   @Override
   public void onServiceConnected() {
     mParent.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
+    mParent.getService().getMoodPlayer().addOnActiveMoodsChangedListener(this);
+    if (mBrightnessBar != null)
+      setMode();
+  }
+
+  @Override
+  public void onActiveMoodsChanged() {
+    if (mBrightnessBar != null)
+      setMode();
+  }
+
+  public void setMode() {
+    boolean maxBriMode = false;
+    Group g = mParent.getService().getDeviceManager().getSelectedGroup();
+    if (g != null && mParent.getService().getMoodPlayer().anyConflictsWithPlaying(g))
+      maxBriMode = true;
+
+    if (maxBriMode) {
+      mBrightnessBar.setVisibility(View.GONE);
+      mMaxBrightnessBar.setVisibility(View.VISIBLE);
+      mBrightnessDescriptor.setText(R.string.max_brightness);
+    } else {
+      mBrightnessBar.setVisibility(View.VISIBLE);
+      mMaxBrightnessBar.setVisibility(View.GONE);
+      mBrightnessDescriptor.setText(R.string.brightness);
+    }
   }
 
   public void onPause() {
     super.onPause();
-    if (mParent.boundToService())
+    if (mParent.boundToService()) {
       mParent.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+      mParent.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
+    }
   }
 
   @Override

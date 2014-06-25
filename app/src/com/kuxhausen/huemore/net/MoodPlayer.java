@@ -44,6 +44,15 @@ public class MoodPlayer {
     restartCountDownTimer();
   }
 
+  public boolean anyConflictsWithPlaying(Group g) {
+    for (int i = 0; i < mPlayingMoods.size(); i++) {
+      if (mPlayingMoods.get(i).getGroup().conflictsWith(g)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 

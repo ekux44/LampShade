@@ -107,6 +107,7 @@
 	<string name="hint_remote_address">IP Address or URL</string>
 	<string name="toast_hue_connection_updated">Connection Updated</string>
 	<string name="notification_overflow_more">more</string>
+	<string name="max_brightness">Max Brightness</string>
 	
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>
