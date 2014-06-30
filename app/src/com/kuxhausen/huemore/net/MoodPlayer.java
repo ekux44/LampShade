@@ -44,9 +44,10 @@ public class MoodPlayer {
     restartCountDownTimer();
   }
 
-  public boolean anyConflictsWithPlaying(Group g) {
+  public boolean conflictsWithOngoingPlaying(Group g) {
     for (int i = 0; i < mPlayingMoods.size(); i++) {
-      if (mPlayingMoods.get(i).getGroup().conflictsWith(g)) {
+      if (!mPlayingMoods.get(i).getMood().isSimple()
+          && mPlayingMoods.get(i).getGroup().conflictsWith(g)) {
         return true;
       }
     }

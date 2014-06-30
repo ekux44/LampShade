@@ -60,6 +60,8 @@ public class Mood implements Cloneable {
 
   public int getNumTimeslots() {
     int result = 0;
+    if (events == null)
+      return result;
     HashSet<Integer> times = new HashSet<Integer>();
     for (Event e : events) {
       if (e != null && e.time != null && times.add(e.time))
@@ -82,5 +84,15 @@ public class Mood implements Cloneable {
     }
 
     return colorGrid;
+  }
+
+  public boolean isSimple() {
+    if (events == null)
+      return true;
+    for (Event e : events) {
+      if (e != null && e.time != null && e.time != 0)
+        return false;
+    }
+    return true;
   }
 }

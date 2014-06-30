@@ -11,7 +11,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -37,7 +36,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
   // Identifies a particular Loader being used in this component
   private static final int MOODS_LOADER = 0;
-  public CursorAdapter dataSource;
+  public MoodRowAdapter dataSource;
 
   public TextView selected, longSelected; // updated on long click
   private int selectedPos = -1;
@@ -64,7 +63,6 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
             new int[] {android.R.id.text1}, 0);
 
     setListAdapter(dataSource);
-
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.moods_list_fragment, container, false);
 
@@ -218,6 +216,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
      */
     dataSource.changeCursor(cursor);
     registerForContextMenu(getListView());
+    getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
   }
 
   @Override
@@ -235,8 +234,12 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     selected = ((TextView) (v));
     selectedPos = position;
 
-    // Set the item as checked to be highlighted when in two-pane layout
-    getListView().setItemChecked(selectedPos, true);
+    if (dataSource.getRow(selectedPos).m.isSimple()) {
+      // set the selected Item to -1 to clear any existing selection
+      getListView().setItemChecked(-1, true);
+    } else {
+      getListView().setItemChecked(selectedPos, true);
+    }
 
     // Notify the parent activity of selected item
     String moodName = selected.getText().toString();

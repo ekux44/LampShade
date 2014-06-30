@@ -185,7 +185,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
   public void setMode() {
     boolean maxBriMode = false;
     Group g = mParent.getService().getDeviceManager().getSelectedGroup();
-    if (g != null && mParent.getService().getMoodPlayer().anyConflictsWithPlaying(g))
+    if (g != null && mParent.getService().getMoodPlayer().conflictsWithOngoingPlaying(g))
       maxBriMode = true;
 
     if (maxBriMode) {

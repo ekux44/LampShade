@@ -176,8 +176,6 @@ public class GroupListFragment extends ListFragment implements
     // Notify the parent activity of selected bulbs
     gbpfCallback.setGroup(Group.loadFromDatabase(selected.getText().toString(), this.gbpfCallback));
 
-    // Set the item as checked to be highlighted when in two-pane layout
-    getListView().setItemChecked(selectedPos, true);
   }
 
   /**
