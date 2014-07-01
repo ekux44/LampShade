@@ -197,7 +197,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         time = e.time;
       }
     }
-    setGridRows(rows);
+    setGridRows(Math.max(rows, 1));
 
     int row = -1;
     time = -1;

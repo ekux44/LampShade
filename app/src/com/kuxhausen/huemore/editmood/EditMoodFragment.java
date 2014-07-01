@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
@@ -193,6 +194,11 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
           moodName = this.getResources().getString(R.string.unnamed_mood) + " " + unnamedNumber;
         }
         stateGridFragment.onCreateMood(moodName);
+        Toast t =
+            Toast.makeText(parrentA, parrentA.getResources().getString(R.string.saved) + " "
+                + moodName, Toast.LENGTH_SHORT);
+        t.show();
+        parrentA.onBackPressed();
         return true;
     }
     return false;
