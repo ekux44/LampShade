@@ -1,9 +1,8 @@
 package com.kuxhausen.huemore.net.hue;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
@@ -22,8 +21,8 @@ public class HueBulb implements NetworkBulb {
   private HubConnection mConnection;
   private int mCurrentMaxBri;
 
-  public BulbState desiredState = new BulbState();
-  public ArrayList<PendingStateChange> ongoing = new ArrayList<PendingStateChange>();
+  private BulbState desiredState = new BulbState();
+  public PendingStateChange ongoing;
   public BulbState confirmed = new BulbState();
 
   // TODO chance once a better Device Id implemented
@@ -44,7 +43,7 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public void setState(BulbState bs) {
-    BulbState preBriAdjusted = bs.cloneWithDefaults();
+    BulbState preBriAdjusted = bs.clone();
     if (preBriAdjusted.bri != null)
       preBriAdjusted.bri = (int) (preBriAdjusted.bri * mCurrentMaxBri / 100f);
     desiredState.merge(preBriAdjusted);
@@ -54,9 +53,38 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public BulbState getState() {
-    // TODO consider changing this to confirmed?
+    return confirmed;
+  }
+
+  public void confirm(PendingStateChange transmitted) {
+    // remove successful changes from pending
+    ongoing = null;
+
+    Log.d("confirm", "pre" + desiredState.toString());
+    // recalculate any remaining desired state
+    desiredState = transmitted.sentState.delta(desiredState);
+    Log.d("confirm", "post" + desiredState.toString());
+
+
+    // update confirmed
+    BulbState.confirmChange(confirmed, transmitted.sentState);
+  }
+
+  public boolean hasOngoingTransmission() {
+    return ongoing != null;
+  }
+
+  public boolean hasPendingTransmission() {
+    return (getSendState() != null && !getSendState().isEmpty());
+  }
+
+  /**
+   * returns desiredState
+   */
+  public BulbState getSendState() {
     return desiredState;
   }
+
 
   @Override
   public String getName() {
@@ -90,6 +118,8 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public void setCurrentMaxBrightness(int bri, boolean maxBriMode) {
+    Log.d("brightness", "setCurrentMaxBrightness");
+
     boolean addToQueue = false;
     bri = Math.max(1, bri); // guard to keep maxBri above 0
 

@@ -137,6 +137,52 @@ public class BulbState {
     return delta;
   }
 
+  /**
+   * update confirmed with whatever the nontransient result of that change state is
+   * 
+   * @param confirmed
+   * @param change
+   */
+  public static void confirmChange(BulbState confirmed, BulbState change) {
+    if (change.on != null)
+      confirmed.on = change.on;
+    if (change.bri != null)
+      confirmed.bri = change.bri;
+
+    // ignore alert for now
+    // TODO deal with alert
+    if (change.alert != null)
+      confirmed.alert = "none";
+
+
+    if (change.effect != null)
+      confirmed.effect = change.effect;
+
+    // ignore transitiontime for now
+    // TODO deal with transitiontime
+    if (change.transitiontime != null)
+      confirmed.transitiontime = 4;
+
+    // TODO convert between colormoods instead of filling nulls
+    if (change.xy != null) {
+      confirmed.xy = change.xy;
+      confirmed.hue = null;
+      confirmed.sat = null;
+      confirmed.ct = null;
+    } else if (change.hue != null && change.sat != null) {
+      confirmed.xy = null;
+      confirmed.hue = change.hue;
+      confirmed.sat = change.sat;
+      confirmed.ct = null;
+    } else if (change.ct != null) {
+      confirmed.xy = null;
+      confirmed.hue = null;
+      confirmed.sat = null;
+      confirmed.ct = change.ct;
+    }
+
+  }
+
   public String getCT() {
     return (1000000 / ct) + "K";
 
@@ -151,18 +197,10 @@ public class BulbState {
     }
   }
 
-  public BulbState cloneWithDefaults() {
-    BulbState clone = this.clone();
-    if (clone.on == null)
-      clone.on = true;
-    if (clone.bri == null)
-      clone.bri = 255;
-    if (clone.alert == null)
-      clone.alert = "none";
-    if (clone.effect == null)
-      clone.effect = "none";
-    if (clone.transitiontime == null)
-      clone.transitiontime = 4;
-    return clone;
+  public boolean isEmpty() {
+    if (on == null && bri == null && hue == null && sat == null && xy == null && ct == null
+        && alert == null && effect == null && transitiontime == null)
+      return true;
+    return false;
   }
 }

@@ -41,7 +41,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
   private static final Integer TYPE = NetBulbColumns.NetBulbType.PHILIPS_HUE;
   private static final Gson gson = new Gson();
-  private static final int MAX_NUM_CONCURRENT_REQUESTS_PER_BULB = 1;
 
   private Long mBaseId;
   private String mName, mDeviceId;
@@ -252,9 +251,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
           HueBulb selected = mChangedQueue.iterator().next();
           mChangedQueue.remove(selected);
 
-          // TODO re enable sendState optimization after further api transience testing
-          BulbState toSend = selected.desiredState;// getSendState(selected);
-          if (toSend != null && selected.ongoing.size() <= MAX_NUM_CONCURRENT_REQUESTS_PER_BULB) {
+          BulbState toSend = selected.getSendState();
+          if (toSend != null && !toSend.isEmpty() && selected.ongoing == null) {
 
             PendingStateChange stateChange =
                 new PendingStateChange(toSend, selected, System.nanoTime());
@@ -262,9 +260,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
               NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
                   getRequestQueue(), HubConnection.this, stateChange);
               Log.d("transmit",
-                  stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.toString());
+                  stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.isEmpty() + " "
+                      + stateChange.sentState.toString());
             }
-            selected.ongoing.add(stateChange);
+            selected.ongoing = stateChange;
           }
         }
       }
@@ -330,6 +329,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   }
 
   public void reportStateChangeFailure(PendingStateChange mRequest) {
+    mRequest.hubBulb.ongoing = null;
     this.stallCount++;
     mChangedQueue.add(mRequest.hubBulb);
   }
@@ -338,14 +338,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     this.stallCount = 0;
     HueBulb affected = request.hubBulb;
 
-    // remove successful changes from pending
-    affected.ongoing.remove(request);
-
-    // merge successful changes onto confirmed
-    affected.confirmed.merge(request.sentState);
+    affected.confirm(request);
 
     // if more changes should be sent, do so
-    if (getSendState(affected) != null) {
+    if (affected.hasPendingTransmission()) {
       mChangedQueue.add(affected);
     }
 
@@ -353,20 +349,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     this.mDeviceManager.onStateChanged();
   }
 
-  /**
-   * returns the BulbState delta between current+pending and desired if no delta, return null
-   */
-  private BulbState getSendState(HueBulb hBulb) {
-    BulbState projectedState = hBulb.confirmed.clone();
-    for (PendingStateChange p : hBulb.ongoing) {
-      projectedState.merge(p.sentState);
-    }
-    BulbState dif = projectedState.delta(hBulb.desiredState);
-
-    if (dif.toString() != null && dif.toString().length() > 0)
-      return dif;
-    return null;
-  }
 
   @Override
   public String mainDescription() {
@@ -389,7 +371,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     boolean hasPendingWork = false;
     for (HueBulb hb : mBulbList) {
-      if (!hb.ongoing.isEmpty()) {
+      if (hb.ongoing != null) {
         hasPendingWork = true;
       }
     }
