@@ -119,7 +119,11 @@ public class HueUrlEncoder {
     // Set 20 bit timestamps representing the loopIterationTimeLength
     mBitSet.addNumber(mood.loopIterationTimeLength, 20);
 
-    return mBitSet.getBase64Encoding();
+    String encoded = mBitSet.getBase64Encoding();
+    // bug fix against newlines in encodeLegacy
+    String corrected = encoded.replaceAll(("" + (char) 10), "");
+    return corrected;
+
   }
 
   /** Set 8 bit timing repeat policy **/

@@ -73,12 +73,13 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
   /** Returns a share intent */
   private Intent getDefaultShareIntent(String mood) {
+    String encodedMood = HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity()));
 
     Intent intent = new Intent(Intent.ACTION_SEND);
     intent.setType("text/plain");
     // intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
     intent.putExtra(Intent.EXTRA_TEXT, mood + " #LampShadeIO http://lampshade.io/share?"
-        + HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity())));
+        + encodedMood);
     return intent;
   }
 
