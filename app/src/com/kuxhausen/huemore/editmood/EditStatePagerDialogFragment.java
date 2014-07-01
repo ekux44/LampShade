@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,11 +49,6 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   }
 
   public void setState(BulbState newState, OnCreateColorListener initiator, String optionalMessage) {
-    if (newState != null && newState.xy != null)
-      Log.e("setStateInPager", newState.xy[0] + "  " + newState.clone().xy[0] + "  "
-          + optionalMessage);
-    else if (newState != null && newState.ct != null)
-      Log.e("setStateInPager", newState.ct + " " + optionalMessage);
     currentState = newState.clone();
     setSpinner();
     this.stateChanged(initiator);

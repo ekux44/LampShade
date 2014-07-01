@@ -8,7 +8,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
@@ -142,7 +141,6 @@ public class MoodPlayer {
    * time for their next events
    */
   public void saveOngoingAndScheduleResores() {
-    Log.e("nap", "saveAndSchedule");
     // calculated from SystemClock.elapsedRealtime
     long awakenTime = Long.MAX_VALUE;
     for (PlayingMood pm : mPlayingMoods) {
@@ -168,7 +166,6 @@ public class MoodPlayer {
   }
 
   public void restoreFromSaved() {
-    Log.e("nap", "restoreFromSaved");
     String[] projectionColumns =
         {DatabaseDefinitions.PlayingMood.COL_GROUP_VALUE,
             DatabaseDefinitions.PlayingMood.COL_MOOD_NAME,

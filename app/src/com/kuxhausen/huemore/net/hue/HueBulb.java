@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
@@ -50,7 +49,6 @@ public class HueBulb implements NetworkBulb {
       preBriAdjusted.bri = (int) (preBriAdjusted.bri * mCurrentMaxBri / 100f);
     desiredState.merge(preBriAdjusted);
 
-    Log.e("play", bs.toString());
     mConnection.getChangedQueue().add(this);
   }
 

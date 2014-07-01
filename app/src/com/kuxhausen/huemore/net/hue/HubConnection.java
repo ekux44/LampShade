@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -257,9 +258,12 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
             PendingStateChange stateChange =
                 new PendingStateChange(toSend, selected, System.nanoTime());
-            for (Route route : getBestRoutes())
+            for (Route route : getBestRoutes()) {
               NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
                   getRequestQueue(), HubConnection.this, stateChange);
+              Log.d("transmit",
+                  stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.toString());
+            }
             selected.ongoing.add(stateChange);
           }
         }

@@ -12,7 +12,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
-import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.DecodeErrorActivity;
@@ -154,13 +153,11 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
     if (mMoodPlayer.hasImminentPendingWork())
       shouldStayAwake = true;
-    Log.e("na", "MoodPlayer StayAwake=" + shouldStayAwake);
 
     for (Connection c : mDeviceManager.getConnections()) {
       if (c.hasPendingWork())
         shouldStayAwake = true;
     }
-    Log.e("na", "MP & DM StayAwake=" + shouldStayAwake);
 
     if (shouldStayAwake) {
       if (mWakelock == null) {
@@ -203,7 +200,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
   @Override
   public void onStateChanged() {
-    Log.e("state", "heard onStateChanged");
     calculateWakeNeeds();
   }
 
