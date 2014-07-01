@@ -68,6 +68,8 @@ public class HueBulb implements NetworkBulb {
 
     // update confirmed
     BulbState.confirmChange(confirmed, transmitted.sentState);
+
+    desiredState = confirmed.delta(desiredState);
   }
 
   public boolean hasOngoingTransmission() {
@@ -135,8 +137,8 @@ public class HueBulb implements NetworkBulb {
       if (maxBriMode) {
         // update the desired brightness value and add to change queue
         if (desiredState.bri == null) {
-          int trueBrightness = (int) (255 * (oldVal / 100f));
-          desiredState.bri = (int) (trueBrightness * (2.55f * mCurrentMaxBri));
+          int trueBrightness = (int) (2.55f * oldVal);
+          desiredState.bri = (int) (trueBrightness * (mCurrentMaxBri / 100f));
           addToQueue = true;
         }
       }
