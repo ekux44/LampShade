@@ -112,8 +112,8 @@ public class HueBulb implements NetworkBulb {
       }
     }
 
-    if (!maxBriMode && (desiredState.bri == null || desiredState.bri != ((int) 2.55f * bri))) {
-      desiredState.bri = ((int) 2.55f * bri);
+    if (!maxBriMode && (desiredState.bri == null || desiredState.bri != ((int) (2.55f * bri)))) {
+      desiredState.bri = ((int) (2.55f * bri));
       addToQueue = true;
     }
 
