@@ -92,7 +92,6 @@ public class DeviceManager {
       l.onConnectionStatusChanged();
   }
 
-
   public interface OnStateChangedListener {
     public void onStateChanged();
   }

@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -28,7 +30,10 @@ import android.widget.Toast;
 import com.kuxhausen.huemore.billing.BillingManager;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
+import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.ConnectionListFragment;
+import com.kuxhausen.huemore.net.NetworkBulb;
+import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
 import com.kuxhausen.huemore.nfc.NfcWriterFragment;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -167,6 +172,28 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public boolean onPrepareOptionsMenu(Menu menu) {
     // If the nav drawer is open, hide action items related to the content view
     boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerView);
+
+    boolean hasPendingOrSuccessfulConnections = false;
+    if (this.boundToService()) {
+      ArrayList<Connection> cons = getService().getDeviceManager().getConnections();
+      for (Connection c : cons) {
+        for (NetworkBulb b : c.getBulbs()) {
+          if (b.getConnectivityState() == ConnectivityState.Connected
+              || b.getConnectivityState() == ConnectivityState.Unknown)
+            hasPendingOrSuccessfulConnections = true;
+        }
+      }
+    }
+    if (hasPendingOrSuccessfulConnections) {
+      MenuItem unlocksItem = menu.findItem(R.id.action_connectivity_error);
+      unlocksItem.setEnabled(false);
+      unlocksItem.setVisible(false);
+    } else {
+      MenuItem unlocksItem = menu.findItem(R.id.action_connectivity_error);
+      unlocksItem.setEnabled(true);
+      unlocksItem.setVisible(true);
+    }
+
     return super.onPrepareOptionsMenu(menu);
   }
 
@@ -179,6 +206,9 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     }
     // Handle action buttons
     switch (item.getItemId()) {
+      case R.id.action_connectivity_error:
+        showConnectivity();
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -318,6 +348,13 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
      * fragmentManager.beginTransaction().addToBackStack(null).replace(R.id.content_frame,
      * frag).commit();
      */
+  }
+
+  public void showConnectivity() {
+    selectItem(CONNECTIONS_FRAG, null);
+
+    // TODO find a way of showing connectivity page without clearning back stack yet still enabling
+    // nav drawer
   }
 
   public void showEditMood(String moodName) {

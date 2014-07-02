@@ -183,9 +183,9 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
   }
 
   public void setMode() {
-    if(!mParent.boundToService() || mBrightnessBar==null)
+    if (!mParent.boundToService() || mBrightnessBar == null)
       return;
-    
+
     boolean maxBriMode = false;
     Group g = mParent.getService().getDeviceManager().getSelectedGroup();
     if (g != null && mParent.getService().getMoodPlayer().conflictsWithOngoingPlaying(g))

@@ -1,4 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
-
+	<item
+		android:id="@+id/action_connectivity_error"
+		android:title="@string/action_connection_error"
+		android:icon="@drawable/ic_action_error"
+		android:orderInCategory="1"
+		app:showAsAction="always"
+		android:visible="false"
+		android:enabled="false"/>
 </menu>
