@@ -254,8 +254,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
           BulbState toSend = selected.getSendState();
           if (toSend != null && !toSend.isEmpty() && selected.ongoing == null) {
 
-            PendingStateChange stateChange =
-                new PendingStateChange(toSend, selected, System.nanoTime());
+            PendingStateChange stateChange = new PendingStateChange(toSend, selected);
             for (Route route : getBestRoutes()) {
               NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
                   getRequestQueue(), HubConnection.this, stateChange);
@@ -263,7 +262,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                   stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.isEmpty() + " "
                       + stateChange.sentState.toString());
             }
-            selected.ongoing = stateChange;
+            selected.ongoing = stateChange.sentState;
           }
         }
       }
@@ -338,7 +337,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     this.stallCount = 0;
     HueBulb affected = request.hubBulb;
 
-    affected.confirm(request);
+    affected.confirm(request.sentState);
 
     // if more changes should be sent, do so
     if (affected.hasPendingTransmission()) {

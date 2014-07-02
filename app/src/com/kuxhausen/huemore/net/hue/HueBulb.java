@@ -22,7 +22,7 @@ public class HueBulb implements NetworkBulb {
   private int mCurrentMaxBri;
 
   private BulbState desiredState = new BulbState();
-  public PendingStateChange ongoing;
+  public BulbState ongoing;
   public BulbState confirmed = new BulbState();
 
   // TODO chance once a better Device Id implemented
@@ -56,18 +56,18 @@ public class HueBulb implements NetworkBulb {
     return confirmed;
   }
 
-  public void confirm(PendingStateChange transmitted) {
+  public void confirm(BulbState transmitted) {
     // remove successful changes from pending
     ongoing = null;
 
     Log.d("confirm", "pre" + desiredState.toString());
     // recalculate any remaining desired state
-    desiredState = transmitted.sentState.delta(desiredState);
+    desiredState = transmitted.delta(desiredState);
     Log.d("confirm", "post" + desiredState.toString());
 
 
     // update confirmed
-    BulbState.confirmChange(confirmed, transmitted.sentState);
+    BulbState.confirmChange(confirmed, transmitted);
 
     desiredState = confirmed.delta(desiredState);
   }
@@ -86,7 +86,6 @@ public class HueBulb implements NetworkBulb {
   public BulbState getSendState() {
     return desiredState;
   }
-
 
   @Override
   public String getName() {
