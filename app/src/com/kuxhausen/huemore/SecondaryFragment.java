@@ -150,6 +150,9 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
   }
 
   public void setMode() {
+    if (!parrentA.boundToService() || mBrightnessBar == null)
+      return;
+    
     boolean maxBriMode = false;
     Group g = parrentA.getService().getDeviceManager().getSelectedGroup();
     if (g != null && parrentA.getService().getMoodPlayer().conflictsWithOngoingPlaying(g))
