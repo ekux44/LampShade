@@ -63,8 +63,8 @@ public class NetworkManagedActivity extends ActionBarActivity implements
   }
 
   @Override
-  public void onStart() {
-    super.onStart();
+  public void onResume() {
+    super.onPause();
     // Bind to LocalService
     Intent intent = new Intent(this, ConnectivityService.class);
     startService(intent);
@@ -73,8 +73,8 @@ public class NetworkManagedActivity extends ActionBarActivity implements
   }
 
   @Override
-  public void onStop() {
-    super.onStop();
+  public void onPause() {
+    super.onPause();
 
     // Unbind from the service
     if (mBound) {

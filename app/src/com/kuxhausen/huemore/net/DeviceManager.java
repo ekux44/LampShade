@@ -27,8 +27,22 @@ public class DeviceManager {
   private HashMap<Long, NetworkBulb> bulbMap;
   private MyObserver mConnectionObserver;
 
-  public DeviceManager(Context c) {
+  /**
+   * true if devicemanager should try to maintain connectivity & sych with devices (ex: app is open)
+   */
+  private boolean mSycMode;
+
+  public void setSycMode(boolean result) {
+    mSycMode = result;
+  }
+
+  public boolean getSycMode() {
+    return mSycMode;
+  }
+
+  public DeviceManager(Context c, boolean sycMode) {
     mContext = c;
+    mSycMode = sycMode;
 
     mConnectionObserver = new MyObserver(new Handler(Looper.getMainLooper()));
     mContext.getContentResolver().registerContentObserver(NetConnectionColumns.URI, true,

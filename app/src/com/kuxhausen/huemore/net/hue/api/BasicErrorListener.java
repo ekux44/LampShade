@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
+import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
 import com.kuxhausen.huemore.net.hue.Route;
 
 public class BasicErrorListener implements ErrorListener {
@@ -19,9 +20,9 @@ public class BasicErrorListener implements ErrorListener {
   @Override
   public void onErrorResponse(VolleyError error) {
     if (parrent != null)
-      parrent.setHubConnectionState(mRoute, false);
+      parrent.setHubConnectionState(mRoute, ConnectivityState.Unreachable);
 
-    Log.e("volleyError", error.getLocalizedMessage() + "   ");
+    Log.d("volleyError", error.getLocalizedMessage() + "   ");
   }
 
 }

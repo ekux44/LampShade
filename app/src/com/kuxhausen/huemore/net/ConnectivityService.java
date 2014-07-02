@@ -62,7 +62,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     mWakelock.acquire();
 
     // Initialize DeviceManager and Mood Player
-    mDeviceManager = new DeviceManager(this);
+    mDeviceManager = new DeviceManager(this, mBound);
     mDeviceManager.registerStateListener(this);
     mMoodPlayer = new MoodPlayer(this, mDeviceManager);
     mMoodPlayer.addOnActiveMoodsChangedListener(this);
@@ -75,6 +75,8 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
    */
   public IBinder onBind(Intent intent) {
     mBound = true;
+    if (mDeviceManager != null)
+      mDeviceManager.setSycMode(true);
     return mBinder;
   }
 
@@ -82,12 +84,16 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   public boolean onUnbind(Intent intent) {
     super.onUnbind(intent);
     mBound = false;
+    if (mDeviceManager != null)
+      mDeviceManager.setSycMode(false);
     return true; // ensures onRebind is called
   }
 
   @Override
   public void onRebind(Intent intent) {
     super.onRebind(intent);
+    if (mDeviceManager != null)
+      mDeviceManager.setSycMode(true);
     mBound = true;
   }
 
@@ -140,6 +146,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         mMoodPlayer.restoreFromSaved();
       }
     }
+
     calculateWakeNeeds();
     return super.onStartCommand(intent, flags, startId);
   }
@@ -179,7 +186,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         mWakelock = null;
       }
 
-      if (!mBound && mMoodPlayer.getPlayingMoods().isEmpty()) {
+      if (!mBound) {
 
         // with no ongoing moods and not bound, go ahead and completely shut down
         // this.stopSelf();
@@ -231,7 +238,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
             + this.getResources().getString(R.string.notification_overflow_more));
       }
       mBuilder.setStyle(iStyle);
-
 
       this.startForeground(notificationId, mBuilder.build());
 

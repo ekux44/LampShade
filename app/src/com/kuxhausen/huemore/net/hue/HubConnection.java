@@ -169,19 +169,20 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
 
   @Override
-  public void setHubConnectionState(Route r, boolean connected) {
-    if (connected)
-      r.state = ConnectivityState.Connected;
-    else
-      r.state = ConnectivityState.Unreachable;
+  public void setHubConnectionState(Route r, ConnectivityState newState) {
+    if (r.state != newState) {
+      r.state = newState;
+      mDeviceManager.onConnectionChanged();
+    }
 
-    mDeviceManager.onConnectionChanged();
-    if (!getBestRoutes().isEmpty() && getBestRoutes().get(0).state != ConnectivityState.Connected) {
-      if (SystemClock.elapsedRealtime() - lastDisconnectedPingInElapsedRealtime > discounnectedPingIntervalMilis) {
-        lastDisconnectedPingInElapsedRealtime = SystemClock.elapsedRealtime();
-        for (Route route : getBestRoutes())
-          NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext,
-              getRequestQueue(), this, this);
+    if (mDeviceManager.getSycMode()) {
+      if (!getBestRoutes().isEmpty() && getBestRoutes().get(0).state != ConnectivityState.Connected) {
+        if (SystemClock.elapsedRealtime() - lastDisconnectedPingInElapsedRealtime > discounnectedPingIntervalMilis) {
+          lastDisconnectedPingInElapsedRealtime = SystemClock.elapsedRealtime();
+          for (Route route : getBestRoutes())
+            NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext,
+                getRequestQueue(), this, this);
+        }
       }
     }
   }

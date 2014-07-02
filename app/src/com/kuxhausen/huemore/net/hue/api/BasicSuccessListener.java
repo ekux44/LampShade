@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.net.hue.api;
 
 import com.android.volley.Response.Listener;
+import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
 import com.kuxhausen.huemore.net.hue.Route;
 
 public class BasicSuccessListener<T> implements Listener<T> {
@@ -16,7 +17,7 @@ public class BasicSuccessListener<T> implements Listener<T> {
   @Override
   public void onResponse(T response) {
     if (parrent != null)
-      parrent.setHubConnectionState(mRoute, true);
+      parrent.setHubConnectionState(mRoute, ConnectivityState.Connected);
   }
 
 }
