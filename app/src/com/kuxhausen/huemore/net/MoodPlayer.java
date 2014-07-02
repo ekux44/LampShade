@@ -34,13 +34,11 @@ public class MoodPlayer {
   private ArrayList<OnActiveMoodsChangedListener> moodsChangedListeners =
       new ArrayList<OnActiveMoodsChangedListener>();
   private ArrayList<PlayingMood> mPlayingMoods = new ArrayList<PlayingMood>();
-  private static CountDownTimer countDownTimer;
+  private CountDownTimer countDownTimer;
 
   public MoodPlayer(Context c, DeviceManager m) {
     mContext = c;
     mDeviceManager = m;
-
-    restartCountDownTimer();
   }
 
   public boolean conflictsWithOngoingPlaying(Group g) {
@@ -65,7 +63,7 @@ public class MoodPlayer {
     }
 
     mPlayingMoods.add(pm);
-
+    ensureLooping();
 
     // update notifications
     onActiveMoodsChanged();
@@ -102,30 +100,36 @@ public class MoodPlayer {
       countDownTimer.cancel();
   }
 
-  public void restartCountDownTimer() {
-    if (countDownTimer != null)
-      countDownTimer.cancel();
-
+  public void ensureLooping() {
     // runs at the rate to execute 10 times per second
-    countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / MOODS_TIMES_PER_SECOND)) {
+    if (countDownTimer != null)
+      countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / MOODS_TIMES_PER_SECOND)) {
 
-      @Override
-      public void onFinish() {}
+        @Override
+        public void onFinish() {}
 
-      @Override
-      public void onTick(long millisUntilFinished) {
-        for (int i = 0; i < mPlayingMoods.size(); i++) {
-          boolean ongoing = mPlayingMoods.get(i).onTick();
-          if (!ongoing) {
-            mPlayingMoods.remove(i);
-            i--;
+        @Override
+        public void onTick(long millisUntilFinished) {
+          boolean activeMoodsChanged = false;
+          for (int i = 0; i < mPlayingMoods.size(); i++) {
+            boolean ongoing = mPlayingMoods.get(i).onTick();
+            if (!ongoing) {
+              mPlayingMoods.remove(i);
+              i--;
 
-            // update notifications
+              // update notifications
+              activeMoodsChanged = true;
+
+            }
+          }
+          if (activeMoodsChanged)
             onActiveMoodsChanged();
+          if (mPlayingMoods.isEmpty()) {
+            countDownTimer = null;
+            this.cancel();
           }
         }
-      }
-    };
+      };
     countDownTimer.start();
   }
 

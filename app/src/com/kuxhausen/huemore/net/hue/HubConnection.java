@@ -383,10 +383,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     public void addToQueue(HueBulb changed) {
       mChangedQueue.add(changed);
-      ensureCountDownTimerStarted();
+      ensureLooping();
     }
 
-    public void ensureCountDownTimerStarted() {
+    private void ensureLooping() {
 
       if (countDownTimer == null)
         countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
