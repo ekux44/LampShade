@@ -48,7 +48,7 @@ public class HueBulb implements NetworkBulb {
       preBriAdjusted.bri = (int) (preBriAdjusted.bri * mCurrentMaxBri / 100f);
     desiredState.merge(preBriAdjusted);
 
-    mConnection.getChangedQueue().add(this);
+    mConnection.getLooper().addToQueue(this);
   }
 
   @Override
@@ -148,7 +148,8 @@ public class HueBulb implements NetworkBulb {
       addToQueue = true;
     }
 
-    if (addToQueue)
-      mConnection.getChangedQueue().add(this);
+    if (addToQueue) {
+      mConnection.getLooper().addToQueue(this);
+    }
   }
 }

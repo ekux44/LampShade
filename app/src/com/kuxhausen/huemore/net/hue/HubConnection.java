@@ -46,11 +46,11 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   private String mName, mDeviceId;
   HubData mData;
   private Context mContext;
-  private LinkedHashSet<HueBulb> mChangedQueue;
   private ArrayList<HueBulb> mBulbList;
   private ArrayList<Route> myRoutes;
   private long lastDisconnectedPingInElapsedRealtime;
   private static final long discounnectedPingIntervalMilis = 1000;
+  public ChangeLoopManager mLoopManager;
 
   /**
    * once STALL_THRESHOLD many consecutive send failures have occured, stop reporting pendingWork
@@ -68,7 +68,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     mData = data;
 
     mBulbList = new ArrayList<HueBulb>();
-    mChangedQueue = new LinkedHashSet<HueBulb>();
+    mLoopManager = new ChangeLoopManager();
     myRoutes = new ArrayList<Route>();
 
     String selection =
@@ -92,7 +92,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     // junk?
     mDeviceManager = dm;
     volleyRQ = Volley.newRequestQueue(mContext);
-    restartCountDownTimer();
 
     // initalized state
     this.mDeviceManager.onStateChanged();
@@ -129,10 +128,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   @Override
   public void onDestroy() {
-    if (countDownTimer != null)
-      countDownTimer.cancel();
+    mLoopManager.onDestroy();
     volleyRQ.cancelAll("");
-    mChangedQueue = null;
     mBulbList = null;
   }
 
@@ -187,14 +184,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     }
   }
 
-  protected LinkedHashSet<HueBulb> getChangedQueue() {
-    return mChangedQueue;
-  }
+
 
   private DeviceManager mDeviceManager;
   private RequestQueue volleyRQ;
-  private CountDownTimer countDownTimer;
-  private final static int TRANSMITS_PER_SECOND = 10;
 
   public enum KnownState {
     Unknown, ToSend, Getting, Synched
@@ -235,41 +228,6 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   }
 
 
-  public void restartCountDownTimer() {
-
-    if (countDownTimer != null)
-      countDownTimer.cancel();
-
-    // runs at the rate to execute 15 op/sec
-    countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
-
-      @Override
-      public void onFinish() {}
-
-      @Override
-      public void onTick(long millisUntilFinished) {
-        if (mChangedQueue.size() > 0) {
-          HueBulb selected = mChangedQueue.iterator().next();
-          mChangedQueue.remove(selected);
-
-          BulbState toSend = selected.getSendState();
-          if (toSend != null && !toSend.isEmpty() && selected.ongoing == null) {
-
-            PendingStateChange stateChange = new PendingStateChange(toSend, selected);
-            for (Route route : getBestRoutes()) {
-              NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
-                  getRequestQueue(), HubConnection.this, stateChange);
-              Log.d("transmit",
-                  stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.isEmpty() + " "
-                      + stateChange.sentState.toString());
-            }
-            selected.ongoing = stateChange.sentState;
-          }
-        }
-      }
-    };
-    countDownTimer.start();
-  }
 
   @Override
   public void onListReturned(Bulb[] result) {
@@ -331,7 +289,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   public void reportStateChangeFailure(PendingStateChange mRequest) {
     mRequest.hubBulb.ongoing = null;
     this.stallCount++;
-    mChangedQueue.add(mRequest.hubBulb);
+    this.mLoopManager.addToQueue(mRequest.hubBulb);
   }
 
   public void reportStateChangeSucess(PendingStateChange request) {
@@ -342,7 +300,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     // if more changes should be sent, do so
     if (affected.hasPendingTransmission()) {
-      mChangedQueue.add(affected);
+      this.mLoopManager.addToQueue(affected);
     }
 
     // notify changes
@@ -407,5 +365,62 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     String selector = NetConnectionColumns._ID + "=?";
     String[] selectionArgs = {"" + mBaseId};
     mContext.getContentResolver().delete(NetConnectionColumns.URI, selector, selectionArgs);
+  }
+
+  public ChangeLoopManager getLooper() {
+    return mLoopManager;
+  }
+
+  public class ChangeLoopManager {
+    private LinkedHashSet<HueBulb> mChangedQueue = new LinkedHashSet<HueBulb>();
+    private CountDownTimer countDownTimer;
+    private final static int TRANSMITS_PER_SECOND = 10;
+
+    protected void onDestroy() {
+      if (countDownTimer != null)
+        countDownTimer.cancel();
+    }
+
+    public void addToQueue(HueBulb changed) {
+      mChangedQueue.add(changed);
+      ensureCountDownTimerStarted();
+    }
+
+    public void ensureCountDownTimerStarted() {
+
+      if (countDownTimer == null)
+        countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
+
+          @Override
+          public void onFinish() {}
+
+          @Override
+          public void onTick(long millisUntilFinished) {
+            if (mChangedQueue.size() > 0) {
+              HueBulb selected = mChangedQueue.iterator().next();
+              mChangedQueue.remove(selected);
+
+              BulbState toSend = selected.getSendState();
+              if (toSend != null && !toSend.isEmpty() && selected.ongoing == null) {
+
+                PendingStateChange stateChange = new PendingStateChange(toSend, selected);
+                for (Route route : getBestRoutes()) {
+                  NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
+                      getRequestQueue(), HubConnection.this, stateChange);
+                  Log.d("transmit",
+                      stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.isEmpty()
+                          + " " + stateChange.sentState.toString());
+                }
+                selected.ongoing = stateChange.sentState;
+              }
+            } else {
+              ChangeLoopManager.this.countDownTimer = null;
+              this.cancel();
+            }
+          }
+        };
+      countDownTimer.start();
+    }
+
   }
 }
