@@ -16,8 +16,7 @@ public class BasicSuccessListener<T> implements Listener<T> {
 
   @Override
   public void onResponse(T response) {
-    if (parrent != null)
-      parrent.setHubConnectionState(mRoute, ConnectivityState.Connected);
+    parrent.setHubConnectionState(mRoute, ConnectivityState.Connected);
   }
 
 }

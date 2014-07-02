@@ -18,6 +18,7 @@ public class StateErrorListener extends BasicErrorListener {
 
   @Override
   public void onErrorResponse(VolleyError error) {
+    super.onErrorResponse(error);
     mHubConnection.reportStateChangeFailure(mRequest);
   }
 

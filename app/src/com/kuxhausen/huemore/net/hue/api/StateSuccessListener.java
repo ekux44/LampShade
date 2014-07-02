@@ -17,6 +17,7 @@ public class StateSuccessListener extends BasicSuccessListener<LightsPutResponse
 
   @Override
   public void onResponse(LightsPutResponse[] response) {
+    super.onResponse(response);
     if (response.length > 0 && response[0].success != null) {
       mHubConnection.reportStateChangeSucess(mRequest);
     } else {

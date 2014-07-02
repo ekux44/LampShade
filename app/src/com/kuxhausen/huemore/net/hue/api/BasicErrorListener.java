@@ -19,8 +19,7 @@ public class BasicErrorListener implements ErrorListener {
 
   @Override
   public void onErrorResponse(VolleyError error) {
-    if (parrent != null)
-      parrent.setHubConnectionState(mRoute, ConnectivityState.Unreachable);
+    parrent.setHubConnectionState(mRoute, ConnectivityState.Unreachable);
 
     Log.d("volleyError", error.getLocalizedMessage() + "   ");
   }
