@@ -102,7 +102,7 @@ public class MoodPlayer {
 
   public void ensureLooping() {
     // runs at the rate to execute 10 times per second
-    if (countDownTimer != null)
+    if (countDownTimer == null) {
       countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / MOODS_TIMES_PER_SECOND)) {
 
         @Override
@@ -116,10 +116,8 @@ public class MoodPlayer {
             if (!ongoing) {
               mPlayingMoods.remove(i);
               i--;
-
               // update notifications
               activeMoodsChanged = true;
-
             }
           }
           if (activeMoodsChanged)
@@ -130,7 +128,8 @@ public class MoodPlayer {
           }
         }
       };
-    countDownTimer.start();
+      countDownTimer.start();
+    }
   }
 
   public boolean hasImminentPendingWork() {
