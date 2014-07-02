@@ -239,6 +239,8 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     LoaderManager lm = context.getSupportLoaderManager();
     lm.initLoader(GROUPS_LOADER, null, this);
     lm.initLoader(MOODS_LOADER, null, this);
+    
+    setHasOptionsMenu(true);
   }
 
   private void WriteModeOn() {

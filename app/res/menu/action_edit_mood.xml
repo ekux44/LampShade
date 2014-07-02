@@ -2,18 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
-		android:id="@+id/action_help"
-		android:title="@string/action_help"
-		android:icon="@drawable/ic_action_help"
-		android:orderInCategory="1"
-		app:showAsAction="ifRoom"
-		/>
-	
-    <item
 		android:id="@+id/action_save"
 		android:title="@string/save"
 		android:icon="@drawable/ic_action_save"
-		android:orderInCategory="2"
+		android:orderInCategory="1"
 		app:showAsAction="ifRoom"
 		/>
     
@@ -21,7 +13,15 @@
 		android:id="@+id/action_play"
 		android:title="@string/action_play"
 		android:icon="@drawable/ic_action_play"
+		android:orderInCategory="2"
+		app:showAsAction="ifRoom"
+		/>
+	<item
+		android:id="@+id/action_help"
+		android:title="@string/action_help"
+		android:icon="@drawable/ic_action_help"
 		android:orderInCategory="3"
 		app:showAsAction="ifRoom"
 		/>
+	
 </menu>
