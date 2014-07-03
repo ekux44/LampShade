@@ -1,24 +1,32 @@
-# built application files
-*.apk
-*.ap_
+#Android generated
+bin
+gen
 
-# files for the dex VM
-*.dex
-
-# Java class files
-*.class
-
-# generated files
-bin/
-gen/
-
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Eclipse project files
-.classpath
+#Eclipse
 .project
+.classpath
+.settings
 
-# Gradle files
-.gradle/
-build/
+#IntelliJ IDEA
+.idea
+*.iml
+classes
+
+#Command line
+build.xml
+proguard-project.txt
+
+#Mac specific
+.DS_Store
+
+#User specific
+/local.properties
+sample/src/com/cyrilmottier/android/polarissample/util/LocalConfig.java
+
+#gradle
+/build
+.gradle
+gradle
+gradlew
+gradlew.bat
+signing.properties

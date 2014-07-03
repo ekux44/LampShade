@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kuxhausen.huemore" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher_lampshade"
+        android:installLocation="internalOnly"
+        android:label="@string/app_name" >
+        <activity
+            android:name="com.kuxhausen.huemore.NavigationDrawerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/BlueWidgets">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <provider
+            android:name="com.kuxhausen.huemore.persistence.LampShadeProvider"
+            android:authorities="com.kuxhausen.provider.huemore.database"
+            android:exported="true" >
+        </provider>
+
+        <!-- Listen for the "edit" action -->
+        <activity
+            android:name="com.kuxhausen.huemore.automation.EditActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:icon="@drawable/ic_launcher_lampshade"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/BlueWidgets" >
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
+        <!-- Listen for the "fire" action -->
+        <receiver android:name="com.kuxhausen.huemore.automation.FireReceiver" >
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.kuxhausen.huemore.DecodeErrorActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/BlueWidgets" >
+        </activity>
+        <activity
+            android:name="com.kuxhausen.huemore.nfc.NfcReaderActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/BlueWidgets"
+            android:noHistory="true" >
+        </activity>
+        <activity
+            android:name="com.kuxhausen.huemore.nfc.NfcReadRouterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/BlueWidgets"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="www.kuxhausen.com"
+                    android:pathPrefix="/HueMore/nfc"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="www.lampshade.io"
+                    android:pathPrefix="/nfc"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+		<activity
+            android:name="com.kuxhausen.huemore.SharedMoodReaderActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/BlueWidgets"
+            android:noHistory="true" >
+
+            <intent-filter>
+	          <action android:name="android.intent.action.VIEW" />
+	          <category android:name="android.intent.category.DEFAULT" />
+	          <category android:name="android.intent.category.BROWSABLE" />
+	          <data android:scheme="http" android:host="lampshade.io"
+	                android:path="/share" />
+        	</intent-filter>
+        </activity>
+        
+        <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever" >
+        </receiver>
+
+        <receiver android:name="com.kuxhausen.huemore.timing.BootSetter" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.kuxhausen.huemore.widget.AlarmWidgetProvider"
+            android:exported="true" android:label="@string/widget_alarms_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+            <!-- This specifies the widget provider info -->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widgetinfo" />
+        </receiver>
+
+        <service
+            android:name="com.kuxhausen.huemore.widget.AlarmWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        
+   		<receiver
+            android:name="com.kuxhausen.huemore.widget.GroupWidgetProvider"
+            android:exported="true" android:label="@string/widget_groups_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/group_widgetinfo" />
+        </receiver>
+
+        <service
+            android:name="com.kuxhausen.huemore.widget.GroupWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+ 		       
+        <service
+            android:name="com.kuxhausen.huemore.net.ConnectivityService"
+            android:enabled="true"
+            android:exported="false"
+            android:icon="@drawable/ic_launcher_lampshade" >
+        </service>
+    </application>
+
+</manifest>
