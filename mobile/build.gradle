@@ -33,7 +33,7 @@ dependencies {
     wearApp project(':wear')
     compile 'com.android.support:appcompat-v7:18.0.0'
     compile 'com.android.support:gridlayout-v7:18.0.0'
-    compile 'com.google.android.gms:play-services-wearable:+'
+    compile 'com.google.android.gms:play-services:5.0.+'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
 }
