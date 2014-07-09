@@ -36,4 +36,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:+'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
+    compile project(':lifix')
 }
