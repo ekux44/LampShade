@@ -6,12 +6,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
+import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.DecodeErrorActivity;
@@ -51,14 +55,18 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   private WakeLock mWakelock;
   private DeviceManager mDeviceManager;
   private MoodPlayer mMoodPlayer;
+  private long mCreatedTime = 0;
+  private boolean mDestroyed;
 
   @Override
   public void onCreate() {
     super.onCreate();
+    mCreatedTime = SystemClock.elapsedRealtime();
+    mDestroyed = false;
 
     // acquire wakelock needed till everything initialized
     PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-    mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
+    mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getString(R.string.app_name));
     mWakelock.acquire();
 
     // Initialize DeviceManager and Mood Player
@@ -86,6 +94,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     mBound = false;
     if (mDeviceManager != null)
       mDeviceManager.setSycMode(false);
+    calculateWakeNeeds();
     return true; // ensures onRebind is called
   }
 
@@ -156,43 +165,59 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
    * before launching mood events queued
    */
   public void calculateWakeNeeds() {
-    boolean shouldStayAwake = false;
+    boolean waitingOnPlayingMood = false;
+    boolean waitingOnPendingNetworking = false;
+    Log.d("power", "calculateWakeNeeds");
+
 
     if (mMoodPlayer.hasImminentPendingWork())
-      shouldStayAwake = true;
+      waitingOnPlayingMood = true;
 
     for (Connection c : mDeviceManager.getConnections()) {
       if (c.hasPendingWork())
-        shouldStayAwake = true;
+        waitingOnPendingNetworking = true;
     }
 
-    if (shouldStayAwake) {
+    Log.d("power", "waitingOnPlayingMood="+waitingOnPlayingMood);
+    Log.d("power", "waitingOnPendingNetworking="+waitingOnPendingNetworking);
+
+    if (waitingOnPlayingMood || waitingOnPendingNetworking) {
       if (mWakelock == null) {
         // acquire wakelock till done doing work
         PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
+        mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getString(R.string.app_name));
         mWakelock.acquire();
       }
     } else {
-      if (!mBound) {
+      if (!mBound && (SystemClock.elapsedRealtime() - mCreatedTime > 5000)) {
         // not bound, so service may sleep after releasing wakelock
         // save ongoing moods and schedule a broadcast to restart service before next playing mood
         // event
         mMoodPlayer.saveOngoingAndScheduleResores();
+
+        Log.d("power", "stopSelf");
+
+        // with no ongoing moods and not bound, go ahead and completely shut down
+        this.stopSelf();
       }
 
       if (mWakelock != null) {
         mWakelock.release();
         mWakelock = null;
       }
+    }
 
-      if (!mBound) {
-
-        // with no ongoing moods and not bound, go ahead and completely shut down
-        // this.stopSelf();
-        // doesn't work because it gets triggered before a service finishes binding and can't be
-        // undone.
-      }
+    if(!mBound && !waitingOnPlayingMood && waitingOnPendingNetworking){
+      // check back in another second to see if pending networking has completed or timed out
+      Handler handler = new Handler();
+      handler.postDelayed(new Runnable(){
+        @Override
+        public void run(){
+          if(!mDestroyed) {
+            ConnectivityService.this.calculateWakeNeeds();
+          }
+        }
+      }, 1000);
     }
   }
 
@@ -211,6 +236,8 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   }
 
   public void onActiveMoodsChanged() {
+    calculateWakeNeeds();
+
     if (mMoodPlayer.getPlayingMoods().isEmpty()) {
       this.stopForeground(true);
     } else {
@@ -242,13 +269,12 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       this.startForeground(notificationId, mBuilder.build());
 
     }
-
-    calculateWakeNeeds();
   }
 
 
   @Override
   public void onDestroy() {
+    mDestroyed = true;
     mMoodPlayer.onDestroy();
     mDeviceManager.onDestroy();
     if (mWakelock != null)

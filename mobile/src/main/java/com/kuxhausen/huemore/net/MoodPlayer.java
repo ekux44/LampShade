@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
@@ -148,7 +149,7 @@ public class MoodPlayer {
     long awakenTime = Long.MAX_VALUE;
     for (PlayingMood pm : mPlayingMoods) {
       long nextEventTime = pm.getNextEventTime();
-      if (nextEventTime > awakenTime)
+      if (nextEventTime < awakenTime)
         awakenTime = nextEventTime;
     }
 
@@ -164,6 +165,8 @@ public class MoodPlayer {
       cv.put(DatabaseDefinitions.PlayingMood.COL_MILI_TIME_STARTED, SystemClock.elapsedRealtime());
       mContext.getContentResolver().insert(DatabaseDefinitions.PlayingMood.URI, cv);
     }
+
+    Log.d("mood", "awaken future millis offset " + (awakenTime - SystemClock.elapsedRealtime()));
 
     AlarmReciever.scheduleInternalAlarm(mContext, awakenTime);
   }
@@ -190,6 +193,8 @@ public class MoodPlayer {
       }
       Integer initialMaxB = cursor.getInt(3);
       Long miliTimeStarted = cursor.getLong(4);
+
+      Log.d("mood","restore at"+SystemClock.elapsedRealtime()+" from "+miliTimeStarted);
 
       this.playMood(g, m, mName, initialMaxB, miliTimeStarted);
     }

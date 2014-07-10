@@ -5,6 +5,7 @@ import java.util.PriorityQueue;
 import java.util.Stack;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
@@ -19,7 +20,7 @@ import com.kuxhausen.huemore.timing.Conversions;
 public class PlayingMood {
 
   // if the next even is happening in less than 1/2 seconds, stay awake for it
-  private final static long IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC = 500l;
+  private final static long IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC = 1000l;
 
   /** should never be null **/
   private Mood mood;
@@ -75,6 +76,9 @@ public class PlayingMood {
 
   // if null, parameter ignored
   private void loadMoodIntoQueue(Long timeLoopStartedInRealtimeElapsedMilis) {
+    Log.d("mood","loadMoodWithOffset"+((timeLoopStartedInRealtimeElapsedMilis!=null)?timeLoopStartedInRealtimeElapsedMilis:"null"));
+
+
     ArrayList<Long>[] channels = new ArrayList[mood.getNumChannels()];
     for (int i = 0; i < channels.length; i++)
       channels[i] = new ArrayList<Long>();
@@ -134,6 +138,8 @@ public class PlayingMood {
             timeLoopStartedInRealtimeElapsedMilis = SystemClock.elapsedRealtime();
           qe.miliTime = timeLoopStartedInRealtimeElapsedMilis + (e.time * 100l);
 
+          Log.d("mood","qe event offset"+(qe.miliTime-SystemClock.elapsedRealtime()));
+
           // if event in future or present (+/- 100ms, add to queue
           if (qe.miliTime + 100 > SystemClock.elapsedRealtime())
             queue.add(qe);
@@ -164,10 +170,18 @@ public class PlayingMood {
   }
 
   public boolean hasImminentPendingWork() {
+   //TODO fix
+    if(!queue.isEmpty()){
+      Log.d("mood",queue.peek().miliTime + "");
+      Log.d("mood",(queue.peek().miliTime - SystemClock.elapsedRealtime())+"");
+    }
+
     // IF queue has imminent events or queue about to be reloaded
-    if ((!queue.isEmpty() && (queue.peek().miliTime - SystemClock.elapsedRealtime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC)
-        || (queue.peek() == null && mood.isInfiniteLooping() && SystemClock.elapsedRealtime() > moodLoopIterationEndMiliTime))
+    if (!queue.isEmpty() && (queue.peek().miliTime - SystemClock.elapsedRealtime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC){
       return true;
+    } else if(mood.isInfiniteLooping() && (moodLoopIterationEndMiliTime - SystemClock.elapsedRealtime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC){
+      return true;
+    }
     return false;
   }
 

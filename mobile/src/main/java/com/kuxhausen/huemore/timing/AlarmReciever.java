@@ -6,8 +6,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -168,7 +170,9 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     if (intent.getAction() != null
-        && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.8\\..*")) {
+        && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.8*")) {
+      Log.d("alarm", "napping mood wakeup");
+
       Intent trasmitter = new Intent(context, ConnectivityService.class);
       trasmitter.putExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS, true);
       startWakefulService(context, trasmitter);
@@ -177,6 +181,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
       AlarmState as =
           gson.fromJson(intent.getExtras().getString(InternalArguments.ALARM_DETAILS),
               AlarmState.class);
+      Log.d("alarm","wakeup for user alarm");
 
       Intent trasmitter = new Intent(context, ConnectivityService.class);
       trasmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, as.brightness);

@@ -287,7 +287,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   }
 
   public void reportStateChangeFailure(PendingStateChange mRequest) {
-    mRequest.hubBulb.ongoing = null;
+    mRequest.hubBulb.lastSendInitiatedTime = null;
     this.stallCount++;
     this.mLoopManager.addToQueue(mRequest.hubBulb);
   }
@@ -329,7 +329,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     boolean hasPendingWork = false;
     for (HueBulb hb : mBulbList) {
-      if (hb.ongoing != null) {
+      if (hb.hasOngoingTransmission()) {
         hasPendingWork = true;
       }
     }
@@ -401,7 +401,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
               mChangedQueue.remove(selected);
 
               BulbState toSend = selected.getSendState();
-              if (toSend != null && !toSend.isEmpty() && selected.ongoing == null) {
+              if (toSend != null && !toSend.isEmpty() && selected.lastSendInitiatedTime == null) {
 
                 PendingStateChange stateChange = new PendingStateChange(toSend, selected);
                 for (Route route : getBestRoutes()) {
@@ -411,7 +411,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                       stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.isEmpty()
                           + " " + stateChange.sentState.toString());
                 }
-                selected.ongoing = stateChange.sentState;
+                selected.lastSendInitiatedTime = SystemClock.elapsedRealtime();
               }
             } else {
               ChangeLoopManager.this.countDownTimer = null;

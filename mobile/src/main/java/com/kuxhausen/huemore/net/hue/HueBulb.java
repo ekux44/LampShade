@@ -2,6 +2,7 @@ package com.kuxhausen.huemore.net.hue;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
@@ -11,6 +12,8 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.BulbState;
 
 public class HueBulb implements NetworkBulb {
+
+  public static final long SEND_TIMEOUT_TIME = 2000;
 
   private Long mBaseId;
   private String mName;
@@ -22,7 +25,9 @@ public class HueBulb implements NetworkBulb {
   private int mCurrentMaxBri;
 
   private BulbState desiredState = new BulbState();
-  public BulbState ongoing;
+
+  //using SystemClock.elapsedTimes
+  public Long lastSendInitiatedTime;
   public BulbState confirmed = new BulbState();
 
   // TODO chance once a better Device Id implemented
@@ -58,7 +63,7 @@ public class HueBulb implements NetworkBulb {
 
   public void confirm(BulbState transmitted) {
     // remove successful changes from pending
-    ongoing = null;
+    lastSendInitiatedTime = null;
 
     Log.d("confirm", "pre" + desiredState.toString());
     // recalculate any remaining desired state
@@ -73,7 +78,8 @@ public class HueBulb implements NetworkBulb {
   }
 
   public boolean hasOngoingTransmission() {
-    return ongoing != null;
+    return (lastSendInitiatedTime != null) && (SystemClock.elapsedRealtime() - lastSendInitiatedTime
+                                               < SEND_TIMEOUT_TIME);
   }
 
   public boolean hasPendingTransmission() {
