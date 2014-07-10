@@ -1,6 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
+    lintOptions {
+        checkReleaseBuilds false
+    }
+    signingConfigs {
+        playRelease {
+            keyAlias 'ekux44'
+            keyPassword 'How now brown cow.'
+            storeFile file('/Users/kuxhausen/Documents/Keys/kuxhausen.keystore')
+            storePassword 'How now brown cow. How now brown cow.'
+        }
+    }
     compileSdkVersion 20
     buildToolsVersion '20.0.0'
     defaultConfig {
@@ -14,6 +25,7 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.playRelease
         }
     }
     productFlavors {
