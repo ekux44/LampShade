@@ -171,6 +171,7 @@ public class PlayingMood {
 
   public boolean hasImminentPendingWork() {
    //TODO fix
+    return true;/*
     if(!queue.isEmpty()){
       Log.d("mood",queue.peek().miliTime + "");
       Log.d("mood",(queue.peek().miliTime - SystemClock.elapsedRealtime())+"");
@@ -182,7 +183,7 @@ public class PlayingMood {
     } else if(mood.isInfiniteLooping() && (moodLoopIterationEndMiliTime - SystemClock.elapsedRealtime()) < IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC){
       return true;
     }
-    return false;
+    return false;*/
   }
 
   public Group getGroup() {
