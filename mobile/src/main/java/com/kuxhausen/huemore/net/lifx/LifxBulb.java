@@ -3,10 +3,11 @@ package com.kuxhausen.huemore.net.lifx;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.state.BulbState;
 
+import lifx.java.android.entities.LFXHSBKColor;
 import lifx.java.android.entities.LFXTypes;
 import lifx.java.android.light.LFXLight;
 
-public class LifxBulb implements NetworkBulb {
+public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
     LFXLight mLight;
 
@@ -61,4 +62,19 @@ public class LifxBulb implements NetworkBulb {
     public void setCurrentMaxBrightness(int maxBri, boolean maxBriMode) {
 
     }
+
+  @Override
+  public void lightDidChangeLabel(LFXLight light, String label) {
+
+  }
+
+  @Override
+  public void lightDidChangeColor(LFXLight light, LFXHSBKColor color) {
+
+  }
+
+  @Override
+  public void lightDidChangePowerState(LFXLight light, LFXTypes.LFXPowerState powerState) {
+
+  }
 }
