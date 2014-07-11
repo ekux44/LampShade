@@ -77,4 +77,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   public void lightDidChangePowerState(LFXLight light, LFXTypes.LFXPowerState powerState) {
 
   }
+
+  public static class ExtraData{
+
+  }
 }

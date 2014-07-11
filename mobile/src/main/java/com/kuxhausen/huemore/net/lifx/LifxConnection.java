@@ -42,4 +42,8 @@ public class LifxConnection implements Connection {
     public void delete() {
 
     }
+
+  public static class ExtraData{
+
+  }
 }

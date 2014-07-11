@@ -25,9 +25,9 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
   public void onCreate(Context c, DeviceManager dm) {
     mDeviceManager = dm;
 
-    WifiManager wifi;
-    wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+    WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
     ml = wifi.createMulticastLock("lifx_samples_tag");
+    ml.setReferenceCounted(true);
     ml.acquire();
 
     Log.d("lifx", "lifxManager onCreate");

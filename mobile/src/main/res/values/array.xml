@@ -58,6 +58,7 @@
     
     <string-array name="add_devices_list">
 	    <item>@string/device_hue</item>
+        <item>@string/device_lifx</item>
     </string-array>
     
     <!-- A format string for breadcrumbs in the titlebar.  For left to right languages, such as English, the format will look something like "Main Activity > Sub Activity > Sub Activity 2".  Item #1 is the previous path, item #2 is the separator, and item #3 is the current item.  For most left to right languages, this shouldn't need to be changed. -->
