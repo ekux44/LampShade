@@ -1,8 +1,5 @@
 package com.kuxhausen.huemore.net;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -10,8 +7,14 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
+import com.kuxhausen.huemore.net.lifx.LifxConnection;
+import com.kuxhausen.huemore.net.lifx.LifxManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.Group;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class DeviceManager {
 
@@ -26,9 +29,11 @@ public class DeviceManager {
   public ArrayList<OnStateChangedListener> stateListeners = new ArrayList<OnStateChangedListener>();
   private HashMap<Long, NetworkBulb> bulbMap;
   private MyObserver mConnectionObserver;
+  private LifxManager mLifxManager;
 
   /**
-   * true if devicemanager should try to maintain connectivity & sych with devices (ex: app is open)
+   * true if devicemanager should try to maintain connectivity & sych with devices (ex: app is
+   * open)
    */
   private boolean mSycMode;
 
@@ -46,17 +51,27 @@ public class DeviceManager {
 
     mConnectionObserver = new MyObserver(new Handler(Looper.getMainLooper()));
     mContext.getContentResolver().registerContentObserver(NetConnectionColumns.URI, true,
-        mConnectionObserver);
+                                                          mConnectionObserver);
 
     loadEverythingFromDatabase();
   }
 
   public void loadEverythingFromDatabase() {
+    destroyManagers();
+    { // load all connections from the database
+      mConnections = new ArrayList<Connection>();
 
-    // load all connections from the database
-    mConnections = new ArrayList<Connection>();
-    mConnections.addAll(HubConnection.loadHubConnections(mContext, this));
+      //load any hue connections
+      mConnections.addAll(HubConnection.loadHubConnections(mContext, this));
 
+      //load any lifx connections
+      List<LifxConnection> lifxConnections = LifxManager.loadConnections(mContext, this);
+      if (!lifxConnections.isEmpty()) {
+        mLifxManager = new LifxManager();
+        mLifxManager.onCreate(mContext, this, lifxConnections);
+        mConnections.addAll(lifxConnections);
+      }
+    }
     // load all network bulbs from the connections
     bulbMap = new HashMap<Long, NetworkBulb>();
     for (Connection con : mConnections) {
@@ -68,10 +83,19 @@ public class DeviceManager {
     onBulbsListChanged();
   }
 
+  public void destroyManagers() {
+    if (mLifxManager != null) {
+      mLifxManager.onDestroy();
+      mLifxManager = null;
+    }
+  }
+
   public void onDestroy() {
+    destroyManagers();
     mContext.getContentResolver().unregisterContentObserver(mConnectionObserver);
-    for (Connection c : mConnections)
+    for (Connection c : mConnections) {
       c.onDestroy();
+    }
   }
 
   public Group getSelectedGroup() {
@@ -102,15 +126,19 @@ public class DeviceManager {
   }
 
   public void onConnectionChanged() {
-    for (OnConnectionStatusChangedListener l : connectionListeners)
+    for (OnConnectionStatusChangedListener l : connectionListeners) {
       l.onConnectionStatusChanged();
+    }
   }
 
   public interface OnStateChangedListener {
+
     public void onStateChanged();
   }
 
-  /** announce state changes to any listeners **/
+  /**
+   * announce state changes to any listeners *
+   */
   public void onStateChanged() {
     // only send brightnessListeners brightness state changes
     for (OnStateChangedListener l : brightnessListeners) {
@@ -140,8 +168,9 @@ public class DeviceManager {
   }
 
   public Integer getBrightness(Group g) {
-    if (g == null)
+    if (g == null) {
       return null;
+    }
     int briSum = 0;
     int briNum = 0;
 
@@ -157,10 +186,13 @@ public class DeviceManager {
     return briSum;
   }
 
-  /** doesn't notify listeners **/
+  /**
+   * doesn't notify listeners *
+   */
   public void setBrightness(Group g, int bri, boolean maxBriMode) {
-    if (g == null)
+    if (g == null) {
       return;
+    }
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
       // upon upgrading from v2.7, bulbs may not exist until reconnection
       if (bulbMap.containsKey(bulbId)) {
@@ -184,6 +216,7 @@ public class DeviceManager {
   }
 
   class MyObserver extends ContentObserver {
+
     public MyObserver(Handler handler) {
       super(handler);
     }
@@ -201,7 +234,7 @@ public class DeviceManager {
 
   /**
    * Safely deletes references to connection's bulbs & connection, then deletes from database
-   * 
+   *
    * @param selected connection to delete
    */
   public void delete(Connection selected) {
