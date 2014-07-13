@@ -64,7 +64,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   }
 
   public void lightDisconnected() {
-    mLight.removeLightListener(this);
+    if(mLight!=null)
+      mLight.removeLightListener(this);
     mLight = null;
   }
 

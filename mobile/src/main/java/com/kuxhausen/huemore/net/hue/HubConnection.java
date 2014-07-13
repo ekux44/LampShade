@@ -159,9 +159,16 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   @Override
   public ArrayList<NetworkBulb> getBulbs() {
-    ArrayList<NetworkBulb> result = new ArrayList<NetworkBulb>(mBulbList.size());
-    result.addAll(mBulbList);
-    return result;
+    if(mBulbList!=null) {
+      ArrayList<NetworkBulb> result = new ArrayList<NetworkBulb>(mBulbList.size());
+      result.addAll(mBulbList);
+      return result;
+    } else {
+      //TODO fix root cause
+      //this case should never occur, but it does
+      return new ArrayList<NetworkBulb>();
+    }
+
   }
 
 
