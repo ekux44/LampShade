@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.ContactsContract;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.Connection;
@@ -65,7 +66,7 @@ public class LifxConnection implements Connection {
 
   @Override
   public void initializeConnection(Context c) {
-
+    mBulb.onInitialize();
   }
 
   @Override
@@ -92,12 +93,16 @@ public class LifxConnection implements Connection {
 
   @Override
   public boolean hasPendingWork() {
-    return false;
+    return this.mBulb.hasPendingWork();
   }
 
   @Override
   public void delete() {
+    this.onDestroy();
 
+    String selector = DatabaseDefinitions.NetConnectionColumns._ID + "=?";
+    String[] selectionArgs = {"" + mBaseId};
+    mContext.getContentResolver().delete(DatabaseDefinitions.NetConnectionColumns.URI, selector, selectionArgs);
   }
 
   public String getDeviceId() {

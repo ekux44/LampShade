@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.net.lifx;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
@@ -13,6 +14,9 @@ import lifx.java.android.light.LFXLight;
 
 public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
+  //In milis
+  private final static long TRANSMIT_TIMEOUT_TIME = 10000;
+
   LifxConnection mConnection;
 
   private Context mContext;
@@ -24,6 +28,11 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   private int mCurrentMaxBri;
 
   private LFXLight mLight;
+  private long mInitializedTime;
+
+  private BulbState mDesiredState;
+  // In SystemClock.elapsedRealtime();
+  private Long mDesiredLastChanged;
 
   public LifxBulb(Context c, Long bulbBaseId, String bulbName,
                   String bulbDeviceId, ExtraData bulbData,
@@ -36,12 +45,22 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
     mContext = c;
     mConnection = lifxConnection;
+    mDesiredState = new BulbState();
 
+  }
+
+  protected void onInitialize(){
+    mInitializedTime = SystemClock.elapsedRealtime();
   }
 
   public void lightConnected(LFXLight light) {
     mLight = light;
     mLight.addLightListener(this);
+
+    if(!mDesiredState.isEmpty()){
+      setState(mDesiredState);
+      mDesiredState = new BulbState();
+    }
   }
 
   public void lightDisconnected() {
@@ -55,14 +74,17 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     if (mLight != null && mLight.getReachability()
         .equals(LFXTypes.LFXDeviceReachability.REACHABLE)) {
       return ConnectivityState.Connected;
+    } else if(SystemClock.elapsedRealtime() > (mInitializedTime + this.TRANSMIT_TIMEOUT_TIME)){
+      return ConnectivityState.Unreachable;
     }
-    //TODO finish
     return ConnectivityState.Unknown;
   }
 
   @Override
   public void setState(BulbState bs) {
     Log.d("lifx", "setState but mLight?null " + (mLight == null));
+
+    mDesiredLastChanged = SystemClock.elapsedRealtime();
 
     if (mLight != null && bs != null) {
       float brightness = mLight.getColor().getBrightness();
@@ -99,8 +121,16 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       }
 
     } else {
-      //TODO cache for when light not connected yet
+      //cache for when light not connected yet
+      mDesiredState.merge(bs);
     }
+  }
+
+  protected boolean hasPendingWork(){
+    if(mDesiredLastChanged!=null && (mDesiredLastChanged+this.TRANSMIT_TIMEOUT_TIME) > SystemClock.elapsedRealtime()){
+      return true;
+    }
+    return false;
   }
 
   @Override
@@ -130,7 +160,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   @Override
   public int getCurrentMaxBrightness() {
-    return 0;
+    return mCurrentMaxBri;
   }
 
   @Override
