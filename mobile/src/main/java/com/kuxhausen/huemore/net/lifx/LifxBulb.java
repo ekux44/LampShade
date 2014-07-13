@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 
 import lifx.java.android.entities.LFXHSBKColor;
@@ -64,6 +65,12 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     Log.d("lifx", "setState but mLight?null " + (mLight == null));
 
     if (mLight != null && bs != null) {
+      float brightness = mLight.getColor().getBrightness();
+      if (bs.bri != null) {
+        brightness = bs.bri / 255f;
+      }
+      //TODO apply any maxBri rules
+
       if (bs.on != null) {
         if (bs.on) {
           mLight.setPowerState(LFXTypes.LFXPowerState.ON);
@@ -71,8 +78,29 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
           mLight.setPowerState(LFXTypes.LFXPowerState.OFF);
         }
       }
+
+      //Send full color, color temp, or just brightness
+      if (bs.xy != null) {
+        Float[] hs = Utils.xyTOhs(bs.xy);
+        float lifxHue = 360 * hs[0];
+        float lifxSat = hs[1];
+        LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, brightness, 3500);
+        mLight.setColor(newColor);
+      } else if (bs.ct != null) {
+        LFXHSBKColor newColor = LFXHSBKColor.getColor(0, 0, brightness, bs.getCtKelvin());
+        mLight.setColor(newColor);
+      } else if (bs.bri != null) {
+        LFXHSBKColor
+            newColor =
+            LFXHSBKColor
+                .getColor(mLight.getColor().getHue(), mLight.getColor().getSaturation(), brightness,
+                          mLight.getColor().getKelvin());
+        mLight.setColor(newColor);
+      }
+
+    } else {
+      //TODO cache for when light not connected yet
     }
-    //TODO finish and add timed caching when unreachable
   }
 
   @Override
@@ -97,7 +125,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   @Override
   public Long getBaseId() {
-    return -1l;
+    return mBaseId;
   }
 
   @Override
@@ -107,7 +135,12 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   @Override
   public void setCurrentMaxBrightness(int maxBri, boolean maxBriMode) {
-
+    BulbState hack = new BulbState();
+    hack.bri = (int) (2.55f * maxBri);
+    if (maxBriMode) {
+      this.mCurrentMaxBri = maxBri;
+    }
+    this.setState(hack);
   }
 
   @Override

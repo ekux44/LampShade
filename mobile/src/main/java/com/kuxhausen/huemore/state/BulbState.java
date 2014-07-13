@@ -183,9 +183,18 @@ public class BulbState {
 
   }
 
+  /**
+   * @return temperature in kelvins labled with a K
+   */
   public String getCT() {
     return (1000000 / ct) + "K";
 
+  }
+
+  public Integer getCtKelvin(){
+    if(ct != null)
+      return (int)(1000000 / ct);
+    return null;
   }
 
   public BulbState clone() {
