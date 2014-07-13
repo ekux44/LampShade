@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
+import com.kuxhausen.huemore.net.lifx.LifxRegistrationDialog;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 public class NewConnectionFragment extends DialogFragment implements OnItemClickListener {
@@ -33,7 +34,8 @@ public class NewConnectionFragment extends DialogFragment implements OnItemClick
       dialogFrag.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
     } else if (selectedText.equals(mParent.getString(R.string.device_lifx))) {
-
+      LifxRegistrationDialog dialogFrag = new LifxRegistrationDialog();
+      dialogFrag.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
     } else if (selectedText.equals(mParent.getString(R.string.device_lightpack))) {
 
     }
