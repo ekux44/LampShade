@@ -126,15 +126,22 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
       onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
       final PendingIntent onClickPendingIntent =
-          PendingIntent.getBroadcast(context, 0, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+          PendingIntent.getBroadcast(context, 1, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setPendingIntentTemplate(R.id.group_list, onClickPendingIntent);
+
+      final Intent startVoiceIntent = new Intent(context, VoiceReadRouterActivity.class);
+      startVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      final PendingIntent openVoicePendingIntent =
+          PendingIntent.getActivity(context, 2, startVoiceIntent,
+                                    PendingIntent.FLAG_CANCEL_CURRENT);
+      rv.setOnClickPendingIntent(R.id.voice_icon, openVoicePendingIntent);
 
       final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
       openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE,
           NavigationDrawerActivity.GROUP_FRAG);
       openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
       final PendingIntent openHueMorePendingIntent =
-          PendingIntent.getActivity(context, -1, openHueMoreIntent,
+          PendingIntent.getActivity(context, 3, openHueMoreIntent,
               PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
     }

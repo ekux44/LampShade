@@ -172,6 +172,14 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name="com.kuxhausen.huemore.widget.VoiceReadRouterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:taskAffinity="">
+        </activity>
+
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
     </application>
 

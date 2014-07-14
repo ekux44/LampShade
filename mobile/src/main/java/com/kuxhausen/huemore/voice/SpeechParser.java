@@ -18,7 +18,7 @@ public class SpeechParser {
     else{
       //TODO remove when done debugging
       result.group = c.getString(R.string.cap_all);
-      result.mood = "Sunlight";
+      result.mood = "Fruity";
     }
 
     return result;

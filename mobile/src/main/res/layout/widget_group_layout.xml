@@ -47,6 +47,16 @@
             android:textAllCaps="true"
             android:textSize="24sp" />
 
+        <ImageView
+            android:id="@+id/voice_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:paddingLeft="8dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_action_mic" />
+
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
