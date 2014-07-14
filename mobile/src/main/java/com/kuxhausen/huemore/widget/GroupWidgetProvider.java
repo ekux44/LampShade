@@ -130,10 +130,10 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       rv.setPendingIntentTemplate(R.id.group_list, onClickPendingIntent);
 
       final Intent startVoiceIntent = new Intent(context, VoiceReadRouterActivity.class);
-      startVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      startVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
       final PendingIntent openVoicePendingIntent =
           PendingIntent.getActivity(context, 2, startVoiceIntent,
-                                    PendingIntent.FLAG_CANCEL_CURRENT);
+                                    PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setOnClickPendingIntent(R.id.voice_icon, openVoicePendingIntent);
 
       final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);

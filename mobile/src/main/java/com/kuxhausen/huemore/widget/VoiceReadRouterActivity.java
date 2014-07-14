@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
@@ -19,6 +20,7 @@ public class VoiceReadRouterActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.placeholder);
     startVoiceRecognitionActivity();
   }
 
@@ -35,8 +37,8 @@ public class VoiceReadRouterActivity extends Activity {
     intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "bedroom to relax");
 
     // Given an hint to the recognizer about what the user is going to say
-    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+    intent
+        .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
     // Specify how many results you want to receive. The results will be sorted
     // where the first result is the one with higher confidence.
@@ -62,9 +64,9 @@ public class VoiceReadRouterActivity extends Activity {
         transmitter.putExtra(DatabaseDefinitions.InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
         startService(transmitter);
 
-        this.finish();
+
       }
     }
-    super.onActivityResult(requestCode, resultCode, data);
+    this.finish();
   }
 }
