@@ -126,27 +126,31 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       Integer maxBri = null;
 
       Bundle extras = intent.getExtras();
+      if(extras!=null) {
+        if (extras.containsKey(InternalArguments.VOICE_INPUT) || extras.containsKey(
+            InternalArguments.VOICE_INPUT_LIST)) {
+          String best = extras.getString(InternalArguments.VOICE_INPUT);
+          List<String> candidates = extras.getStringArrayList(InternalArguments.VOICE_INPUT_LIST);
+          float[] confidences = extras.getFloatArray(InternalArguments.VOICE_INPUT_CONFIDENCE_ARRAY);
 
-      if(extras.containsKey(InternalArguments.VOICE_INPUT) || extras.containsKey(
-          InternalArguments.VOICE_INPUT_LIST)){
+          GroupMoodBrightness parsed = SpeechParser.parse(this, best, candidates, confidences);
+          groupName = parsed.group;
+          moodName = parsed.mood;
+          maxBri = parsed.brightness;
+        }
 
-        GroupMoodBrightness parsed = SpeechParser.parse(this, extras);
-        groupName = parsed.group;
-        moodName = parsed.mood;
-        maxBri = parsed.brightness;
-      }
-
-      if(extras.containsKey(InternalArguments.ENCODED_MOOD)) {
-        encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
-      }
-      if(extras.containsKey(InternalArguments.GROUP_NAME)) {
-        groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
-      }
-      if(extras.containsKey(InternalArguments.MOOD_NAME)) {
-        moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
-      }
-      if(extras.containsKey(InternalArguments.MAX_BRIGHTNESS)) {
-        maxBri = intent.getIntExtra(InternalArguments.MAX_BRIGHTNESS, 0);
+        if (extras.containsKey(InternalArguments.ENCODED_MOOD)) {
+          encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
+        }
+        if (extras.containsKey(InternalArguments.GROUP_NAME)) {
+          groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
+        }
+        if (extras.containsKey(InternalArguments.MOOD_NAME)) {
+          moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+        }
+        if (extras.containsKey(InternalArguments.MAX_BRIGHTNESS)) {
+          maxBri = intent.getIntExtra(InternalArguments.MAX_BRIGHTNESS, 0);
+        }
       }
 
       if (encodedMood != null) {

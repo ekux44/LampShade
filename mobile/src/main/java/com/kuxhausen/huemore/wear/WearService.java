@@ -64,7 +64,7 @@ public class WearService extends WearableListenerService {
     Log.v("wear", "msg rcvd");
     Log.v("wear", messageEvent.getPath());
 
-    GroupMoodBrightness gmb = SpeechParser.parse(this, messageEvent.getPath());
+    GroupMoodBrightness gmb = SpeechParser.parse(this, messageEvent.getPath(), null, null);
     Intent trasmitter = new Intent(this, ConnectivityService.class);
     trasmitter.putExtra(DatabaseDefinitions.InternalArguments.MOOD_NAME, gmb.mood);
     trasmitter.putExtra(DatabaseDefinitions.InternalArguments.GROUP_NAME, gmb.group);

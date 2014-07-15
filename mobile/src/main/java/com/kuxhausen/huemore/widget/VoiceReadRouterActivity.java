@@ -11,6 +11,8 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
+import java.util.List;
+
 public class VoiceReadRouterActivity extends Activity {
 
   private static final int VOICE_RECOGNITION_REQUEST_CODE = 123;
@@ -53,7 +55,10 @@ public class VoiceReadRouterActivity extends Activity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
-      GroupMoodBrightness gmb = SpeechParser.parse(this, data.getExtras());
+      List<String> candidateSpeeches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+      float[] confidences = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
+      GroupMoodBrightness gmb = SpeechParser.parse(this, null, candidateSpeeches, confidences);
+
       if (gmb != null) {
         Intent transmitter = new Intent(this, ConnectivityService.class);
         transmitter.putExtra(DatabaseDefinitions.InternalArguments.MOOD_NAME, gmb.mood);
@@ -61,12 +66,9 @@ public class VoiceReadRouterActivity extends Activity {
         transmitter
             .putExtra(DatabaseDefinitions.InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
         startService(transmitter);
-        this.finish();
-        return;
       }
     }
 
-    //retry input if no success
-    startVoiceRecognitionActivity();
+    this.finish();
   }
 }
