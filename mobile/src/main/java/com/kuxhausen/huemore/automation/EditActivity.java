@@ -137,7 +137,7 @@ public class EditActivity extends NetworkManagedActivity implements
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) this.findViewById(R.id.moodSpinner);
-    String[] mColumns = {MoodColumns.MOOD, BaseColumns._ID};
+    String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
     moodDataSource =
         new SimpleCursorAdapter(this, layout, null, mColumns, new int[] {android.R.id.text1}, 0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -229,7 +229,7 @@ public class EditActivity extends NetworkManagedActivity implements
         String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(this, GroupColumns.GROUPS_URI, gColumns, null, null, null);
       case MOODS_LOADER:
-        String[] mColumns = {MoodColumns.MOOD, BaseColumns._ID};
+        String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(this, DatabaseDefinitions.MoodColumns.MOODS_URI, mColumns, null,
             null, null);
       default:

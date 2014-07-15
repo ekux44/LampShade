@@ -168,14 +168,14 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
       case R.id.okay:
         String moodName = name.getText().toString();
         // delete any old mood with same name //todo warn users
-        String moodSelect = MoodColumns.MOOD + "=?";
+        String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
         String[] moodArg = {moodName};
         this.getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI, moodSelect,
             moodArg);
 
         ContentValues mNewValues = new ContentValues();
-        mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, moodName);
-        mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(sharedMood));
+        mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_NAME, moodName);
+        mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(sharedMood));
 
         this.getContentResolver().insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
         this.finish();

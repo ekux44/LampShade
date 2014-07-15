@@ -282,7 +282,7 @@ public class LampShadeProvider extends ContentProvider {
             mood = LampShadeProvider.getEncodedOff();
           }
 
-          String[] moodColumns = {MoodColumns.STATE};
+          String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
           MatrixCursor mc = new MatrixCursor(moodColumns);
           Object[] tempRow = {mood};
           mc.addRow(tempRow);
@@ -318,7 +318,7 @@ public class LampShadeProvider extends ContentProvider {
 
       Mood m = Utils.generateSimpleMood(resultState);
 
-      String[] moodColumns = {MoodColumns.STATE};
+      String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
       MatrixCursor mc = new MatrixCursor(moodColumns);
       Object[] tempRow = {HueUrlEncoder.encode(m)};
       mc.addRow(tempRow);
@@ -326,7 +326,7 @@ public class LampShadeProvider extends ContentProvider {
 
       return mc;
     } else if (sUriMatcher.match(uri) == MOODS && selectionArgs == null) {
-      String[] columns = {MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
+      String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
       MatrixCursor c1 = new MatrixCursor(columns);
       Object[] tempCol0 = {this.getContext().getString(R.string.cap_off), 0, getEncodedOff()};
       c1.addRow(tempCol0);

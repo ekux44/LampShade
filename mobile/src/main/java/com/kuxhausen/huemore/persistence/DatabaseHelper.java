@@ -46,7 +46,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
 
     db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" + BaseColumns._ID
-        + " INTEGER PRIMARY KEY," + MoodColumns.MOOD + " TEXT," + MoodColumns.STATE + " TEXT"
+        + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT," + MoodColumns.COL_MOOD_VALUE
+        + " TEXT"
         + ");");
 
     db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " (" + BaseColumns._ID
@@ -64,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         /** update 2.4/2.5/switch to serialized b64 **/
 
-        String[] moodColumns = {MoodColumns.MOOD, MoodColumns.STATE};
+        String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor cursor =
             db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                 null, null);
@@ -88,7 +89,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE " + MoodColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + MoodColumns.MOOD + " TEXT," + MoodColumns.STATE + " TEXT"
+            + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT," + MoodColumns.COL_MOOD_VALUE
+            + " TEXT"
             + ");");
 
         // remove standard moods that are no longer correct
@@ -124,8 +126,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           m.setNumChannels(stateJson.size());
           m.events = events;
 
-          cv.put(MoodColumns.MOOD, key);
-          cv.put(MoodColumns.STATE, HueUrlEncoder.encode(m));
+          cv.put(MoodColumns.COL_MOOD_NAME, key);
+          cv.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(m));
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
       }
@@ -139,11 +141,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // remove the sunset mood
         String[] moodArgs = {"Sunset"};
-        db.delete(MoodColumns.TABLE_NAME, MoodColumns.MOOD + " =?", moodArgs);
+        db.delete(MoodColumns.TABLE_NAME, MoodColumns.COL_MOOD_NAME + " =?", moodArgs);
       }
       case 4: {
         ContentValues cv = new ContentValues();
-        String[] moodColumns = {MoodColumns.MOOD, MoodColumns.STATE};
+        String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor moodCursor =
             db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                 null, null);
@@ -187,12 +189,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + MoodColumns.MOOD + " TEXT," + MoodColumns.STATE + " TEXT"
+            + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT," + MoodColumns.COL_MOOD_VALUE
+            + " TEXT"
             + ");");
 
         for (String key : moodMap.keySet()) {
-          cv.put(MoodColumns.MOOD, key);
-          cv.put(MoodColumns.STATE, moodMap.get(key));
+          cv.put(MoodColumns.COL_MOOD_NAME, key);
+          cv.put(MoodColumns.COL_MOOD_VALUE, moodMap.get(key));
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
 

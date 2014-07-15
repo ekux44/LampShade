@@ -125,7 +125,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
-    String[] mColumns = {MoodColumns.MOOD, BaseColumns._ID};
+    String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
     moodDataSource =
         new SimpleCursorAdapter(context, layout, null, mColumns, new int[] {android.R.id.text1}, 0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -298,7 +298,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
         String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(context, GroupColumns.GROUPS_URI, gColumns, null, null, null);
       case MOODS_LOADER:
-        String[] mColumns = {MoodColumns.MOOD, BaseColumns._ID};
+        String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(context, DatabaseDefinitions.MoodColumns.MOODS_URI, mColumns, null,
             null, null);
       default:

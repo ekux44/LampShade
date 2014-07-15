@@ -90,15 +90,10 @@ public final class DatabaseDefinitions {
      */
     public static final Uri MOODS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_MOODS);
 
-    /**
-     * which mood this state row is part of
-     */
-    public static final String MOOD = "Dmood";
-
-    /**
-     * JSon'd HueState object
-     */
-    public static final String STATE = "Dstate";
+    public static final String COL_MOOD_VALUE = "Dstate";
+    public static final String COL_MOOD_NAME = "Dmood";
+    public static final String COL_MOOD_LOWERCASE_NAME = "D_COL_MOOD_LOWERCASE_NAME";
+    public static final String COL_MOOD_RANK = "D_COL_COL_MOOD_RANK";
 
     // This class cannot be instantiated
     private MoodColumns() {}

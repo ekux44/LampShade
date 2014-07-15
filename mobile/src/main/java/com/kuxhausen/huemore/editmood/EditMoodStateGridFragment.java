@@ -726,8 +726,8 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   @Override
   public void onCreateMood(String moodname) {
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(DatabaseDefinitions.MoodColumns.MOOD, moodname);
-    mNewValues.put(DatabaseDefinitions.MoodColumns.STATE, HueUrlEncoder.encode(getMood()));
+    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_NAME, moodname);
+    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(getMood()));
 
     getActivity().getContentResolver()
         .insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);

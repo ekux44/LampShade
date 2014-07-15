@@ -75,7 +75,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       groupSpinner.setAdapter(groupDataSource);
 
-      String[] mColumns = {MoodColumns.MOOD, BaseColumns._ID};
+      String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
       moodDataSource =
           new SimpleCursorAdapter(getActivity(), layout, null, mColumns,
               new int[] {android.R.id.text1}, 0);
@@ -192,7 +192,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         );
       case MOODS_LOADER:
         // Returns a new CursorLoader
-        String[] mColumns = {MoodColumns.MOOD, BaseColumns._ID};
+        String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
             DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
             mColumns, // Projection to return

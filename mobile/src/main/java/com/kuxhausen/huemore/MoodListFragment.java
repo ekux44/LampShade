@@ -57,7 +57,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
      */
     getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-    String[] columns = {MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
+    String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
     dataSource =
         new MoodRowAdapter(this, this.getActivity(), layout, null, columns,
             new int[] {android.R.id.text1}, 0);
@@ -169,7 +169,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     switch (item.getItemId()) {
 
       case R.id.contextmoodmenu_delete:
-        String moodSelect = MoodColumns.MOOD + "=?";
+        String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
         String[] moodArg = {longSelected.getText().toString()};
         getActivity().getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI,
             moodSelect, moodArg);
@@ -195,7 +195,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     switch (loaderID) {
       case MOODS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {MoodColumns.MOOD, BaseColumns._ID, MoodColumns.STATE};
+        String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
         return new CursorLoader(getActivity(), // Parent activity context
             DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
             columns, // Projection to return

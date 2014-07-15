@@ -179,7 +179,7 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
       case R.id.action_save:
         if (priorName != null) {
           // delete old mood
-          String moodSelect = MoodColumns.MOOD + "=?";
+          String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
           String[] moodArg = {priorName};
           parrentA.getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI,
               moodSelect, moodArg);

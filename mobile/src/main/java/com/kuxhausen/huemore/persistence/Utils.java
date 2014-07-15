@@ -16,11 +16,11 @@ import com.kuxhausen.huemore.state.Mood;
 public class Utils {
 
   public static Mood getMoodFromDatabase(String moodName, Context ctx) {
-    String[] moodColumns = {MoodColumns.STATE};
+    String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
     String[] mWhereClause = {moodName};
     Cursor moodCursor =
         ctx.getContentResolver().query(DatabaseDefinitions.MoodColumns.MOODS_URI, moodColumns,
-            MoodColumns.MOOD + "=?", mWhereClause, null);
+            MoodColumns.COL_MOOD_NAME + "=?", mWhereClause, null);
     moodCursor.moveToFirst();
     try {
       return HueUrlEncoder.decode(moodCursor.getString(0)).second.first;
