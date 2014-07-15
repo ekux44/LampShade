@@ -8,6 +8,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 
 import java.util.ArrayList;
 
@@ -52,12 +53,13 @@ public class VoiceInputReceiver extends WakefulBroadcastReceiver {
       if (b.containsKey(EXTRA_RESULTS)) {
         ArrayList<String> voiceList = b.getStringArrayList(EXTRA_RESULTS);
         if (voiceList != null) {
-          transmitter.putStringArrayListExtra(EXTRA_RESULTS, voiceList);
+          transmitter.putStringArrayListExtra(InternalArguments.VOICE_INPUT_LIST, voiceList);
 
           if (b.containsKey(EXTRA_CONFIDENCE_SCORES)) {
             float[] confidences = b.getFloatArray(EXTRA_CONFIDENCE_SCORES);
-            if(confidences!=null)
-              transmitter.putExtra(EXTRA_CONFIDENCE_SCORES, confidences);
+            if (confidences != null) {
+              transmitter.putExtra(InternalArguments.VOICE_INPUT_CONFIDENCE_ARRAY, confidences);
+            }
           }
 
           Log.v(TAG, "valid voice extras");
@@ -66,7 +68,7 @@ public class VoiceInputReceiver extends WakefulBroadcastReceiver {
       } else if (b.containsKey(EXTRA_VOICE_INPUT_STRING)) {
         ArrayList<String> voiceList = b.getStringArrayList(EXTRA_VOICE_INPUT_STRING);
         if (voiceList != null) {
-          transmitter.putStringArrayListExtra(EXTRA_VOICE_INPUT_STRING, voiceList);
+          transmitter.putStringArrayListExtra(InternalArguments.VOICE_INPUT, voiceList);
 
           Log.v(TAG, "valid voice extras");
           startWakefulService(context, transmitter);

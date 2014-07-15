@@ -211,6 +211,9 @@ public final class DatabaseDefinitions {
     public static final String GROUPBULB_TAB = "GROUPBULB_TAB";
     public static final String FLAG_AWAKEN_PLAYING_MOODS = "FLAG_AWAKEN_PLAYING_MOODS";
     public static final String FLAG_SHOW_NAV_DRAWER = "FLAG_SHOW_NAV_DRAWER";
+    public static final String VOICE_INPUT = "VOICE_INPUT";
+    public static final String VOICE_INPUT_LIST = "VOICE_INPUT_LIST";
+    public static final String VOICE_INPUT_CONFIDENCE_ARRAY = "VOICE_INPUT_CONFIDENCE_ARRAY";
   }
 
   public static final class PreferenceKeys {

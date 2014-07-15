@@ -6,8 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -23,6 +23,7 @@ import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.automation.FireReceiver;
+import com.kuxhausen.huemore.automation.VoiceInputReceiver;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
@@ -30,8 +31,10 @@ import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
+import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.timing.AlarmReciever;
+import com.kuxhausen.huemore.voice.SpeechParser;
 
 public class ConnectivityService extends Service implements OnActiveMoodsChangedListener,
     OnStateChangedListener {
@@ -115,14 +118,36 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       // remove any possible launched wakelocks
       AlarmReciever.completeWakefulIntent(intent);
       FireReceiver.completeWakefulIntent(intent);
+      VoiceInputReceiver.completeWakefulIntent(intent);
 
+      String encodedMood = null;
+      String groupName = null;
+      String moodName = null;
+      Integer maxBri = null;
 
-      String encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
-      String groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
-      String moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
-      Integer maxBri = intent.getIntExtra(InternalArguments.MAX_BRIGHTNESS, -1);
-      if (maxBri == -1)
-        maxBri = null;
+      Bundle extras = intent.getExtras();
+
+      if(extras.containsKey(InternalArguments.VOICE_INPUT) || extras.containsKey(
+          InternalArguments.VOICE_INPUT_LIST)){
+
+        GroupMoodBrightness parsed = SpeechParser.parse(this, extras);
+        groupName = parsed.group;
+        moodName = parsed.mood;
+        maxBri = parsed.brightness;
+      }
+
+      if(extras.containsKey(InternalArguments.ENCODED_MOOD)) {
+        encodedMood = intent.getStringExtra(InternalArguments.ENCODED_MOOD);
+      }
+      if(extras.containsKey(InternalArguments.GROUP_NAME)) {
+        groupName = intent.getStringExtra(InternalArguments.GROUP_NAME);
+      }
+      if(extras.containsKey(InternalArguments.MOOD_NAME)) {
+        moodName = intent.getStringExtra(InternalArguments.MOOD_NAME);
+      }
+      if(extras.containsKey(InternalArguments.MAX_BRIGHTNESS)) {
+        maxBri = intent.getIntExtra(InternalArguments.MAX_BRIGHTNESS, 0);
+      }
 
       if (encodedMood != null) {
         try {
