@@ -12,6 +12,15 @@
         android:layout_weight="1" >
     </ListView>
 
+    <TextView
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/empty_list_connections"
+        android:padding="8dp"/>
+
     <include layout="@layout/horizontal_divider_line_blue"/>
     
 </LinearLayout>
