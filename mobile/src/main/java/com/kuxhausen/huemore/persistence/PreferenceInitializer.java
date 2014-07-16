@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.kuxhausen.huemore.CommunityDialogFragment;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.NewConnectionFragment;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.net.hue.ui.DiscoverHubDialogFragment;
 import com.kuxhausen.huemore.onboarding.WelcomeDialogFragment;
@@ -105,7 +106,7 @@ public class PreferenceInitializer {
         WelcomeDialogFragment wdf = new WelcomeDialogFragment();
         wdf.show(act.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
       } else {
-        DiscoverHubDialogFragment dhdf = new DiscoverHubDialogFragment();
+        NewConnectionFragment dhdf = new NewConnectionFragment();
         dhdf.show(act.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
       }
     } else if (!settings.contains(PreferenceKeys.HAS_SHOWN_COMMUNITY_DIALOG)) {
