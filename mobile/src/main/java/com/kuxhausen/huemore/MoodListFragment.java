@@ -38,7 +38,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
   private static final int MOODS_LOADER = 0;
   public MoodRowAdapter dataSource;
 
-  public TextView selected, longSelected; // updated on long click
+  public View selected, longSelected; // updated on long click
   private int selectedPos = -1;
   private ShareActionProvider mShareActionProvider;
 
@@ -92,16 +92,13 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
     }
-    if (selectedPos > -1 && selected != null
-        && !selected.getText().equals(this.getActivity().getString(R.string.cap_off))
-        && !selected.getText().equals(this.getActivity().getString(R.string.cap_on))
-        && !selected.getText().equals(this.getActivity().getString(R.string.cap_random))) {
+    if (selectedPos > -1 && selected != null) {
       /** Getting the actionprovider associated with the menu item whose id is share */
       mShareActionProvider =
           (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
 
       /** Getting the target intent */
-      Intent intent = getDefaultShareIntent("" + selected.getText());
+      Intent intent = getDefaultShareIntent("" + getTextFromRowView(selected));
 
       /** Setting a share intent */
       if (intent != null)
@@ -166,12 +163,12 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
-        String[] moodArg = {longSelected.getText().toString()};
+        String[] moodArg = {getTextFromRowView(longSelected)};
         getActivity().getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI,
             moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
-        parrentA.showEditMood(longSelected.getText().toString());
+        parrentA.showEditMood(getTextFromRowView(longSelected));
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -191,7 +188,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     switch (loaderID) {
       case MOODS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
+        String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE, MoodColumns.COL_MOOD_LOWERCASE_NAME, MoodColumns.COL_MOOD_PRIORITY};
         return new CursorLoader(getActivity(), // Parent activity context
             DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
             columns, // Projection to return
@@ -227,11 +224,10 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-
-    selected = ((TextView) (v));
+    selected = v;
     selectedPos = position;
 
-    if (dataSource.getRow(selectedPos).m.isSimple()) {
+    if (dataSource.getRow(selectedPos).mValue.isSimple()) {
       // set the selected Item to -1 to clear any existing selection
       getListView().setItemChecked(-1, true);
     } else {
@@ -239,7 +235,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     }
 
     // Notify the parent activity of selected item
-    String moodName = selected.getText().toString();
+    String moodName = getTextFromRowView(selected);
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
 
     if (service.getDeviceManager().getSelectedGroup() != null)
@@ -249,4 +245,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     getActivity().supportInvalidateOptionsMenu();
   }
 
+  private String getTextFromRowView(View row){
+    return ((TextView)row.findViewById(android.R.id.text1)).getText().toString();
+  }
 }

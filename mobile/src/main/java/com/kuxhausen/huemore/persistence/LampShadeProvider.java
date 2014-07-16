@@ -339,6 +339,10 @@ public class LampShadeProvider extends ContentProvider {
 
     // Does the update based on the incoming URI pattern
     switch (sUriMatcher.match(uri)) {
+      case MOODS:
+        count = db.update(MoodColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(MoodColumns.MOODS_URI);
+        break;
       case NETCONNECTIONS:
         count = db.update(NetConnectionColumns.TABLE_NAME, values, selection, selectionArgs);
         toNotify.add(NetConnectionColumns.URI);
