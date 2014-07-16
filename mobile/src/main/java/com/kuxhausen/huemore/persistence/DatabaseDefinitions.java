@@ -93,7 +93,7 @@ public final class DatabaseDefinitions {
     public static final String COL_MOOD_VALUE = "Dstate";
     public static final String COL_MOOD_NAME = "Dmood";
     public static final String COL_MOOD_LOWERCASE_NAME = "D_COL_MOOD_LOWERCASE_NAME";
-    public static final String COL_MOOD_RANK = "D_COL_COL_MOOD_RANK";
+    public static final String COL_MOOD_PRIORITY = "D_COL_MOOD_PRIORITY";
 
     // This class cannot be instantiated
     private MoodColumns() {}

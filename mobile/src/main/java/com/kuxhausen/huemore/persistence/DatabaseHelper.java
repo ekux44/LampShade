@@ -26,7 +26,7 @@ import com.kuxhausen.huemore.state.Mood;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 6;
+  private static final int DATABASE_VERSION = 7;
   Gson gson = new Gson();
 
   public DatabaseHelper(Context context) {
@@ -309,6 +309,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + PlayingMood.COL_INITIAL_MAX_BRI + " INTEGER," + PlayingMood.COL_MILI_TIME_STARTED
             + " INTEGER" + ");");
 
+      }
+      case 6: {
+        //TODO clean previous migrations or create non-upgrade path for first run performance
+        ContentValues cv = new ContentValues();
+        String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
+        Cursor moodCursor =
+            db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
+                     null, null);
+
+        HashMap<String, Pair<String,String>> moodMap = new HashMap<String, Pair<String,String>>();
+
+        while (moodCursor.moveToNext()) {
+          String visibleName = moodCursor.getString(0);
+          String encodedMood = moodCursor.getString(1);
+          String lowercaseName = visibleName.toLowerCase();
+
+          while(moodMap.containsKey(lowercaseName)){
+            visibleName+=" 1";
+            lowercaseName+=" 1";
+          }
+          moodMap.put(lowercaseName, new Pair<String,String>(visibleName,encodedMood));
+        }
+
+        // remove any nameless moods
+        moodMap.remove("");
+        moodMap.remove(null);
+
+
+        db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
+
+        db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" +
+                   BaseColumns._ID + " INTEGER PRIMARY KEY," +
+                   MoodColumns.COL_MOOD_LOWERCASE_NAME+ " TEXT," +
+                   MoodColumns.COL_MOOD_NAME + " TEXT," +
+                   MoodColumns.COL_MOOD_VALUE+ " TEXT," +
+                   MoodColumns.COL_MOOD_PRIORITY + " INTEGER," +
+                   "UNIQUE (" + MoodColumns.COL_MOOD_LOWERCASE_NAME + ") ON CONFLICT REPLACE" +
+                   ");");
+
+        for (String key : moodMap.keySet()) {
+          Pair<String, String > mapped = moodMap.get(key);
+          String visibleName = mapped.first;
+          String value = mapped.second;
+
+          cv.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, key.toLowerCase());
+          cv.put(MoodColumns.COL_MOOD_NAME, visibleName);
+          cv.put(MoodColumns.COL_MOOD_VALUE, value);
+          cv.put(MoodColumns.COL_MOOD_PRIORITY, 1);
+          db.insert(MoodColumns.TABLE_NAME, null, cv);
+        }
       }
     }
   }
