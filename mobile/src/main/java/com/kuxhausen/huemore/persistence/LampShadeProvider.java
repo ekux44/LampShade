@@ -262,36 +262,10 @@ public class LampShadeProvider extends ContentProvider {
         groupBy = null;
         break;
       case MOODS:
-        if ((selection != null)
-            && selectionArgs.length > 0
-            && (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
-                || selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
-                || selectionArgs[0].equals(this.getContext().getString(R.string.cap_off)) || selectionArgs[0]
-                .charAt(0) == ((char) 8))) {
-
-          String mood = null;
-
-          if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_random))
-              || selectionArgs[0].equals(((char) 8) + "RANDOM")) {
-            mood = LampShadeProvider.getEncodedRandom();
-          } else if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_on))
-              || selectionArgs[0].equals(((char) 8) + "ON")) {
-            mood = LampShadeProvider.getEncodedOn();
-          } else if (selectionArgs[0].equals(this.getContext().getString(R.string.cap_off))
-              || selectionArgs[0].equals(((char) 8) + "OFF")) {
-            mood = LampShadeProvider.getEncodedOff();
-          }
-
-          String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
-          MatrixCursor mc = new MatrixCursor(moodColumns);
-          Object[] tempRow = {mood};
-          mc.addRow(tempRow);
-          mc.setNotificationUri(getContext().getContentResolver(), uri);
-          return mc;
-        } else {
-          qb.setTables(MoodColumns.TABLE_NAME);
-          groupBy = null;
-        }
+        qb.setTables(MoodColumns.TABLE_NAME);
+        groupBy = null;
+        if(sortOrder == null || sortOrder.equals(""))
+          sortOrder = MoodColumns.COL_MOOD_PRIORITY + " DESC," + MoodColumns.COL_MOOD_LOWERCASE_NAME + " COLLATE UNICODE";
         break;
       default:
         // If the URI doesn't match any of the known patterns, throw an
@@ -325,18 +299,6 @@ public class LampShadeProvider extends ContentProvider {
       mc.setNotificationUri(getContext().getContentResolver(), uri);
 
       return mc;
-    } else if (sUriMatcher.match(uri) == MOODS && selectionArgs == null) {
-      String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
-      MatrixCursor c1 = new MatrixCursor(columns);
-      Object[] tempCol0 = {this.getContext().getString(R.string.cap_off), 0, getEncodedOff()};
-      c1.addRow(tempCol0);
-      Object[] tempCol1 = {this.getContext().getString(R.string.cap_on), 0, getEncodedOn()};
-      c1.addRow(tempCol1);
-      Object[] tempCol2 = {this.getContext().getString(R.string.cap_random), 0, getEncodedRandom()};
-      c1.addRow(tempCol2);
-
-      Cursor[] tempC = {c1, c2};
-      cRay = tempC;
     } else if (sUriMatcher.match(uri) == GROUPS) {
       String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
       MatrixCursor c1 = new MatrixCursor(columns);
@@ -403,36 +365,4 @@ public class LampShadeProvider extends ContentProvider {
     // Returns the number of rows updated.
     return count;
   }
-
-  private static String getEncodedOn() {
-    BulbState resultState = new BulbState();
-    resultState.on = true;
-    resultState.effect = "none";
-    return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
-  }
-
-  private static String getEncodedOff() {
-    BulbState resultState = new BulbState();
-    resultState.on = false;
-    resultState.effect = "none";
-    return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
-  }
-
-  /**
-   * random only handled here
-   */
-  private static String getEncodedRandom() {
-    BulbState resultState = new BulbState();
-    resultState.on = true;
-    resultState.effect = "none";
-
-    float[] hsv =
-        {(float) (65535 * Math.random() * 360) / 65535, (float) (Math.random() * 5. + .25), 1};
-    Float[] input = {hsv[0] / 360f, hsv[1]};
-    resultState.xy = Utils.hsTOxy(input);
-
-
-    return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
-  }
-
 }

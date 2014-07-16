@@ -12,6 +12,8 @@ import android.provider.BaseColumns;
 import android.util.Pair;
 
 import com.google.gson.Gson;
+
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -28,9 +30,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "huemore.db";
   private static final int DATABASE_VERSION = 7;
   Gson gson = new Gson();
+  private Context mContext;
 
   public DatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    mContext = context;
   }
 
   @Override
@@ -318,24 +322,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                      null, null);
 
-        HashMap<String, Pair<String,String>> moodMap = new HashMap<String, Pair<String,String>>();
+        HashMap<String, Pair<String, Pair<String,Integer>>> moodMap = new HashMap<String, Pair<String,Pair<String,Integer>>>();
+
+        String onName = mContext.getString(R.string.cap_on);
+        moodMap.put(onName.toLowerCase(), new Pair<String, Pair<String,Integer>>(onName, new Pair<String, Integer>(getEncodedOff(), 2)));
+
+        String offName = mContext.getString(R.string.cap_off);
+        moodMap.put(offName.toLowerCase(), new Pair<String, Pair<String,Integer>>(offName, new Pair<String, Integer>(getEncodedOff(), 2)));
+
 
         while (moodCursor.moveToNext()) {
           String visibleName = moodCursor.getString(0);
           String encodedMood = moodCursor.getString(1);
           String lowercaseName = visibleName.toLowerCase();
+          Integer priority = 1;
 
           while(moodMap.containsKey(lowercaseName)){
             visibleName+=" 1";
             lowercaseName+=" 1";
           }
-          moodMap.put(lowercaseName, new Pair<String,String>(visibleName,encodedMood));
+          moodMap.put(lowercaseName, new Pair<String,Pair<String,Integer>>(visibleName,new Pair<String, Integer>(encodedMood, priority)));
         }
 
         // remove any nameless moods
         moodMap.remove("");
         moodMap.remove(null);
-
 
         db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
 
@@ -349,17 +360,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    ");");
 
         for (String key : moodMap.keySet()) {
-          Pair<String, String > mapped = moodMap.get(key);
+          Pair<String, Pair<String,Integer> > mapped = moodMap.get(key);
           String visibleName = mapped.first;
-          String value = mapped.second;
+          String value = mapped.second.first;
+          Integer priority = mapped.second.second;
 
           cv.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, key.toLowerCase());
           cv.put(MoodColumns.COL_MOOD_NAME, visibleName);
           cv.put(MoodColumns.COL_MOOD_VALUE, value);
-          cv.put(MoodColumns.COL_MOOD_PRIORITY, 1);
+          cv.put(MoodColumns.COL_MOOD_PRIORITY, priority);
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
       }
     }
+  }
+
+
+  private static String getEncodedOn() {
+    BulbState resultState = new BulbState();
+    resultState.on = true;
+    resultState.effect = "none";
+    return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
+  }
+
+  private static String getEncodedOff() {
+    BulbState resultState = new BulbState();
+    resultState.on = false;
+    resultState.effect = "none";
+    return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
   }
 }

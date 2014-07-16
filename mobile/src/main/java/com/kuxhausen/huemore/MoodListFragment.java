@@ -154,11 +154,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     super.onCreateContextMenu(menu, v, menuInfo);
 
     longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-    if (longSelected.getText().equals(this.getActivity().getString(R.string.cap_off))
-        || longSelected.getText().equals(this.getActivity().getString(R.string.cap_on))
-        || longSelected.getText().equals(this.getActivity().getString(R.string.cap_random))) {
-      return;
-    }
+
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_mood, menu);
   }
