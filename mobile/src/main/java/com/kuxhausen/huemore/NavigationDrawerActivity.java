@@ -184,7 +184,8 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
         }
       }
     }
-    if (hasPendingOrSuccessfulConnections) {
+    //hide connectivity error icon on connections page or no error
+    if (mSelectedItemPosition == CONNECTIONS_FRAG || hasPendingOrSuccessfulConnections) {
       MenuItem unlocksItem = menu.findItem(R.id.action_connectivity_error);
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
@@ -280,6 +281,8 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     fragmentManager.beginTransaction().replace(R.id.content_frame, selectedFrag, selectedFragTag)
         .commit();
+
+    this.supportInvalidateOptionsMenu();
 
     // update selected item and title, then close the drawer
     mDrawerList.setItemChecked(position, true);
