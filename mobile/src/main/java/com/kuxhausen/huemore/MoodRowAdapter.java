@@ -112,9 +112,13 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
       mDraw.setMood(item.mValue);
       viewHolder.ctv.setCompoundDrawablesWithIntrinsicBounds(mDraw, null, null, null);
     }
-    viewHolder.starView.setChecked(item.isStared());
     viewHolder.ctv.setOnClickListener(new OnClickForwardingListener(moodListFrag, position));
+
+    //remove old listener before setting value so other row being reused from is not affected
+    viewHolder.starView.setOnCheckedChangeListener(null);
+    viewHolder.starView.setChecked(item.isStared());
     viewHolder.starView.setOnCheckedChangeListener(new OnCheckListener(context, this, position));
+
     return moodRowView;
   }
 

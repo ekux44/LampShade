@@ -341,7 +341,12 @@ public class LampShadeProvider extends ContentProvider {
     switch (sUriMatcher.match(uri)) {
       case MOODS:
         count = db.update(MoodColumns.TABLE_NAME, values, selection, selectionArgs);
-        toNotify.add(MoodColumns.MOODS_URI);
+        if(values.size() == 1 && values.containsKey(MoodColumns.COL_MOOD_PRIORITY)){
+          //If only the mood priority changed,
+          //Don't notify because there's no animation for list reordering yet
+        } else{
+          toNotify.add(MoodColumns.MOODS_URI);
+        }
         break;
       case NETCONNECTIONS:
         count = db.update(NetConnectionColumns.TABLE_NAME, values, selection, selectionArgs);
