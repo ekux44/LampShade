@@ -37,7 +37,7 @@ public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
       edit.commit();
     }
 
-    if (listener != null)
+    if (listener != null && response!=null)
       listener.onListReturned(response.getList());
   }
 }
