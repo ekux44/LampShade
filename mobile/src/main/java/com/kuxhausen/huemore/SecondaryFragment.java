@@ -2,6 +2,7 @@ package com.kuxhausen.huemore;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -46,10 +47,14 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
 
     parrentA.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-    Group currentlySelected = parrentA.getService().getDeviceManager().getSelectedGroup();
-    if (currentlySelected != null)
-      parrentA.getSupportActionBar().setTitle(currentlySelected.getName());
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
+      //if not in splitscreen mode, try change page title to any selected group
+      if(parrentA.boundToService()) {
+        Group currentlySelected = parrentA.getService().getDeviceManager().getSelectedGroup();
+        if (currentlySelected != null)
+          parrentA.getSupportActionBar().setTitle(currentlySelected.getName());
+      }
+    }
 
 
     mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
