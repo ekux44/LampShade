@@ -117,7 +117,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     //remove old listener before setting value so other row being reused from is not affected
     viewHolder.starView.setOnCheckedChangeListener(null);
     viewHolder.starView.setChecked(item.isStared());
-    viewHolder.starView.setOnCheckedChangeListener(new OnCheckListener(context, this, position));
+    viewHolder.starView.setOnCheckedChangeListener(new OnCheckListener(context, this, position, moodListFrag));
 
     return moodRowView;
   }
@@ -149,17 +149,20 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     Context mContext;
     MoodRowAdapter mla;
     int position;
+    MoodListFragment mlf;
 
-    public OnCheckListener(Context c, MoodRowAdapter adapt, int pos) {
+    public OnCheckListener(Context c, MoodRowAdapter adapt, int pos, MoodListFragment frag) {
       mContext = c;
       mla = adapt;
       position = pos;
+      mlf = frag;
     }
 
     @Override
     public void onCheckedChanged (CompoundButton buttonView, boolean isChecked){
       if(mla.getRow(position).isStared()!=isChecked){
         mla.getRow(position).starChanged(mContext, isChecked);
+        mlf.markCanRefresh();
       }
     }
 

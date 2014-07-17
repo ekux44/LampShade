@@ -41,6 +41,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
   public View selected, longSelected; // updated on long click
   private int selectedPos = -1;
   private ShareActionProvider mShareActionProvider;
+  private boolean mCanRefresh;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,6 +106,16 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
       shareItem.setEnabled(false);
       shareItem.setVisible(false);
     }
+
+    MenuItem refreshItem = menu.findItem(R.id.action_refresh_moods);
+    if(mCanRefresh){
+      refreshItem.setEnabled(true);
+      refreshItem.setVisible(true);
+    }
+    else {
+      refreshItem.setEnabled(false);
+      refreshItem.setVisible(false);
+    }
   }
 
   @Override
@@ -112,6 +123,11 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     // Handle item selection
     switch (item.getItemId()) {
 
+      case R.id.action_refresh_moods:
+        mCanRefresh = false;
+        parrentA.supportInvalidateOptionsMenu();
+        getLoaderManager().restartLoader(MOODS_LOADER, null, this);
+        return true;
       case R.id.action_add_mood:
         parrentA.showEditMood(null);
         return true;
@@ -239,5 +255,11 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
   private String getTextFromRowView(View row){
     return ((TextView)row.findViewById(android.R.id.text1)).getText().toString();
+  }
+
+  public void markCanRefresh(){
+    if(!mCanRefresh)
+      parrentA.supportInvalidateOptionsMenu();
+    mCanRefresh = true;
   }
 }
