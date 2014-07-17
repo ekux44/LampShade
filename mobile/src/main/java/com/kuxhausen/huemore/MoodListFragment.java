@@ -47,9 +47,6 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
     parrentA = (NavigationDrawerActivity) this.getActivity();
 
-    int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
 
     /*
      * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
@@ -59,7 +56,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
 
     String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
     dataSource =
-        new MoodRowAdapter(this, this.getActivity(), layout, null, columns,
+        new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null, columns,
             new int[] {android.R.id.text1}, 0);
 
     setListAdapter(dataSource);
@@ -227,12 +224,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     selected = v;
     selectedPos = position;
 
-    if (dataSource.getRow(selectedPos).mValue.isSimple()) {
-      // set the selected Item to -1 to clear any existing selection
-      getListView().setItemChecked(-1, true);
-    } else {
-      getListView().setItemChecked(selectedPos, true);
-    }
+    getListView().setItemChecked(selectedPos, true);
 
     // Notify the parent activity of selected item
     String moodName = getTextFromRowView(selected);
