@@ -200,6 +200,9 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
 
   @Override
   public void onConnectionStatusChanged() {
+    if(!parrentA.boundToService())
+      return;
+
     if (mBrightnessBar != null && !mIsTrackingTouch
         && mBrightnessBar.getVisibility() == View.VISIBLE) {
       DeviceManager dm = parrentA.getService().getDeviceManager();
