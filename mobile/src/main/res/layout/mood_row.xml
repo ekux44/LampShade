@@ -13,9 +13,8 @@
 
     <CheckBox
         android:id="@+id/star"
-        style="@android:style/Widget.CompoundButton.Star"
+        style="@style/Star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:padding="8dp" />
+        android:layout_gravity="center_vertical" />
 </LinearLayout>
