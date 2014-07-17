@@ -47,7 +47,7 @@ public class VoiceReadRouterActivity extends Activity {
     // Specify the recognition language. This parameter has to be specified only if the
     // recognition has to be done in a specific language and not the default one (i.e., the
     // system locale). Most of the applications do not have to set this parameter.
-    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+    //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
 
     startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
   }

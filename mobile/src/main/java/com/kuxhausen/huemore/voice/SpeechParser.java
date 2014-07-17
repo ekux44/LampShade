@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class SpeechParser {
     }
     //TODO do something more intelligent with multiple strings and confidences
 
+    best = best.toLowerCase();
     Log.d("voice", best);
 
     GroupMoodBrightness result = new GroupMoodBrightness();
@@ -25,11 +27,23 @@ public class SpeechParser {
       result.mood = c.getString(R.string.cap_on);
       result.brightness = 100;
     } else {
-      //TODO remove when done debugging
-      result.group = c.getString(R.string.cap_all);
-      result.mood = "Fruity";
-    }
+        /*
+        String[] briArgs = best.split(" brightness at ");
+        String[] moodArgs = best.split(" to ");
 
+        if(briArgs.length == 2){
+          String group = briArgs[0].trim();
+          String brightness = briArgs[1].replaceAll("[^\\D]", "");
+          int brightnessVal = -1;
+          try{
+            brightnessVal = Integer.parseInt(brightness);
+          } catch (NumberFormatException){
+          }
+          c.getContentResolver().query(DatabaseDefinitions.GroupColumns.GROUPS_URI, )
+
+        }
+    */
+    }
     return result;
   }
 }
