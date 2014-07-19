@@ -14,6 +14,7 @@ import com.kuxhausen.huemore.state.BulbState;
 public class HueBulb implements NetworkBulb {
 
   public static final long SEND_TIMEOUT_TIME = 2000;
+  public final static float BS_BRI_CONVERSION = 2.55f;
 
   private Long mBaseId;
   private String mName;
@@ -22,7 +23,8 @@ public class HueBulb implements NetworkBulb {
   private HueBulbData mData;
   private Context mContext;
   private HubConnection mConnection;
-  private int mCurrentMaxBri;
+  private int mMaxBri;
+  private boolean mMaxBriMode;
 
   private BulbState desiredState = new BulbState();
 
@@ -36,21 +38,22 @@ public class HueBulb implements NetworkBulb {
   }
 
   public HueBulb(Context c, Long bulbBaseId, String bulbName, String bulbDeviceId,
-      HueBulbData bulbData, HubConnection hubConnection, int currentMaxBri) {
+      HueBulbData bulbData, HubConnection hubConnection) {
     mContext = c;
     mBaseId = bulbBaseId;
     mName = bulbName;
     mDeviceId = bulbDeviceId;
     mData = bulbData;
     mConnection = hubConnection;
-    mCurrentMaxBri = Math.max(1, currentMaxBri); // guard to keep maxBri above 0
   }
 
   @Override
   public void setState(BulbState bs) {
     BulbState preBriAdjusted = bs.clone();
-    if (preBriAdjusted.bri != null)
-      preBriAdjusted.bri = (int) (preBriAdjusted.bri * mCurrentMaxBri / 100f);
+    if (preBriAdjusted.bri != null){
+      setCurrentBrightness((int)(preBriAdjusted.bri/BS_BRI_CONVERSION));
+      preBriAdjusted.bri = null;
+    }
     desiredState.merge(preBriAdjusted);
 
     mConnection.getLooper().addToQueue(this);
@@ -119,43 +122,60 @@ public class HueBulb implements NetworkBulb {
   }
 
   @Override
-  public int getCurrentMaxBrightness() {
-    return mCurrentMaxBri;
+  public int getMaxBrightness() {
+    return Math.max(1, Math.min(100, mMaxBri));
   }
 
   @Override
-  public void setCurrentMaxBrightness(int bri, boolean maxBriMode) {
-    Log.d("brightness", "setCurrentMaxBrightness");
-
-    boolean addToQueue = false;
-    bri = Math.max(1, bri); // guard to keep maxBri above 0
-
-    if (mCurrentMaxBri != bri) {
-      int oldVal = mCurrentMaxBri;
-      mCurrentMaxBri = bri;
-      ContentValues cv = new ContentValues();
-      cv.put(DatabaseDefinitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, mCurrentMaxBri);
-      String[] selectionArgs = {"" + mBaseId};
-      mContext.getContentResolver().update(DatabaseDefinitions.NetBulbColumns.URI, cv,
-          DatabaseDefinitions.NetBulbColumns._ID + " =?", selectionArgs);
-
-      if (maxBriMode) {
-        // update the desired brightness value and add to change queue
-        if (desiredState.bri == null) {
-          int trueBrightness = (int) (2.55f * oldVal);
-          desiredState.bri = (int) (trueBrightness * (mCurrentMaxBri / 100f));
-          addToQueue = true;
-        }
+  public int getCurrentBrightness() {
+    if(desiredState.bri!=null){
+      int physicalBri = (int)(desiredState.bri / BS_BRI_CONVERSION);
+      if(mMaxBriMode){
+        return (int)(physicalBri / (getMaxBrightness()/100f));
+      } else{
+        return physicalBri;
       }
+    } else{
+      return 50;
+    }
+  }
+
+  @Override
+  public void setMaxBrightness(int newMaxBri) {
+    newMaxBri = Math.max(1, Math.min(100, newMaxBri));
+
+    if(desiredState.bri!=null) {
+      //if there is an existing current brightness, recalculate it
+      int currentBri = getCurrentBrightness();
+      mMaxBri = newMaxBri;
+      setCurrentBrightness(currentBri);
+    } else {
+      mMaxBri = newMaxBri;
+    }
+  }
+
+  public void setCurrentBrightness(int newPercentBri){
+    newPercentBri = Math.max(1, Math.min(100, newPercentBri));
+
+    int desiredBulbStateBri;
+    if(mMaxBriMode){
+      desiredBulbStateBri = (int)((newPercentBri*BS_BRI_CONVERSION)*(getMaxBrightness()/100f));
+    } else {
+      desiredBulbStateBri = (int)(newPercentBri*BS_BRI_CONVERSION);
     }
 
-    if (!maxBriMode && (desiredState.bri == null || desiredState.bri != ((int) (2.55f * bri)))) {
-      desiredState.bri = ((int) (2.55f * bri));
-      addToQueue = true;
-    }
-
-    if (addToQueue) {
+    if(desiredState.bri == null || desiredState.bri!=desiredBulbStateBri){
+      desiredState.bri = desiredBulbStateBri;
       mConnection.getLooper().addToQueue(this);
     }
   }
+
+  public boolean isMaxBriModeEnabled(){
+    return mMaxBriMode;
+  }
+
+  public void enableMaxBriMode(boolean enabled){
+    mMaxBriMode = true;
+  }
+
 }

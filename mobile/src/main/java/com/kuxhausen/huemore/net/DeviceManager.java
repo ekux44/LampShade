@@ -175,7 +175,7 @@ public class DeviceManager {
     int briNum = 0;
 
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      briSum += bulbMap.get(bulbId).getCurrentMaxBrightness();
+      briSum += bulbMap.get(bulbId)();
       briNum++;
     }
 

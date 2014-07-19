@@ -37,8 +37,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       NetConnectionColumns.DEVICE_ID_COLUMN, NetConnectionColumns.JSON_COLUMN};
   private static final String[] bulbColumns = {NetBulbColumns._ID,
       NetBulbColumns.CONNECTION_DATABASE_ID, NetBulbColumns.TYPE_COLUMN,
-      NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN,
-      NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
+      NetBulbColumns.NAME_COLUMN, NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns.JSON_COLUMN};
   private static final Integer TYPE = NetBulbColumns.NetBulbType.PHILIPS_HUE;
   private static final Gson gson = new Gson();
 
@@ -83,9 +82,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       String bulbName = cursor.getString(3);
       String bulbDeviceId = cursor.getString(4);
       HueBulbData bulbData = gson.fromJson(cursor.getString(5), HueBulbData.class);
-      int currentMaxBri = cursor.getInt(6);
-      mBulbList.add(new HueBulb(c, bulbBaseId, bulbName, bulbDeviceId, bulbData, this,
-          currentMaxBri));
+      mBulbList.add(new HueBulb(c, bulbBaseId, bulbName, bulbDeviceId, bulbData, this));
     }
 
 
@@ -277,7 +274,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
               .getLastPathSegment());
 
       mBulbList.add(new HueBulb(mContext, bulbBaseId, bulbName, bulbDeviceId, new HueBulbData(),
-          this, 100));
+          this));
 
     }
 

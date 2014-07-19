@@ -28,10 +28,20 @@ public interface NetworkBulb {
 
   public abstract Long getBaseId();
 
-  /** @result 0-100 */
-  public abstract int getCurrentMaxBrightness();
+  /** @result 1-100 */
+  public abstract int getMaxBrightness();
 
-  /** @param maxBri 0-100 */
-  public abstract void setCurrentMaxBrightness(int maxBri, boolean maxBriMode);
+  /** @param maxBri 1-100 */
+  public abstract void setMaxBrightness(int maxBri);
 
+  /** @result 1-100 */
+  public abstract int getCurrentBrightness();
+
+  /** @param bri 1-100 */
+  public abstract void setCurrentBrightness(int bri);
+
+  /** @param enabled if true, device's physical_brightness = current_bri * (max_bri/100) **/
+  public abstract void enableMaxBriMode(boolean enabled);
+
+  public abstract boolean isMaxBriModeEnabled();
 }

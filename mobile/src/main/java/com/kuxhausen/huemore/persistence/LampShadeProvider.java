@@ -354,9 +354,14 @@ public class LampShadeProvider extends ContentProvider {
         break;
       case NETBULBS:
         count = db.update(NetBulbColumns.TABLE_NAME, values, selection, selectionArgs);
-        toNotify.add(NetBulbColumns.URI);
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        if(values.size() == 1 && values.containsKey(NetBulbColumns.CURRENT_MAX_BRIGHTNESS)){
+          //If only the group max brightness changed,
+          //Don't notify. This should be moved to a separate table at some point.
+        } else{
+          toNotify.add(NetBulbColumns.URI);
+          toNotify.add(GroupColumns.GROUPS_URI);
+          toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        }
         break;
       case ALARMS:
         count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);

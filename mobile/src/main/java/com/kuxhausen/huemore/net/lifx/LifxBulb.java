@@ -16,6 +16,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   //In milis
   private final static long TRANSMIT_TIMEOUT_TIME = 10000;
+  public final static float BS_BRI_CONVERSION = 2.55f;
 
   LifxConnection mConnection;
 
@@ -25,7 +26,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   private String mName;
   private String mDeviceId;
   private ExtraData mExtraData;
-  private int mCurrentMaxBri;
+  private int mMaxBri;
 
   private LFXLight mLight;
   private long mInitializedTime;
@@ -34,14 +35,15 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   // In SystemClock.elapsedRealtime();
   private Long mDesiredLastChanged;
 
+  private boolean mMaxBriMode;
+
   public LifxBulb(Context c, Long bulbBaseId, String bulbName,
                   String bulbDeviceId, ExtraData bulbData,
-                  LifxConnection lifxConnection, int currentMaxBri) {
+                  LifxConnection lifxConnection) {
     mBaseId = bulbBaseId;
     mName = bulbName;
     mDeviceId = bulbDeviceId;
     mExtraData = bulbData;
-    mCurrentMaxBri = currentMaxBri;
 
     mContext = c;
     mConnection = lifxConnection;
@@ -191,5 +193,63 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   public static class ExtraData {
 
+  }
+
+
+  @Override
+  public int getMaxBrightness() {
+    return Math.max(1, Math.min(100, mMaxBri));
+  }
+
+  @Override
+  public int getCurrentBrightness() {
+    if(desiredState.bri!=null){
+      int physicalBri = (int)(desiredState.bri / BS_BRI_CONVERSION);
+      if(mMaxBriMode){
+        return (int)(physicalBri / (getMaxBrightness()/100f));
+      } else{
+        return physicalBri;
+      }
+    } else{
+      return 50;
+    }
+  }
+
+  @Override
+  public void setMaxBrightness(int newMaxBri) {
+    newMaxBri = Math.max(1, Math.min(100, newMaxBri));
+
+    if(desiredState.bri!=null) {
+      //if there is an existing current brightness, recalculate it
+      int currentBri = getCurrentBrightness();
+      mMaxBri = newMaxBri;
+      setCurrentBrightness(currentBri);
+    } else {
+      mMaxBri = newMaxBri;
+    }
+  }
+
+  public void setCurrentBrightness(int newPercentBri){
+    newPercentBri = Math.max(1, Math.min(100, newPercentBri));
+
+    int desiredBulbStateBri;
+    if(mMaxBriMode){
+      desiredBulbStateBri = (int)((newPercentBri*BS_BRI_CONVERSION)*(getMaxBrightness()/100f));
+    } else {
+      desiredBulbStateBri = (int)(newPercentBri*BS_BRI_CONVERSION);
+    }
+
+    if(desiredState.bri == null || desiredState.bri!=desiredBulbStateBri){
+      desiredState.bri = desiredBulbStateBri;
+      mConnection.getLooper().addToQueue(this);
+    }
+  }
+
+  public boolean isMaxBriModeEnabled(){
+    return mMaxBriMode;
+  }
+
+  public void enableMaxBriMode(boolean enabled){
+    mMaxBriMode = true;
   }
 }
