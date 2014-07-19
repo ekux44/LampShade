@@ -10,6 +10,7 @@ import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.lifx.LifxConnection;
 import com.kuxhausen.huemore.net.lifx.LifxManager;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 
 import java.util.ArrayList;
@@ -167,36 +168,85 @@ public class DeviceManager {
     brightnessListeners.remove(l);
   }
 
-  public Integer getBrightness(Group g) {
-    if (g == null) {
-      return null;
+  /**
+   * will guess when brightness unknown
+   */
+  public int getBrightness(Group g) {
+    if (g == null || g.getNetworkBulbDatabaseIds().isEmpty()) {
+      return 50;
     }
     int briSum = 0;
     int briNum = 0;
 
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      briSum += bulbMap.get(bulbId)();
-      briNum++;
+      // upon upgrading from v2.7, bulbs may not exist until reconnection
+      if (bulbMap.containsKey(bulbId)) {
+        NetworkBulb bulb = bulbMap.get(bulbId);
+        int brightness = (int) (bulb.getState(true).bri / 2.55f);
+
+        briSum += brightness;
+        briNum++;
+      }
     }
 
-    int bri = 100;
-    if (briNum > 0) {
-      bri = briSum / briNum;
-    }
-    return briSum;
+    return briSum/briNum;
   }
 
   /**
    * doesn't notify listeners *
    */
-  public void setBrightness(Group g, int bri, boolean maxBriMode) {
+  public void setBrightness(Group g, int brightness) {
     if (g == null) {
       return;
     }
     for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
       // upon upgrading from v2.7, bulbs may not exist until reconnection
       if (bulbMap.containsKey(bulbId)) {
-        bulbMap.get(bulbId).setCurrentMaxBrightness(bri, maxBriMode);
+        NetworkBulb bulb = bulbMap.get(bulbId);
+
+        BulbState change = new BulbState();
+        change.bri = (int)(brightness * 2.55f);
+        bulb.setState(change, false);
+      }
+    }
+  }
+
+  /**
+   * will guess when brightness unknown
+   */
+  public int getMaxBrightness(Group g) {
+    if (g == null || g.getNetworkBulbDatabaseIds().isEmpty()) {
+      return 50;
+    }
+    int briSum = 0;
+    int briNum = 0;
+
+    for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
+      // upon upgrading from v2.7, bulbs may not exist until reconnection
+      if (bulbMap.containsKey(bulbId)) {
+        NetworkBulb bulb = bulbMap.get(bulbId);
+        int brightness = bulb.getMaxBrightness(true);
+
+        briSum += brightness;
+        briNum++;
+      }
+    }
+
+    return briSum/briNum;
+  }
+
+  /**
+   * doesn't notify listeners *
+   */
+  public void setMaxBrightness(Group g, Boolean enable, Integer brightness) {
+    if (g == null) {
+      return;
+    }
+    for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
+      // upon upgrading from v2.7, bulbs may not exist until reconnection
+      if (bulbMap.containsKey(bulbId)) {
+        NetworkBulb bulb = bulbMap.get(bulbId);
+        bulb.setMaxBrightness(enable, brightness, false);
       }
     }
   }

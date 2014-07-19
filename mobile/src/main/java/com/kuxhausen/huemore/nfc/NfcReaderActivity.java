@@ -123,7 +123,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
       DeviceManager dm = service.getDeviceManager();
       Group g = Group.loadFromLegacyData(mBulbs, null, this);
       for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-        dm.getNetworkBulb(bulbId).setState(bs);
+        dm.getNetworkBulb(bulbId).setState(bs, true);
       }
     }
   }

@@ -12,7 +12,7 @@ import lifx.java.android.entities.LFXHSBKColor;
 import lifx.java.android.entities.LFXTypes;
 import lifx.java.android.light.LFXLight;
 
-public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
+public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
 
   //In milis
   private final static long TRANSMIT_TIMEOUT_TIME = 10000;
@@ -60,7 +60,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     mLight.addLightListener(this);
 
     if(!mDesiredState.isEmpty()){
-      setState(mDesiredState);
+      setState(mDesiredState, false);
       mDesiredState = new BulbState();
     }
   }
@@ -84,7 +84,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   }
 
   @Override
-  public void setState(BulbState bs) {
+  public void setState(BulbState bs, boolean broadcast) {
     Log.d("lifx", "setState but mLight?null " + (mLight == null));
 
     mDesiredLastChanged = SystemClock.elapsedRealtime();
@@ -137,8 +137,20 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   }
 
   @Override
-  public BulbState getState() {
+  public BulbState getState(boolean guessIfUnknown) {
     return new BulbState();
+  }
+
+  @Override
+  public Integer getMaxBrightness(boolean guessIfUnknown){
+    if(getRawMaxBrightness()!=null) {
+      return getRawMaxBrightness();
+    } else if(guessIfUnknown){
+      //TODO return present 'physical' brightness if known
+      return 50;
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -162,21 +174,6 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   }
 
   @Override
-  public int getCurrentMaxBrightness() {
-    return mCurrentMaxBri;
-  }
-
-  @Override
-  public void setCurrentMaxBrightness(int maxBri, boolean maxBriMode) {
-    BulbState hack = new BulbState();
-    hack.bri = (int) (2.55f * maxBri);
-    if (maxBriMode) {
-      this.mCurrentMaxBri = maxBri;
-    }
-    this.setState(hack);
-  }
-
-  @Override
   public void lightDidChangeLabel(LFXLight light, String label) {
 
   }
@@ -193,63 +190,5 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   public static class ExtraData {
 
-  }
-
-
-  @Override
-  public int getMaxBrightness() {
-    return Math.max(1, Math.min(100, mMaxBri));
-  }
-
-  @Override
-  public int getCurrentBrightness() {
-    if(desiredState.bri!=null){
-      int physicalBri = (int)(desiredState.bri / BS_BRI_CONVERSION);
-      if(mMaxBriMode){
-        return (int)(physicalBri / (getMaxBrightness()/100f));
-      } else{
-        return physicalBri;
-      }
-    } else{
-      return 50;
-    }
-  }
-
-  @Override
-  public void setMaxBrightness(int newMaxBri) {
-    newMaxBri = Math.max(1, Math.min(100, newMaxBri));
-
-    if(desiredState.bri!=null) {
-      //if there is an existing current brightness, recalculate it
-      int currentBri = getCurrentBrightness();
-      mMaxBri = newMaxBri;
-      setCurrentBrightness(currentBri);
-    } else {
-      mMaxBri = newMaxBri;
-    }
-  }
-
-  public void setCurrentBrightness(int newPercentBri){
-    newPercentBri = Math.max(1, Math.min(100, newPercentBri));
-
-    int desiredBulbStateBri;
-    if(mMaxBriMode){
-      desiredBulbStateBri = (int)((newPercentBri*BS_BRI_CONVERSION)*(getMaxBrightness()/100f));
-    } else {
-      desiredBulbStateBri = (int)(newPercentBri*BS_BRI_CONVERSION);
-    }
-
-    if(desiredState.bri == null || desiredState.bri!=desiredBulbStateBri){
-      desiredState.bri = desiredBulbStateBri;
-      mConnection.getLooper().addToQueue(this);
-    }
-  }
-
-  public boolean isMaxBriModeEnabled(){
-    return mMaxBriMode;
-  }
-
-  public void enableMaxBriMode(boolean enabled){
-    mMaxBriMode = true;
   }
 }

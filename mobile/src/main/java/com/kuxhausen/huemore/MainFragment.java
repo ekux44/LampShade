@@ -103,14 +103,14 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
           DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), false);
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
           mIsTrackingTouch = false;
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
           DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), false);
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
           mIsTrackingTouch = true;
         }
 
@@ -118,7 +118,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), false);
+            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
           }
         }
       });
@@ -129,14 +129,14 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
           DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), true);
+          dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
           mIsTrackingTouch = false;
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
           DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), true);
+          dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
           mIsTrackingTouch = true;
         }
 
@@ -144,7 +144,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), true);
+            dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
           }
         }
       });

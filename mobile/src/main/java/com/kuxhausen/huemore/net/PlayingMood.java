@@ -158,7 +158,7 @@ public class PlayingMood {
       while (queue.peek() != null && queue.peek().miliTime <= SystemClock.elapsedRealtime()) {
         QueueEvent e = queue.poll();
         if (mDeviceManager.getNetworkBulb(e.bulbBaseId) != null)
-          mDeviceManager.getNetworkBulb(e.bulbBaseId).setState(e.event.state);
+          mDeviceManager.getNetworkBulb(e.bulbBaseId).setState(e.event.state, true);
       }
     } else if (queue.peek() == null && mood.isInfiniteLooping()
         && SystemClock.elapsedRealtime() > moodLoopIterationEndMiliTime) {

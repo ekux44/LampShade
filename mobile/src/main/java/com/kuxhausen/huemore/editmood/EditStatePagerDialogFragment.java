@@ -74,7 +74,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-          dm.getNetworkBulb(bulbId).setState(currentState);
+          dm.getNetworkBulb(bulbId).setState(currentState, true);
         }
       }
     }

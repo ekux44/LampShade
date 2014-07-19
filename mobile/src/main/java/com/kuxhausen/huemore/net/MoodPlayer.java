@@ -55,6 +55,15 @@ public class MoodPlayer {
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 
+    //if this mood isn't being launched with a new max bri, preserve any current max bri
+    if(maxBri==null) {
+      for (PlayingMood iteration : mPlayingMoods) {
+        //existing max bri transferable only if same group
+        if (iteration.equals(g))
+          maxBri = mDeviceManager.getMaxBrightness(g);
+      }
+    }
+
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().conflictsWith(pm.getGroup())) {
         // remove mood at i to unschedule
@@ -62,6 +71,8 @@ public class MoodPlayer {
         i--;
       }
     }
+
+    mDeviceManager.setMaxBrightness(g,!m.isSimple(), maxBri);
 
     mPlayingMoods.add(pm);
     ensureLooping();
@@ -78,7 +89,7 @@ public class MoodPlayer {
         i--;
       }
     }
-
+    mDeviceManager.setMaxBrightness(g,false, null);
     // update notifications
     onActiveMoodsChanged();
   }

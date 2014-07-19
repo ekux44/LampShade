@@ -111,7 +111,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-          dm.getNetworkBulb(bulbId).setState(hs);
+          dm.getNetworkBulb(bulbId).setState(hs, true);
         }
       }
     }
