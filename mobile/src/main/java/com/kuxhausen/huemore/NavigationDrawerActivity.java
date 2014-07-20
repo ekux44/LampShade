@@ -71,7 +71,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_navigation_drawer);
 
-    mBillingManager = new BillingManager(this);
 
     if (Utils.hasProVersion(this)) {
       mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_pro_titles);
@@ -134,6 +133,12 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
       unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
     }
+  }
+
+  @Override
+  protected void onStart(){
+    super.onStart();
+    mBillingManager = new BillingManager(this);
   }
 
   public void onResume() {
@@ -440,11 +445,22 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
 
   @Override
-  public void onDestroy() {
-    mNotificationAdapter.onDestroy();
-    if (mBillingManager != null)
+  protected void onStop(){
+    super.onStop();
+    //we don't want billing still running in background when user leaves but moods still playing
+    if (mBillingManager != null) {
       mBillingManager.onDestroy();
+    }
+  }
 
+  @Override
+  protected void onDestroy() {
+    mNotificationAdapter.onDestroy();
+
+    //billing should have been destroyed in onStop, but try again in case onStop was skipped
+    if (mBillingManager != null) {
+      mBillingManager.onDestroy();
+    }
     super.onDestroy();
   }
 

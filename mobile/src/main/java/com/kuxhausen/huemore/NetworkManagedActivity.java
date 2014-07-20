@@ -79,6 +79,7 @@ public class NetworkManagedActivity extends ActionBarActivity implements
     // Unbind from the service
     if (mBound) {
       mService.getDeviceManager().removeOnConnectionStatusChangedListener(this);
+      mService.getDeviceManager().removeStateListener(NetworkManagedActivity.this);
       mService.getDeviceManager().removeBrightnessListener(this);
       unbindService(mConnection);
       mBound = false;

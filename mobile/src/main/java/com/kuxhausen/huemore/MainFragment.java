@@ -247,6 +247,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
       mGroupBulbViewPager.setCurrentItem(tabNum);
   }
 
+  @Override
   public void onConnectionStatusChanged() {
     if (mBrightnessBar != null && !mIsTrackingTouch) {
       DeviceManager dm = mParent.getService().getDeviceManager();
