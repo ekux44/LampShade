@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.net;
 
+import android.util.Log;
+
 import com.kuxhausen.huemore.state.BulbState;
 
 public abstract class NetworkBulb {
@@ -83,5 +85,6 @@ public abstract class NetworkBulb {
         }
       }
     }
+    Log.i("setMaxBri", "" + maxBri+" "+this.isMaxBriModeEnabled());
   }
 }
