@@ -221,7 +221,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     redrawGrid();
   }
 
-  private Mood getMood() {
+  protected Mood getMood() {
     Mood m = new Mood();
     if (pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE)
       m.usesTiming = true;
@@ -721,16 +721,6 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       else if (gridCols() > num)
         deleteCol(gridCols() - 1);
     }
-  }
-
-  @Override
-  public void onCreateMood(String moodname) {
-    ContentValues mNewValues = new ContentValues();
-    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_NAME, moodname);
-    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(getMood()));
-
-    getActivity().getContentResolver()
-        .insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
   }
 
   @Override

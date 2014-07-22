@@ -174,8 +174,10 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
             moodArg);
 
         ContentValues mNewValues = new ContentValues();
-        mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_NAME, moodName);
-        mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(sharedMood));
+        mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
+        mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase());
+        mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(sharedMood));
+        mNewValues.put(MoodColumns.COL_MOOD_VALUE, MoodRow.UNSTARRED_PRIORITY);
 
         this.getContentResolver().insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
         this.finish();

@@ -13,6 +13,8 @@ public class MoodRow {
   String mName, mLowercaseName;
   int mPriority;
 
+  public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
+
   public MoodRow(String name, long dbid, Mood mood, String lowercaseName, int priority) {
     id = dbid;
     mLowercaseName = lowercaseName;
@@ -22,16 +24,16 @@ public class MoodRow {
   }
 
   public boolean isStared(){
-    if(mPriority>1)
+    if(mPriority==STARRED_PRIORITY)
       return true;
     return false;
   }
 
   public void starChanged(Context c, boolean isStared){
     if(isStared)
-      mPriority = 2;
+      mPriority = STARRED_PRIORITY;
     else
-      mPriority = 1;
+      mPriority = UNSTARRED_PRIORITY;
 
     String rowSelect = DatabaseDefinitions.MoodColumns._ID + "=?";
     String[] rowArg = {"" + id};

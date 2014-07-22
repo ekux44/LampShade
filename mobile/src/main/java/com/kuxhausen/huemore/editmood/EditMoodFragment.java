@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.editmood;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -21,12 +22,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import com.kuxhausen.huemore.MoodRow;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 
@@ -46,9 +50,6 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
   private CheckBox loop;
 
   public interface OnCreateMoodListener {
-    /** Called by HeadlinesFragment when a list item is selected */
-    public void onCreateMood(String groupname);
-
     public void preview();
 
   }
@@ -177,13 +178,7 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
         parrentA.showHelp(this.getResources().getString(R.string.help_title_editingmoods));
         return true;
       case R.id.action_save:
-        if (priorName != null) {
-          // delete old mood
-          String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
-          String[] moodArg = {priorName};
-          parrentA.getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI,
-              moodSelect, moodArg);
-        }
+
         String moodName = nameEditText.getText().toString();
         if (moodName == null || moodName.length() < 1) {
           SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentA);
@@ -193,7 +188,27 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
           edit.commit();
           moodName = this.getResources().getString(R.string.unnamed_mood) + " " + unnamedNumber;
         }
-        stateGridFragment.onCreateMood(moodName);
+
+        ContentValues mNewValues = new ContentValues();
+        mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
+        mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase());
+        mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(stateGridFragment.getMood()));
+
+
+        if (priorName != null) {
+          // modify existing mood
+          String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
+          String[] moodArg = {priorName};
+          parrentA.getContentResolver().update(MoodColumns.MOODS_URI, mNewValues, moodSelect, moodArg);
+
+          //now remember new mood name
+          priorName = moodName;
+        } else {
+
+          mNewValues.put(MoodColumns.COL_MOOD_PRIORITY, MoodRow.UNSTARRED_PRIORITY);
+          parrentA.getContentResolver().insert(MoodColumns.MOODS_URI, mNewValues);
+        }
+
         Toast t =
             Toast.makeText(parrentA, parrentA.getResources().getString(R.string.saved) + " "
                 + moodName, Toast.LENGTH_SHORT);
