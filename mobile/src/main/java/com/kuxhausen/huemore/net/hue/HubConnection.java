@@ -102,9 +102,13 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     if (mData != null && mData.portForwardedAddress != null)
       myRoutes.add(new Route(mData.portForwardedAddress, ConnectivityState.Unknown));
 
-    for (Route route : getBestRoutes())
+    for (Route route : getBestRoutes()) {
       NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
-          this, this);
+                                        this, this);
+      for(HueBulb b : this.mBulbList){
+        NetworkMethods.PreformGetBulbAttributes(route, mData.hashedUsername,mContext,getRequestQueue(),this,this, b.getHubBulbNumber());
+      }
+    }
   }
 
   public List<Route> getBestRoutes() {
@@ -121,6 +125,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     }
 
     return result;
+  }
+
+  public DeviceManager getDeviceManager() {
+    return mDeviceManager;
   }
 
   @Override
@@ -181,8 +189,11 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
         if (SystemClock.elapsedRealtime() - lastDisconnectedPingInElapsedRealtime > discounnectedPingIntervalMilis) {
           lastDisconnectedPingInElapsedRealtime = SystemClock.elapsedRealtime();
           for (Route route : getBestRoutes())
-            NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext,
-                getRequestQueue(), this, this);
+            for(HueBulb b : this.mBulbList){
+              NetworkMethods.PreformGetBulbAttributes(route, mData.hashedUsername,mContext,getRequestQueue(),this,this, b.getHubBulbNumber());
+            }
+            //NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext,
+            //    getRequestQueue(), this, this);
         }
       }
     }
@@ -202,33 +213,14 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     return volleyRQ;
   }
 
-  public void onAttributesReturned(BulbAttributes result, int bulbNumber) {
-    // //figure out which bulb in group (if that group is still selected)
-    // int index = calculateBulbPositionInGroup(bulbNumber, mDeviceManager.getSelectedGroup());
-    // //if group is still expected this, save
-    // if(index>-1 && bulbKnown[index]==KnownState.Getting){
-    // bulbKnown[index] = KnownState.Synched;
-    // bulbBri[index] = result.state.bri;
-    //
-    // //if all expected get brightnesses have returned, compute maxbri and notify listeners
-    // boolean anyOutstandingGets = false;
-    // for(KnownState ks : bulbKnown)
-    // anyOutstandingGets |= (ks == KnownState.Getting);
-    // if(!anyOutstandingGets){
-    // //todo calc more intelligent bri when mood known
-    // int briSum = 0;
-    // for(int bri : bulbBri)
-    // briSum +=bri;
-    // maxBrightness = briSum/mDeviceManager.getSelectedGroup().groupAsLegacyArray.length;
-    //
-    // for(int i = 0; i< mDeviceManager.getSelectedGroup().groupAsLegacyArray.length; i++){
-    // bulbBri[i]= maxBrightness;
-    // bulbRelBri[i] = MAX_REL_BRI;
-    // }
-    //
-    // mDeviceManager.onStateChanged();
-    // }
-    // }
+  @Override
+  public void onAttributesReturned(BulbAttributes result, String bulbHueId) {
+    for(HueBulb bulb: this.mBulbList){
+      if(bulb.getHubBulbNumber().equals(bulbHueId)){
+        //found the bulb who's attributes were returned
+        bulb.attributesReturned(result);
+      }
+    }
   }
 
 

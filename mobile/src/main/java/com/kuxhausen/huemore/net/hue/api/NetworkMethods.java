@@ -35,7 +35,7 @@ public class NetworkMethods {
 
   public static void PreformGetBulbAttributes(Route route, String hash, Context context,
       RequestQueue queue, ConnectionMonitor monitor, OnBulbAttributesReturnedListener listener,
-      int bulb) {
+      String bulb) {
     if (queue == null)
       return;
 

@@ -103,8 +103,23 @@ public class HueBulb extends NetworkBulb {
 
     // update confirmed
     BulbState.confirmChange(confirmed, transmitted);
+    BulbState.confirmChange(desiredState, transmitted);
+    //desiredState = confirmed.delta(desiredState);
+  }
 
-    desiredState = confirmed.delta(desiredState);
+  public void attributesReturned(BulbAttributes attributes){
+    //these may be stale by up to 4 seconds, but lets set them to the confirmed for now
+    //TODO better handle
+    //for now only touch brightness since that's atleast user visible
+    confirmed.bri = attributes.state.bri;
+    if(desiredState.bri==null) {
+      desiredState.bri = attributes.state.bri;
+
+      //notify brightness bar
+      this.mConnection.getDeviceManager().onStateChanged();
+
+      Log.d("net","onAttributeReturned" + desiredState.bri);
+    }
   }
 
   public boolean hasOngoingTransmission() {
@@ -120,7 +135,7 @@ public class HueBulb extends NetworkBulb {
    * returns desiredState
    */
   public BulbState getSendState() {
-    return desiredState;
+    return confirmed.delta(desiredState);
   }
 
   @Override

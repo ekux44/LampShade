@@ -28,8 +28,8 @@ import com.kuxhausen.huemore.state.Group;
 /**
  * @author Eric Kuxhausen
  */
-public class MainFragment extends Fragment implements OnConnectionStatusChangedListener,
-    OnServiceConnectedListener, OnActiveMoodsChangedListener {
+public class MainFragment extends Fragment implements
+    OnServiceConnectedListener, OnActiveMoodsChangedListener, DeviceManager.OnStateChangedListener {
 
   private NavigationDrawerActivity mParent;
 
@@ -102,15 +102,11 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-          DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
           mIsTrackingTouch = false;
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-          DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
           mIsTrackingTouch = true;
         }
 
@@ -128,15 +124,11 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-          DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
           mIsTrackingTouch = false;
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-          DeviceManager dm = mParent.getService().getDeviceManager();
-          dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
           mIsTrackingTouch = true;
         }
 
@@ -164,22 +156,19 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
       b.remove(InternalArguments.GROUPBULB_TAB);
     }
 
-    if (mBrightnessBar != null)
-      setMode();
+    setMode();
   }
 
   @Override
   public void onServiceConnected() {
-    mParent.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
+    mParent.getService().getDeviceManager().registerBrightnessListener(this);
     mParent.getService().getMoodPlayer().addOnActiveMoodsChangedListener(this);
-    if (mBrightnessBar != null)
-      setMode();
+    setMode();
   }
 
   @Override
   public void onActiveMoodsChanged() {
-    if (mBrightnessBar != null)
-      setMode();
+    setMode();
   }
 
   public void setMode() {
@@ -205,7 +194,7 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
   public void onPause() {
     super.onPause();
     if (mParent.boundToService()) {
-      mParent.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+      mParent.getService().getDeviceManager().removeBrightnessListener(this);
       mParent.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
     }
   }
@@ -248,12 +237,12 @@ public class MainFragment extends Fragment implements OnConnectionStatusChangedL
   }
 
   @Override
-  public void onConnectionStatusChanged() {
-    if (mBrightnessBar != null && !mIsTrackingTouch) {
-      DeviceManager dm = mParent.getService().getDeviceManager();
-      Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
-      if (candidateBrightness != null)
-        mBrightnessBar.setProgress(candidateBrightness);
+  public void onStateChanged() {
+    DeviceManager dm = mParent.getService().getDeviceManager();
+
+    if (!mIsTrackingTouch) {
+      mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
+      mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
     }
   }
 

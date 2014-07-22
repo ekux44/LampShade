@@ -24,8 +24,7 @@ import com.kuxhausen.huemore.state.Group;
 /**
  * @author Eric Kuxhausen
  */
-public class SecondaryFragment extends Fragment implements OnConnectionStatusChangedListener,
-    OnServiceConnectedListener, OnActiveMoodsChangedListener {
+public class SecondaryFragment extends Fragment implements OnServiceConnectedListener, OnActiveMoodsChangedListener, DeviceManager.OnStateChangedListener {
 
   private NavigationDrawerActivity parrentA;
 
@@ -34,8 +33,8 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
   private MoodManualPagerAdapter mMoodManualPagerAdapter;
   private SlidingTabLayout mMoodManualSlidingTabLayout;
   private SeekBar mBrightnessBar, mMaxBrightnessBar;
-  private boolean mIsTrackingTouch = false;
   private TextView mBrightnessDescriptor;
+  private boolean mIsTrackingTouch = false;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,15 +79,11 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
 
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) {
-        DeviceManager dm = parrentA.getService().getDeviceManager();
-        dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
         mIsTrackingTouch = false;
       }
 
       @Override
       public void onStartTrackingTouch(SeekBar seekBar) {
-        DeviceManager dm = parrentA.getService().getDeviceManager();
-        dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
         mIsTrackingTouch = true;
       }
 
@@ -106,15 +101,11 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
 
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) {
-        DeviceManager dm = parrentA.getService().getDeviceManager();
-        dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
         mIsTrackingTouch = false;
       }
 
       @Override
       public void onStartTrackingTouch(SeekBar seekBar) {
-        DeviceManager dm = parrentA.getService().getDeviceManager();
-        dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
         mIsTrackingTouch = true;
       }
 
@@ -136,15 +127,12 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
     parrentA.registerOnServiceConnectedListener(this);
     this.setHasOptionsMenu(true);
 
-    if (parrentA.boundToService()) {
-      setMode();
-    }
-
+    setMode();
   }
 
   @Override
   public void onServiceConnected() {
-    parrentA.getService().getDeviceManager().addOnConnectionStatusChangedListener(this);
+    parrentA.getService().getDeviceManager().registerBrightnessListener(this);
     parrentA.getService().getMoodPlayer().addOnActiveMoodsChangedListener(this);
     setMode();
   }
@@ -177,7 +165,7 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
   public void onPause() {
     super.onPause();
     if (parrentA.boundToService()) {
-      parrentA.getService().getDeviceManager().removeOnConnectionStatusChangedListener(this);
+      parrentA.getService().getDeviceManager().removeBrightnessListener(this);
       parrentA.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
     }
   }
@@ -204,26 +192,6 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
   }
 
   @Override
-  public void onConnectionStatusChanged() {
-    if(!parrentA.boundToService())
-      return;
-
-    if (mBrightnessBar != null && !mIsTrackingTouch
-        && mBrightnessBar.getVisibility() == View.VISIBLE) {
-      DeviceManager dm = parrentA.getService().getDeviceManager();
-      Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
-      if (candidateBrightness != null)
-        mBrightnessBar.setProgress(candidateBrightness);
-    } else if (mMaxBrightnessBar != null && !mIsTrackingTouch
-        && mMaxBrightnessBar.getVisibility() == View.VISIBLE) {
-      DeviceManager dm = parrentA.getService().getDeviceManager();
-      Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
-      if (candidateBrightness != null)
-        mMaxBrightnessBar.setProgress(candidateBrightness);
-    }
-  }
-
-  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     // Handle item selection
     switch (item.getItemId()) {
@@ -232,6 +200,16 @@ public class SecondaryFragment extends Fragment implements OnConnectionStatusCha
         return true;
       default:
         return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
+  public void onStateChanged() {
+    DeviceManager dm = parrentA.getService().getDeviceManager();
+
+    if (!mIsTrackingTouch) {
+      mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
+      mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
     }
   }
 }

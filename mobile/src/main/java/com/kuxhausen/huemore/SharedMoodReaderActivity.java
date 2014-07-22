@@ -74,15 +74,11 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
 
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) {
-        DeviceManager dm = SharedMoodReaderActivity.this.getService().getDeviceManager();
-        dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
         mIsTrackingTouch = false;
       }
 
       @Override
       public void onStartTrackingTouch(SeekBar seekBar) {
-        DeviceManager dm = SharedMoodReaderActivity.this.getService().getDeviceManager();
-        dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
         mIsTrackingTouch = true;
       }
 
