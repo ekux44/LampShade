@@ -56,6 +56,10 @@ public class HueBulb extends NetworkBulb {
     desiredState.merge(preBriAdjusted);
 
     mConnection.getLooper().addToQueue(this);
+
+    if(broadcast)
+      this.mConnection.getDeviceManager().onStateChanged();
+
     Log.i("setState",preBriAdjusted.toString());
   }
 

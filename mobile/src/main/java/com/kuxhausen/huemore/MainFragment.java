@@ -240,7 +240,7 @@ public class MainFragment extends Fragment implements
   public void onStateChanged() {
     DeviceManager dm = mParent.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch) {
+    if (!mIsTrackingTouch && mBrightnessBar!=null && mMaxBrightnessBar!=null) {
       mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
       mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
     }

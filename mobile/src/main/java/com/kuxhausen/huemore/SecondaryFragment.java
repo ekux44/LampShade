@@ -207,7 +207,7 @@ public class SecondaryFragment extends Fragment implements OnServiceConnectedLis
   public void onStateChanged() {
     DeviceManager dm = parrentA.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch) {
+    if (!mIsTrackingTouch && mBrightnessBar!=null && mMaxBrightnessBar!=null) {
       mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
       mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
     }
