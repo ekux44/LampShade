@@ -140,7 +140,16 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
 
   @Override
   public BulbState getState(boolean guessIfUnknown) {
-    return new BulbState();
+    BulbState result = new BulbState();
+
+    if(mLight!=null && mLight.getColor()!=null){
+      LFXHSBKColor color = mLight.getColor();
+      result.bri = (int)((color.getBrightness() * 255f)* (100f / getMaxBrightness(true)));
+    } else if(guessIfUnknown){
+      result.bri = 127;
+    }
+
+    return result;
   }
 
   @Override

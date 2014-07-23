@@ -93,6 +93,8 @@ public class LifxRegistrationDialog extends DialogFragment implements
 
     bulbsListView.setAdapter(candidateBulbsAdapter);
 
+    builder.setTitle(R.string.dialog_title_searching_for_lights);
+
     builder.setView(dialogMainView);
 
     builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
@@ -172,6 +174,7 @@ public class LifxRegistrationDialog extends DialogFragment implements
         candidateBulbDeviceIds.add(light.getDeviceID());
       }
     }
+    bulbsListView.setAdapter(candidateBulbsAdapter);
   }
 
   @Override
@@ -186,6 +189,7 @@ public class LifxRegistrationDialog extends DialogFragment implements
 
   @Override
   public void lightCollectionDidChangeLabel(LFXLightCollection lightCollection, String label) {
+    updateCandidateList();
   }
 
   @Override
