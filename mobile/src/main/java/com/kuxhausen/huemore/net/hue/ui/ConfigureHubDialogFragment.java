@@ -41,11 +41,13 @@ public class ConfigureHubDialogFragment extends DialogFragment {
 
     if (mPriorConnection != null) {
       String local = mPriorConnection.getHubData().localHubAddress;
-      if (local != null)
+      if (local != null) {
         mLocalAddress.setText(local);
+      }
       String remote = mPriorConnection.getHubData().portForwardedAddress;
-      if (remote != null)
+      if (remote != null) {
         mRemoteAddress.setText(remote);
+      }
     }
 
     builder.setView(registerWithHubView);

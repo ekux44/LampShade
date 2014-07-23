@@ -48,7 +48,7 @@ public class RelativeStartTimeslot implements OnClickListener {
   public void setStartTime(int offsetWithinDayInDeciSeconds) {
     moodEventTime =
         Math.max(frag.computeMinimumValue(mPosition),
-            Math.min(MAX_MOOD_EVENT_TIME, offsetWithinDayInDeciSeconds));
+                 Math.min(MAX_MOOD_EVENT_TIME, offsetWithinDayInDeciSeconds));
     t.setText(getTime());
   }
 

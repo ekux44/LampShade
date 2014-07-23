@@ -1,16 +1,13 @@
 package com.kuxhausen.huemore.net;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.Gson;
 
-import alt.android.os.CountDownTimer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
@@ -19,6 +16,11 @@ import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.timing.AlarmReciever;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import alt.android.os.CountDownTimer;
 
 public class MoodPlayer {
 
@@ -56,11 +58,12 @@ public class MoodPlayer {
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 
     //if this mood isn't being launched with a new max bri, preserve any current max bri
-    if(maxBri==null) {
+    if (maxBri == null) {
       for (PlayingMood iteration : mPlayingMoods) {
         //existing max bri transferable only if same group
-        if (iteration.equals(g))
+        if (iteration.equals(g)) {
           maxBri = mDeviceManager.getMaxBrightness(g);
+        }
       }
     }
 
@@ -72,7 +75,7 @@ public class MoodPlayer {
       }
     }
 
-    mDeviceManager.setMaxBrightness(g,!m.isSimple(), maxBri);
+    mDeviceManager.setMaxBrightness(g, !m.isSimple(), maxBri);
 
     mPlayingMoods.add(pm);
     ensureLooping();
@@ -89,7 +92,7 @@ public class MoodPlayer {
         i--;
       }
     }
-    mDeviceManager.setMaxBrightness(g,false, null);
+    mDeviceManager.setMaxBrightness(g, false, null);
     // update notifications
     onActiveMoodsChanged();
   }
@@ -103,13 +106,15 @@ public class MoodPlayer {
   }
 
   public void onActiveMoodsChanged() {
-    for (OnActiveMoodsChangedListener l : moodsChangedListeners)
+    for (OnActiveMoodsChangedListener l : moodsChangedListeners) {
       l.onActiveMoodsChanged();
+    }
   }
 
   public void onDestroy() {
-    if (countDownTimer != null)
+    if (countDownTimer != null) {
       countDownTimer.cancel();
+    }
   }
 
   public void ensureLooping() {
@@ -118,7 +123,8 @@ public class MoodPlayer {
       countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / MOODS_TIMES_PER_SECOND)) {
 
         @Override
-        public void onFinish() {}
+        public void onFinish() {
+        }
 
         @Override
         public void onTick(long millisUntilFinished) {
@@ -132,8 +138,9 @@ public class MoodPlayer {
               activeMoodsChanged = true;
             }
           }
-          if (activeMoodsChanged)
+          if (activeMoodsChanged) {
             onActiveMoodsChanged();
+          }
           if (mPlayingMoods.isEmpty()) {
             countDownTimer = null;
             this.cancel();
@@ -145,9 +152,11 @@ public class MoodPlayer {
   }
 
   public boolean hasImminentPendingWork() {
-    for (PlayingMood pm : mPlayingMoods)
-      if (pm.hasImminentPendingWork())
+    for (PlayingMood pm : mPlayingMoods) {
+      if (pm.hasImminentPendingWork()) {
         return true;
+      }
+    }
     return false;
   }
 
@@ -160,8 +169,9 @@ public class MoodPlayer {
     long awakenTime = Long.MAX_VALUE;
     for (PlayingMood pm : mPlayingMoods) {
       long nextEventTime = pm.getNextEventTime();
-      if (nextEventTime < awakenTime)
+      if (nextEventTime < awakenTime) {
         awakenTime = nextEventTime;
+      }
     }
 
     awakenTime -= MILIS_AWAKEN_STARTUP_TIME;
@@ -185,13 +195,13 @@ public class MoodPlayer {
   public void restoreFromSaved() {
     String[] projectionColumns =
         {DatabaseDefinitions.PlayingMood.COL_GROUP_VALUE,
-            DatabaseDefinitions.PlayingMood.COL_MOOD_NAME,
-            DatabaseDefinitions.PlayingMood.COL_MOOD_VALUE,
-            DatabaseDefinitions.PlayingMood.COL_INITIAL_MAX_BRI,
-            DatabaseDefinitions.PlayingMood.COL_MILI_TIME_STARTED};
+         DatabaseDefinitions.PlayingMood.COL_MOOD_NAME,
+         DatabaseDefinitions.PlayingMood.COL_MOOD_VALUE,
+         DatabaseDefinitions.PlayingMood.COL_INITIAL_MAX_BRI,
+         DatabaseDefinitions.PlayingMood.COL_MILI_TIME_STARTED};
     Cursor cursor =
         mContext.getContentResolver().query(DatabaseDefinitions.PlayingMood.URI, projectionColumns,
-            null, null, null);
+                                            null, null, null);
     cursor.moveToPosition(-1);// not the same as move to first!
     while (cursor.moveToNext()) {
       Group g = gson.fromJson(cursor.getString(0), Group.class);
@@ -205,7 +215,7 @@ public class MoodPlayer {
       Integer initialMaxB = cursor.getInt(3);
       Long miliTimeStarted = cursor.getLong(4);
 
-      Log.d("mood","restore at"+SystemClock.elapsedRealtime()+" from "+miliTimeStarted);
+      Log.d("mood", "restore at" + SystemClock.elapsedRealtime() + " from " + miliTimeStarted);
 
       this.playMood(g, m, mName, initialMaxB, miliTimeStarted);
     }

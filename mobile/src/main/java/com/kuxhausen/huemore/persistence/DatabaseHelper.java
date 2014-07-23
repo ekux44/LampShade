@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.persistence;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.google.gson.Gson;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,8 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Pair;
-
-import com.google.gson.Gson;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
@@ -24,6 +21,9 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -50,13 +50,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
 
     db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" + BaseColumns._ID
-        + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT," + MoodColumns.COL_MOOD_VALUE
-        + " TEXT"
-        + ");");
+               + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT,"
+               + MoodColumns.COL_MOOD_VALUE
+               + " TEXT"
+               + ");");
 
     db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " (" + BaseColumns._ID
-        + " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
-        + " INTEGER," + "Dbulb" + " INTEGER" + ");");
+               + " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
+               + " INTEGER," + "Dbulb" + " INTEGER" + ");");
 
     this.onUpgrade(db, 1, DATABASE_VERSION);
   }
@@ -72,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor cursor =
             db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
-                null, null);
+                     null, null);
 
         HashMap<String, ArrayList<String>> moodStateMap = new HashMap<String, ArrayList<String>>();
 
@@ -82,10 +83,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           if (mood != null && state != null && !mood.equals("") && !state.equals("")
               && !state.equals("{}")) {
             ArrayList<String> states;
-            if (moodStateMap.containsKey(mood))
+            if (moodStateMap.containsKey(mood)) {
               states = moodStateMap.get(mood);
-            else
+            } else {
               states = new ArrayList<String>();
+            }
             states.add(state);
             moodStateMap.put(mood, states);
           }
@@ -93,14 +95,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE " + MoodColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT," + MoodColumns.COL_MOOD_VALUE
-            + " TEXT"
-            + ");");
+                   + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT,"
+                   + MoodColumns.COL_MOOD_VALUE
+                   + " TEXT"
+                   + ");");
 
         // remove standard moods that are no longer correct
         String[] moodsToRemove =
             {"OFF", "Reading", "Relax", "Concentrate", "Energize", "Red", "Orange", "Blue",
-                "Romantic", "Rainbow", ((char) 8) + "OFF", ((char) 8) + "ON", ((char) 8) + "RANDOM"};
+             "Romantic", "Rainbow", ((char) 8) + "OFF", ((char) 8) + "ON", ((char) 8) + "RANDOM"};
 
         for (String removeKey : moodsToRemove) {
           moodStateMap.remove(removeKey);
@@ -112,8 +115,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           // bug fix in case there are any empty bulbstates in the old system
           for (int i = 0; i < stateJson.size(); i++) {
             if (stateJson.get(i) == null
-                || gson.fromJson(stateJson.get(i), BulbState.class) == null)
+                || gson.fromJson(stateJson.get(i), BulbState.class) == null) {
               stateJson.remove(i);
+            }
           }
 
           Event[] events = new Event[stateJson.size()];
@@ -140,8 +144,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AlarmColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + AlarmColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + AlarmColumns.STATE + " TEXT,"
-            + AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
+                   + " INTEGER PRIMARY KEY," + AlarmColumns.STATE + " TEXT,"
+                   + AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 
         // remove the sunset mood
         String[] moodArgs = {"Sunset"};
@@ -152,7 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor moodCursor =
             db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
-                null, null);
+                     null, null);
 
         HashMap<String, String> moodMap = new HashMap<String, String>();
 
@@ -174,28 +178,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         moodMap.put("Concentrate", "BgQAAQAAjJSvx8qfr6eTBAAQAAAA﻿");
         moodMap.put("Deep Sea", "BgYAAQAAipSf6G-Ur9oDGCLl49NJ4s09ywYAhiICAAA=﻿");
         moodMap.put("Fruity",
-            "BvaHAQAAACYAwASOmB-hypSvUsQcgClifiBxUb4DwUgApoj5Fp58-EGyywCYABIUIsIqMTUBQBo=﻿");
+                    "BvaHAQAAACYAwASOmB-hypSvUsQcgClifiBxUb4DwUgApoj5Fp58-EGyywCYABIUIsIqMTUBQBo=﻿");
 
         // add these stock moods but don't write over prior versions
-        if (!moodMap.containsKey("Gentle Sunrise"))
+        if (!moodMap.containsKey("Gentle Sunrise")) {
           moodMap.put("Gentle Sunrise",
-              "AQSAAQAAgDQApAGAJzfkJ8o85KtGLQMAk8j5riCB-ZYxfgDAZPIyfiB9bL5VtUAAMAFgwCSAQwA=");
-        if (!moodMap.containsKey("Gentle Sunset"))
+                      "AQSAAQAAgDQApAGAJzfkJ8o85KtGLQMAk8j5riCB-ZYxfgDAZPIyfiB9bL5VtUAAMAFgwCSAQwA=");
+        }
+        if (!moodMap.containsKey("Gentle Sunset")) {
           moodMap.put("Gentle Sunset",
-              "AQSAAQAAgDQApAGAI-cHhj7kW1GOBwCTyd34iaDH-GrSiQHAJDAAMAFgQBWAQwA=");
-        if (!moodMap.containsKey("Living Night"))
+                      "AQSAAQAAgDQApAGAI-cHhj7kW1GOBwCTyd34iaDH-GrSiQHAJDAAMAFgQBWAQwA=");
+        }
+        if (!moodMap.containsKey("Living Night")) {
           moodMap.put("Living Night", "AfKHAAAAAEwAaGJWfu4rZb4IfDsAk4m_-TkqEvniQEQATAAEFBAVACYA");
-        if (!moodMap.containsKey("f.lux"))
+        }
+        if (!moodMap.containsKey("f.lux")) {
           moodMap
               .put("f.lux",
-                  "AQxA5RmHN7_yNEQDWOqnAoAj5-ux8ufr6SQBAJDI-YGhD_lWlOMBACRyvitIYL5ljB8AAAFQFGIoEQAAAA==");
+                   "AQxA5RmHN7_yNEQDWOqnAoAj5-ux8ufr6SQBAJDI-YGhD_lWlOMBACRyvitIYL5ljB8AAAFQFGIoEQAAAA==");
+        }
 
         db.execSQL("DROP TABLE IF EXISTS " + MoodColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT," + MoodColumns.COL_MOOD_VALUE
-            + " TEXT"
-            + ");");
+                   + " INTEGER PRIMARY KEY," + MoodColumns.COL_MOOD_NAME + " TEXT,"
+                   + MoodColumns.COL_MOOD_VALUE
+                   + " TEXT"
+                   + ");");
 
         for (String key : moodMap.keySet()) {
           cv.put(MoodColumns.COL_MOOD_NAME, key);
@@ -206,18 +215,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       }
       case 5: {
         db.execSQL("CREATE TABLE " + NetConnectionColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + NetConnectionColumns.NAME_COLUMN + " TEXT,"
-            + NetConnectionColumns.DEVICE_ID_COLUMN + " TEXT," + NetConnectionColumns.TYPE_COLUMN
-            + " INTEGER," + NetConnectionColumns.JSON_COLUMN + " TEXT" + ");");
+                   + " INTEGER PRIMARY KEY," + NetConnectionColumns.NAME_COLUMN + " TEXT,"
+                   + NetConnectionColumns.DEVICE_ID_COLUMN + " TEXT,"
+                   + NetConnectionColumns.TYPE_COLUMN
+                   + " INTEGER," + NetConnectionColumns.JSON_COLUMN + " TEXT" + ");");
 
         db.execSQL("CREATE TABLE " + NetBulbColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + NetBulbColumns.NAME_COLUMN + " TEXT,"
-            + NetBulbColumns.DEVICE_ID_COLUMN + " TEXT," + NetBulbColumns.CONNECTION_DATABASE_ID
-            + " INTEGER," + NetBulbColumns.TYPE_COLUMN + " INTEGER," + NetBulbColumns.JSON_COLUMN
-            + " TEXT," + NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER," + " FOREIGN KEY ("
-            + NetBulbColumns.CONNECTION_DATABASE_ID + ") REFERENCES "
-            + NetConnectionColumns.TABLE_NAME + " (" + NetConnectionColumns._ID
-            + " ) ON DELETE CASCADE " + ");");
+                   + " INTEGER PRIMARY KEY," + NetBulbColumns.NAME_COLUMN + " TEXT,"
+                   + NetBulbColumns.DEVICE_ID_COLUMN + " TEXT,"
+                   + NetBulbColumns.CONNECTION_DATABASE_ID
+                   + " INTEGER," + NetBulbColumns.TYPE_COLUMN + " INTEGER,"
+                   + NetBulbColumns.JSON_COLUMN
+                   + " TEXT," + NetBulbColumns.CURRENT_MAX_BRIGHTNESS + " INTEGER,"
+                   + " FOREIGN KEY ("
+                   + NetBulbColumns.CONNECTION_DATABASE_ID + ") REFERENCES "
+                   + NetConnectionColumns.TABLE_NAME + " (" + NetConnectionColumns._ID
+                   + " ) ON DELETE CASCADE " + ");");
 
         /** Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
 
@@ -225,7 +238,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             {GroupColumns._ID, GroupColumns.GROUP, GroupColumns.PRECEDENCE, "Dbulb"};
         Cursor oldGroupCursor =
             db.query(DatabaseDefinitions.GroupColumns.TABLE_NAME, oldGroupColumns, null, null,
-                null, null, null);
+                     null, null, null);
 
         // load all the old group data into here <name, list of hue hub bulb <precedence, hub bulb
         // number>>
@@ -286,10 +299,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
-            + " INTEGER," + GroupColumns.BULB_DATABASE_ID + " INTEGER," + " FOREIGN KEY ("
-            + GroupColumns.BULB_DATABASE_ID + ") REFERENCES " + NetBulbColumns.TABLE_NAME + " ("
-            + NetBulbColumns._ID + " ) ON DELETE CASCADE " + ");");
+                   + " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT,"
+                   + GroupColumns.PRECEDENCE
+                   + " INTEGER," + GroupColumns.BULB_DATABASE_ID + " INTEGER," + " FOREIGN KEY ("
+                   + GroupColumns.BULB_DATABASE_ID + ") REFERENCES " + NetBulbColumns.TABLE_NAME
+                   + " ("
+                   + NetBulbColumns._ID + " ) ON DELETE CASCADE " + ");");
 
 
         /* now add the groups to the new table */
@@ -308,10 +323,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " (" + BaseColumns._ID
-            + " INTEGER PRIMARY KEY," + PlayingMood.COL_GROUP_VALUE + " TEXT,"
-            + PlayingMood.COL_MOOD_NAME + " TEXT," + PlayingMood.COL_MOOD_VALUE + " TEXT,"
-            + PlayingMood.COL_INITIAL_MAX_BRI + " INTEGER," + PlayingMood.COL_MILI_TIME_STARTED
-            + " INTEGER" + ");");
+                   + " INTEGER PRIMARY KEY," + PlayingMood.COL_GROUP_VALUE + " TEXT,"
+                   + PlayingMood.COL_MOOD_NAME + " TEXT," + PlayingMood.COL_MOOD_VALUE + " TEXT,"
+                   + PlayingMood.COL_INITIAL_MAX_BRI + " INTEGER,"
+                   + PlayingMood.COL_MILI_TIME_STARTED
+                   + " INTEGER" + ");");
 
       }
       case 7: {
@@ -322,7 +338,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                      null, null);
 
-        HashMap<String, Pair<String, Pair<String,Integer>>> moodMap = new HashMap<String, Pair<String,Pair<String,Integer>>>();
+        HashMap<String, Pair<String, Pair<String, Integer>>>
+            moodMap =
+            new HashMap<String, Pair<String, Pair<String, Integer>>>();
 
         while (moodCursor.moveToNext()) {
           String visibleName = moodCursor.getString(0);
@@ -330,19 +348,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           String lowercaseName = visibleName.toLowerCase().trim();
           Integer priority = 1;
 
-          while(moodMap.containsKey(lowercaseName)){
-            visibleName+=" 1";
-            lowercaseName+=" 1";
+          while (moodMap.containsKey(lowercaseName)) {
+            visibleName += " 1";
+            lowercaseName += " 1";
           }
-          moodMap.put(lowercaseName, new Pair<String,Pair<String,Integer>>(visibleName,new Pair<String, Integer>(encodedMood, priority)));
+          moodMap.put(lowercaseName, new Pair<String, Pair<String, Integer>>(visibleName,
+                                                                             new Pair<String, Integer>(
+                                                                                 encodedMood,
+                                                                                 priority)
+          ));
         }
 
         String onName = mContext.getString(R.string.cap_on);
-        moodMap.put(onName.toLowerCase(), new Pair<String, Pair<String,Integer>>(onName, new Pair<String, Integer>(getEncodedOn(), 2)));
+        moodMap.put(onName.toLowerCase(), new Pair<String, Pair<String, Integer>>(onName,
+                                                                                  new Pair<String, Integer>(
+                                                                                      getEncodedOn(),
+                                                                                      2)
+        ));
 
         String offName = mContext.getString(R.string.cap_off);
-        moodMap.put(offName.toLowerCase(), new Pair<String, Pair<String,Integer>>(offName, new Pair<String, Integer>(getEncodedOff(), 2)));
-
+        moodMap.put(offName.toLowerCase(), new Pair<String, Pair<String, Integer>>(offName,
+                                                                                   new Pair<String, Integer>(
+                                                                                       getEncodedOff(),
+                                                                                       2)
+        ));
 
         // remove any nameless moods
         moodMap.remove("");
@@ -352,15 +381,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + MoodColumns.TABLE_NAME + " (" +
                    BaseColumns._ID + " INTEGER PRIMARY KEY," +
-                   MoodColumns.COL_MOOD_LOWERCASE_NAME+ " TEXT," +
+                   MoodColumns.COL_MOOD_LOWERCASE_NAME + " TEXT," +
                    MoodColumns.COL_MOOD_NAME + " TEXT," +
-                   MoodColumns.COL_MOOD_VALUE+ " TEXT," +
+                   MoodColumns.COL_MOOD_VALUE + " TEXT," +
                    MoodColumns.COL_MOOD_PRIORITY + " INTEGER," +
                    "UNIQUE (" + MoodColumns.COL_MOOD_LOWERCASE_NAME + ") ON CONFLICT REPLACE" +
                    ");");
 
         for (String key : moodMap.keySet()) {
-          Pair<String, Pair<String,Integer> > mapped = moodMap.get(key);
+          Pair<String, Pair<String, Integer>> mapped = moodMap.get(key);
           String visibleName = mapped.first;
           String value = mapped.second.first;
           Integer priority = mapped.second.second;

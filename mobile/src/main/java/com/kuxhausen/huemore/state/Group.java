@@ -1,12 +1,12 @@
 package com.kuxhausen.huemore.state;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.database.Cursor;
 
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+
+import java.util.ArrayList;
 
 public class Group {
 
@@ -32,7 +32,7 @@ public class Group {
     String[] gWhereClause = {name};
     Cursor cursor =
         c.getContentResolver().query(GroupColumns.GROUPBULBS_URI, groupColumns,
-            GroupColumns.GROUP + "=?", gWhereClause, null);
+                                     GroupColumns.GROUP + "=?", gWhereClause, null);
 
     ArrayList<Long> netBulbDbIds = new ArrayList<Long>();
     while (cursor.moveToNext()) {
@@ -56,7 +56,8 @@ public class Group {
               DatabaseDefinitions.NetBulbColumns.URI,
               projections,
               DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN + " =? AND "
-                  + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null);
+              + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
+          );
 
       if (cursor.moveToFirst()) {
         netBulbDbIds.add(cursor.getLong(0));
@@ -70,16 +71,18 @@ public class Group {
   public boolean conflictsWith(Group other) {
     for (Long mBulbId : mNetworkBulbDatabaseIds) {
       for (Long oBulbId : other.mNetworkBulbDatabaseIds) {
-        if (mBulbId.equals(oBulbId))
+        if (mBulbId.equals(oBulbId)) {
           return true;
+        }
       }
     }
     return false;
   }
 
   public boolean equals(Group g) {
-    if (this.mName.equals(g.getName()))
+    if (this.mName.equals(g.getName())) {
       return true;
+    }
     return false;
   }
 }

@@ -11,5 +11,6 @@ public class BulbAttributes {
   public String type;
   public String name;
 
-  public BulbAttributes() {}
+  public BulbAttributes() {
+  }
 }

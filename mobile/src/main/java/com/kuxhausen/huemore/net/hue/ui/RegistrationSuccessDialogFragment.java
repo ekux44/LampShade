@@ -10,6 +10,7 @@ import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 
 public class RegistrationSuccessDialogFragment extends DialogFragment {
+
   NetworkManagedActivity ma;
 
   @Override

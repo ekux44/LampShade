@@ -1,10 +1,5 @@
 package com.kuxhausen.huemore.persistence;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Pair;
@@ -14,9 +9,16 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+
 public class HueUrlEncoder {
 
-  /** zero indexed **/
+  /**
+   * zero indexed *
+   */
   public final static Integer PROTOCOL_VERSION_NUMBER = 4;
 
 
@@ -25,7 +27,6 @@ public class HueUrlEncoder {
   }
 
   public static String encode(Mood m, Group g, Integer brightness, Context c) {
-
 
     Integer[] legacyArray = new Integer[50];
     String[] projections = {DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN};
@@ -38,7 +39,8 @@ public class HueUrlEncoder {
               DatabaseDefinitions.NetBulbColumns.URI,
               projections,
               DatabaseDefinitions.NetBulbColumns._ID + " =? AND "
-                  + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null);
+              + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
+          );
 
       if (cursor.moveToFirst()) {
         String s = cursor.getString(0);
@@ -47,7 +49,6 @@ public class HueUrlEncoder {
       }
     }
 
-
     return encodeLegacy(m, legacyArray, brightness);
   }
 
@@ -55,8 +56,9 @@ public class HueUrlEncoder {
   public static String encodeLegacy(Mood m, Integer[] bulbsAffected, Integer brightness) {
     Mood mood = m.clone();
 
-    if (mood == null)
+    if (mood == null) {
       return "";
+    }
 
     ManagedBitSet mBitSet = new ManagedBitSet();
 
@@ -70,11 +72,13 @@ public class HueUrlEncoder {
     if (bulbsAffected != null) {
       boolean[] bulbs = new boolean[50];
       for (Integer i : bulbsAffected) {
-        if (i != null)
+        if (i != null) {
           bulbs[i - 1] = true;
+        }
       }
-      for (int i = 0; i < bulbs.length; i++)
+      for (int i = 0; i < bulbs.length; i++) {
         mBitSet.incrementingSet(bulbs[i]);
+      }
     }
 
     /** optional total brightness added in Protocol_Version_Number==3 **/
@@ -88,8 +92,9 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(brightness != null);
 
       // If optional brightness included, write it's 8 bits
-      if (brightness != null)
+      if (brightness != null) {
         mBitSet.addNumber(brightness, 8);
+      }
     }
 
     // Set 6 bit number of channels
@@ -101,15 +106,17 @@ public class HueUrlEncoder {
     // Set 6 bit number of timestamps
     mBitSet.addNumber(timeArray.size(), 6);
     // Set variable size list of 20 bit timestamps
-    for (Integer i : timeArray)
+    for (Integer i : timeArray) {
       mBitSet.addNumber(i, 20);
+    }
 
     ArrayList<BulbState> stateArray = generateStatesArray(mood);
     // Set 12 bit number of states
     mBitSet.addNumber(stateArray.size(), 12);
 
-    for (BulbState state : stateArray)
+    for (BulbState state : stateArray) {
       addState(mBitSet, state);
+    }
 
     // Set 12 bit number of events
     mBitSet.addNumber(mood.events.length, 12);
@@ -126,7 +133,9 @@ public class HueUrlEncoder {
 
   }
 
-  /** Set 8 bit timing repeat policy **/
+  /**
+   * Set 8 bit timing repeat policy *
+   */
   private static void addTimingRepeatPolicy(ManagedBitSet mBitSet, Mood mood) {
     // 1 bit timing addressing reference mode
     mBitSet.incrementingSet(mood.timeAddressingRepeatPolicy);
@@ -135,7 +144,9 @@ public class HueUrlEncoder {
     mBitSet.addNumber(mood.getNumLoops(), 7);
   }
 
-  /** Set variable length state **/
+  /**
+   * Set variable length state *
+   */
   private static void addState(ManagedBitSet mBitSet, BulbState bs) {
     /** Put 9 bit properties flags **/
     {
@@ -193,12 +204,13 @@ public class HueUrlEncoder {
     /** Put 2 bit alert **/
     if (bs.alert != null) {
       int value = 0;
-      if (bs.alert.equals("none"))
+      if (bs.alert.equals("none")) {
         value = 0;
-      else if (bs.alert.equals("select"))
+      } else if (bs.alert.equals("select")) {
         value = 1;
-      else if (bs.alert.equals("lselect"))
+      } else if (bs.alert.equals("lselect")) {
         value = 2;
+      }
 
       mBitSet.addNumber(value, 2);
     }
@@ -208,10 +220,11 @@ public class HueUrlEncoder {
     // functionality
     if (bs.effect != null) {
       int value = 0;
-      if (bs.effect.equals("none"))
+      if (bs.effect.equals("none")) {
         value = 0;
-      else if (bs.effect.equals("colorloop"))
+      } else if (bs.effect.equals("colorloop")) {
         value = 1;
+      }
 
       mBitSet.addNumber(value, 4);
     }
@@ -222,9 +235,12 @@ public class HueUrlEncoder {
     }
   }
 
-  /** Set variable length list of variable length events **/
+  /**
+   * Set variable length list of variable length events *
+   */
   private static void addListOfEvents(ManagedBitSet mBitSet, Mood mood,
-      ArrayList<Integer> timeArray, ArrayList<BulbState> stateArray) {
+                                      ArrayList<Integer> timeArray,
+                                      ArrayList<BulbState> stateArray) {
     String[] bulbStateToStringArray = new String[stateArray.size()];
     for (int i = 0; i < stateArray.size(); i++) {
       bulbStateToStringArray[i] = stateArray.get(i).toString();
@@ -241,11 +257,13 @@ public class HueUrlEncoder {
 
       // add mood lookup number
       mBitSet.addNumber(bulbStateToStringList.indexOf(e.state.toString()),
-          getBitLength(stateArray.size()));
+                        getBitLength(stateArray.size()));
     }
   }
 
-  /** calulate number of bits needed to address this many addresses **/
+  /**
+   * calulate number of bits needed to address this many addresses *
+   */
   private static int getBitLength(int addresses) {
     int length = 0;
     while (addresses != 0) {
@@ -319,7 +337,7 @@ public class HueUrlEncoder {
     if (propertiesFlags[4]) {
       Float x = Float.intBitsToFloat(mBitSet.extractNumber(32));
       Float y = Float.intBitsToFloat(mBitSet.extractNumber(32));
-      bs.xy = new Float[] {x, y};
+      bs.xy = new Float[]{x, y};
     }
 
     /** Get 9 bit ct **/
@@ -382,9 +400,11 @@ public class HueUrlEncoder {
       boolean hasBulbs = mBitSet.incrementingGet();
       if (hasBulbs) {
         // 50 bits of optional bulb inclusion flags
-        for (int i = 0; i < 50; i++)
-          if (mBitSet.incrementingGet())
+        for (int i = 0; i < 50; i++) {
+          if (mBitSet.incrementingGet()) {
             bList.add(i + 1);
+          }
+        }
       }
 
       if (encodingVersion == 1 || encodingVersion == 2 || encodingVersion == 3
@@ -395,8 +415,10 @@ public class HueUrlEncoder {
           // 1 bit optional brightness inclusion flag
           hasBrightness = mBitSet.incrementingGet();
           if (hasBrightness)
-            // 8 bit optional global brightness
+          // 8 bit optional global brightness
+          {
             brightness = mBitSet.extractNumber(8);
+          }
         }
 
         int numChannels = mBitSet.extractNumber(6);
@@ -445,10 +467,11 @@ public class HueUrlEncoder {
 
         // number of events, 8 bits for encodings 1 & 2, 12 bits for 3+
         int numEvents;
-        if (encodingVersion <= 2)
+        if (encodingVersion <= 2) {
           numEvents = mBitSet.extractNumber(8);
-        else
+        } else {
           numEvents = mBitSet.extractNumber(12);
+        }
         Event[] eList = new Event[numEvents];
 
         for (int i = 0; i < numEvents; i++) {
@@ -464,8 +487,9 @@ public class HueUrlEncoder {
         mood.events = eList;
 
         // 20 bit loopIterationTimeLength is only difference between encodingVersion=1 & =2
-        if (encodingVersion >= 2)
+        if (encodingVersion >= 2) {
           mood.loopIterationTimeLength = mBitSet.extractNumber(20);
+        }
 
       } else if (encodingVersion == 0) {
         mBitSet.useLittleEndianEncoding(true);
@@ -503,12 +527,13 @@ public class HueUrlEncoder {
       Integer[] bulbs = null;
       if (hasBulbs) {
         bulbs = new Integer[bList.size()];
-        for (int i = 0; i < bList.size(); i++)
+        for (int i = 0; i < bList.size(); i++) {
           bulbs[i] = bList.get(i);
+        }
       }
 
       return new Pair<Integer[], Pair<Mood, Integer>>(bulbs, new Pair<Mood, Integer>(mood,
-          brightness));
+                                                                                     brightness));
     } catch (FutureEncodingException e) {
       throw new FutureEncodingException();
     } catch (Exception e) {

@@ -40,7 +40,7 @@ public class DecodeErrorActivity extends ActionBarActivity implements OnClickLis
   public void onClick(View v) {
     if (decoderErrorUpgrade) {
       this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
-          + "com.kuxhausen.huemore")));
+                                                                  + "com.kuxhausen.huemore")));
     }
     this.finish();
   }

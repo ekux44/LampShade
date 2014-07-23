@@ -17,7 +17,8 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment implement
   NavigationDrawerActivity mParent;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     mParent = (NavigationDrawerActivity) this.getActivity();
 
     // Inflate the layout for this fragment

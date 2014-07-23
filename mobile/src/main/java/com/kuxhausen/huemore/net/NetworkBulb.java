@@ -41,10 +41,11 @@ public abstract class NetworkBulb {
 
 
   protected Integer getRawMaxBrightness() {
-    if(mMaxBri!=null) {
+    if (mMaxBri != null) {
       return Math.max(1, Math.min(100, mMaxBri));
-    } else
+    } else {
       return null;
+    }
   }
 
   /**
@@ -57,19 +58,19 @@ public abstract class NetworkBulb {
   /*
    * @param enabled if true, device's physical_brightness = current_bri * (max_bri/100) *
    */
-  public boolean isMaxBriModeEnabled(){
+  public boolean isMaxBriModeEnabled() {
     return mMaxBriEnabled;
   }
 
   /**
-   *
-   * @param enabled if true/false, set maxBriEnabled to value. If null, maxBri changes cause instantaneous stateChanges
-   * @param maxBri 1-100, or null to ignore
-   * @param broadcast
+   * @param enabled if true/false, set maxBriEnabled to value. If null, maxBri changes cause
+   *                instantaneous stateChanges
+   * @param maxBri  1-100, or null to ignore
    */
   public void setMaxBrightness(Boolean enabled, Integer maxBri, boolean broadcast) {
-    if (maxBri != null)
+    if (maxBri != null) {
       maxBri = Math.max(1, Math.min(100, maxBri));
+    }
 
     if (enabled != null) {
       mMaxBri = maxBri;
@@ -85,6 +86,6 @@ public abstract class NetworkBulb {
         }
       }
     }
-    Log.i("setMaxBri", "" + maxBri+" "+this.isMaxBriModeEnabled());
+    Log.i("setMaxBri", "" + maxBri + " " + this.isMaxBriModeEnabled());
   }
 }

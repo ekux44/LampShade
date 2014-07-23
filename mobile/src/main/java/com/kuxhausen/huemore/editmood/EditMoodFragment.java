@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
+import com.google.gson.Gson;
+
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -21,12 +23,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import com.kuxhausen.huemore.MoodRow;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -35,7 +34,7 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Mood;
 
 public class EditMoodFragment extends Fragment implements OnItemSelectedListener,
-    OnCheckedChangeListener {
+                                                          OnCheckedChangeListener {
 
   private NavigationDrawerActivity parrentA;
 
@@ -50,12 +49,14 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
   private CheckBox loop;
 
   public interface OnCreateMoodListener {
+
     public void preview();
 
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.edit_mood_activity, null);
@@ -64,17 +65,14 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
 
     parrentA.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
     // Inflate the custom view
     nameEditText =
         (EditText) LayoutInflater.from(parrentA).inflate(R.layout.mood_name_edit_text, null);
-
 
     loop = (CheckBox) myView.findViewById(R.id.loopCheckBox);
     loop.setOnCheckedChangeListener(this);
     moodTypeSpinner = (Spinner) myView.findViewById(R.id.moodTypeSpinner);
     moodTypeSpinner.setOnItemSelectedListener(this);
-
 
     // If we're being restored from a previous state,
     // then we don't need to do anything and should return or else
@@ -96,7 +94,7 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
       getChildFragmentManager()
           .beginTransaction()
           .add(R.id.edit_mood_fragment_container, stateGridFragment,
-              EditMoodStateGridFragment.class.getName()).commit();
+               EditMoodStateGridFragment.class.getName()).commit();
     }
 
     Bundle args = getArguments();
@@ -109,11 +107,13 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
 
       moodTypeSpinner
           .setSelection(EditMoodStateGridFragment.calculateMoodType(priorMood).ordinal());
-      if (moodTypeSpinner.getSelectedItemPosition() == EditMoodStateGridFragment.PageType.RELATIVE_PAGE
-          .ordinal())
+      if (moodTypeSpinner.getSelectedItemPosition()
+          == EditMoodStateGridFragment.PageType.RELATIVE_PAGE
+          .ordinal()) {
         setChecked(true);
-      else
+      } else {
         setChecked(false);
+      }
 
     } else {
       priorName = null;
@@ -141,14 +141,16 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
   }
 
   public String getName() {
-    if (nameEditText != null)
+    if (nameEditText != null) {
       return nameEditText.getText().toString();
+    }
     return "";
   }
 
   public boolean isChecked() {
-    if (loop != null)
+    if (loop != null) {
       return loop.isChecked();
+    }
     return false;
   }
 
@@ -192,14 +194,15 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
         ContentValues mNewValues = new ContentValues();
         mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
         mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase().trim());
-        mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(stateGridFragment.getMood()));
-
+        mNewValues
+            .put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(stateGridFragment.getMood()));
 
         if (priorName != null) {
           // modify existing mood
           String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
           String[] moodArg = {priorName};
-          parrentA.getContentResolver().update(MoodColumns.MOODS_URI, mNewValues, moodSelect, moodArg);
+          parrentA.getContentResolver()
+              .update(MoodColumns.MOODS_URI, mNewValues, moodSelect, moodArg);
 
           //now remember new mood name
           priorName = moodName;
@@ -211,14 +214,13 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
 
         Toast t =
             Toast.makeText(parrentA, parrentA.getResources().getString(R.string.saved) + " "
-                + moodName, Toast.LENGTH_SHORT);
+                                     + moodName, Toast.LENGTH_SHORT);
         t.show();
         parrentA.onBackPressed();
         return true;
     }
     return false;
   }
-
 
 
   @Override
@@ -235,13 +237,11 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
   }
 
 
-
   @Override
   public void onNothingSelected(AdapterView<?> parent) {
     // TODO Auto-generated method stub
 
   }
-
 
 
   @Override

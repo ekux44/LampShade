@@ -32,7 +32,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.state.Group;
 
 public class GroupListFragment extends ListFragment implements
-    LoaderManager.LoaderCallbacks<Cursor> {
+                                                    LoaderManager.LoaderCallbacks<Cursor> {
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0;
@@ -42,7 +42,8 @@ public class GroupListFragment extends ListFragment implements
   private NetworkManagedActivity gbpfCallback;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
     // create ContextThemeWrapper from the original Activity Context with the custom theme
     final Context contextThemeWrapper =
@@ -52,8 +53,9 @@ public class GroupListFragment extends ListFragment implements
 
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+        ? android.R.layout.simple_list_item_activated_1
+        : android.R.layout.simple_list_item_1;
 
     // Inflate the layout for this fragment
     View myView = localInflater.inflate(R.layout.groups_list_fragment, null);
@@ -68,7 +70,7 @@ public class GroupListFragment extends ListFragment implements
 
     dataSource =
         new SimpleCursorAdapter(contextThemeWrapper, layout, null, columns,
-            new int[] {android.R.id.text1}, 0);
+                                new int[]{android.R.id.text1}, 0);
 
     setListAdapter(dataSource);
 
@@ -87,7 +89,8 @@ public class GroupListFragment extends ListFragment implements
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.action_group, menu);
 
-    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
       MenuItem unlocksItem = menu.findItem(R.id.action_add_group);
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
@@ -124,8 +127,9 @@ public class GroupListFragment extends ListFragment implements
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (selected != null && selectedPos > -1)
+    if (selected != null && selectedPos > -1) {
       getListView().setItemChecked(selectedPos, false);
+    }
   }
 
   @Override
@@ -143,8 +147,9 @@ public class GroupListFragment extends ListFragment implements
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
 
-    if (longSelected == null)
+    if (longSelected == null) {
       return false;
+    }
 
     switch (item.getItemId()) {
 
@@ -152,7 +157,7 @@ public class GroupListFragment extends ListFragment implements
         String groupSelect = GroupColumns.GROUP + "=?";
         String[] groupArg = {longSelected.getText().toString()};
         getActivity().getContentResolver().delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
-            groupSelect, groupArg);
+                                                  groupSelect, groupArg);
         return true;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
@@ -193,11 +198,11 @@ public class GroupListFragment extends ListFragment implements
         // Returns a new CursorLoader
         String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-            DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
-            columns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+                                columns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in

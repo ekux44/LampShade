@@ -8,6 +8,7 @@ public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttr
   private final String bulbHueId;
 
   public interface OnBulbAttributesReturnedListener {
+
     public void onAttributesReturned(BulbAttributes result, String bulbHueId);
   }
 
@@ -15,7 +16,7 @@ public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttr
   private final OnBulbAttributesReturnedListener listener;
 
   public BulbAttributesSuccessListener(ConnectionMonitor parrentA,
-      OnBulbAttributesReturnedListener l, String bHueId, Route r) {
+                                       OnBulbAttributesReturnedListener l, String bHueId, Route r) {
     super(parrentA, r);
     listener = l;
     bulbHueId = bHueId;
@@ -25,7 +26,8 @@ public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttr
   public void onResponse(BulbAttributes response) {
     super.onResponse(response);
 
-    if (listener != null)
+    if (listener != null) {
       listener.onAttributesReturned(response, bulbHueId);
+    }
   }
 }

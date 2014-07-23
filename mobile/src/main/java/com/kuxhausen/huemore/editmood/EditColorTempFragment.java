@@ -18,22 +18,25 @@ import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColor
 import com.kuxhausen.huemore.state.BulbState;
 
 public class EditColorTempFragment extends Fragment implements OnSeekBarChangeListener,
-    OnCreateColorListener {
+                                                               OnCreateColorListener {
 
   private BulbState hs = new BulbState();
+
   {
     hs.on = true;
     hs.effect = "none";
 
     hs.ct = 1000000 / 4000;
   }
+
   SeekBar seekBar;
   EditText tempEditText;
   final int seekBarOffset = 2000;
   EditStatePagerDialogFragment statePager;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View groupDialogView = inflater.inflate(R.layout.colortemp_state_fragment, null);

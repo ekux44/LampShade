@@ -33,7 +33,7 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
 public class SharedMoodReaderActivity extends NetworkManagedActivity implements OnClickListener,
-    LoaderManager.LoaderCallbacks<Cursor> {
+                                                                                LoaderManager.LoaderCallbacks<Cursor> {
 
   private SharedMoodReaderActivity me;
 
@@ -60,8 +60,9 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
     me = this;
 
     int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+        ? android.R.layout.simple_list_item_activated_1
+        : android.R.layout.simple_list_item_1;
     /*
      * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
      * onCreateLoader().
@@ -95,7 +96,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
     groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
     String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
-        new SimpleCursorAdapter(this, layout, null, gColumns, new int[] {android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     groupSpinner.setAdapter(groupDataSource);
 
@@ -115,8 +116,9 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
     if (mBrightnessBar != null && !mIsTrackingTouch) {
       DeviceManager dm = this.getService().getDeviceManager();
       Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
-      if (candidateBrightness != null)
+      if (candidateBrightness != null) {
         mBrightnessBar.setProgress(candidateBrightness);
+      }
     }
   }
 
@@ -167,7 +169,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
         String[] moodArg = {moodName};
         this.getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI, moodSelect,
-            moodArg);
+                                         moodArg);
 
         ContentValues mNewValues = new ContentValues();
         mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
@@ -199,11 +201,11 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
         // Returns a new CursorLoader
         String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(this, // Parent activity context
-            DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
-            gColumns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+                                gColumns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in

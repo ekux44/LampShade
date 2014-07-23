@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.automation;
 
+import com.google.gson.Gson;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +27,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
@@ -39,7 +40,8 @@ import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 
 public class EditActivity extends NetworkManagedActivity implements
-    LoaderManager.LoaderCallbacks<Cursor>, OnCheckedChangeListener, OnClickListener {
+                                                         LoaderManager.LoaderCallbacks<Cursor>,
+                                                         OnCheckedChangeListener, OnClickListener {
 
   // don't change value
   protected static final String EXTRA_BUNDLE_SERIALIZED_BY_NAME =
@@ -54,7 +56,7 @@ public class EditActivity extends NetworkManagedActivity implements
   protected static final String TASKER_VARIABLE_TARGETS_KEY =
       "net.dinglisch.android.tasker.extras.VARIABLE_REPLACE_KEYS";
   protected static final String TASKER_VARIABLE_TARGETS_VALUE = PERCENT_BRIGHTNESS_KEY + " "
-      + MOOD_NAME_KEY;
+                                                                + MOOD_NAME_KEY;
 
   private Button okayButton, cancelButton;
 
@@ -83,7 +85,7 @@ public class EditActivity extends NetworkManagedActivity implements
     if (b != null
         && b.containsKey(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)
         && b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).containsKey(
-            EXTRA_BUNDLE_SERIALIZED_BY_NAME)) {
+        EXTRA_BUNDLE_SERIALIZED_BY_NAME)) {
       setSerializedByName(b.getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE).getString(
           EXTRA_BUNDLE_SERIALIZED_BY_NAME));
     }
@@ -102,8 +104,9 @@ public class EditActivity extends NetworkManagedActivity implements
 
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+        ? android.R.layout.simple_list_item_activated_1
+        : android.R.layout.simple_list_item_1;
 
     LoaderManager lm = getSupportLoaderManager();
     lm.initLoader(GROUPS_LOADER, null, this);
@@ -118,10 +121,12 @@ public class EditActivity extends NetworkManagedActivity implements
       }
 
       @Override
-      public void onStartTrackingTouch(SeekBar seekBar) {}
+      public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
       @Override
-      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+      }
     });
 
     brightnessDescripterTextView = (TextView) this.findViewById(R.id.brightnessDescripterTextView);
@@ -132,14 +137,14 @@ public class EditActivity extends NetworkManagedActivity implements
     groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
     String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
-        new SimpleCursorAdapter(this, layout, null, gColumns, new int[] {android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) this.findViewById(R.id.moodSpinner);
     String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
     moodDataSource =
-        new SimpleCursorAdapter(this, layout, null, mColumns, new int[] {android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, mColumns, new int[]{android.R.id.text1}, 0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     moodSpinner.setAdapter(moodDataSource);
 
@@ -152,7 +157,7 @@ public class EditActivity extends NetworkManagedActivity implements
       case R.id.okay:
         Intent i = new Intent();
         i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB,
-            getSerializedByNamePreview());
+                   getSerializedByNamePreview());
         Bundle b = new Bundle();
         b.putString(EXTRA_BUNDLE_SERIALIZED_BY_NAME, getSerializedByName());
         i.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, b);
@@ -189,8 +194,9 @@ public class EditActivity extends NetworkManagedActivity implements
     Mood m = Utils.getMoodFromDatabase(moodName, this);
 
     Integer brightness = null;
-    if (brightnessBar.getVisibility() == View.VISIBLE)
+    if (brightnessBar.getVisibility() == View.VISIBLE) {
       brightness = brightnessBar.getProgress();
+    }
 
     this.getService().getMoodPlayer().playMood(g, m, moodName, brightness, null);
   }
@@ -199,12 +205,14 @@ public class EditActivity extends NetworkManagedActivity implements
     GroupMoodBrightness gmb = new GroupMoodBrightness();
     gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
     gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString();
-    if (brightnessBar.getVisibility() == View.VISIBLE)
+    if (brightnessBar.getVisibility() == View.VISIBLE) {
       gmb.brightness = brightnessBar.getProgress();
+    }
 
     String preview = gmb.group + " \u2192 " + gmb.mood;
-    if (brightnessBar.getVisibility() == View.VISIBLE)
+    if (brightnessBar.getVisibility() == View.VISIBLE) {
       preview += " @ " + ((gmb.brightness * 100) / 255) + "%";
+    }
     return preview;
   }
 
@@ -217,8 +225,9 @@ public class EditActivity extends NetworkManagedActivity implements
     GroupMoodBrightness gmb = new GroupMoodBrightness();
     gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
     gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString();
-    if (brightnessBar.getVisibility() == View.VISIBLE)
+    if (brightnessBar.getVisibility() == View.VISIBLE) {
       gmb.brightness = brightnessBar.getProgress();
+    }
     return gson.toJson(gmb);
   }
 
@@ -231,7 +240,7 @@ public class EditActivity extends NetworkManagedActivity implements
       case MOODS_LOADER:
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(this, DatabaseDefinitions.MoodColumns.MOODS_URI, mColumns, null,
-            null, null);
+                                null, null);
       default:
         return null;
     }
@@ -257,19 +266,22 @@ public class EditActivity extends NetworkManagedActivity implements
       // apply prior state
       int moodPos = 0;
       for (int i = 0; i < moodDataSource.getCount(); i++) {
-        if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(priorGMB.mood))
+        if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(priorGMB.mood)) {
           moodPos = i;
+        }
       }
       moodSpinner.setSelection(moodPos);
 
       int groupPos = 0;
       for (int i = 0; i < groupDataSource.getCount(); i++) {
-        if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(priorGMB.group))
+        if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(priorGMB.group)) {
           groupPos = i;
+        }
       }
       groupSpinner.setSelection(groupPos);
-      if (priorGMB.brightness != null)
+      if (priorGMB.brightness != null) {
         brightnessBar.setProgress(priorGMB.brightness);
+      }
     }
   }
 

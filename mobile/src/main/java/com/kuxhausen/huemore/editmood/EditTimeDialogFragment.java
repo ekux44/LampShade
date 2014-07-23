@@ -22,7 +22,8 @@ public class EditTimeDialogFragment extends DialogFragment implements OnClickLis
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.edit_timeslot_dialog, container, false);

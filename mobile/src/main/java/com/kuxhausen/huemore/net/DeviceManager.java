@@ -189,7 +189,7 @@ public class DeviceManager {
       }
     }
 
-    return briSum/briNum;
+    return briSum / briNum;
   }
 
   /**
@@ -205,7 +205,7 @@ public class DeviceManager {
         NetworkBulb bulb = bulbMap.get(bulbId);
 
         BulbState change = new BulbState();
-        change.bri = (int)(brightness * 2.55f);
+        change.bri = (int) (brightness * 2.55f);
         bulb.setState(change, false);
       }
     }
@@ -232,7 +232,7 @@ public class DeviceManager {
       }
     }
 
-    return briSum/briNum;
+    return briSum / briNum;
   }
 
   /**

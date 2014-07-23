@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.widget;
 
+import com.google.gson.Gson;
+
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
@@ -12,7 +14,6 @@ import android.provider.BaseColumns;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
@@ -23,6 +24,7 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class GroupWidgetService extends RemoteViewsService {
+
   @Override
   public RemoteViewsFactory onGetViewFactory(Intent intent) {
     return new GroupStackRemoteViewsFactory(this.getApplicationContext(), intent);
@@ -35,6 +37,7 @@ public class GroupWidgetService extends RemoteViewsService {
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+
   private Context mContext;
   private Cursor mCursor;
   private int mAppWidgetId;
@@ -44,7 +47,7 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     mContext = context;
     mAppWidgetId =
         intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID);
+                           AppWidgetManager.INVALID_APPWIDGET_ID);
   }
 
   public void onCreate() {
@@ -81,7 +84,7 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
       final Intent fillInIntent = new Intent();
       final Bundle extras = new Bundle();
       extras.putString(InternalArguments.MOOD_NAME,
-          mContext.getResources().getString(R.string.cap_off));
+                       mContext.getResources().getString(R.string.cap_off));
       extras.putString(InternalArguments.GROUP_NAME, groupName);
       fillInIntent.putExtras(extras);
       rv.setOnClickFillInIntent(R.id.offButton, fillInIntent);
@@ -91,7 +94,7 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
       final Intent fillInIntent = new Intent();
       final Bundle extras = new Bundle();
       extras.putString(InternalArguments.MOOD_NAME,
-          mContext.getResources().getString(R.string.cap_on));
+                       mContext.getResources().getString(R.string.cap_on));
       extras.putString(InternalArguments.GROUP_NAME, groupName);
       fillInIntent.putExtras(extras);
       rv.setOnClickFillInIntent(R.id.onButton, fillInIntent);

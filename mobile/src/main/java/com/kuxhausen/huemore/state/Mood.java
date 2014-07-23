@@ -1,22 +1,27 @@
 package com.kuxhausen.huemore.state;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
-import com.google.gson.Gson;
-
 public class Mood implements Cloneable {
+
   public Event[] events;
   private int numChannels;
   public Boolean usesTiming;
-  /** in units of 1/10 of a second */
+  /**
+   * in units of 1/10 of a second
+   */
   public int loopIterationTimeLength;
   /**
    * if true, timestamps in events are offsets from beginning of the day, otherwise they are offsets
    * from mood start time
-   **/
+   */
   public Boolean timeAddressingRepeatPolicy;
-  /** max value 126 (127 special cased to infinity) **/
+  /**
+   * max value 126 (127 special cased to infinity) *
+   */
   private Integer numLoops;
 
   public Mood() {
@@ -28,8 +33,9 @@ public class Mood implements Cloneable {
   }
 
   public void setInfiniteLooping(boolean infinite) {
-    if (infinite)
+    if (infinite) {
       numLoops = 127;
+    }
   }
 
   public boolean isInfiniteLooping() {
@@ -60,12 +66,14 @@ public class Mood implements Cloneable {
 
   public int getNumTimeslots() {
     int result = 0;
-    if (events == null)
+    if (events == null) {
       return result;
+    }
     HashSet<Integer> times = new HashSet<Integer>();
     for (Event e : events) {
-      if (e != null && e.time != null && times.add(e.time))
+      if (e != null && e.time != null && times.add(e.time)) {
         result++;
+      }
     }
     return result;
   }
@@ -78,8 +86,9 @@ public class Mood implements Cloneable {
     BulbState[][] colorGrid = new BulbState[maxRow][maxCol];
     int curRow = -1;
     for (Event e : events) {
-      if (!timeslotMapping.containsKey(e.time))
+      if (!timeslotMapping.containsKey(e.time)) {
         timeslotMapping.put(e.time, ++curRow);
+      }
       colorGrid[timeslotMapping.get(e.time)][e.channel] = e.state;
     }
 
@@ -87,11 +96,13 @@ public class Mood implements Cloneable {
   }
 
   public boolean isSimple() {
-    if (events == null)
+    if (events == null) {
       return true;
+    }
     for (Event e : events) {
-      if (e != null && e.time != null && e.time != 0)
+      if (e != null && e.time != null && e.time != 0) {
         return false;
+      }
     }
     return true;
   }

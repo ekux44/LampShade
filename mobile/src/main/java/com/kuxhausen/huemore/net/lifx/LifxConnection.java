@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.ContactsContract;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.Connection;
@@ -102,7 +101,8 @@ public class LifxConnection implements Connection {
 
     String selector = DatabaseDefinitions.NetConnectionColumns._ID + "=?";
     String[] selectionArgs = {"" + mBaseId};
-    mContext.getContentResolver().delete(DatabaseDefinitions.NetConnectionColumns.URI, selector, selectionArgs);
+    mContext.getContentResolver()
+        .delete(DatabaseDefinitions.NetConnectionColumns.URI, selector, selectionArgs);
   }
 
   public String getDeviceId() {

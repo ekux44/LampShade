@@ -1,8 +1,8 @@
 package com.kuxhausen.huemore.timing;
 
-import java.util.Calendar;
-
 import android.os.SystemClock;
+
+import java.util.Calendar;
 
 
 public class Conversions {

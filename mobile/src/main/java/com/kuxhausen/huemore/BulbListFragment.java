@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -29,11 +27,14 @@ import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
 import com.kuxhausen.huemore.state.Group;
 
-public class BulbListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+
+public class BulbListFragment extends ListFragment
+    implements LoaderManager.LoaderCallbacks<Cursor> {
 
   private static final int BULBS_LOADER = 0;
   private static final String[] columns = {NetBulbColumns.NAME_COLUMN,
-      NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID};
+                                           NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID};
 
   public CursorAdapter dataSource;
 
@@ -44,7 +45,8 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
   ArrayList<String> bulbNameList;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     // create ContextThemeWrapper from the original Activity Context with the custom theme
     final Context contextThemeWrapper =
         new ContextThemeWrapper(this.getActivity(), R.style.GreenWidgets);
@@ -53,14 +55,15 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
 
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+        ? android.R.layout.simple_list_item_activated_1
+        : android.R.layout.simple_list_item_1;
 
     getLoaderManager().initLoader(BULBS_LOADER, null, this);
 
     dataSource =
         new SimpleCursorAdapter(contextThemeWrapper, layout, null, columns,
-            new int[] {android.R.id.text1}, 0);
+                                new int[]{android.R.id.text1}, 0);
 
     setListAdapter(dataSource);
 
@@ -85,8 +88,9 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (selected != null && selectedPos > -1)
+    if (selected != null && selectedPos > -1) {
       getListView().setItemChecked(selectedPos, false);
+    }
   }
 
   @Override
@@ -102,8 +106,9 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
 
-    if (longSelected == null)
+    if (longSelected == null) {
       return false;
+    }
 
     switch (item.getItemId()) {
 
@@ -145,11 +150,11 @@ public class BulbListFragment extends ListFragment implements LoaderManager.Load
       case BULBS_LOADER:
         // Returns a new CursorLoader
         return new CursorLoader(getActivity(), // Parent activity context
-            DatabaseDefinitions.NetBulbColumns.URI, // Table
-            columns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                DatabaseDefinitions.NetBulbColumns.URI, // Table
+                                columns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in

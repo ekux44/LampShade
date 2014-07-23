@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 
 import java.util.List;

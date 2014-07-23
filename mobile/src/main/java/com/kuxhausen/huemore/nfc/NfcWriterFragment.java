@@ -1,8 +1,6 @@
 package com.kuxhausen.huemore.nfc;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import com.google.gson.Gson;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -39,7 +37,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
@@ -51,9 +48,14 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
 
 public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
-    OnCheckedChangeListener, OnClickListener {
+                                                           OnCheckedChangeListener,
+                                                           OnClickListener {
 
   private Button sendButton;
   private NfcAdapter nfcAdapter;
@@ -78,7 +80,8 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     View myView = inflater.inflate(R.layout.nfc_writer, container, false);
 
     context = (NavigationDrawerActivity) this.getActivity();
@@ -90,11 +93,11 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
      * nfcItem.setEnabled(false); nfcItem.setVisible(false); }
      */
 
-
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+        ? android.R.layout.simple_list_item_activated_1
+        : android.R.layout.simple_list_item_1;
 
     brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
     brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -105,10 +108,12 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
       }
 
       @Override
-      public void onStartTrackingTouch(SeekBar seekBar) {}
+      public void onStartTrackingTouch(SeekBar seekBar) {
+      }
 
       @Override
-      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+      }
     });
 
     brightnessDescripterTextView =
@@ -120,14 +125,14 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     groupSpinner = (Spinner) myView.findViewById(R.id.groupSpinner);
     String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
-        new SimpleCursorAdapter(context, layout, null, gColumns, new int[] {android.R.id.text1}, 0);
+        new SimpleCursorAdapter(context, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
     String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
     moodDataSource =
-        new SimpleCursorAdapter(context, layout, null, mColumns, new int[] {android.R.id.text1}, 0);
+        new SimpleCursorAdapter(context, layout, null, mColumns, new int[]{android.R.id.text1}, 0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     moodSpinner.setAdapter(moodDataSource);
 
@@ -138,10 +143,12 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 
     pendingIntent =
         PendingIntent.getActivity(context, 0,
-            new Intent(context, context.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+                                  new Intent(context, context.getClass())
+                                      .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0
+        );
     IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
     tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-    writeTagFilters = new IntentFilter[] {tagDetected};
+    writeTagFilters = new IntentFilter[]{tagDetected};
 
     return myView;
   }
@@ -174,19 +181,19 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
         try {
           if (context.myTag == null) {
             Toast.makeText(context, context.getString(R.string.nfc_tag_not_detected),
-                Toast.LENGTH_SHORT).show();
+                           Toast.LENGTH_SHORT).show();
           } else {
             write(getSerializedByValue(), context.myTag);
             Toast.makeText(context, context.getString(R.string.nfc_tag_write_success),
-                Toast.LENGTH_SHORT).show();
+                           Toast.LENGTH_SHORT).show();
           }
         } catch (IOException e) {
           Toast.makeText(context, context.getString(R.string.nfc_tag_write_fail),
-              Toast.LENGTH_SHORT).show();
+                         Toast.LENGTH_SHORT).show();
           e.printStackTrace();
         } catch (FormatException e) {
           Toast.makeText(context, context.getString(R.string.nfc_tag_write_fail),
-              Toast.LENGTH_SHORT).show();
+                         Toast.LENGTH_SHORT).show();
           e.printStackTrace();
         }
         break;
@@ -239,20 +246,22 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     LoaderManager lm = context.getSupportLoaderManager();
     lm.initLoader(GROUPS_LOADER, null, this);
     lm.initLoader(MOODS_LOADER, null, this);
-    
+
     setHasOptionsMenu(true);
   }
 
   private void WriteModeOn() {
     writeMode = true;
-    if (nfcAdapter != null)
+    if (nfcAdapter != null) {
       nfcAdapter.enableForegroundDispatch(context, pendingIntent, writeTagFilters, null);
+    }
   }
 
   private void WriteModeOff() {
     writeMode = false;
-    if (nfcAdapter != null)
+    if (nfcAdapter != null) {
       nfcAdapter.disableForegroundDispatch(context);
+    }
   }
 
   public void preview() {
@@ -264,8 +273,9 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     Mood m = Utils.getMoodFromDatabase(moodName, context);
 
     Integer brightness = null;
-    if (brightnessBar.getVisibility() == View.VISIBLE)
+    if (brightnessBar.getVisibility() == View.VISIBLE) {
       brightness = brightnessBar.getProgress();
+    }
 
     context.getService().getMoodPlayer().playMood(g, m, moodName, brightness, null);
   }
@@ -273,18 +283,18 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   public String getSerializedByValue() {
     String url = "lampshade.io/nfc?";
 
-
     Group g =
         Group.loadFromDatabase(((TextView) groupSpinner.getSelectedView()).getText().toString(),
-            context);
+                               context);
 
     Mood m =
         Utils.getMoodFromDatabase(((TextView) moodSpinner.getSelectedView()).getText().toString(),
-            context);
+                                  context);
 
     Integer brightness = null;
-    if (brightnessBar.getVisibility() == View.VISIBLE)
+    if (brightnessBar.getVisibility() == View.VISIBLE) {
       brightness = brightnessBar.getProgress();
+    }
 
     String data = HueUrlEncoder.encode(m, g, brightness, context);
     return url + data;
@@ -300,7 +310,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
       case MOODS_LOADER:
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(context, DatabaseDefinitions.MoodColumns.MOODS_URI, mColumns, null,
-            null, null);
+                                null, null);
       default:
         return null;
     }
@@ -326,19 +336,22 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
       // apply prior state
       int moodPos = 0;
       for (int i = 0; i < moodDataSource.getCount(); i++) {
-        if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(priorGMB.mood))
+        if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(priorGMB.mood)) {
           moodPos = i;
+        }
       }
       moodSpinner.setSelection(moodPos);
 
       int groupPos = 0;
       for (int i = 0; i < groupDataSource.getCount(); i++) {
-        if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(priorGMB.group))
+        if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(priorGMB.group)) {
           groupPos = i;
+        }
       }
       groupSpinner.setSelection(groupPos);
-      if (priorGMB.brightness != null)
+      if (priorGMB.brightness != null) {
         brightnessBar.setProgress(priorGMB.brightness);
+      }
     }
   }
 

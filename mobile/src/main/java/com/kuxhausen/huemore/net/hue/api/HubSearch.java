@@ -1,11 +1,8 @@
 package com.kuxhausen.huemore.net.hue.api;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
+import com.google.gson.Gson;
+
+import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,9 +16,12 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.os.AsyncTask;
-
-import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
@@ -31,7 +31,10 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
   // The container Activity must implement this interface so the frag can
   // deliver messages
   public interface OnHubFoundListener {
-    /** Called by HeadlinesFragment when a list item is selected */
+
+    /**
+     * Called by HeadlinesFragment when a list item is selected
+     */
     public void onHubFoundResult(Bridge[] bridges);
   }
 
@@ -86,8 +89,9 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
     } catch (java.lang.ArrayIndexOutOfBoundsException e) {
       // TODO deal with null IP from getBridge
     }
-    if (result != null && result.length < 1)
+    if (result != null && result.length < 1) {
       result = null;
+    }
     return result;
   }
 
@@ -96,8 +100,9 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
     Bridge[] result = new Bridge[0];
     result = getBridgesAPI();
-    if (result != null)
+    if (result != null) {
       return result;
+    }
     ArrayList<Bridge> results = new ArrayList<Bridge>();
 
     HttpParams httpParameters = new BasicHttpParams();
@@ -113,12 +118,14 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
     for (int i = 0; i < 256; i++) {
 
-      if (this.isCancelled())
+      if (this.isCancelled()) {
         i = 256;
+      }
 
       Bridge possible = checkIP((i + 100) % 256, client);
-      if (possible != null)
+      if (possible != null) {
         results.add(possible);
+      }
     }
     result = results.toArray(new Bridge[0]);
     return result;

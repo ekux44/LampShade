@@ -33,11 +33,12 @@ public class Tests {
       if (b1.length != b2.length) {
         Log.e("tests", tNum + "bulbLengthNotEqual");
       }
-      for (int i = 0; i < b1.length; i++)
+      for (int i = 0; i < b1.length; i++) {
         if (b1[i] != b2[i]) {
           Log.e("tests", tNum + "bulb@spot" + i + " FlagNotEqual");
           return false;
         }
+      }
     }
     if (m1.isInfiniteLooping() != m2.isInfiniteLooping()) {
       Log.e("tests", tNum + "infiniteLoopingNotEqual");
@@ -139,7 +140,6 @@ public class Tests {
      * Log.e("tests","6"+test(6,m,null,null)); Integer[] bulbs = {1, 3, 14};
      * Log.e("tests","7"+test(7,m,bulbs,null));
      */
-
 
     /** bitSet to encoding test **/
     /*

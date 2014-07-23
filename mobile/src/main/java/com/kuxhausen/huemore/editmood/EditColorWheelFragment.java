@@ -16,7 +16,7 @@ import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
 public class EditColorWheelFragment extends Fragment implements OnCreateColorListener,
-    com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
+                                                                com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
   ColorPicker picker;
   SaturationBar saturationBar;
@@ -24,7 +24,8 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
   EditStatePagerDialogFragment statePager;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.colorwheel_state_fragment, null);
@@ -52,13 +53,16 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
 
     BulbState state = statePager.getState();
     // relative brightness
-    if (newHSV[2] != 1f)
+    if (newHSV[2] != 1f) {
       state.bri = (int) (newHSV[2] * 255f);
+    }
     state.on = true;
     state.xy = newXY;
     state.ct = null;
-    if (EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE - EditStatePagerDialogFragment.hasNoRecentStates))
+    if (EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE
+                                                     - EditStatePagerDialogFragment.hasNoRecentStates)) {
       statePager.setState(state, this, "wheel");
+    }
   }
 
   @Override

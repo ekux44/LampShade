@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
@@ -29,7 +28,8 @@ import com.kuxhausen.huemore.state.Group;
  * @author Eric Kuxhausen
  */
 public class MainFragment extends Fragment implements
-    OnServiceConnectedListener, OnActiveMoodsChangedListener, DeviceManager.OnStateChangedListener {
+                                           OnServiceConnectedListener, OnActiveMoodsChangedListener,
+                                           DeviceManager.OnStateChangedListener {
 
   private NavigationDrawerActivity mParent;
 
@@ -50,7 +50,8 @@ public class MainFragment extends Fragment implements
    */
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.main_activity, null);
@@ -61,7 +62,6 @@ public class MainFragment extends Fragment implements
     // Set up the ViewPager, attaching the adapter.
     mGroupBulbViewPager = (ViewPager) myView.findViewById(R.id.bulb_group_pager);
     mGroupBulbViewPager.setAdapter(mGroupBulbPagerAdapter);
-
 
     // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
     // it's PagerAdapter set.
@@ -76,7 +76,8 @@ public class MainFragment extends Fragment implements
     mGroupBulbSlidingTabLayout.setOnPageChangeListener(mForwardPage);
 
     mSettings = PreferenceManager.getDefaultSharedPreferences(mParent);
-    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
 
       mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
       // Set up the ViewPager, attaching the adapter.
@@ -94,7 +95,6 @@ public class MainFragment extends Fragment implements
       mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
       mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
           R.color.redwidgets_color));
-
 
       mBrightnessDescriptor = (TextView) myView.findViewById(R.id.brightnessDescripterTextView);
       mBrightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
@@ -172,13 +172,15 @@ public class MainFragment extends Fragment implements
   }
 
   public void setMode() {
-    if (!mParent.boundToService() || mBrightnessBar == null)
+    if (!mParent.boundToService() || mBrightnessBar == null) {
       return;
+    }
 
     boolean maxBriMode = false;
     Group g = mParent.getService().getDeviceManager().getSelectedGroup();
-    if (g != null && mParent.getService().getMoodPlayer().conflictsWithOngoingPlaying(g))
+    if (g != null && mParent.getService().getMoodPlayer().conflictsWithOngoingPlaying(g)) {
       maxBriMode = true;
+    }
 
     if (maxBriMode) {
       mBrightnessBar.setVisibility(View.GONE);
@@ -225,22 +227,24 @@ public class MainFragment extends Fragment implements
   }
 
   public void invalidateSelection() {
-    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
       ((MoodListFragment) (mMoodManualPagerAdapter.getItem(MoodManualPagerAdapter.MOOD_LOCATION)))
           .invalidateSelection();
     }
   }
 
   public void setTab(int tabNum) {
-    if (mGroupBulbViewPager != null)
+    if (mGroupBulbViewPager != null) {
       mGroupBulbViewPager.setCurrentItem(tabNum);
+    }
   }
 
   @Override
   public void onStateChanged() {
     DeviceManager dm = mParent.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch && mBrightnessBar!=null && mMaxBrightnessBar!=null) {
+    if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
       mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
       mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
     }
@@ -251,7 +255,8 @@ public class MainFragment extends Fragment implements
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.main, menu);
 
-    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        < Configuration.SCREENLAYOUT_SIZE_LARGE) {
       MenuItem bothItem = menu.findItem(R.id.action_add_both);
       if (bothItem != null) {
         bothItem.setEnabled(false);

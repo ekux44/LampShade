@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.net;
 
-import java.util.List;
-
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -36,14 +34,17 @@ import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.timing.AlarmReciever;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
+import java.util.List;
+
 public class ConnectivityService extends Service implements OnActiveMoodsChangedListener,
-    OnStateChangedListener {
+                                                            OnStateChangedListener {
 
   /**
    * Class used for the client Binder. Because we know this service always runs in the same process
    * as its clients, we don't need to deal with IPC.
    */
   public class LocalBinder extends Binder {
+
     public ConnectivityService getService() {
       // Return this instance of LocalService so clients can call public methods
       return ConnectivityService.this;
@@ -81,13 +82,14 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   }
 
   @Override
-  /** 
+  /**
    * Called after onCreate when service attaching to Activity(s)
    */
   public IBinder onBind(Intent intent) {
     mBound = true;
-    if (mDeviceManager != null)
+    if (mDeviceManager != null) {
       mDeviceManager.setSycMode(true);
+    }
     return mBinder;
   }
 
@@ -95,8 +97,9 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   public boolean onUnbind(Intent intent) {
     super.onUnbind(intent);
     mBound = false;
-    if (mDeviceManager != null)
+    if (mDeviceManager != null) {
       mDeviceManager.setSycMode(false);
+    }
     calculateWakeNeeds();
     return true; // ensures onRebind is called
   }
@@ -104,13 +107,14 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   @Override
   public void onRebind(Intent intent) {
     super.onRebind(intent);
-    if (mDeviceManager != null)
+    if (mDeviceManager != null) {
       mDeviceManager.setSycMode(true);
+    }
     mBound = true;
   }
 
   @Override
-  /** 
+  /**
    * Called after onCreate when service (re)started independently
    */
   public int onStartCommand(Intent intent, int flags, int startId) {
@@ -126,12 +130,14 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       Integer maxBri = null;
 
       Bundle extras = intent.getExtras();
-      if(extras!=null) {
+      if (extras != null) {
         if (extras.containsKey(InternalArguments.VOICE_INPUT) || extras.containsKey(
             InternalArguments.VOICE_INPUT_LIST)) {
           String best = extras.getString(InternalArguments.VOICE_INPUT);
           List<String> candidates = extras.getStringArrayList(InternalArguments.VOICE_INPUT_LIST);
-          float[] confidences = extras.getFloatArray(InternalArguments.VOICE_INPUT_CONFIDENCE_ARRAY);
+          float[]
+              confidences =
+              extras.getFloatArray(InternalArguments.VOICE_INPUT_CONFIDENCE_ARRAY);
 
           GroupMoodBrightness parsed = SpeechParser.parse(this, best, candidates, confidences);
           groupName = parsed.group;
@@ -160,7 +166,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
           if (moodPairs.second.first != null) {
             Group g = Group.loadFromLegacyData(moodPairs.first, groupName, this);
 
-
             moodName = (moodName == null) ? "Unknown Mood" : moodName;
             mMoodPlayer
                 .playMood(g, moodPairs.second.first, moodName, moodPairs.second.second, null);
@@ -180,7 +185,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
         mMoodPlayer.playMood(g, m, moodName, maxBri, null);
       } else if (intent.hasExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS)
-          && intent.getExtras().getBoolean(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS)) {
+                 && intent.getExtras().getBoolean(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS)) {
         mMoodPlayer.restoreFromSaved();
       }
     }
@@ -198,23 +203,25 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     boolean waitingOnPendingNetworking = false;
     Log.d("power", "calculateWakeNeeds");
 
-
-    if (mMoodPlayer.hasImminentPendingWork())
+    if (mMoodPlayer.hasImminentPendingWork()) {
       waitingOnPlayingMood = true;
-
-    for (Connection c : mDeviceManager.getConnections()) {
-      if (c.hasPendingWork())
-        waitingOnPendingNetworking = true;
     }
 
-    Log.d("power", "waitingOnPlayingMood="+waitingOnPlayingMood);
-    Log.d("power", "waitingOnPendingNetworking="+waitingOnPendingNetworking);
+    for (Connection c : mDeviceManager.getConnections()) {
+      if (c.hasPendingWork()) {
+        waitingOnPendingNetworking = true;
+      }
+    }
+
+    Log.d("power", "waitingOnPlayingMood=" + waitingOnPlayingMood);
+    Log.d("power", "waitingOnPendingNetworking=" + waitingOnPendingNetworking);
 
     if (waitingOnPlayingMood || waitingOnPendingNetworking) {
       if (mWakelock == null) {
         // acquire wakelock till done doing work
         PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        mWakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getString(R.string.app_name));
+        mWakelock =
+            pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getString(R.string.app_name));
         mWakelock.acquire();
       }
     } else {
@@ -236,13 +243,13 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       }
     }
 
-    if(!mBound && !waitingOnPlayingMood && waitingOnPendingNetworking){
+    if (!mBound && !waitingOnPlayingMood && waitingOnPendingNetworking) {
       // check back in another second to see if pending networking has completed or timed out
       Handler handler = new Handler();
-      handler.postDelayed(new Runnable(){
+      handler.postDelayed(new Runnable() {
         @Override
-        public void run(){
-          if(!mDestroyed) {
+        public void run() {
+          if (!mDestroyed) {
             ConnectivityService.this.calculateWakeNeeds();
           }
         }
@@ -291,7 +298,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       }
       if (playing.size() > 5) {
         iStyle.setSummaryText("+" + (playing.size() - 5) + " "
-            + this.getResources().getString(R.string.notification_overflow_more));
+                              + this.getResources().getString(R.string.notification_overflow_more));
       }
       mBuilder.setStyle(iStyle);
 
@@ -306,8 +313,9 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     mDestroyed = true;
     mMoodPlayer.onDestroy();
     mDeviceManager.onDestroy();
-    if (mWakelock != null)
+    if (mWakelock != null) {
       mWakelock.release();
+    }
     super.onDestroy();
   }
 }

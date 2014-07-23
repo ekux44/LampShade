@@ -51,7 +51,7 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
 
   }
 
-  protected void onInitialize(){
+  protected void onInitialize() {
     mInitializedTime = SystemClock.elapsedRealtime();
   }
 
@@ -59,15 +59,16 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
     mLight = light;
     mLight.addLightListener(this);
 
-    if(!mDesiredState.isEmpty()){
+    if (!mDesiredState.isEmpty()) {
       setState(mDesiredState, false);
       mDesiredState = new BulbState();
     }
   }
 
   public void lightDisconnected() {
-    if(mLight!=null)
+    if (mLight != null) {
       mLight.removeLightListener(this);
+    }
     mLight = null;
   }
 
@@ -77,7 +78,7 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
     if (mLight != null && mLight.getReachability()
         .equals(LFXTypes.LFXDeviceReachability.REACHABLE)) {
       return ConnectivityState.Connected;
-    } else if(SystemClock.elapsedRealtime() > (mInitializedTime + this.TRANSMIT_TIMEOUT_TIME)){
+    } else if (SystemClock.elapsedRealtime() > (mInitializedTime + this.TRANSMIT_TIMEOUT_TIME)) {
       return ConnectivityState.Unreachable;
     }
     return ConnectivityState.Unknown;
@@ -129,8 +130,9 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
     }
   }
 
-  protected boolean hasPendingWork(){
-    if(mDesiredLastChanged!=null && (mDesiredLastChanged+this.TRANSMIT_TIMEOUT_TIME) > SystemClock.elapsedRealtime()){
+  protected boolean hasPendingWork() {
+    if (mDesiredLastChanged != null
+        && (mDesiredLastChanged + this.TRANSMIT_TIMEOUT_TIME) > SystemClock.elapsedRealtime()) {
       return true;
     }
     return false;
@@ -142,10 +144,10 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
   }
 
   @Override
-  public Integer getMaxBrightness(boolean guessIfUnknown){
-    if(getRawMaxBrightness()!=null) {
+  public Integer getMaxBrightness(boolean guessIfUnknown) {
+    if (getRawMaxBrightness() != null) {
       return getRawMaxBrightness();
-    } else if(guessIfUnknown){
+    } else if (guessIfUnknown) {
       //TODO return present 'physical' brightness if known
       return 50;
     } else {

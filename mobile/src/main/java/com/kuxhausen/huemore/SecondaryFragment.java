@@ -17,14 +17,15 @@ import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
 
 /**
  * @author Eric Kuxhausen
  */
-public class SecondaryFragment extends Fragment implements OnServiceConnectedListener, OnActiveMoodsChangedListener, DeviceManager.OnStateChangedListener {
+public class SecondaryFragment extends Fragment
+    implements OnServiceConnectedListener, OnActiveMoodsChangedListener,
+               DeviceManager.OnStateChangedListener {
 
   private NavigationDrawerActivity parrentA;
 
@@ -37,7 +38,8 @@ public class SecondaryFragment extends Fragment implements OnServiceConnectedLis
   private boolean mIsTrackingTouch = false;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.secondary_activity, null);
@@ -46,15 +48,16 @@ public class SecondaryFragment extends Fragment implements OnServiceConnectedLis
 
     parrentA.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        < Configuration.SCREENLAYOUT_SIZE_LARGE) {
       //if not in splitscreen mode, try change page title to any selected group
-      if(parrentA.boundToService()) {
+      if (parrentA.boundToService()) {
         Group currentlySelected = parrentA.getService().getDeviceManager().getSelectedGroup();
-        if (currentlySelected != null)
+        if (currentlySelected != null) {
           parrentA.getSupportActionBar().setTitle(currentlySelected.getName());
+        }
       }
     }
-
 
     mMoodManualPagerAdapter = new MoodManualPagerAdapter(this);
     // Set up the ViewPager, attaching the adapter.
@@ -143,13 +146,15 @@ public class SecondaryFragment extends Fragment implements OnServiceConnectedLis
   }
 
   public void setMode() {
-    if (!parrentA.boundToService() || mBrightnessBar == null)
+    if (!parrentA.boundToService() || mBrightnessBar == null) {
       return;
-    
+    }
+
     boolean maxBriMode = false;
     Group g = parrentA.getService().getDeviceManager().getSelectedGroup();
-    if (g != null && parrentA.getService().getMoodPlayer().conflictsWithOngoingPlaying(g))
+    if (g != null && parrentA.getService().getMoodPlayer().conflictsWithOngoingPlaying(g)) {
       maxBriMode = true;
+    }
 
     if (maxBriMode) {
       mBrightnessBar.setVisibility(View.GONE);
@@ -207,7 +212,7 @@ public class SecondaryFragment extends Fragment implements OnServiceConnectedLis
   public void onStateChanged() {
     DeviceManager dm = parrentA.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch && mBrightnessBar!=null && mMaxBrightnessBar!=null) {
+    if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
       mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
       mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
     }

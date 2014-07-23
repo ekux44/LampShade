@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.timing;
 
+import com.google.gson.Gson;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +10,6 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
@@ -29,13 +30,12 @@ public class BootSetter extends BroadcastReceiver {
       while (cursor.moveToNext()) {
         DatabaseAlarm ar =
             new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), AlarmState.class),
-                cursor.getInt(1));
+                              cursor.getInt(1));
         if (ar.getAlarmState().isScheduled()) {
           AlarmReciever.createAlarms(context, ar);
         }
 
       }
-
 
       // clear out any playing moods stopped at shutdown
       context.getContentResolver().delete(DatabaseDefinitions.PlayingMood.URI, null, null);

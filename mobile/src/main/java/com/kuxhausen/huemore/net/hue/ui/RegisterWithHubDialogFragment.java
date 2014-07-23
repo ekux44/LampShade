@@ -1,8 +1,6 @@
 package com.kuxhausen.huemore.net.hue.ui;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import com.google.gson.Gson;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -21,7 +19,6 @@ import android.widget.ProgressBar;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.net.hue.api.Bridge;
@@ -29,6 +26,10 @@ import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.net.hue.api.RegistrationResponse;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class RegisterWithHubDialogFragment extends DialogFragment {
 
@@ -66,7 +67,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
       this.dismiss();
     }
 
-
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
     LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -89,9 +89,10 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
       public void onTick(long millisUntilFinished) {
         if (isAdded()) {
           progressBar
-              .setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0) / length_in_milliseconds));
+              .setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0)
+                                  / length_in_milliseconds));
           NetworkMethods.PreformRegister(rq, getListeners(getUserName()), bridges, getUserName(),
-              getDeviceType());
+                                         getDeviceType());
         }
       }
 
@@ -100,7 +101,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
         if (isAdded()) {
           // try one last time
           NetworkMethods.PreformRegister(rq, getListeners(getUserName()), bridges, getUserName(),
-              getDeviceType());
+                                         getDeviceType());
 
           // launch the failed registration dialog
           RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
@@ -188,7 +189,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
           ContentValues cv = new ContentValues();
 
           cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN,
-              DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
+                 DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
           cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(mHubData));
           cv.put(DatabaseDefinitions.NetConnectionColumns.NAME_COLUMN, "?");
 

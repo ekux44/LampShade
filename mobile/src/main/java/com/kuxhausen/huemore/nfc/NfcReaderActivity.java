@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.nfc;
 
-import java.nio.charset.Charset;
-
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -29,8 +27,10 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.nio.charset.Charset;
+
 public class NfcReaderActivity extends NetworkManagedActivity implements OnCheckedChangeListener,
-    OnClickListener {
+                                                                         OnClickListener {
 
   private Integer[] mBulbs;
   private Mood mood;
@@ -71,8 +71,9 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
         this.startService(intent);
 
         boolean on = false;
-        if (mood.events[0].state.on != null && mood.events[0].state.on)
+        if (mood.events[0].state.on != null && mood.events[0].state.on) {
           on = true;
+        }
         mOnButton.setChecked(on);
         mOnButton.setOnCheckedChangeListener(this);
 

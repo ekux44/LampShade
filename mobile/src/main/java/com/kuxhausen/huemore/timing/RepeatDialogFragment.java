@@ -9,12 +9,13 @@ import android.support.v4.app.DialogFragment;
 import com.kuxhausen.huemore.R;
 
 public class RepeatDialogFragment extends DialogFragment implements
-    DialogInterface.OnMultiChoiceClickListener {
+                                                         DialogInterface.OnMultiChoiceClickListener {
 
   private boolean[] checkedItems = new boolean[7];
   OnRepeatSelectedListener resultListener;
 
   public interface OnRepeatSelectedListener {
+
     public void onRepeatSelected(boolean[] repeats);
   }
 

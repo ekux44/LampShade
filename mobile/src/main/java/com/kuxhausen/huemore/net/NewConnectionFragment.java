@@ -66,8 +66,9 @@ public class NewConnectionFragment extends DialogFragment implements OnItemClick
     mTypeList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
     int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-            : android.R.layout.simple_list_item_1;
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+        ? android.R.layout.simple_list_item_activated_1
+        : android.R.layout.simple_list_item_1;
     deviceTypes = mParent.getResources().getStringArray(R.array.add_devices_list);
     ArrayAdapter<String> aa = new ArrayAdapter<String>(mParent, layout, deviceTypes);
     mTypeList.setAdapter(aa);

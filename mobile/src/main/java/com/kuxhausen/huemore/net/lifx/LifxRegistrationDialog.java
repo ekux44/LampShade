@@ -167,7 +167,7 @@ public class LifxRegistrationDialog extends DialogFragment implements
     candidateBulbNames.clear();
     candidateBulbDeviceIds.clear();
     for (LFXLight light : networkContext.getAllLightsCollection().getLights()) {
-      if(!existingBulbDeviceIds.contains(light.getDeviceID())) {
+      if (!existingBulbDeviceIds.contains(light.getDeviceID())) {
         candidateBulbNames.add(light.getLabel());
         candidateBulbDeviceIds.add(light.getDeviceID());
       }

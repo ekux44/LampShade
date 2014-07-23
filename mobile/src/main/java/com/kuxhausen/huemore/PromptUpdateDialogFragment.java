@@ -71,10 +71,11 @@ public class PromptUpdateDialogFragment extends DialogFragment implements OnChec
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
     Editor edit = settings.edit();
-    if (isChecked)
+    if (isChecked) {
       edit.putBoolean(PreferenceKeys.UPDATE_OPT_OUT, true);
-    else
+    } else {
       edit.putBoolean(PreferenceKeys.UPDATE_OPT_OUT, false);
+    }
     edit.commit();
   }
 }
