@@ -212,4 +212,11 @@ public class BulbState {
       return true;
     return false;
   }
+
+  public boolean hasOnlyBri() {
+    if (on == null && bri != null && hue == null && sat == null && xy == null && ct == null
+        && alert == null && effect == null && transitiontime == null)
+      return true;
+    return false;
+  }
 }

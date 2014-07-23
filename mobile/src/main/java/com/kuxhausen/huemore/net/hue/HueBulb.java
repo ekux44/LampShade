@@ -25,6 +25,7 @@ public class HueBulb extends NetworkBulb {
   private HubConnection mConnection;
 
   private BulbState desiredState = new BulbState();
+  private boolean mInstantBrightnessRequested = false;
 
   //using SystemClock.elapsedTimes
   public Long lastSendInitiatedTime;
@@ -51,6 +52,10 @@ public class HueBulb extends NetworkBulb {
     if(isMaxBriModeEnabled()){
       if(preBriAdjusted.bri!=null)
         preBriAdjusted.bri = (int)(preBriAdjusted.bri * getMaxBrightness(true)/100f);
+    }
+
+    if(preBriAdjusted.hasOnlyBri()){
+      mInstantBrightnessRequested=true;
     }
 
     desiredState.merge(preBriAdjusted);
@@ -139,7 +144,16 @@ public class HueBulb extends NetworkBulb {
    * returns desiredState
    */
   public BulbState getSendState() {
-    return confirmed.delta(desiredState);
+    BulbState toSend =  confirmed.delta(desiredState);
+    if(mInstantBrightnessRequested){
+      BulbState brightnessOnly = new BulbState();
+      brightnessOnly.bri = toSend.bri;
+      brightnessOnly.transitiontime = 4;
+      mInstantBrightnessRequested = false;
+      return brightnessOnly;
+    } else {
+      return toSend;
+    }
   }
 
   @Override
