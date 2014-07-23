@@ -91,11 +91,25 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
     mDesiredLastChanged = SystemClock.elapsedRealtime();
 
     if (mLight != null && bs != null) {
-      float brightness = mLight.getColor().getBrightness();
+      //TODO cache so don't have to guess when SDK dosn't know
+      float lifxBrightness = .5f;
+      float lifxHue = 0;
+      float lifxSat = 0;
+      int lifxCt = 3500;
+      if (mLight.getColor() != null) {
+        lifxBrightness = mLight.getColor().getBrightness();
+        lifxHue = mLight.getColor().getHue();
+        lifxSat = mLight.getColor().getSaturation();
+        lifxCt = mLight.getColor().getKelvin();
+      }
+
       if (bs.bri != null) {
-        brightness = bs.bri / 255f;
+        lifxBrightness = bs.bri / 255f;
       }
       //TODO apply any maxBri rules
+
+      //clip brightness to ensure proper behavior (0 brightness not allowed)
+      lifxBrightness = Math.max(.01f, lifxBrightness);
 
       if (bs.on != null) {
         if (bs.on) {
@@ -108,19 +122,15 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
       //Send full color, color temp, or just brightness
       if (bs.xy != null) {
         Float[] hs = Utils.xyTOhs(bs.xy);
-        float lifxHue = 360 * hs[0];
-        float lifxSat = hs[1];
-        LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, brightness, 3500);
+        lifxHue = 360 * hs[0];
+        lifxSat = hs[1];
+        LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, 3500);
         mLight.setColor(newColor);
       } else if (bs.ct != null) {
-        LFXHSBKColor newColor = LFXHSBKColor.getColor(0, 0, brightness, bs.getCtKelvin());
+        LFXHSBKColor newColor = LFXHSBKColor.getColor(0, 0, lifxBrightness, lifxCt);
         mLight.setColor(newColor);
       } else if (bs.bri != null) {
-        LFXHSBKColor
-            newColor =
-            LFXHSBKColor
-                .getColor(mLight.getColor().getHue(), mLight.getColor().getSaturation(), brightness,
-                          mLight.getColor().getKelvin());
+        LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, lifxCt);
         mLight.setColor(newColor);
       }
 
@@ -142,10 +152,10 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
   public BulbState getState(boolean guessIfUnknown) {
     BulbState result = new BulbState();
 
-    if(mLight!=null && mLight.getColor()!=null){
+    if (mLight != null && mLight.getColor() != null) {
       LFXHSBKColor color = mLight.getColor();
-      result.bri = (int)((color.getBrightness() * 255f)* (100f / getMaxBrightness(true)));
-    } else if(guessIfUnknown){
+      result.bri = (int) ((color.getBrightness() * 255f) * (100f / getMaxBrightness(true)));
+    } else if (guessIfUnknown) {
       result.bri = 127;
     }
 
