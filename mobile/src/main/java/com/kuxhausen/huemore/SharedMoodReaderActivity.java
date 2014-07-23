@@ -87,7 +87,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
           DeviceManager dm = SharedMoodReaderActivity.this.getService().getDeviceManager();
-          dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), null);
 
         }
       }
@@ -115,7 +115,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
   public void onStateChanged() {
     if (mBrightnessBar != null && !mIsTrackingTouch) {
       DeviceManager dm = this.getService().getDeviceManager();
-      Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup());
+      Integer candidateBrightness = dm.getBrightness(dm.getSelectedGroup(), true);
       if (candidateBrightness != null) {
         mBrightnessBar.setProgress(candidateBrightness);
       }

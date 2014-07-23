@@ -9,7 +9,7 @@ import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
 import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.state.BulbState;
 
-public class HueBulb extends NetworkBulb {
+public class HueBulb implements NetworkBulb {
 
   public static final long SEND_TIMEOUT_TIME = 2000;
   public final static float BS_BRI_CONVERSION = 2.55f;
@@ -30,6 +30,8 @@ public class HueBulb extends NetworkBulb {
   //using SystemClock.elapsedTimes
   public Long lastSendInitiatedTime;
   public BulbState confirmed = new BulbState();
+
+  private Integer mMaxBri;
 
   // TODO chance once a better Device Id implemented
   public String getHubBulbNumber() {
@@ -72,17 +74,75 @@ public class HueBulb extends NetworkBulb {
 
   @Override
   public Integer getMaxBrightness(boolean guessIfUnknown) {
-    if (getRawMaxBrightness() != null) {
-      return getRawMaxBrightness();
+    if (mMaxBri != null) {
+      return mMaxBri;
     } else if (guessIfUnknown) {
-      if (desiredState.bri != null) {
-        return (int) (desiredState.bri / 2.55f);
-      } else {
-        return 50;
-      }
+      return 100;
     } else {
       return null;
     }
+  }
+
+  /**
+   * @param guessIfUnknown will guess value instead of returning null if unknown
+   * @result 1-100
+   */
+  @Override
+  public Integer getCurrentBrightness(boolean guessIfUnknown) {
+    Integer bri = null;
+    if (desiredState.bri != null) {
+      bri = desiredState.bri;
+    } else if (confirmed.bri != null) {
+      bri = confirmed.bri;
+    } else if (guessIfUnknown) {
+      bri = 127;
+    }
+    if (bri != null) {
+      return (int) ((bri / 2.55f) * (100f / getMaxBrightness(true)));
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
+    Integer oldCurerntBri = this.getCurrentBrightness(false);
+
+    boolean currentChanged = false;
+    if (oldCurerntBri == null ^ desiredCurrentBrightness == null) {
+      currentChanged = true;
+    } else if (oldCurerntBri != null && desiredCurrentBrightness != null && !oldCurerntBri
+        .equals(desiredCurrentBrightness)) {
+      currentChanged = true;
+    }
+
+    boolean maxChanged = false;
+    if (mMaxBri == null ^ desiredMaxBrightness == null) {
+      maxChanged = true;
+    } else if (mMaxBri != null && desiredMaxBrightness != null && !mMaxBri
+        .equals(desiredMaxBrightness)) {
+      maxChanged = true;
+    }
+
+    mMaxBri = desiredMaxBrightness;
+
+    if (desiredCurrentBrightness != null) {
+      oldCurerntBri = desiredCurrentBrightness;
+    }
+
+    if (maxChanged || currentChanged) {
+      if (oldCurerntBri != null) {
+        BulbState change = new BulbState();
+        change.bri = (int) (oldCurerntBri * 2.55f);
+        change.transitiontime = 4;
+        setState(change, true);
+      }
+    }
+  }
+
+  @Override
+  public boolean isMaxBriModeEnabled() {
+    return mMaxBri != null;
   }
 
 

@@ -426,7 +426,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                                                              getRequestQueue(), HubConnection.this,
                                                              stateChange);
                   Log.d("net.hue.connection.onTick",
-                        "perform transmit"+stateChange.hubBulb.getBaseId()
+                        "perform transmit" + stateChange.hubBulb.getBaseId()
                         + "," + stateChange.sentState.isEmpty()
                         + "," + stateChange.sentState.toString()
                   );

@@ -12,21 +12,18 @@ import lifx.java.android.entities.LFXHSBKColor;
 import lifx.java.android.entities.LFXTypes;
 import lifx.java.android.light.LFXLight;
 
-public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
+public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   //In milis
   private final static long TRANSMIT_TIMEOUT_TIME = 10000;
-  public final static float BS_BRI_CONVERSION = 2.55f;
 
   LifxConnection mConnection;
-
   private Context mContext;
 
   private Long mBaseId;
   private String mName;
   private String mDeviceId;
   private ExtraData mExtraData;
-  private int mMaxBri;
 
   private LFXLight mLight;
   private long mInitializedTime;
@@ -35,7 +32,7 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
   // In SystemClock.elapsedRealtime();
   private Long mDesiredLastChanged;
 
-  private boolean mMaxBriMode;
+  private Integer mMaxBri;
 
   public LifxBulb(Context c, Long bulbBaseId, String bulbName,
                   String bulbDeviceId, ExtraData bulbData,
@@ -104,9 +101,8 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
       }
 
       if (bs.bri != null) {
-        lifxBrightness = bs.bri / 255f;
+        lifxBrightness = (bs.bri / 255f) * (getMaxBrightness(true) / 100f);
       }
-      //TODO apply any maxBri rules
 
       //clip brightness to ensure proper behavior (0 brightness not allowed)
       lifxBrightness = Math.max(.01f, lifxBrightness);
@@ -177,14 +173,70 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
 
   @Override
   public Integer getMaxBrightness(boolean guessIfUnknown) {
-    if (getRawMaxBrightness() != null) {
-      return getRawMaxBrightness();
+    if (mMaxBri != null) {
+      return mMaxBri;
     } else if (guessIfUnknown) {
-      //TODO return present 'physical' brightness if known
+      return 100;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * @param guessIfUnknown will guess value instead of returning null if unknown
+   * @result 1-100
+   */
+  @Override
+  public Integer getCurrentBrightness(boolean guessIfUnknown) {
+    if (mLight != null && mLight.getColor() != null) {
+      LFXHSBKColor color = mLight.getColor();
+      return (int) ((color.getBrightness() * 100f) * (100f / getMaxBrightness(true)));
+    } else if (guessIfUnknown) {
       return 50;
     } else {
       return null;
     }
+  }
+
+  @Override
+  public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
+    Integer oldCurerntBri = this.getCurrentBrightness(false);
+
+    boolean currentChanged = false;
+    if (oldCurerntBri == null ^ desiredCurrentBrightness == null) {
+      currentChanged = true;
+    } else if (oldCurerntBri != null && desiredCurrentBrightness != null && !oldCurerntBri
+        .equals(desiredCurrentBrightness)) {
+      currentChanged = true;
+    }
+
+    boolean maxChanged = false;
+    if (mMaxBri == null ^ desiredMaxBrightness == null) {
+      maxChanged = true;
+    } else if (mMaxBri != null && desiredMaxBrightness != null && !mMaxBri
+        .equals(desiredMaxBrightness)) {
+      maxChanged = true;
+    }
+
+    mMaxBri = desiredMaxBrightness;
+
+    if (desiredCurrentBrightness != null) {
+      oldCurerntBri = desiredCurrentBrightness;
+    }
+
+    if (maxChanged || currentChanged) {
+      if (oldCurerntBri != null) {
+        BulbState change = new BulbState();
+        change.bri = (int) (oldCurerntBri * 2.55f);
+        change.transitiontime = 4;
+        setState(change, true);
+      }
+    }
+  }
+
+  @Override
+  public boolean isMaxBriModeEnabled() {
+    return mMaxBri != null;
   }
 
   @Override

@@ -94,7 +94,7 @@ public class SecondaryFragment extends Fragment
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
           DeviceManager dm = parrentA.getService().getDeviceManager();
-          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress());
+          dm.setBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
         }
       }
     });
@@ -116,7 +116,7 @@ public class SecondaryFragment extends Fragment
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
           DeviceManager dm = parrentA.getService().getDeviceManager();
-          dm.setMaxBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
+          dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), null);
         }
       }
     });
@@ -214,8 +214,8 @@ public class SecondaryFragment extends Fragment
       DeviceManager dm = parrentA.getService().getDeviceManager();
 
       if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
-        mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
-        mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
+        mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup(), true));
+        mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup(), true));
       }
     }
   }

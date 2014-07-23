@@ -57,13 +57,14 @@ public class MoodPlayer {
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 
+    Integer priorMaxBri = null;
+    Integer priorCurrentBri = null;
     //if this mood isn't being launched with a new max bri, preserve any current max bri
-    if (maxBri == null) {
-      for (PlayingMood iteration : mPlayingMoods) {
-        //existing max bri transferable only if same group
-        if (iteration.equals(g)) {
-          maxBri = mDeviceManager.getMaxBrightness(g);
-        }
+    for (PlayingMood iteration : mPlayingMoods) {
+      //existing max bri transferable only if same group
+      if (iteration.equals(g)) {
+        maxBri = mDeviceManager.getMaxBrightness(g, false);
+        maxBri = mDeviceManager.getBrightness(g, false);
       }
     }
 
@@ -75,7 +76,19 @@ public class MoodPlayer {
       }
     }
 
-    mDeviceManager.setMaxBrightness(g, !m.isSimple(), maxBri);
+    if (!m.isSimple()) {
+      if (maxBri == null) {
+        maxBri = priorMaxBri;
+      }
+
+      if (maxBri != null) {
+        mDeviceManager.setBrightness(g, priorMaxBri, null);
+      } else {
+        mDeviceManager.setBrightness(g, priorCurrentBri, 100);
+      }
+    } else {
+      mDeviceManager.setBrightness(g, null, null);
+    }
 
     mPlayingMoods.add(pm);
     ensureLooping();
@@ -92,7 +105,7 @@ public class MoodPlayer {
         i--;
       }
     }
-    mDeviceManager.setMaxBrightness(g, false, null);
+    mDeviceManager.setBrightness(g, null, null);
     // update notifications
     onActiveMoodsChanged();
   }
