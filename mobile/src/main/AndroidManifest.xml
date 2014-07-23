@@ -55,7 +55,8 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
             </intent-filter>
         </receiver>
-
+        <receiver android:name="com.kuxhausen.huemore.automation.VoiceInputReceiver" >
+        </receiver>
         <activity
             android:name="com.kuxhausen.huemore.DecodeErrorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
