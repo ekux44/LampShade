@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.persistence;
 
-import java.util.ArrayList;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -15,14 +13,16 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
+
+import java.util.ArrayList;
 
 public class LampShadeProvider extends ContentProvider {
 
@@ -50,16 +50,16 @@ public class LampShadeProvider extends ContentProvider {
     sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     {
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY,
-          DatabaseDefinitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
-          INDIVIDUAL_ALARM);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
+      sUriMatcher.addURI(Definitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
+      sUriMatcher.addURI(Definitions.AUTHORITY,
+                         Definitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
+                         INDIVIDUAL_ALARM);
+      sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
     }
   }
 
@@ -99,8 +99,8 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
-        table = (DatabaseDefinitions.MoodColumns.TABLE_NAME);
-        toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
+        table = (Definitions.MoodColumns.TABLE_NAME);
+        toNotify.add(Definitions.MoodColumns.MOODS_URI);
         break;
       default:
         // If the URI doesn't match any of the known patterns, throw an exception.
@@ -110,8 +110,9 @@ public class LampShadeProvider extends ContentProvider {
     SQLiteDatabase db = mOpenHelper.getWritableDatabase();
     int rowsAffected = db.delete(table, selection, selectionArgs);
 
-    for (Uri me : toNotify)
+    for (Uri me : toNotify) {
       this.getContext().getContentResolver().notifyChange(me, null);
+    }
 
     return rowsAffected;
   }
@@ -156,21 +157,21 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
-        qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
-        table = DatabaseDefinitions.AlarmColumns.TABLE_NAME;
+        qb.setTables(Definitions.AlarmColumns.TABLE_NAME);
+        table = Definitions.AlarmColumns.TABLE_NAME;
         toNotify.add(AlarmColumns.ALARMS_URI);
         toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPS:
-        qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
-        table = DatabaseDefinitions.GroupColumns.TABLE_NAME;
+        qb.setTables(Definitions.GroupColumns.TABLE_NAME);
+        table = Definitions.GroupColumns.TABLE_NAME;
         toNotify.add(GroupColumns.GROUPS_URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
-        qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
-        table = DatabaseDefinitions.MoodColumns.TABLE_NAME;
-        toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
+        qb.setTables(Definitions.MoodColumns.TABLE_NAME);
+        table = Definitions.MoodColumns.TABLE_NAME;
+        toNotify.add(Definitions.MoodColumns.MOODS_URI);
         break;
       default:
         // If the URI doesn't match any of the known patterns, throw an exception.
@@ -186,8 +187,9 @@ public class LampShadeProvider extends ContentProvider {
       // TODO
     }
 
-    for (Uri me : toNotify)
+    for (Uri me : toNotify) {
       this.getContext().getContentResolver().notifyChange(me, null);
+    }
 
     return ContentUris.withAppendedId(uri, insertId);
   }
@@ -204,7 +206,7 @@ public class LampShadeProvider extends ContentProvider {
 
   @Override
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-      String sortOrder) {
+                      String sortOrder) {
 
     // Opens the database object in "read" mode, since no writes need to be done.
     SQLiteDatabase db = mOpenHelper.getReadableDatabase();
@@ -245,15 +247,16 @@ public class LampShadeProvider extends ContentProvider {
       case GROUPBULBS:
         if ((selection != null)
             && selectionArgs.length > 0
-            && (selectionArgs[0].equals(this.getContext().getString(R.string.cap_all)) || selectionArgs[0]
-                .charAt(0) == ((char) 8))) {
+            && (selectionArgs[0].equals(this.getContext().getString(R.string.cap_all))
+                || selectionArgs[0]
+                       .charAt(0) == ((char) 8))) {
 
           qb.setTables(NetBulbColumns.TABLE_NAME);
           String[] groupColumns = {NetBulbColumns._ID + " AS " + GroupColumns.BULB_DATABASE_ID};
 
           Cursor c = qb.query(db, groupColumns, // using our own projection for 'All' mood as it's
-                                                // hitting a different database.
-              null, null, groupBy, null, sortOrder);
+                              // hitting a different database.
+                              null, null, groupBy, null, sortOrder);
 
           c.setNotificationUri(getContext().getContentResolver(), uri);
           return c;
@@ -264,8 +267,11 @@ public class LampShadeProvider extends ContentProvider {
       case MOODS:
         qb.setTables(MoodColumns.TABLE_NAME);
         groupBy = null;
-        if(sortOrder == null || sortOrder.equals(""))
-          sortOrder = MoodColumns.COL_MOOD_PRIORITY + " DESC," + MoodColumns.COL_MOOD_LOWERCASE_NAME + " COLLATE UNICODE";
+        if (sortOrder == null || sortOrder.equals("")) {
+          sortOrder =
+              MoodColumns.COL_MOOD_PRIORITY + " DESC," + MoodColumns.COL_MOOD_LOWERCASE_NAME
+              + " COLLATE UNICODE";
+        }
         break;
       default:
         // If the URI doesn't match any of the known patterns, throw an
@@ -279,11 +285,11 @@ public class LampShadeProvider extends ContentProvider {
      * Cursor object is empty, and Cursor.getCount() returns 0.
      */
     Cursor c2 = qb.query(db, projection, // The columns to return from the query
-        selection, // The columns for the where clause
-        selectionArgs, // The values for the where clause
-        groupBy, // don't group the rows
-        null, // don't filter by row groups
-        sortOrder);
+                         selection, // The columns for the where clause
+                         selectionArgs, // The values for the where clause
+                         groupBy, // don't group the rows
+                         null, // don't filter by row groups
+                         sortOrder);
 
     Cursor[] cRay;
     if (sUriMatcher.match(uri) == MOODS && c2.getCount() < 1) {
@@ -320,7 +326,6 @@ public class LampShadeProvider extends ContentProvider {
     }
     MergeCursor c = new MergeCursor(cRay);
 
-
     // Tells the Cursor what URI to watch, so it knows when its source data
     // changes. apparently the merge cursor doesn't forward notifications, so notify individually
     // too!
@@ -341,10 +346,10 @@ public class LampShadeProvider extends ContentProvider {
     switch (sUriMatcher.match(uri)) {
       case MOODS:
         count = db.update(MoodColumns.TABLE_NAME, values, selection, selectionArgs);
-        if(values.size() == 1 && values.containsKey(MoodColumns.COL_MOOD_PRIORITY)){
+        if (values.size() == 1 && values.containsKey(MoodColumns.COL_MOOD_PRIORITY)) {
           //If only the mood priority changed,
           //Don't notify because there's no animation for list reordering yet
-        } else{
+        } else {
           toNotify.add(MoodColumns.MOODS_URI);
         }
         break;
@@ -354,9 +359,15 @@ public class LampShadeProvider extends ContentProvider {
         break;
       case NETBULBS:
         count = db.update(NetBulbColumns.TABLE_NAME, values, selection, selectionArgs);
-        toNotify.add(NetBulbColumns.URI);
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        if (values.size() == 1 && values.containsKey(NetBulbColumns.CURRENT_MAX_BRIGHTNESS)) {
+          //If only the group max brightness changed,
+          //Don't notify. This should be moved to a separate table at some point.
+        } else {
+          toNotify.add(NetBulbColumns.URI);
+          toNotify.add(GroupColumns.GROUPS_URI);
+          toNotify
+              .add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        }
         break;
       case ALARMS:
         count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);
@@ -368,8 +379,9 @@ public class LampShadeProvider extends ContentProvider {
         throw new IllegalArgumentException("Unknown URI " + uri);
     }
 
-    for (Uri me : toNotify)
+    for (Uri me : toNotify) {
       this.getContext().getContentResolver().notifyChange(me, null);
+    }
 
     // Returns the number of rows updated.
     return count;

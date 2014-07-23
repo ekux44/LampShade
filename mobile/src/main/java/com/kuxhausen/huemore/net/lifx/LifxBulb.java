@@ -12,10 +12,11 @@ import lifx.java.android.entities.LFXHSBKColor;
 import lifx.java.android.entities.LFXTypes;
 import lifx.java.android.light.LFXLight;
 
-public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
+public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
 
   //In milis
   private final static long TRANSMIT_TIMEOUT_TIME = 10000;
+  public final static float BS_BRI_CONVERSION = 2.55f;
 
   LifxConnection mConnection;
 
@@ -25,7 +26,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   private String mName;
   private String mDeviceId;
   private ExtraData mExtraData;
-  private int mCurrentMaxBri;
+  private int mMaxBri;
 
   private LFXLight mLight;
   private long mInitializedTime;
@@ -34,14 +35,15 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   // In SystemClock.elapsedRealtime();
   private Long mDesiredLastChanged;
 
+  private boolean mMaxBriMode;
+
   public LifxBulb(Context c, Long bulbBaseId, String bulbName,
                   String bulbDeviceId, ExtraData bulbData,
-                  LifxConnection lifxConnection, int currentMaxBri) {
+                  LifxConnection lifxConnection) {
     mBaseId = bulbBaseId;
     mName = bulbName;
     mDeviceId = bulbDeviceId;
     mExtraData = bulbData;
-    mCurrentMaxBri = currentMaxBri;
 
     mContext = c;
     mConnection = lifxConnection;
@@ -49,7 +51,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   }
 
-  protected void onInitialize(){
+  protected void onInitialize() {
     mInitializedTime = SystemClock.elapsedRealtime();
   }
 
@@ -57,15 +59,16 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     mLight = light;
     mLight.addLightListener(this);
 
-    if(!mDesiredState.isEmpty()){
-      setState(mDesiredState);
+    if (!mDesiredState.isEmpty()) {
+      setState(mDesiredState, false);
       mDesiredState = new BulbState();
     }
   }
 
   public void lightDisconnected() {
-    if(mLight!=null)
+    if (mLight != null) {
       mLight.removeLightListener(this);
+    }
     mLight = null;
   }
 
@@ -75,14 +78,14 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     if (mLight != null && mLight.getReachability()
         .equals(LFXTypes.LFXDeviceReachability.REACHABLE)) {
       return ConnectivityState.Connected;
-    } else if(SystemClock.elapsedRealtime() > (mInitializedTime + this.TRANSMIT_TIMEOUT_TIME)){
+    } else if (SystemClock.elapsedRealtime() > (mInitializedTime + this.TRANSMIT_TIMEOUT_TIME)) {
       return ConnectivityState.Unreachable;
     }
     return ConnectivityState.Unknown;
   }
 
   @Override
-  public void setState(BulbState bs) {
+  public void setState(BulbState bs, boolean broadcast) {
     Log.d("lifx", "setState but mLight?null " + (mLight == null));
 
     mDesiredLastChanged = SystemClock.elapsedRealtime();
@@ -127,16 +130,38 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     }
   }
 
-  protected boolean hasPendingWork(){
-    if(mDesiredLastChanged!=null && (mDesiredLastChanged+this.TRANSMIT_TIMEOUT_TIME) > SystemClock.elapsedRealtime()){
+  protected boolean hasPendingWork() {
+    if (mDesiredLastChanged != null
+        && (mDesiredLastChanged + this.TRANSMIT_TIMEOUT_TIME) > SystemClock.elapsedRealtime()) {
       return true;
     }
     return false;
   }
 
   @Override
-  public BulbState getState() {
-    return new BulbState();
+  public BulbState getState(boolean guessIfUnknown) {
+    BulbState result = new BulbState();
+
+    if(mLight!=null && mLight.getColor()!=null){
+      LFXHSBKColor color = mLight.getColor();
+      result.bri = (int)((color.getBrightness() * 255f)* (100f / getMaxBrightness(true)));
+    } else if(guessIfUnknown){
+      result.bri = 127;
+    }
+
+    return result;
+  }
+
+  @Override
+  public Integer getMaxBrightness(boolean guessIfUnknown) {
+    if (getRawMaxBrightness() != null) {
+      return getRawMaxBrightness();
+    } else if (guessIfUnknown) {
+      //TODO return present 'physical' brightness if known
+      return 50;
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -157,21 +182,6 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   @Override
   public Long getBaseId() {
     return mBaseId;
-  }
-
-  @Override
-  public int getCurrentMaxBrightness() {
-    return mCurrentMaxBri;
-  }
-
-  @Override
-  public void setCurrentMaxBrightness(int maxBri, boolean maxBriMode) {
-    BulbState hack = new BulbState();
-    hack.bri = (int) (2.55f * maxBri);
-    if (maxBriMode) {
-      this.mCurrentMaxBri = maxBri;
-    }
-    this.setState(hack);
   }
 
   @Override

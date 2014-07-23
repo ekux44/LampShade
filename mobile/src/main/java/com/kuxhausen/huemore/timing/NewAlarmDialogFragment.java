@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
-import java.util.Calendar;
+import com.google.gson.Gson;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,16 +26,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
+import java.util.Calendar;
+
 public class NewAlarmDialogFragment extends DialogFragment implements OnClickListener,
-    LoaderManager.LoaderCallbacks<Cursor>, OnRepeatSelectedListener {
+                                                                      LoaderManager.LoaderCallbacks<Cursor>,
+                                                                      OnRepeatSelectedListener {
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
@@ -51,8 +53,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
   private DatabaseAlarm priorState;
 
   public void onLoadLoaderManager(DatabaseAlarm optionalState) {
-    if (optionalState != null)
+    if (optionalState != null) {
       this.priorState = optionalState;
+    }
     if (groupSpinner != null && moodSpinner != null) {
       /*
        * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
@@ -65,20 +68,21 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       // lm.initLoader(MOODS_LOADER, null, this);
 
       int layout =
-          Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-              : android.R.layout.simple_list_item_1;
+          Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
+          ? android.R.layout.simple_list_item_activated_1
+          : android.R.layout.simple_list_item_1;
 
       String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
       groupDataSource =
           new SimpleCursorAdapter(getActivity(), layout, null, gColumns,
-              new int[] {android.R.id.text1}, 0);
+                                  new int[]{android.R.id.text1}, 0);
       groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       groupSpinner.setAdapter(groupDataSource);
 
       String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
       moodDataSource =
           new SimpleCursorAdapter(getActivity(), layout, null, mColumns,
-              new int[] {android.R.id.text1}, 0);
+                                  new int[]{android.R.id.text1}, 0);
       moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       moodSpinner.setAdapter(moodDataSource);
 
@@ -86,18 +90,19 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         // apply initial state
         int moodPos = 0;
         for (int i = 0; i < moodDataSource.getCount(); i++) {
-          if (moodDataSource.getItem(i).equals(optionalState.getAlarmState().mood))
+          if (moodDataSource.getItem(i).equals(optionalState.getAlarmState().mood)) {
             moodPos = i;
+          }
         }
         moodSpinner.setSelection(moodPos);
 
         int groupPos = 0;
         for (int i = 0; i < groupDataSource.getCount(); i++) {
-          if (groupDataSource.getItem(i).equals(optionalState.getAlarmState().group))
+          if (groupDataSource.getItem(i).equals(optionalState.getAlarmState().group)) {
             groupPos = i;
+          }
         }
         groupSpinner.setSelection(groupPos);
-
 
         brightnessBar.setProgress(optionalState.getAlarmState().brightness);
 
@@ -106,8 +111,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         Calendar projectedTime = Calendar.getInstance();
         if (optionalState.getAlarmState().isRepeating()) {
           for (int i = 0; i < optionalState.getAlarmState().getRepeatingDays().length; i++) {
-            if (optionalState.getAlarmState().getRepeatingDays()[i])
+            if (optionalState.getAlarmState().getRepeatingDays()[i]) {
               projectedTime.setTimeInMillis(optionalState.getAlarmState().getRepeatingTimes()[i]);
+            }
           }
         } else {
           projectedTime.setTimeInMillis(optionalState.getAlarmState().getTime());
@@ -119,10 +125,12 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
-    for (int i = 0; i < repeats.length; i++)
+    for (int i = 0; i < repeats.length; i++) {
       repeats[i] = false;
+    }
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.edit_alarm_dialog, container, false);
@@ -184,21 +192,21 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         // Returns a new CursorLoader
         String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-            DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
-            gColumns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                Definitions.GroupColumns.GROUPS_URI, // Table
+                                gColumns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       case MOODS_LOADER:
         // Returns a new CursorLoader
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-            DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
-            mColumns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                Definitions.MoodColumns.MOODS_URI, // Table
+                                mColumns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in
@@ -231,16 +239,18 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       int moodPos = 0;
       for (int i = 0; i < moodDataSource.getCount(); i++) {
         if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
-            priorState.getAlarmState().mood))
+            priorState.getAlarmState().mood)) {
           moodPos = i;
+        }
       }
       moodSpinner.setSelection(moodPos);
 
       int groupPos = 0;
       for (int i = 0; i < groupDataSource.getCount(); i++) {
         if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(
-            priorState.getAlarmState().group))
+            priorState.getAlarmState().group)) {
           groupPos = i;
+        }
       }
       groupSpinner.setSelection(groupPos);
     }
@@ -287,8 +297,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       result = c.getResources().getString(R.string.cap_short_none);
     } else {
       for (int i = 0; i < 7; i++) {
-        if (repeats[i])
+        if (repeats[i]) {
           result += days[i] + " ";
+        }
       }
     }
     return result;
@@ -315,19 +326,20 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
 
     if (as.isRepeating()) {
       long[] l = new long[7];
-      for (int i = 0; i < 7; i++)
+      for (int i = 0; i < 7; i++) {
         l[i] = projectedTime.getTimeInMillis();
+      }
       as.setRepeatingTimes(l);
     } else {
       as.setTime(projectedTime.getTimeInMillis());
     }
     // Defines an object to contain the new values to insert
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
+    mNewValues.put(Definitions.AlarmColumns.STATE, gson.toJson(as));
 
     Uri locationOfNewAlarm =
-        getActivity().getContentResolver().insert(DatabaseDefinitions.AlarmColumns.ALARMS_URI,
-            mNewValues);
+        getActivity().getContentResolver().insert(Definitions.AlarmColumns.ALARMS_URI,
+                                                  mNewValues);
 
     DatabaseAlarm ar = new DatabaseAlarm(getActivity(), locationOfNewAlarm);
     AlarmReciever.createAlarms(getActivity(), ar);

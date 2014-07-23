@@ -30,15 +30,18 @@ public class StateCell {
 
   public StateCell clone() {
     StateCell copy = new StateCell(context);
-    if (hs != null)
+    if (hs != null) {
       copy.hs = hs.clone();
-    if (name != null)
+    }
+    if (name != null) {
       copy.name = new String(name);
+    }
     copy.selected = Boolean.valueOf(selected);
     return copy;
   }
 
-  public View getView(ViewGroup parent, OnClickListener l, Fragment frag, OnLongClickListener longL) {
+  public View getView(ViewGroup parent, OnClickListener l, Fragment frag,
+                      OnLongClickListener longL) {
     View rowView;
     LayoutInflater inflater = frag.getActivity().getLayoutInflater();
     if (hs.ct != null && hs.ct != 0) {
@@ -52,36 +55,42 @@ public class StateCell {
       int color = getStateColor(hs, true);
       ColorDrawable cd = new ColorDrawable(color);
       cd.setAlpha(255);
-      if ((color % 0xff000000) != 0)
+      if ((color % 0xff000000) != 0) {
         state_color.setImageDrawable(cd);
+      }
     } else if (hs.on != null) {
       rowView = inflater.inflate(R.layout.edit_mood_on_row, parent, false);
       TextView stateText = (TextView) rowView.findViewById(R.id.onTextView);
-      if (hs.on != null && hs.on)
+      if (hs.on != null && hs.on) {
         stateText.setText(context.getResources().getString(R.string.cap_on));
-      else
+      } else {
         stateText.setText(context.getResources().getString(R.string.cap_off));
+      }
     } else {
       rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
     }
-    if (selected)
+    if (selected) {
       rowView.setBackgroundColor(context.getResources().getColor(R.color.bluewidgets_color));
-    else
+    } else {
       rowView.setBackgroundColor(0);
+    }
 
     rowView.setOnClickListener(l);
 
-    if (longL != null)
+    if (longL != null) {
       rowView.setOnLongClickListener(longL);
-    if (frag != null)
+    }
+    if (frag != null) {
       frag.registerForContextMenu(rowView);
+    }
     return rowView;
   }
 
   // TODO add color generation support for color temp, on, off
   public static int getStateColor(BulbState hs, boolean sRGB) {
-    if (hs == null)
+    if (hs == null) {
       return 0;
+    }
     if (hs.ct != null && hs.ct != 0) {
       Float[] hueSat = Utils.xyTOhs(Utils.ctTOxy(hs.ct));
       float[] hsv = new float[3];

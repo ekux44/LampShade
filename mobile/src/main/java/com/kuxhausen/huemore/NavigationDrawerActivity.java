@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -35,15 +33,17 @@ import com.kuxhausen.huemore.net.ConnectionListFragment;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
 import com.kuxhausen.huemore.nfc.NfcWriterFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.timing.AlarmsListFragment;
 
+import java.util.ArrayList;
+
 public class NavigationDrawerActivity extends NetworkManagedActivity implements
-    OnBackStackChangedListener {
+                                                                     OnBackStackChangedListener {
 
   private DrawerLayout mDrawerLayout;
   private View mDrawerView;
@@ -71,8 +71,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_navigation_drawer);
 
-    mBillingManager = new BillingManager(this);
-
     if (Utils.hasProVersion(this)) {
       mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_pro_titles);
     } else {
@@ -95,7 +93,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     mNotificationList = (ListView) findViewById(R.id.notification_list);
 
-
     // enable ActionBar app icon to behave as action to toggle nav drawer
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
@@ -103,10 +100,10 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     // ActionBarDrawerToggle ties together the the proper interactions
     // between the sliding drawer and the action bar app icon
     mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-    mDrawerLayout, /* DrawerLayout object */
-    R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-    R.string.drawer_open, /* "open drawer" description for accessibility */
-    R.string.drawer_close /* "close drawer" description for accessibility */
+                                              mDrawerLayout, /* DrawerLayout object */
+                                              R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+                                              R.string.drawer_open, /* "open drawer" description for accessibility */
+                                              R.string.drawer_close /* "close drawer" description for accessibility */
     ) {
       public void onDrawerClosed(View view) {
         getSupportActionBar().setTitle(mTitle);
@@ -125,15 +122,19 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-
     PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
-
 
     if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
         && b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
       UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
       unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
     }
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    mBillingManager = new BillingManager(this);
   }
 
   public void onResume() {
@@ -179,8 +180,9 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       for (Connection c : cons) {
         for (NetworkBulb b : c.getBulbs()) {
           if (b.getConnectivityState() == ConnectivityState.Connected
-              || b.getConnectivityState() == ConnectivityState.Unknown)
+              || b.getConnectivityState() == ConnectivityState.Unknown) {
             hasPendingOrSuccessfulConnections = true;
+          }
         }
       }
     }
@@ -217,6 +219,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
   /* The click listner for ListView in the navigation drawer */
   private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
       selectItem(position, null);
@@ -224,8 +227,9 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   }
 
   private void selectItem(int position, Bundle b) {
-    if (b == null)
+    if (b == null) {
       b = new Bundle();
+    }
 
     // record the groupbulb tab state and pass in bundle to main
     if (position == GROUP_FRAG) {
@@ -238,8 +242,9 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     // this allows Bulb & Group to show up twice in NavBar but share fragment
     int actualPosition = position;
-    if (actualPosition == GROUP_FRAG)
+    if (actualPosition == GROUP_FRAG) {
       actualPosition = BULB_FRAG;
+    }
 
     mSelectedItemPosition = position;
     cleanUpActionBar();
@@ -383,7 +388,8 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
           ((MainFragment) getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG + BULB_FRAG));
     }
     if (frag != null) {
-      if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+      if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+          >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
         frag.invalidateSelection();
       } else if (boundToService()) {
         SecondaryFragment drillDownFrag = new SecondaryFragment();
@@ -440,18 +446,30 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
 
   @Override
-  public void onDestroy() {
-    mNotificationAdapter.onDestroy();
-    if (mBillingManager != null)
+  protected void onStop() {
+    super.onStop();
+    //we don't want billing still running in background when user leaves but moods still playing
+    if (mBillingManager != null) {
       mBillingManager.onDestroy();
+    }
+  }
 
+  @Override
+  protected void onDestroy() {
+    mNotificationAdapter.onDestroy();
+
+    //billing should have been destroyed in onStop, but try again in case onStop was skipped
+    if (mBillingManager != null) {
+      mBillingManager.onDestroy();
+    }
     super.onDestroy();
   }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (mBillingManager != null)
+    if (mBillingManager != null) {
       mBillingManager.onActivityResult(requestCode, resultCode, data);
+    }
   }
 
   public BillingManager getBillingManager() {

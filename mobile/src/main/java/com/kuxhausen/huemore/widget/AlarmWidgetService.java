@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.widget;
 
+import com.google.gson.Gson;
+
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
@@ -12,10 +14,9 @@ import android.provider.BaseColumns;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.timing.AlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
@@ -24,6 +25,7 @@ import com.kuxhausen.huemore.timing.DatabaseAlarm;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AlarmWidgetService extends RemoteViewsService {
+
   @Override
   public RemoteViewsFactory onGetViewFactory(Intent intent) {
     return new StackRemoteViewsFactory(this.getApplicationContext(), intent);
@@ -36,6 +38,7 @@ public class AlarmWidgetService extends RemoteViewsService {
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+
   private Context mContext;
   private Cursor mCursor;
   private int mAppWidgetId;
@@ -45,7 +48,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     mContext = context;
     mAppWidgetId =
         intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID);
+                           AppWidgetManager.INVALID_APPWIDGET_ID);
   }
 
   public void onCreate() {
@@ -89,7 +92,6 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     } else {
       rv.setImageViewResource(R.id.alarmOnOffImageButton, R.drawable.off);
     }
-
 
     // Set the click intent so that we can handle it and show a toast message
     final Intent fillInIntent = new Intent();

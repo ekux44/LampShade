@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.net;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.R;
+
+import java.util.ArrayList;
 
 public class ConnectionRowAdapter extends ArrayAdapter<Connection> {
 
@@ -96,6 +96,7 @@ public class ConnectionRowAdapter extends ArrayAdapter<Connection> {
   }
 
   protected static class ViewHolder {
+
     protected TextView mainText;
     protected TextView secondaryText;
     protected ProgressBar connectivingSpinner;

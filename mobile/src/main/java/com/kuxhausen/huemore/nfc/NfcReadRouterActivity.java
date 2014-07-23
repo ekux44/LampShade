@@ -8,10 +8,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class NfcReadRouterActivity extends Activity {
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

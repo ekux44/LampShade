@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,19 +24,21 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
 
+import java.util.ArrayList;
+
 public class EditGroupDialogFragment extends DialogFragment implements
-    LoaderManager.LoaderCallbacks<Cursor> {
+                                                            LoaderManager.LoaderCallbacks<Cursor> {
 
   private static final int BULBS_LOADER = 0;
   private static final String[] columns = {NetBulbColumns.NAME_COLUMN,
-      NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID};
+                                           NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID};
 
   public CursorAdapter dataSource;
 
@@ -77,8 +77,8 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
     dataSource =
         new SimpleCursorAdapter(this.getActivity(),
-            android.R.layout.simple_list_item_multiple_choice, null, columns,
-            new int[] {android.R.id.text1}, 0);
+                                android.R.layout.simple_list_item_multiple_choice, null, columns,
+                                new int[]{android.R.id.text1}, 0);
 
     bulbsListView.setAdapter(dataSource);
 
@@ -101,7 +101,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
           String groupSelect = GroupColumns.GROUP + "=?";
           String[] groupArg = {initialName};
           getActivity().getContentResolver().delete(
-              DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
+              Definitions.GroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
         }
 
         String groupName = nameEditText.getText().toString();
@@ -114,10 +114,8 @@ public class EditGroupDialogFragment extends DialogFragment implements
           edit.commit();
           groupName =
               parrentActivity.getResources().getString(R.string.unnamed_group) + " "
-                  + unnamedNumber;
+              + unnamedNumber;
         }
-
-
 
         SparseBooleanArray set = bulbsListView.getCheckedItemPositions();
         Cursor cursor = dataSource.getCursor();
@@ -126,12 +124,12 @@ public class EditGroupDialogFragment extends DialogFragment implements
           if (set.get(i)) {
             ContentValues mNewValues = new ContentValues();
 
-            mNewValues.put(DatabaseDefinitions.GroupColumns.GROUP, groupName);
-            mNewValues.put(DatabaseDefinitions.GroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
-            mNewValues.put(DatabaseDefinitions.GroupColumns.PRECEDENCE, i);
+            mNewValues.put(GroupColumns.GROUP, groupName);
+            mNewValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
+            mNewValues.put(GroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
+            mNewValues.put(GroupColumns.PRECEDENCE, i);
 
-            getActivity().getContentResolver().insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
-                mNewValues);
+            getActivity().getContentResolver().insert(GroupColumns.GROUPS_URI, mNewValues);
           }
 
           cursor.moveToNext();
@@ -156,11 +154,11 @@ public class EditGroupDialogFragment extends DialogFragment implements
       case BULBS_LOADER:
         // Returns a new CursorLoader
         return new CursorLoader(getActivity(), // Parent activity context
-            DatabaseDefinitions.NetBulbColumns.URI, // Table
-            columns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                Definitions.NetBulbColumns.URI, // Table
+                                columns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in

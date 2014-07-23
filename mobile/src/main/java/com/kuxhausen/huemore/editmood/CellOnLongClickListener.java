@@ -21,7 +21,7 @@ public class CellOnLongClickListener implements OnLongClickListener {
   private ViewType mViewType;
 
   public CellOnLongClickListener(EditMoodStateGridFragment editMoodStateGridFragment,
-      ViewType viewType) {
+                                 ViewType viewType) {
     mFrag = editMoodStateGridFragment;
     mViewType = viewType;
   }
@@ -58,7 +58,6 @@ public class CellOnLongClickListener implements OnLongClickListener {
     }
     return true;
   }
-
 
 
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -114,6 +113,7 @@ public class CellOnLongClickListener implements OnLongClickListener {
       outline.draw(canvas);
     }
   }
+
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   private static class ChannelShadowBuilder extends View.DragShadowBuilder {
 

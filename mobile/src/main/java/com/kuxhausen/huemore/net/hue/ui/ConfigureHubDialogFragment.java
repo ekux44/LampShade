@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.HubData;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class ConfigureHubDialogFragment extends DialogFragment {
 
@@ -41,11 +41,13 @@ public class ConfigureHubDialogFragment extends DialogFragment {
 
     if (mPriorConnection != null) {
       String local = mPriorConnection.getHubData().localHubAddress;
-      if (local != null)
+      if (local != null) {
         mLocalAddress.setText(local);
+      }
       String remote = mPriorConnection.getHubData().portForwardedAddress;
-      if (remote != null)
+      if (remote != null) {
         mRemoteAddress.setText(remote);
+      }
     }
 
     builder.setView(registerWithHubView);

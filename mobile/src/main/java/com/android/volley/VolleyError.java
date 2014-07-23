@@ -19,6 +19,7 @@ package com.android.volley;
  */
 @SuppressWarnings("serial")
 public class VolleyError extends Exception {
+
   public final NetworkResponse networkResponse;
 
   public VolleyError() {

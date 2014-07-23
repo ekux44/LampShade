@@ -20,11 +20,11 @@ import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class AlarmsListFragment extends ListFragment implements
-    LoaderManager.LoaderCallbacks<Cursor> {
+                                                     LoaderManager.LoaderCallbacks<Cursor> {
 
   private NavigationDrawerActivity mParrent;
 
@@ -35,7 +35,8 @@ public class AlarmsListFragment extends ListFragment implements
   private DatabaseAlarm selectedRow;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     mParrent = (NavigationDrawerActivity) this.getActivity();
@@ -49,7 +50,7 @@ public class AlarmsListFragment extends ListFragment implements
     String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
     dataSource =
         new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null, columns,
-            new int[] {R.id.subTextView}, 0);
+                            new int[]{R.id.subTextView}, 0);
 
     setListAdapter(dataSource);
 
@@ -58,7 +59,6 @@ public class AlarmsListFragment extends ListFragment implements
     setHasOptionsMenu(true);
 
     getActivity().setTitle(R.string.alarms);
-
 
     ((ActionBarActivity) this.getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     return myView;
@@ -132,11 +132,11 @@ public class AlarmsListFragment extends ListFragment implements
         // Returns a new CursorLoader
         String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-            AlarmColumns.ALARMS_URI, // Table
-            columns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                AlarmColumns.ALARMS_URI, // Table
+                                columns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in

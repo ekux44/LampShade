@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.editmood;
 
+import com.google.gson.Gson;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -15,12 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 
@@ -39,23 +40,30 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   Gson gson = new Gson();
   private int row, col;
 
-  /** 1 if true, 0 if false **/
+  /**
+   * 1 if true, 0 if false *
+   */
   static int hasNoRecentStates = 1;
 
   public BulbState getState() {
-    if (currentState == null)
+    if (currentState == null) {
       currentState = new BulbState();
+    }
     return currentState;
   }
 
-  public void setState(BulbState newState, OnCreateColorListener initiator, String optionalMessage) {
+  public void setState(BulbState newState, OnCreateColorListener initiator,
+                       String optionalMessage) {
     currentState = newState.clone();
     setSpinner();
     this.stateChanged(initiator);
   }
 
   public interface OnCreateColorListener {
-    /*** return true if well suited to display updated data ***/
+
+    /**
+     * return true if well suited to display updated data **
+     */
     public boolean stateChanged();
 
     public void setStatePager(EditStatePagerDialogFragment statePage);
@@ -63,8 +71,9 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
 
   private void stateChanged(OnCreateColorListener initiator) {
     for (OnCreateColorListener listener : newColorFragments) {
-      if (listener != initiator && listener != null)
+      if (listener != initiator && listener != null) {
         listener.stateChanged();
+      }
     }
 
     if (this.getActivity() != null) {
@@ -74,7 +83,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-          dm.getNetworkBulb(bulbId).setState(currentState);
+          dm.getNetworkBulb(bulbId).setState(currentState, true);
         }
       }
     }
@@ -82,15 +91,17 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
 
   public void setParrentMood(EditMoodStateGridFragment eamf) {
     parrentMood = eamf;
-    if (RecentStatesFragment.extractUniques(eamf.moodRows).size() > 0)
+    if (RecentStatesFragment.extractUniques(eamf.moodRows).size() > 0) {
       hasNoRecentStates = 0;
-    else
+    } else {
       hasNoRecentStates = 1;
+    }
   }
 
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.color_dialog_pager, container, false);
@@ -98,13 +109,11 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     transitionSpinner = (Spinner) myView.findViewById(R.id.transitionSpinner);
     ArrayAdapter<CharSequence> adapter =
         ArrayAdapter.createFromResource(getActivity(), R.array.transition_names_array,
-            android.R.layout.simple_spinner_item);
+                                        android.R.layout.simple_spinner_item);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     transitionSpinner.setAdapter(adapter);
 
     transitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
-
-
 
     // Create an adapter that when requested, will return a fragment
     // representing an object in the collection.
@@ -149,26 +158,32 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   private void setSpinner() {
     if (currentState.transitiontime != null) {
       int pos = 0;
-      for (int i = 0; i < transitionValues.length; i++)
-        if (currentState.transitiontime == transitionValues[i])
+      for (int i = 0; i < transitionValues.length; i++) {
+        if (currentState.transitiontime == transitionValues[i]) {
           pos = i;
+        }
+      }
       transitionSpinner.setSelection(pos);
     }
   }
 
   private void routeState(BulbState bs) {
-    if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(RECENT_PAGE)).stateChanged())
+    if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(RECENT_PAGE)).stateChanged()) {
       mViewPager.setCurrentItem(RECENT_PAGE);
-    else if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(SAMPLE_PAGE)).stateChanged())
+    } else if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(SAMPLE_PAGE))
+        .stateChanged()) {
       mViewPager.setCurrentItem(SAMPLE_PAGE);
-    else if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(TEMP_PAGE - hasNoRecentStates))
-        .stateChanged())
+    } else if (((OnCreateColorListener) mNewColorPagerAdapter
+        .getItem(TEMP_PAGE - hasNoRecentStates))
+        .stateChanged()) {
       mViewPager.setCurrentItem(TEMP_PAGE - hasNoRecentStates);
-    else if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(WHEEL_PAGE - hasNoRecentStates))
-        .stateChanged())
+    } else if (((OnCreateColorListener) mNewColorPagerAdapter
+        .getItem(WHEEL_PAGE - hasNoRecentStates))
+        .stateChanged()) {
       mViewPager.setCurrentItem(WHEEL_PAGE - hasNoRecentStates);
-    else
+    } else {
       mViewPager.setCurrentItem(RECENT_PAGE);
+    }
   }
 
   /**
@@ -186,8 +201,9 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
 
     @Override
     public Fragment getItem(int i) {
-      if (newColorFragments[i] != null)
+      if (newColorFragments[i] != null) {
         return (Fragment) newColorFragments[i];
+      }
 
       if (i == SAMPLE_PAGE) {
         newColorFragments[i] = new SampleStatesFragment();
@@ -205,8 +221,9 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
         newColorFragments[i] = new RecentStatesFragment();
         newColorFragments[i].setStatePager(frag);
         return (Fragment) newColorFragments[i];
-      } else
+      } else {
         return null;
+      }
     }
 
     @Override
@@ -216,14 +233,15 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
 
     @Override
     public CharSequence getPageTitle(int i) {
-      if (i == SAMPLE_PAGE)
+      if (i == SAMPLE_PAGE) {
         return frag.getActivity().getString(R.string.cap_sample_state);
-      else if (i == WHEEL_PAGE - frag.hasNoRecentStates)
+      } else if (i == WHEEL_PAGE - frag.hasNoRecentStates) {
         return frag.getActivity().getString(R.string.cap_hue_sat_mode);
-      else if (i == TEMP_PAGE - frag.hasNoRecentStates)
+      } else if (i == TEMP_PAGE - frag.hasNoRecentStates) {
         return frag.getActivity().getString(R.string.cap_color_temp_mode);
-      else if (i == RECENT_PAGE)
+      } else if (i == RECENT_PAGE) {
         return frag.getActivity().getString(R.string.cap_recent_state);
+      }
       return "";
     }
   }
@@ -232,17 +250,19 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.okay:
-        if (transitionSpinner != null)
+        if (transitionSpinner != null) {
           currentState.transitiontime =
               transitionValues[transitionSpinner.getSelectedItemPosition()];
+        }
 
         Intent i = new Intent();
         i.putExtra(InternalArguments.HUE_STATE, gson.toJson(currentState));
         i.putExtra(InternalArguments.ROW, row);
         i.putExtra(InternalArguments.COLUMN, col);
 
-        if (this.getTargetFragment() != null)
+        if (this.getTargetFragment() != null) {
           getTargetFragment().onActivityResult(-1, -1, i);
+        }
         this.dismiss();
         break;
       case R.id.cancel:

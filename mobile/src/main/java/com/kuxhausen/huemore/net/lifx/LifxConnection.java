@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.ContactsContract;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.NetworkBulb;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.ArrayList;
 
@@ -18,13 +17,13 @@ import lifx.java.android.light.LFXLight;
 
 public class LifxConnection implements Connection {
 
-  private static final String[] bulbColumns = {DatabaseDefinitions.NetBulbColumns._ID,
-                                               DatabaseDefinitions.NetBulbColumns.CONNECTION_DATABASE_ID,
-                                               DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN,
-                                               DatabaseDefinitions.NetBulbColumns.NAME_COLUMN,
-                                               DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN,
-                                               DatabaseDefinitions.NetBulbColumns.JSON_COLUMN,
-                                               DatabaseDefinitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
+  private static final String[] bulbColumns = {Definitions.NetBulbColumns._ID,
+                                               Definitions.NetBulbColumns.CONNECTION_DATABASE_ID,
+                                               Definitions.NetBulbColumns.TYPE_COLUMN,
+                                               Definitions.NetBulbColumns.NAME_COLUMN,
+                                               Definitions.NetBulbColumns.DEVICE_ID_COLUMN,
+                                               Definitions.NetBulbColumns.JSON_COLUMN,
+                                               Definitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS};
   private static final Gson gson = new Gson();
 
   private Long mBaseId;
@@ -46,14 +45,14 @@ public class LifxConnection implements Connection {
     mDeviceManager = dm;
 
     String selection =
-        DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " = ?  AND "
-        + DatabaseDefinitions.NetBulbColumns.CONNECTION_DATABASE_ID + " = ?";
+        Definitions.NetBulbColumns.TYPE_COLUMN + " = ?  AND "
+        + Definitions.NetBulbColumns.CONNECTION_DATABASE_ID + " = ?";
     String[]
         selectionArgs =
-        {"" + DatabaseDefinitions.NetBulbColumns.NetBulbType.LIFX, "" + mBaseId};
+        {"" + Definitions.NetBulbColumns.NetBulbType.LIFX, "" + mBaseId};
     Cursor cursor =
         c.getContentResolver()
-            .query(DatabaseDefinitions.NetBulbColumns.URI, bulbColumns, selection, selectionArgs,
+            .query(Definitions.NetBulbColumns.URI, bulbColumns, selection, selectionArgs,
                    null);
     cursor.moveToFirst();
     Long bulbBaseId = cursor.getLong(0);
@@ -61,7 +60,7 @@ public class LifxConnection implements Connection {
     String bulbDeviceId = cursor.getString(4);
     LifxBulb.ExtraData bulbData = gson.fromJson(cursor.getString(5), LifxBulb.ExtraData.class);
     int currentMaxBri = cursor.getInt(6);
-    mBulb = new LifxBulb(c, bulbBaseId, bulbName, bulbDeviceId, bulbData, this, currentMaxBri);
+    mBulb = new LifxBulb(c, bulbBaseId, bulbName, bulbDeviceId, bulbData, this);
   }
 
   @Override
@@ -100,9 +99,10 @@ public class LifxConnection implements Connection {
   public void delete() {
     this.onDestroy();
 
-    String selector = DatabaseDefinitions.NetConnectionColumns._ID + "=?";
+    String selector = Definitions.NetConnectionColumns._ID + "=?";
     String[] selectionArgs = {"" + mBaseId};
-    mContext.getContentResolver().delete(DatabaseDefinitions.NetConnectionColumns.URI, selector, selectionArgs);
+    mContext.getContentResolver()
+        .delete(Definitions.NetConnectionColumns.URI, selector, selectionArgs);
   }
 
   public String getDeviceId() {

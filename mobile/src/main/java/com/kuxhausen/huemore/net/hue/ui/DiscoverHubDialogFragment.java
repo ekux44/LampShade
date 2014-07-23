@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.net.hue.ui;
 
+import com.google.gson.Gson;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,12 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.api.Bridge;
 import com.kuxhausen.huemore.net.hue.api.HubSearch;
 import com.kuxhausen.huemore.net.hue.api.HubSearch.OnHubFoundListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFoundListener {
 
@@ -43,8 +44,6 @@ public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFo
         // User cancelled the dialog
       }
     });
-
-
 
     startDiscovery();
     Log.e("asdf", "hubSearchStarted");
@@ -72,8 +71,9 @@ public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFo
   @Override
   public void onStop() {
     super.onStop();
-    if (hubSearch != null)
+    if (hubSearch != null) {
       hubSearch.cancel(false);
+    }
   }
 
   @Override

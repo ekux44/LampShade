@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.ArrayList;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,8 +13,10 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.BulbState;
 
+import java.util.ArrayList;
+
 public class SampleStatesFragment extends Fragment implements OnCreateColorListener,
-    OnClickListener {
+                                                              OnClickListener {
 
   private GridView g;
   private StateCellAdapter adapter;
@@ -29,7 +29,7 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
 
     String[] simpleNames =
         {"Reading", "Relax", "Concentrate", "Energize", "Deep Sea1", "Deep Sea2", "Fruit1",
-            "Fruit2", "Fruit3"};
+         "Fruit2", "Fruit3"};
     float[] simpleX =
         {0.4571f, 0.5119f, 0.368f, 0.3151f, 0.1859f, 0.6367f, 0.5089f, 0.5651f, 0.4081f};
     float[] simpleY =
@@ -72,7 +72,8 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.grid_view, null);
@@ -93,8 +94,9 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
 
   @Override
   public void onClick(View v) {
-    if (lastSelectedPosition > -1)
+    if (lastSelectedPosition > -1) {
       list.get(lastSelectedPosition).selected = false;
+    }
     lastSelectedPosition = (Integer) v.getTag();
     list.get(lastSelectedPosition).selected = true;
     adapter.notifyDataSetChanged();
@@ -115,8 +117,9 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
     }
     if (lastSelectedPosition != newSelectedPosition) {
       lastSelectedPosition = newSelectedPosition;
-      if (adapter != null)
+      if (adapter != null) {
         adapter.notifyDataSetChanged();
+      }
     }
     if (newSelectedPosition != -1) {
       return true;

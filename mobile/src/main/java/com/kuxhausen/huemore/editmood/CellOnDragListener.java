@@ -15,7 +15,8 @@ class CellOnDragListener implements View.OnDragListener {
   private EditMoodStateGridFragment mFrag;
   private ViewType mViewType;
 
-  public CellOnDragListener(EditMoodStateGridFragment editMoodStateGridFragment, ViewType viewType) {
+  public CellOnDragListener(EditMoodStateGridFragment editMoodStateGridFragment,
+                            ViewType viewType) {
     mFrag = editMoodStateGridFragment;
     mViewType = viewType;
   }
@@ -30,8 +31,9 @@ class CellOnDragListener implements View.OnDragListener {
     switch (action) {
       case DragEvent.ACTION_DRAG_STARTED:
         // Determines if this View can accept the dragged data
-        if (((ViewType) event.getLocalState()).equals(mViewType))
+        if (((ViewType) event.getLocalState()).equals(mViewType)) {
           return true;
+        }
         return false;
       case DragEvent.ACTION_DRAG_ENTERED:
         // Applies a background around the View. The return value is ignored.
@@ -66,7 +68,7 @@ class CellOnDragListener implements View.OnDragListener {
               return true;
             } else {
               mFrag.insertionMoveChannel(mFrag.mStateGrid.getSelectedChannelCol(),
-                  (Integer) v.getTag());
+                                         (Integer) v.getTag());
               mFrag.mActionMode.finish();
               return true;
             }
@@ -77,7 +79,7 @@ class CellOnDragListener implements View.OnDragListener {
               return true;
             } else {
               mFrag.insertionMoveTimeslot(mFrag.mStateGrid.getSelectedTimeslotRow(),
-                  (Integer) v.getTag());
+                                          (Integer) v.getTag());
               mFrag.mActionMode.finish();
               return true;
             }
@@ -87,10 +89,14 @@ class CellOnDragListener implements View.OnDragListener {
       case DragEvent.ACTION_DRAG_ENDED:
         // Turns off any color tinting. the return value is ignored.
         v.setBackgroundColor(Color.TRANSPARENT);
-        if (mFrag.mActionMode != null)
+        if (mFrag.mActionMode != null) {
           mFrag.mActionMode.finish();
+        }
         return true;
-    };
+    }
+    ;
     return false;
-  };
+  }
+
+  ;
 }

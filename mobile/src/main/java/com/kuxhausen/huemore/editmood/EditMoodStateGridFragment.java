@@ -1,9 +1,8 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
 import android.annotation.TargetApi;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -22,22 +21,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.editmood.StateGridSelections.StateGridDisplay;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.util.ArrayList;
+
 public class EditMoodStateGridFragment extends Fragment implements OnClickListener,
-    OnCreateMoodListener, StateGridDisplay {
+                                                                   OnCreateMoodListener,
+                                                                   StateGridDisplay {
 
   EditMoodFragment parentFrag;
 
@@ -50,13 +49,13 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   private String priorName;
   private PageType pageType = PageType.SIMPLE_PAGE;
   private CellOnLongClickListener mCellLongListener = new CellOnLongClickListener(this,
-      ViewType.StateCell);
+                                                                                  ViewType.StateCell);
   CellOnDragListener mCellDragListener;
   private CellOnLongClickListener mChannelLongListener = new CellOnLongClickListener(this,
-      ViewType.Channel);
+                                                                                     ViewType.Channel);
   CellOnDragListener mChannelDragListener;
   private CellOnLongClickListener mTimeslotLongListener = new CellOnLongClickListener(this,
-      ViewType.Timeslot);
+                                                                                      ViewType.Timeslot);
   CellOnDragListener mTimeslotDragListener;
 
 
@@ -65,12 +64,15 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   public enum PageType {
     SIMPLE_PAGE, RELATIVE_PAGE, DAILY_PAGE
-  };
+  }
+
+  ;
 
   public void setMoodMode(int spinnerPos) {
     if (pageType.ordinal() != spinnerPos) {
-      if (spinnerPos == PageType.SIMPLE_PAGE.ordinal())
+      if (spinnerPos == PageType.SIMPLE_PAGE.ordinal()) {
         setGridRows(1);
+      }
 
       pageType = PageType.values()[spinnerPos];
       redrawGrid();
@@ -78,7 +80,8 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
 
@@ -87,7 +90,6 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       mChannelDragListener = new CellOnDragListener(this, ViewType.Channel);
       mTimeslotDragListener = new CellOnDragListener(this, ViewType.Timeslot);
     }
-
 
     mStateGrid = new StateGridSelections(this);
 
@@ -126,14 +128,16 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   }
 
   public int getGridWidth() {
-    if (grid != null)
+    if (grid != null) {
       return grid.getWidth();
+    }
     return 0;
   }
 
   public int getGridHeight() {
-    if (grid != null)
+    if (grid != null) {
       return grid.getHeight();
+    }
     return 0;
   }
 
@@ -148,7 +152,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     getCell(new Pair<Integer, Integer>(data.getIntExtra(InternalArguments.ROW, -1),
-        data.getIntExtra(InternalArguments.COLUMN, -1))).hs =
+                                       data.getIntExtra(InternalArguments.COLUMN, -1))).hs =
         gson.fromJson(data.getStringExtra(InternalArguments.HUE_STATE), BulbState.class);
 
     redrawGrid();
@@ -168,7 +172,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
     service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(),
-        name, null, null);
+                                     name, null, null);
   }
 
   public static PageType calculateMoodType(Mood m) {
@@ -176,8 +180,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       return PageType.SIMPLE_PAGE;
     } else if (m.timeAddressingRepeatPolicy == true) {
       return PageType.DAILY_PAGE;
-    } else
+    } else {
       return PageType.RELATIVE_PAGE;
+    }
   }
 
 
@@ -221,17 +226,19 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     redrawGrid();
   }
 
-  private Mood getMood() {
+  protected Mood getMood() {
     Mood m = new Mood();
-    if (pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE)
+    if (pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE) {
       m.usesTiming = true;
-    else
+    } else {
       m.usesTiming = false;
+    }
     m.setNumChannels(gridCols());
-    if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE)
+    if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE) {
       m.timeAddressingRepeatPolicy = true;
-    else
+    } else {
       m.timeAddressingRepeatPolicy = false;
+    }
     m.setInfiniteLooping(parentFrag.isChecked());
 
     ArrayList<Event> events = new ArrayList<Event>();
@@ -248,8 +255,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       }
     }
     Event[] eRay = new Event[events.size()];
-    for (int i = 0; i < eRay.length; i++)
+    for (int i = 0; i < eRay.length; i++) {
       eRay[i] = events.get(i);
+    }
 
     m.events = eRay;
     m.loopIterationTimeLength = loopTimeslot.getStartTime();
@@ -258,24 +266,28 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   private int getTime(int row) {
     if (row > -1 && row < moodRows.size()) {
-      if (pageType == PageType.DAILY_PAGE)
+      if (pageType == PageType.DAILY_PAGE) {
         return moodRows.get(row).dailyTimeslot.getStartTime();
-      else if (pageType == PageType.RELATIVE_PAGE)
+      } else if (pageType == PageType.RELATIVE_PAGE) {
         return moodRows.get(row).relativeTimeslot.getStartTime();
+      }
     }
     return 0;
   }
 
-  /** compute Minimum Value at my position **/
+  /**
+   * compute Minimum Value at my position *
+   */
   public int computeMinimumValue(int position) {
     position = Math.min(position, moodRows.size());
     if (position <= 0) {
       return 0;
     } else {
-      if (pageType == PageType.DAILY_PAGE)
+      if (pageType == PageType.DAILY_PAGE) {
         return moodRows.get(position - 1).dailyTimeslot.getStartTime() + 600;
-      else if (pageType == PageType.RELATIVE_PAGE)
+      } else if (pageType == PageType.RELATIVE_PAGE) {
         return moodRows.get(position - 1).relativeTimeslot.getStartTime() + 10;
+      }
     }
     return 0;
   }
@@ -290,7 +302,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         cpdf.setParrentMood(this);
         Bundle args = new Bundle();
         args.putString(InternalArguments.PREVIOUS_STATE,
-            gson.toJson(this.getCell(mStateGrid.getSelectedCellRowCol()).hs));
+                       gson.toJson(this.getCell(mStateGrid.getSelectedCellRowCol()).hs));
         args.putInt(InternalArguments.ROW, mStateGrid.getSelectedCellRow());
         args.putInt(InternalArguments.COLUMN, mStateGrid.getSelectedCellCol());
         cpdf.setArguments(args);
@@ -324,7 +336,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
         ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
         service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM,
-            null, null, null);
+                                         null, null, null);
         break;
     }
 
@@ -333,7 +345,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   public void switchCells(Pair<Integer, Integer> first, Pair<Integer, Integer> second) {
     StateCell temp = moodRows.get(first.first).cellRay.get(first.second);
     moodRows.get(first.first).cellRay.set(first.second,
-        moodRows.get(second.first).cellRay.get(second.second));
+                                          moodRows.get(second.first).cellRay.get(second.second));
     moodRows.get(second.first).cellRay.set(second.second, temp);
     redrawGrid();
   }
@@ -361,8 +373,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   public void deleteChannel(int position) {
     if (moodRows.get(0).cellRay.size() > 1) {
-      for (StateRow sr : moodRows)
+      for (StateRow sr : moodRows) {
         sr.cellRay.remove(position);
+      }
       grid.setColumnCount(initialCols + endingCols + gridCols() - 1);
       redrawGrid();
     }
@@ -385,11 +398,12 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public void redrawGrid() {
-    if (grid == null)
+    if (grid == null) {
       return;
+    }
     grid.removeAllViews();
     LayoutInflater inflater = this.getActivity().getLayoutInflater();
-    for (int r = 0; r < moodRows.size(); r++)
+    for (int r = 0; r < moodRows.size(); r++) {
       for (int c = 0; c < moodRows.get(r).cellRay.size(); c++) {
         GridLayout.LayoutParams vg = new GridLayout.LayoutParams();
         vg.columnSpec = GridLayout.spec(c + initialCols);
@@ -401,12 +415,15 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
                     this,
                     this,
                     (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ? mCellLongListener
-                        : null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                                                                             : null
+                );
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
           v.setOnDragListener(mCellDragListener);
+        }
         mStateGrid.tagStateCell(v, r, c);
         grid.addView(v, vg);
       }
+    }
     int gridStateRows = this.gridRows();
     int gridStateCols = this.gridCols();
 
@@ -433,11 +450,13 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         vg.columnSpec = GridLayout.spec(initialCols + c);
         vg.rowSpec = GridLayout.spec(1);
         vg.setGravity(Gravity.CENTER);
-        if (channelButtons.size() <= c)
+        if (channelButtons.size() <= c) {
           channelButtons.add((ImageButton) inflater.inflate(R.layout.info_image_button, null));
+        }
         View v = channelButtons.get(c);
-        if (v.getParent() != null)
+        if (v.getParent() != null) {
           ((ViewGroup) v.getParent()).removeView(v);
+        }
         v.setOnClickListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
           v.setOnLongClickListener(mChannelLongListener);
@@ -457,8 +476,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         vg.setGravity(Gravity.CENTER);
 
         View v = moodRows.get(r).relativeTimeslot.getView(r);
-        if (v.getParent() != null)
+        if (v.getParent() != null) {
           ((ViewGroup) v.getParent()).removeView(v);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
           v.setOnLongClickListener(mTimeslotLongListener);
           v.setOnDragListener(mTimeslotDragListener);
@@ -476,8 +496,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         vg.setGravity(Gravity.CENTER);
 
         View v = moodRows.get(r).dailyTimeslot.getView(r);
-        if (v.getParent() != null)
+        if (v.getParent() != null) {
           ((ViewGroup) v.getParent()).removeView(v);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
           v.setOnLongClickListener(mTimeslotLongListener);
           v.setOnDragListener(mTimeslotDragListener);
@@ -559,8 +580,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         vg.setGravity(Gravity.CENTER);
 
         View v = loopTimeslot.getView(moodRows.size());
-        if (v.getParent() != null)
+        if (v.getParent() != null) {
           ((ViewGroup) v.getParent()).removeView(v);
+        }
 
         grid.addView(v, vg);
       }
@@ -609,7 +631,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         cpdf.setParrentMood(this);
         Bundle args = new Bundle();
         args.putString(InternalArguments.PREVIOUS_STATE,
-            gson.toJson(getCell(mStateGrid.getSelectedCellRowCol()).hs));
+                       gson.toJson(getCell(mStateGrid.getSelectedCellRowCol()).hs));
         args.putInt(InternalArguments.ROW, mStateGrid.getSelectedCellRow());
         args.putInt(InternalArguments.COLUMN, mStateGrid.getSelectedCellCol());
         cpdf.setArguments(args);
@@ -707,30 +729,22 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   private final void setGridRows(int num) {
     while (gridRows() != num) {
-      if (gridRows() < num)
+      if (gridRows() < num) {
         addRow();
-      else if (gridRows() > num)
+      } else if (gridRows() > num) {
         deleteRow(gridRows() - 1);
+      }
     }
   }
 
   private final void setGridCols(int num) {
     while (gridCols() != num) {
-      if (gridCols() < num)
+      if (gridCols() < num) {
         addCol();
-      else if (gridCols() > num)
+      } else if (gridCols() > num) {
         deleteCol(gridCols() - 1);
+      }
     }
-  }
-
-  @Override
-  public void onCreateMood(String moodname) {
-    ContentValues mNewValues = new ContentValues();
-    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_NAME, moodname);
-    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(getMood()));
-
-    getActivity().getContentResolver()
-        .insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
   }
 
   @Override

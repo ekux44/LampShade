@@ -10,7 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class DecodeErrorActivity extends ActionBarActivity implements OnClickListener {
 
@@ -40,7 +40,7 @@ public class DecodeErrorActivity extends ActionBarActivity implements OnClickLis
   public void onClick(View v) {
     if (decoderErrorUpgrade) {
       this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
-          + "com.kuxhausen.huemore")));
+                                                                  + "com.kuxhausen.huemore")));
     }
     this.finish();
   }

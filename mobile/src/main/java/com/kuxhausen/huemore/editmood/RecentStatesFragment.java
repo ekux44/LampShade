@@ -1,8 +1,5 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,8 +11,11 @@ import android.widget.GridView;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public class RecentStatesFragment extends Fragment implements OnCreateColorListener,
-    OnClickListener {
+                                                              OnClickListener {
 
   private GridView g;
   private StateCellAdapter adapter;
@@ -44,7 +44,8 @@ public class RecentStatesFragment extends Fragment implements OnCreateColorListe
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.grid_view, null);
@@ -62,8 +63,9 @@ public class RecentStatesFragment extends Fragment implements OnCreateColorListe
 
   @Override
   public void onClick(View v) {
-    if (lastSelectedPosition > -1)
+    if (lastSelectedPosition > -1) {
       list.get(lastSelectedPosition).selected = false;
+    }
     lastSelectedPosition = (Integer) v.getTag();
     list.get(lastSelectedPosition).selected = true;
     adapter.notifyDataSetChanged();
@@ -84,8 +86,9 @@ public class RecentStatesFragment extends Fragment implements OnCreateColorListe
     }
     if (lastSelectedPosition != newSelectedPosition) {
       lastSelectedPosition = newSelectedPosition;
-      if (adapter != null)
+      if (adapter != null) {
         adapter.notifyDataSetChanged();
+      }
     }
     if (newSelectedPosition != -1) {
       return true;

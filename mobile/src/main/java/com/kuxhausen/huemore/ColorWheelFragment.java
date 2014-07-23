@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore;
 
+import com.google.gson.Gson;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +12,9 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
@@ -21,9 +22,10 @@ import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
 
 public class ColorWheelFragment extends Fragment implements OnCheckedChangeListener,
-    com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
+                                                            com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
   public interface OnColorChangedListener {
+
     void colorChanged(int color, int hue);
 
     float getSaturation();
@@ -32,6 +34,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   ColorPicker picker;
   SaturationBar saturationBar;
   private BulbState hs = new BulbState();
+
   {
     hs.on = true;
     hs.effect = "none";
@@ -39,6 +42,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
     hs.xy = lol;// TODO change
 
   }
+
   Gson gson = new Gson();
 
   CompoundButton colorLoop;
@@ -47,7 +51,8 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   boolean colorLoopLayoutVisible = true;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View groupDialogView = inflater.inflate(R.layout.colorwheel_mood_fragment, null);
@@ -93,15 +98,17 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   public void onStart() {
     super.onStart();
     picker.setOnColorChangedListener(this);
-    if (colorLoopLayoutVisible)
+    if (colorLoopLayoutVisible) {
       colorLoop.setOnCheckedChangeListener(this);
+    }
   }
 
   public void hideColorLoop() {
     colorLoopLayoutVisible = false;
     colorLoop = null;
-    if (colorLoopLayout != null)
+    if (colorLoopLayout != null) {
       colorLoopLayout.setVisibility(View.GONE);
+    }
   }
 
   public void preview() {
@@ -111,7 +118,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-          dm.getNetworkBulb(bulbId).setState(hs);
+          dm.getNetworkBulb(bulbId).setState(hs, true);
         }
       }
     }
@@ -120,10 +127,11 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-    if (isChecked)
+    if (isChecked) {
       hs.effect = "colorloop";
-    else
+    } else {
       hs.effect = "none";
+    }
     preview();
   }
 

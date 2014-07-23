@@ -14,13 +14,13 @@
 
 package com.android.volley;
 
-import java.util.concurrent.BlockingQueue;
-
 import android.os.Process;
+
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Provides a thread for performing cache triage on a queue of requests.
- * 
+ *
  * Requests added to the specified cache queue are resolved from cache. Any deliverable response is
  * posted back to the caller via a {@link ResponseDelivery}. Cache misses and responses that require
  * refresh are enqueued on the specified network queue for processing by a {@link NetworkDispatcher}
@@ -31,32 +31,42 @@ public class CacheDispatcher extends Thread {
 
   private static final boolean DEBUG = VolleyLog.DEBUG;
 
-  /** The queue of requests coming in for triage. */
+  /**
+   * The queue of requests coming in for triage.
+   */
   private final BlockingQueue<Request> mCacheQueue;
 
-  /** The queue of requests going out to the network. */
+  /**
+   * The queue of requests going out to the network.
+   */
   private final BlockingQueue<Request> mNetworkQueue;
 
-  /** The cache to read from. */
+  /**
+   * The cache to read from.
+   */
   private final Cache mCache;
 
-  /** For posting responses. */
+  /**
+   * For posting responses.
+   */
   private final ResponseDelivery mDelivery;
 
-  /** Used for telling us to die. */
+  /**
+   * Used for telling us to die.
+   */
   private volatile boolean mQuit = false;
 
   /**
    * Creates a new cache triage dispatcher thread. You must call {@link #start()} in order to begin
    * processing.
-   * 
-   * @param cacheQueue Queue of incoming requests for triage
+   *
+   * @param cacheQueue   Queue of incoming requests for triage
    * @param networkQueue Queue to post requests that require network to
-   * @param cache Cache interface to use for resolution
-   * @param delivery Delivery interface to use for posting responses
+   * @param cache        Cache interface to use for resolution
+   * @param delivery     Delivery interface to use for posting responses
    */
   public CacheDispatcher(BlockingQueue<Request> cacheQueue, BlockingQueue<Request> networkQueue,
-      Cache cache, ResponseDelivery delivery) {
+                         Cache cache, ResponseDelivery delivery) {
     mCacheQueue = cacheQueue;
     mNetworkQueue = networkQueue;
     mCache = cache;
@@ -74,8 +84,9 @@ public class CacheDispatcher extends Thread {
 
   @Override
   public void run() {
-    if (DEBUG)
+    if (DEBUG) {
       VolleyLog.v("start new dispatcher");
+    }
     Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
     // Make a blocking call to initialize the cache.

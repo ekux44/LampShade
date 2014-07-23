@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.BulbState;
 
 public class EditBulbDialogFragment extends DialogFragment {
@@ -57,8 +57,7 @@ public class EditBulbDialogFragment extends DialogFragment {
     bs.alert = "lselect";
     bs.on = true;
 
-    netBulb.setState(bs);
-
+    netBulb.setState(bs, false);
 
     builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
       @Override
@@ -70,7 +69,7 @@ public class EditBulbDialogFragment extends DialogFragment {
         bs.alert = "lselect";
         bs.on = true;
 
-        netBulb.setState(bs);
+        netBulb.setState(bs, false);
       }
     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override

@@ -1,8 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -15,6 +12,9 @@ import android.util.DisplayMetrics;
 import com.kuxhausen.huemore.editmood.StateCell;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Custom view that shows a pie chart and, optionally, a label.
@@ -136,14 +136,17 @@ public class MoodPreviewDrawable extends Drawable {
       for (int r = 0; r < maxRow; r++) {
         for (int c = 0; c < maxCol; c++) {
           BulbState b = bsMat[r][c];
-          if (b == null)
+          if (b == null) {
             continue;
+          }
           int numRowsSpanned = 1;
-          examine: for (int r2 = r + 1; r2 < maxRow; r2++) {
-            if (bsMat[r2][c] == null)
+          examine:
+          for (int r2 = r + 1; r2 < maxRow; r2++) {
+            if (bsMat[r2][c] == null) {
               numRowsSpanned++;
-            else
+            } else {
               break examine;
+            }
           }
           mData.add(new Item(StateCell.getStateColor(b, true), r, c, r + numRowsSpanned, c + 1));
         }
@@ -159,6 +162,7 @@ public class MoodPreviewDrawable extends Drawable {
    * Maintains the state for a data item.
    */
   public class Item {
+
     public Paint mPaint;
     public RectF mSize;
 

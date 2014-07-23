@@ -1,10 +1,11 @@
 package com.kuxhausen.huemore.persistence;
 
-import java.util.BitSet;
-
 import android.util.Base64;
 
+import java.util.BitSet;
+
 public class ManagedBitSet {
+
   private BitSet set;
   private int index;
   private boolean littleEndian = false;
@@ -41,8 +42,9 @@ public class ManagedBitSet {
       byte mask = 1;
       byte temp = 0;
       for (int j = 0; j < 8; j++) {
-        if (bits.get(8 * i + j))
+        if (bits.get(8 * i + j)) {
           temp |= mask;
+        }
         mask = (byte) (mask << 1);
       }
       bytes[i] = (temp);
@@ -61,8 +63,9 @@ public class ManagedBitSet {
       byte mask = 1;
       byte temp = bytes[i];
       for (int j = 0; j < 8; j++) {
-        if ((temp & mask) != 0)
+        if ((temp & mask) != 0) {
           bits.set(8 * i + j, true);
+        }
         mask = (byte) (mask << 1);
       }
     }
@@ -90,15 +93,17 @@ public class ManagedBitSet {
     if (littleEndian) {
       int bitMask = 1;
       for (int i = 0; i < length; i++) {
-        if (this.incrementingGet())
+        if (this.incrementingGet()) {
           result += bitMask;
+        }
         bitMask *= 2;
       }
     } else {
       int bitMask = 1 << (length - 1);
       for (int i = length - 1; i >= 0; i--) {
-        if (this.incrementingGet())
+        if (this.incrementingGet()) {
           result += bitMask;
+        }
         bitMask = bitMask >>> 1;
       }
     }

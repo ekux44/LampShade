@@ -6,12 +6,15 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import com.kuxhausen.huemore.net.hue.Route;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
 
   public interface OnBulbListReturnedListener {
-    /** Called by HeadlinesFragment when a list item is selected */
+
+    /**
+     * Called by HeadlinesFragment when a list item is selected
+     */
     public void onListReturned(Bulb[] result);
   }
 
@@ -20,7 +23,7 @@ public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
   private final Context context;
 
   public BulbListSuccessListener(ConnectionMonitor parrentA, OnBulbListReturnedListener l,
-      Context c, Route r) {
+                                 Context c, Route r) {
     super(parrentA, r);
     listener = l;
     context = c;
@@ -37,7 +40,8 @@ public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
       edit.commit();
     }
 
-    if (listener != null && response!=null)
+    if (listener != null && response != null) {
       listener.onListReturned(response.getList());
+    }
   }
 }

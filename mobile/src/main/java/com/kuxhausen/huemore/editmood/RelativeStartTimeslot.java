@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class RelativeStartTimeslot implements OnClickListener {
 
@@ -48,7 +48,7 @@ public class RelativeStartTimeslot implements OnClickListener {
   public void setStartTime(int offsetWithinDayInDeciSeconds) {
     moodEventTime =
         Math.max(frag.computeMinimumValue(mPosition),
-            Math.min(MAX_MOOD_EVENT_TIME, offsetWithinDayInDeciSeconds));
+                 Math.min(MAX_MOOD_EVENT_TIME, offsetWithinDayInDeciSeconds));
     t.setText(getTime());
   }
 

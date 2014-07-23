@@ -14,7 +14,8 @@ import com.kuxhausen.huemore.net.MoodPlayer;
 import com.kuxhausen.huemore.net.PlayingMood;
 
 public class NotificationRowAdapter extends ArrayAdapter<PlayingMood> implements
-    OnActiveMoodsChangedListener, OnClickListener {
+                                                                      OnActiveMoodsChangedListener,
+                                                                      OnClickListener {
 
   private Context context;
   private MoodPlayer mPlayer;
@@ -59,6 +60,7 @@ public class NotificationRowAdapter extends ArrayAdapter<PlayingMood> implements
   }
 
   protected static class ViewHolder {
+
     protected TextView mainText;
     protected ImageButton cancelButton;
   }

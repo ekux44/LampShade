@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.net.hue;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
@@ -8,23 +7,25 @@ import android.util.Log;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
 import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
 import com.kuxhausen.huemore.state.BulbState;
 
-public class HueBulb implements NetworkBulb {
+public class HueBulb extends NetworkBulb {
 
   public static final long SEND_TIMEOUT_TIME = 2000;
+  public final static float BS_BRI_CONVERSION = 2.55f;
 
   private Long mBaseId;
   private String mName;
-  /** for now this is just bulbNumber **/
+  /**
+   * for now this is just bulbNumber *
+   */
   private String mDeviceId;
   private HueBulbData mData;
   private Context mContext;
   private HubConnection mConnection;
-  private int mCurrentMaxBri;
 
   private BulbState desiredState = new BulbState();
+  private boolean mInstantBrightnessRequested = false;
 
   //using SystemClock.elapsedTimes
   public Long lastSendInitiatedTime;
@@ -36,45 +37,104 @@ public class HueBulb implements NetworkBulb {
   }
 
   public HueBulb(Context c, Long bulbBaseId, String bulbName, String bulbDeviceId,
-      HueBulbData bulbData, HubConnection hubConnection, int currentMaxBri) {
+                 HueBulbData bulbData, HubConnection hubConnection) {
     mContext = c;
     mBaseId = bulbBaseId;
     mName = bulbName;
     mDeviceId = bulbDeviceId;
     mData = bulbData;
     mConnection = hubConnection;
-    mCurrentMaxBri = Math.max(1, currentMaxBri); // guard to keep maxBri above 0
   }
 
   @Override
-  public void setState(BulbState bs) {
+  public void setState(BulbState bs, boolean broadcast) {
     BulbState preBriAdjusted = bs.clone();
-    if (preBriAdjusted.bri != null)
-      preBriAdjusted.bri = (int) (preBriAdjusted.bri * mCurrentMaxBri / 100f);
+    if (isMaxBriModeEnabled()) {
+      if (preBriAdjusted.bri != null) {
+        preBriAdjusted.bri = (int) (preBriAdjusted.bri * getMaxBrightness(true) / 100f);
+      }
+    }
+
+    if (preBriAdjusted.hasOnlyBri()) {
+      mInstantBrightnessRequested = true;
+    }
+
     desiredState.merge(preBriAdjusted);
 
     mConnection.getLooper().addToQueue(this);
+
+    if (broadcast) {
+      this.mConnection.getDeviceManager().onStateChanged();
+    }
+
+    Log.i("setState", preBriAdjusted.toString());
   }
 
   @Override
-  public BulbState getState() {
-    return confirmed;
+  public Integer getMaxBrightness(boolean guessIfUnknown) {
+    if (getRawMaxBrightness() != null) {
+      return getRawMaxBrightness();
+    } else if (guessIfUnknown) {
+      if (desiredState.bri != null) {
+        return (int) (desiredState.bri / 2.55f);
+      } else {
+        return 50;
+      }
+    } else {
+      return null;
+    }
+  }
+
+
+  @Override
+  public BulbState getState(boolean guess) {
+    BulbState preBriAdjusted = desiredState.clone();
+    if (isMaxBriModeEnabled()) {
+      if (preBriAdjusted.bri != null) {
+        preBriAdjusted.bri = (int) (preBriAdjusted.bri * 100f / getMaxBrightness(true));
+      }
+    }
+
+    if (guess) {
+      if (preBriAdjusted.bri == null) {
+        preBriAdjusted.bri = 127;
+      }
+
+    }
+    Log.i("net.hue.bulb.getState", preBriAdjusted.toString());
+    return preBriAdjusted;
   }
 
   public void confirm(BulbState transmitted) {
     // remove successful changes from pending
     lastSendInitiatedTime = null;
 
-    Log.d("confirm", "pre" + desiredState.toString());
+    Log.d("net.hue.bulb.confirm", "unconfirmedDesired" + desiredState.toString());
     // recalculate any remaining desired state
-    desiredState = transmitted.delta(desiredState);
-    Log.d("confirm", "post" + desiredState.toString());
-
+    //desiredState = transmitted.delta(desiredState);
 
     // update confirmed
     BulbState.confirmChange(confirmed, transmitted);
+    BulbState.confirmChange(desiredState, transmitted);
+    //desiredState = confirmed.delta(desiredState);
 
-    desiredState = confirmed.delta(desiredState);
+    Log.d("net.hue.bulb.confirm", "confirmedDesired" + desiredState.toString());
+
+  }
+
+  public void attributesReturned(BulbAttributes attributes) {
+    //these may be stale by up to 4 seconds, but lets set them to the confirmed for now
+    //TODO better handle
+    //for now only touch brightness since that's atleast user visible
+    confirmed.bri = attributes.state.bri;
+    if (desiredState.bri == null) {
+      desiredState.bri = attributes.state.bri;
+
+      //notify brightness bar
+      this.mConnection.getDeviceManager().onStateChanged();
+
+      Log.d("net.hue.bulb.attribute", "onAttributeReturned" + desiredState.bri);
+    }
   }
 
   public boolean hasOngoingTransmission() {
@@ -90,7 +150,16 @@ public class HueBulb implements NetworkBulb {
    * returns desiredState
    */
   public BulbState getSendState() {
-    return desiredState;
+    BulbState toSend = confirmed.delta(desiredState);
+    if (mInstantBrightnessRequested) {
+      BulbState brightnessOnly = new BulbState();
+      brightnessOnly.bri = toSend.bri;
+      brightnessOnly.transitiontime = 4;
+      mInstantBrightnessRequested = false;
+      return brightnessOnly;
+    } else {
+      return toSend;
+    }
   }
 
   @Override
@@ -103,9 +172,11 @@ public class HueBulb implements NetworkBulb {
     BulbAttributes bAttrs = new BulbAttributes();
     bAttrs.name = name;
 
-    for (Route route : mConnection.getBestRoutes())
+    for (Route route : mConnection.getBestRoutes()) {
       NetworkMethods.PreformSetBulbAttributes(route, mConnection.mData.hashedUsername, mContext,
-          mConnection.getRequestQueue(), mConnection, Integer.parseInt(mDeviceId), bAttrs);
+                                              mConnection.getRequestQueue(), mConnection,
+                                              Integer.parseInt(mDeviceId), bAttrs);
+    }
   }
 
   @Override
@@ -118,44 +189,4 @@ public class HueBulb implements NetworkBulb {
     return mConnection.getConnectivityState();
   }
 
-  @Override
-  public int getCurrentMaxBrightness() {
-    return mCurrentMaxBri;
-  }
-
-  @Override
-  public void setCurrentMaxBrightness(int bri, boolean maxBriMode) {
-    Log.d("brightness", "setCurrentMaxBrightness");
-
-    boolean addToQueue = false;
-    bri = Math.max(1, bri); // guard to keep maxBri above 0
-
-    if (mCurrentMaxBri != bri) {
-      int oldVal = mCurrentMaxBri;
-      mCurrentMaxBri = bri;
-      ContentValues cv = new ContentValues();
-      cv.put(DatabaseDefinitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, mCurrentMaxBri);
-      String[] selectionArgs = {"" + mBaseId};
-      mContext.getContentResolver().update(DatabaseDefinitions.NetBulbColumns.URI, cv,
-          DatabaseDefinitions.NetBulbColumns._ID + " =?", selectionArgs);
-
-      if (maxBriMode) {
-        // update the desired brightness value and add to change queue
-        if (desiredState.bri == null) {
-          int trueBrightness = (int) (2.55f * oldVal);
-          desiredState.bri = (int) (trueBrightness * (mCurrentMaxBri / 100f));
-          addToQueue = true;
-        }
-      }
-    }
-
-    if (!maxBriMode && (desiredState.bri == null || desiredState.bri != ((int) (2.55f * bri)))) {
-      desiredState.bri = ((int) (2.55f * bri));
-      addToQueue = true;
-    }
-
-    if (addToQueue) {
-      mConnection.getLooper().addToQueue(this);
-    }
-  }
 }

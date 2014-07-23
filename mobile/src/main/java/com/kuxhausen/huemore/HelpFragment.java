@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class HelpFragment extends Fragment implements OnNavigationListener {
 
@@ -20,7 +20,8 @@ public class HelpFragment extends Fragment implements OnNavigationListener {
   private String[] mPages, mTitles;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     View myView = inflater.inflate(R.layout.help_fragment, container, false);
 
     mSelected = (TextView) myView.findViewById(R.id.helpText);
@@ -33,9 +34,8 @@ public class HelpFragment extends Fragment implements OnNavigationListener {
     Context context = aBar.getThemedContext();
     ArrayAdapter<CharSequence> list =
         ArrayAdapter.createFromResource(context, R.array.help_page_titles,
-            android.R.layout.simple_spinner_item);
+                                        android.R.layout.simple_spinner_item);
     list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 
     aBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
     aBar.setListNavigationCallbacks(list, this);
@@ -46,8 +46,9 @@ public class HelpFragment extends Fragment implements OnNavigationListener {
     if (args != null && args.containsKey(InternalArguments.HELP_PAGE)) {
       String desiredPageTitle = args.getString(InternalArguments.HELP_PAGE);
       for (int position = 0; position < mTitles.length; position++) {
-        if (desiredPageTitle.equals(mTitles[position]))
+        if (desiredPageTitle.equals(mTitles[position])) {
           aBar.setSelectedNavigationItem(position);
+        }
       }
     }
     return myView;

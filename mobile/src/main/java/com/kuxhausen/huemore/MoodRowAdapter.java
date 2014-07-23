@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,10 +15,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+
+import java.util.ArrayList;
 
 public class MoodRowAdapter extends SimpleCursorAdapter {
 
@@ -38,7 +39,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
   }
 
   public MoodRowAdapter(MoodListFragment frag, Context context, int layout, Cursor c,
-      String[] from, int[] to, int flags) {
+                        String[] from, int[] to, int flags) {
     super(context, layout, c, from, to, flags);
     this.cursor = c;
     this.context = context;
@@ -61,7 +62,10 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
         // Log.e("changeCursor", "row asdf");
         try {
           list.add(new MoodRow(cursor.getString(0), cursor.getLong(1), HueUrlEncoder.decode(cursor
-              .getString(2)).second.first, cursor.getString(3), cursor.getInt(4)));
+                                                                                                .getString(
+                                                                                                    2)).second.first,
+                               cursor.getString(3), cursor.getInt(4)
+          ));
         } catch (InvalidEncodingException e) {
         } catch (FutureEncodingException e) {
         }
@@ -83,16 +87,15 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
       // Get a new instance of the row layout view
       LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
-
       // create ContextThemeWrapper from the original Activity Context with the custom theme
       final Context contextThemeWrapper = new ContextThemeWrapper(context, R.style.RedWidgets);
       // clone the inflater using the ContextThemeWrapper
       LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
 
       moodRowView = localInflater.inflate(R.layout.mood_row, null);
-      TextView textView = (TextView)moodRowView.findViewById(android.R.id.text1);
+      TextView textView = (TextView) moodRowView.findViewById(android.R.id.text1);
       textView.setLongClickable(true);
-      CheckBox checkBox = (CheckBox)moodRowView.findViewById(R.id.star);
+      CheckBox checkBox = (CheckBox) moodRowView.findViewById(R.id.star);
 
       // Hold the view objects in an object, that way the don't need to be "re-  finded"
       viewHolder = new ViewHolder();
@@ -117,12 +120,14 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     //remove old listener before setting value so other row being reused from is not affected
     viewHolder.starView.setOnCheckedChangeListener(null);
     viewHolder.starView.setChecked(item.isStared());
-    viewHolder.starView.setOnCheckedChangeListener(new OnCheckListener(context, this, position, moodListFrag));
+    viewHolder.starView
+        .setOnCheckedChangeListener(new OnCheckListener(context, this, position, moodListFrag));
 
     return moodRowView;
   }
 
   protected static class ViewHolder {
+
     protected TextView ctv;
     protected CheckBox starView;
   }
@@ -144,6 +149,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     }
 
   }
+
   public class OnCheckListener implements CompoundButton.OnCheckedChangeListener {
 
     Context mContext;
@@ -159,8 +165,8 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     }
 
     @Override
-    public void onCheckedChanged (CompoundButton buttonView, boolean isChecked){
-      if(mla.getRow(position).isStared()!=isChecked){
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+      if (mla.getRow(position).isStared() != isChecked) {
         mla.getRow(position).starChanged(mContext, isChecked);
         mlf.markCanRefresh();
       }

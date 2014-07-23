@@ -1,14 +1,15 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.ArrayList;
-
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
+
 public class StateCellAdapter extends BaseAdapter {
+
   public StateCellAdapter(OnClickListener l, ArrayList<StateCell> list, Fragment frag) {
     this.l = l;
     this.list = list;

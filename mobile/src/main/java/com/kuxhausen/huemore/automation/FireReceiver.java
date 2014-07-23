@@ -1,13 +1,14 @@
 package com.kuxhausen.huemore.automation;
 
+import com.google.gson.Gson;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 
 public class FireReceiver extends WakefulBroadcastReceiver {
@@ -27,16 +28,18 @@ public class FireReceiver extends WakefulBroadcastReceiver {
           && !b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY).contains("%")) {
         try {
           int percent = Integer.parseInt(b.getString(EditActivity.PERCENT_BRIGHTNESS_KEY));
-          if (percent >= 0 && percent <= 100)
+          if (percent >= 0 && percent <= 100) {
             gmb.brightness = ((percent * 255) / 100);
+          }
         } catch (Error e) {
         }
       }
       if (b.containsKey(EditActivity.MOOD_NAME_KEY)
           && !b.getString(EditActivity.MOOD_NAME_KEY).contains("%")) {
         String mood = b.getString(EditActivity.MOOD_NAME_KEY);
-        if (mood != null && mood.length() > 0)
+        if (mood != null && mood.length() > 0) {
           gmb.mood = mood;
+        }
       }
 
       Intent trasmitter = new Intent(context, ConnectivityService.class);

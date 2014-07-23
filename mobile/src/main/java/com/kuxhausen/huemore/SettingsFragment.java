@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class SettingsFragment extends Fragment implements OnClickListener {
 
@@ -24,7 +24,8 @@ public class SettingsFragment extends Fragment implements OnClickListener {
   private CheckBox mEnableNfcReadPage;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     View myView = inflater.inflate(R.layout.settings, container, false);
 
     this.getActivity().setTitle(R.string.action_settings);
@@ -52,7 +53,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
     switch (v.getId()) {
       case R.id.rateButton:
         this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
-            + "com.kuxhausen.huemore")));
+                                                                    + "com.kuxhausen.huemore")));
         break;
       case R.id.action_unlocks:
         UnlocksDialogFragment unlocks = new UnlocksDialogFragment();

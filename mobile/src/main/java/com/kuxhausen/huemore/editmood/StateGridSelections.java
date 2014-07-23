@@ -17,6 +17,7 @@ public class StateGridSelections {
   }
 
   interface StateGridDisplay {
+
     public abstract PageType getPageType();
 
     public abstract void redrawGrid();
@@ -35,14 +36,16 @@ public class StateGridSelections {
   }
 
   public int getSelectedCellRow() {
-    if (mSelectedCellRowCol != null)
+    if (mSelectedCellRowCol != null) {
       return mSelectedCellRowCol.first;
+    }
     return 0;
   }
 
   public int getSelectedCellCol() {
-    if (mSelectedCellRowCol != null)
+    if (mSelectedCellRowCol != null) {
       return mSelectedCellRowCol.second;
+    }
     return 0;
   }
 

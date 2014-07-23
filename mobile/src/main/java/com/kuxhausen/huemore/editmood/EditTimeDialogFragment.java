@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class EditTimeDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -22,7 +22,8 @@ public class EditTimeDialogFragment extends DialogFragment implements OnClickLis
   }
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.edit_timeslot_dialog, container, false);

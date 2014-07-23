@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore;
 
-import java.util.ArrayList;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +13,17 @@ import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
 import com.kuxhausen.huemore.net.OnConnectionStatusChangedListener;
 import com.kuxhausen.huemore.state.Group;
 
+import java.util.ArrayList;
+
 public class NetworkManagedActivity extends ActionBarActivity implements
-    OnConnectionStatusChangedListener, OnStateChangedListener, OnServiceConnectedListener {
+                                                              OnConnectionStatusChangedListener,
+                                                              OnStateChangedListener,
+                                                              OnServiceConnectedListener {
 
   public void setGroup(Group g) {
-    if (mBound)
+    if (mBound) {
       mService.getDeviceManager().onGroupSelected(g, null);
+    }
   }
 
   private ConnectivityService mService = new ConnectivityService();
@@ -30,17 +33,19 @@ public class NetworkManagedActivity extends ActionBarActivity implements
 
   // register for a one time on service connected message
   public void registerOnServiceConnectedListener(OnServiceConnectedListener l) {
-    if (mBound)
+    if (mBound) {
       l.onServiceConnected();
-    else
+    } else {
       serviceListeners.add(l);
+    }
   }
 
   public ConnectivityService getService() {
-    if (mBound)
+    if (mBound) {
       return mService;
-    else
+    } else {
       return null;
+    }
   }
 
   public boolean boundToService() {
@@ -79,13 +84,16 @@ public class NetworkManagedActivity extends ActionBarActivity implements
     // Unbind from the service
     if (mBound) {
       mService.getDeviceManager().removeOnConnectionStatusChangedListener(this);
+      mService.getDeviceManager().removeStateListener(NetworkManagedActivity.this);
       mService.getDeviceManager().removeBrightnessListener(this);
       unbindService(mConnection);
       mBound = false;
     }
   }
 
-  /** Defines callbacks for service binding, passed to bindService() */
+  /**
+   * Defines callbacks for service binding, passed to bindService()
+   */
   private ServiceConnection mConnection = new ServiceConnection() {
 
     @Override

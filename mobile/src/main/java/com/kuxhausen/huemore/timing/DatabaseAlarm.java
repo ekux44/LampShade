@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
-import java.util.Calendar;
+import com.google.gson.Gson;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,8 +9,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.DateFormat;
 
-import com.google.gson.Gson;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+
+import java.util.Calendar;
 
 public class DatabaseAlarm {
 
@@ -48,9 +49,11 @@ public class DatabaseAlarm {
     /** only hour and minute are valid **/
     long time = 0;
     if (aState.isRepeating()) {
-      for (int i = 0; i < 7; i++)
-        if (aState.getRepeatingDays()[i])
+      for (int i = 0; i < 7; i++) {
+        if (aState.getRepeatingDays()[i]) {
           time = aState.getRepeatingTimes()[i];
+        }
+      }
     } else {
       time = aState.getTime();
     }
@@ -85,8 +88,9 @@ public class DatabaseAlarm {
   }
 
   public void delete() {
-    if (this.aState.isScheduled())
+    if (this.aState.isScheduled()) {
       this.toggle();
+    }
 
     String moodSelect2 = BaseColumns._ID + "=?";
     String[] moodArg2 = {"" + this.getID()};

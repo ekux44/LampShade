@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.editmood;
 
-import java.util.Calendar;
-
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -14,8 +12,10 @@ import android.widget.Button;
 import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.timing.Conversions;
+
+import java.util.Calendar;
 
 public class TimeOfDayTimeslot implements OnClickListener {
 
@@ -41,8 +41,9 @@ public class TimeOfDayTimeslot implements OnClickListener {
   }
 
   public String getTime() {
-    if (frag == null || frag.getActivity() == null)
+    if (frag == null || frag.getActivity() == null) {
       return "";
+    }
     Calendar c = Conversions.calendarMillisFromMoodDailyTime(moodEventTime);
     return DateFormat.getTimeFormat(frag.getActivity()).format(c.getTime());
   }
@@ -57,7 +58,7 @@ public class TimeOfDayTimeslot implements OnClickListener {
   public void setStartTime(int offsetWithinDayInDeciSeconds) {
     moodEventTime =
         Math.max(frag.computeMinimumValue(mPosition),
-            Math.min(MAX_MOOD_EVENT_TIME, offsetWithinDayInDeciSeconds));
+                 Math.min(MAX_MOOD_EVENT_TIME, offsetWithinDayInDeciSeconds));
     t.setText(getTime());
   }
 
@@ -73,7 +74,7 @@ public class TimeOfDayTimeslot implements OnClickListener {
   }
 
   public static class TimePickerFragment extends DialogFragment implements
-      TimePickerDialog.OnTimeSetListener {
+                                                                TimePickerDialog.OnTimeSetListener {
 
     TimeOfDayTimeslot t;
 
@@ -87,7 +88,7 @@ public class TimeOfDayTimeslot implements OnClickListener {
 
       // Create a new instance of TimePickerDialog and return it
       return new TimePickerDialog(getActivity(), this, hour, minute,
-          DateFormat.is24HourFormat(getActivity()));
+                                  DateFormat.is24HourFormat(getActivity()));
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -95,7 +96,6 @@ public class TimeOfDayTimeslot implements OnClickListener {
       c.set(Calendar.MILLISECOND, 0);
       c.set(Calendar.MINUTE, minute);
       c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-
 
       Calendar previousTimeslotCal =
           Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.mPosition));

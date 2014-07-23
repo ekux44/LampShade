@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 /**
  * Convenience definitions for Database Hander and Preferences
  */
-public final class DatabaseDefinitions {
+public final class Definitions {
 
   public static final String SLASH = "/";
 
@@ -26,7 +26,7 @@ public final class DatabaseDefinitions {
      * The content:// style URL for this table
      */
     public static final Uri INDIVIDUAL_ALARM_URI = Uri.parse(SCHEME + AUTHORITY + SLASH
-        + PATH_INDIVIDUAL_ALARM);
+                                                             + PATH_INDIVIDUAL_ALARM);
 
 
     /**
@@ -40,10 +40,12 @@ public final class DatabaseDefinitions {
     public static final String INTENT_REQUEST_CODE = "Dintent_request_code";
 
     // This class cannot be instantiated
-    private AlarmColumns() {}
+    private AlarmColumns() {
+    }
   }
 
   public static final class GroupColumns implements BaseColumns {
+
     public static final String TABLE_NAME = "groups";
 
 
@@ -58,6 +60,7 @@ public final class DatabaseDefinitions {
      * which group this bulb row is part of
      */
     public static final String GROUP = "Dgroup";
+    public static final String COL_GROUP_LOWERCASE_NAME = "D_COL_GROUP_LOWERCASE_NAME";
 
     /**
      * order in which bulb configurations should be used when applying mood (lowest number = first)
@@ -71,7 +74,8 @@ public final class DatabaseDefinitions {
 
 
     // This class cannot be instantiated
-    private GroupColumns() {}
+    private GroupColumns() {
+    }
   }
 
   public static final class MoodColumns implements BaseColumns {
@@ -96,7 +100,8 @@ public final class DatabaseDefinitions {
     public static final String COL_MOOD_PRIORITY = "D_COL_MOOD_PRIORITY";
 
     // This class cannot be instantiated
-    private MoodColumns() {}
+    private MoodColumns() {
+    }
   }
 
   public static final class NetBulbColumns implements BaseColumns {
@@ -111,7 +116,9 @@ public final class DatabaseDefinitions {
     public static final String DEVICE_ID_COLUMN = "D_DEVICE_ID_COLUMN";
     public static final String TYPE_COLUMN = "D_TYPE_COLUMN";
     public static final String JSON_COLUMN = "D_JSON_COLUMN";
-    /** holds a values 0-100 **/
+    /**
+     * holds a values 0-100 *
+     */
     public static final String CURRENT_MAX_BRIGHTNESS = "D_CURRENT_MAX_BRIGHTNESS";
     /**
      * Points to the NetConnection table entry for this bulb
@@ -119,12 +126,14 @@ public final class DatabaseDefinitions {
     public static final String CONNECTION_DATABASE_ID = "Dconnection_database_id";
 
     public static final class NetBulbType {
+
       public static final int PHILIPS_HUE = 1;
       public static final int LIFX = 2;
     }
 
     // This class cannot be instantiated
-    private NetBulbColumns() {}
+    private NetBulbColumns() {
+    }
   }
 
   public static final class NetConnectionColumns implements BaseColumns {
@@ -142,7 +151,8 @@ public final class DatabaseDefinitions {
     public static final String JSON_COLUMN = "D_JSON_COLUMN";
 
     // This class cannot be instantiated
-    private NetConnectionColumns() {}
+    private NetConnectionColumns() {
+    }
   }
 
   /*
@@ -177,12 +187,16 @@ public final class DatabaseDefinitions {
     public static final String COL_MILI_TIME_STARTED = "D_MILI_TIME_START_COLUMN";
 
     // This class cannot be instantiated
-    private PlayingMood() {}
+    private PlayingMood() {
+    }
   }
 
   public static final class InternalArguments {
+
     public static final String GROUP_NAME = "Group_Name";
     public static final String MOOD_NAME = "Mood_Name";
+    public static final String LOWERCASE_GROUP_NAME = "Lowercase_Group_Name";
+    public static final String LOWERCASE_MOOD_NAME = "Lowercase_Mood_Name";
     public static final String ENCODED_MOOD = "Encoded_Mood";
     public static final String BRIDGES = "Bridges";
     public static final String MD5 = "MD5";
@@ -212,6 +226,7 @@ public final class DatabaseDefinitions {
   }
 
   public static final class PreferenceKeys {
+
     public static final String DEFAULT_TO_GROUPS = "default_to_groups";
     public static final String DEFAULT_TO_MOODS = "default_to_moods";
     public static final String FIRST_RUN = "First_Run";
@@ -232,6 +247,7 @@ public final class DatabaseDefinitions {
    * These preference keys were used in previous versions and might still exist on users devices
    */
   public static final class DeprecatedPreferenceKeys {
+
     public static final String BRIDGE_IP_ADDRESS = "Bridge_IP_Address";
     public static final String LOCAL_BRIDGE_IP_ADDRESS = "Local_Bridge_IP_Address";
     public static final String INTERNET_BRIDGE_IP_ADDRESS = "Internet_Bridge_IP_Address";
@@ -239,6 +255,7 @@ public final class DatabaseDefinitions {
   }
 
   public static final class PlayItems {
+
     public static final String FIVE_BULB_UNLOCK_1 = "five_bulb_unlock_1";
     public static final String BUY_ME_A_BULB_DONATION_1 = "buy_me_a_bulb_donation_1";
   }
@@ -248,5 +265,6 @@ public final class DatabaseDefinitions {
 
 
   // This class cannot be instantiated
-  private DatabaseDefinitions() {}
+  private Definitions() {
+  }
 }

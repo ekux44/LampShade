@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.widget;
 
+import com.google.gson.Gson;
+
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -16,18 +18,18 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.widget.RemoteViews;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 
 /**
  * Our data observer just notifies an update for all weather widgets when it detects a change.
  */
 class GroupDataProviderObserver extends ContentObserver {
+
   private AppWidgetManager mAppWidgetManager;
   private ComponentName mComponentName;
 
@@ -55,6 +57,7 @@ class GroupDataProviderObserver extends ContentObserver {
  * The weather widget's AppWidgetProvider.
  */
 public class GroupWidgetProvider extends AppWidgetProvider {
+
   public static String CLICK_ACTION = "com.example.android.weatherlistwidget.CLICK";
   public static String REFRESH_ACTION = "com.example.android.weatherlistwidget.REFRESH";
 
@@ -120,7 +123,6 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       // view of the collection view.
       rv.setEmptyView(R.id.group_list, R.id.empty_view);
 
-
       final Intent onClickIntent = new Intent(context, GroupWidgetProvider.class);
       onClickIntent.setAction(GroupWidgetProvider.CLICK_ACTION);
       onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -138,11 +140,11 @@ public class GroupWidgetProvider extends AppWidgetProvider {
 
       final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
       openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE,
-          NavigationDrawerActivity.GROUP_FRAG);
+                                 NavigationDrawerActivity.GROUP_FRAG);
       openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
       final PendingIntent openHueMorePendingIntent =
           PendingIntent.getActivity(context, 3, openHueMoreIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+                                    PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
     }
     return rv;
@@ -163,7 +165,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
 
   @Override
   public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
-      int appWidgetId, Bundle newOptions) {
+                                        int appWidgetId, Bundle newOptions) {
     RemoteViews layout;
     layout = buildLayout(context, appWidgetId);
     appWidgetManager.updateAppWidget(appWidgetId, layout);

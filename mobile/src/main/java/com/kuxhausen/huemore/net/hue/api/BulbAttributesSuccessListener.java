@@ -5,27 +5,29 @@ import com.kuxhausen.huemore.net.hue.Route;
 
 public class BulbAttributesSuccessListener extends BasicSuccessListener<BulbAttributes> {
 
-  private final int bulbNum;
+  private final String bulbHueId;
 
   public interface OnBulbAttributesReturnedListener {
-    public void onAttributesReturned(BulbAttributes result, int bulbNumber);
+
+    public void onAttributesReturned(BulbAttributes result, String bulbHueId);
   }
 
 
   private final OnBulbAttributesReturnedListener listener;
 
   public BulbAttributesSuccessListener(ConnectionMonitor parrentA,
-      OnBulbAttributesReturnedListener l, int bNum, Route r) {
+                                       OnBulbAttributesReturnedListener l, String bHueId, Route r) {
     super(parrentA, r);
     listener = l;
-    bulbNum = bNum;
+    bulbHueId = bHueId;
   }
 
   @Override
   public void onResponse(BulbAttributes response) {
     super.onResponse(response);
 
-    if (listener != null)
-      listener.onAttributesReturned(response, bulbNum);
+    if (listener != null) {
+      listener.onAttributesReturned(response, bulbHueId);
+    }
   }
 }

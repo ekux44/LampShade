@@ -1,7 +1,7 @@
 package com.kuxhausen.huemore.net.hue.api;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -12,20 +12,25 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Volley adapter for JSON requests that will be parsed into Java objects by Gson.
  */
 public class GsonRequest<T> extends Request<T> {
 
-  /** Charset for request. */
+  /**
+   * Charset for request.
+   */
   private static final String PROTOCOL_CHARSET = "utf-8";
 
-  /** Content type for request. */
+  /**
+   * Content type for request.
+   */
   private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s",
-      PROTOCOL_CHARSET);
+                                                                    PROTOCOL_CHARSET);
 
   private final String mRequestBody;
 
@@ -36,13 +41,14 @@ public class GsonRequest<T> extends Request<T> {
 
   /**
    * Make a GET request and return a parsed object from JSON.
-   * 
-   * @param url URL of the request to make
-   * @param clazz Relevant class object, for Gson's reflection
+   *
+   * @param url     URL of the request to make
+   * @param clazz   Relevant class object, for Gson's reflection
    * @param headers Map of request headers
    */
   public GsonRequest(int method, String url, String requestBody, Class<T> clazz,
-      Map<String, String> headers, Listener<T> listener, ErrorListener errorListener) {
+                     Map<String, String> headers, Listener<T> listener,
+                     ErrorListener errorListener) {
     super(method, url, errorListener);
     mRequestBody = requestBody;
     this.clazz = clazz;
@@ -61,7 +67,7 @@ public class GsonRequest<T> extends Request<T> {
       return mRequestBody == null ? null : mRequestBody.getBytes(PROTOCOL_CHARSET);
     } catch (UnsupportedEncodingException uee) {
       VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-          mRequestBody, PROTOCOL_CHARSET);
+                    mRequestBody, PROTOCOL_CHARSET);
       return null;
     }
   }
@@ -73,8 +79,9 @@ public class GsonRequest<T> extends Request<T> {
 
   @Override
   protected void deliverResponse(T response) {
-    if (listener != null)
+    if (listener != null) {
       listener.onResponse(response);
+    }
   }
 
   @Override
@@ -86,7 +93,7 @@ public class GsonRequest<T> extends Request<T> {
                                                                * .headers)
                                                                */);
       return Response.success(gson.fromJson(json, clazz),
-          HttpHeaderParser.parseCacheHeaders(response));
+                              HttpHeaderParser.parseCacheHeaders(response));
     } catch (UnsupportedEncodingException e) {
       return Response.error(new ParseError(e));
     } catch (JsonSyntaxException e) {

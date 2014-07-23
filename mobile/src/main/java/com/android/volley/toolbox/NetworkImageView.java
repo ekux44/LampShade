@@ -1,11 +1,11 @@
 /**
  * Copyright (C) 2013 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -27,7 +27,10 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
  * Handles fetching an image from a URL as well as the life-cycle of the associated request.
  */
 public class NetworkImageView extends ImageView {
-  /** The URL of the network image to load */
+
+  /**
+   * The URL of the network image to load
+   */
   private String mUrl;
 
   /**
@@ -40,10 +43,14 @@ public class NetworkImageView extends ImageView {
    */
   private int mErrorImageId;
 
-  /** Local copy of the ImageLoader. */
+  /**
+   * Local copy of the ImageLoader.
+   */
   private ImageLoader mImageLoader;
 
-  /** Current ImageContainer. (either in-flight or finished) */
+  /**
+   * Current ImageContainer. (either in-flight or finished)
+   */
   private ImageContainer mImageContainer;
 
   public NetworkImageView(Context context) {
@@ -60,14 +67,13 @@ public class NetworkImageView extends ImageView {
 
   /**
    * Sets URL of the image that should be loaded into this view. Note that calling this will
-   * immediately either set the cached image (if available) or the default image specified by
-   * {@link NetworkImageView#setDefaultImageResId(int)} on the view.
-   * 
-   * NOTE: If applicable, {@link NetworkImageView#setDefaultImageResId(int)} and
-   * {@link NetworkImageView#setErrorImageResId(int)} should be called prior to calling this
-   * function.
-   * 
-   * @param url The URL that should be loaded into this ImageView.
+   * immediately either set the cached image (if available) or the default image specified by {@link
+   * NetworkImageView#setDefaultImageResId(int)} on the view.
+   *
+   * NOTE: If applicable, {@link NetworkImageView#setDefaultImageResId(int)} and {@link
+   * NetworkImageView#setErrorImageResId(int)} should be called prior to calling this function.
+   *
+   * @param url         The URL that should be loaded into this ImageView.
    * @param imageLoader ImageLoader that will be used to make the request.
    */
   public void setImageUrl(String url, ImageLoader imageLoader) {
@@ -95,7 +101,7 @@ public class NetworkImageView extends ImageView {
 
   /**
    * Loads the image for the view if it isn't already loaded.
-   * 
+   *
    * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
    */
   private void loadImageIfNecessary(final boolean isInLayoutPass) {
@@ -104,7 +110,7 @@ public class NetworkImageView extends ImageView {
 
     boolean isFullyWrapContent =
         getLayoutParams() != null && getLayoutParams().height == LayoutParams.WRAP_CONTENT
-            && getLayoutParams().width == LayoutParams.WRAP_CONTENT;
+        && getLayoutParams().width == LayoutParams.WRAP_CONTENT;
     // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
     // view, hold off on loading the image.
     if (width == 0 && height == 0 && !isFullyWrapContent) {

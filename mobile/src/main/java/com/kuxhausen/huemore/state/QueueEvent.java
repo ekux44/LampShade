@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.state;
 
 public class QueueEvent implements Comparable<QueueEvent> {
+
   public Long bulbBaseId;
   /**
    * event start time measured in SystemClock.elapsedRealtime()

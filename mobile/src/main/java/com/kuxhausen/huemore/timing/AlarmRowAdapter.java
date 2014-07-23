@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,9 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.kuxhausen.huemore.R;
+
+import java.util.ArrayList;
 
 public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedChangeListener {
 
@@ -31,7 +32,8 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
     return getList().get(position);
   }
 
-  public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+  public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from, int[] to,
+                         int flags) {
     super(context, layout, c, from, to, flags);
     this.cursor = c;
     this.context = context;
@@ -50,7 +52,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
         // Log.e("changeCursor _row",
         // gson.fromJson(cursor.getString(0),AlarmState.class).mood);
         list.add(new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), AlarmState.class),
-            cursor.getInt(1)));
+                                   cursor.getInt(1)));
       }
     }
   }
@@ -93,6 +95,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
   }
 
   protected static class ViewHolder {
+
     protected TextView time;
     protected TextView secondaryDescription;
     protected CompoundButton scheduledButton;

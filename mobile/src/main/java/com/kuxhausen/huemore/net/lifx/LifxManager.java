@@ -8,7 +8,7 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,11 @@ import lifx.java.android.network_context.LFXNetworkContext;
 public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
                                     LFXLightCollection.LFXLightCollectionListener {
 
-  private static final String[] columns = {DatabaseDefinitions.NetConnectionColumns._ID,
-                                           DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN,
-                                           DatabaseDefinitions.NetConnectionColumns.NAME_COLUMN,
-                                           DatabaseDefinitions.NetConnectionColumns.DEVICE_ID_COLUMN,
-                                           DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN};
+  private static final String[] columns = {Definitions.NetConnectionColumns._ID,
+                                           Definitions.NetConnectionColumns.TYPE_COLUMN,
+                                           Definitions.NetConnectionColumns.NAME_COLUMN,
+                                           Definitions.NetConnectionColumns.DEVICE_ID_COLUMN,
+                                           Definitions.NetConnectionColumns.JSON_COLUMN};
   private static final Gson gson = new Gson();
 
 
@@ -41,10 +41,10 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
   public static List<LifxConnection> loadConnections(Context c, DeviceManager dm) {
     ArrayList<LifxConnection> connections = new ArrayList<LifxConnection>();
 
-    String[] selectionArgs = {"" + DatabaseDefinitions.NetBulbColumns.NetBulbType.LIFX};
+    String[] selectionArgs = {"" + Definitions.NetBulbColumns.NetBulbType.LIFX};
     Cursor cursor =
-        c.getContentResolver().query(DatabaseDefinitions.NetConnectionColumns.URI, columns,
-                                     DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN + " = ?",
+        c.getContentResolver().query(Definitions.NetConnectionColumns.URI, columns,
+                                     Definitions.NetConnectionColumns.TYPE_COLUMN + " = ?",
                                      selectionArgs, null);
     cursor.moveToPosition(-1);// not the same as move to first!
     while (cursor.moveToNext()) {
@@ -56,7 +56,7 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
           gson.fromJson(cursor.getString(4), LifxConnection.ExtraData.class);
       connections.add(new LifxConnection(c, baseId, name, deviceId, data, dm));
     }
-    Log.d("lifx",connections.size() +" connections loaded");
+    Log.d("lifx", connections.size() + " connections loaded");
     return connections;
   }
 

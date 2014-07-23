@@ -6,5 +6,6 @@ public class Bridge {
   public String internalipaddress;
   public String macaddress;
 
-  public Bridge() {}
+  public Bridge() {
+  }
 }

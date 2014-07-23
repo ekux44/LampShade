@@ -3,7 +3,6 @@ package com.kuxhausen.huemore;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
@@ -25,12 +24,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 
-public class MoodListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MoodListFragment extends ListFragment
+    implements LoaderManager.LoaderCallbacks<Cursor> {
 
   NavigationDrawerActivity parrentA;
 
@@ -44,7 +44,8 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
   private boolean mCanRefresh;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
 
     parrentA = (NavigationDrawerActivity) this.getActivity();
 
@@ -58,7 +59,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
     dataSource =
         new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null, columns,
-            new int[] {android.R.id.text1}, 0);
+                           new int[]{android.R.id.text1}, 0);
 
     setListAdapter(dataSource);
     // Inflate the layout for this fragment
@@ -69,7 +70,9 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     return myView;
   }
 
-  /** Returns a share intent */
+  /**
+   * Returns a share intent
+   */
   private Intent getDefaultShareIntent(String mood) {
     String encodedMood = HueUrlEncoder.encode(Utils.getMoodFromDatabase(mood, this.getActivity()));
 
@@ -77,7 +80,7 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     intent.setType("text/plain");
     // intent.putExtra(Intent.EXTRA_SUBJECT, "SUBJECT");
     intent.putExtra(Intent.EXTRA_TEXT, mood + " #LampShadeIO http://lampshade.io/share?"
-        + encodedMood);
+                                       + encodedMood);
     return intent;
   }
 
@@ -85,7 +88,8 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.action_mood, menu);
 
-    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
       MenuItem unlocksItem = menu.findItem(R.id.action_add_mood);
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
@@ -99,8 +103,9 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
       Intent intent = getDefaultShareIntent("" + getTextFromRowView(selected));
 
       /** Setting a share intent */
-      if (intent != null)
+      if (intent != null) {
         mShareActionProvider.setShareIntent(intent);
+      }
     } else {
       MenuItem shareItem = menu.findItem(R.id.action_share);
       shareItem.setEnabled(false);
@@ -108,11 +113,10 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     }
 
     MenuItem refreshItem = menu.findItem(R.id.action_refresh_moods);
-    if(mCanRefresh){
+    if (mCanRefresh) {
       refreshItem.setEnabled(true);
       refreshItem.setVisible(true);
-    }
-    else {
+    } else {
       refreshItem.setEnabled(false);
       refreshItem.setVisible(false);
     }
@@ -151,19 +155,21 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (selected != null && selectedPos > -1)
+    if (selected != null && selectedPos > -1) {
       getListView().setItemChecked(selectedPos, false);
+    }
     selectedPos = -1;
     selected = null;
-    if (getActivity() != null)
+    if (getActivity() != null) {
       getActivity().supportInvalidateOptionsMenu();
+    }
   }
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    longSelected =((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+    longSelected = ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_mood, menu);
@@ -177,8 +183,8 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
         String[] moodArg = {getTextFromRowView(longSelected)};
-        getActivity().getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI,
-            moodSelect, moodArg);
+        getActivity().getContentResolver().delete(Definitions.MoodColumns.MOODS_URI,
+                                                  moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
         parrentA.showEditMood(getTextFromRowView(longSelected));
@@ -201,13 +207,16 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     switch (loaderID) {
       case MOODS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE, MoodColumns.COL_MOOD_LOWERCASE_NAME, MoodColumns.COL_MOOD_PRIORITY};
+        String[]
+            columns =
+            {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE,
+             MoodColumns.COL_MOOD_LOWERCASE_NAME, MoodColumns.COL_MOOD_PRIORITY};
         return new CursorLoader(getActivity(), // Parent activity context
-            DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
-            columns, // Projection to return
-            null, // No selection clause
-            null, // No selection arguments
-            null // Default sort order
+                                Definitions.MoodColumns.MOODS_URI, // Table
+                                columns, // Projection to return
+                                null, // No selection clause
+                                null, // No selection arguments
+                                null // Default sort order
         );
       default:
         // An invalid id was passed in
@@ -246,20 +255,23 @@ public class MoodListFragment extends ListFragment implements LoaderManager.Load
     String moodName = getTextFromRowView(selected);
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
 
-    if (service.getDeviceManager().getSelectedGroup() != null)
+    if (service.getDeviceManager().getSelectedGroup() != null) {
       service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(),
-          Utils.getMoodFromDatabase(moodName, getActivity()), moodName, null, null);
+                                       Utils.getMoodFromDatabase(moodName, getActivity()), moodName,
+                                       null, null);
+    }
 
     getActivity().supportInvalidateOptionsMenu();
   }
 
-  private String getTextFromRowView(View row){
-    return ((TextView)row.findViewById(android.R.id.text1)).getText().toString();
+  private String getTextFromRowView(View row) {
+    return ((TextView) row.findViewById(android.R.id.text1)).getText().toString();
   }
 
-  public void markCanRefresh(){
-    if(!mCanRefresh)
+  public void markCanRefresh() {
+    if (!mCanRefresh) {
       parrentA.supportInvalidateOptionsMenu();
+    }
     mCanRefresh = true;
   }
 }

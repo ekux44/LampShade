@@ -13,12 +13,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class CommunityDialogFragment extends DialogFragment implements OnClickListener {
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.community_dialog_fragment, container, false);
 

@@ -22,6 +22,7 @@ import java.io.IOException;
  * of always allocating them fresh, saving on heap churn.
  */
 public class PoolingByteArrayOutputStream extends ByteArrayOutputStream {
+
   /**
    * If the {@link #PoolingByteArrayOutputStream(ByteArrayPool)} constructor is called, this is the
    * default size to which the underlying byte array is initialized.
@@ -42,9 +43,9 @@ public class PoolingByteArrayOutputStream extends ByteArrayOutputStream {
    * Constructs a new {@code ByteArrayOutputStream} with a default size of {@code size} bytes. If
    * more than {@code size} bytes are written to this instance, the underlying byte array will
    * expand.
-   * 
+   *
    * @param size initial size for the underlying byte array. The value will be pinned to a default
-   *        minimum size.
+   *             minimum size.
    */
   public PoolingByteArrayOutputStream(ByteArrayPool pool, int size) {
     mPool = pool;

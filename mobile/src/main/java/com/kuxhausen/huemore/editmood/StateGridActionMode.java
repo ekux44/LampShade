@@ -17,7 +17,8 @@ class StateGridActionMode implements ActionMode.Callback {
   private ImageButton mDiscardButton;
   private ViewType mViewType;
 
-  public StateGridActionMode(EditMoodStateGridFragment editMoodStateGridFragment, ViewType viewType) {
+  public StateGridActionMode(EditMoodStateGridFragment editMoodStateGridFragment,
+                             ViewType viewType) {
     mFrag = editMoodStateGridFragment;
     mViewType = viewType;
   }
@@ -58,6 +59,7 @@ class StateGridActionMode implements ActionMode.Callback {
   }
 
   @Override
-  public void onDestroyActionMode(ActionMode mode) {}
+  public void onDestroyActionMode(ActionMode mode) {
+  }
 
 }

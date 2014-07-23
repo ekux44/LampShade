@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class AddMoodGroupSelectorDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -17,7 +17,8 @@ public class AddMoodGroupSelectorDialogFragment extends DialogFragment implement
   NavigationDrawerActivity mParent;
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
     mParent = (NavigationDrawerActivity) this.getActivity();
 
     // Inflate the layout for this fragment

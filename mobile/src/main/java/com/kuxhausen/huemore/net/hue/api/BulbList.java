@@ -1,8 +1,8 @@
 package com.kuxhausen.huemore.net.hue.api;
 
-import java.util.ArrayList;
-
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 public class BulbList {
 
@@ -109,7 +109,8 @@ public class BulbList {
 
   // TODO add the final 20
 
-  public BulbList() {}
+  public BulbList() {
+  }
 
   public Bulb[] getList() {
     ArrayList<Bulb> ray = new ArrayList<Bulb>();
@@ -314,10 +315,10 @@ public class BulbList {
       ray.add(b50);
     }
 
-
     Bulb[] list = new Bulb[ray.size()];
-    for (int i = 0; i < list.length; i++)
+    for (int i = 0; i < list.length; i++) {
       list[i] = ray.get(i);
+    }
 
     return list;
   }

@@ -57,7 +57,8 @@ public class BulbState {
    */
   public Integer transitiontime;
 
-  public BulbState() {}
+  public BulbState() {
+  }
 
   /**
    * Must ensure uniqueness for HueUrlEncoder
@@ -65,28 +66,39 @@ public class BulbState {
   @Override
   public String toString() {
     String result = "";
-    if (on != null)
+    if (on != null) {
       result += "on:" + (on ? "true" : "false") + " ";
-    if (bri != null)
+    }
+    if (bri != null) {
       result += "bri:" + bri + " ";
-    if (hue != null)
+    }
+    if (hue != null) {
       result += "hue:" + hue + " ";
-    if (sat != null)
+    }
+    if (sat != null) {
       result += "sat:" + sat + " ";
-    if (xy != null)
+    }
+    if (xy != null) {
       result += "xy:" + xy[0] + " " + xy[1] + " ";
-    if (ct != null)
+    }
+    if (ct != null) {
       result += "ct:" + ct + " ";
-    if (alert != null)
+    }
+    if (alert != null) {
       result += "alert:" + alert + " ";
-    if (effect != null)
+    }
+    if (effect != null) {
       result += "effect:" + effect + " ";
-    if (transitiontime != null)
+    }
+    if (transitiontime != null) {
       result += "transitiontime:" + transitiontime + " ";
+    }
     return result;
   }
 
-  /** when in doubt, override, only allow 1 of three color modes **/
+  /**
+   * when in doubt, override, only allow 1 of three color modes *
+   */
   public void merge(BulbState other) {
     on = (other.on != null) ? other.on : on;
     bri = (other.bri != null) ? other.bri : bri;
@@ -112,22 +124,28 @@ public class BulbState {
     }
   }
 
-  /** return a BulbState with the values of o when the differ from this object */
+  /**
+   * return a BulbState with the values of o when the differ from this object
+   */
   public BulbState delta(BulbState o) {
     BulbState delta = new BulbState();
 
-    if (o.on != null && (on == null || !on.equals(o.on)))
+    if (o.on != null && (on == null || !on.equals(o.on))) {
       delta.on = o.on;
-    if (o.bri != null && (bri == null || !bri.equals(o.bri)))
+    }
+    if (o.bri != null && (bri == null || !bri.equals(o.bri))) {
       delta.bri = o.bri;
-    if (o.alert != null && (alert == null || !alert.equals(o.alert)))
+    }
+    if (o.alert != null && (alert == null || !alert.equals(o.alert))) {
       delta.alert = o.alert;
-    if (o.effect != null && (effect == null || !effect.equals(o.effect)))
+    }
+    if (o.effect != null && (effect == null || !effect.equals(o.effect))) {
       delta.effect = o.effect;
+    }
     if (o.transitiontime != null
-        && (transitiontime == null || !transitiontime.equals(o.transitiontime)))
+        && (transitiontime == null || !transitiontime.equals(o.transitiontime))) {
       delta.transitiontime = o.transitiontime;
-
+    }
 
     if (o.xy != null && (xy == null || !(xy[0].equals(o.xy[0]) && xy[1].equals(o.xy[1])))) {
       delta.xy = o.xy;
@@ -139,29 +157,30 @@ public class BulbState {
 
   /**
    * update confirmed with whatever the nontransient result of that change state is
-   * 
-   * @param confirmed
-   * @param change
    */
   public static void confirmChange(BulbState confirmed, BulbState change) {
-    if (change.on != null)
+    if (change.on != null) {
       confirmed.on = change.on;
-    if (change.bri != null)
+    }
+    if (change.bri != null) {
       confirmed.bri = change.bri;
+    }
 
     // ignore alert for now
     // TODO deal with alert
-    if (change.alert != null)
+    if (change.alert != null) {
       confirmed.alert = "none";
+    }
 
-
-    if (change.effect != null)
+    if (change.effect != null) {
       confirmed.effect = change.effect;
+    }
 
     // ignore transitiontime for now
     // TODO deal with transitiontime
-    if (change.transitiontime != null)
+    if (change.transitiontime != null) {
       confirmed.transitiontime = 4;
+    }
 
     // TODO convert between colormoods instead of filling nulls
     if (change.xy != null) {
@@ -191,9 +210,10 @@ public class BulbState {
 
   }
 
-  public Integer getCtKelvin(){
-    if(ct != null)
-      return (int)(1000000 / ct);
+  public Integer getCtKelvin() {
+    if (ct != null) {
+      return (int) (1000000 / ct);
+    }
     return null;
   }
 
@@ -208,8 +228,17 @@ public class BulbState {
 
   public boolean isEmpty() {
     if (on == null && bri == null && hue == null && sat == null && xy == null && ct == null
-        && alert == null && effect == null && transitiontime == null)
+        && alert == null && effect == null && transitiontime == null) {
       return true;
+    }
+    return false;
+  }
+
+  public boolean hasOnlyBri() {
+    if (on == null && bri != null && hue == null && sat == null && xy == null && ct == null
+        && alert == null && effect == null && transitiontime == null) {
+      return true;
+    }
     return false;
   }
 }

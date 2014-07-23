@@ -28,6 +28,7 @@ import com.android.volley.AuthFailureError;
  * specified account.
  */
 public class AndroidAuthenticator implements Authenticator {
+
   private final Context mContext;
   private final Account mAccount;
   private final String mAuthTokenType;
@@ -35,9 +36,9 @@ public class AndroidAuthenticator implements Authenticator {
 
   /**
    * Creates a new authenticator.
-   * 
-   * @param context Context for accessing AccountManager
-   * @param account Account to authenticate as
+   *
+   * @param context       Context for accessing AccountManager
+   * @param account       Account to authenticate as
    * @param authTokenType Auth token type passed to AccountManager
    */
   public AndroidAuthenticator(Context context, Account account, String authTokenType) {
@@ -46,14 +47,14 @@ public class AndroidAuthenticator implements Authenticator {
 
   /**
    * Creates a new authenticator.
-   * 
-   * @param context Context for accessing AccountManager
-   * @param account Account to authenticate as
-   * @param authTokenType Auth token type passed to AccountManager
+   *
+   * @param context           Context for accessing AccountManager
+   * @param account           Account to authenticate as
+   * @param authTokenType     Auth token type passed to AccountManager
    * @param notifyAuthFailure Whether to raise a notification upon auth failure
    */
   public AndroidAuthenticator(Context context, Account account, String authTokenType,
-      boolean notifyAuthFailure) {
+                              boolean notifyAuthFailure) {
     mContext = context;
     mAccount = account;
     mAuthTokenType = authTokenType;
