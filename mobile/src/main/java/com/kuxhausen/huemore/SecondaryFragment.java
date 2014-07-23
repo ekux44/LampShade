@@ -210,11 +210,13 @@ public class SecondaryFragment extends Fragment
 
   @Override
   public void onStateChanged() {
-    DeviceManager dm = parrentA.getService().getDeviceManager();
+    if(parrentA!=null && parrentA.boundToService()) {
+      DeviceManager dm = parrentA.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
-      mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
-      mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
+      if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
+        mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup()));
+        mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup()));
+      }
     }
   }
 }
