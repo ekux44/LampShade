@@ -120,18 +120,31 @@ public class LifxBulb extends NetworkBulb implements LFXLight.LFXLightListener {
       }
 
       //Send full color, color temp, or just brightness
-      if (bs.xy != null) {
-        Float[] hs = Utils.xyTOhs(bs.xy);
-        lifxHue = 360 * hs[0];
-        lifxSat = hs[1];
-        LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, 3500);
-        mLight.setColor(newColor);
-      } else if (bs.ct != null) {
-        LFXHSBKColor newColor = LFXHSBKColor.getColor(0, 0, lifxBrightness, lifxCt);
-        mLight.setColor(newColor);
-      } else if (bs.bri != null) {
+      if (bs.xy != null || bs.ct != null || bs.bri != null) {
+        if (bs.xy != null) {
+          Float[] hs = Utils.xyTOhs(bs.xy);
+          lifxHue = 360 * hs[0];
+          lifxSat = hs[1];
+
+          LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, 3500);
+          mLight.setColor(newColor);
+
+        } else if (bs.ct != null) {
+          lifxHue = 0;
+          lifxSat = 0;
+          lifxCt = bs.getCtKelvin();
+
+          LFXHSBKColor newColor = LFXHSBKColor.getColor(0, 0, lifxBrightness, lifxCt);
+          mLight.setColor(newColor);
+        }
+
         LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, lifxCt);
-        mLight.setColor(newColor);
+
+        if (bs.transitiontime != null) {
+          mLight.setColorOverDuration(newColor, bs.transitiontime * 100);
+        } else {
+          mLight.setColor(newColor);
+        }
       }
 
     } else {
