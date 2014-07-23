@@ -34,7 +34,7 @@ public class VoiceReadRouterActivity extends Activity {
     intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
 
     // Display an hint to the user about what he should say.
-    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "bedroom to relax");
+    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "\"bedroom to relax\"");
 
     // Given an hint to the recognizer about what the user is going to say
     intent
