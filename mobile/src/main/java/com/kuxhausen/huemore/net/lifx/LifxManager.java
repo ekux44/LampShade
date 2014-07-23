@@ -60,6 +60,17 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
     return connections;
   }
 
+  public void assignLights() {
+    LFXLightCollection allLifxLights = networkContext.getAllLightsCollection();
+    for (LifxConnection userConnection : mConnections) {
+      LFXLight lightExists = allLifxLights.getLightWithDeviceID(userConnection.getDeviceId());
+      if (lightExists != null) {
+        userConnection.lightConnected(lightExists);
+      } else {
+        userConnection.lightDisconnected();
+      }
+    }
+  }
 
   public void onCreate(Context c, DeviceManager dm, List<LifxConnection> toInitialize) {
     mDeviceManager = dm;
@@ -97,14 +108,16 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
               .size()
     );
 
-    mDeviceManager.onBulbsListChanged();
+    assignLights();
     mDeviceManager.onConnectionChanged();
   }
 
   @Override
   public void networkContextDidDisconnect(LFXNetworkContext networkContext) {
-    mDeviceManager.onConnectionChanged();
     Log.d("lifx", "lifxManager networkContextDidDisconnect");
+
+    assignLights();
+    mDeviceManager.onConnectionChanged();
   }
 
   @Override
@@ -125,22 +138,16 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
   public void lightCollectionDidAddLight(LFXLightCollection lightCollection, LFXLight light) {
     Log.d("lifx", "lifxManager lightCollectionDidAddLight");
 
-    for (LifxConnection con : mConnections) {
-      if (con.getDeviceId().equals(light.getDeviceID())) {
-        con.lightConnected(light);
-      }
-    }
+    assignLights();
+    mDeviceManager.onConnectionChanged();
   }
 
   @Override
   public void lightCollectionDidRemoveLight(LFXLightCollection lightCollection, LFXLight light) {
     Log.d("lifx", "lifxManager lightCollectionDidRemoveLight");
 
-    for (LifxConnection con : mConnections) {
-      if (con.getDeviceId().equals(light.getDeviceID())) {
-        con.lightConnected(light);
-      }
-    }
+    assignLights();
+    mDeviceManager.onConnectionChanged();
   }
 
   @Override

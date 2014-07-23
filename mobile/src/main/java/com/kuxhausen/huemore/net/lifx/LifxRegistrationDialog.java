@@ -15,6 +15,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +102,12 @@ public class LifxRegistrationDialog extends DialogFragment implements
       @Override
       public void onClick(DialogInterface dialog, int id) {
         SparseBooleanArray set = bulbsListView.getCheckedItemPositions();
+
+        ArrayList<Pair<ContentValues, ContentValues>>
+            toAdd =
+            new ArrayList<Pair<ContentValues, ContentValues>>();
+
+        //calculate all the values to add to the database
         for (int i = 0; i < candidateBulbNames.size(); i++) {
           //if that candidateLight is checked
           if (set.get(i)) {
@@ -118,31 +125,43 @@ public class LifxRegistrationDialog extends DialogFragment implements
                                     selectedLight.getLabel());
             netConnectionValues.put(Definitions.NetConnectionColumns.DEVICE_ID_COLUMN,
                                     selectedLight.getDeviceID());
-            long connectionBaseId = Long.parseLong(mContext.getContentResolver().insert(
-                Definitions.NetConnectionColumns.URI, netConnectionValues)
-                                                       .getLastPathSegment());
-            ;
 
             ContentValues netBulbValues = new ContentValues();
             netBulbValues
                 .put(Definitions.NetBulbColumns.NAME_COLUMN, selectedLight.getLabel());
             netBulbValues.put(Definitions.NetBulbColumns.DEVICE_ID_COLUMN,
                               selectedLight.getDeviceID());
-            netBulbValues
-                .put(Definitions.NetBulbColumns.CONNECTION_DATABASE_ID, connectionBaseId);
             netBulbValues.put(Definitions.NetBulbColumns.JSON_COLUMN,
                               gson.toJson(new LifxBulb.ExtraData()));
             netBulbValues.put(Definitions.NetBulbColumns.TYPE_COLUMN,
                               Definitions.NetBulbColumns.NetBulbType.LIFX);
             netBulbValues.put(Definitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
-            long
-                bulbBaseId =
-                Long.parseLong(mContext.getContentResolver()
-                                   .insert(Definitions.NetBulbColumns.URI, netBulbValues)
-                                   .getLastPathSegment());
 
-
+            toAdd.add(new Pair<ContentValues, ContentValues>(netConnectionValues, netBulbValues));
           }
+        }
+
+        //shut down connection before adding to database (due to devicemanager reload)
+        if (networkContext != null) {
+          networkContext.disconnect();
+          networkContext = null;
+        }
+
+        //now add everything to database
+        for (Pair<ContentValues, ContentValues> valuesPair : toAdd) {
+          ContentValues netConnectionValues = valuesPair.first;
+          ContentValues netBulbValues = valuesPair.second;
+
+          long
+              connectionBaseId =
+              Long.parseLong(mContext.getContentResolver()
+                                 .insert(Definitions.NetConnectionColumns.URI, netConnectionValues)
+                                 .getLastPathSegment());
+
+          netBulbValues.put(Definitions.NetBulbColumns.CONNECTION_DATABASE_ID, connectionBaseId);
+
+          long bulbBaseId = Long.parseLong(mContext.getContentResolver().insert(
+              Definitions.NetBulbColumns.URI, netBulbValues).getLastPathSegment());
         }
 
       }
@@ -158,7 +177,9 @@ public class LifxRegistrationDialog extends DialogFragment implements
 
   @Override
   public void onDestroy() {
-    networkContext.disconnect();
+    if (networkContext != null) {
+      networkContext.disconnect();
+    }
     if (ml != null) {
       ml.release();
     }
