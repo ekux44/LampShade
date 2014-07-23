@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
@@ -66,9 +66,9 @@ public class WearService extends WearableListenerService {
 
     GroupMoodBrightness gmb = SpeechParser.parse(this, messageEvent.getPath(), null, null);
     Intent trasmitter = new Intent(this, ConnectivityService.class);
-    trasmitter.putExtra(DatabaseDefinitions.InternalArguments.MOOD_NAME, gmb.mood);
-    trasmitter.putExtra(DatabaseDefinitions.InternalArguments.GROUP_NAME, gmb.group);
-    trasmitter.putExtra(DatabaseDefinitions.InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
+    trasmitter.putExtra(Definitions.InternalArguments.MOOD_NAME, gmb.mood);
+    trasmitter.putExtra(Definitions.InternalArguments.GROUP_NAME, gmb.group);
+    trasmitter.putExtra(Definitions.InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
     startService(trasmitter);
   }
 }

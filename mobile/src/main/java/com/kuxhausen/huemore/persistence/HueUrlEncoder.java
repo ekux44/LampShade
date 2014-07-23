@@ -29,17 +29,17 @@ public class HueUrlEncoder {
   public static String encode(Mood m, Group g, Integer brightness, Context c) {
 
     Integer[] legacyArray = new Integer[50];
-    String[] projections = {DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN};
+    String[] projections = {Definitions.NetBulbColumns.DEVICE_ID_COLUMN};
 
     for (Long l : g.getNetworkBulbDatabaseIds()) {
       String[] selectionArgs =
-          {"" + l, "" + DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
+          {"" + l, "" + Definitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
       Cursor cursor =
           c.getContentResolver().query(
-              DatabaseDefinitions.NetBulbColumns.URI,
+              Definitions.NetBulbColumns.URI,
               projections,
-              DatabaseDefinitions.NetBulbColumns._ID + " =? AND "
-              + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
+              Definitions.NetBulbColumns._ID + " =? AND "
+              + Definitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
           );
 
       if (cursor.moveToFirst()) {

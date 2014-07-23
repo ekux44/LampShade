@@ -16,11 +16,11 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.NewConnectionFragment;
 import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.onboarding.WelcomeDialogFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.DeprecatedPreferenceKeys;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedPreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class PreferenceInitializer {
 
@@ -44,13 +44,13 @@ public class PreferenceInitializer {
       if (hubData.hashedUsername != null
           && (hubData.localHubAddress != null || hubData.portForwardedAddress != null)) {
         ContentValues connectionValues = new ContentValues();
-        connectionValues.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN,
-                             DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
-        connectionValues.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN,
+        connectionValues.put(Definitions.NetConnectionColumns.TYPE_COLUMN,
+                             Definitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
+        connectionValues.put(Definitions.NetConnectionColumns.JSON_COLUMN,
                              gson.toJson(hubData));
         long connectionId =
             Long.parseLong(act.getContentResolver()
-                               .insert(DatabaseDefinitions.NetConnectionColumns.URI,
+                               .insert(Definitions.NetConnectionColumns.URI,
                                        connectionValues)
                                .getLastPathSegment());
 

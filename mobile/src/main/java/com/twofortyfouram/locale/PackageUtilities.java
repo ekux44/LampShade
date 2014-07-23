@@ -13,13 +13,13 @@
 
 package com.twofortyfouram.locale;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 
 /**
  * A simple utility class to find a package that is compatible with hosting the Locale Developer
@@ -29,6 +29,7 @@ import android.content.pm.PackageManager;
  * This class is NOT part of the public Locale Developer Platform API
  */
 public final class PackageUtilities {
+
   /**
    * A hard-coded set of Android packages that support the Locale Developer Platform.
    */
@@ -49,7 +50,7 @@ public final class PackageUtilities {
 
   /**
    * @return a list wrapped in {@link Collections#unmodifiableList(List)} that represents the set of
-   *         Locale-compatible packages.
+   * Locale-compatible packages.
    */
   private static Set<String> constructPackageSet() {
     final HashSet<String> packages = new HashSet<String>();
@@ -70,20 +71,19 @@ public final class PackageUtilities {
 
   /**
    * Obtains the {@code String} package name of a currently-installed package which implements the
-   * host component of the Locale Developer Platform.
-   * <p>
-   * Note: A TOCTOU error exists, due to the fact that the package could be uninstalled at any time.
-   * <p>
-   * Note: If there are multiple hosts, this method will return one of them. The interface of this
-   * method makes no guarantee which host will returned, nor whether that host will be consistently
-   * returned.
-   * 
-   * @param manager an instance of {@code PackageManager}. Cannot be null.
-   * @param packageHint hint as to which package should take precedence. This parameter may be null.
+   * host component of the Locale Developer Platform. <p> Note: A TOCTOU error exists, due to the
+   * fact that the package could be uninstalled at any time. <p> Note: If there are multiple hosts,
+   * this method will return one of them. The interface of this method makes no guarantee which host
+   * will returned, nor whether that host will be consistently returned.
+   *
+   * @param manager     an instance of {@code PackageManager}. Cannot be null.
+   * @param packageHint hint as to which package should take precedence. This parameter may be
+   *                    null.
    * @return {@code String} package name of a host for the Locale Developer Platform, such as
-   *         "com.twofortyfouram.locale". If no such package is found, returns null.
+   * "com.twofortyfouram.locale". If no such package is found, returns null.
    */
-  public static String getCompatiblePackage(final PackageManager manager, final String packageHint) {
+  public static String getCompatiblePackage(final PackageManager manager,
+                                            final String packageHint) {
     /*
      * The interface for this method makes no guarantees as to which host will be returned. However
      * the implementation is more predictable.

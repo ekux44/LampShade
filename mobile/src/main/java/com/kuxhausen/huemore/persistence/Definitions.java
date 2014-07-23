@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 /**
  * Convenience definitions for Database Hander and Preferences
  */
-public final class DatabaseDefinitions {
+public final class Definitions {
 
   public static final String SLASH = "/";
 
@@ -265,6 +265,6 @@ public final class DatabaseDefinitions {
 
 
   // This class cannot be instantiated
-  private DatabaseDefinitions() {
+  private Definitions() {
   }
 }

@@ -19,7 +19,7 @@ import com.kuxhausen.huemore.OnServiceConnectedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.hue.ui.ConfigureHubDialogFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 import java.util.ArrayList;
 

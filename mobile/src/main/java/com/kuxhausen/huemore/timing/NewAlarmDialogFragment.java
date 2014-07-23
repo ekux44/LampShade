@@ -27,10 +27,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
 import java.util.Calendar;
@@ -192,7 +192,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         // Returns a new CursorLoader
         String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+                                Definitions.GroupColumns.GROUPS_URI, // Table
                                 gColumns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments
@@ -202,7 +202,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         // Returns a new CursorLoader
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
+                                Definitions.MoodColumns.MOODS_URI, // Table
                                 mColumns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments
@@ -335,10 +335,10 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     }
     // Defines an object to contain the new values to insert
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(DatabaseDefinitions.AlarmColumns.STATE, gson.toJson(as));
+    mNewValues.put(Definitions.AlarmColumns.STATE, gson.toJson(as));
 
     Uri locationOfNewAlarm =
-        getActivity().getContentResolver().insert(DatabaseDefinitions.AlarmColumns.ALARMS_URI,
+        getActivity().getContentResolver().insert(Definitions.AlarmColumns.ALARMS_URI,
                                                   mNewValues);
 
     DatabaseAlarm ar = new DatabaseAlarm(getActivity(), locationOfNewAlarm);

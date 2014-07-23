@@ -3,7 +3,7 @@ package com.kuxhausen.huemore;
 import android.content.ContentValues;
 import android.content.Context;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.state.Mood;
 
 public class MoodRow {
@@ -37,12 +37,12 @@ public class MoodRow {
       mPriority = UNSTARRED_PRIORITY;
     }
 
-    String rowSelect = DatabaseDefinitions.MoodColumns._ID + "=?";
+    String rowSelect = Definitions.MoodColumns._ID + "=?";
     String[] rowArg = {"" + id};
 
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(DatabaseDefinitions.MoodColumns.COL_MOOD_PRIORITY, mPriority);
+    mNewValues.put(Definitions.MoodColumns.COL_MOOD_PRIORITY, mPriority);
     c.getContentResolver()
-        .update(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues, rowSelect, rowArg);
+        .update(Definitions.MoodColumns.MOODS_URI, mNewValues, rowSelect, rowArg);
   }
 }

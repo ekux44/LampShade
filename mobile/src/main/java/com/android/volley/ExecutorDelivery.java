@@ -14,20 +14,23 @@
 
 package com.android.volley;
 
-import java.util.concurrent.Executor;
-
 import android.os.Handler;
+
+import java.util.concurrent.Executor;
 
 /**
  * Delivers responses and errors.
  */
 public class ExecutorDelivery implements ResponseDelivery {
-  /** Used for posting responses, typically to the main thread. */
+
+  /**
+   * Used for posting responses, typically to the main thread.
+   */
   private final Executor mResponsePoster;
 
   /**
    * Creates a new response delivery interface.
-   * 
+   *
    * @param handler {@link Handler} to post responses on
    */
   public ExecutorDelivery(final Handler handler) {
@@ -42,7 +45,7 @@ public class ExecutorDelivery implements ResponseDelivery {
 
   /**
    * Creates a new response delivery interface, mockable version for testing.
-   * 
+   *
    * @param executor For running delivery tasks
    */
   public ExecutorDelivery(Executor executor) {
@@ -73,6 +76,7 @@ public class ExecutorDelivery implements ResponseDelivery {
    */
   @SuppressWarnings("rawtypes")
   private class ResponseDeliveryRunnable implements Runnable {
+
     private final Request mRequest;
     private final Response mResponse;
     private final Runnable mRunnable;

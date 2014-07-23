@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -19,7 +19,7 @@ public class Utils {
     String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
     String[] mWhereClause = {moodName};
     Cursor moodCursor =
-        ctx.getContentResolver().query(DatabaseDefinitions.MoodColumns.MOODS_URI, moodColumns,
+        ctx.getContentResolver().query(Definitions.MoodColumns.MOODS_URI, moodColumns,
                                        MoodColumns.COL_MOOD_NAME + "=?", mWhereClause, null);
     moodCursor.moveToFirst();
     try {

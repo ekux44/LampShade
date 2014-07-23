@@ -20,6 +20,7 @@ package com.android.volley;
  */
 @SuppressWarnings("serial")
 public class NetworkError extends VolleyError {
+
   public NetworkError() {
     super();
   }

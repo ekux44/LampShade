@@ -12,12 +12,12 @@ import android.util.Pair;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -72,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor cursor =
-            db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
+            db.query(Definitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                      null, null);
 
         HashMap<String, ArrayList<String>> moodStateMap = new HashMap<String, ArrayList<String>>();
@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor moodCursor =
-            db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
+            db.query(Definitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                      null, null);
 
         HashMap<String, String> moodMap = new HashMap<String, String>();
@@ -237,7 +237,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] oldGroupColumns =
             {GroupColumns._ID, GroupColumns.GROUP, GroupColumns.PRECEDENCE, "Dbulb"};
         Cursor oldGroupCursor =
-            db.query(DatabaseDefinitions.GroupColumns.TABLE_NAME, oldGroupColumns, null, null,
+            db.query(Definitions.GroupColumns.TABLE_NAME, oldGroupColumns, null, null,
                      null, null, null);
 
         // load all the old group data into here <name, list of hue hub bulb <precedence, hub bulb
@@ -335,7 +335,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
         Cursor moodCursor =
-            db.query(DatabaseDefinitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
+            db.query(Definitions.MoodColumns.TABLE_NAME, moodColumns, null, null, null,
                      null, null);
 
         HashMap<String, Pair<String, Pair<String, Integer>>>

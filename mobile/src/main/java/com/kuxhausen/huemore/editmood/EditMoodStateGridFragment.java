@@ -26,7 +26,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditMoodFragment.OnCreateMoodListener;
 import com.kuxhausen.huemore.editmood.StateGridSelections.StateGridDisplay;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;

@@ -7,7 +7,7 @@ import android.speech.RecognizerIntent;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
@@ -61,10 +61,10 @@ public class VoiceReadRouterActivity extends Activity {
 
       if (gmb != null) {
         Intent transmitter = new Intent(this, ConnectivityService.class);
-        transmitter.putExtra(DatabaseDefinitions.InternalArguments.MOOD_NAME, gmb.mood);
-        transmitter.putExtra(DatabaseDefinitions.InternalArguments.GROUP_NAME, gmb.group);
+        transmitter.putExtra(Definitions.InternalArguments.MOOD_NAME, gmb.mood);
+        transmitter.putExtra(Definitions.InternalArguments.GROUP_NAME, gmb.group);
         transmitter
-            .putExtra(DatabaseDefinitions.InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
+            .putExtra(Definitions.InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
         startService(transmitter);
       }
     }

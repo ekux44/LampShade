@@ -14,14 +14,14 @@
 
 package com.android.volley.toolbox;
 
-import java.util.Map;
+import com.android.volley.Cache;
+import com.android.volley.NetworkResponse;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.http.protocol.HTTP;
 
-import com.android.volley.Cache;
-import com.android.volley.NetworkResponse;
+import java.util.Map;
 
 /**
  * Utility methods for parsing HTTP headers.
@@ -30,7 +30,7 @@ public class HttpHeaderParser {
 
   /**
    * Extracts a {@link Cache.Entry} from a {@link NetworkResponse}.
-   * 
+   *
    * @param response The network response to parse headers from
    * @return a cache entry for the given response, or null if the response is not cacheable.
    */

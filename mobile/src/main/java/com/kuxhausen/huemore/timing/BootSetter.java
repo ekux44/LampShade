@@ -10,9 +10,9 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class BootSetter extends BroadcastReceiver {
 
@@ -38,7 +38,7 @@ public class BootSetter extends BroadcastReceiver {
       }
 
       // clear out any playing moods stopped at shutdown
-      context.getContentResolver().delete(DatabaseDefinitions.PlayingMood.URI, null, null);
+      context.getContentResolver().delete(Definitions.PlayingMood.URI, null, null);
     }
   }
 

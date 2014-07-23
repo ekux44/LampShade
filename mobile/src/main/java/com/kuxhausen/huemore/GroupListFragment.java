@@ -26,9 +26,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.Group;
 
 public class GroupListFragment extends ListFragment implements
@@ -156,7 +156,7 @@ public class GroupListFragment extends ListFragment implements
       case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
         String groupSelect = GroupColumns.GROUP + "=?";
         String[] groupArg = {longSelected.getText().toString()};
-        getActivity().getContentResolver().delete(DatabaseDefinitions.GroupColumns.GROUPBULBS_URI,
+        getActivity().getContentResolver().delete(Definitions.GroupColumns.GROUPBULBS_URI,
                                                   groupSelect, groupArg);
         return true;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
@@ -198,7 +198,7 @@ public class GroupListFragment extends ListFragment implements
         // Returns a new CursorLoader
         String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+                                Definitions.GroupColumns.GROUPS_URI, // Table
                                 columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

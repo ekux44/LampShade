@@ -14,10 +14,9 @@
 
 package com.android.volley.toolbox;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -34,14 +33,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An HttpStack that performs request over an {@link HttpClient}.
  */
 public class HttpClientStack implements HttpStack {
+
   protected final HttpClient mClient;
 
   private final static String HEADER_CONTENT_TYPE = "Content-Type";
@@ -85,8 +86,9 @@ public class HttpClientStack implements HttpStack {
    * Creates the appropriate subclass of HttpUriRequest for passed in request.
    */
   @SuppressWarnings("deprecation")
-  /* protected */static HttpUriRequest createHttpRequest(Request<?> request,
-      Map<String, String> additionalHeaders) throws AuthFailureError {
+  /* protected */ static HttpUriRequest createHttpRequest(Request<?> request,
+                                                          Map<String, String> additionalHeaders)
+      throws AuthFailureError {
     switch (request.getMethod()) {
       case Method.DEPRECATED_GET_OR_POST: {
         // This is the deprecated way that needs to be handled for backwards compatibility.
@@ -126,7 +128,7 @@ public class HttpClientStack implements HttpStack {
   }
 
   private static void setEntityIfNonEmptyBody(HttpEntityEnclosingRequestBase httpRequest,
-      Request<?> request) throws AuthFailureError {
+                                              Request<?> request) throws AuthFailureError {
     byte[] body = request.getBody();
     if (body != null) {
       HttpEntity entity = new ByteArrayEntity(body);
@@ -136,10 +138,8 @@ public class HttpClientStack implements HttpStack {
 
   /**
    * Called before the request is executed using the underlying HttpClient.
-   * 
-   * <p>
-   * Overwrite in subclasses to augment the request.
-   * </p>
+   *
+   * <p> Overwrite in subclasses to augment the request. </p>
    */
   protected void onPrepareRequest(HttpUriRequest request) throws IOException {
     // Nothing.

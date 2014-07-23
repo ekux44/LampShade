@@ -24,8 +24,8 @@ import com.kuxhausen.huemore.net.hue.HubData;
 import com.kuxhausen.huemore.net.hue.api.Bridge;
 import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.net.hue.api.RegistrationResponse;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -188,13 +188,13 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
           mHubData.hashedUsername = username;
           ContentValues cv = new ContentValues();
 
-          cv.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN,
-                 DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
-          cv.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(mHubData));
-          cv.put(DatabaseDefinitions.NetConnectionColumns.NAME_COLUMN, "?");
+          cv.put(Definitions.NetConnectionColumns.TYPE_COLUMN,
+                 Definitions.NetBulbColumns.NetBulbType.PHILIPS_HUE);
+          cv.put(Definitions.NetConnectionColumns.JSON_COLUMN, gson.toJson(mHubData));
+          cv.put(Definitions.NetConnectionColumns.NAME_COLUMN, "?");
 
           RegisterWithHubDialogFragment.this.getActivity().getContentResolver()
-              .insert(DatabaseDefinitions.NetConnectionColumns.URI, cv);
+              .insert(Definitions.NetConnectionColumns.URI, cv);
 
           // done with registration dialog
           dismiss();

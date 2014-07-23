@@ -19,6 +19,7 @@ package com.android.volley;
  */
 @SuppressWarnings("serial")
 public class NoConnectionError extends NetworkError {
+
   public NoConnectionError() {
     super();
   }

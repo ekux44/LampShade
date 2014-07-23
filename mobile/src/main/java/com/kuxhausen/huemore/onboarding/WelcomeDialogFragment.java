@@ -7,8 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 
 import com.kuxhausen.huemore.net.NewConnectionFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class WelcomeDialogFragment extends DialogFragment {
 

@@ -14,6 +14,20 @@
 
 package com.android.volley.toolbox;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,20 +41,6 @@ import java.util.Map.Entry;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.StatusLine;
-import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
-
 /**
  * An {@link HttpStack} based on {@link HttpURLConnection}.
  */
@@ -52,6 +52,7 @@ public class HurlStack implements HttpStack {
    * An interface for transforming URLs before use.
    */
   public interface UrlRewriter {
+
     /**
      * Returns a URL to use instead of the provided one, or null to indicate this URL should not be
      * used at all.
@@ -74,7 +75,7 @@ public class HurlStack implements HttpStack {
   }
 
   /**
-   * @param urlRewriter Rewriter to use for request URLs
+   * @param urlRewriter      Rewriter to use for request URLs
    * @param sslSocketFactory SSL factory to use for HTTPS connections
    */
   public HurlStack(UrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory) {
@@ -112,7 +113,7 @@ public class HurlStack implements HttpStack {
     }
     StatusLine responseStatus =
         new BasicStatusLine(protocolVersion, connection.getResponseCode(),
-            connection.getResponseMessage());
+                            connection.getResponseMessage());
     BasicHttpResponse response = new BasicHttpResponse(responseStatus);
     response.setEntity(entityFromConnection(connection));
     for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
@@ -126,8 +127,7 @@ public class HurlStack implements HttpStack {
 
   /**
    * Initializes an {@link HttpEntity} from the given {@link HttpURLConnection}.
-   * 
-   * @param connection
+   *
    * @return an HttpEntity populated with data from <code>connection</code>.
    */
   private static HttpEntity entityFromConnection(HttpURLConnection connection) {
@@ -154,10 +154,8 @@ public class HurlStack implements HttpStack {
 
   /**
    * Opens an {@link HttpURLConnection} with parameters.
-   * 
-   * @param url
+   *
    * @return an open connection
-   * @throws IOException
    */
   private HttpURLConnection openConnection(URL url, Request<?> request) throws IOException {
     HttpURLConnection connection = createConnection(url);
@@ -177,8 +175,9 @@ public class HurlStack implements HttpStack {
   }
 
   @SuppressWarnings("deprecation")
-  /* package */static void setConnectionParametersForRequest(HttpURLConnection connection,
-      Request<?> request) throws IOException, AuthFailureError {
+  /* package */ static void setConnectionParametersForRequest(HttpURLConnection connection,
+                                                              Request<?> request)
+      throws IOException, AuthFailureError {
     switch (request.getMethod()) {
       case Method.DEPRECATED_GET_OR_POST:
         // This is the deprecated way that needs to be handled for backwards compatibility.

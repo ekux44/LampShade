@@ -19,7 +19,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.api.Bridge;
 import com.kuxhausen.huemore.net.hue.api.HubSearch;
 import com.kuxhausen.huemore.net.hue.api.HubSearch.OnHubFoundListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFoundListener {
 

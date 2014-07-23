@@ -72,7 +72,7 @@ class SlidingTabStrip extends LinearLayout {
     mDefaultTabColorizer = new SimpleTabColorizer();
     mDefaultTabColorizer.setIndicatorColors(DEFAULT_SELECTED_INDICATOR_COLOR);
     mDefaultTabColorizer.setDividerColors(setColorAlpha(themeForegroundColor,
-        DEFAULT_DIVIDER_COLOR_ALPHA));
+                                                        DEFAULT_DIVIDER_COLOR_ALPHA));
 
     mBottomBorderThickness = (int) (DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS * density);
     mBottomBorderPaint = new Paint();
@@ -141,7 +141,7 @@ class SlidingTabStrip extends LinearLayout {
       mSelectedIndicatorPaint.setColor(color);
 
       canvas.drawRect(left, height - mSelectedIndicatorThickness, right, height,
-          mSelectedIndicatorPaint);
+                      mSelectedIndicatorPaint);
     }
 
     // Thin underline along each child bottom edge
@@ -149,9 +149,8 @@ class SlidingTabStrip extends LinearLayout {
       View child = getChildAt(i);
       mBottomBorderPaint.setColor(tabColorizer.getIndicatorColor(i));
       canvas.drawRect(child.getLeft(), height - mBottomBorderThickness, child.getRight(), height,
-          mBottomBorderPaint);
+                      mBottomBorderPaint);
     }
-
 
     // Vertical separators between the titles
     int separatorTop = (height - dividerHeightPx) / 2;
@@ -159,7 +158,8 @@ class SlidingTabStrip extends LinearLayout {
       View child = getChildAt(i);
       mDividerPaint.setColor(tabColorizer.getDividerColor(i));
       canvas.drawLine(child.getRight(), separatorTop, child.getRight(), separatorTop
-          + dividerHeightPx, mDividerPaint);
+                                                                        + dividerHeightPx,
+                      mDividerPaint);
     }
   }
 
@@ -172,9 +172,9 @@ class SlidingTabStrip extends LinearLayout {
 
   /**
    * Blend {@code color1} and {@code color2} using the given ratio.
-   * 
+   *
    * @param ratio of which to blend. 1.0 will return {@code color1}, 0.5 will give an even blend,
-   *        0.0 will return {@code color2}.
+   *              0.0 will return {@code color2}.
    */
   private static int blendColors(int color1, int color2, float ratio) {
     final float inverseRation = 1f - ratio;
@@ -185,6 +185,7 @@ class SlidingTabStrip extends LinearLayout {
   }
 
   private static class SimpleTabColorizer implements SlidingTabLayout.TabColorizer {
+
     private int[] mIndicatorColors;
     private int[] mDividerColors;
 

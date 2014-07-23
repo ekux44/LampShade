@@ -9,7 +9,7 @@ import android.os.Looper;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.lifx.LifxConnection;
 import com.kuxhausen.huemore.net.lifx.LifxManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 

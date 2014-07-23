@@ -14,39 +14,40 @@
 
 package com.android.volley.toolbox;
 
-import java.io.UnsupportedEncodingException;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * A canned request for retrieving the response body at a given URL as a String.
  */
 public class StringRequest extends Request<String> {
+
   private final Listener<String> mListener;
 
   /**
    * Creates a new request with the given method.
-   * 
-   * @param method the request {@link Method} to use
-   * @param url URL to fetch the string at
-   * @param listener Listener to receive the String response
+   *
+   * @param method        the request {@link Method} to use
+   * @param url           URL to fetch the string at
+   * @param listener      Listener to receive the String response
    * @param errorListener Error listener, or null to ignore errors
    */
   public StringRequest(int method, String url, Listener<String> listener,
-      ErrorListener errorListener) {
+                       ErrorListener errorListener) {
     super(method, url, errorListener);
     mListener = listener;
   }
 
   /**
    * Creates a new GET request.
-   * 
-   * @param url URL to fetch the string at
-   * @param listener Listener to receive the String response
+   *
+   * @param url           URL to fetch the string at
+   * @param listener      Listener to receive the String response
    * @param errorListener Error listener, or null to ignore errors
    */
   public StringRequest(String url, Listener<String> listener, ErrorListener errorListener) {

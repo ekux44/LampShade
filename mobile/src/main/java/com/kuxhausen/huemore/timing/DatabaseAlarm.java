@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.DateFormat;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 
 import java.util.Calendar;
 

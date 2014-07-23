@@ -24,11 +24,11 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
           String groupSelect = GroupColumns.GROUP + "=?";
           String[] groupArg = {initialName};
           getActivity().getContentResolver().delete(
-              DatabaseDefinitions.GroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
+              Definitions.GroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
         }
 
         String groupName = nameEditText.getText().toString();
@@ -154,7 +154,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
       case BULBS_LOADER:
         // Returns a new CursorLoader
         return new CursorLoader(getActivity(), // Parent activity context
-                                DatabaseDefinitions.NetBulbColumns.URI, // Table
+                                Definitions.NetBulbColumns.URI, // Table
                                 columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

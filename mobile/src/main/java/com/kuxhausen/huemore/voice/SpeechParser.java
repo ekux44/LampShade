@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class SpeechParser {
           result.group = groupName;
           result.brightness = brightnessVal;
 
-          Log.d("voice", "success:"+groupName+","+brightnessVal);
+          Log.d("voice", "success:" + groupName + "," + brightnessVal);
         }
 
       } else if (moodArgs.length == 2) {
@@ -70,7 +70,7 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:"+groupName+","+moodName);
+          Log.d("voice", "success:" + groupName + "," + moodName);
         }
       } else if (moodTooArgs.length == 2) {
         Log.d("voice", moodTooArgs[0] + "," + moodTooArgs[1]);
@@ -85,7 +85,7 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:"+groupName+","+moodName);
+          Log.d("voice", "success:" + groupName + "," + moodName);
         }
       } else if (moodTwoArgs.length == 2) {
         Log.d("voice", moodTwoArgs[0] + "," + moodTwoArgs[1]);
@@ -100,7 +100,7 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:"+groupName+","+moodName);
+          Log.d("voice", "success:" + groupName + "," + moodName);
         }
       } else if (mood2Args.length == 2) {
         Log.d("voice", mood2Args[0] + "," + mood2Args[1]);
@@ -115,7 +115,7 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:"+groupName+","+moodName);
+          Log.d("voice", "success:" + groupName + "," + moodName);
         }
       }
     }
@@ -133,7 +133,7 @@ public class SpeechParser {
     if (groupCursor.getCount() > 0) {
       groupCursor.moveToFirst();
       return groupCursor.getString(0);
-    } else if(lowercaseGroupName.equals(c.getString(R.string.cap_all).toLowerCase())){
+    } else if (lowercaseGroupName.equals(c.getString(R.string.cap_all).toLowerCase())) {
       return c.getString(R.string.cap_all);
     } else {
       return null;

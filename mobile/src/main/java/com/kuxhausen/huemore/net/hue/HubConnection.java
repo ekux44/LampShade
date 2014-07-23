@@ -21,8 +21,8 @@ import com.kuxhausen.huemore.net.hue.api.BulbAttributesSuccessListener.OnBulbAtt
 import com.kuxhausen.huemore.net.hue.api.BulbListSuccessListener.OnBulbListReturnedListener;
 import com.kuxhausen.huemore.net.hue.api.ConnectionMonitor;
 import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.BulbState;
 
 import java.util.ArrayList;

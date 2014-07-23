@@ -15,9 +15,9 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 /**
  * This is the service that provides the factory to be bound to the collection service.
@@ -130,7 +130,7 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     ContentResolver r = mContext.getContentResolver();
     String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
-    mCursor = r.query(DatabaseDefinitions.GroupColumns.GROUPS_URI, columns, null, null, null);
+    mCursor = r.query(Definitions.GroupColumns.GROUPS_URI, columns, null, null, null);
 
   }
 }

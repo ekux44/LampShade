@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class SettingsFragment extends Fragment implements OnClickListener {
 

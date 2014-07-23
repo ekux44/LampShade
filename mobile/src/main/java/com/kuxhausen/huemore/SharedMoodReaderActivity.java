@@ -22,10 +22,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
@@ -168,7 +168,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
         // delete any old mood with same name //todo warn users
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
         String[] moodArg = {moodName};
-        this.getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI, moodSelect,
+        this.getContentResolver().delete(Definitions.MoodColumns.MOODS_URI, moodSelect,
                                          moodArg);
 
         ContentValues mNewValues = new ContentValues();
@@ -177,7 +177,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
         mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(sharedMood));
         mNewValues.put(MoodColumns.COL_MOOD_VALUE, MoodRow.UNSTARRED_PRIORITY);
 
-        this.getContentResolver().insert(DatabaseDefinitions.MoodColumns.MOODS_URI, mNewValues);
+        this.getContentResolver().insert(Definitions.MoodColumns.MOODS_URI, mNewValues);
         this.finish();
         break;
       case R.id.cancel:
@@ -201,7 +201,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
         // Returns a new CursorLoader
         String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(this, // Parent activity context
-                                DatabaseDefinitions.GroupColumns.GROUPS_URI, // Table
+                                Definitions.GroupColumns.GROUPS_URI, // Table
                                 gColumns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

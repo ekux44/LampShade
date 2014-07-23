@@ -14,44 +14,55 @@
 
 package com.android.volley;
 
-import java.util.concurrent.BlockingQueue;
-
 import android.net.TrafficStats;
 import android.os.Build;
 import android.os.Process;
 
+import java.util.concurrent.BlockingQueue;
+
 /**
  * Provides a thread for performing network dispatch from a queue of requests.
- * 
- * Requests added to the specified queue are processed from the network via a specified
- * {@link Network} interface. Responses are committed to cache, if eligible, using a specified
- * {@link Cache} interface. Valid responses and errors are posted back to the caller via a
- * {@link ResponseDelivery}.
+ *
+ * Requests added to the specified queue are processed from the network via a specified {@link
+ * Network} interface. Responses are committed to cache, if eligible, using a specified {@link
+ * Cache} interface. Valid responses and errors are posted back to the caller via a {@link
+ * ResponseDelivery}.
  */
 @SuppressWarnings("rawtypes")
 public class NetworkDispatcher extends Thread {
-  /** The queue of requests to service. */
+
+  /**
+   * The queue of requests to service.
+   */
   private final BlockingQueue<Request> mQueue;
-  /** The network interface for processing requests. */
+  /**
+   * The network interface for processing requests.
+   */
   private final Network mNetwork;
-  /** The cache to write to. */
+  /**
+   * The cache to write to.
+   */
   private final Cache mCache;
-  /** For posting responses and errors. */
+  /**
+   * For posting responses and errors.
+   */
   private final ResponseDelivery mDelivery;
-  /** Used for telling us to die. */
+  /**
+   * Used for telling us to die.
+   */
   private volatile boolean mQuit = false;
 
   /**
    * Creates a new network dispatcher thread. You must call {@link #start()} in order to begin
    * processing.
-   * 
-   * @param queue Queue of incoming requests for triage
-   * @param network Network interface to use for performing requests
-   * @param cache Cache interface to use for writing responses to cache
+   *
+   * @param queue    Queue of incoming requests for triage
+   * @param network  Network interface to use for performing requests
+   * @param cache    Cache interface to use for writing responses to cache
    * @param delivery Delivery interface to use for posting responses
    */
   public NetworkDispatcher(BlockingQueue<Request> queue, Network network, Cache cache,
-      ResponseDelivery delivery) {
+                           ResponseDelivery delivery) {
     mQueue = queue;
     mNetwork = network;
     mCache = cache;

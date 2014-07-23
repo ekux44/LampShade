@@ -39,9 +39,9 @@ import android.widget.Toast;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
@@ -309,7 +309,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
         return new CursorLoader(context, GroupColumns.GROUPS_URI, gColumns, null, null, null);
       case MOODS_LOADER:
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
-        return new CursorLoader(context, DatabaseDefinitions.MoodColumns.MOODS_URI, mColumns, null,
+        return new CursorLoader(context, Definitions.MoodColumns.MOODS_URI, mColumns, null,
                                 null, null);
       default:
         return null;

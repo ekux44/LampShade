@@ -3,8 +3,8 @@ package com.kuxhausen.huemore.state;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 
 import java.util.ArrayList;
 
@@ -46,17 +46,17 @@ public class Group {
   public static Group loadFromLegacyData(Integer[] bulbs, String groupName, Context c) {
     ArrayList<Long> netBulbDbIds = new ArrayList<Long>();
 
-    String[] projections = {DatabaseDefinitions.NetBulbColumns._ID};
+    String[] projections = {Definitions.NetBulbColumns._ID};
     for (Integer deviceId : bulbs) {
       String[] selectionArgs =
-          {"" + deviceId, "" + DatabaseDefinitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
+          {"" + deviceId, "" + Definitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
 
       Cursor cursor =
           c.getContentResolver().query(
-              DatabaseDefinitions.NetBulbColumns.URI,
+              Definitions.NetBulbColumns.URI,
               projections,
-              DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN + " =? AND "
-              + DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
+              Definitions.NetBulbColumns.DEVICE_ID_COLUMN + " =? AND "
+              + Definitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
           );
 
       if (cursor.moveToFirst()) {

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.net.DeviceManager;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
 
 /**
@@ -210,7 +210,7 @@ public class SecondaryFragment extends Fragment
 
   @Override
   public void onStateChanged() {
-    if(parrentA!=null && parrentA.boundToService()) {
+    if (parrentA != null && parrentA.boundToService()) {
       DeviceManager dm = parrentA.getService().getDeviceManager();
 
       if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {

@@ -23,7 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.ArrayList;
 
@@ -39,10 +39,10 @@ public class LifxRegistrationDialog extends DialogFragment implements
                                                            LoaderManager.LoaderCallbacks<Cursor> {
 
   private static final int LIFX_BULBS_LOADER = 0;
-  private static final String[] columns = {DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN};
+  private static final String[] columns = {Definitions.NetBulbColumns.DEVICE_ID_COLUMN};
   private static final String[]
       selectionArgs =
-      {"" + DatabaseDefinitions.NetBulbColumns.NetBulbType.LIFX};
+      {"" + Definitions.NetBulbColumns.NetBulbType.LIFX};
 
   ListView bulbsListView;
 
@@ -108,35 +108,35 @@ public class LifxRegistrationDialog extends DialogFragment implements
                     .getLightWithDeviceID(candidateBulbDeviceIds.get(i));
 
             ContentValues netConnectionValues = new ContentValues();
-            netConnectionValues.put(DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN,
-                                    DatabaseDefinitions.NetBulbColumns.NetBulbType.LIFX);
-            netConnectionValues.put(DatabaseDefinitions.NetConnectionColumns.JSON_COLUMN,
+            netConnectionValues.put(Definitions.NetConnectionColumns.TYPE_COLUMN,
+                                    Definitions.NetBulbColumns.NetBulbType.LIFX);
+            netConnectionValues.put(Definitions.NetConnectionColumns.JSON_COLUMN,
                                     gson.toJson(new LifxConnection.ExtraData()));
-            netConnectionValues.put(DatabaseDefinitions.NetConnectionColumns.NAME_COLUMN,
+            netConnectionValues.put(Definitions.NetConnectionColumns.NAME_COLUMN,
                                     selectedLight.getLabel());
-            netConnectionValues.put(DatabaseDefinitions.NetConnectionColumns.DEVICE_ID_COLUMN,
+            netConnectionValues.put(Definitions.NetConnectionColumns.DEVICE_ID_COLUMN,
                                     selectedLight.getDeviceID());
             long connectionBaseId = Long.parseLong(mContext.getContentResolver().insert(
-                DatabaseDefinitions.NetConnectionColumns.URI, netConnectionValues)
+                Definitions.NetConnectionColumns.URI, netConnectionValues)
                                                        .getLastPathSegment());
             ;
 
             ContentValues netBulbValues = new ContentValues();
             netBulbValues
-                .put(DatabaseDefinitions.NetBulbColumns.NAME_COLUMN, selectedLight.getLabel());
-            netBulbValues.put(DatabaseDefinitions.NetBulbColumns.DEVICE_ID_COLUMN,
+                .put(Definitions.NetBulbColumns.NAME_COLUMN, selectedLight.getLabel());
+            netBulbValues.put(Definitions.NetBulbColumns.DEVICE_ID_COLUMN,
                               selectedLight.getDeviceID());
             netBulbValues
-                .put(DatabaseDefinitions.NetBulbColumns.CONNECTION_DATABASE_ID, connectionBaseId);
-            netBulbValues.put(DatabaseDefinitions.NetBulbColumns.JSON_COLUMN,
+                .put(Definitions.NetBulbColumns.CONNECTION_DATABASE_ID, connectionBaseId);
+            netBulbValues.put(Definitions.NetBulbColumns.JSON_COLUMN,
                               gson.toJson(new LifxBulb.ExtraData()));
-            netBulbValues.put(DatabaseDefinitions.NetBulbColumns.TYPE_COLUMN,
-                              DatabaseDefinitions.NetBulbColumns.NetBulbType.LIFX);
-            netBulbValues.put(DatabaseDefinitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
+            netBulbValues.put(Definitions.NetBulbColumns.TYPE_COLUMN,
+                              Definitions.NetBulbColumns.NetBulbType.LIFX);
+            netBulbValues.put(Definitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
             long
                 bulbBaseId =
                 Long.parseLong(mContext.getContentResolver()
-                                   .insert(DatabaseDefinitions.NetBulbColumns.URI, netBulbValues)
+                                   .insert(Definitions.NetBulbColumns.URI, netBulbValues)
                                    .getLastPathSegment());
 
 
@@ -205,9 +205,9 @@ public class LifxRegistrationDialog extends DialogFragment implements
       case LIFX_BULBS_LOADER:
         // Returns a new CursorLoader
         return new CursorLoader(mContext,
-                                DatabaseDefinitions.NetConnectionColumns.URI,
+                                Definitions.NetConnectionColumns.URI,
                                 columns,
-                                DatabaseDefinitions.NetConnectionColumns.TYPE_COLUMN + " = ?",
+                                Definitions.NetConnectionColumns.TYPE_COLUMN + " = ?",
                                 selectionArgs,
                                 null
         );

@@ -24,8 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 
@@ -183,7 +183,7 @@ public class MoodListFragment extends ListFragment
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
         String[] moodArg = {getTextFromRowView(longSelected)};
-        getActivity().getContentResolver().delete(DatabaseDefinitions.MoodColumns.MOODS_URI,
+        getActivity().getContentResolver().delete(Definitions.MoodColumns.MOODS_URI,
                                                   moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
@@ -212,7 +212,7 @@ public class MoodListFragment extends ListFragment
             {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE,
              MoodColumns.COL_MOOD_LOWERCASE_NAME, MoodColumns.COL_MOOD_PRIORITY};
         return new CursorLoader(getActivity(), // Parent activity context
-                                DatabaseDefinitions.MoodColumns.MOODS_URI, // Table
+                                Definitions.MoodColumns.MOODS_URI, // Table
                                 columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

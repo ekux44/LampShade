@@ -12,8 +12,8 @@ import com.kuxhausen.huemore.billing.googleplay.IabHelper;
 import com.kuxhausen.huemore.billing.googleplay.IabResult;
 import com.kuxhausen.huemore.billing.googleplay.Inventory;
 import com.kuxhausen.huemore.billing.googleplay.Purchase;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayItems;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.Definitions.PlayItems;
+import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class BillingManager {
 

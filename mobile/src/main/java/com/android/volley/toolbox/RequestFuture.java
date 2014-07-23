@@ -14,30 +14,30 @@
 
 package com.android.volley.toolbox;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
 /**
  * A Future that represents a Volley request.
- * 
+ *
  * Used by providing as your response and error listeners. For example:
- * 
+ *
  * <pre>
  * RequestFuture&lt;JSONObject&gt; future = RequestFuture.newFuture();
  * MyRequest request = new MyRequest(URL, future, future);
- * 
+ *
  * // If you want to be able to cancel the request:
  * future.setRequest(requestQueue.add(request));
- * 
+ *
  * // Otherwise:
  * requestQueue.add(request);
- * 
+ *
  * try {
  *   JSONObject response = future.get();
  *   // do something with response
@@ -47,10 +47,11 @@ import com.android.volley.VolleyError;
  *   // handle the error
  * }
  * </pre>
- * 
+ *
  * @param <T> The type of parsed response this future expects.
  */
 public class RequestFuture<T> implements Future<T>, Response.Listener<T>, Response.ErrorListener {
+
   private Request<?> mRequest;
   private boolean mResultReceived = false;
   private T mResult;
@@ -60,7 +61,8 @@ public class RequestFuture<T> implements Future<T>, Response.Listener<T>, Respon
     return new RequestFuture<E>();
   }
 
-  private RequestFuture() {}
+  private RequestFuture() {
+  }
 
   public void setRequest(Request<?> request) {
     mRequest = request;
@@ -91,12 +93,12 @@ public class RequestFuture<T> implements Future<T>, Response.Listener<T>, Respon
 
   @Override
   public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
-      TimeoutException {
+                                                   TimeoutException {
     return doGet(TimeUnit.MILLISECONDS.convert(timeout, unit));
   }
 
   private synchronized T doGet(Long timeoutMs) throws InterruptedException, ExecutionException,
-      TimeoutException {
+                                                      TimeoutException {
     if (mException != null) {
       throw new ExecutionException(mException);
     }

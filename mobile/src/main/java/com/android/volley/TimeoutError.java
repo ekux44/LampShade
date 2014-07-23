@@ -19,4 +19,5 @@ package com.android.volley;
  */
 @SuppressWarnings("serial")
 public class TimeoutError extends VolleyError {
+
 }

@@ -23,7 +23,7 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.automation.VoiceInputReceiver;
 import com.kuxhausen.huemore.net.DeviceManager.OnStateChangedListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;

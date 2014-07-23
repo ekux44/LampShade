@@ -13,12 +13,12 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetBulbColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.NetConnectionColumns;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions.PlayingMood;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
 
@@ -50,16 +50,16 @@ public class LampShadeProvider extends ContentProvider {
     sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     {
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY,
-                         DatabaseDefinitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
+      sUriMatcher.addURI(Definitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
+      sUriMatcher.addURI(Definitions.AUTHORITY,
+                         Definitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
                          INDIVIDUAL_ALARM);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
-      sUriMatcher.addURI(DatabaseDefinitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
+      sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
     }
   }
 
@@ -99,8 +99,8 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
-        table = (DatabaseDefinitions.MoodColumns.TABLE_NAME);
-        toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
+        table = (Definitions.MoodColumns.TABLE_NAME);
+        toNotify.add(Definitions.MoodColumns.MOODS_URI);
         break;
       default:
         // If the URI doesn't match any of the known patterns, throw an exception.
@@ -157,21 +157,21 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
-        qb.setTables(DatabaseDefinitions.AlarmColumns.TABLE_NAME);
-        table = DatabaseDefinitions.AlarmColumns.TABLE_NAME;
+        qb.setTables(Definitions.AlarmColumns.TABLE_NAME);
+        table = Definitions.AlarmColumns.TABLE_NAME;
         toNotify.add(AlarmColumns.ALARMS_URI);
         toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPS:
-        qb.setTables(DatabaseDefinitions.GroupColumns.TABLE_NAME);
-        table = DatabaseDefinitions.GroupColumns.TABLE_NAME;
+        qb.setTables(Definitions.GroupColumns.TABLE_NAME);
+        table = Definitions.GroupColumns.TABLE_NAME;
         toNotify.add(GroupColumns.GROUPS_URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
-        qb.setTables(DatabaseDefinitions.MoodColumns.TABLE_NAME);
-        table = DatabaseDefinitions.MoodColumns.TABLE_NAME;
-        toNotify.add(DatabaseDefinitions.MoodColumns.MOODS_URI);
+        qb.setTables(Definitions.MoodColumns.TABLE_NAME);
+        table = Definitions.MoodColumns.TABLE_NAME;
+        toNotify.add(Definitions.MoodColumns.MOODS_URI);
         break;
       default:
         // If the URI doesn't match any of the known patterns, throw an exception.

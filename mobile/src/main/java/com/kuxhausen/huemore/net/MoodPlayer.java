@@ -9,7 +9,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
-import com.kuxhausen.huemore.persistence.DatabaseDefinitions;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
@@ -176,15 +176,15 @@ public class MoodPlayer {
 
     awakenTime -= MILIS_AWAKEN_STARTUP_TIME;
 
-    mContext.getContentResolver().delete(DatabaseDefinitions.PlayingMood.URI, null, null);
+    mContext.getContentResolver().delete(Definitions.PlayingMood.URI, null, null);
     for (PlayingMood pm : mPlayingMoods) {
       ContentValues cv = new ContentValues();
-      cv.put(DatabaseDefinitions.PlayingMood.COL_GROUP_VALUE, gson.toJson(pm.getGroup()));
-      cv.put(DatabaseDefinitions.PlayingMood.COL_MOOD_NAME, pm.getMoodName());
-      cv.put(DatabaseDefinitions.PlayingMood.COL_MOOD_VALUE, HueUrlEncoder.encode(pm.getMood()));
-      cv.put(DatabaseDefinitions.PlayingMood.COL_INITIAL_MAX_BRI, pm.getGroupName());
-      cv.put(DatabaseDefinitions.PlayingMood.COL_MILI_TIME_STARTED, SystemClock.elapsedRealtime());
-      mContext.getContentResolver().insert(DatabaseDefinitions.PlayingMood.URI, cv);
+      cv.put(Definitions.PlayingMood.COL_GROUP_VALUE, gson.toJson(pm.getGroup()));
+      cv.put(Definitions.PlayingMood.COL_MOOD_NAME, pm.getMoodName());
+      cv.put(Definitions.PlayingMood.COL_MOOD_VALUE, HueUrlEncoder.encode(pm.getMood()));
+      cv.put(Definitions.PlayingMood.COL_INITIAL_MAX_BRI, pm.getGroupName());
+      cv.put(Definitions.PlayingMood.COL_MILI_TIME_STARTED, SystemClock.elapsedRealtime());
+      mContext.getContentResolver().insert(Definitions.PlayingMood.URI, cv);
     }
 
     Log.d("mood", "awaken future millis offset " + (awakenTime - SystemClock.elapsedRealtime()));
@@ -194,13 +194,13 @@ public class MoodPlayer {
 
   public void restoreFromSaved() {
     String[] projectionColumns =
-        {DatabaseDefinitions.PlayingMood.COL_GROUP_VALUE,
-         DatabaseDefinitions.PlayingMood.COL_MOOD_NAME,
-         DatabaseDefinitions.PlayingMood.COL_MOOD_VALUE,
-         DatabaseDefinitions.PlayingMood.COL_INITIAL_MAX_BRI,
-         DatabaseDefinitions.PlayingMood.COL_MILI_TIME_STARTED};
+        {Definitions.PlayingMood.COL_GROUP_VALUE,
+         Definitions.PlayingMood.COL_MOOD_NAME,
+         Definitions.PlayingMood.COL_MOOD_VALUE,
+         Definitions.PlayingMood.COL_INITIAL_MAX_BRI,
+         Definitions.PlayingMood.COL_MILI_TIME_STARTED};
     Cursor cursor =
-        mContext.getContentResolver().query(DatabaseDefinitions.PlayingMood.URI, projectionColumns,
+        mContext.getContentResolver().query(Definitions.PlayingMood.URI, projectionColumns,
                                             null, null, null);
     cursor.moveToPosition(-1);// not the same as move to first!
     while (cursor.moveToNext()) {

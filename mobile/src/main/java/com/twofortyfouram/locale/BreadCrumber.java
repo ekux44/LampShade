@@ -20,28 +20,28 @@ import android.util.Log;
 import com.kuxhausen.huemore.R;
 
 /**
- * Utility class to generate a breadcrumb title string for {@code Activity} instances in Locale.
- * <p>
+ * Utility class to generate a breadcrumb title string for {@code Activity} instances in Locale. <p>
  * This class cannot be instantiated.
  */
 public final class BreadCrumber {
+
   /**
    * Static helper method to generate bread crumbs. Bread crumb strings will be properly formatted
-   * for the current language, including right-to-left languages, as long as the proper
-   * {@link com.twofortyfouram.locale.platform.R.string#twofortyfouram_locale_breadcrumb_format}
-   * string resources have been created.
-   * 
-   * @param context {@code Context} for loading platform resources. Cannot be null.
-   * @param intent {@code Intent} to extract the bread crumb from.
+   * for the current language, including right-to-left languages, as long as the proper {@link
+   * com.twofortyfouram.locale.platform.R.string#twofortyfouram_locale_breadcrumb_format} string
+   * resources have been created.
+   *
+   * @param context      {@code Context} for loading platform resources. Cannot be null.
+   * @param intent       {@code Intent} to extract the bread crumb from.
    * @param currentCrumb The last element of the bread crumb path.
    * @return {@code String} presentation of the bread crumb. If the intent parameter is null, then
-   *         this method returns currentCrumb. If currentCrumb is null, then this method returns the
-   *         empty string "". If intent contains a private Serializable instances as an extra, then
-   *         this method returns the empty string "".
+   * this method returns currentCrumb. If currentCrumb is null, then this method returns the empty
+   * string "". If intent contains a private Serializable instances as an extra, then this method
+   * returns the empty string "".
    * @throws IllegalArgumentException if {@code context} is null.
    */
   public static CharSequence generateBreadcrumb(final Context context, final Intent intent,
-      final String currentCrumb) {
+                                                final String currentCrumb) {
     if (null == context) {
       throw new IllegalArgumentException("context cannot be null"); //$NON-NLS-1$
     }
@@ -64,8 +64,10 @@ public final class BreadCrumber {
           intent.getStringExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BREADCRUMB);
       if (null != breadcrumbString) {
         return context.getString(R.string.twofortyfouram_locale_breadcrumb_format,
-            breadcrumbString,
-            context.getString(R.string.twofortyfouram_locale_breadcrumb_separator), currentCrumb);
+                                 breadcrumbString,
+                                 context.getString(
+                                     R.string.twofortyfouram_locale_breadcrumb_separator),
+                                 currentCrumb);
       }
       return currentCrumb;
     } catch (final Exception e) {
@@ -76,7 +78,7 @@ public final class BreadCrumber {
 
   /**
    * Private constructor prevents instantiation.
-   * 
+   *
    * @throws UnsupportedOperationException because this class cannot be instantiated.
    */
   private BreadCrumber() {
