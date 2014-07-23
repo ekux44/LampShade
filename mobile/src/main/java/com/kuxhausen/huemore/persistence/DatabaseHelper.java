@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 8;
+  private static final int DATABASE_VERSION = 9;
   Gson gson = new Gson();
   private Context mContext;
 
@@ -330,7 +330,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    + " INTEGER" + ");");
 
       }
-      case 7: {
+      case 8: {
         //TODO clean previous migrations or create non-upgrade path for first run performance
         ContentValues cv = new ContentValues();
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
@@ -399,6 +399,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           cv.put(MoodColumns.COL_MOOD_VALUE, value);
           cv.put(MoodColumns.COL_MOOD_PRIORITY, priority);
           db.insert(MoodColumns.TABLE_NAME, null, cv);
+        }
+
+        //now migrate groups to add a lowercase name field
+
+        String[] oldGroupColumns =
+            {GroupColumns.GROUP, GroupColumns.PRECEDENCE, GroupColumns.BULB_DATABASE_ID};
+        Cursor oldGroupCursor =
+            db.query(GroupColumns.TABLE_NAME, oldGroupColumns, null, null, null, null, null);
+
+        // load all the old group data into here <name, <precedence,bulb_database_id>>
+        HashMap<String, Pair<Long, Long>> oldGroupMap = new HashMap<String, Pair<Long, Long>>();
+
+        while (oldGroupCursor.moveToNext()) {
+
+          String name = oldGroupCursor.getString(0);
+          long precedence = 0;
+          try {
+            precedence = oldGroupCursor.getLong(1);
+          } catch (Exception e) {
+          }
+          Long bulbDatabaseId = null;
+          try {
+            bulbDatabaseId = oldGroupCursor.getLong(2);
+          } catch (Exception e) {
+          }
+
+          oldGroupMap.put(name, new Pair<Long, Long>(precedence, bulbDatabaseId));
+        }
+
+        /* rebuild the sql tables */
+        db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
+
+        db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
+                   + BaseColumns._ID + " INTEGER PRIMARY KEY,"
+                   + GroupColumns.GROUP + " TEXT,"
+                   + GroupColumns.COL_GROUP_LOWERCASE_NAME + " TEXT,"
+                   + GroupColumns.PRECEDENCE + " INTEGER,"
+                   + GroupColumns.BULB_DATABASE_ID + " INTEGER,"
+                   + " FOREIGN KEY (" + GroupColumns.BULB_DATABASE_ID + ") REFERENCES "
+                   + NetBulbColumns.TABLE_NAME + " (" + NetBulbColumns._ID + " ) ON DELETE CASCADE "
+                   + ");");
+
+        /* now add the groups to the new table */
+        for (String groupName : oldGroupMap.keySet()) {
+          Pair<Long, Long> oldPair = oldGroupMap.get(groupName);
+          Long bulbPrecidence = oldPair.first;
+          Long bulbBaseId = oldPair.second;
+
+          ContentValues groupValues = new ContentValues();
+          groupValues.put(GroupColumns.GROUP, groupName);
+          groupValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
+          groupValues.put(GroupColumns.PRECEDENCE, bulbPrecidence);
+          groupValues.put(GroupColumns.BULB_DATABASE_ID, bulbBaseId);
+          db.insert(GroupColumns.TABLE_NAME, null, groupValues);
         }
       }
     }

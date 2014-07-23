@@ -60,6 +60,7 @@ public final class DatabaseDefinitions {
      * which group this bulb row is part of
      */
     public static final String GROUP = "Dgroup";
+    public static final String COL_GROUP_LOWERCASE_NAME = "D_COL_GROUP_LOWERCASE_NAME";
 
     /**
      * order in which bulb configurations should be used when applying mood (lowest number = first)
@@ -194,6 +195,8 @@ public final class DatabaseDefinitions {
 
     public static final String GROUP_NAME = "Group_Name";
     public static final String MOOD_NAME = "Mood_Name";
+    public static final String LOWERCASE_GROUP_NAME = "Lowercase_Group_Name";
+    public static final String LOWERCASE_MOOD_NAME = "Lowercase_Mood_Name";
     public static final String ENCODED_MOOD = "Encoded_Mood";
     public static final String BRIDGES = "Bridges";
     public static final String MD5 = "MD5";

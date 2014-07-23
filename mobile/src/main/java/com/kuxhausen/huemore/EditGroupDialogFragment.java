@@ -124,12 +124,12 @@ public class EditGroupDialogFragment extends DialogFragment implements
           if (set.get(i)) {
             ContentValues mNewValues = new ContentValues();
 
-            mNewValues.put(DatabaseDefinitions.GroupColumns.GROUP, groupName);
-            mNewValues.put(DatabaseDefinitions.GroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
-            mNewValues.put(DatabaseDefinitions.GroupColumns.PRECEDENCE, i);
+            mNewValues.put(GroupColumns.GROUP, groupName);
+            mNewValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
+            mNewValues.put(GroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
+            mNewValues.put(GroupColumns.PRECEDENCE, i);
 
-            getActivity().getContentResolver().insert(DatabaseDefinitions.GroupColumns.GROUPS_URI,
-                                                      mNewValues);
+            getActivity().getContentResolver().insert(GroupColumns.GROUPS_URI, mNewValues);
           }
 
           cursor.moveToNext();
