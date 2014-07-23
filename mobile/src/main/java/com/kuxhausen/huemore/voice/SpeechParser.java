@@ -33,12 +33,14 @@ public class SpeechParser {
       String[] briArgs = best.split(" brightness at ");
       String[] moodArgs = best.split(" to ");
       String[] moodTooArgs = best.split(" too ");
+      String[] moodTwoArgs = best.split(" two ");
+      String[] mood2Args = best.split(" 2 ");
 
       if (briArgs.length == 2) {
         Log.d("voice", briArgs[0] + "," + briArgs[1]);
 
         String lowercaseGroupName = briArgs[0].toLowerCase().trim();
-        String brightness = briArgs[1].replaceAll("[^\\D]", "");
+        String brightness = briArgs[1].replaceAll("[^\\d]", "");
 
         int brightnessVal = -1;
         try {
@@ -85,6 +87,36 @@ public class SpeechParser {
 
           Log.d("voice", "success:"+groupName+","+moodName);
         }
+      } else if (moodTwoArgs.length == 2) {
+        Log.d("voice", moodTwoArgs[0] + "," + moodTwoArgs[1]);
+
+        String lowercaseGroupName = moodTwoArgs[0].toLowerCase().trim();
+        String lowercaseMoodName = moodTwoArgs[1].toLowerCase().trim();
+
+        String groupName = checkGroupName(c, lowercaseGroupName);
+        String moodName = checkMoodName(c, lowercaseMoodName);
+
+        if (groupName != null && moodName != null) {
+          result.group = groupName;
+          result.mood = moodName;
+
+          Log.d("voice", "success:"+groupName+","+moodName);
+        }
+      } else if (mood2Args.length == 2) {
+        Log.d("voice", mood2Args[0] + "," + mood2Args[1]);
+
+        String lowercaseGroupName = mood2Args[0].toLowerCase().trim();
+        String lowercaseMoodName = mood2Args[1].toLowerCase().trim();
+
+        String groupName = checkGroupName(c, lowercaseGroupName);
+        String moodName = checkMoodName(c, lowercaseMoodName);
+
+        if (groupName != null && moodName != null) {
+          result.group = groupName;
+          result.mood = moodName;
+
+          Log.d("voice", "success:"+groupName+","+moodName);
+        }
       }
     }
     return result;
@@ -95,12 +127,14 @@ public class SpeechParser {
     String[] gWhereClause = {lowercaseGroupName};
     Cursor
         groupCursor =
-        c.getContentResolver().query(GroupColumns.GROUPS_URI, groupColumns,
+        c.getContentResolver().query(GroupColumns.GROUPBULBS_URI, groupColumns,
                                      GroupColumns.COL_GROUP_LOWERCASE_NAME + "=?", gWhereClause,
                                      null);
     if (groupCursor.getCount() > 0) {
       groupCursor.moveToFirst();
       return groupCursor.getString(0);
+    } else if(lowercaseGroupName.equals(c.getString(R.string.cap_all).toLowerCase())){
+      return c.getString(R.string.cap_all);
     } else {
       return null;
     }
