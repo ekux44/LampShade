@@ -409,7 +409,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.query(GroupColumns.TABLE_NAME, oldGroupColumns, null, null, null, null, null);
 
         // load all the old group data into here <name, <precedence,bulb_database_id>>
-        HashMap<String, Pair<Long, Long>> oldGroupMap = new HashMap<String, Pair<Long, Long>>();
+        ArrayList<Pair<String, Pair<Long, Long>>>
+            oldGroupList =
+            new ArrayList<Pair<String, Pair<Long, Long>>>();
 
         while (oldGroupCursor.moveToNext()) {
 
@@ -425,7 +427,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           } catch (Exception e) {
           }
 
-          oldGroupMap.put(name, new Pair<Long, Long>(precedence, bulbDatabaseId));
+          oldGroupList.add(new Pair<String, Pair<Long, Long>>(name, new Pair<Long, Long>(precedence,
+                                                                                         bulbDatabaseId)));
         }
 
         /* rebuild the sql tables */
@@ -442,10 +445,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    + ");");
 
         /* now add the groups to the new table */
-        for (String groupName : oldGroupMap.keySet()) {
-          Pair<Long, Long> oldPair = oldGroupMap.get(groupName);
-          Long bulbPrecidence = oldPair.first;
-          Long bulbBaseId = oldPair.second;
+        for (Pair<String, Pair<Long, Long>> item : oldGroupList) {
+          String groupName = item.first;
+          Long bulbPrecidence = item.second.first;
+          Long bulbBaseId = item.second.second;
 
           ContentValues groupValues = new ContentValues();
           groupValues.put(GroupColumns.GROUP, groupName);
