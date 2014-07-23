@@ -101,7 +101,7 @@ public class HueBulb extends NetworkBulb {
       }
 
     }
-    Log.i("getState", preBriAdjusted.toString());
+    Log.i("net.hue.bulb.getState", preBriAdjusted.toString());
     return preBriAdjusted;
   }
 
@@ -109,15 +109,17 @@ public class HueBulb extends NetworkBulb {
     // remove successful changes from pending
     lastSendInitiatedTime = null;
 
-    Log.d("confirm", "pre" + desiredState.toString());
+    Log.d("net.hue.bulb.confirm", "unconfirmedDesired" + desiredState.toString());
     // recalculate any remaining desired state
-    desiredState = transmitted.delta(desiredState);
-    Log.d("confirm", "post" + desiredState.toString());
+    //desiredState = transmitted.delta(desiredState);
 
     // update confirmed
     BulbState.confirmChange(confirmed, transmitted);
     BulbState.confirmChange(desiredState, transmitted);
     //desiredState = confirmed.delta(desiredState);
+
+    Log.d("net.hue.bulb.confirm", "confirmedDesired" + desiredState.toString());
+
   }
 
   public void attributesReturned(BulbAttributes attributes) {
@@ -131,7 +133,7 @@ public class HueBulb extends NetworkBulb {
       //notify brightness bar
       this.mConnection.getDeviceManager().onStateChanged();
 
-      Log.d("net", "onAttributeReturned" + desiredState.bri);
+      Log.d("net.hue.bulb.attribute", "onAttributeReturned" + desiredState.bri);
     }
   }
 

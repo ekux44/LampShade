@@ -425,9 +425,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                   NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
                                                              getRequestQueue(), HubConnection.this,
                                                              stateChange);
-                  Log.d("transmit",
-                        stateChange.hubBulb.getBaseId() + ": " + stateChange.sentState.isEmpty()
-                        + " " + stateChange.sentState.toString()
+                  Log.d("net.hue.connection.onTick",
+                        "perform transmit"+stateChange.hubBulb.getBaseId()
+                        + "," + stateChange.sentState.isEmpty()
+                        + "," + stateChange.sentState.toString()
                   );
                 }
                 selected.lastSendInitiatedTime = SystemClock.elapsedRealtime();

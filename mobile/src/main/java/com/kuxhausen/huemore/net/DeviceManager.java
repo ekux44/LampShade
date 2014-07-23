@@ -5,6 +5,7 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.lifx.LifxConnection;
@@ -172,6 +173,7 @@ public class DeviceManager {
    * will guess when brightness unknown
    */
   public int getBrightness(Group g) {
+    Log.d("net.devicemanager.getbrightness", "");
     if (g == null || g.getNetworkBulbDatabaseIds().isEmpty()) {
       return 50;
     }
@@ -196,6 +198,7 @@ public class DeviceManager {
    * doesn't notify listeners *
    */
   public void setBrightness(Group g, int brightness) {
+    Log.d("net.devicemanager.setbrightness", "");
     if (g == null) {
       return;
     }
@@ -239,6 +242,7 @@ public class DeviceManager {
    * doesn't notify listeners *
    */
   public void setMaxBrightness(Group g, Boolean enable, Integer brightness) {
+    Log.d("net.devicemanager.setmaxbrightness", "");
     if (g == null) {
       return;
     }

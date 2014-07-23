@@ -86,6 +86,6 @@ public abstract class NetworkBulb {
         }
       }
     }
-    Log.i("setMaxBri", "" + maxBri + " " + this.isMaxBriModeEnabled());
+    Log.i("net.base.setmaxbri", "" + maxBri + " " + this.isMaxBriModeEnabled());
   }
 }
