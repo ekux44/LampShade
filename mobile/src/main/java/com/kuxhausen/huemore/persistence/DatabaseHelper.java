@@ -28,7 +28,7 @@ import com.kuxhausen.huemore.state.Mood;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 7;
+  private static final int DATABASE_VERSION = 8;
   Gson gson = new Gson();
   private Context mContext;
 
@@ -314,7 +314,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " INTEGER" + ");");
 
       }
-      case 6: {
+      case 7: {
         //TODO clean previous migrations or create non-upgrade path for first run performance
         ContentValues cv = new ContentValues();
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
@@ -324,17 +324,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         HashMap<String, Pair<String, Pair<String,Integer>>> moodMap = new HashMap<String, Pair<String,Pair<String,Integer>>>();
 
-        String onName = mContext.getString(R.string.cap_on);
-        moodMap.put(onName.toLowerCase(), new Pair<String, Pair<String,Integer>>(onName, new Pair<String, Integer>(getEncodedOff(), 2)));
-
-        String offName = mContext.getString(R.string.cap_off);
-        moodMap.put(offName.toLowerCase(), new Pair<String, Pair<String,Integer>>(offName, new Pair<String, Integer>(getEncodedOff(), 2)));
-
-
         while (moodCursor.moveToNext()) {
           String visibleName = moodCursor.getString(0);
           String encodedMood = moodCursor.getString(1);
-          String lowercaseName = visibleName.toLowerCase();
+          String lowercaseName = visibleName.toLowerCase().trim();
           Integer priority = 1;
 
           while(moodMap.containsKey(lowercaseName)){
@@ -343,6 +336,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           }
           moodMap.put(lowercaseName, new Pair<String,Pair<String,Integer>>(visibleName,new Pair<String, Integer>(encodedMood, priority)));
         }
+
+        String onName = mContext.getString(R.string.cap_on);
+        moodMap.put(onName.toLowerCase(), new Pair<String, Pair<String,Integer>>(onName, new Pair<String, Integer>(getEncodedOn(), 2)));
+
+        String offName = mContext.getString(R.string.cap_off);
+        moodMap.put(offName.toLowerCase(), new Pair<String, Pair<String,Integer>>(offName, new Pair<String, Integer>(getEncodedOff(), 2)));
+
 
         // remove any nameless moods
         moodMap.remove("");

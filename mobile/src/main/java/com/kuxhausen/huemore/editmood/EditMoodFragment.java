@@ -191,7 +191,7 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
 
         ContentValues mNewValues = new ContentValues();
         mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
-        mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase());
+        mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase().trim());
         mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(stateGridFragment.getMood()));
 
 

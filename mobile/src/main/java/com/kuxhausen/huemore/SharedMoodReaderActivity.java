@@ -171,7 +171,7 @@ public class SharedMoodReaderActivity extends NetworkManagedActivity implements 
 
         ContentValues mNewValues = new ContentValues();
         mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
-        mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase());
+        mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase().trim());
         mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(sharedMood));
         mNewValues.put(MoodColumns.COL_MOOD_VALUE, MoodRow.UNSTARRED_PRIORITY);
 
