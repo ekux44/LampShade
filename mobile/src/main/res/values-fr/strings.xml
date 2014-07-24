@@ -107,7 +107,16 @@
 	<string name="hint_remote_address">Adresse IP ou URL</string>
 	<string name="toast_hue_connection_updated">Connexion mise à jour</string>
 	<string name="notification_overflow_more">plus</string>
-	
+	<string name="max_brightness">Luminosité max.</string>
+	<string name="saved">Enregistré</string>
+	<string name="action_connection_error">Erreur de connexion</string>
+    <string name="empty_list_connections">Non appairé à des lampes. Cliquez sur le bouton plus pour ajouter une nouvelle connexion.</string>
+    <string name="empty_list_bulbs">Non appairé à des lampes. Allez à la page Connexions pour configurer des lampes.</string>
+    <string name="empty_list_groups">Non appairé à des lampes. Allez à la page Connexions pour configurer des lampes.</string>
+    <string name="mark_favorite">Favoriser</string>
+    <string name="mark_not_favorite">DéFavoriser</string>
+    <string name="action_refresh">Actualiser</string>
+
 	<string name="help_title_gettingstarted">Démarrage rapide</string>
 	<string name="help_title_editingmoods">Création et modification des ambiances</string>
 	<string name="help_title_alarms">Alarmes</string>

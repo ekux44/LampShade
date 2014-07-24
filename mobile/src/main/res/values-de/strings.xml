@@ -90,7 +90,7 @@
 	<string name="empty_group_list_text">Keine Gruppen gefunden...</string>
 	<string name="widget_alarms_label">LampShade Alarme</string>
 	<string name="widget_groups_label">LampShade Gruppen</string>
-	<string name="include_brightness">Include Brightness</string>
+	<string name="include_brightness">Beinhaltet Helligkeit</string>
 	<string name="action_play">Vorschau der Szene</string>
 	<string name="action_help">Hilfe</string>
 	<string name="minutes">Minuten</string>
@@ -99,7 +99,7 @@
 	<string name="show_NFC_read_page_descriptor">Zeige Schnellzugriffe, wenn NFC Tags gelesen worden sind</string>
 	<string name="action_connections">Verbindungen</string>
 	<string name="action_bulbs">Lampen</string>
-	<string name="actionmenu_new_connection">Connect to a smart lighting device</string>
+	<string name="actionmenu_new_connection">Verbinde dich mit einer Smart-Home Beleuchtungssteuerung</string>
 	<string name="prompt_new_connection_type">Gerätetyp auswählen</string>
 	<string name="prompt_local_address">IP Adresse der Bridge</string>
 	<string name="hint_local_address">IP Adresse</string>
@@ -107,7 +107,16 @@
 	<string name="hint_remote_address">IP Adresse oder URL</string>
 	<string name="toast_hue_connection_updated">Verbindung aktualisiert</string>
 	<string name="notification_overflow_more">mehr</string>
-	
+	<string name="max_brightness">Max. Helligkeit</string>
+	<string name="saved">Gespeichert</string>
+	<string name="action_connection_error">Verbindungsfehler</string>
+    <string name="empty_list_connections">Mit keiner Lampe verbunden. Benutze den Plus Knopf um eine neue Verbindung einzurichten.</string>
+    <string name="empty_list_bulbs">Mit keiner Lampe verbunden. Navigieren Sie zu "Verbindungen", um Ihr System einzurichten.</string>
+    <string name="empty_list_groups">Mit keiner Lampe verbunden. Navigieren Sie zu "Verbindungen", um Ihr System einzurichten.</string>
+    <string name="mark_favorite">zur Favoritenliste hinzufügen</string>
+    <string name="mark_not_favorite">aus Favoritenliste entfernen</string>
+    <string name="action_refresh">Aktualisieren</string>
+
 	<string name="help_title_gettingstarted">Einstieg</string>
 	<string name="help_title_editingmoods">Szenen erstellen oder bearbeiten</string>
 	<string name="help_title_alarms">Alarme</string>
@@ -115,12 +124,12 @@
 	<string name="help_title_automationpluggin">Plugin für Tasker/Locale/Llama</string>
 	<string name="help_title_faq">FAQ</string>
 	
-	<string name="help_content_gettingstarted">Once you have wirelessly connected to your lights, you can begin controlling them.\n\nFirst, click on a light bulb or bulb group to select it.\n\nNext, you are shown a page of moods you may play on your selected bulb(s). Moods can be simple color paterns or dynamic lighting animations.\n\nDynamic moods will continue playing until stopped. To view ongoing moods, look for the LampShade icon in your device\'s notification bar. To stop a mood, play a simple mood(such as ON or OFF) on the same bulb(s).</string>
-	<string name="help_content_editingmoods">Moods contain lighting states such as colors and on/off commands.\n\nWhile a mood is played on a group or bulb, these states take effect.\n\nThe states are set to take effect either immediately, over time relative to when the playing starts, or at specific times of the day while the mood is playing.\n\nChannels (columns of states) allow you to play multiple colors at the same time. Each time a mood is played on a group, the group\'s lights will be assigned equally among the channels, round-robin style.</string>
-	<string name="help_content_alarms">(Paid Feature)\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
-	<string name="help_content_nfc">(Paid Feature)\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
-	<string name="help_content_automationpluggin">(Paid Feature)\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
-	<string name="help_content_faq">Q. Why aren\'t my Philips lights changing to bright green?\nA. The Philips Hue regular and downlight models only contain Blue, Red and Yellow LEDs so they cannot display intense greens.\n\nQ. Why aren\'t my Philips lights changing to dark reds or blues?\nA. Your Philips lights might be running outdated software. Use the offcial Philips app to update the firmware on your hub and lightbulbs.\n\nQ. Do LampShade alarms work when I\'m away from home?\nA. LampShade alarms can only take effect when LampShade is connected to your lights. They will only work when away from home if you are using the remote access feature.</string>
+	<string name="help_content_gettingstarted">Sobald du dich über WLAN mit den Lampen verbunden hast, kannst du diese über die App steuern.\n\nHierfür tippe als erstes auf die Lampe oder eine Gruppe, um diese auszuwählen.\n\nAnschließend siehst du eine Übersicht der Szenen, welche man auf einer Lampe oder Gruppe abspielen kann. Szenen können simple Farben oder dynamische Farbabläufe sein.\n\nDynamische Szenen werden solange ausgeführt, bis diese manuell gestoppt werden. Für einen Überblick der aktiven Szenen, schauen Sie einfach in ihrer Benachrichtigungsleiste. Um eine Szene zu stoppen, aktivieren Sie einfach eine simple Szene ohne Abläufe (z.B. "AN" oder "AUS") auf dieser Lampe bzw. Gruppe.</string>
+	<string name="help_content_editingmoods">Über Szenen kann man bestimmte Farbabläufe ("Status") definieren und An/Aus Befehle an das System senden.\n\nWenn eine Szene ausgeführt wird, dann werden alle definierten Attribute auf die zugeordnete Lampe/Gruppe angewendet.\n\nDer Status kann sich zu bestimmten Zeiten ändern, je nachdem wie Ihr diese definiert habt (z.B. zu einer bestimmten Tageszeit).\n\nKanäle bieten die Möglichkeit mehrere Farben auf einmal auszuwählen. Wird eine Szene mit mehreren Kanälen auf eine Gruppe angewendet, dann werden die Kanäle auf die einzelnen Lampen verteilt ("Rundlauf-Verfahren").</string>
+	<string name="help_content_alarms">(Gekaufte Version)\n\nÜber Alarme haben Sie die Möglichkeit, Szenen für eine bestimmte Zeit in der Zukunft zu definieren.\n\nDiese Alarme lassen sich an definierten Tagen wiederholen.\n\nWenn Sie den Alarm mit einer Szene nutzen, welche die Helligkeit nach und nach verändert (z.B. der Sonnenaufgang), dann wird die Helligkeit auf die höchste Stufe gesetzt.\n\nDie Alarme werden auf Ihrem Gerät gespeichert, somit werden diese nur erfolgreich ausgeführt, wenn Sie sich zum Auslösezeitpunkt im gleichen Netzwerk wie die Bridge befinden.</string>
+	<string name="help_content_nfc">(Gekaufte Version)\nLampShade bietet die Möglichkeit, Szenen auf einen NFC Tag zu schreiben.\n\nSobald eine Szene auf einem Tag gespeichert wurde, können Sie mit Hilfe Ihres Smartphones den NFC Tag berühren und die Szene wird gestartet.(Gerät muss entsperrt sein!)\n\nUm dieses Feature nutzen zu können, muss Ihr Gerät das Schreiben von NFC Tags unterstützen.</string>
+	<string name="help_content_automationpluggin">(Gekaufte Version)\nDas LampShade (Automatisierungs-)Plugin unterstützt viele Apps, unter anderem Tasker, Locale und Llama. Diese Applikationen können das Plugin nutzen, um Szenen zu starten, welche über bestimmte Bedinungen automatisch ausgeführt werden (z.B. über ein GPS Standort oder eine eingehende Nachricht)\n\nDas Plugin wird über die angesprochenen Apps geöffnet und bietet die Auswahl der Szene, Gruppe und Helligkeit einer Lampe/Gruppe.</string>
+	<string name="help_content_faq">Frage: Warum zeigt meine Philips Hue Lampe kein klares Grün an?\nAntwort: Die Philips Hue Lichter haben intern nur blaue, rote und gelbe LEDs (RYB). Aus diesem Grund wird kein 100% Grün erreicht.\n\nFrage: Warum wechselt mein Philips Licht nicht zu dunkel rot oder blau?\nAntwort: Evtl. sind Ihre Lampen nicht auf den aktuellsten Stand. Benutzen Sie die Philips App um ein Firmware Update durchzuführen.\n\nFrage: Funktionieren die LampShade Alarme, wenn ich nicht zu Hause bin?\nAntwort: LampShade Alarme funktionieren nur, wenn LampShade mit Ihrer Bridge verbunden ist. Dementsprechend wird dies nur funktionieren, wenn Sie einen Fernzugriff eingerichtet haben.</string>
 	
 	<string-array name="mood_types">
         <item>Einfach</item>
