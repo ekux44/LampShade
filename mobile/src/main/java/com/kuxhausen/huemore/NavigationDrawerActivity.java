@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -123,12 +124,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     getSupportFragmentManager().addOnBackStackChangedListener(this);
 
     PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
-
-    if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
-        && b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
-      UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-      unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-    }
   }
 
   @Override
@@ -158,6 +153,21 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     if (b != null && b.getBoolean(InternalArguments.FLAG_SHOW_NAV_DRAWER)) {
       mDrawerLayout.openDrawer(Gravity.LEFT);
+    }
+
+    if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
+        && b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
+      UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
+      unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+    }
+
+    Uri data = getIntent().getData();
+    if(data!=null && data.getHost().equals("lampshade.io")){
+      SharedMoodDialog dialog = new SharedMoodDialog();
+      Bundle extras = new Bundle();
+      extras.putString(InternalArguments.ENCODED_MOOD,data.getQuery());
+      dialog.setArguments(extras);
+      dialog.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
     }
   }
 

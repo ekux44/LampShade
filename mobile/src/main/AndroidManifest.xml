@@ -29,6 +29,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="lampshade.io"
+                    android:path="/share" />
+            </intent-filter>
         </activity>
         <provider
             android:name="com.kuxhausen.huemore.persistence.LampShadeProvider"
@@ -96,21 +103,6 @@
                     android:pathPrefix="/nfc"
                     android:scheme="http" />
             </intent-filter>
-        </activity>
-		<activity
-            android:name="com.kuxhausen.huemore.SharedMoodReaderActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets"
-            android:noHistory="true" >
-
-            <intent-filter>
-	          <action android:name="android.intent.action.VIEW" />
-	          <category android:name="android.intent.category.DEFAULT" />
-	          <category android:name="android.intent.category.BROWSABLE" />
-	          <data android:scheme="http" android:host="lampshade.io"
-	                android:path="/share" />
-        	</intent-filter>
         </activity>
         
         <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever" >
