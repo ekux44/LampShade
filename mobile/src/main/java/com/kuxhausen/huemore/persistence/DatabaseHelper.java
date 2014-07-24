@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 9;
+  private static final int DATABASE_VERSION = 10;
   Gson gson = new Gson();
   private Context mContext;
 
@@ -150,6 +150,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // remove the sunset mood
         String[] moodArgs = {"Sunset"};
         db.delete(MoodColumns.TABLE_NAME, MoodColumns.COL_MOOD_NAME + " =?", moodArgs);
+      }
+      case 3: {
+        //land and fall through to next case
       }
       case 4: {
         ContentValues cv = new ContentValues();
@@ -330,7 +333,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    + " INTEGER" + ");");
 
       }
-      case 8: {
+      case 6:{
+        //land and fall through to next case
+      }
+      case 7:{
+        //land and fall through to next case
+      }
+      case 8:{
+        //land and fall through to next case
+      }
+      case 9: {
         //TODO clean previous migrations or create non-upgrade path for first run performance
         ContentValues cv = new ContentValues();
         String[] moodColumns = {MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_VALUE};
