@@ -107,6 +107,7 @@ public class HueBulb implements NetworkBulb {
   @Override
   public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
     Integer oldCurerntBri = this.getCurrentBrightness(false);
+    Integer oldMaxBri = mMaxBri;
 
     boolean currentChanged = false;
     if (oldCurerntBri == null ^ desiredCurrentBrightness == null) {
@@ -126,7 +127,9 @@ public class HueBulb implements NetworkBulb {
 
     mMaxBri = desiredMaxBrightness;
 
-    if (desiredCurrentBrightness != null) {
+    if(desiredMaxBrightness==null && maxChanged && desiredCurrentBrightness==null && currentChanged) {
+      oldCurerntBri = (int)(oldCurerntBri * oldMaxBri/100f);
+    } else if (desiredCurrentBrightness != null) {
       oldCurerntBri = desiredCurrentBrightness;
     }
 

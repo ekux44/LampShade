@@ -114,7 +114,7 @@ public class MainFragment extends Fragment implements
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), null, seekBar.getProgress());
+            dm.setBrightness(dm.getSelectedGroup(), null, Math.max(1, seekBar.getProgress()));
           }
         }
       });
@@ -136,7 +136,7 @@ public class MainFragment extends Fragment implements
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), seekBar.getProgress(), null);
+            dm.setBrightness(dm.getSelectedGroup(), Math.max(1, seekBar.getProgress()), null);
           }
         }
       });

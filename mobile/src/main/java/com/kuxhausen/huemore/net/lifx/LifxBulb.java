@@ -200,11 +200,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   @Override
   public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
-    Log.d("lifx","setBrightness "
-                 +(desiredMaxBrightness!=null?desiredMaxBrightness:"null")
-                 +(desiredCurrentBrightness!=null?desiredCurrentBrightness:"null"));
-
     Integer oldCurerntBri = this.getCurrentBrightness(false);
+    Integer oldMaxBri = mMaxBri;
 
     boolean currentChanged = false;
     if (oldCurerntBri == null ^ desiredCurrentBrightness == null) {
@@ -224,7 +221,9 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
     mMaxBri = desiredMaxBrightness;
 
-    if (desiredCurrentBrightness != null) {
+    if(desiredMaxBrightness==null && maxChanged && desiredCurrentBrightness==null && currentChanged) {
+      oldCurerntBri = (int)(oldCurerntBri * oldMaxBri/100f);
+    } else if (desiredCurrentBrightness != null) {
       oldCurerntBri = desiredCurrentBrightness;
     }
 
