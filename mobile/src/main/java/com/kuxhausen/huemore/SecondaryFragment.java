@@ -214,7 +214,7 @@ public class SecondaryFragment extends Fragment
       DeviceManager dm = parrentA.getService().getDeviceManager();
 
       if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
-        mBrightnessBar.setProgress(dm.getBrightness(dm.getSelectedGroup(), true));
+        mBrightnessBar.setProgress(dm.getCurrentBrightness(dm.getSelectedGroup(), true));
         mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup(), true));
       }
     }

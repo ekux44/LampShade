@@ -63,8 +63,8 @@ public class MoodPlayer {
     for (PlayingMood iteration : mPlayingMoods) {
       //existing max bri transferable only if same group
       if (iteration.equals(g)) {
-        maxBri = mDeviceManager.getMaxBrightness(g, false);
-        maxBri = mDeviceManager.getBrightness(g, false);
+        priorMaxBri = mDeviceManager.getMaxBrightness(g, false);
+        priorCurrentBri = mDeviceManager.getCurrentBrightness(g, false);
       }
     }
 
@@ -82,9 +82,11 @@ public class MoodPlayer {
       }
 
       if (maxBri != null) {
-        mDeviceManager.setBrightness(g, priorMaxBri, null);
-      } else {
+        mDeviceManager.setBrightness(g, maxBri, null);
+      } else if(priorCurrentBri!=null) {
         mDeviceManager.setBrightness(g, priorCurrentBri, 100);
+      } else {
+        mDeviceManager.setBrightness(g, 100, null);
       }
     } else {
       mDeviceManager.setBrightness(g, null, null);
@@ -95,6 +97,7 @@ public class MoodPlayer {
 
     // update notifications
     onActiveMoodsChanged();
+    mDeviceManager.onStateChanged();
   }
 
   public void cancelMood(Group g) {
@@ -108,6 +111,7 @@ public class MoodPlayer {
     mDeviceManager.setBrightness(g, null, null);
     // update notifications
     onActiveMoodsChanged();
+    mDeviceManager.onStateChanged();
   }
 
   public void addOnActiveMoodsChangedListener(OnActiveMoodsChangedListener l) {

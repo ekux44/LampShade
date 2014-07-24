@@ -171,7 +171,7 @@ public class DeviceManager {
   /**
    * will guess when brightness unknown
    */
-  public Integer getBrightness(Group g, boolean guess) {
+  public Integer getCurrentBrightness(Group g, boolean guess) {
     Log.d("net.devicemanager.getbrightness", "");
     if (g == null || g.getNetworkBulbDatabaseIds().isEmpty()) {
       return 50;
