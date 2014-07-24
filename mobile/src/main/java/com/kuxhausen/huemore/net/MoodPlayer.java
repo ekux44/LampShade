@@ -57,16 +57,8 @@ public class MoodPlayer {
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 
-    Integer priorMaxBri = null;
-    Integer priorCurrentBri = null;
-    //if this mood isn't being launched with a new max bri, preserve any current max bri
-    for (PlayingMood iteration : mPlayingMoods) {
-      //existing max bri transferable only if same group
-      if (iteration.equals(g)) {
-        priorMaxBri = mDeviceManager.getMaxBrightness(g, false);
-        priorCurrentBri = mDeviceManager.getCurrentBrightness(g, false);
-      }
-    }
+    Integer priorMaxBri = mDeviceManager.getMaxBrightness(g, false);
+    Integer priorCurrentBri = mDeviceManager.getCurrentBrightness(g, false);
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().conflictsWith(pm.getGroup())) {

@@ -227,7 +227,7 @@ public class DeviceManager {
       // upon upgrading from v2.7, bulbs may not exist until reconnection
       if (bulbMap.containsKey(bulbId)) {
         NetworkBulb bulb = bulbMap.get(bulbId);
-        Integer brightness = bulb.getMaxBrightness(true);
+        Integer brightness = bulb.getMaxBrightness(guess);
         if (brightness == null) {
           return brightness;
         }
