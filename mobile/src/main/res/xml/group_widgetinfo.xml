@@ -7,7 +7,7 @@
     android:initialLayout="@layout/widget_group_layout"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="keyguard|home_screen"
-    android:minResizeHeight="120dp" android:minResizeWidth="180dp" android:previewImage="@drawable/group_widget_landscape">
+    android:minResizeHeight="120dp" android:minResizeWidth="180dp" android:previewImage="@drawable/widget_groups_preview">
 </appwidget-provider>
 
 <!-- 86400000 is the value of AlarmManager.INTERVAL_DAY - or once per day. -->
