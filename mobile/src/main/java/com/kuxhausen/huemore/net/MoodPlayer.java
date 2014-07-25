@@ -81,7 +81,7 @@ public class MoodPlayer {
         mDeviceManager.setBrightness(g, 100, null);
       }
     } else {
-      mDeviceManager.setBrightness(g, null, null);
+      mDeviceManager.setBrightness(g, null, maxBri);
     }
 
     mPlayingMoods.add(pm);
