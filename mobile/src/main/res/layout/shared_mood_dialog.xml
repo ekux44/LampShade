@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_mood_name"
         android:imeOptions="actionDone"
-        android:inputType="text"></EditText>
+        android:inputType="text"/>
 
 </LinearLayout>
