@@ -126,7 +126,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     ArrayList<Route> result = new ArrayList<Route>();
 
     for (Route route : myRoutes) {
-      if (route.state == bestSoFar) {
+      if (route.state == bestSoFar && route.state!=ConnectivityState.Connected) {
         result.add(route);
       } else if (route.isMoreConnectedThan(bestSoFar)) {
         result.clear();
