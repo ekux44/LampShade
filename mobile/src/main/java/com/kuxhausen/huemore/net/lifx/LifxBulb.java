@@ -174,7 +174,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   @Override
   public Integer getMaxBrightness(boolean guessIfUnknown) {
     if (mMaxBri != null) {
-      return mMaxBri;
+      return Math.max(1,Math.min(100,mMaxBri));
     } else if (guessIfUnknown) {
       return 100;
     } else {
