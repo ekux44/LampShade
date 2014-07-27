@@ -21,7 +21,7 @@ public class NotificationRowAdapter extends ArrayAdapter<PlayingMood> implements
   private MoodPlayer mPlayer;
 
   public NotificationRowAdapter(Context con, MoodPlayer mp) {
-    super(con, android.R.id.text1, mp.getPlayingMoods());
+    super(con, android.R.layout.simple_list_item_1, mp.getPlayingMoods());
     context = con;
     mPlayer = mp;
     mp.addOnActiveMoodsChangedListener(this);
