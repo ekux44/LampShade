@@ -102,6 +102,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
       if (bs.bri != null) {
         lifxBrightness = (bs.bri / 255f) * (getMaxBrightness(true) / 100f);
+      } else if (isMaxBriModeEnabled()) {
+        lifxBrightness = (getMaxBrightness(true) / 100f);
       }
 
       //clip brightness to ensure proper behavior (0 brightness not allowed)
@@ -174,7 +176,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   @Override
   public Integer getMaxBrightness(boolean guessIfUnknown) {
     if (mMaxBri != null) {
-      return Math.max(1,Math.min(100,mMaxBri));
+      return Math.max(1, Math.min(100, mMaxBri));
     } else if (guessIfUnknown) {
       return 100;
     } else {
@@ -221,8 +223,9 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
     mMaxBri = desiredMaxBrightness;
 
-    if(desiredMaxBrightness==null && maxChanged && desiredCurrentBrightness==null && currentChanged) {
-      oldCurerntBri = (int)(oldCurerntBri * oldMaxBri/100f);
+    if (desiredMaxBrightness == null && maxChanged && desiredCurrentBrightness == null
+        && currentChanged) {
+      oldCurerntBri = (int) (oldCurerntBri * oldMaxBri / 100f);
     } else if (desiredCurrentBrightness != null) {
       oldCurerntBri = desiredCurrentBrightness;
     }

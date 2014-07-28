@@ -56,6 +56,8 @@ public class HueBulb implements NetworkBulb {
     if (isMaxBriModeEnabled()) {
       if (preBriAdjusted.bri != null) {
         preBriAdjusted.bri = (int) (preBriAdjusted.bri * getMaxBrightness(true) / 100f);
+      } else {
+        preBriAdjusted.bri = (int)(getMaxBrightness(true)*2.55f);
       }
     }
 
@@ -108,6 +110,13 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
+    Log.v("net.hue.bulb.zb",
+          "oldMaxBri+"+(mMaxBri!=null?mMaxBri:"null")
+          +", oldCurrentBri:"+(getCurrentBrightness(false)!=null?getCurrentBrightness(false):"null")
+          + ", newMaxBri:"+(desiredMaxBrightness!=null?desiredMaxBrightness:"null")
+          + ", newDesiredCurrentBri"+(desiredCurrentBrightness!=null?desiredCurrentBrightness:"null")
+    );
+
     Integer oldCurerntBri = this.getCurrentBrightness(false);
     Integer oldMaxBri = mMaxBri;
 
@@ -143,6 +152,11 @@ public class HueBulb implements NetworkBulb {
         setState(change, true);
       }
     }
+
+    Log.v("net.hue.bulb.za",
+          "finalMaxBri+"+(mMaxBri!=null?mMaxBri:"null")
+          +", finalCurrentBri:"+(getCurrentBrightness(false)!=null?getCurrentBrightness(false):"null")
+    );
   }
 
   @Override
