@@ -224,23 +224,23 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         scheduledDelayedCalculate();
       }
 
-    } else {
-      if (!mBound && (SystemClock.elapsedRealtime() - mCreatedTime > 5000)) {
-        // not bound, so service may sleep after releasing wakelock
-        // save ongoing moods and schedule a broadcast to restart service before next playing mood
-        // event
-        mMoodPlayer.saveOngoingAndScheduleResores();
-
-        Log.d("power", "stopSelf");
-
-        // with no ongoing moods and not bound, go ahead and completely shut down
-        this.stopSelf();
-      }
+    } else if(!mBound && mMoodPlayer.getPlayingMoods().size()>0) {
+      // save ongoing moods and schedule a broadcast to restart service before next playing mood
+      // event
+      mMoodPlayer.saveOngoingAndScheduleResores();
 
       if (mWakelock != null) {
         mWakelock.release();
         mWakelock = null;
       }
+
+    } else if (!mBound && (SystemClock.elapsedRealtime() - mCreatedTime > 5000)) {
+      // with no ongoing moods and not bound, go ahead and completely shut down
+      this.stopSelf();
+
+    } else if (mWakelock != null) {
+      mWakelock.release();
+      mWakelock = null;
     }
   }
 
