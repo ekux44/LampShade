@@ -50,6 +50,8 @@ public class HueBulb implements NetworkBulb {
 
   @Override
   public void setState(BulbState bs, boolean broadcast) {
+    this.mConnection.updateDesiredLastChanged();
+
     BulbState preBriAdjusted = bs.clone();
     if (isMaxBriModeEnabled()) {
       if (preBriAdjusted.bri != null) {
@@ -63,7 +65,7 @@ public class HueBulb implements NetworkBulb {
 
     desiredState.merge(preBriAdjusted);
 
-    mConnection.getLooper().addToQueue(this);
+    mConnection.getLooper().queueSendState(this);
 
     if (broadcast) {
       this.mConnection.getDeviceManager().onStateChanged();
@@ -196,7 +198,7 @@ public class HueBulb implements NetworkBulb {
       //notify brightness bar
       this.mConnection.getDeviceManager().onStateChanged();
 
-      Log.d("net.hue.bulb.attribute", "onAttributeReturned" + desiredState.bri);
+      Log.d("net.hue.bulb.attribute", "onAttributeReturned with bri:" + desiredState.bri);
     }
   }
 

@@ -48,22 +48,21 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
   private static final Integer TYPE = NetBulbColumns.NetBulbType.PHILIPS_HUE;
   private static final Gson gson = new Gson();
 
+  //In milis
+  private final static long TRANSMIT_TIMEOUT_TIME = 10000;
+  // In SystemClock.elapsedRealtime();
+  private Long mDesiredLastChanged;
+
   private Long mBaseId;
   private String mName, mDeviceId;
   HubData mData;
   private Context mContext;
   private ArrayList<HueBulb> mBulbList;
   private ArrayList<Route> myRoutes;
-  private long lastDisconnectedPingInElapsedRealtime;
-  private static final long discounnectedPingIntervalMilis = 1000;
   public ChangeLoopManager mLoopManager;
 
-  /**
-   * once STALL_THRESHOLD many consecutive send failures have occured, stop reporting pendingWork
-   * that keeps device awake reset everytime a send succeeds
-   */
-  private long stallCount;
-  private final static long STALL_THRESHOLD = 100;
+  private DeviceManager mDeviceManager;
+  private RequestQueue volleyRQ;
 
   public HubConnection(Context c, Long baseId, String name, String deviceId, HubData data,
                        DeviceManager dm) {
@@ -110,14 +109,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       myRoutes.add(new Route(mData.portForwardedAddress, ConnectivityState.Unknown));
     }
 
-    for (Route route : getBestRoutes()) {
-      NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
-                                        this, this);
-      for (HueBulb b : this.mBulbList) {
-        NetworkMethods
-            .PreformGetBulbAttributes(route, mData.hashedUsername, mContext, getRequestQueue(),
-                                      this, this, b.getHubBulbNumber());
-      }
+    getLooper().queueGetList();
+
+    for (HueBulb b : this.mBulbList) {
+      getLooper().queueGetState(b);
     }
   }
 
@@ -195,37 +190,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       r.state = newState;
       mDeviceManager.onConnectionChanged();
     }
-
-    if (mDeviceManager.getSycMode()) {
-      if (!getBestRoutes().isEmpty()
-          && getBestRoutes().get(0).state != ConnectivityState.Connected) {
-        if (SystemClock.elapsedRealtime() - lastDisconnectedPingInElapsedRealtime
-            > discounnectedPingIntervalMilis) {
-          lastDisconnectedPingInElapsedRealtime = SystemClock.elapsedRealtime();
-          for (Route route : getBestRoutes()) {
-            for (HueBulb b : this.mBulbList) {
-              NetworkMethods.PreformGetBulbAttributes(route, mData.hashedUsername, mContext,
-                                                      getRequestQueue(), this, this,
-                                                      b.getHubBulbNumber());
-            }
-          }
-          //NetworkMethods.PreformGetBulbList(route, mData.hashedUsername, mContext,
-          //    getRequestQueue(), this, this);
-        }
-      }
-    }
   }
-
-
-  private DeviceManager mDeviceManager;
-  private RequestQueue volleyRQ;
-
-  public enum KnownState {
-    Unknown, ToSend, Getting, Synched
-  }
-
-  ;
-
 
   public RequestQueue getRequestQueue() {
     return volleyRQ;
@@ -304,19 +269,17 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   public void reportStateChangeFailure(PendingStateChange mRequest) {
     mRequest.hubBulb.lastSendInitiatedTime = null;
-    this.stallCount++;
-    this.mLoopManager.addToQueue(mRequest.hubBulb);
+    this.mLoopManager.queueSendState(mRequest.hubBulb);
   }
 
   public void reportStateChangeSucess(PendingStateChange request) {
-    this.stallCount = 0;
     HueBulb affected = request.hubBulb;
 
     affected.confirm(request.sentState);
 
     // if more changes should be sent, do so
     if (affected.hasPendingTransmission()) {
-      this.mLoopManager.addToQueue(affected);
+      this.mLoopManager.queueSendState(affected);
     }
 
     // notify changes
@@ -336,20 +299,24 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     return this.mContext.getResources().getString(R.string.device_hue);
   }
 
+  public void updateDesiredLastChanged(){
+    mDesiredLastChanged = SystemClock.elapsedRealtime();
+  }
+
   @Override
   public boolean hasPendingWork() {
-    if (stallCount > STALL_THRESHOLD) {
-      // pending work completely stalled, so don't report it and keep device awake
-      return false;
-    }
+    if (mDesiredLastChanged != null
+        && (mDesiredLastChanged + this.TRANSMIT_TIMEOUT_TIME) > SystemClock.elapsedRealtime()) {
 
-    boolean hasPendingWork = false;
-    for (HueBulb hb : mBulbList) {
-      if (hb.hasOngoingTransmission()) {
-        hasPendingWork = true;
+      boolean hasPendingWork = false;
+      for (HueBulb hb : mBulbList) {
+        if (hb.hasOngoingTransmission()) {
+          hasPendingWork = true;
+        }
       }
+      return hasPendingWork;
     }
-    return hasPendingWork;
+    return false;
   }
 
   public HubData getHubData() {
@@ -387,7 +354,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   public class ChangeLoopManager {
 
-    private LinkedHashSet<HueBulb> mChangedQueue = new LinkedHashSet<HueBulb>();
+    private LinkedHashSet<HueBulb> mOutgoingStateQueue = new LinkedHashSet<HueBulb>();
+    private LinkedHashSet<HueBulb> mIncomingStateQueue = new LinkedHashSet<HueBulb>();
+    private boolean requestList = false;
+
     private CountDownTimer countDownTimer;
     private final static int TRANSMITS_PER_SECOND = 10;
 
@@ -397,8 +367,18 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       }
     }
 
-    public void addToQueue(HueBulb changed) {
-      mChangedQueue.add(changed);
+    public void queueSendState(HueBulb changed) {
+      mOutgoingStateQueue.add(changed);
+      ensureLooping();
+    }
+
+    public void queueGetState(HueBulb querry) {
+      mIncomingStateQueue.add(querry);
+      ensureLooping();
+    }
+
+    public void queueGetList(){
+      requestList = true;
       ensureLooping();
     }
 
@@ -413,9 +393,19 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
           @Override
           public void onTick(long millisUntilFinished) {
-            if (mChangedQueue.size() > 0) {
-              HueBulb selected = mChangedQueue.iterator().next();
-              mChangedQueue.remove(selected);
+            if(requestList){
+              for (Route route : getBestRoutes()) {
+                NetworkMethods
+                    .PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
+                                        HubConnection.this, HubConnection.this);
+
+                Log.d("net.hue.connection.onTick", "perform request list");
+              }
+              requestList = false;
+            }
+            else if (mOutgoingStateQueue.size() > 0) {
+              HueBulb selected = mOutgoingStateQueue.iterator().next();
+              mOutgoingStateQueue.remove(selected);
 
               BulbState toSend = selected.getSendState();
               if (toSend != null && !toSend.isEmpty() && selected.lastSendInitiatedTime == null) {
@@ -432,6 +422,18 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                   );
                 }
                 selected.lastSendInitiatedTime = SystemClock.elapsedRealtime();
+              }
+            } else if(mIncomingStateQueue.size() > 0) {
+              HueBulb toQuerry = mIncomingStateQueue.iterator().next();
+              mIncomingStateQueue.remove(toQuerry);
+
+              for (Route route : getBestRoutes()) {
+                NetworkMethods
+                    .PreformGetBulbAttributes(route, mData.hashedUsername, mContext, getRequestQueue(),
+                                              HubConnection.this, HubConnection.this, toQuerry.getHubBulbNumber());
+                Log.d("net.hue.connection.onTick",
+                      "perform querry" + toQuerry.getBaseId()
+                );
               }
             } else {
               ChangeLoopManager.this.countDownTimer = null;
