@@ -62,6 +62,9 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   private long mCreatedTime = 0;
   private boolean mDestroyed;
 
+  private Handler mDelayedCalculateHandler;
+  private Runnable myDelayedCalculateRunner;
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -215,6 +218,12 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
             pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getString(R.string.app_name));
         mWakelock.acquire();
       }
+
+      if (!mBound && !waitingOnPlayingMood && waitingOnPendingNetworking) {
+        // check back in another second to see if pending networking has completed or timed out
+        scheduledDelayedCalculate();
+      }
+
     } else {
       if (!mBound && (SystemClock.elapsedRealtime() - mCreatedTime > 5000)) {
         // not bound, so service may sleep after releasing wakelock
@@ -233,19 +242,30 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         mWakelock = null;
       }
     }
+  }
 
-    if (!mBound && !waitingOnPlayingMood && waitingOnPendingNetworking) {
-      // check back in another second to see if pending networking has completed or timed out
-      Handler handler = new Handler();
-      handler.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          if (!mDestroyed) {
-            ConnectivityService.this.calculateWakeNeeds();
-          }
+  private void scheduledDelayedCalculate(){
+    cancelDelayedCalculate();
+
+    mDelayedCalculateHandler = new Handler();
+    myDelayedCalculateRunner = new Runnable() {
+      @Override
+      public void run() {
+        if (!mDestroyed) {
+          ConnectivityService.this.calculateWakeNeeds();
         }
-      }, 1000);
+      }
+    };
+
+    mDelayedCalculateHandler.postDelayed(myDelayedCalculateRunner, 1000);
+  }
+
+  private void cancelDelayedCalculate(){
+    if(mDelayedCalculateHandler!=null && myDelayedCalculateRunner!=null){
+      mDelayedCalculateHandler.removeCallbacks(myDelayedCalculateRunner);
     }
+    mDelayedCalculateHandler = null;
+    myDelayedCalculateRunner = null;
   }
 
   public MoodPlayer getMoodPlayer() {
@@ -302,6 +322,8 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   @Override
   public void onDestroy() {
     mDestroyed = true;
+
+    cancelDelayedCalculate();
     mMoodPlayer.onDestroy();
     mDeviceManager.onDestroy();
     if (mWakelock != null) {
