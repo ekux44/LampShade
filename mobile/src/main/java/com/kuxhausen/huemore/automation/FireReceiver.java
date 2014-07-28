@@ -9,7 +9,6 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.state.GroupMoodBrightness;
 
 public class FireReceiver extends WakefulBroadcastReceiver {
 
@@ -21,7 +20,7 @@ public class FireReceiver extends WakefulBroadcastReceiver {
       String serializedGMB =
           intent.getExtras().getBundle(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE)
               .getString(EditActivity.EXTRA_BUNDLE_SERIALIZED_BY_NAME);
-      GroupMoodBrightness gmb = gson.fromJson(serializedGMB, GroupMoodBrightness.class);
+      LegacyGMB gmb = gson.fromJson(serializedGMB, LegacyGMB.class);
 
       Bundle b = intent.getExtras();
       if (b.containsKey(EditActivity.PERCENT_BRIGHTNESS_KEY)
@@ -45,7 +44,8 @@ public class FireReceiver extends WakefulBroadcastReceiver {
       Intent trasmitter = new Intent(context, ConnectivityService.class);
       trasmitter.putExtra(InternalArguments.MOOD_NAME, gmb.mood);
       trasmitter.putExtra(InternalArguments.GROUP_NAME, gmb.group);
-      trasmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, gmb.brightness);
+      if(gmb.brightness!=null)
+        trasmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, gmb.getPercentBrightness());
       startWakefulService(context, trasmitter);
     }
   }

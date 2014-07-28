@@ -10,6 +10,7 @@ public class GroupMoodBrightness {
 
   /**
    * may be null in serialization *
+   * out of 100
    */
   public Integer brightness;
 }

@@ -36,7 +36,6 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 
 public class EditActivity extends NetworkManagedActivity implements
@@ -72,7 +71,7 @@ public class EditActivity extends NetworkManagedActivity implements
   private Spinner groupSpinner, moodSpinner;
   private SimpleCursorAdapter groupDataSource, moodDataSource;
 
-  private GroupMoodBrightness priorGMB;
+  private LegacyGMB priorGMB;
 
 
   @Override
@@ -202,7 +201,7 @@ public class EditActivity extends NetworkManagedActivity implements
   }
 
   public String getSerializedByNamePreview() {
-    GroupMoodBrightness gmb = new GroupMoodBrightness();
+    LegacyGMB gmb = new LegacyGMB();
     gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
     gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString();
     if (brightnessBar.getVisibility() == View.VISIBLE) {
@@ -217,12 +216,12 @@ public class EditActivity extends NetworkManagedActivity implements
   }
 
   public void setSerializedByName(String s) {
-    priorGMB = gson.fromJson(s, GroupMoodBrightness.class);
+    priorGMB = gson.fromJson(s, LegacyGMB.class);
 
   }
 
   public String getSerializedByName() {
-    GroupMoodBrightness gmb = new GroupMoodBrightness();
+    LegacyGMB gmb = new LegacyGMB();
     gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
     gmb.mood = ((TextView) moodSpinner.getSelectedView()).getText().toString();
     if (brightnessBar.getVisibility() == View.VISIBLE) {
