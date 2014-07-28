@@ -74,7 +74,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     mWakelock.acquire();
 
     // Initialize DeviceManager and Mood Player
-    mDeviceManager = new DeviceManager(this, mBound);
+    mDeviceManager = new DeviceManager(this);
     mDeviceManager.registerStateListener(this);
     mMoodPlayer = new MoodPlayer(this, mDeviceManager);
     mMoodPlayer.addOnActiveMoodsChangedListener(this);
@@ -87,9 +87,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
    */
   public IBinder onBind(Intent intent) {
     mBound = true;
-    if (mDeviceManager != null) {
-      mDeviceManager.setSycMode(true);
-    }
     return mBinder;
   }
 
@@ -97,9 +94,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   public boolean onUnbind(Intent intent) {
     super.onUnbind(intent);
     mBound = false;
-    if (mDeviceManager != null) {
-      mDeviceManager.setSycMode(false);
-    }
     calculateWakeNeeds();
     return true; // ensures onRebind is called
   }
@@ -107,9 +101,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   @Override
   public void onRebind(Intent intent) {
     super.onRebind(intent);
-    if (mDeviceManager != null) {
-      mDeviceManager.setSycMode(true);
-    }
     mBound = true;
   }
 
