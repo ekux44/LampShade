@@ -222,6 +222,10 @@ public class DeviceManager {
       }
     }
 
+    //protection in case there are no bulbs in map
+    if(briNum==0)
+      return 50;
+
     return briSum / briNum;
   }
 
