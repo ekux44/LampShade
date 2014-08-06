@@ -156,33 +156,33 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public void onResumeFragments() {
     super.onResumeFragments();
 
-    if (mResumeBundle != null) {
-      Bundle b = mResumeBundle;
-      if (b.containsKey(InternalArguments.NAV_DRAWER_PAGE)) {
+    Bundle b = mResumeBundle;
+    if (b != null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)) {
 
-        if (b.getInt(InternalArguments.NAV_DRAWER_PAGE) != NavigationDrawerActivity.ALARM_FRAG
-            || Utils.hasProVersion(this)) {
-          // quick and dirty hack to prevent free users from hitting alarms, TODO redo
-          selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
-        }
-        b.remove(InternalArguments.NAV_DRAWER_PAGE);
+      if (b.getInt(InternalArguments.NAV_DRAWER_PAGE) != NavigationDrawerActivity.ALARM_FRAG
+          || Utils.hasProVersion(this)) {
+        // quick and dirty hack to prevent free users from hitting alarms, TODO redo
+        selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
+      }
+      b.remove(InternalArguments.NAV_DRAWER_PAGE);
+    } else {
+      if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
+        selectItem(GROUP_FRAG, b);
       } else {
-        if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
-          selectItem(GROUP_FRAG, b);
-        } else {
-          selectItem(BULB_FRAG, b);
-        }
+        selectItem(BULB_FRAG, b);
       }
+    }
 
-      if (b.getBoolean(InternalArguments.FLAG_SHOW_NAV_DRAWER)) {
-        mDrawerLayout.openDrawer(Gravity.LEFT);
-      }
+    if (b != null && b.getBoolean(InternalArguments.FLAG_SHOW_NAV_DRAWER)) {
+      mDrawerLayout.openDrawer(Gravity.LEFT);
+      b.remove(InternalArguments.FLAG_SHOW_NAV_DRAWER);
+    }
 
-      if (b.containsKey(InternalArguments.PROMPT_UPGRADE)
-          && b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
-        UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-        unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-      }
+    if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
+        && b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
+      UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
+      unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+      b.remove(InternalArguments.PROMPT_UPGRADE);
     }
     mResumeBundle = null;
   }
