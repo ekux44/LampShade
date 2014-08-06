@@ -202,6 +202,9 @@ public class HueBulb implements NetworkBulb {
   }
 
   public void attributesReturned(BulbAttributes attributes) {
+    if(attributes==null || attributes.state==null)
+      return;
+
     //these may be stale by up to 4 seconds, but lets set them to the confirmed for now
     //TODO better handle
     //for now only touch brightness since that's atleast user visible
