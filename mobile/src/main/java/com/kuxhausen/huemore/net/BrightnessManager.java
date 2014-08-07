@@ -35,7 +35,7 @@ public class BrightnessManager {
     //TODO
   }
 
-  public void setBrightness() {
+  public void setBrightness(int brightness) {
     //TODO
   }
 

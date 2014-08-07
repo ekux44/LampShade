@@ -4,9 +4,13 @@ import com.kuxhausen.huemore.state.BulbState;
 
 public class MockNetBulb implements NetworkBulb{
 
+  public BulbState mKnown = new BulbState();
+  public BulbState mTarget = new BulbState();
+  long mId = (long)(Math.random() * Integer.MAX_VALUE);
+
   @Override
   public ConnectivityState getConnectivityState() {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -21,18 +25,20 @@ public class MockNetBulb implements NetworkBulb{
 
   @Override
   public String getName() {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void rename(String name) {
-
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public Long getBaseId() {
-    return null;
+    return mId;
   }
+
+  //TODO everything beneith this is deprecated?
 
   /**
    * @param guessIfUnknown will guess value instead of returning null if unknown
@@ -40,7 +46,7 @@ public class MockNetBulb implements NetworkBulb{
    */
   @Override
   public Integer getMaxBrightness(boolean guessIfUnknown) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -49,16 +55,16 @@ public class MockNetBulb implements NetworkBulb{
    */
   @Override
   public Integer getCurrentBrightness(boolean guessIfUnknown) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
-
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean isMaxBriModeEnabled() {
-    return false;
+    throw new UnsupportedOperationException();
   }
 }
