@@ -2,20 +2,23 @@ package com.kuxhausen.huemore.net;
 
 import com.kuxhausen.huemore.state.BulbState;
 
-public class MockNetBulb implements NetworkBulb{
+public class MockNetBulb implements NetworkBulb {
 
   public BulbState mKnown = new BulbState();
   public BulbState mTarget = new BulbState();
-  long mId = (long)(Math.random() * Integer.MAX_VALUE);
+  long mId = (long) (Math.random() * Integer.MAX_VALUE);
 
-  public void setState(BulbState state){
-    if(state!=null)
+  @Override
+  public void setState(BulbState state) {
+    if (state != null) {
       mTarget = state.clone();
+    }
   }
 
-  public BulbState getState(GetStateConfidence confidence){
+  @Override
+  public BulbState getState(GetStateConfidence confidence) {
     BulbState result = new BulbState();
-    switch (confidence){
+    switch (confidence) {
       case GUESS:
         result.bri = 127;
         result.on = true;
@@ -34,7 +37,7 @@ public class MockNetBulb implements NetworkBulb{
 
   @Override
   public ConnectivityState getConnectivityState() {
- throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException();
   }
 
   @Override

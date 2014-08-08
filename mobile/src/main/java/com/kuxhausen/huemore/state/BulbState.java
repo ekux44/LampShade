@@ -241,4 +241,24 @@ public class BulbState {
     }
     return false;
   }
+
+  public Integer getPercentBri() {
+    if (bri == null) {
+      return bri;
+    } else {
+      return (int) Math.round(Math.max(1, Math.min(255, bri)) / 2.55);
+    }
+  }
+
+  public void setPercentBri(Integer brightness) {
+    if (brightness == null) {
+      bri = null;
+    } else {
+      bri = Math.max(1, Math.min(255, (int) (brightness * 2.55)));
+    }
+  }
+
+  public void setTransitiontimeNone() {
+    transitiontime = 0;
+  }
 }

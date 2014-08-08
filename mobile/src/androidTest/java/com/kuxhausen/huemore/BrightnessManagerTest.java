@@ -2,7 +2,6 @@ package com.kuxhausen.huemore;
 
 import android.test.AndroidTestCase;
 
-import com.android.volley.Network;
 import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.BrightnessManager.BrightnessPolicy;
 import com.kuxhausen.huemore.net.MockNetBulb;
@@ -42,7 +41,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
   }
 
   //test get/set brightness across the policies
-  public void testSetBrightness1(){
+  public void testSetBrightness1() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
     MockNetBulb bBulb = new MockNetBulb();
@@ -61,13 +60,13 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertEquals(manager.getBrightness(), 60);
 
     manager.setPolicy(BrightnessPolicy.VOLUME_BRI);
-    assertEquals(manager.getBrightness(),60);
+    assertEquals(manager.getBrightness(), 60);
 
     manager.setBrightness(40);
-    assertEquals(manager.getBrightness(),40);
+    assertEquals(manager.getBrightness(), 40);
 
     manager.setPolicy(BrightnessPolicy.DIRECT_BRI);
-    assertEquals(manager.getBrightness(),40);
+    assertEquals(manager.getBrightness(), 40);
   }
 
   public void testSetState1() {
@@ -79,7 +78,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     }
   }
 
-  public void testSetState2(){
+  public void testSetState2() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
     MockNetBulb bBulb = new MockNetBulb();

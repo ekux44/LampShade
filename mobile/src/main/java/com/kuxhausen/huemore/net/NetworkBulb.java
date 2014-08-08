@@ -8,7 +8,7 @@ public interface NetworkBulb {
     Unknown, Unreachable, Connected
   }
 
-  public enum GetStateConfidence{
+  public enum GetStateConfidence {
     GUESS, KNOWN, DESIRED
   }
 
@@ -53,10 +53,16 @@ public interface NetworkBulb {
   /*
    * will always broadcast
    */
-  public abstract void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness);
+  public abstract void setBrightness(Integer desiredMaxBrightness,
+                                     Integer desiredCurrentBrightness);
 
   /*
    * @param enabled if true, device's physical_brightness = current_bri * (max_bri/100) *
    */
   public abstract boolean isMaxBriModeEnabled();
+
+
+  public abstract void setState(BulbState state);
+
+  public abstract BulbState getState(GetStateConfidence confidence);
 }

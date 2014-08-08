@@ -164,6 +164,18 @@ public class HueBulb implements NetworkBulb {
     return mMaxBri != null;
   }
 
+  @Override
+  public void setState(BulbState state) {
+    //TODO
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public BulbState getState(GetStateConfidence confidence) {
+    //TODO
+    throw new UnsupportedOperationException();
+  }
+
 
   @Override
   public BulbState getState(boolean guess) {

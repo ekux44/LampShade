@@ -246,6 +246,18 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   }
 
   @Override
+  public void setState(BulbState state) {
+    //TODO
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public BulbState getState(GetStateConfidence confidence) {
+    //TODO
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public String getName() {
     if (mLight != null) {
       return mLight.getLabel();
