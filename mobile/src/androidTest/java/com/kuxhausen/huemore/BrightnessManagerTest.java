@@ -41,6 +41,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertEquals(manager.getPolicy(), BrightnessPolicy.DIRECT_BRI);
   }
 
+  //test get/set brightness across the policies
   public void testSetBrightness1(){
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
@@ -57,7 +58,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertEquals(manager.getBrightness(), 30);
 
     manager.setBrightness(60);
-    assertEquals(manager.getBrightness(),60);
+    assertEquals(manager.getBrightness(), 60);
 
     manager.setPolicy(BrightnessPolicy.VOLUME_BRI);
     assertEquals(manager.getBrightness(),60);
@@ -98,6 +99,10 @@ public class BrightnessManagerTest extends AndroidTestCase {
     BrightnessManager manager = new BrightnessManager(list);
     manager.setState(aBulb, aState);
 
+    manager.setState(bBulb, bState);
+
+    assertEquals(aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN), aState);
+    assertEquals(bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED), bState);
     //TODO
 
   }

@@ -8,19 +8,43 @@ public class MockNetBulb implements NetworkBulb{
   public BulbState mTarget = new BulbState();
   long mId = (long)(Math.random() * Integer.MAX_VALUE);
 
+  public void setState(BulbState state){
+    if(state!=null)
+      mTarget = state.clone();
+  }
+
+  public BulbState getState(GetStateConfidence confidence){
+    BulbState result = new BulbState();
+    switch (confidence){
+      case GUESS:
+        result.bri = 127;
+        result.on = true;
+        result.alert = "none";
+        result.effect = "none";
+        result.ct = 300;
+        result.transitiontime = 4;
+      case KNOWN:
+        result.merge(mKnown);
+      case DESIRED:
+        result.merge(mTarget);
+    }
+    return result;
+  }
+
+
   @Override
   public ConnectivityState getConnectivityState() {
-    throw new UnsupportedOperationException();
+ throw new UnsupportedOperationException();
   }
 
   @Override
   public void setState(BulbState bs, boolean broadcast) {
-
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public BulbState getState(boolean guessIfUnknown) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override

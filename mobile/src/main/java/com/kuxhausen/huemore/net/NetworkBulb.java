@@ -8,6 +8,10 @@ public interface NetworkBulb {
     Unknown, Unreachable, Connected
   }
 
+  public enum GetStateConfidence{
+    GUESS, KNOWN, DESIRED
+  }
+
   interface ConnectionListener {
 
     public abstract void onConnectivityChanged(ConnectivityState netState);
