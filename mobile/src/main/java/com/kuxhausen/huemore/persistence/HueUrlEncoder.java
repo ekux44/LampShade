@@ -168,7 +168,7 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(bs.xy != null);
 
       // Put ct flag
-      mBitSet.incrementingSet(bs.ct != null);
+      mBitSet.incrementingSet(bs.getMiredCT() != null);
 
       // Put alert flag
       mBitSet.incrementingSet(bs.getAlert() != null);
@@ -199,8 +199,8 @@ public class HueUrlEncoder {
     }
 
     /** Put 9 bit ct **/
-    if (bs.ct != null) {
-      mBitSet.addNumber(bs.ct, 9);
+    if (bs.getMiredCT() != null) {
+      mBitSet.addNumber(bs.getMiredCT(), 9);
     }
 
     /** Put 2 bit alert **/
@@ -344,7 +344,7 @@ public class HueUrlEncoder {
 
     /** Get 9 bit ct **/
     if (propertiesFlags[5]) {
-      bs.ct = mBitSet.extractNumber(9);
+      bs.setMiredCT(mBitSet.extractNumber(9));
     }
 
     /** Get 2 bit alert **/

@@ -64,6 +64,40 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.get255Bri());
   }
 
+  public void testMiredCT() {
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getMiredCT());
+
+    bs.setMiredCT(153);
+    assertEquals((Integer) 153, bs.getMiredCT());
+
+    bs.setMiredCT(500);
+    assertEquals((Integer) 500, bs.getMiredCT());
+
+    bs.setMiredCT(0);
+    assertEquals((Integer) 1, bs.getMiredCT());
+
+    bs.setMiredCT(null);
+    assertEquals(null, bs.getMiredCT());
+  }
+
+  public void testKelvinCT() {
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getKelvinCT());
+
+    bs.setKelvinCT(6535);
+    assertEquals((Integer) 6535, bs.getKelvinCT());
+
+    bs.setKelvinCT(2000);
+    assertEquals((Integer) 2000, bs.getKelvinCT());
+
+    bs.setKelvinCT(0);
+    assertEquals((Integer) 1, bs.getKelvinCT());
+
+    bs.setKelvinCT(null);
+    assertEquals(null, bs.getKelvinCT());
+  }
+
   public void testOn() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getOn());

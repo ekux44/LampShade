@@ -27,7 +27,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
     hs.setOn(true);
     hs.setEffect(Effect.NONE);
 
-    hs.ct = 1000000 / 4000;
+    hs.setKelvinCT(4000);
   }
 
   SeekBar seekBar;
@@ -44,14 +44,14 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
 
     seekBar = (SeekBar) groupDialogView.findViewById(R.id.temperatureBar);
 
-    seekBar.setProgress((1000000 / hs.ct) - seekBarOffset);
+    seekBar.setProgress(hs.getKelvinCT() - seekBarOffset);
 
     seekBar.setOnSeekBarChangeListener(this);
 
     tempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
     tempEditText.setVisibility(View.VISIBLE);
 
-    tempEditText.setText(hs.getCT());
+    tempEditText.setText(hs.getKelvinCT()+"K");
 
     tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
       @Override
@@ -61,7 +61,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
           temp = Math.max(temp, 0);
           temp = Math.min(temp, seekBarOffset + seekBar.getMax());
           seekBar.setProgress(temp - seekBarOffset);
-          hs.ct = ((1000000 / temp));
+          hs.setKelvinCT(temp);
           statePager.setState(hs, EditColorTempFragment.this, "ct");
         }
         return false;
@@ -75,7 +75,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
   @Override
   public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     if (fromUser) {
-      hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
+      hs.setKelvinCT(seekBarOffset + seekBar.getProgress());
       tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
       statePager.setState(hs, this, "ct");
     }
@@ -83,22 +83,16 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
 
   @Override
   public void onStartTrackingTouch(SeekBar seekBar) {
-    hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
-    tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-    statePager.setState(hs, this, "ct");
   }
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
-    hs.ct = ((1000000 / (seekBarOffset + seekBar.getProgress())));
-    tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-    statePager.setState(hs, this, "ct");
   }
 
   @Override
   public boolean stateChanged() {
-    if (statePager.getState().ct != null) {
-      hs.ct = statePager.getState().ct;
+    if (statePager.getState().getMiredCT() != null) {
+      hs.setMiredCT(statePager.getState().getMiredCT());
       return true;
     }
     return false;

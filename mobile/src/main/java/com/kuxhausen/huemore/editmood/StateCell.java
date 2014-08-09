@@ -44,10 +44,10 @@ public class StateCell {
                       OnLongClickListener longL) {
     View rowView;
     LayoutInflater inflater = frag.getActivity().getLayoutInflater();
-    if (hs.ct != null && hs.ct != 0) {
+    if (hs.getKelvinCT() != null) {
       rowView = inflater.inflate(R.layout.edit_mood_colortemp_row, parent, false);
       TextView stateText = (TextView) rowView.findViewById(R.id.ctTextView);
-      stateText.setText(hs.getCT());
+      stateText.setText(hs.getKelvinCT()+"K");
     } else if (hs.xy != null) {
       rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 
@@ -91,8 +91,8 @@ public class StateCell {
     if (hs == null) {
       return 0;
     }
-    if (hs.ct != null && hs.ct != 0) {
-      Float[] hueSat = Utils.xyTOhs(Utils.ctTOxy(hs.ct));
+    if (hs.getMiredCT() != null) {
+      Float[] hueSat = Utils.xyTOhs(Utils.ctTOxy(hs.getMiredCT()));
       float[] hsv = new float[3];
       hsv[0] = (float) (hueSat[0] * 360);
       hsv[1] = (float) (hueSat[1]);

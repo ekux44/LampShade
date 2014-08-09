@@ -26,7 +26,7 @@ public class MockNetBulb implements NetworkBulb {
         result.setOn(true);
         result.setAlert(Alert.NONE);
         result.setEffect(Effect.NONE);
-        result.ct = 300;
+        result.setMiredCT(300);
         result.transitiontime = 4;
       case KNOWN:
         result.merge(mKnown);

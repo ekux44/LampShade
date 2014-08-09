@@ -118,7 +118,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       }
 
       //Send full color, color temp, or just brightness
-      if (bs.xy != null || bs.ct != null || bs.get255Bri() != null) {
+      if (bs.xy != null || bs.getKelvinCT() != null || bs.get255Bri() != null) {
         if (bs.xy != null) {
           Float[] hs = Utils.xyTOhs(bs.xy);
           lifxHue = 360 * hs[0];
@@ -127,10 +127,10 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
           LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, 3500);
           mLight.setColor(newColor);
 
-        } else if (bs.ct != null) {
+        } else if (bs.getKelvinCT() != null) {
           lifxHue = 0;
           lifxSat = 0;
-          lifxCt = bs.getCtKelvin();
+          lifxCt = bs.getKelvinCT();
 
           LFXHSBKColor newColor = LFXHSBKColor.getColor(0, 0, lifxBrightness, lifxCt);
           mLight.setColor(newColor);

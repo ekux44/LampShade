@@ -3,8 +3,6 @@ package com.kuxhausen.huemore.state;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-import java.security.AllPermission;
-
 public class BulbState {
 
   public enum Alert {
@@ -43,7 +41,7 @@ public class BulbState {
    * The Mired Color temperature of the light. 2012 connected lights are capable of 153 (6500K) to
    * 500 (2000K).
    */
-  public Integer ct;
+  private Integer ct;
 
   /**
    * The alert effect, is a temporary change to the bulb�s state, and has one of the following
@@ -186,21 +184,6 @@ public class BulbState {
 
   }
 
-  /**
-   * @return temperature in kelvins labled with a K
-   */
-  public String getCT() {
-    return (1000000 / ct) + "K";
-
-  }
-
-  public Integer getCtKelvin() {
-    if (ct != null) {
-      return (int) (1000000 / ct);
-    }
-    return null;
-  }
-
   public BulbState clone() {
     Gson gson = new Gson();
     try {
@@ -262,6 +245,36 @@ public class BulbState {
     }
   }
 
+  public Integer getMiredCT() {
+    return ct;
+  }
+
+  public void setMiredCT(Integer newCT) {
+    if (newCT == null) {
+      ct = newCT;
+    } else {
+      ct = Math.max(1, newCT);
+    }
+  }
+
+  public Integer getKelvinCT() {
+    if (ct == null) {
+      return null;
+    } else if (ct == 0) {
+      return 1000000;
+    } else {
+      return (1000000 / ct);
+    }
+  }
+
+  public void setKelvinCT(Integer newCT) {
+    if (newCT == null) {
+      ct = newCT;
+    } else {
+      ct = Math.max(1, (1000000 / Math.max(1, newCT)));
+    }
+  }
+
   public Effect getEffect() {
     return effect;
   }
@@ -274,7 +287,7 @@ public class BulbState {
     return alert;
   }
 
-  public void setAlert(Alert a){
+  public void setAlert(Alert a) {
     alert = a;
   }
 

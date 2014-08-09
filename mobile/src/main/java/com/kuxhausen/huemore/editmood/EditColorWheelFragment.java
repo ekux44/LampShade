@@ -58,7 +58,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     }
     state.setOn(true);
     state.xy = newXY;
-    state.ct = null;
+    state.setKelvinCT(null);
     if (EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE
                                                      - EditStatePagerDialogFragment.hasNoRecentStates)) {
       statePager.setState(state, this, "wheel");
