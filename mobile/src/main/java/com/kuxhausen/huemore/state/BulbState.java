@@ -3,6 +3,8 @@ package com.kuxhausen.huemore.state;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.security.AllPermission;
+
 public class BulbState {
 
   public enum Alert {
@@ -49,7 +51,7 @@ public class BulbState {
    * performing one breathe cycle. �lselect� � The light is performing breathe cycles for 30 seconds
    * or until an "alert": "none" command is received.
    */
-  public String alert;
+  private Alert alert;
 
   /**
    * The dynamic effect of the light, can either be "none" or "colorloop"
@@ -160,7 +162,7 @@ public class BulbState {
     // ignore alert for now
     // TODO deal with alert
     if (change.alert != null) {
-      confirmed.alert = "none";
+      confirmed.alert = Alert.NONE;
     }
 
     if (change.effect != null) {
@@ -266,6 +268,14 @@ public class BulbState {
 
   public void setEffect(Effect ef) {
     effect = ef;
+  }
+
+  public Alert getAlert() {
+    return alert;
+  }
+
+  public void setAlert(Alert a){
+    alert = a;
   }
 
   public void setTransitiontimeNone() {

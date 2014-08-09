@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Alert;
 
 public class EditBulbDialogFragment extends DialogFragment {
 
@@ -54,7 +55,7 @@ public class EditBulbDialogFragment extends DialogFragment {
     nameEditText.setText(netBulb.getName());
 
     BulbState bs = new BulbState();
-    bs.alert = "lselect";
+    bs.setAlert(Alert.FLASH_30SEC);
     bs.setOn(true);
 
     netBulb.setState(bs, false);
@@ -66,7 +67,7 @@ public class EditBulbDialogFragment extends DialogFragment {
         netBulb.rename(nameEditText.getText().toString());
 
         BulbState bs = new BulbState();
-        bs.alert = "lselect";
+        bs.setAlert(Alert.FLASH_30SEC);
         bs.setOn(true);
 
         netBulb.setState(bs, false);

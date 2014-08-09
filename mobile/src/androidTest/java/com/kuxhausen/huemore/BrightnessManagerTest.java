@@ -7,6 +7,7 @@ import com.kuxhausen.huemore.net.BrightnessManager.BrightnessPolicy;
 import com.kuxhausen.huemore.net.MockNetBulb;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Alert;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
 import java.util.ArrayList;
@@ -105,15 +106,12 @@ public class BrightnessManagerTest extends AndroidTestCase {
     BulbState state2 = new BulbState();
     state2.setPercentBri(97);
     state2.setEffect(Effect.COLORLOOP);
-    state2.alert = "lselect";
+    state2.setAlert(Alert.FLASH_30SEC);
     state2.ct = 300;
-
 
     manager.setState(bBulb, state2);
     assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
     assertEquals(emptyState, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-
-
 
     manager.setState(aBulb, state2);
     assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));

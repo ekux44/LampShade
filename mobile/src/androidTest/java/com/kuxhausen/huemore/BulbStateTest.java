@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import android.test.AndroidTestCase;
 
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Alert;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class BulbStateTest extends AndroidTestCase {
@@ -96,5 +97,31 @@ public class BulbStateTest extends AndroidTestCase {
     String json3 = gson.toJson(bs);
     assertEquals(null, bs.getEffect());
     assertEquals(null, gson.fromJson(json3, BulbState.class).getEffect());
+  }
+
+  public void testAlert() {
+    Gson gson = new Gson();
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getAlert());
+
+    bs.setAlert(Alert.NONE);
+    String json1 = gson.toJson(bs);
+    assertEquals(Alert.NONE, bs.getAlert());
+    assertEquals(Alert.NONE, gson.fromJson(json1, BulbState.class).getAlert());
+
+    bs.setAlert(Alert.FLASH_ONCE);
+    String json2 = gson.toJson(bs);
+    assertEquals(Alert.FLASH_ONCE, bs.getAlert());
+    assertEquals(Alert.FLASH_ONCE, gson.fromJson(json2, BulbState.class).getAlert());
+
+    bs.setAlert(Alert.FLASH_30SEC);
+    String json3 = gson.toJson(bs);
+    assertEquals(Alert.FLASH_30SEC, bs.getAlert());
+    assertEquals(Alert.FLASH_30SEC, gson.fromJson(json3, BulbState.class).getAlert());
+
+    bs.setAlert(null);
+    String json4 = gson.toJson(bs);
+    assertEquals(null, bs.getAlert());
+    assertEquals(null, gson.fromJson(json4, BulbState.class).getAlert());
   }
 }

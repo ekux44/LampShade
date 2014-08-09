@@ -29,6 +29,7 @@ import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Alert;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
@@ -324,7 +325,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
         int channelToFlash = (Integer) v.getTag();
         BulbState bs = new BulbState();
-        bs.alert = "select";
+        bs.setAlert(Alert.FLASH_ONCE);
         bs.setOn(true);
 
         Event e = new Event();

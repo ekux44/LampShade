@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Effect;
+import com.kuxhausen.huemore.state.BulbState.Alert;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
@@ -170,7 +171,7 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(bs.ct != null);
 
       // Put alert flag
-      mBitSet.incrementingSet(bs.alert != null);
+      mBitSet.incrementingSet(bs.getAlert() != null);
 
       // Put effect flag
       mBitSet.incrementingSet(bs.getEffect() != null);
@@ -203,13 +204,13 @@ public class HueUrlEncoder {
     }
 
     /** Put 2 bit alert **/
-    if (bs.alert != null) {
+    if (bs.getAlert() != null) {
       int value = 0;
-      if (bs.alert.equals("none")) {
+      if (bs.getAlert().equals(Alert.NONE)) {
         value = 0;
-      } else if (bs.alert.equals("select")) {
+      } else if (bs.getAlert().equals(Alert.FLASH_ONCE)) {
         value = 1;
-      } else if (bs.alert.equals("lselect")) {
+      } else if (bs.getAlert().equals(Alert.FLASH_30SEC)) {
         value = 2;
       }
 
@@ -351,13 +352,13 @@ public class HueUrlEncoder {
       int value = mBitSet.extractNumber(2);
       switch (value) {
         case 0:
-          bs.alert = "none";
+          bs.setAlert(Alert.NONE);
           break;
         case 1:
-          bs.alert = "select";
+          bs.setAlert(Alert.FLASH_ONCE);
           break;
         case 2:
-          bs.alert = "lselect";
+          bs.setAlert(Alert.FLASH_30SEC);
           break;
       }
     }
