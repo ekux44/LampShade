@@ -100,8 +100,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
         lifxCt = mLight.getColor().getKelvin();
       }
 
-      if (bs.bri != null) {
-        lifxBrightness = (bs.bri / 255f) * (getMaxBrightness(true) / 100f);
+      if (bs.get255Bri() != null) {
+        lifxBrightness = (bs.get255Bri() / 255f) * (getMaxBrightness(true) / 100f);
       } else if (isMaxBriModeEnabled()) {
         lifxBrightness = (getMaxBrightness(true) / 100f);
       }
@@ -118,7 +118,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       }
 
       //Send full color, color temp, or just brightness
-      if (bs.xy != null || bs.ct != null || bs.bri != null) {
+      if (bs.xy != null || bs.ct != null || bs.get255Bri() != null) {
         if (bs.xy != null) {
           Float[] hs = Utils.xyTOhs(bs.xy);
           lifxHue = 360 * hs[0];
@@ -165,9 +165,9 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
     if (mLight != null && mLight.getColor() != null) {
       LFXHSBKColor color = mLight.getColor();
-      result.bri = (int) ((color.getBrightness() * 255f) * (100f / getMaxBrightness(true)));
+      result.set255Bri((int) ((color.getBrightness() * 255f) * (100f / getMaxBrightness(true))));
     } else if (guessIfUnknown) {
-      result.bri = 127;
+      result.setPercentBri(50);
     }
 
     return result;
@@ -233,7 +233,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     if (maxChanged || currentChanged) {
       if (oldCurerntBri != null) {
         BulbState change = new BulbState();
-        change.bri = (int) (oldCurerntBri * 2.55f);
+        change.set255Bri((int) (oldCurerntBri * 2.55f));
         change.transitiontime = 4;
         setState(change, true);
       }

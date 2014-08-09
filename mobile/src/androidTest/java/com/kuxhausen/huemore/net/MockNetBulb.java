@@ -20,7 +20,7 @@ public class MockNetBulb implements NetworkBulb {
     BulbState result = new BulbState();
     switch (confidence) {
       case GUESS:
-        result.bri = 127;
+        result.setPercentBri(50);
         result.on = true;
         result.alert = "none";
         result.effect = "none";

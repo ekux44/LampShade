@@ -154,7 +154,7 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(bs.on != null);
 
       // Put bri flag
-      mBitSet.incrementingSet(bs.bri != null);
+      mBitSet.incrementingSet(bs.get255Bri() != null);
 
       // Put hue flag
       mBitSet.incrementingSet(false);
@@ -183,8 +183,8 @@ public class HueUrlEncoder {
     }
 
     /** Put 8 bit bri **/
-    if (bs.bri != null) {
-      mBitSet.addNumber(bs.bri, 8);
+    if (bs.get255Bri() != null) {
+      mBitSet.addNumber(bs.get255Bri(), 8);
     }
 
     /** Put 64 bit xy **/
@@ -312,7 +312,7 @@ public class HueUrlEncoder {
 
     /** Get 8 bit bri **/
     if (propertiesFlags[1]) {
-      bs.bri = mBitSet.extractNumber(8);
+      bs.set255Bri(mBitSet.extractNumber(8));
     }
 
     Integer hue = null;
@@ -458,9 +458,9 @@ public class HueUrlEncoder {
           if (encodingVersion < 3) {
             // convert from old brightness stuffing to new relative brightness + total brightness
             // system
-            if (stateArray[i].bri != null) {
-              brightness = stateArray[i].bri;
-              stateArray[i].bri = null;
+            if (stateArray[i].get255Bri() != null) {
+              brightness = stateArray[i].get255Bri();
+              stateArray[i].set255Bri(null);
             }
           }
         }
@@ -506,9 +506,9 @@ public class HueUrlEncoder {
 
           // convert from old brightness stuffing to new relative brightness + total brightness
           // system
-          if (e.state.bri != null) {
-            brightness = e.state.bri;
-            e.state.bri = null;
+          if (e.state.get255Bri() != null) {
+            brightness = e.state.get255Bri();
+            e.state.set255Bri(null);
           }
 
           e.channel = i;

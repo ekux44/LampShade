@@ -54,7 +54,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     BulbState state = statePager.getState();
     // relative brightness
     if (newHSV[2] != 1f) {
-      state.bri = (int) (newHSV[2] * 255f);
+      state.set255Bri((int) (newHSV[2] * 255f));
     }
     state.on = true;
     state.xy = newXY;
@@ -71,7 +71,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     if (state.xy != null) {
       Float[] hueSat = Utils.xyTOhs(state.xy);
       // don't forget relative brightness if set
-      float[] hsv = {hueSat[0] * 360, hueSat[1], (state.bri != null) ? state.bri / 255f : 1f};
+      float[] hsv = {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
       state.on = true;
 
       int rgb = Color.HSVToColor(hsv);

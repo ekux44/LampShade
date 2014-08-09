@@ -96,14 +96,14 @@ public class StateCell {
       float[] hsv = new float[3];
       hsv[0] = (float) (hueSat[0] * 360);
       hsv[1] = (float) (hueSat[1]);
-      hsv[2] = (hs.bri != null) ? hs.bri / 255f : 1f; // remember relative brightness
+      hsv[2] = (hs.get255Bri() != null) ? hs.get255Bri() / 255f : 1f; // remember relative brightness
       return Color.HSVToColor(hsv);
     } else if (hs.xy != null) {
       Float[] hueSat = (sRGB) ? Utils.xyTOsRGBhs(hs.xy) : Utils.xyTOhs(hs.xy);
       float[] hsv = new float[3];
       hsv[0] = (float) (hueSat[0] * 360);
       hsv[1] = (float) (hueSat[1]);
-      hsv[2] = (hs.bri != null) ? hs.bri / 255f : 1f; // remember relative brightness
+      hsv[2] = (hs.get255Bri() != null) ? hs.get255Bri() / 255f : 1f; // remember relative brightness
       return Color.HSVToColor(hsv);
     } else {
       return 0;

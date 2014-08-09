@@ -12,7 +12,7 @@ public class BulbState {
    * The brightness value to set the light to. Brightness is a scale from 0 (the minimum the light
    * is capable of) to 255 (the maximum). Note: a brightness of 0 is not off.
    */
-  public Integer bri;
+  private Integer bri;
   /**
    * The x and y coordinates of a color in CIE color space. The first entry is the x coordinate and
    * the second entry is the y coordinate. Both x and y must be between 0 and 1. If the specified

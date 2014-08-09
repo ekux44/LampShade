@@ -49,8 +49,8 @@ public class BrightnessManagerTest extends AndroidTestCase {
     list.add(bBulb);
 
     //remember to keep raw manipulation scaled by BS.bri range (0-255)
-    aBulb.mKnown.bri = 51;
-    bBulb.mKnown.bri = 102;
+    aBulb.mKnown.setPercentBri(20);
+    bBulb.mKnown.setPercentBri(40);
 
     BrightnessManager manager = new BrightnessManager(list);
     //should return the initial average of known, scaled from 1-100
@@ -93,7 +93,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertFalse(emptyState.equals(aBulb.getState(NetworkBulb.GetStateConfidence.GUESS)));
 
     BulbState state1 = new BulbState();
-    state1.bri = 129;
+    state1.setPercentBri(37);
     state1.ct = 300;
     state1.transitiontime = 60;
 
@@ -102,7 +102,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertEquals(state1, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
 
     BulbState state2 = new BulbState();
-    state2.bri = 199;
+    state2.setPercentBri(97);
     state2.effect = "colorloop";
     state2.alert = "lselect";
     state2.ct = 300;
