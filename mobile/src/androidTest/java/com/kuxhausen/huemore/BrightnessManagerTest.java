@@ -85,24 +85,39 @@ public class BrightnessManagerTest extends AndroidTestCase {
     list.add(aBulb);
     list.add(bBulb);
 
-    BulbState aState = new BulbState();
-    aState.bri = 129;
-    aState.ct = 300;
-    aState.transitiontime = 60;
-
-    BulbState bState = new BulbState();
-    bState.effect = "colorloop";
-    bState.alert = "lselect";
-    bState.ct = 300;
-
     BrightnessManager manager = new BrightnessManager(list);
-    manager.setState(aBulb, aState);
 
-    manager.setState(bBulb, bState);
+    BulbState emptyState = new BulbState();
+    assertEquals(emptyState, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(emptyState, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    assertFalse(emptyState.equals(aBulb.getState(NetworkBulb.GetStateConfidence.GUESS)));
 
-    assertEquals(aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN), aState);
-    assertEquals(bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED), bState);
-    //TODO
+    BulbState state1 = new BulbState();
+    state1.bri = 129;
+    state1.ct = 300;
+    state1.transitiontime = 60;
 
+    aBulb.mKnown = state1;
+    assertEquals(state1, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(state1, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+
+    BulbState state2 = new BulbState();
+    state2.bri = 199;
+    state2.effect = "colorloop";
+    state2.alert = "lselect";
+    state2.ct = 300;
+
+
+    manager.setState(bBulb, state2);
+    assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(emptyState, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+
+
+
+    manager.setState(aBulb, state2);
+    assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
+    BulbState combined = state1.clone();
+    combined.merge(state2);
+    assertEquals(combined, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
   }
 }
