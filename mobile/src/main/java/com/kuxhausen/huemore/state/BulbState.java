@@ -14,17 +14,6 @@ public class BulbState {
    */
   public Integer bri;
   /**
-   * The hue value to set light to. The hue value is a wrapping value between 0 and 65535. Both 0
-   * and 65535 are red, 25500 is green and 46920 is blue. e.g. �hue�: 50000 will set the light to a
-   * specific hue.
-   */
-  private Integer hue;
-  /**
-   * Saturation of the light. 255 is the most saturated (colored) and 0 is the least saturated
-   * (white).
-   */
-  private Short sat;
-  /**
    * The x and y coordinates of a color in CIE color space. The first entry is the x coordinate and
    * the second entry is the y coordinate. Both x and y must be between 0 and 1. If the specified
    * coordinates are not in the CIE color space, the closest color to the coordinates will be
@@ -72,12 +61,6 @@ public class BulbState {
     if (bri != null) {
       result += "bri:" + bri + " ";
     }
-    if (hue != null) {
-      result += "hue:" + hue + " ";
-    }
-    if (sat != null) {
-      result += "sat:" + sat + " ";
-    }
     if (xy != null) {
       result += "xy:" + xy[0] + " " + xy[1] + " ";
     }
@@ -108,18 +91,9 @@ public class BulbState {
 
     if (other.xy != null) {
       xy = other.xy;
-      hue = null;
-      sat = null;
-      ct = null;
-    } else if (other.hue != null && other.sat != null) {
-      xy = null;
-      hue = other.hue;
-      sat = other.sat;
       ct = null;
     } else if (other.ct != null) {
       xy = null;
-      hue = null;
-      sat = null;
       ct = other.ct;
     }
   }
@@ -185,18 +159,9 @@ public class BulbState {
     // TODO convert between colormoods instead of filling nulls
     if (change.xy != null) {
       confirmed.xy = change.xy;
-      confirmed.hue = null;
-      confirmed.sat = null;
-      confirmed.ct = null;
-    } else if (change.hue != null && change.sat != null) {
-      confirmed.xy = null;
-      confirmed.hue = change.hue;
-      confirmed.sat = change.sat;
       confirmed.ct = null;
     } else if (change.ct != null) {
       confirmed.xy = null;
-      confirmed.hue = null;
-      confirmed.sat = null;
       confirmed.ct = change.ct;
     }
 
@@ -227,7 +192,7 @@ public class BulbState {
   }
 
   public boolean isEmpty() {
-    if (on == null && bri == null && hue == null && sat == null && xy == null && ct == null
+    if (on == null && bri == null && xy == null && ct == null
         && alert == null && effect == null && transitiontime == null) {
       return true;
     }
@@ -235,7 +200,7 @@ public class BulbState {
   }
 
   public boolean hasOnlyBri() {
-    if (on == null && bri != null && hue == null && sat == null && xy == null && ct == null
+    if (on == null && bri != null && xy == null && ct == null
         && alert == null && effect == null && transitiontime == null) {
       return true;
     }
