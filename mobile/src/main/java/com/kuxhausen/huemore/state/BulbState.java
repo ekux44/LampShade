@@ -223,6 +223,18 @@ public class BulbState {
     }
   }
 
+  public Integer get255Bri(){
+    return bri;
+  }
+
+  public void set255Bri(Integer brightness) {
+    if (brightness == null) {
+      bri = null;
+    } else {
+      bri = Math.max(1, Math.min(255, brightness));
+    }
+  }
+
   public void setTransitiontimeNone() {
     transitiontime = 0;
   }
