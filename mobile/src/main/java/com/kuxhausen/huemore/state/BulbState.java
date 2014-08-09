@@ -211,7 +211,7 @@ public class BulbState {
     if (bri == null) {
       return bri;
     } else {
-      return (int) Math.round(Math.max(1, Math.min(255, bri)) / 2.55);
+      return Math.max(1, Math.min(255, (int) Math.round(bri / 2.55)));
     }
   }
 
