@@ -1,8 +1,11 @@
 package com.kuxhausen.huemore;
 
+import com.google.gson.Gson;
+
 import android.test.AndroidTestCase;
 
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class BulbStateTest extends AndroidTestCase {
 
@@ -58,5 +61,40 @@ public class BulbStateTest extends AndroidTestCase {
 
     bs.set255Bri(null);
     assertEquals(null, bs.get255Bri());
+  }
+
+  public void testOn() {
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getOn());
+
+    bs.setOn(true);
+    assertEquals((Boolean) true, bs.getOn());
+
+    bs.setOn(false);
+    assertEquals((Boolean) false, bs.getOn());
+
+    bs.setOn(null);
+    assertEquals(null, bs.getOn());
+  }
+
+  public void testEffect() {
+    Gson gson = new Gson();
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getEffect());
+
+    bs.setEffect(Effect.NONE);
+    String json1 = gson.toJson(bs);
+    assertEquals(Effect.NONE, bs.getEffect());
+    assertEquals(Effect.NONE, gson.fromJson(json1, BulbState.class).getEffect());
+
+    bs.setEffect(Effect.COLORLOOP);
+    String json2 = gson.toJson(bs);
+    assertEquals(Effect.COLORLOOP, bs.getEffect());
+    assertEquals(Effect.COLORLOOP, gson.fromJson(json2, BulbState.class).getEffect());
+
+    bs.setEffect(null);
+    String json3 = gson.toJson(bs);
+    assertEquals(null, bs.getEffect());
+    assertEquals(null, gson.fromJson(json3, BulbState.class).getEffect());
   }
 }

@@ -17,6 +17,7 @@ import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 import com.kuxhausen.huemore.state.Group;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
@@ -36,8 +37,8 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   private BulbState hs = new BulbState();
 
   {
-    hs.on = true;
-    hs.effect = "none";
+    hs.setOn(true);
+    hs.setEffect(Effect.NONE);
     Float[] lol = {.5f, .5f};
     hs.xy = lol;// TODO change
 
@@ -129,9 +130,9 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
     if (isChecked) {
-      hs.effect = "colorloop";
+      hs.setEffect(Effect.COLORLOOP);
     } else {
-      hs.effect = "none";
+      hs.setEffect(Effect.NONE);
     }
     preview();
   }

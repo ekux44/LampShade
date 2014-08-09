@@ -58,10 +58,10 @@ public class StateCell {
       if ((color % 0xff000000) != 0) {
         state_color.setImageDrawable(cd);
       }
-    } else if (hs.on != null) {
+    } else if (hs.getOn() != null) {
       rowView = inflater.inflate(R.layout.edit_mood_on_row, parent, false);
       TextView stateText = (TextView) rowView.findViewById(R.id.onTextView);
-      if (hs.on != null && hs.on) {
+      if (hs.getOn() != null && hs.getOn()) {
         stateText.setText(context.getResources().getString(R.string.cap_on));
       } else {
         stateText.setText(context.getResources().getString(R.string.cap_off));

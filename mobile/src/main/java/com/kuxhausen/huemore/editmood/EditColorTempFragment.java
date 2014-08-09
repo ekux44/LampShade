@@ -16,6 +16,7 @@ import android.widget.TextView.OnEditorActionListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class EditColorTempFragment extends Fragment implements OnSeekBarChangeListener,
                                                                OnCreateColorListener {
@@ -23,8 +24,8 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
   private BulbState hs = new BulbState();
 
   {
-    hs.on = true;
-    hs.effect = "none";
+    hs.setOn(true);
+    hs.setEffect(Effect.NONE);
 
     hs.ct = 1000000 / 4000;
   }

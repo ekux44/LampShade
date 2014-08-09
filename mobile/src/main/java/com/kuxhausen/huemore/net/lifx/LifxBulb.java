@@ -109,8 +109,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       //clip brightness to ensure proper behavior (0 brightness not allowed)
       lifxBrightness = Math.max(.01f, lifxBrightness);
 
-      if (bs.on != null) {
-        if (bs.on) {
+      if (bs.getOn() != null) {
+        if (bs.getOn()) {
           mLight.setPowerState(LFXTypes.LFXPowerState.ON);
         } else {
           mLight.setPowerState(LFXTypes.LFXPowerState.OFF);

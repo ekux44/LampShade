@@ -476,15 +476,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static String getEncodedOn() {
     BulbState resultState = new BulbState();
-    resultState.on = true;
-    resultState.effect = "none";
+    resultState.setOn(true);
+    resultState.setEffect(BulbState.Effect.NONE);
     return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
   }
 
   private static String getEncodedOff() {
     BulbState resultState = new BulbState();
-    resultState.on = false;
-    resultState.effect = "none";
+    resultState.setOn(false);
+    resultState.setEffect(BulbState.Effect.NONE);
     return HueUrlEncoder.encode(Utils.generateSimpleMood(resultState));
   }
 }

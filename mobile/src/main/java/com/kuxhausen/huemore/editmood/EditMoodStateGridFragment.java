@@ -325,7 +325,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         int channelToFlash = (Integer) v.getTag();
         BulbState bs = new BulbState();
         bs.alert = "select";
-        bs.on = true;
+        bs.setOn(true);
 
         Event e = new Event();
         e.channel = channelToFlash;

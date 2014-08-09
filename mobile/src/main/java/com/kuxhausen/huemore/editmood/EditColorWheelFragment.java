@@ -56,7 +56,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     if (newHSV[2] != 1f) {
       state.set255Bri((int) (newHSV[2] * 255f));
     }
-    state.on = true;
+    state.setOn(true);
     state.xy = newXY;
     state.ct = null;
     if (EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE
@@ -72,7 +72,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
       Float[] hueSat = Utils.xyTOhs(state.xy);
       // don't forget relative brightness if set
       float[] hsv = {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
-      state.on = true;
+      state.setOn(true);
 
       int rgb = Color.HSVToColor(hsv);
 

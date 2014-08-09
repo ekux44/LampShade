@@ -12,6 +12,7 @@ import android.widget.GridView;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 
 import java.util.ArrayList;
 
@@ -39,8 +40,8 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
       BulbState hs = new BulbState();
       Float[] conversionXY = {simpleX[i], simpleY[i]};
       hs.xy = conversionXY;
-      hs.on = true;
-      hs.effect = "none";
+      hs.setOn(true);
+      hs.setEffect(Effect.NONE);
       hs.transitiontime = 4; // TODO remove hard coding of all this stuff
 
       StateCell mr = new StateCell(statePager.getActivity());
@@ -51,8 +52,8 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
     }
     {
       BulbState hs = new BulbState();
-      hs.on = true;
-      hs.effect = "none";
+      hs.setOn(true);
+      hs.setEffect(Effect.NONE);
 
       StateCell mr = new StateCell(statePager.getActivity());
       mr.hs = hs;
@@ -61,8 +62,8 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
     }
     {
       BulbState hs = new BulbState();
-      hs.on = false;
-      hs.effect = "none";
+      hs.setOn(true);
+      hs.setEffect(Effect.NONE);
 
       StateCell mr = new StateCell(statePager.getActivity());
       mr.hs = hs;

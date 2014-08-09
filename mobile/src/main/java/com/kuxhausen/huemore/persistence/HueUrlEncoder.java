@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
@@ -151,7 +152,7 @@ public class HueUrlEncoder {
     /** Put 9 bit properties flags **/
     {
       // On/OFF flag always include in v1 implementation 1
-      mBitSet.incrementingSet(bs.on != null);
+      mBitSet.incrementingSet(bs.getOn() != null);
 
       // Put bri flag
       mBitSet.incrementingSet(bs.get255Bri() != null);
@@ -172,14 +173,14 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(bs.alert != null);
 
       // Put effect flag
-      mBitSet.incrementingSet(bs.effect != null);
+      mBitSet.incrementingSet(bs.getEffect() != null);
 
       // Put transitiontime flag
       mBitSet.incrementingSet(bs.transitiontime != null);
     }
     /** Put on bit **/
-    if (bs.on != null) {
-      mBitSet.incrementingSet(bs.on);
+    if (bs.getOn() != null) {
+      mBitSet.incrementingSet(bs.getOn());
     }
 
     /** Put 8 bit bri **/
@@ -218,11 +219,11 @@ public class HueUrlEncoder {
     /** Put 4 bit effect **/
     // three more bits than needed, reserved for future API
     // functionality
-    if (bs.effect != null) {
+    if (bs.getEffect() != null) {
       int value = 0;
-      if (bs.effect.equals("none")) {
+      if (bs.getEffect().equals(Effect.NONE)) {
         value = 0;
-      } else if (bs.effect.equals("colorloop")) {
+      } else if (bs.getEffect().equals(Effect.COLORLOOP)) {
         value = 1;
       }
 
@@ -307,7 +308,7 @@ public class HueUrlEncoder {
 
     /** Get on bit **/
     if (propertiesFlags[0]) {
-      bs.on = mBitSet.incrementingGet();
+      bs.setOn(mBitSet.incrementingGet());
     }
 
     /** Get 8 bit bri **/
@@ -368,10 +369,10 @@ public class HueUrlEncoder {
       int value = mBitSet.extractNumber(4);
       switch (value) {
         case 0:
-          bs.effect = "none";
+          bs.setEffect(Effect.NONE);
           break;
         case 1:
-          bs.effect = "colorloop";
+          bs.setEffect(Effect.COLORLOOP);
           break;
       }
     }

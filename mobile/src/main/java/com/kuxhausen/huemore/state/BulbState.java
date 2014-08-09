@@ -1,13 +1,30 @@
 package com.kuxhausen.huemore.state;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 public class BulbState {
+
+  public enum Alert {
+    @SerializedName("none")
+    NONE,
+    @SerializedName("select")
+    FLASH_ONCE,
+    @SerializedName("lselect")
+    FLASH_30SEC
+  }
+
+  public enum Effect {
+    @SerializedName("none")
+    NONE,
+    @SerializedName("colorloop")
+    COLORLOOP
+  }
 
   /**
    * On/Off state of the light. On=true, Off=false
    */
-  public Boolean on;
+  private Boolean on;
   /**
    * The brightness value to set the light to. Brightness is a scale from 0 (the minimum the light
    * is capable of) to 255 (the maximum). Note: a brightness of 0 is not off.
@@ -37,7 +54,7 @@ public class BulbState {
   /**
    * The dynamic effect of the light, can either be "none" or "colorloop"
    */
-  public String effect;
+  private Effect effect;
 
   /**
    * The duration of the transition from the light�s current state to the new state. This is given
@@ -199,6 +216,14 @@ public class BulbState {
     return false;
   }
 
+  public Boolean getOn() {
+    return on;
+  }
+
+  public void setOn(Boolean newOn) {
+    on = newOn;
+  }
+
   public boolean hasOnlyBri() {
     if (on == null && bri != null && xy == null && ct == null
         && alert == null && effect == null && transitiontime == null) {
@@ -223,7 +248,7 @@ public class BulbState {
     }
   }
 
-  public Integer get255Bri(){
+  public Integer get255Bri() {
     return bri;
   }
 
@@ -233,6 +258,14 @@ public class BulbState {
     } else {
       bri = Math.max(1, Math.min(255, brightness));
     }
+  }
+
+  public Effect getEffect() {
+    return effect;
+  }
+
+  public void setEffect(Effect ef) {
+    effect = ef;
   }
 
   public void setTransitiontimeNone() {

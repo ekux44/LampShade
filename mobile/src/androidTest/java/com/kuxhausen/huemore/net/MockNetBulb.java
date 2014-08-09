@@ -1,6 +1,7 @@
 package com.kuxhausen.huemore.net;
 
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class MockNetBulb implements NetworkBulb {
 
@@ -21,9 +22,9 @@ public class MockNetBulb implements NetworkBulb {
     switch (confidence) {
       case GUESS:
         result.setPercentBri(50);
-        result.on = true;
+        result.setOn(true);
         result.alert = "none";
-        result.effect = "none";
+        result.setEffect(Effect.NONE);
         result.ct = 300;
         result.transitiontime = 4;
       case KNOWN:

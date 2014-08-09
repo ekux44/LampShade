@@ -71,7 +71,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
         this.startService(intent);
 
         boolean on = false;
-        if (mood.events[0].state.on != null && mood.events[0].state.on) {
+        if (mood.events[0].state.getOn() != null && mood.events[0].state.getOn()) {
           on = true;
         }
         mOnButton.setChecked(on);
@@ -117,7 +117,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     BulbState bs = new BulbState();
-    bs.on = isChecked;
+    bs.setOn(isChecked);
 
     ConnectivityService service = this.getService();
     if (service != null) {

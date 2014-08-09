@@ -55,7 +55,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 
     BulbState bs = new BulbState();
     bs.alert = "lselect";
-    bs.on = true;
+    bs.setOn(true);
 
     netBulb.setState(bs, false);
 
@@ -67,7 +67,7 @@ public class EditBulbDialogFragment extends DialogFragment {
 
         BulbState bs = new BulbState();
         bs.alert = "lselect";
-        bs.on = true;
+        bs.setOn(true);
 
         netBulb.setState(bs, false);
       }
