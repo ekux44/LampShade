@@ -30,7 +30,7 @@ public class RecentStatesFragment extends Fragment implements OnCreateColorListe
       for (StateCell cell : row.cellRay) {
         StateCell localCopy = cell.clone();
         if (!bulbStateHash.contains(localCopy.hs.toString())
-            && (localCopy.hs.toString().length() > 0)) {
+            && (!localCopy.hs.isEmpty())) {
           bulbStateHash.add(localCopy.hs.toString());
           list.add(localCopy);
         }

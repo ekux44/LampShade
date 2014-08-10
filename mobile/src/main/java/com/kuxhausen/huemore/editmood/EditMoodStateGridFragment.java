@@ -246,7 +246,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     for (int r = 0; r < moodRows.size(); r++) {
       for (int c = 0; c < moodRows.get(r).cellRay.size(); c++) {
         StateCell mr = moodRows.get(r).cellRay.get(c);
-        if (mr.hs != null && !mr.hs.toString().equals("")) {
+        if (mr.hs != null && !mr.hs.isEmpty()) {
           Event e = new Event();
           e.channel = c;
           e.time = getTime(r);

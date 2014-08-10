@@ -109,7 +109,7 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
   public boolean stateChanged() {
     int newSelectedPosition = -1;
     for (int i = 0; i < list.size(); i++) {
-      if (list.get(i).hs.toString().equals(statePager.getState().toString())) {
+      if (list.get(i).hs.equals(statePager.getState())) {
         newSelectedPosition = i;
         list.get(i).selected = true;
       } else {
