@@ -138,8 +138,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
         LFXHSBKColor newColor = LFXHSBKColor.getColor(lifxHue, lifxSat, lifxBrightness, lifxCt);
 
-        if (bs.transitiontime != null) {
-          mLight.setColorOverDuration(newColor, bs.transitiontime * 100);
+        if (bs.getTransitionTime() != null) {
+          mLight.setColorOverDuration(newColor, bs.getTransitionTime() * 100);
         } else {
           mLight.setColor(newColor);
         }
@@ -234,7 +234,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       if (oldCurerntBri != null) {
         BulbState change = new BulbState();
         change.set255Bri((int) (oldCurerntBri * 2.55f));
-        change.transitiontime = 4;
+        change.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
         setState(change, true);
       }
     }

@@ -148,7 +148,7 @@ public class HueBulb implements NetworkBulb {
       if (oldCurerntBri != null) {
         BulbState change = new BulbState();
         change.set255Bri((int) (oldCurerntBri * 2.55f));
-        change.transitiontime = 4;
+        change.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
         setState(change, true);
       }
     }
@@ -248,7 +248,7 @@ public class HueBulb implements NetworkBulb {
     if (mInstantBrightnessRequested) {
       BulbState brightnessOnly = new BulbState();
       brightnessOnly.set255Bri(toSend.get255Bri());
-      brightnessOnly.transitiontime = 4;
+      brightnessOnly.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
       mInstantBrightnessRequested = false;
       return brightnessOnly;
     } else {

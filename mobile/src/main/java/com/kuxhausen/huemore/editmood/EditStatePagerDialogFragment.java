@@ -156,10 +156,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   }
 
   private void setSpinner() {
-    if (currentState.transitiontime != null) {
+    if (currentState.getTransitionTime() != null) {
       int pos = 0;
       for (int i = 0; i < transitionValues.length; i++) {
-        if (currentState.transitiontime == transitionValues[i]) {
+        if (currentState.getTransitionTime() == transitionValues[i]) {
           pos = i;
         }
       }
@@ -251,8 +251,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     switch (v.getId()) {
       case R.id.okay:
         if (transitionSpinner != null) {
-          currentState.transitiontime =
-              transitionValues[transitionSpinner.getSelectedItemPosition()];
+          currentState
+              .setTransitionTime(transitionValues[transitionSpinner.getSelectedItemPosition()]);
         }
 
         Intent i = new Intent();

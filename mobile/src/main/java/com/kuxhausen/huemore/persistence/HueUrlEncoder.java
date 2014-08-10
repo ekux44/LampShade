@@ -177,7 +177,7 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(bs.getEffect() != null);
 
       // Put transitiontime flag
-      mBitSet.incrementingSet(bs.transitiontime != null);
+      mBitSet.incrementingSet(bs.getTransitionTime() != null);
     }
     /** Put on bit **/
     if (bs.getOn() != null) {
@@ -232,8 +232,8 @@ public class HueUrlEncoder {
     }
 
     /** Put 16 bit transitiontime **/
-    if (bs.transitiontime != null) {
-      mBitSet.addNumber(bs.transitiontime, 16);
+    if (bs.getTransitionTime() != null) {
+      mBitSet.addNumber(bs.getTransitionTime(), 16);
     }
   }
 
@@ -381,7 +381,7 @@ public class HueUrlEncoder {
     /** Get 16 bit transitiontime **/
     if (propertiesFlags[8]) {
       int value = mBitSet.extractNumber(16);
-      bs.transitiontime = value;
+      bs.setTransitionTime(value);
     }
 
     return bs;

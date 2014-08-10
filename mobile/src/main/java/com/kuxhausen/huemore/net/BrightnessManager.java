@@ -72,7 +72,7 @@ public class BrightnessManager {
 
         BulbState bs = new BulbState();
         bs.setPercentBri(newPhysicalBri);
-        bs.setTransitiontimeNone();
+        bs.setTransitionTime(BulbState.TRANSITION_TIME_NONE);
 
         bulb.setState(bs);
       }
@@ -81,7 +81,7 @@ public class BrightnessManager {
     } else {
       BulbState bs = new BulbState();
       bs.setPercentBri(newBrightness);
-      bs.setTransitiontimeNone();
+      bs.setTransitionTime(BulbState.TRANSITION_TIME_NONE);
 
       for (NetworkBulb bulb : mBulbs) {
         bulb.setState(bs);

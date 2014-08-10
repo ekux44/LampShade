@@ -158,4 +158,19 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getAlert());
     assertEquals(null, gson.fromJson(json4, BulbState.class).getAlert());
   }
+
+  public void testTransitionTime() {
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getTransitionTime());
+
+    bs.setTransitionTime(0);
+    assertEquals((Integer) 0, bs.getTransitionTime());
+
+    bs.setTransitionTime(600);
+    assertEquals((Integer) 600, bs.getTransitionTime());
+
+    bs.setTransitionTime(null);
+    assertEquals(null, bs.getTransitionTime());
+
+  }
 }

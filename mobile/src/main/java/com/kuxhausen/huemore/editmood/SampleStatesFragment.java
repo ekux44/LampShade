@@ -42,7 +42,7 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
       hs.xy = conversionXY;
       hs.setOn(true);
       hs.setEffect(Effect.NONE);
-      hs.transitiontime = 4; // TODO remove hard coding of all this stuff
+      hs.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
 
       StateCell mr = new StateCell(statePager.getActivity());
       mr.hs = hs;

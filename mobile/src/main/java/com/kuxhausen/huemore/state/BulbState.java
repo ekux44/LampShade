@@ -21,6 +21,8 @@ public class BulbState {
     COLORLOOP
   }
 
+  public final static int TRANSITION_TIME_DEFAULT = 4, TRANSITION_TIME_NONE = 0;
+
   /**
    * On/Off state of the light. On=true, Off=false
    */
@@ -61,7 +63,7 @@ public class BulbState {
    * as a multiple of 100ms and defaults to 4 (400ms). For example, setting transistiontime:10 will
    * make the transition last 1 second.
    */
-  public Integer transitiontime;
+  private Integer transitiontime;
 
   public BulbState() {
   }
@@ -291,7 +293,15 @@ public class BulbState {
     alert = a;
   }
 
-  public void setTransitiontimeNone() {
-    transitiontime = 0;
+  public Integer getTransitionTime() {
+    return transitiontime;
+  }
+
+  public void setTransitionTime(Integer timeInDeciSeconds) {
+    if (timeInDeciSeconds == null) {
+      transitiontime = timeInDeciSeconds;
+    } else {
+      transitiontime = Math.max(0, timeInDeciSeconds);
+    }
   }
 }
