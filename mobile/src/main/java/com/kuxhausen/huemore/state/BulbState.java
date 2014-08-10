@@ -369,4 +369,10 @@ public class BulbState {
       transitiontime = Math.max(0, timeInDeciSeconds);
     }
   }
+
+  public static BulbState merge(BulbState priority, BulbState secondary){
+    BulbState result = secondary.clone();
+    result.merge(priority);
+    return result;
+  }
 }

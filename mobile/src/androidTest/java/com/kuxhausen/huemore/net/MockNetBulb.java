@@ -22,16 +22,18 @@ public class MockNetBulb implements NetworkBulb {
     BulbState result = new BulbState();
     switch (confidence) {
       case GUESS:
-        result.setPercentBri(50);
-        result.setOn(true);
-        result.setAlert(Alert.NONE);
-        result.setEffect(Effect.NONE);
-        result.setMiredCT(300);
-        result.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
+        BulbState guess = new BulbState();
+        guess.setPercentBri(50);
+        guess.setOn(true);
+        guess.setAlert(Alert.NONE);
+        guess.setEffect(Effect.NONE);
+        guess.setMiredCT(300);
+        guess.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
+        result = BulbState.merge(guess, result);
       case KNOWN:
-        result.merge(mKnown);
+        result = BulbState.merge(mKnown, result);
       case DESIRED:
-        result.merge(mTarget);
+        result = BulbState.merge(mTarget, result);
     }
     return result;
   }
