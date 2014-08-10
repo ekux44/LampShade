@@ -173,4 +173,59 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getTransitionTime());
 
   }
+
+  public void testEquals() {
+    BulbState state1 = new BulbState();
+    BulbState state2 = new BulbState();
+    assertEquals(state1, state2);
+
+    state1.set255Bri(30);
+    assertFalse(state1.equals(state2));
+    state2.set255Bri(70);
+    assertFalse(state1.equals(state2));
+    state2.set255Bri(30);
+    assertEquals(state1, state2);
+
+    state1.setEffect(Effect.NONE);
+    assertFalse(state1.equals(state2));
+    state2.setEffect(Effect.COLORLOOP);
+    assertFalse(state1.equals(state2));
+    state2.setEffect(Effect.NONE);
+    assertEquals(state1, state2);
+
+    state1.setTransitionTime(600);
+    assertFalse(state1.equals(state2));
+    state2.setTransitionTime(10);
+    assertFalse(state1.equals(state2));
+    state2.setTransitionTime(600);
+    assertEquals(state1, state2);
+
+    state1.setAlert(Alert.FLASH_30SEC);
+    assertFalse(state1.equals(state2));
+    state2.setAlert(Alert.NONE);
+    assertFalse(state1.equals(state2));
+    state2.setAlert(Alert.FLASH_30SEC);
+    assertEquals(state1, state2);
+
+    state1.setKelvinCT(2500);
+    assertFalse(state1.equals(state2));
+    state2.setKelvinCT(6000);
+    assertFalse(state1.equals(state2));
+    state2.setKelvinCT(2500);
+    assertEquals(state1, state2);
+
+    state1.setOn(false);
+    assertFalse(state1.equals(state2));
+    state2.setOn(true);
+    assertFalse(state1.equals(state2));
+    state2.setOn(false);
+    assertEquals(state1, state2);
+
+    state1.xy = new Float[]{.2f, .2f};
+    assertFalse(state1.equals(state2));
+    state2.xy = new Float[]{.75f, .75f};
+    assertFalse(state1.equals(state2));
+    state2.xy = new Float[]{.2f, .2f};
+    assertEquals(state1, state2);
+  }
 }

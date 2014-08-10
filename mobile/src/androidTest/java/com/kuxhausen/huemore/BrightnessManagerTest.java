@@ -97,7 +97,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     BulbState state1 = new BulbState();
     state1.setPercentBri(37);
     state1.setMiredCT(300);
-    state1.transitiontime = 60;
+    state1.setTransitionTime(60);
 
     aBulb.mKnown = state1;
     assertEquals(state1, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));

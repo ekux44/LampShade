@@ -3,6 +3,8 @@ package com.kuxhausen.huemore.state;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Arrays;
+
 public class BulbState {
 
   public enum Alert {
@@ -193,6 +195,69 @@ public class BulbState {
     } catch (Exception e) {
       return new BulbState();
     }
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    assert (obj != null);
+    assert (obj instanceof BulbState);
+    BulbState other = (BulbState) obj;
+
+    if (this.getOn() != null ^ other.getOn() != null) {
+      return false;
+    }
+    if (this.getOn() != null && other.getOn() != null && !this.getOn().equals(other.getOn())) {
+      return false;
+    }
+
+    if (this.get255Bri() != null ^ other.get255Bri() != null) {
+      return false;
+    }
+    if (this.get255Bri() != null && other.get255Bri() != null && !this.get255Bri()
+        .equals(other.get255Bri())) {
+      return false;
+    }
+
+    if (this.getTransitionTime() != null ^ other.getTransitionTime() != null) {
+      return false;
+    }
+    if (this.getTransitionTime() != null && other.getTransitionTime() != null && !this
+        .getTransitionTime().equals(other.getTransitionTime())) {
+      return false;
+    }
+
+    if (this.getAlert() != null ^ other.getAlert() != null) {
+      return false;
+    }
+    if (this.getAlert() != null && other.getAlert() != null && !this.getAlert()
+        .equals(other.getAlert())) {
+      return false;
+    }
+
+    if (this.getEffect() != null ^ other.getEffect() != null) {
+      return false;
+    }
+    if (this.getEffect() != null && other.getEffect() != null && !this.getEffect()
+        .equals(other.getEffect())) {
+      return false;
+    }
+
+    if (this.getMiredCT() != null ^ other.getMiredCT() != null) {
+      return false;
+    }
+    if (this.getMiredCT() != null && other.getMiredCT() != null && !this.getMiredCT()
+        .equals(other.getMiredCT())) {
+      return false;
+    }
+
+    if (this.xy != null ^ other.xy != null) {
+      return false;
+    }
+    if (this.xy != null && other.xy != null && !Arrays.equals(this.xy, other.xy)) {
+      return false;
+    }
+
+    return true;
   }
 
   public boolean isEmpty() {
