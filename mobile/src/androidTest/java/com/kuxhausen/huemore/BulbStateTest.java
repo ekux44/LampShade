@@ -223,7 +223,13 @@ public class BulbStateTest extends AndroidTestCase {
 
     state1.xy = new Float[]{.2f, .2f};
     assertFalse(state1.equals(state2));
+    state2.xy = new Float[]{.75f, .2f};
+    assertFalse(state1.equals(state2));
+    state2.xy = new Float[]{.2f, .75f};
+    assertFalse(state1.equals(state2));
     state2.xy = new Float[]{.75f, .75f};
+    assertFalse(state1.equals(state2));
+    state2.xy = new Float[]{null, null};
     assertFalse(state1.equals(state2));
     state2.xy = new Float[]{.2f, .2f};
     assertEquals(state1, state2);
