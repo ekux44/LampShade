@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.testing;
+package com.kuxhausen.huemore;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.Mood;
 
-public class Tests {
+public class LegacyTests {
 
   public static Boolean test(int tNum, Mood m1, Integer[] b1, Integer bri1) {
 
