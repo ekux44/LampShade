@@ -120,7 +120,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertEquals(combined, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
   }
 
-  //This simulates functionality require for use cases such as sunrise alarm clock
+  //This simulates functionality required for a sunrise alarm clock
   public void testFunctionality1(){
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
@@ -132,7 +132,6 @@ public class BrightnessManagerTest extends AndroidTestCase {
 
     BrightnessManager manager = new BrightnessManager(list);
 
-
     { //aBulb responds here, now has has known value
       aBulb.mKnown.setOn(false);
       aBulb.mKnown.setPercentBri(20);
@@ -142,10 +141,12 @@ public class BrightnessManagerTest extends AndroidTestCase {
     manager.setPolicy(BrightnessPolicy.VOLUME_BRI);
     manager.setBrightness(75);
 
-    { //bBulb syncs here, now has has known value
-      aBulb.mKnown.setOn(false);
-      aBulb.mKnown.setPercentBri(20);
-      aBulb.mKnown.setKelvinCT(3000);
+    assertEquals(75, manager.getBrightness());
+
+    { //bBulb responds here, now has has known value
+      bBulb.mKnown.setOn(false);
+      bBulb.mKnown.setPercentBri(20);
+      bBulb.mKnown.setKelvinCT(3000);
     }
 
     BulbState dark = new BulbState();
@@ -153,32 +154,42 @@ public class BrightnessManagerTest extends AndroidTestCase {
     dark.setPercentBri(0);
     dark.setKelvinCT(2000);
 
-    manager.setState(aBulb, dark);
-    manager.setState(bBulb, dark);
-    manager.setState(cBulb, dark);
-
-    assertEquals(dark, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-    assertEquals(dark, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-    assertEquals(dark, cBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    for(NetworkBulb bulb : list){
+      manager.setState(bulb, dark);
+      assertEquals(dark, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    }
 
     BulbState medium = new BulbState();
-    dark.setOn(true);
-    dark.setPercentBri(40);
-    dark.setKelvinCT(3500);
+    medium.setOn(true);
+    medium.set255Bri(64);
+    medium.setKelvinCT(3500);
 
-    manager.setState(aBulb, medium);
-    manager.setState(bBulb, medium);
-    manager.setState(cBulb, medium);
+    for(NetworkBulb bulb : list){
+      manager.setState(bulb, medium);
+      assertEquals(medium, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+      assertEquals((Integer) 48, ((MockNetBulb) bulb).mTarget.get255Bri());
+    }
 
-    assertEquals(medium, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-    assertEquals(medium, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-    assertEquals(medium, cBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-    //TODO inspect bulbs .known to make sure brightness rules applied
+    BulbState light = new BulbState();
+    light.setOn(true);
+    light.setPercentBri(100);
+    light.setKelvinCT(4000);
 
-    //TODO have 3rd's (bright state with 76+% brightness
+    for(NetworkBulb bulb : list){
+      manager.setState(bulb, light);
+      assertEquals(light, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+      assertEquals((Integer) 100, ((MockNetBulb) bulb).mTarget.getPercentBri());
+    }
 
-    //TODO end volume mode, check brightness (.known and getBri) again
+    assertEquals(75, manager.getBrightness());
 
+    //now mood ends and check that brightness correct after switching brightness modes
+    manager.setPolicy(BrightnessPolicy.DIRECT_BRI);
 
+    assertEquals(75, manager.getBrightness());
+
+    for(NetworkBulb bulb : list){
+      assertEquals((Integer)75, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN).getPercentBri());
+    }
   }
 }
