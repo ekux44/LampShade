@@ -172,13 +172,13 @@ public class BrightnessManagerTest extends AndroidTestCase {
 
     BulbState light = new BulbState();
     light.setOn(true);
-    light.set255Bri(255);
+    light.setPercentBri(100);
     light.setKelvinCT(4000);
 
     for (NetworkBulb bulb : list) {
       manager.setState(bulb, light);
       assertEquals(light, manager.getState(bulb, NetworkBulb.GetStateConfidence.KNOWN));
-      assertEquals((Integer) 255, ((MockNetBulb) bulb).mTarget.get255Bri());
+      assertEquals((Integer) 75, ((MockNetBulb) bulb).mTarget.getPercentBri());
     }
 
     assertEquals(75, manager.getBrightness());
