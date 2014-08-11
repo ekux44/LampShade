@@ -111,13 +111,13 @@ public class BrightnessManagerTest extends AndroidTestCase {
 
     manager.setState(bBulb, state2);
     assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
-    assertEquals(emptyState, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
 
     manager.setState(aBulb, state2);
-    assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(state2, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
     BulbState combined = state1.clone();
     combined.merge(state2);
-    assertEquals(combined, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    assertEquals(combined, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
   }
 
   //This simulates functionality required for a sunrise alarm clock

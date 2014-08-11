@@ -18,9 +18,13 @@ public class BrightnessManager {
   }
 
   public void setPolicy(BrightnessPolicy policy) {
+    assert policy != null;
+
     mPolicy = policy;
 
-    //TODO?
+    if (mPolicy == BrightnessPolicy.DIRECT_BRI) {
+      mVolumeBri = null;
+    }
   }
 
   public BrightnessPolicy getPolicy() {
@@ -32,11 +36,20 @@ public class BrightnessManager {
     assert targetState != null;
     assert mBulbs.contains(netBulb);
 
-    //TODO
+    BulbState adjusted = targetState.clone();
+    if (mPolicy == BrightnessPolicy.VOLUME_BRI && adjusted.get255Bri() != null) {
+      if (mVolumeBri == null) {
+        //calculate existing volume bri as brightest individual
+        mVolumeBri = getLargestPercentBrightness(mBulbs);
+      }
+      adjusted.set255Bri((mVolumeBri * adjusted.get255Bri()) / 100);
+    }
+    netBulb.setState(adjusted);
   }
 
-  //Does not update lights
+  //Does not update lights, only valid in volume mode
   public void setVolumeWithoutUpdate(int newVolume) {
+    assert mPolicy == BrightnessPolicy.VOLUME_BRI;
     mVolumeBri = newVolume;
   }
 
@@ -47,14 +60,7 @@ public class BrightnessManager {
 
       if (mVolumeBri == null) {
         //calculate existing volume bri as brightest individual
-        int briMax = 1;
-        for (NetworkBulb bulb : mBulbs) {
-          Integer physicalBri = bulb.getState(NetworkBulb.GetStateConfidence.KNOWN).getPercentBri();
-          if (physicalBri != null && physicalBri > briMax) {
-            briMax = physicalBri;
-          }
-        }
-        mVolumeBri = briMax;
+        mVolumeBri = getLargestPercentBrightness(mBulbs);
       }
 
       int oldVolume = mVolumeBri;
@@ -93,14 +99,7 @@ public class BrightnessManager {
     if (mPolicy == BrightnessPolicy.VOLUME_BRI) {
       if (mVolumeBri == null) {
         //calculate existing volume bri as brightest individual
-        int briMax = 1;
-        for (NetworkBulb bulb : mBulbs) {
-          Integer physicalBri = bulb.getState(NetworkBulb.GetStateConfidence.KNOWN).getPercentBri();
-          if (physicalBri != null && physicalBri > briMax) {
-            briMax = physicalBri;
-          }
-        }
-        return briMax;
+        return getLargestPercentBrightness(mBulbs);
       } else {
         return mVolumeBri;
       }
@@ -114,6 +113,18 @@ public class BrightnessManager {
       }
       return briSum / briNum;
     }
+  }
+
+  //calculate the largest brightness among the group
+  private static int getLargestPercentBrightness(List<NetworkBulb> list) {
+    int briMax = 1;
+    for (NetworkBulb bulb : list) {
+      Integer physicalBri = bulb.getState(NetworkBulb.GetStateConfidence.KNOWN).getPercentBri();
+      if (physicalBri != null && physicalBri > briMax) {
+        briMax = physicalBri;
+      }
+    }
+    return briMax;
   }
 
   public enum BrightnessPolicy {
