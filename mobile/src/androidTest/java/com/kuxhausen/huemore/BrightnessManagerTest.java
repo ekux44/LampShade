@@ -90,9 +90,9 @@ public class BrightnessManagerTest extends AndroidTestCase {
     BrightnessManager manager = new BrightnessManager(list);
 
     BulbState emptyState = new BulbState();
-    assertEquals(emptyState, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
-    assertEquals(emptyState, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-    assertFalse(emptyState.equals(aBulb.getState(NetworkBulb.GetStateConfidence.GUESS)));
+    assertEquals(emptyState, manager.getState(aBulb, NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(emptyState, manager.getState(aBulb, NetworkBulb.GetStateConfidence.KNOWN));
+    assertFalse(emptyState.equals(manager.getState(aBulb, NetworkBulb.GetStateConfidence.GUESS)));
 
     BulbState state1 = new BulbState();
     state1.setPercentBri(37);
@@ -100,8 +100,8 @@ public class BrightnessManagerTest extends AndroidTestCase {
     state1.setTransitionTime(60);
 
     aBulb.mKnown = state1;
-    assertEquals(emptyState, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
-    assertEquals(state1, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    assertEquals(emptyState, manager.getState(aBulb, NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(state1, manager.getState(aBulb, NetworkBulb.GetStateConfidence.KNOWN));
 
     BulbState state2 = new BulbState();
     state2.setPercentBri(97);
@@ -110,18 +110,18 @@ public class BrightnessManagerTest extends AndroidTestCase {
     state2.setMiredCT(300);
 
     manager.setState(bBulb, state2);
-    assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
-    assertEquals(state2, bBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    assertEquals(state2, manager.getState(bBulb, NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(state2, manager.getState(bBulb, NetworkBulb.GetStateConfidence.KNOWN));
 
     manager.setState(aBulb, state2);
-    assertEquals(state2, aBulb.getState(NetworkBulb.GetStateConfidence.DESIRED));
+    assertEquals(state2, manager.getState(aBulb, NetworkBulb.GetStateConfidence.DESIRED));
     BulbState combined = state1.clone();
     combined.merge(state2);
-    assertEquals(combined, aBulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+    assertEquals(combined, manager.getState(aBulb, NetworkBulb.GetStateConfidence.KNOWN));
   }
 
   //This simulates functionality required for a sunrise alarm clock
-  public void testFunctionality1(){
+  public void testFunctionality1() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
     MockNetBulb bBulb = new MockNetBulb();
@@ -139,7 +139,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     }
 
     manager.setPolicy(BrightnessPolicy.VOLUME_BRI);
-    manager.setBrightness(75);
+    manager.setVolumeWithoutUpdate(75);
 
     assertEquals(75, manager.getBrightness());
 
@@ -154,9 +154,9 @@ public class BrightnessManagerTest extends AndroidTestCase {
     dark.setPercentBri(0);
     dark.setKelvinCT(2000);
 
-    for(NetworkBulb bulb : list){
+    for (NetworkBulb bulb : list) {
       manager.setState(bulb, dark);
-      assertEquals(dark, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+      assertEquals(dark, manager.getState(bulb, NetworkBulb.GetStateConfidence.KNOWN));
     }
 
     BulbState medium = new BulbState();
@@ -164,21 +164,21 @@ public class BrightnessManagerTest extends AndroidTestCase {
     medium.set255Bri(64);
     medium.setKelvinCT(3500);
 
-    for(NetworkBulb bulb : list){
+    for (NetworkBulb bulb : list) {
       manager.setState(bulb, medium);
-      assertEquals(medium, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
+      assertEquals(medium, manager.getState(bulb, NetworkBulb.GetStateConfidence.KNOWN));
       assertEquals((Integer) 48, ((MockNetBulb) bulb).mTarget.get255Bri());
     }
 
     BulbState light = new BulbState();
     light.setOn(true);
-    light.setPercentBri(100);
+    light.set255Bri(255);
     light.setKelvinCT(4000);
 
-    for(NetworkBulb bulb : list){
+    for (NetworkBulb bulb : list) {
       manager.setState(bulb, light);
-      assertEquals(light, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN));
-      assertEquals((Integer) 100, ((MockNetBulb) bulb).mTarget.getPercentBri());
+      assertEquals(light, manager.getState(bulb, NetworkBulb.GetStateConfidence.KNOWN));
+      assertEquals((Integer) 255, ((MockNetBulb) bulb).mTarget.get255Bri());
     }
 
     assertEquals(75, manager.getBrightness());
@@ -188,8 +188,9 @@ public class BrightnessManagerTest extends AndroidTestCase {
 
     assertEquals(75, manager.getBrightness());
 
-    for(NetworkBulb bulb : list){
-      assertEquals((Integer)75, bulb.getState(NetworkBulb.GetStateConfidence.KNOWN).getPercentBri());
+    for (NetworkBulb bulb : list) {
+      assertEquals((Integer) 75,
+                   manager.getState(bulb, NetworkBulb.GetStateConfidence.KNOWN).getPercentBri());
     }
   }
 }

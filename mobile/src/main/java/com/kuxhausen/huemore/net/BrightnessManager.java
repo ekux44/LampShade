@@ -31,6 +31,20 @@ public class BrightnessManager {
     return mPolicy;
   }
 
+  public BulbState getState(NetworkBulb netBulb, NetworkBulb.GetStateConfidence confidence){
+    assert netBulb != null;
+    assert mBulbs.contains(netBulb);
+
+    BulbState adjusted = netBulb.getState(confidence).clone();
+    if (mPolicy == BrightnessPolicy.VOLUME_BRI && adjusted.get255Bri() != null) {
+      Integer volume = mVolumeBri;
+      if(volume==null)
+        volume = getLargestPercentBrightness(mBulbs);
+      adjusted.set255Bri(Math.min(255, (adjusted.get255Bri() * 100) / volume));
+    }
+    return adjusted;
+  }
+
   public void setState(NetworkBulb netBulb, BulbState targetState) {
     assert netBulb != null;
     assert targetState != null;
