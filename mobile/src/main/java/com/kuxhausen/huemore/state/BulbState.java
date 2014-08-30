@@ -370,7 +370,7 @@ public class BulbState {
     }
   }
 
-  public static BulbState merge(BulbState priority, BulbState secondary){
+  public static BulbState merge(BulbState priority, BulbState secondary) {
     BulbState result = secondary.clone();
     result.merge(priority);
     return result;

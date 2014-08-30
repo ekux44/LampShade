@@ -13,7 +13,7 @@ public class MockNetBulb implements NetworkBulb {
   @Override
   public void setState(BulbState state) {
     if (state != null) {
-      mTarget = state.clone();
+      mTarget = BulbState.merge(state, mTarget);
     }
   }
 
