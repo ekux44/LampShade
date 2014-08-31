@@ -19,6 +19,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
+import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
@@ -114,7 +115,7 @@ public class MainFragment extends Fragment implements
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), null, Math.max(1, seekBar.getProgress()));
+            dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
           }
         }
       });
@@ -136,7 +137,7 @@ public class MainFragment extends Fragment implements
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            dm.setBrightness(dm.getSelectedGroup(), Math.max(1, seekBar.getProgress()), null);
+            dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
           }
         }
       });
@@ -245,8 +246,9 @@ public class MainFragment extends Fragment implements
     DeviceManager dm = mParent.getService().getDeviceManager();
 
     if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
-      mBrightnessBar.setProgress(dm.getCurrentBrightness(dm.getSelectedGroup(), true));
-      mMaxBrightnessBar.setProgress(dm.getMaxBrightness(dm.getSelectedGroup(), true));
+      int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
+      mBrightnessBar.setProgress(brightness);
+      mMaxBrightnessBar.setProgress(brightness);
     }
   }
 

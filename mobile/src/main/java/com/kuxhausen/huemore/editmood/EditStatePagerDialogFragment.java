@@ -19,6 +19,7 @@ import android.widget.Spinner;
 
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
@@ -82,8 +83,10 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
         // TODO warn users with toast if no selected group
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
+        BrightnessManager briManager = dm.obtainBrightnessManager(g);
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-          dm.getNetworkBulb(bulbId).setState(currentState, true);
+          if(dm.getNetworkBulb(bulbId)!=null)
+            briManager.setState(dm.getNetworkBulb(bulbId), currentState);
         }
       }
     }

@@ -29,10 +29,10 @@ public class PlayingMood {
   private String moodName;
   private Group group;
 
-  public Integer initialMaxBri; // careful this might go stale after playing starts
-
   private MoodPlayer mChangedListener;
   private DeviceManager mDeviceManager;
+
+  private BrightnessManager mBrightnessManager;
 
   private PriorityQueue<QueueEvent> queue = new PriorityQueue<QueueEvent>();
   private Long moodLoopIterationEndMiliTime = 0L;
@@ -45,7 +45,7 @@ public class PlayingMood {
     mood = m;
     moodName = mName;
 
-    initialMaxBri = maxBri;
+    mBrightnessManager = dm.obtainBrightnessManager(g);
 
     if (timeStartedInRealtimeElapsedMilis != null) {
       if (mood.isInfiniteLooping()) {
@@ -165,7 +165,7 @@ public class PlayingMood {
       while (queue.peek() != null && queue.peek().miliTime <= SystemClock.elapsedRealtime()) {
         QueueEvent e = queue.poll();
         if (mDeviceManager.getNetworkBulb(e.bulbBaseId) != null) {
-          mDeviceManager.getNetworkBulb(e.bulbBaseId).setState(e.event.state, true);
+          mBrightnessManager.setState(mDeviceManager.getNetworkBulb(e.bulbBaseId), e.event.state);
         }
       }
     } else if (queue.peek() == null && mood.isInfiniteLooping()

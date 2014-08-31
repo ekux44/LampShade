@@ -224,7 +224,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         scheduledDelayedCalculate();
       }
 
-    } else if(!mBound && mMoodPlayer.getPlayingMoods().size()>0) {
+    } else if (!mBound && mMoodPlayer.getPlayingMoods().size() > 0) {
       // save ongoing moods and schedule a broadcast to restart service before next playing mood
       // event
       mMoodPlayer.saveOngoingAndScheduleResores();
@@ -244,7 +244,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     }
   }
 
-  private void scheduledDelayedCalculate(){
+  private void scheduledDelayedCalculate() {
     cancelDelayedCalculate();
 
     mDelayedCalculateHandler = new Handler();
@@ -260,8 +260,8 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     mDelayedCalculateHandler.postDelayed(myDelayedCalculateRunner, 1000);
   }
 
-  private void cancelDelayedCalculate(){
-    if(mDelayedCalculateHandler!=null && myDelayedCalculateRunner!=null){
+  private void cancelDelayedCalculate() {
+    if (mDelayedCalculateHandler != null && myDelayedCalculateRunner != null) {
       mDelayedCalculateHandler.removeCallbacks(myDelayedCalculateRunner);
     }
     mDelayedCalculateHandler = null;

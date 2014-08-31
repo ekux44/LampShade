@@ -57,31 +57,23 @@ public class MoodPlayer {
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 
-    Integer priorMaxBri = mDeviceManager.getMaxBrightness(g, false);
-    Integer priorCurrentBri = mDeviceManager.getCurrentBrightness(g, false);
-
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().conflictsWith(pm.getGroup())) {
-        // remove mood at i to unschedule
+        //unschedule any conflicting moods
         mPlayingMoods.remove(i);
         i--;
       }
     }
 
+    BrightnessManager briManager = mDeviceManager.obtainBrightnessManager(g);
     if (!m.isSimple()) {
-      if (maxBri == null) {
-        maxBri = priorMaxBri;
-      }
-
+      briManager.setPolicy(BrightnessManager.BrightnessPolicy.VOLUME_BRI);
       if (maxBri != null) {
-        mDeviceManager.setBrightness(g, maxBri, null);
-      } else if(priorCurrentBri!=null) {
-        mDeviceManager.setBrightness(g, priorCurrentBri, 100);
-      } else {
-        mDeviceManager.setBrightness(g, 100, null);
+        briManager.setVolumeWithoutUpdate(maxBri);
       }
     } else {
-      mDeviceManager.setBrightness(g, null, maxBri);
+      briManager.setPolicy(BrightnessManager.BrightnessPolicy.DIRECT_BRI);
+      //TODO ensure no brightness value in mood event's colors
     }
 
     mPlayingMoods.add(pm);
@@ -95,12 +87,15 @@ public class MoodPlayer {
   public void cancelMood(Group g) {
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().equals(g)) {
-        // TODO remove mood at i to unschedule
+        //unschedule
         mPlayingMoods.remove(i);
         i--;
       }
     }
-    mDeviceManager.setBrightness(g, null, null);
+
+    mDeviceManager.obtainBrightnessManager(g)
+        .setPolicy(BrightnessManager.BrightnessPolicy.DIRECT_BRI);
+
     // update notifications
     onActiveMoodsChanged();
     mDeviceManager.onStateChanged();

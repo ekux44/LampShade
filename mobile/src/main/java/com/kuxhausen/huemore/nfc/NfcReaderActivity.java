@@ -17,6 +17,7 @@ import android.widget.ToggleButton;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
@@ -123,8 +124,10 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
     if (service != null) {
       DeviceManager dm = service.getDeviceManager();
       Group g = Group.loadFromLegacyData(mBulbs, null, this);
+      BrightnessManager briManager = dm.obtainBrightnessManager(g);
       for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-        dm.getNetworkBulb(bulbId).setState(bs, true);
+        if(dm.getNetworkBulb(bulbId)!=null)
+          briManager.setState(dm.getNetworkBulb(bulbId), bs);
       }
     }
   }

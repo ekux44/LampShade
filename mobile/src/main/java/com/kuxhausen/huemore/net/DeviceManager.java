@@ -5,7 +5,7 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.util.Pair;
 
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.lifx.LifxConnection;
@@ -22,7 +22,6 @@ public class DeviceManager {
   private ArrayList<Connection> mConnections;
   private Context mContext;
   private Group selectedGroup;
-  private String selectedGroupName;
   private ArrayList<OnConnectionStatusChangedListener> connectionListeners =
       new ArrayList<OnConnectionStatusChangedListener>();
   public ArrayList<OnStateChangedListener> brightnessListeners =
@@ -31,6 +30,10 @@ public class DeviceManager {
   private HashMap<Long, NetworkBulb> bulbMap;
   private MyObserver mConnectionObserver;
   private LifxManager mLifxManager;
+  private ArrayList<Pair<Group, BrightnessManager>>
+      mBrightnessManagers =
+      new ArrayList<Pair<Group, BrightnessManager>>();
+
 
   public DeviceManager(Context c) {
     mContext = c;
@@ -74,6 +77,7 @@ public class DeviceManager {
       mLifxManager.onDestroy();
       mLifxManager = null;
     }
+    mBrightnessManagers.clear();
   }
 
   public void onDestroy() {
@@ -88,15 +92,38 @@ public class DeviceManager {
     return selectedGroup;
   }
 
-  public String getSelectedGroupName() {
-    return selectedGroupName;
-  }
-
   public void onGroupSelected(Group group, Integer optionalBri) {
     selectedGroup = group;
-    selectedGroupName = group.getName();
 
     // TODO
+  }
+
+  public BrightnessManager obtainBrightnessManager(Group g) {
+    //if a manager already exists for this group, return it
+    for (Pair<Group, BrightnessManager> pair : mBrightnessManagers) {
+      if (pair.first.equals(g)) {
+        return pair.second;
+      }
+    }
+
+    //else eliminate any conflicting managers
+    for (int i = 0; i < mBrightnessManagers.size(); i++) {
+      if (mBrightnessManagers.get(i).first.conflictsWith(g)) {
+        mBrightnessManagers.remove(i);
+        i--;
+      }
+    }
+
+    //and create a new manager
+    ArrayList<NetworkBulb> networkBulbs = new ArrayList<NetworkBulb>();
+    for (long id : g.getNetworkBulbDatabaseIds()) {
+      if (bulbMap.containsKey(id)) {
+        networkBulbs.add(bulbMap.get(id));
+      }
+    }
+    BrightnessManager newManager = new BrightnessManager(networkBulbs);
+    mBrightnessManagers.add(new Pair<Group, BrightnessManager>(g, newManager));
+    return newManager;
   }
 
   public ArrayList<Connection> getConnections() {
@@ -151,82 +178,6 @@ public class DeviceManager {
 
   public void removeBrightnessListener(OnStateChangedListener l) {
     brightnessListeners.remove(l);
-  }
-
-  /**
-   * will guess when brightness unknown
-   */
-  public Integer getCurrentBrightness(Group g, boolean guess) {
-    Log.d("net.devicemanager.getbrightness", "");
-    if (g == null || g.getNetworkBulbDatabaseIds().isEmpty()) {
-      return 50;
-    }
-    int briSum = 0;
-    int briNum = 0;
-
-    for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      // upon upgrading from v2.7, bulbs may not exist until reconnection
-      if (bulbMap.containsKey(bulbId)) {
-        NetworkBulb bulb = bulbMap.get(bulbId);
-        Integer brightness = bulb.getCurrentBrightness(guess);
-        if (brightness == null) {
-          return brightness;
-        }
-
-        briSum += brightness;
-        briNum++;
-      }
-    }
-
-    return briSum / briNum;
-  }
-
-  /**
-   * doesn't notify listeners *
-   */
-  public void setBrightness(Group g, Integer maxBrightness, Integer currentBrightness) {
-    Log.d("net.devicemanager.setbrightness", "");
-    if (g == null) {
-      return;
-    }
-    for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      // upon upgrading from v2.7, bulbs may not exist until reconnection
-      if (bulbMap.containsKey(bulbId)) {
-        NetworkBulb bulb = bulbMap.get(bulbId);
-        bulb.setBrightness(maxBrightness, currentBrightness);
-      }
-    }
-  }
-
-  /**
-   * will guess when brightness unknown
-   */
-  public Integer getMaxBrightness(Group g, boolean guess) {
-    if (g == null || g.getNetworkBulbDatabaseIds().isEmpty()) {
-      return 50;
-    }
-    int briSum = 0;
-    int briNum = 0;
-
-    for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-      // upon upgrading from v2.7, bulbs may not exist until reconnection
-      if (bulbMap.containsKey(bulbId)) {
-        NetworkBulb bulb = bulbMap.get(bulbId);
-        Integer brightness = bulb.getMaxBrightness(guess);
-        if (brightness == null) {
-          return brightness;
-        }
-
-        briSum += brightness;
-        briNum++;
-      }
-    }
-
-    //protection in case there are no bulbs in map
-    if(briNum==0)
-      return 50;
-
-    return briSum / briNum;
   }
 
   public void onBulbsListChanged() {

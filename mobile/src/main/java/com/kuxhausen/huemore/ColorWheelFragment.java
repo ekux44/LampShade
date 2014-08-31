@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 
+import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
@@ -118,9 +119,10 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
       if (service != null) {
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
+        BrightnessManager briManager = dm.obtainBrightnessManager(g);
         for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
           if(dm.getNetworkBulb(bulbId)!=null)
-            dm.getNetworkBulb(bulbId).setState(hs, true);
+            briManager.setState(dm.getNetworkBulb(bulbId), hs);
         }
       }
     }

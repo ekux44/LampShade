@@ -79,8 +79,9 @@ public class Group {
     return false;
   }
 
-  public boolean equals(Group g) {
-    if (this.mName.equals(g.getName())) {
+  @Override
+  public boolean equals(Object g) {
+    if(g instanceof Group && this.mName.equals(((Group)g).getName())) {
       return true;
     }
     return false;
