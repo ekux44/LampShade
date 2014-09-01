@@ -45,16 +45,6 @@ public class MockNetBulb implements NetworkBulb {
   }
 
   @Override
-  public void setState(BulbState bs, boolean broadcast) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public BulbState getState(boolean guessIfUnknown) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public String getName() {
     throw new UnsupportedOperationException();
   }
@@ -67,35 +57,5 @@ public class MockNetBulb implements NetworkBulb {
   @Override
   public Long getBaseId() {
     return mId;
-  }
-
-  //TODO everything beneith this is deprecated?
-
-  /**
-   * @param guessIfUnknown will guess value instead of returning null if unknown
-   * @result 1-100
-   */
-  @Override
-  public Integer getMaxBrightness(boolean guessIfUnknown) {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @param guessIfUnknown will guess value instead of returning null if unknown
-   * @result 1-100
-   */
-  @Override
-  public Integer getCurrentBrightness(boolean guessIfUnknown) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean isMaxBriModeEnabled() {
-    throw new UnsupportedOperationException();
   }
 }

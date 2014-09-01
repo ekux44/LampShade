@@ -25,7 +25,6 @@ public class HueBulb implements NetworkBulb {
   private HubConnection mConnection;
 
   private BulbState desiredState = new BulbState();
-  private boolean mInstantBrightnessRequested = false;
 
   //using SystemClock.elapsedTimes
   public Long lastSendInitiatedTime;
@@ -49,151 +48,38 @@ public class HueBulb implements NetworkBulb {
   }
 
   @Override
-  public void setState(BulbState bs, boolean broadcast) {
+  public void setState(BulbState bs) {
     this.mConnection.updateDesiredLastChanged();
 
-    BulbState preBriAdjusted = bs.clone();
-    if (isMaxBriModeEnabled()) {
-      if (preBriAdjusted.get255Bri() != null) {
-        preBriAdjusted.set255Bri((int) (preBriAdjusted.get255Bri() * getMaxBrightness(true) / 100f));
-      } else {
-        preBriAdjusted.set255Bri((int)(getMaxBrightness(true)*2.55f));
-      }
-    }
-
-    if (preBriAdjusted.hasOnlyBri()) {
-      mInstantBrightnessRequested = true;
-    }
-
-    desiredState.merge(preBriAdjusted);
+    desiredState.merge(bs);
 
     mConnection.getLooper().queueSendState(this);
 
-    if (broadcast) {
-      this.mConnection.getDeviceManager().onStateChanged();
-    }
+    //TODO move or limit to actual state changes
+    this.mConnection.getDeviceManager().onStateChanged();
 
-    Log.i("setState", preBriAdjusted.toString());
-  }
-
-  @Override
-  public Integer getMaxBrightness(boolean guessIfUnknown) {
-    if (mMaxBri != null) {
-      return Math.max(1,Math.min(100,mMaxBri));
-    } else if (guessIfUnknown) {
-      return 100;
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * @param guessIfUnknown will guess value instead of returning null if unknown
-   * @result 1-100
-   */
-  @Override
-  public Integer getCurrentBrightness(boolean guessIfUnknown) {
-    Integer bri = null;
-    if (desiredState.get255Bri() != null) {
-      bri = desiredState.get255Bri();
-    } else if (confirmed.get255Bri() != null) {
-      bri = confirmed.get255Bri();
-    } else if (guessIfUnknown) {
-      bri = 127;
-    }
-    if (bri != null) {
-      return (int) ((bri / 2.55f) * (100f / getMaxBrightness(true)));
-    } else {
-      return null;
-    }
-  }
-
-  @Override
-  public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
-    Log.v("net.hue.bulb.zb",
-          "oldMaxBri+"+(mMaxBri!=null?mMaxBri:"null")
-          +", oldCurrentBri:"+(getCurrentBrightness(false)!=null?getCurrentBrightness(false):"null")
-          + ", newMaxBri:"+(desiredMaxBrightness!=null?desiredMaxBrightness:"null")
-          + ", newDesiredCurrentBri"+(desiredCurrentBrightness!=null?desiredCurrentBrightness:"null")
-    );
-
-    Integer oldCurerntBri = this.getCurrentBrightness(false);
-    Integer oldMaxBri = mMaxBri;
-
-    boolean currentChanged = false;
-    if (oldCurerntBri == null ^ desiredCurrentBrightness == null) {
-      currentChanged = true;
-    } else if (oldCurerntBri != null && desiredCurrentBrightness != null && !oldCurerntBri
-        .equals(desiredCurrentBrightness)) {
-      currentChanged = true;
-    }
-
-    boolean maxChanged = false;
-    if (mMaxBri == null ^ desiredMaxBrightness == null) {
-      maxChanged = true;
-    } else if (mMaxBri != null && desiredMaxBrightness != null && !mMaxBri
-        .equals(desiredMaxBrightness)) {
-      maxChanged = true;
-    }
-
-    mMaxBri = desiredMaxBrightness;
-
-    if(desiredMaxBrightness==null && maxChanged && desiredCurrentBrightness==null && currentChanged) {
-      oldCurerntBri = (int)(oldCurerntBri * oldMaxBri/100f);
-    } else if (desiredCurrentBrightness != null) {
-      oldCurerntBri = desiredCurrentBrightness;
-    }
-
-    if (maxChanged || currentChanged) {
-      if (oldCurerntBri != null) {
-        BulbState change = new BulbState();
-        change.set255Bri((int) (oldCurerntBri * 2.55f));
-        change.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
-        setState(change, true);
-      }
-    }
-
-    Log.v("net.hue.bulb.za",
-          "finalMaxBri+"+(mMaxBri!=null?mMaxBri:"null")
-          +", finalCurrentBri:"+(getCurrentBrightness(false)!=null?getCurrentBrightness(false):"null")
-    );
-  }
-
-  @Override
-  public boolean isMaxBriModeEnabled() {
-    return mMaxBri != null;
-  }
-
-  @Override
-  public void setState(BulbState state) {
-    //TODO
-    throw new UnsupportedOperationException();
+    Log.i("setState", bs.toString());
   }
 
   @Override
   public BulbState getState(GetStateConfidence confidence) {
-    //TODO
-    throw new UnsupportedOperationException();
-  }
-
-
-  @Override
-  public BulbState getState(boolean guess) {
-    BulbState preBriAdjusted = desiredState.clone();
-    if (isMaxBriModeEnabled()) {
-      if (preBriAdjusted.get255Bri() != null) {
-        preBriAdjusted.set255Bri((int) (preBriAdjusted.get255Bri() * 100f / getMaxBrightness(true)));
-      }
+    BulbState result = new BulbState();
+    switch (confidence) {
+      case GUESS:
+        BulbState guess = new BulbState();
+        guess.setPercentBri(50);
+        guess.setOn(true);
+        guess.setAlert(BulbState.Alert.NONE);
+        guess.setEffect(BulbState.Effect.NONE);
+        guess.setMiredCT(300);
+        guess.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
+        result = BulbState.merge(guess, result);
+      case KNOWN:
+        result = BulbState.merge(confirmed, result);
+      case DESIRED:
+        result = BulbState.merge(desiredState, result);
     }
-
-    if (guess) {
-      if (preBriAdjusted.get255Bri() == null) {
-        preBriAdjusted.setPercentBri(50);
-      }
-
-    }
-    Log.i("net.hue.bulb.getState", preBriAdjusted.toString());
-    return preBriAdjusted;
+    return result;
   }
 
   public void confirm(BulbState transmitted) {
@@ -214,8 +100,9 @@ public class HueBulb implements NetworkBulb {
   }
 
   public void attributesReturned(BulbAttributes attributes) {
-    if(attributes==null || attributes.state==null)
+    if (attributes == null || attributes.state == null) {
       return;
+    }
 
     //these may be stale by up to 4 seconds, but lets set them to the confirmed for now
     //TODO better handle
@@ -245,15 +132,7 @@ public class HueBulb implements NetworkBulb {
    */
   public BulbState getSendState() {
     BulbState toSend = confirmed.delta(desiredState);
-    if (mInstantBrightnessRequested) {
-      BulbState brightnessOnly = new BulbState();
-      brightnessOnly.set255Bri(toSend.get255Bri());
-      brightnessOnly.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
-      mInstantBrightnessRequested = false;
-      return brightnessOnly;
-    } else {
-      return toSend;
-    }
+    return toSend;
   }
 
   @Override

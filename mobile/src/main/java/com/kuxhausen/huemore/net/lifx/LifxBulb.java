@@ -57,7 +57,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     mLight.addLightListener(this);
 
     if (!mDesiredState.isEmpty()) {
-      setState(mDesiredState, false);
+      setState(mDesiredState);
       mDesiredState = new BulbState();
     }
   }
@@ -82,7 +82,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
   }
 
   @Override
-  public void setState(BulbState bs, boolean broadcast) {
+  public void setState(BulbState bs) {
     Log.d("lifx", "setState but mLight?null " + (mLight == null));
 
     mDesiredLastChanged = SystemClock.elapsedRealtime();
@@ -101,9 +101,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       }
 
       if (bs.get255Bri() != null) {
-        lifxBrightness = (bs.get255Bri() / 255f) * (getMaxBrightness(true) / 100f);
-      } else if (isMaxBriModeEnabled()) {
-        lifxBrightness = (getMaxBrightness(true) / 100f);
+        lifxBrightness = (bs.get255Bri() / 255f);
       }
 
       //clip brightness to ensure proper behavior (0 brightness not allowed)
@@ -149,6 +147,9 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       //cache for when light not connected yet
       mDesiredState.merge(bs);
     }
+
+    //TODO move or limit to actual state changes
+    this.mConnection.getDeviceManager().onStateChanged();
   }
 
   protected boolean hasPendingWork() {
@@ -159,102 +160,38 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
     return false;
   }
 
-  @Override
-  public BulbState getState(boolean guessIfUnknown) {
-    BulbState result = new BulbState();
-
-    if (mLight != null && mLight.getColor() != null) {
-      LFXHSBKColor color = mLight.getColor();
-      result.set255Bri((int) ((color.getBrightness() * 255f) * (100f / getMaxBrightness(true))));
-    } else if (guessIfUnknown) {
-      result.setPercentBri(50);
-    }
-
-    return result;
-  }
-
-  @Override
-  public Integer getMaxBrightness(boolean guessIfUnknown) {
-    if (mMaxBri != null) {
-      return Math.max(1, Math.min(100, mMaxBri));
-    } else if (guessIfUnknown) {
-      return 100;
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * @param guessIfUnknown will guess value instead of returning null if unknown
-   * @result 1-100
-   */
-  @Override
-  public Integer getCurrentBrightness(boolean guessIfUnknown) {
-    if (mLight != null && mLight.getColor() != null) {
-      LFXHSBKColor color = mLight.getColor();
-      return (int) ((color.getBrightness() * 100f) * (100f / getMaxBrightness(true)));
-    } else if (guessIfUnknown) {
-      return 50;
-    } else {
-      return null;
-    }
-  }
-
-  @Override
-  public void setBrightness(Integer desiredMaxBrightness, Integer desiredCurrentBrightness) {
-    Integer oldCurerntBri = this.getCurrentBrightness(false);
-    Integer oldMaxBri = mMaxBri;
-
-    boolean currentChanged = false;
-    if (oldCurerntBri == null ^ desiredCurrentBrightness == null) {
-      currentChanged = true;
-    } else if (oldCurerntBri != null && desiredCurrentBrightness != null && !oldCurerntBri
-        .equals(desiredCurrentBrightness)) {
-      currentChanged = true;
-    }
-
-    boolean maxChanged = false;
-    if (mMaxBri == null ^ desiredMaxBrightness == null) {
-      maxChanged = true;
-    } else if (mMaxBri != null && desiredMaxBrightness != null && !mMaxBri
-        .equals(desiredMaxBrightness)) {
-      maxChanged = true;
-    }
-
-    mMaxBri = desiredMaxBrightness;
-
-    if (desiredMaxBrightness == null && maxChanged && desiredCurrentBrightness == null
-        && currentChanged) {
-      oldCurerntBri = (int) (oldCurerntBri * oldMaxBri / 100f);
-    } else if (desiredCurrentBrightness != null) {
-      oldCurerntBri = desiredCurrentBrightness;
-    }
-
-    if (maxChanged || currentChanged) {
-      if (oldCurerntBri != null) {
-        BulbState change = new BulbState();
-        change.set255Bri((int) (oldCurerntBri * 2.55f));
-        change.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
-        setState(change, true);
-      }
-    }
-  }
-
-  @Override
-  public boolean isMaxBriModeEnabled() {
-    return mMaxBri != null;
-  }
-
-  @Override
-  public void setState(BulbState state) {
-    //TODO
-    throw new UnsupportedOperationException();
-  }
 
   @Override
   public BulbState getState(GetStateConfidence confidence) {
-    //TODO
-    throw new UnsupportedOperationException();
+    BulbState result = new BulbState();
+    switch (confidence) {
+      case GUESS:
+        BulbState guess = new BulbState();
+        guess.setPercentBri(50);
+        guess.setOn(true);
+        guess.setAlert(BulbState.Alert.NONE);
+        guess.setEffect(BulbState.Effect.NONE);
+        guess.setMiredCT(300);
+        guess.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);
+        result = BulbState.merge(guess, result);
+      case KNOWN:
+        if (mLight != null && mLight.getColor() != null) {
+          LFXHSBKColor color = mLight.getColor();
+          BulbState confirmed = new BulbState();
+          confirmed.setOn(mLight.getPowerState() == LFXTypes.LFXPowerState.ON);
+          confirmed.setPercentBri((int) (color.getBrightness() * 100.0));
+
+          //TODO improve lifx color logic
+          confirmed.setKelvinCT((int) color.getKelvin());
+          Float[] hs = {color.getHue() / 360.0f, color.getSaturation()};
+          confirmed.xy = Utils.hsTOxy(hs);
+
+          result = BulbState.merge(confirmed, result);
+        }
+      case DESIRED:
+        result = BulbState.merge(mDesiredState, result);
+    }
+    return result;
   }
 
   @Override

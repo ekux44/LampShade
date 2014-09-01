@@ -58,7 +58,7 @@ public class EditBulbDialogFragment extends DialogFragment {
     bs.setAlert(Alert.FLASH_30SEC);
     bs.setOn(true);
 
-    netBulb.setState(bs, false);
+    netBulb.setState(bs);
 
     builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
       @Override
@@ -70,7 +70,7 @@ public class EditBulbDialogFragment extends DialogFragment {
         bs.setAlert(Alert.FLASH_30SEC);
         bs.setOn(true);
 
-        netBulb.setState(bs, false);
+        netBulb.setState(bs);
       }
     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override

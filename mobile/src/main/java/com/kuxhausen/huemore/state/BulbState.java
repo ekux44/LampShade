@@ -23,7 +23,8 @@ public class BulbState {
     COLORLOOP
   }
 
-  public final static int TRANSITION_TIME_DEFAULT = 4, TRANSITION_TIME_NONE = 0;
+  public final static int TRANSITION_TIME_DEFAULT = 4, TRANSITION_TIME_NONE = 0,
+      TRANSITION_TIME_BRIGHTNESS_BAR = 2;
 
   /**
    * On/Off state of the light. On=true, Off=false

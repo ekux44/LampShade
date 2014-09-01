@@ -121,7 +121,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     ArrayList<Route> result = new ArrayList<Route>();
 
     for (Route route : myRoutes) {
-      if (route.state == bestSoFar && route.state!=ConnectivityState.Connected) {
+      if (route.state == bestSoFar && route.state != ConnectivityState.Connected) {
         result.add(route);
       } else if (route.isMoreConnectedThan(bestSoFar)) {
         result.clear();
@@ -299,7 +299,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     return this.mContext.getResources().getString(R.string.device_hue);
   }
 
-  public void updateDesiredLastChanged(){
+  public void updateDesiredLastChanged() {
     mDesiredLastChanged = SystemClock.elapsedRealtime();
   }
 
@@ -377,7 +377,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       ensureLooping();
     }
 
-    public void queueGetList(){
+    public void queueGetList() {
       requestList = true;
       ensureLooping();
     }
@@ -393,7 +393,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
           @Override
           public void onTick(long millisUntilFinished) {
-            if(requestList){
+            if (requestList) {
               for (Route route : getBestRoutes()) {
                 NetworkMethods
                     .PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
@@ -402,8 +402,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                 Log.d("net.hue.connection.onTick", "perform request list");
               }
               requestList = false;
-            }
-            else if (mOutgoingStateQueue.size() > 0) {
+            } else if (mOutgoingStateQueue.size() > 0) {
               HueBulb selected = mOutgoingStateQueue.iterator().next();
               mOutgoingStateQueue.remove(selected);
 
@@ -423,14 +422,16 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                 }
                 selected.lastSendInitiatedTime = SystemClock.elapsedRealtime();
               }
-            } else if(mIncomingStateQueue.size() > 0) {
+            } else if (mIncomingStateQueue.size() > 0) {
               HueBulb toQuerry = mIncomingStateQueue.iterator().next();
               mIncomingStateQueue.remove(toQuerry);
 
               for (Route route : getBestRoutes()) {
                 NetworkMethods
-                    .PreformGetBulbAttributes(route, mData.hashedUsername, mContext, getRequestQueue(),
-                                              HubConnection.this, HubConnection.this, toQuerry.getHubBulbNumber());
+                    .PreformGetBulbAttributes(route, mData.hashedUsername, mContext,
+                                              getRequestQueue(),
+                                              HubConnection.this, HubConnection.this,
+                                              toQuerry.getHubBulbNumber());
                 Log.d("net.hue.connection.onTick",
                       "perform querry" + toQuerry.getBaseId()
                 );

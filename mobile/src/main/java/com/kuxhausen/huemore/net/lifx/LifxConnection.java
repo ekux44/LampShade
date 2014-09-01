@@ -119,6 +119,10 @@ public class LifxConnection implements Connection {
     mLight = null;
   }
 
+  public DeviceManager getDeviceManager() {
+    return mDeviceManager;
+  }
+
   public static class ExtraData {
 
   }
