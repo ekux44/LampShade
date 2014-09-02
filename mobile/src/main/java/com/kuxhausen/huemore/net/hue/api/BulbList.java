@@ -107,7 +107,35 @@ public class BulbList {
   @SerializedName("50")
   private Bulb b50;
 
-  // TODO add the final 20
+  //experimental support for upto 64 hue bulbs. TODO support arbitrary bulbs once NFC rewrite
+  @SerializedName("51")
+  private Bulb b51;
+  @SerializedName("52")
+  private Bulb b52;
+  @SerializedName("53")
+  private Bulb b53;
+  @SerializedName("54")
+  private Bulb b54;
+  @SerializedName("55")
+  private Bulb b55;
+  @SerializedName("56")
+  private Bulb b56;
+  @SerializedName("57")
+  private Bulb b57;
+  @SerializedName("58")
+  private Bulb b58;
+  @SerializedName("59")
+  private Bulb b59;
+  @SerializedName("60")
+  private Bulb b60;
+  @SerializedName("61")
+  private Bulb b61;
+  @SerializedName("62")
+  private Bulb b62;
+  @SerializedName("63")
+  private Bulb b63;
+  @SerializedName("64")
+  private Bulb b64;
 
   public BulbList() {
   }
@@ -313,6 +341,64 @@ public class BulbList {
     if (b50 != null) {
       b50.number = "50";
       ray.add(b50);
+    }
+
+    //experimental support for upto 64 hue bulbs. TODO support arbitrary bulbs once NFC rewrite
+    if (b51 != null) {
+      b51.number = "51";
+      ray.add(b51);
+    }
+    if (b52 != null) {
+      b52.number = "52";
+      ray.add(b52);
+    }
+    if (b53 != null) {
+      b53.number = "53";
+      ray.add(b53);
+    }
+    if (b54 != null) {
+      b54.number = "54";
+      ray.add(b54);
+    }
+    if (b55 != null) {
+      b55.number = "55";
+      ray.add(b55);
+    }
+    if (b56 != null) {
+      b56.number = "56";
+      ray.add(b56);
+    }
+    if (b57 != null) {
+      b57.number = "57";
+      ray.add(b57);
+    }
+    if (b58 != null) {
+      b58.number = "58";
+      ray.add(b58);
+    }
+    if (b59 != null) {
+      b59.number = "59";
+      ray.add(b59);
+    }
+    if (b60 != null) {
+      b60.number = "60";
+      ray.add(b60);
+    }
+    if (b61 != null) {
+      b61.number = "61";
+      ray.add(b61);
+    }
+    if (b62 != null) {
+      b62.number = "62";
+      ray.add(b62);
+    }
+    if (b63 != null) {
+      b63.number = "63";
+      ray.add(b63);
+    }
+    if (b64 != null) {
+      b64.number = "64";
+      ray.add(b64);
     }
 
     Bulb[] list = new Bulb[ray.size()];
