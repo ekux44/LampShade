@@ -136,8 +136,13 @@ public class MoodPlayer {
           for (int i = 0; i < mPlayingMoods.size(); i++) {
             boolean ongoing = mPlayingMoods.get(i).onTick();
             if (!ongoing) {
+              PlayingMood pm = mPlayingMoods.get(i);
+
               mPlayingMoods.remove(i);
               i--;
+
+              mDeviceManager.obtainBrightnessManager(pm.getGroup())
+                  .setPolicy(BrightnessManager.BrightnessPolicy.DIRECT_BRI);
               // update notifications
               activeMoodsChanged = true;
             }
