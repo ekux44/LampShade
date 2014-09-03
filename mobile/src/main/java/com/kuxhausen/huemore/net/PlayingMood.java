@@ -39,6 +39,8 @@ public class PlayingMood {
 
   public PlayingMood(MoodPlayer mp, DeviceManager dm, Group g, Mood m, String mName,
                      Integer maxBri, Long timeStartedInRealtimeElapsedMilis) {
+    assert g!=null;
+
     mChangedListener = mp;
     mDeviceManager = dm;
     group = g;

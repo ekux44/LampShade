@@ -99,6 +99,8 @@ public class DeviceManager {
   }
 
   public BrightnessManager obtainBrightnessManager(Group g) {
+    assert g!=null;
+
     //if a manager already exists for this group, return it
     for (Pair<Group, BrightnessManager> pair : mBrightnessManagers) {
       if (pair.first.equals(g)) {
@@ -124,6 +126,21 @@ public class DeviceManager {
     BrightnessManager newManager = new BrightnessManager(networkBulbs);
     mBrightnessManagers.add(new Pair<Group, BrightnessManager>(g, newManager));
     return newManager;
+  }
+
+  /**
+   * if a BrightnessManager is assigned to that group, return it
+   * else return null
+   */
+  public BrightnessManager peekBrightnessManager(Group g){
+    //if a manager exists for this group, return it
+    for (Pair<Group, BrightnessManager> pair : mBrightnessManagers) {
+      if (pair.first.equals(g)) {
+        return pair.second;
+      }
+    }
+
+    return null;
   }
 
   public ArrayList<Connection> getConnections() {

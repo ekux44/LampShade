@@ -55,6 +55,8 @@ public class MoodPlayer {
   }
 
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
+    assert g!=null;
+
     PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {
@@ -66,15 +68,11 @@ public class MoodPlayer {
     }
 
     BrightnessManager briManager = mDeviceManager.obtainBrightnessManager(g);
-    if (!m.isSimple()) {
-      briManager.setPolicy(BrightnessManager.BrightnessPolicy.VOLUME_BRI);
-      if (maxBri != null) {
-        briManager.setVolumeWithoutUpdate(maxBri);
-      }
-    } else {
-      briManager.setPolicy(BrightnessManager.BrightnessPolicy.DIRECT_BRI);
-      //TODO ensure no brightness value in mood event's colors
+    briManager.setPolicy(BrightnessManager.BrightnessPolicy.VOLUME_BRI);
+    if (maxBri != null) {
+      briManager.setVolumeWithoutUpdate(maxBri);
     }
+
 
     mPlayingMoods.add(pm);
     ensureLooping();
@@ -85,6 +83,8 @@ public class MoodPlayer {
   }
 
   public void cancelMood(Group g) {
+    assert g!=null;
+
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().equals(g)) {
         //unschedule

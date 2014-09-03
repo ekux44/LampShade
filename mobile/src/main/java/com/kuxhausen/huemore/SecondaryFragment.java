@@ -16,6 +16,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
+import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.Group;
@@ -94,7 +95,9 @@ public class SecondaryFragment extends Fragment
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
           DeviceManager dm = parrentA.getService().getDeviceManager();
-          dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+          if (dm.getSelectedGroup() != null) {
+            dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+          }
         }
       }
     });
@@ -116,7 +119,9 @@ public class SecondaryFragment extends Fragment
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
           DeviceManager dm = parrentA.getService().getDeviceManager();
-          dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+          if (dm.getSelectedGroup() != null) {
+            dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+          }
         }
       }
     });
@@ -150,13 +155,10 @@ public class SecondaryFragment extends Fragment
       return;
     }
 
-    boolean maxBriMode = false;
     Group g = parrentA.getService().getDeviceManager().getSelectedGroup();
-    if (g != null && parrentA.getService().getMoodPlayer().conflictsWithOngoingPlaying(g)) {
-      maxBriMode = true;
-    }
+    BrightnessManager bm = parrentA.getService().getDeviceManager().peekBrightnessManager(g);
 
-    if (maxBriMode) {
+    if (bm != null && bm.getPolicy() == BrightnessManager.BrightnessPolicy.VOLUME_BRI) {
       mBrightnessBar.setVisibility(View.GONE);
       mMaxBrightnessBar.setVisibility(View.VISIBLE);
       mBrightnessDescriptor.setText(R.string.max_brightness);
@@ -213,7 +215,8 @@ public class SecondaryFragment extends Fragment
     if (parrentA != null && parrentA.boundToService()) {
       DeviceManager dm = parrentA.getService().getDeviceManager();
 
-      if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null) {
+      if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null
+          && dm.getSelectedGroup() != null) {
         int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
         mBrightnessBar.setProgress(brightness);
         mMaxBrightnessBar.setProgress(brightness);

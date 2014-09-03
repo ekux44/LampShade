@@ -83,10 +83,12 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
         // TODO warn users with toast if no selected group
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
-        BrightnessManager briManager = dm.obtainBrightnessManager(g);
-        for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-          if(dm.getNetworkBulb(bulbId)!=null)
-            briManager.setState(dm.getNetworkBulb(bulbId), currentState);
+        if(g!=null) {
+          BrightnessManager briManager = dm.obtainBrightnessManager(g);
+          for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
+            if (dm.getNetworkBulb(bulbId) != null)
+              briManager.setState(dm.getNetworkBulb(bulbId), currentState);
+          }
         }
       }
     }
