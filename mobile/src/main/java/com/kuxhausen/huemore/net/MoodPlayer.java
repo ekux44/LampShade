@@ -55,9 +55,12 @@ public class MoodPlayer {
   }
 
   public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
-    assert g!=null;
+    assert g != null;
 
-    PlayingMood pm = new PlayingMood(this, mDeviceManager, g, m, mName, maxBri, miliTimeStarted);
+    PlayingMood
+        pm =
+        new PlayingMood(mDeviceManager, g, m, mName, miliTimeStarted,
+                        SystemClock.elapsedRealtime());
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().conflictsWith(pm.getGroup())) {
@@ -73,7 +76,6 @@ public class MoodPlayer {
       briManager.setVolumeWithoutUpdate(maxBri);
     }
 
-
     mPlayingMoods.add(pm);
     ensureLooping();
 
@@ -83,7 +85,7 @@ public class MoodPlayer {
   }
 
   public void cancelMood(Group g) {
-    assert g!=null;
+    assert g != null;
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().equals(g)) {
@@ -134,7 +136,7 @@ public class MoodPlayer {
         public void onTick(long millisUntilFinished) {
           boolean activeMoodsChanged = false;
           for (int i = 0; i < mPlayingMoods.size(); i++) {
-            boolean ongoing = mPlayingMoods.get(i).onTick();
+            boolean ongoing = mPlayingMoods.get(i).onTick(SystemClock.elapsedRealtime());
             if (!ongoing) {
               PlayingMood pm = mPlayingMoods.get(i);
 
