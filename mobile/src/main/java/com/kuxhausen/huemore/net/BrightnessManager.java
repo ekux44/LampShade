@@ -11,14 +11,18 @@ public class BrightnessManager {
   private List<NetworkBulb> mBulbs;
 
   public BrightnessManager(List<NetworkBulb> bulbs) {
-    assert bulbs != null;
-    assert !bulbs.isEmpty();
+    if (bulbs == null) {
+      throw new IllegalArgumentException();
+    }
+
     mBulbs = bulbs;
     mPolicy = BrightnessPolicy.DIRECT_BRI;
   }
 
   public void setPolicy(BrightnessPolicy policy) {
-    assert policy != null;
+    if (policy == null) {
+      throw new IllegalArgumentException();
+    }
 
     mPolicy = policy;
 
@@ -32,8 +36,9 @@ public class BrightnessManager {
   }
 
   public BulbState getState(NetworkBulb netBulb, NetworkBulb.GetStateConfidence confidence) {
-    assert netBulb != null;
-    assert mBulbs.contains(netBulb);
+    if (netBulb == null || !mBulbs.contains(netBulb) || confidence == null) {
+      throw new IllegalArgumentException();
+    }
 
     BulbState adjusted = netBulb.getState(confidence).clone();
     if (mPolicy == BrightnessPolicy.VOLUME_BRI && adjusted.get255Bri() != null) {
@@ -47,9 +52,9 @@ public class BrightnessManager {
   }
 
   public void setState(NetworkBulb netBulb, BulbState targetState) {
-    assert netBulb != null;
-    assert targetState != null;
-    assert mBulbs.contains(netBulb);
+    if (netBulb == null || targetState == null || !mBulbs.contains(netBulb)) {
+      throw new IllegalArgumentException();
+    }
 
     BulbState adjusted = targetState.clone();
 
@@ -71,7 +76,10 @@ public class BrightnessManager {
 
   //Does not update lights, only valid in volume mode
   public void setVolumeWithoutUpdate(int newVolume) {
-    assert mPolicy == BrightnessPolicy.VOLUME_BRI;
+    if (mPolicy != BrightnessPolicy.VOLUME_BRI) {
+      throw new IllegalStateException();
+    }
+
     mVolumeBri = newVolume;
   }
 
@@ -132,7 +140,9 @@ public class BrightnessManager {
 
   //calculate the largest brightness among the group, returning 1 if no bulbs are sufficiently confident of brightness
   private static int getLargestPercentBrightness(List<NetworkBulb> list) {
-    assert list != null;
+    if (list == null) {
+      throw new IllegalArgumentException();
+    }
 
     int briMax = 1;
     for (NetworkBulb bulb : list) {
@@ -147,7 +157,9 @@ public class BrightnessManager {
   //calculate the average brightness among the group, returning 1 if no bulbs are sufficiently confident of brightness
   private static int getAveragePercentBrightness(List<NetworkBulb> list,
                                                  NetworkBulb.GetStateConfidence confidence) {
-    assert list != null;
+    if (list == null) {
+      throw new IllegalArgumentException();
+    }
 
     int briSum = 0;
     int briNum = 0;

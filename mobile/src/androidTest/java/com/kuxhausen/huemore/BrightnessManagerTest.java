@@ -26,7 +26,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     try {
       BrightnessManager manager = new BrightnessManager(null);
       fail();
-    } catch (AssertionError e) {
+    } catch (IllegalArgumentException e) {
     }
   }
 
@@ -76,7 +76,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
       BrightnessManager manager = new BrightnessManager(new ArrayList<NetworkBulb>());
       manager.setState(new MockNetBulb(), new BulbState());
       fail();
-    } catch (AssertionError e) {
+    } catch (IllegalArgumentException e) {
     }
   }
 
