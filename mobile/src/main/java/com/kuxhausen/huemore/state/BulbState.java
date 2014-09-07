@@ -200,8 +200,10 @@ public class BulbState {
 
   @Override
   public boolean equals(Object obj) {
-    assert (obj != null);
-    assert (obj instanceof BulbState);
+    if (obj == null || !(obj instanceof BulbState)) {
+      throw new IllegalArgumentException();
+    }
+
     BulbState other = (BulbState) obj;
 
     if (this.getOn() != null ^ other.getOn() != null) {
