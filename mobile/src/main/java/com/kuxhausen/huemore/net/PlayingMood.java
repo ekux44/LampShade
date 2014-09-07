@@ -1,7 +1,9 @@
 package com.kuxhausen.huemore.net;
 
 import android.util.Log;
+import android.util.Pair;
 
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
@@ -9,6 +11,7 @@ import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.timing.Conversions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
@@ -18,15 +21,81 @@ import java.util.Stack;
  */
 public class PlayingMood {
 
+
+  private Mood mMood;
+  private String mMoodName;
+  private Group mGroup;
+  private long mStartMiliTime;
+  private long mLastTickedMiliTime;
+
+  public PlayingMood(Mood m, String moodName, Group g, long startMiliTime) {
+    if (m == null || g == null || startMiliTime < 1l) {
+      throw new IllegalArgumentException();
+    }
+
+    mMood = m;
+    if (moodName != null) {
+      mMoodName = moodName;
+    } else {
+      mMoodName = "?";
+    }
+    mGroup = g;
+    mStartMiliTime = startMiliTime;
+    mLastTickedMiliTime = startMiliTime - 1;
+
+    if (mMood.getTimeAddressingRepeatPolicy()) {
+      throw new UnsupportedOperationException();
+    }
+
+  }
+
+  public boolean hasFutureEvents(long nowMiliTime) {
+    return false;
+  }
+
+  public long getNextEventInCurrentMillis(long nowMiliTime) {
+    return -1;
+  }
+
+  public List<Pair<List<Long>, BulbState>> getEventsSinceThrough(long sinceMiliTime,
+                                                                 long throughMiliTime) {
+    return null;
+  }
+
+  public List<Pair<List<Long>, BulbState>> tick(long throughMiliTime) {
+    long sinceTime = mLastTickedMiliTime;
+    long throughTime = throughMiliTime;
+
+    mLastTickedMiliTime = throughMiliTime;
+
+    return getEventsSinceThrough(sinceTime, throughTime);
+  }
+
+  public String getMoodName() {
+    return mMoodName;
+  }
+
+  public String getGroupName() {
+    return mGroup.getName();
+  }
+
+  public String toString() {
+    return getGroupName() + " \u2190 " + getMoodName();
+  }
+
+  public Group getGroup() {
+    return mGroup;
+  }
+
+  public Mood getMood() {
+    return mMood;
+  }
+
+  //TODO delete everything beneath this line
+
+
   // if the next even is happening in less than 1/2 seconds, stay awake for it
   private final static long IMMIMENT_EVENT_WAKE_THRESHOLD_IN_MILISEC = 1000l;
-
-  /**
-   * should never be null *
-   */
-  private Mood mood;
-  private String moodName;
-  private Group group;
 
   private DeviceManager mDeviceManager;
 
@@ -38,47 +107,34 @@ public class PlayingMood {
   /**
    * @param systemElapsedRealtime usually SystemClock.elapsedRealtime();
    */
-  public PlayingMood(DeviceManager dm, Group g, Mood m, String mName, Long timeStartedInRealtimeElapsedMilis,
+  public PlayingMood(DeviceManager dm, Group g, Mood m, String mName,
+                     Long timeStartedInRealtimeElapsedMilis,
                      long systemElapsedRealtime) {
     assert g != null;
 
     mDeviceManager = dm;
-    group = g;
-    mood = m;
-    moodName = mName;
+    mGroup = g;
+    mMood = m;
+    if (mName != null) {
+      mMoodName = mName;
+    } else {
+      mMoodName = "?";
+    }
 
     mBrightnessManager = dm.obtainBrightnessManager(g);
 
     if (timeStartedInRealtimeElapsedMilis != null) {
-      if (mood.isInfiniteLooping()) {
+      if (mMood.isInfiniteLooping()) {
         // if entire loops could have occurred since the timeStarm started, fast forward to the
         // currently ongoing loop
         while (timeStartedInRealtimeElapsedMilis < (systemElapsedRealtime + (
-            mood.loopIterationTimeLength * 100))) {
-          timeStartedInRealtimeElapsedMilis += (mood.loopIterationTimeLength * 100);
+            mMood.loopIterationTimeLength * 100))) {
+          timeStartedInRealtimeElapsedMilis += (mMood.loopIterationTimeLength * 100);
         }
       }
     }
 
     loadMoodIntoQueue(timeStartedInRealtimeElapsedMilis, systemElapsedRealtime);
-  }
-
-  public String getMoodName() {
-    if (moodName != null) {
-      return moodName;
-    }
-    return "?";
-  }
-
-  public String getGroupName() {
-    if (group != null) {
-      return group.getName();
-    }
-    return "?";
-  }
-
-  public String toString() {
-    return getGroupName() + " \u2190 " + getMoodName();
   }
 
   /**
@@ -90,23 +146,23 @@ public class PlayingMood {
     Log.d("mood", "loadMoodWithOffset" + ((timeLoopStartedInRealtimeElapsedMilis != null)
                                           ? timeLoopStartedInRealtimeElapsedMilis : "null"));
 
-    ArrayList<Long>[] channels = new ArrayList[mood.getNumChannels()];
+    ArrayList<Long>[] channels = new ArrayList[mMood.getNumChannels()];
     for (int i = 0; i < channels.length; i++) {
       channels[i] = new ArrayList<Long>();
     }
 
-    ArrayList<Long> bulbBaseIds = group.getNetworkBulbDatabaseIds();
+    ArrayList<Long> bulbBaseIds = mGroup.getNetworkBulbDatabaseIds();
     for (int i = 0; i < bulbBaseIds.size(); i++) {
-      channels[i % mood.getNumChannels()].add(bulbBaseIds.get(i));
+      channels[i % mMood.getNumChannels()].add(bulbBaseIds.get(i));
     }
 
-    if (mood.timeAddressingRepeatPolicy) {
+    if (mMood.timeAddressingRepeatPolicy) {
       Stack<QueueEvent> pendingEvents = new Stack<QueueEvent>();
 
       long earliestEventStillApplicable = Long.MIN_VALUE;
 
-      for (int i = mood.events.length - 1; i >= 0; i--) {
-        Event e = mood.events[i];
+      for (int i = mMood.events.length - 1; i >= 0; i--) {
+        Event e = mMood.events[i];
         for (Long bNum : channels[e.channel]) {
           QueueEvent qe = new QueueEvent(e);
           qe.bulbBaseId = bNum;
@@ -122,10 +178,10 @@ public class PlayingMood {
         }
       }
 
-      if (earliestEventStillApplicable == Long.MIN_VALUE && mood.events.length > 0) {
+      if (earliestEventStillApplicable == Long.MIN_VALUE && mMood.events.length > 0) {
         // haven't found a previous state to start with, time to roll over and add last evening
         // event
-        Event e = mood.events[mood.events.length - 1];
+        Event e = mMood.events[mMood.events.length - 1];
         for (Long bNum : channels[e.channel]) {
           QueueEvent qe = new QueueEvent(e);
           qe.bulbBaseId = bNum;
@@ -138,7 +194,7 @@ public class PlayingMood {
         queue.add(pendingEvents.pop());
       }
     } else {
-      for (Event e : mood.events) {
+      for (Event e : mMood.events) {
 
         for (Long bNum : channels[e.channel]) {
           QueueEvent qe = new QueueEvent(e);
@@ -160,7 +216,7 @@ public class PlayingMood {
       }
     }
     moodLoopIterationEndMiliTime =
-        systemElapsedRealtime + (mood.loopIterationTimeLength * 100l);
+        systemElapsedRealtime + (mMood.loopIterationTimeLength * 100l);
   }
 
   /**
@@ -175,10 +231,10 @@ public class PlayingMood {
           mBrightnessManager.setState(mDeviceManager.getNetworkBulb(e.bulbBaseId), e.event.state);
         }
       }
-    } else if (queue.peek() == null && mood.isInfiniteLooping()
+    } else if (queue.peek() == null && mMood.isInfiniteLooping()
                && systemElapsedRealtime > moodLoopIterationEndMiliTime) {
       loadMoodIntoQueue(null, systemElapsedRealtime);
-    } else if (queue.peek() == null && !mood.isInfiniteLooping()) {
+    } else if (queue.peek() == null && !mMood.isInfiniteLooping()) {
       return false;
     }
     return true;
@@ -201,21 +257,13 @@ public class PlayingMood {
     return false;*/
   }
 
-  public Group getGroup() {
-    return group;
-  }
-
-  public Mood getMood() {
-    return mood;
-  }
-
   /**
    * @return next event time is millis referenced in SystemClock.elapsedRealtime()
    */
   public long getNextEventTime() {
     if (!queue.isEmpty()) {
       return queue.peek().miliTime;
-    } else if (mood.isInfiniteLooping()) {
+    } else if (mMood.isInfiniteLooping()) {
       return moodLoopIterationEndMiliTime;
     }
     return Long.MAX_VALUE;

@@ -106,4 +106,11 @@ public class Mood implements Cloneable {
     }
     return true;
   }
+
+  public boolean getTimeAddressingRepeatPolicy() {
+    if (timeAddressingRepeatPolicy == null) {
+      return false;
+    }
+    return timeAddressingRepeatPolicy;
+  }
 }
