@@ -61,14 +61,20 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
 
+    BulbState bs2 = new BulbState();
+    bs2.set255Bri(127);
+
     Event e1 = new Event(bs1, 0, 0);
-    Event[] eRay = {e1};
+    Event e2 = new Event(bs2, 1, 0);
+    Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
     m.events = eRay;
+    m.setNumChannels(2);
 
     Long bulb1 = 123l;
-    Long[] bulbs = {bulb1};
+    Long bulb2 = 456l;
+    Long[] bulbs = {bulb1, bulb2};
     Group g = new Group(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
@@ -80,12 +86,14 @@ public class PlayingMoodTest extends AndroidTestCase {
     assertEquals(startTime, pm.getNextEventInCurrentMillis());
 
     List<Pair<List<Long>, BulbState>> toPlay = pm.tick(startTime);
-    assertEquals(1, toPlay.size());
+    assertEquals(2, toPlay.size());
     assertEquals(bs1, toPlay.get(0).second);
     assertEquals(1, toPlay.get(0).first.size());
     assertEquals(bulb1, toPlay.get(0).first.get(0));
+    assertEquals(bs2, toPlay.get(1).second);
+    assertEquals(1, toPlay.get(1).first.size());
+    assertEquals(bulb2, toPlay.get(1).first.get(0));
 
     assertFalse(pm.hasFutureEvents());
   }
-
 }
