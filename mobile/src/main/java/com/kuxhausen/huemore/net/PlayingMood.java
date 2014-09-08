@@ -49,20 +49,71 @@ public class PlayingMood {
 
   }
 
-  public boolean hasFutureEvents(long nowMiliTime) {
+  private List<Long> getChannelBulbIds(int channelNum) {
+    ArrayList<Long> channel = new ArrayList<Long>();
+
+    List<Long> bulbBaseIds = mGroup.getNetworkBulbDatabaseIds();
+    for (int i = 0; i < bulbBaseIds.size(); i++) {
+      if (i % mMood.getNumChannels() == channelNum) {
+        channel.add(bulbBaseIds.get(i));
+      }
+    }
+
+    return channel;
+  }
+
+  public boolean hasFutureEvents() {
+    if (mMood.isInfiniteLooping()) {
+      return true;
+    }
+    if ((mMood.events[mMood.events.length - 1].time + mStartMiliTime) > mLastTickedMiliTime) {
+      return true;
+    }
     return false;
   }
 
-  public long getNextEventInCurrentMillis(long nowMiliTime) {
-    return -1;
+  public long getNextEventInCurrentMillis() {
+    if (!hasFutureEvents()) {
+      throw new IllegalStateException();
+    }
+
+    if (mMood.isInfiniteLooping()) {
+      throw new UnsupportedOperationException();
+    } else {
+      for (Event e : mMood.events) {
+        if (e.time + mStartMiliTime > mLastTickedMiliTime) {
+          return e.time + mStartMiliTime;
+        }
+      }
+    }
+
+    throw new IllegalStateException();
   }
 
   public List<Pair<List<Long>, BulbState>> getEventsSinceThrough(long sinceMiliTime,
                                                                  long throughMiliTime) {
-    return null;
+
+    List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
+
+    if (mMood.isInfiniteLooping()) {
+      throw new UnsupportedOperationException();
+    } else {
+      for (Event e : mMood.events) {
+        if (sinceMiliTime < (e.time + mStartMiliTime)
+            && (e.time + mStartMiliTime) <= throughMiliTime) {
+          result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+        }
+      }
+
+      return result;
+    }
   }
 
   public List<Pair<List<Long>, BulbState>> tick(long throughMiliTime) {
+    if (throughMiliTime < mLastTickedMiliTime) {
+      throw new IllegalArgumentException();
+    }
+
     long sinceTime = mLastTickedMiliTime;
     long throughTime = throughMiliTime;
 
@@ -151,7 +202,7 @@ public class PlayingMood {
       channels[i] = new ArrayList<Long>();
     }
 
-    ArrayList<Long> bulbBaseIds = mGroup.getNetworkBulbDatabaseIds();
+    List<Long> bulbBaseIds = mGroup.getNetworkBulbDatabaseIds();
     for (int i = 0; i < bulbBaseIds.size(); i++) {
       channels[i % mMood.getNumChannels()].add(bulbBaseIds.get(i));
     }

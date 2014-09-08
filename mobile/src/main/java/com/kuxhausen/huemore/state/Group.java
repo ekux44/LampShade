@@ -7,21 +7,22 @@ import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Group {
 
   private String mName;
-  private ArrayList<Long> mNetworkBulbDatabaseIds;
+  private List<Long> mNetworkBulbDatabaseIds;
 
   public String getName() {
     return mName;
   }
 
-  public ArrayList<Long> getNetworkBulbDatabaseIds() {
+  public List<Long> getNetworkBulbDatabaseIds() {
     return mNetworkBulbDatabaseIds;
   }
 
-  public Group(ArrayList<Long> netBulbBaseIds, String name) {
+  public Group(List<Long> netBulbBaseIds, String name) {
     mNetworkBulbDatabaseIds = netBulbBaseIds;
     mName = name;
   }
@@ -81,7 +82,7 @@ public class Group {
 
   @Override
   public boolean equals(Object g) {
-    if(g instanceof Group && this.mName.equals(((Group)g).getName())) {
+    if (g instanceof Group && this.mName.equals(((Group) g).getName())) {
       return true;
     }
     return false;
