@@ -36,8 +36,9 @@ public class PlayingMood {
 
   /**
    * @param startTime in elapsed realtime milliseconds
+   * @param dayStartTime in elapsed realtime milliseconds (may be negative)
    */
-  public PlayingMood(Mood m, String moodName, Group g, long startTime) {
+  public PlayingMood(Mood m, String moodName, Group g, long startTime, long dayStartTime) {
     if (m == null || g == null || startTime < 1l) {
       throw new IllegalArgumentException();
     }
@@ -49,13 +50,13 @@ public class PlayingMood {
       mMoodName = "?";
     }
     mGroup = g;
-    mStartTime = startTime;
-    mLastTickedTime = startTime - 1;
-
-    if (mMood.getTimeAddressingRepeatPolicy()) {
-      throw new UnsupportedOperationException();
+    if(m.getTimeAddressingRepeatPolicy()){
+      mStartTime = dayStartTime;
+      mLastTickedTime = dayStartTime - 1;
+    } else {
+      mStartTime = startTime;
+      mLastTickedTime = startTime - 1;
     }
-
   }
 
   private List<Long> getChannelBulbIds(int channelNum) {
@@ -259,7 +260,7 @@ public class PlayingMood {
           QueueEvent qe = new QueueEvent(e);
           qe.bulbBaseId = bNum;
 
-          qe.miliTime = Conversions.miliEventTimeFromMoodDailyTime(e.time);
+          qe.miliTime = Conversions.miliEventTimeFromMoodDailyTime(e.getLegacyTime());
           if (qe.miliTime > systemElapsedRealtime) {
             pendingEvents.add(qe);
           } else if (qe.miliTime >= earliestEventStillApplicable) {
@@ -296,7 +297,7 @@ public class PlayingMood {
           if (timeLoopStartedInRealtimeElapsedMilis == null) {
             timeLoopStartedInRealtimeElapsedMilis = systemElapsedRealtime;
           }
-          qe.miliTime = timeLoopStartedInRealtimeElapsedMilis + (e.time * 100l);
+          qe.miliTime = timeLoopStartedInRealtimeElapsedMilis + (e.getLegacyTime() * 100l);
 
           Log.d("mood", "qe event offset" + (qe.miliTime - systemElapsedRealtime));
 

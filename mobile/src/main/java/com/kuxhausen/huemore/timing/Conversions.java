@@ -44,4 +44,20 @@ public class Conversions {
     return SystemClock.elapsedRealtime() + miliOffsetFromNow;
   }
 
+  /**
+   * @return the start of day measured in SystemClock.elapsedRealtime milliseconds (may be negative)
+   */
+  public static long getDayStartElapsedRealTimeMillis() {
+    Calendar dayStart = Calendar.getInstance();
+    dayStart.set(Calendar.MILLISECOND, 0);
+    dayStart.set(Calendar.SECOND, 0);
+    dayStart.set(Calendar.MINUTE, 0);
+    dayStart.set(Calendar.HOUR_OF_DAY, 0);
+    dayStart.getTime();
+
+    Calendar current = Calendar.getInstance();
+
+    return SystemClock.elapsedRealtime() - (current.getTimeInMillis() - dayStart.getTimeInMillis());
+  }
+
 }

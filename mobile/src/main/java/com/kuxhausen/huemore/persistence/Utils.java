@@ -39,7 +39,7 @@ public class Utils {
     // boilerplate
     Event e = new Event();
     e.channel = 0;
-    e.time = 0;
+    e.setLegacyTime(0);
     e.state = bs;
     Event[] eRay = {e};
     // more boilerplate

@@ -69,7 +69,7 @@ public class LegacyTests {
         Log.e("tests", tNum + "event" + i + "ChannelNotEqual");
         return false;
       }
-      if (m1.events[i].time != m2.events[i].time) {
+      if (m1.events[i].getLegacyTime() != m2.events[i].getLegacyTime()) {
         Log.e("tests", tNum + "event" + i + "TimeNotEqual");
         return false;
       }

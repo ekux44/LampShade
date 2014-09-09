@@ -24,21 +24,21 @@ public class PlayingMoodTest extends AndroidTestCase {
 
   public void testConstructor() {
     try {
-      new PlayingMood(null, "", new Group(null, null), 1);
+      new PlayingMood(null, "", new Group(null, null), 1, -1000);
       fail();
     } catch (IllegalArgumentException e) {
     }
 
-    new PlayingMood(new Mood(), null, new Group(null, null), 1);
+    new PlayingMood(new Mood(), null, new Group(null, null), 1, -1000);
 
     try {
-      new PlayingMood(new Mood(), "", null, 1);
+      new PlayingMood(new Mood(), "", null, 1, -1000);
       fail();
     } catch (IllegalArgumentException e) {
     }
 
     try {
-      new PlayingMood(new Mood(), "", new Group(null, null), 0);
+      new PlayingMood(new Mood(), "", new Group(null, null), 0, -1000);
       fail();
     } catch (IllegalArgumentException e) {
     }
@@ -47,7 +47,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     String gName = "some group";
     Mood m = new Mood();
     Group g = new Group(null, gName);
-    PlayingMood pm = new PlayingMood(m, mName, g, 1);
+    PlayingMood pm = new PlayingMood(m, mName, g, 1, -1000);
     assertEquals(g, pm.getGroup());
     assertEquals(m, pm.getMood());
     assertEquals(mName, pm.getMoodName());
@@ -80,8 +80,9 @@ public class PlayingMoodTest extends AndroidTestCase {
     Group g = new Group(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
+    long dayStartTime = 12l;
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(startTime, pm.getNextEventInCurrentMillis());
@@ -126,8 +127,9 @@ public class PlayingMoodTest extends AndroidTestCase {
     Group g = new Group(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
+    long dayStartTime = 12l;
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(startTime, pm.getNextEventInCurrentMillis());
@@ -184,8 +186,9 @@ public class PlayingMoodTest extends AndroidTestCase {
     Group g = new Group(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
+    long dayStartTime = 12l;
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(startTime + 0, pm.getNextEventInCurrentMillis());
@@ -247,5 +250,53 @@ public class PlayingMoodTest extends AndroidTestCase {
     assertEquals(bulb1, tick9.get(0).first.get(0));
 
     assertTrue(pm.hasFutureEvents());
+  }
+
+  /**
+   * playing a daily mood
+   */
+  public void testFunctionality4() {
+    long startTime = 543l;
+    long dayStartTime = 12l;
+
+    long nineAMOffset = 32400000l;
+    long fourPMOffset = 57600000l;
+    long sixPMOffset = 64800000l;
+
+    BulbState bs1 = new BulbState();
+    bs1.setOn(true);
+
+    BulbState bs2 = new BulbState();
+    bs2.set255Bri(127);
+
+    Event e1 = new Event(bs1, 0);
+    e1.setMilliTime(dayStartTime + nineAMOffset);
+    Event e2 = new Event(bs2, 1);
+    e2.setMilliTime(dayStartTime + sixPMOffset);
+    Event[] eRay = {e1, e2};
+
+    Mood m = new Mood();
+    m.events = eRay;
+    m.setNumChannels(2);
+    m.setTimeAddressingRepeatPolicy(true);
+
+    Long bulb1 = 123l;
+    Long bulb2 = 456l;
+    Long[] bulbs = {bulb1, bulb2};
+    Group g = new Group(Arrays.asList(bulbs), "");
+
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + nineAMOffset, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick1 = pm.tick(dayStartTime + fourPMOffset);
+    assertEquals(1, tick1.size());
+    assertEquals(bs1, tick1.get(0).second);
+    assertEquals(1, tick1.get(0).first.size());
+    assertEquals(bulb1, tick1.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + sixPMOffset, pm.getNextEventInCurrentMillis());
+
   }
 }

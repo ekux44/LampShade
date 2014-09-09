@@ -12,7 +12,7 @@ public class Event implements Comparable<Event> {
   /**
    * in units of 1/10 of a second
    */
-  public Integer time;
+  private Long time;
 
   @Override
   public int compareTo(Event another) {
@@ -22,7 +22,7 @@ public class Event implements Comparable<Event> {
   public Event() {
   }
 
-  public Event(BulbState state, Integer channel, Integer time) {
+  public Event(BulbState state, Integer channel, Long time) {
     this.state = state;
     this.channel = channel;
     this.time = time;
@@ -40,8 +40,8 @@ public class Event implements Comparable<Event> {
     this.time = null;
   }
 
-  public void setMilliTime(int milliseconds) {
-    time = (int) (milliseconds / 100l);
+  public void setMilliTime(long milliseconds) {
+    time = milliseconds / 100l;
   }
 
   public long getMilliTime() {
@@ -49,5 +49,24 @@ public class Event implements Comparable<Event> {
       throw new IllegalStateException();
     }
     return time * 100l;
+  }
+
+  /**
+   * in units of 1/10 of a second
+   */
+  public Integer getLegacyTime() {
+    if (time == null) {
+      return null;
+    } else {
+      return time.intValue();
+    }
+  }
+
+  public void setLegacyTime(Integer t) {
+    if (t == null) {
+      time = null;
+    } else {
+      time = (long) t;
+    }
   }
 }

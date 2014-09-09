@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.state.BulbState;
-import com.kuxhausen.huemore.state.BulbState.Effect;
 import com.kuxhausen.huemore.state.BulbState.Alert;
+import com.kuxhausen.huemore.state.BulbState.Effect;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
@@ -255,7 +255,7 @@ public class HueUrlEncoder {
       mBitSet.addNumber(e.channel, getBitLength(mood.getNumChannels()));
 
       // add timestamp lookup number
-      mBitSet.addNumber(timeArray.indexOf(e.time), getBitLength(timeArray.size()));
+      mBitSet.addNumber(timeArray.indexOf(e.getLegacyTime()), getBitLength(timeArray.size()));
 
       // add mood lookup number
       mBitSet.addNumber(bulbStateToStringList.indexOf(e.state.toString()),
@@ -278,7 +278,7 @@ public class HueUrlEncoder {
   private static ArrayList<Integer> generateTimesArray(Mood mood) {
     HashSet<Integer> timeset = new HashSet<Integer>();
     for (Event e : mood.events) {
-      timeset.add(e.time);
+      timeset.add(e.getLegacyTime());
     }
     ArrayList<Integer> timesArray = new ArrayList<Integer>();
     timesArray.addAll(timeset);
@@ -480,7 +480,7 @@ public class HueUrlEncoder {
           Event e = new Event();
           e.channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 
-          e.time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
+          e.setLegacyTime(timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))]);
 
           e.state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
 
@@ -514,7 +514,7 @@ public class HueUrlEncoder {
           }
 
           e.channel = i;
-          e.time = 0;
+          e.setLegacyTime(0);
           eventArray[i] = e;
         }
         mood.events = eventArray;

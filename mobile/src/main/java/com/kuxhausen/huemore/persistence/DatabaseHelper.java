@@ -124,7 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           for (int i = 0; i < stateJson.size(); i++) {
             Event e = new Event();
             e.state = gson.fromJson(stateJson.get(i), BulbState.class);
-            e.time = 0;
+            e.setLegacyTime(0);
             e.channel = i;
             events[i] = e;
           }

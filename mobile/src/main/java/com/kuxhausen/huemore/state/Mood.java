@@ -7,6 +7,8 @@ import java.util.HashSet;
 
 public class Mood implements Cloneable {
 
+  public final static long NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
+
   public Event[] events;
   private int numChannels;
   public Boolean usesTiming;
@@ -39,7 +41,11 @@ public class Mood implements Cloneable {
   }
 
   public boolean isInfiniteLooping() {
-    return (numLoops == 127);
+    if (getTimeAddressingRepeatPolicy()) {
+      return true;
+    } else {
+      return (numLoops == 127);
+    }
   }
 
   public void setNumLoops(int num) {
@@ -71,7 +77,7 @@ public class Mood implements Cloneable {
     }
     HashSet<Integer> times = new HashSet<Integer>();
     for (Event e : events) {
-      if (e != null && e.time != null && times.add(e.time)) {
+      if (e != null && e.getLegacyTime() != null && times.add(e.getLegacyTime())) {
         result++;
       }
     }
@@ -86,10 +92,10 @@ public class Mood implements Cloneable {
     BulbState[][] colorGrid = new BulbState[maxRow][maxCol];
     int curRow = -1;
     for (Event e : events) {
-      if (!timeslotMapping.containsKey(e.time)) {
-        timeslotMapping.put(e.time, ++curRow);
+      if (!timeslotMapping.containsKey(e.getLegacyTime())) {
+        timeslotMapping.put(e.getLegacyTime(), ++curRow);
       }
-      colorGrid[timeslotMapping.get(e.time)][e.channel] = e.state;
+      colorGrid[timeslotMapping.get(e.getLegacyTime())][e.channel] = e.state;
     }
 
     return colorGrid;
@@ -100,7 +106,7 @@ public class Mood implements Cloneable {
       return true;
     }
     for (Event e : events) {
-      if (e != null && e.time != null && e.time != 0) {
+      if (e != null && e.getLegacyTime() != null && e.getLegacyTime() != 0) {
         return false;
       }
     }
@@ -114,8 +120,16 @@ public class Mood implements Cloneable {
     return timeAddressingRepeatPolicy;
   }
 
+  public void setTimeAddressingRepeatPolicy(boolean dailyMode) {
+    timeAddressingRepeatPolicy = dailyMode;
+  }
+
   public long getLoopMilliTime() {
-    return loopIterationTimeLength * 100l;
+    if (getTimeAddressingRepeatPolicy()) {
+      return NUMBER_OF_MILLISECONDS_IN_DAY;
+    } else {
+      return loopIterationTimeLength * 100l;
+    }
   }
 
   public void setLoopMilliTime(long milliseconds) {
