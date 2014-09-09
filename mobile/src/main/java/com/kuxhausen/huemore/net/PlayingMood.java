@@ -75,7 +75,7 @@ public class PlayingMood {
     if (mMood.isInfiniteLooping()) {
       return true;
     }
-    if ((mMood.events[mMood.events.length - 1].time + mStartTime) > mLastTickedTime) {
+    if ((mMood.events[mMood.events.length - 1].getMilliTime() + mStartTime) > mLastTickedTime) {
       return true;
     }
     return false;
@@ -89,19 +89,20 @@ public class PlayingMood {
     if (mMood.isInfiniteLooping()) {
       long
           cycleStart =
-          mStartTime + ((mLastTickedTime - mStartTime) / mMood.loopIterationTimeLength)
-                       * mMood.loopIterationTimeLength;
+          mStartTime + ((mLastTickedTime - mStartTime) / mMood.getLoopMilliTime())
+                       * mMood.getLoopMilliTime();
       for (int numCycles = 0; numCycles < 2; numCycles++) {
         for (Event e : mMood.events) {
-          if (e.time + cycleStart + (numCycles * mMood.loopIterationTimeLength) > mLastTickedTime) {
-            return e.time + cycleStart + (numCycles * mMood.loopIterationTimeLength);
+          if (e.getMilliTime() + cycleStart + (numCycles * mMood.getLoopMilliTime())
+              > mLastTickedTime) {
+            return e.getMilliTime() + cycleStart + (numCycles * mMood.getLoopMilliTime());
           }
         }
       }
     } else {
       for (Event e : mMood.events) {
-        if (e.time + mStartTime > mLastTickedTime) {
-          return e.time + mStartTime;
+        if (e.getMilliTime() + mStartTime > mLastTickedTime) {
+          return e.getMilliTime() + mStartTime;
         }
       }
     }
@@ -118,14 +119,14 @@ public class PlayingMood {
     List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
 
     if (mMood.isInfiniteLooping()) {
-      int priorLoops = (int) Math.max(0, (sinceTime - mStartTime) / mMood.loopIterationTimeLength);
+      int priorLoops = (int) Math.max(0, (sinceTime - mStartTime) / mMood.getLoopMilliTime());
 
       for (int numCycles = priorLoops;
-           mStartTime + (numCycles * mMood.loopIterationTimeLength) <= throughTime;
+           mStartTime + (numCycles * mMood.getLoopMilliTime()) <= throughTime;
            numCycles++) {
         for (Event e : mMood.events) {
-          if (sinceTime < (e.time + mStartTime + (numCycles * mMood.loopIterationTimeLength))
-              && (e.time + mStartTime + (numCycles * mMood.loopIterationTimeLength))
+          if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
+              && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
             result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
           }
@@ -134,8 +135,8 @@ public class PlayingMood {
 
     } else {
       for (Event e : mMood.events) {
-        if (sinceTime < (e.time + mStartTime)
-            && (e.time + mStartTime) <= throughTime) {
+        if (sinceTime < (e.getMilliTime() + mStartTime)
+            && (e.getMilliTime() + mStartTime) <= throughTime) {
           result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
         }
       }

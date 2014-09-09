@@ -34,4 +34,20 @@ public class Event implements Comparable<Event> {
     return gson.fromJson(gson.toJson(this), Event.class);
   }
 
+  public Event(BulbState state, int channel) {
+    this.state = state;
+    this.channel = channel;
+    this.time = null;
+  }
+
+  public void setMilliTime(int milliseconds) {
+    time = (int) (milliseconds / 100l);
+  }
+
+  public long getMilliTime() {
+    if (time == null) {
+      throw new IllegalStateException();
+    }
+    return time * 100l;
+  }
 }

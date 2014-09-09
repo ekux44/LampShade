@@ -113,4 +113,12 @@ public class Mood implements Cloneable {
     }
     return timeAddressingRepeatPolicy;
   }
+
+  public long getLoopMilliTime() {
+    return loopIterationTimeLength * 100l;
+  }
+
+  public void setLoopMilliTime(long milliseconds) {
+    loopIterationTimeLength = (int) (milliseconds / 100l);
+  }
 }

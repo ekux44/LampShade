@@ -64,8 +64,10 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0, 0);
-    Event e2 = new Event(bs2, 1, 0);
+    Event e1 = new Event(bs1, 0);
+    e1.setMilliTime(0);
+    Event e2 = new Event(bs2, 1);
+    e2.setMilliTime(0);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -108,8 +110,10 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0, 0);
-    Event e2 = new Event(bs2, 1, 100);
+    Event e1 = new Event(bs1, 0);
+    e1.setMilliTime(0);
+    Event e2 = new Event(bs2, 1);
+    e2.setMilliTime(100);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -162,15 +166,17 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0, 0);
-    Event e2 = new Event(bs2, 1, 100);
+    Event e1 = new Event(bs1, 0);
+    e1.setMilliTime(0);
+    Event e2 = new Event(bs2, 1);
+    e2.setMilliTime(100);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
     m.events = eRay;
     m.setNumChannels(2);
     m.setInfiniteLooping(true);
-    m.loopIterationTimeLength = 200;
+    m.setLoopMilliTime(200);
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;
