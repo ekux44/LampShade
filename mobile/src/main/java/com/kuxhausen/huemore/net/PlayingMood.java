@@ -72,6 +72,9 @@ public class PlayingMood {
   }
 
   public boolean hasFutureEvents() {
+    if(mMood.getTimeAddressingRepeatPolicy()){
+      return true;
+    }
     if (mMood.isInfiniteLooping()) {
       return true;
     }
