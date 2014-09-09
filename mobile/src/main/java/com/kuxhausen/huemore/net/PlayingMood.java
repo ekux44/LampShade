@@ -17,7 +17,7 @@ import java.util.Stack;
 
 /**
  * used to store activity data about an ongoing mood and format the data for consumption by
- * visualizations/notefications
+ * visualizations/notifications
  */
 public class PlayingMood {
 
@@ -25,11 +25,20 @@ public class PlayingMood {
   private Mood mMood;
   private String mMoodName;
   private Group mGroup;
-  private long mStartMiliTime;
-  private long mLastTickedMiliTime;
+  /**
+   * In elapsed realtime milliseconds
+   */
+  private long mStartTime;
+  /**
+   * In elapsed realtime milliseconds
+   */
+  private long mLastTickedTime;
 
-  public PlayingMood(Mood m, String moodName, Group g, long startMiliTime) {
-    if (m == null || g == null || startMiliTime < 1l) {
+  /**
+   * @param startTime in elapsed realtime milliseconds
+   */
+  public PlayingMood(Mood m, String moodName, Group g, long startTime) {
+    if (m == null || g == null || startTime < 1l) {
       throw new IllegalArgumentException();
     }
 
@@ -40,8 +49,8 @@ public class PlayingMood {
       mMoodName = "?";
     }
     mGroup = g;
-    mStartMiliTime = startMiliTime;
-    mLastTickedMiliTime = startMiliTime - 1;
+    mStartTime = startTime;
+    mLastTickedTime = startTime - 1;
 
     if (mMood.getTimeAddressingRepeatPolicy()) {
       throw new UnsupportedOperationException();
@@ -66,7 +75,7 @@ public class PlayingMood {
     if (mMood.isInfiniteLooping()) {
       return true;
     }
-    if ((mMood.events[mMood.events.length - 1].time + mStartMiliTime) > mLastTickedMiliTime) {
+    if ((mMood.events[mMood.events.length - 1].time + mStartTime) > mLastTickedTime) {
       return true;
     }
     return false;
@@ -78,11 +87,21 @@ public class PlayingMood {
     }
 
     if (mMood.isInfiniteLooping()) {
-      throw new UnsupportedOperationException();
+      long
+          cycleStart =
+          mStartTime + ((mLastTickedTime - mStartTime) / mMood.loopIterationTimeLength)
+                       * mMood.loopIterationTimeLength;
+      for (int numCycles = 0; numCycles < 2; numCycles++) {
+        for (Event e : mMood.events) {
+          if (e.time + cycleStart + (numCycles * mMood.loopIterationTimeLength) > mLastTickedTime) {
+            return e.time + cycleStart + (numCycles * mMood.loopIterationTimeLength);
+          }
+        }
+      }
     } else {
       for (Event e : mMood.events) {
-        if (e.time + mStartMiliTime > mLastTickedMiliTime) {
-          return e.time + mStartMiliTime;
+        if (e.time + mStartTime > mLastTickedTime) {
+          return e.time + mStartTime;
         }
       }
     }
@@ -90,36 +109,52 @@ public class PlayingMood {
     throw new IllegalStateException();
   }
 
-  public List<Pair<List<Long>, BulbState>> getEventsSinceThrough(long sinceMiliTime,
-                                                                 long throughMiliTime) {
+  /**
+   * @param sinceTime   in elapsed realtime milliseconds
+   * @param throughTime in elapsed realtime milliseconds
+   */
+  public List<Pair<List<Long>, BulbState>> getEventsSinceThrough(long sinceTime, long throughTime) {
 
     List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
 
     if (mMood.isInfiniteLooping()) {
-      throw new UnsupportedOperationException();
-    } else {
-      for (Event e : mMood.events) {
-        if (sinceMiliTime < (e.time + mStartMiliTime)
-            && (e.time + mStartMiliTime) <= throughMiliTime) {
-          result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+      for (int numCycles = 0;
+           mStartTime + (numCycles * mMood.loopIterationTimeLength) <= throughTime;
+           numCycles++) {
+        for (Event e : mMood.events) {
+          if (sinceTime < (e.time + mStartTime + (numCycles * mMood.loopIterationTimeLength))
+              && (e.time + mStartTime + (numCycles * mMood.loopIterationTimeLength))
+                 <= throughTime) {
+            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+          }
         }
       }
 
-      return result;
+    } else {
+      for (Event e : mMood.events) {
+        if (sinceTime < (e.time + mStartTime)
+            && (e.time + mStartTime) <= throughTime) {
+          result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+        }
+      }
     }
+    return result;
   }
 
-  public List<Pair<List<Long>, BulbState>> tick(long throughMiliTime) {
-    if (throughMiliTime < mLastTickedMiliTime) {
+  /**
+   * @param throughTime in elapsed realtime milliseconds
+   */
+  public List<Pair<List<Long>, BulbState>> tick(long throughTime) {
+    if (throughTime < mLastTickedTime) {
       throw new IllegalArgumentException();
     }
 
-    long sinceTime = mLastTickedMiliTime;
-    long throughTime = throughMiliTime;
+    long sinceT = mLastTickedTime;
+    long throughT = throughTime;
 
-    mLastTickedMiliTime = throughMiliTime;
+    mLastTickedTime = throughTime;
 
-    return getEventsSinceThrough(sinceTime, throughTime);
+    return getEventsSinceThrough(sinceT, throughT);
   }
 
   public String getMoodName() {
