@@ -118,7 +118,9 @@ public class PlayingMood {
     List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
 
     if (mMood.isInfiniteLooping()) {
-      for (int numCycles = 0;
+      int priorLoops = (int) Math.max(0, (sinceTime - mStartTime) / mMood.loopIterationTimeLength);
+
+      for (int numCycles = priorLoops;
            mStartTime + (numCycles * mMood.loopIterationTimeLength) <= throughTime;
            numCycles++) {
         for (Event e : mMood.events) {
