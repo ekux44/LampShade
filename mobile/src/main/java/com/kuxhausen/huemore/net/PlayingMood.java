@@ -11,6 +11,7 @@ import com.kuxhausen.huemore.state.QueueEvent;
 import com.kuxhausen.huemore.timing.Conversions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Stack;
@@ -35,7 +36,7 @@ public class PlayingMood {
   private long mLastTickedTime;
 
   /**
-   * @param startTime in elapsed realtime milliseconds
+   * @param startTime    in elapsed realtime milliseconds
    * @param dayStartTime in elapsed realtime milliseconds (may be negative)
    */
   public PlayingMood(Mood m, String moodName, Group g, long startTime, long dayStartTime) {
@@ -50,9 +51,29 @@ public class PlayingMood {
       mMoodName = "?";
     }
     mGroup = g;
-    if(m.getTimeAddressingRepeatPolicy()){
+    if (m.getTimeAddressingRepeatPolicy()) {
       mStartTime = dayStartTime;
+
+      long[] lastTickedTimePerChannel = new long[m.getNumChannels()];
+      Arrays.fill(lastTickedTimePerChannel, dayStartTime - 1);
+
+      for (int numCycles = -1; numCycles < 1; numCycles++) {
+        for (Event e : m.events) {
+
+          long
+              adjustedEventTime =
+              e.getMilliTime() + dayStartTime + (numCycles * m.getLoopMilliTime());
+
+          if (adjustedEventTime < lastTickedTimePerChannel[e.channel]) {
+            lastTickedTimePerChannel[e.channel] = adjustedEventTime;
+          }
+        }
+      }
+
       mLastTickedTime = dayStartTime - 1;
+      for (long i : lastTickedTimePerChannel) {
+        mLastTickedTime = Math.min(mLastTickedTime - 1, i);
+      }
     } else {
       mStartTime = startTime;
       mLastTickedTime = startTime - 1;
@@ -73,7 +94,7 @@ public class PlayingMood {
   }
 
   public boolean hasFutureEvents() {
-    if(mMood.getTimeAddressingRepeatPolicy()){
+    if (mMood.getTimeAddressingRepeatPolicy()) {
       return true;
     }
     if (mMood.isInfiniteLooping()) {
@@ -122,7 +143,24 @@ public class PlayingMood {
 
     List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
 
-    if (mMood.isInfiniteLooping()) {
+    if (mMood.getTimeAddressingRepeatPolicy()) {
+      int
+          priorLoops =
+          (int) Math.floor(((double) (sinceTime - mStartTime)) / mMood.getLoopMilliTime());
+
+      for (int numCycles = priorLoops;
+           mStartTime + (numCycles * mMood.getLoopMilliTime()) <= throughTime;
+           numCycles++) {
+        for (Event e : mMood.events) {
+          if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
+              && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
+                 <= throughTime) {
+            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+          }
+        }
+      }
+
+    } else if (mMood.isInfiniteLooping()) {
       int priorLoops = (int) Math.max(0, (sinceTime - mStartTime) / mMood.getLoopMilliTime());
 
       for (int numCycles = priorLoops;

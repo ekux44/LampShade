@@ -259,9 +259,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     long startTime = 543l;
     long dayStartTime = 12l;
 
-    long nineAMOffset = 32400000l;
-    long fourPMOffset = 57600000l;
-    long sixPMOffset = 64800000l;
+    long millisPerHour = 3600000;
 
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
@@ -270,9 +268,9 @@ public class PlayingMoodTest extends AndroidTestCase {
     bs2.set255Bri(127);
 
     Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(dayStartTime + nineAMOffset);
+    e1.setMilliTime(dayStartTime + 5 * millisPerHour);
     Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(dayStartTime + sixPMOffset);
+    e2.setMilliTime(dayStartTime + 13 * millisPerHour);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -288,15 +286,32 @@ public class PlayingMoodTest extends AndroidTestCase {
     PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
 
     assertTrue(pm.hasFutureEvents());
-    assertEquals(dayStartTime + nineAMOffset, pm.getNextEventInCurrentMillis());
-    List<Pair<List<Long>, BulbState>> tick1 = pm.tick(dayStartTime + fourPMOffset);
-    assertEquals(1, tick1.size());
+    assertEquals(dayStartTime + 5 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick1 = pm.tick(dayStartTime + 1 * millisPerHour);
+    assertEquals(2, tick1.size());
     assertEquals(bs1, tick1.get(0).second);
     assertEquals(1, tick1.get(0).first.size());
     assertEquals(bulb1, tick1.get(0).first.get(0));
+    assertEquals(bs2, tick1.get(1).second);
+    assertEquals(1, tick1.get(1).first.size());
+    assertEquals(bulb2, tick1.get(1).first.get(0));
 
     assertTrue(pm.hasFutureEvents());
-    assertEquals(dayStartTime + sixPMOffset, pm.getNextEventInCurrentMillis());
+    assertEquals(dayStartTime + 5 * millisPerHour, pm.getNextEventInCurrentMillis());
+
+    assertEquals(0, pm.tick(dayStartTime + 2 * millisPerHour).size());
+
+    assertEquals(0, pm.tick(dayStartTime + 3 * millisPerHour).size());
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 5 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick3 = pm.tick(dayStartTime + 5 * millisPerHour);
+    assertEquals(1, tick3.size());
+    assertEquals(bs1, tick3.get(0).second);
+    assertEquals(1, tick3.get(0).first.size());
+    assertEquals(bulb1, tick3.get(0).first.get(0));
+
+    //TODO test remaining part of day and looping over with next day
 
   }
 }
