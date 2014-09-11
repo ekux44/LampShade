@@ -311,7 +311,37 @@ public class PlayingMoodTest extends AndroidTestCase {
     assertEquals(1, tick3.get(0).first.size());
     assertEquals(bulb1, tick3.get(0).first.get(0));
 
-    //TODO test remaining part of day and looping over with next day
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 13 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick5 = pm.tick(dayStartTime + 13 * millisPerHour);
+    assertEquals(1, tick5.size());
+    assertEquals(bs2, tick5.get(0).second);
+    assertEquals(1, tick5.get(0).first.size());
+    assertEquals(bulb2, tick5.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 29 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick7 = pm.tick(dayStartTime + 29 * millisPerHour);
+    assertEquals(1, tick7.size());
+    assertEquals(bs1, tick7.get(0).second);
+    assertEquals(1, tick7.get(0).first.size());
+    assertEquals(bulb1, tick7.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 37 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick9 = pm.tick(dayStartTime + 37 * millisPerHour);
+    assertEquals(1, tick9.size());
+    assertEquals(bs2, tick9.get(0).second);
+    assertEquals(1, tick9.get(0).first.size());
+    assertEquals(bulb2, tick9.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 53 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick11 = pm.tick(dayStartTime + 53 * millisPerHour);
+    assertEquals(1, tick11.size());
+    assertEquals(bs1, tick11.get(0).second);
+    assertEquals(1, tick11.get(0).first.size());
+    assertEquals(bulb1, tick11.get(0).first.get(0));
 
   }
 }
