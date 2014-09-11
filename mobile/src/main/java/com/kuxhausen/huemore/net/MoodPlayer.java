@@ -2,14 +2,22 @@ package com.kuxhausen.huemore.net;
 
 import com.google.gson.Gson;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
+import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.FutureEncodingException;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.timing.AlarmReciever;
 import com.kuxhausen.huemore.timing.Conversions;
 
 import java.util.ArrayList;
@@ -22,7 +30,7 @@ public class MoodPlayer {
   /**
    * How long in milis before the next event the ExecutorService should begin waking back up
    */
-  private final static long MILIS_AWAKEN_STARTUP_TIME = 50;
+  private final static long MILIS_AWAKEN_STARTUP_TIME = 100;
 
   private final static int MOODS_TIMES_PER_SECOND = 10;
 
@@ -45,8 +53,9 @@ public class MoodPlayer {
     playMood(g, m, mName, maxBri, SystemClock.elapsedRealtime(), null);
   }
 
-  public void playMood(Group g, Mood m, String mName, Integer maxBri, Long savedStartTime,
-                       Long savedProgress) {
+  public synchronized void playMood(Group g, Mood m, String mName, Integer maxBri,
+                                    Long savedStartTime,
+                                    Long savedProgress) {
     if (g == null) {
       throw new IllegalArgumentException();
     }
@@ -131,35 +140,8 @@ public class MoodPlayer {
 
         @Override
         public void onTick(long millisUntilFinished) {
-          for (PlayingMood pm : getPlayingMoods()) {
+          MoodPlayer.this.tick();
 
-            List<Pair<List<Long>, BulbState>> toDo = pm.tick(SystemClock.elapsedRealtime());
-            for (Pair<List<Long>, BulbState> eachBatch : toDo) {
-              BulbState toSend = eachBatch.second;
-              for (Long id : eachBatch.first) {
-                mDeviceManager.obtainBrightnessManager(pm.getGroup())
-                    .setState(mDeviceManager.getNetworkBulb(id), toSend);
-              }
-            }
-          }
-
-          boolean activeMoodsChanged = false;
-          for (int i = 0; i < mPlayingMoods.size(); i++) {
-            if (!mPlayingMoods.get(i).hasFutureEvents()) {
-              PlayingMood pm = mPlayingMoods.get(i);
-
-              mPlayingMoods.remove(i);
-              i--;
-
-              mDeviceManager.obtainBrightnessManager(pm.getGroup())
-                  .setPolicy(BrightnessManager.BrightnessPolicy.DIRECT_BRI);
-              // update notifications
-              activeMoodsChanged = true;
-            }
-          }
-          if (activeMoodsChanged) {
-            onActiveMoodsChanged();
-          }
           if (mPlayingMoods.isEmpty()) {
             countDownTimer = null;
             this.cancel();
@@ -170,56 +152,96 @@ public class MoodPlayer {
     }
   }
 
-  public boolean shouldNap() {
-    //TODO
-    return false;
+  public synchronized void tick() {
+    for (PlayingMood pm : getPlayingMoods()) {
+
+      List<Pair<List<Long>, BulbState>> toDo = pm.tick(SystemClock.elapsedRealtime());
+      for (Pair<List<Long>, BulbState> eachBatch : toDo) {
+        BulbState toSend = eachBatch.second;
+        for (Long id : eachBatch.first) {
+          mDeviceManager.obtainBrightnessManager(pm.getGroup())
+              .setState(mDeviceManager.getNetworkBulb(id), toSend);
+        }
+      }
+    }
+
+    boolean activeMoodsChanged = false;
+    for (int i = 0; i < mPlayingMoods.size(); i++) {
+      if (!mPlayingMoods.get(i).hasFutureEvents()) {
+        PlayingMood pm = mPlayingMoods.get(i);
+
+        mPlayingMoods.remove(i);
+        i--;
+
+        mDeviceManager.obtainBrightnessManager(pm.getGroup())
+            .setPolicy(BrightnessManager.BrightnessPolicy.DIRECT_BRI);
+        // update notifications
+        activeMoodsChanged = true;
+      }
+    }
+    if (activeMoodsChanged) {
+      onActiveMoodsChanged();
+    }
+  }
+
+  /**
+   * @return next event time in milliseconds measured in SystemClock.getRealtime. Will return null
+   * if no future events
+   */
+  public synchronized Long nextEventTime() {
+    Long result = Long.MAX_VALUE;
+
+    for (PlayingMood pm : getPlayingMoods()) {
+      if (pm.hasFutureEvents()) {
+        if (pm.getNextEventInCurrentMillis() < result) {
+          result = pm.getNextEventInCurrentMillis();
+        }
+      }
+    }
+
+    if (result == Long.MAX_VALUE) {
+      return null;
+    } else {
+      return result;
+    }
   }
 
   /**
    * to save power, service is shutting down so ongoing moods should be schedule to be restarted in
    * time for their next events
    */
-  private void saveNappingMoods() {
-    //TODO
-    /*
-
-    // calculated from SystemClock.elapsedRealtime
-    long awakenTime = Long.MAX_VALUE;
-    for (PlayingMood pm : mPlayingMoods) {
-      long nextEventTime = pm.getNextEventTime();
-      if (nextEventTime < awakenTime) {
-        awakenTime = nextEventTime;
-      }
-    }
-
+  private synchronized void saveNappingMoods() {
+    long awakenTime = nextEventTime();
     awakenTime -= MILIS_AWAKEN_STARTUP_TIME;
 
     mContext.getContentResolver().delete(Definitions.PlayingMood.URI, null, null);
+
     for (PlayingMood pm : mPlayingMoods) {
       ContentValues cv = new ContentValues();
       cv.put(Definitions.PlayingMood.COL_GROUP_VALUE, gson.toJson(pm.getGroup()));
       cv.put(Definitions.PlayingMood.COL_MOOD_NAME, pm.getMoodName());
       cv.put(Definitions.PlayingMood.COL_MOOD_VALUE, HueUrlEncoder.encode(pm.getMood()));
-      cv.put(Definitions.PlayingMood.COL_INITIAL_MAX_BRI, pm.getGroupName());
-      cv.put(Definitions.PlayingMood.COL_MILI_TIME_STARTED, SystemClock.elapsedRealtime());
+      cv.put(Definitions.PlayingMood.COL_MOOD_BRI,
+             mDeviceManager.obtainBrightnessManager(pm.getGroup()).getBrightness());
+      cv.put(Definitions.PlayingMood.COL_MILI_TIME_STARTED, pm.getStartTime());
+      cv.put(Definitions.PlayingMood.COL_INTERNAL_PROGRESS, pm.getInternalProgress());
       mContext.getContentResolver().insert(Definitions.PlayingMood.URI, cv);
     }
 
     Log.d("mood", "awaken future millis offset " + (awakenTime - SystemClock.elapsedRealtime()));
 
     AlarmReciever.scheduleInternalAlarm(mContext, awakenTime);
-
-    */
   }
 
-  private void restoreNappingMoods() {
-    //TODO
-    /*String[] projectionColumns =
+  private synchronized void restoreNappingMoods() {
+    String[] projectionColumns =
         {Definitions.PlayingMood.COL_GROUP_VALUE,
          Definitions.PlayingMood.COL_MOOD_NAME,
          Definitions.PlayingMood.COL_MOOD_VALUE,
-         Definitions.PlayingMood.COL_INITIAL_MAX_BRI,
-         Definitions.PlayingMood.COL_MILI_TIME_STARTED};
+         Definitions.PlayingMood.COL_MOOD_BRI,
+         Definitions.PlayingMood.COL_MILI_TIME_STARTED,
+         Definitions.PlayingMood.COL_INTERNAL_PROGRESS
+        };
     Cursor cursor =
         mContext.getContentResolver().query(Definitions.PlayingMood.URI, projectionColumns,
                                             null, null, null);
@@ -233,17 +255,20 @@ public class MoodPlayer {
       } catch (InvalidEncodingException e) {
       } catch (FutureEncodingException e) {
       }
-      Integer initialMaxB = cursor.getInt(3);
+      Integer moodBri = cursor.getInt(3);
       Long miliTimeStarted = cursor.getLong(4);
+      Long colInternalProgress = cursor.getLong(5);
 
-      Log.d("mood", "restore at" + SystemClock.elapsedRealtime() + " from " + miliTimeStarted);
+      Log.d("mood",
+            "restore at" + SystemClock.elapsedRealtime() + " from " + miliTimeStarted + " with "
+            + colInternalProgress);
 
-      this.playMood(g, m, mName, initialMaxB, miliTimeStarted);
-    }*/
+      this.playMood(g, m, mName, moodBri, miliTimeStarted, colInternalProgress);
+    }
   }
 
 
-  public List<PlayingMood> getPlayingMoods() {
+  public synchronized List<PlayingMood> getPlayingMoods() {
     return mPlayingMoods;
   }
 }

@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 10;
+  private static final int DATABASE_VERSION = 11;
   Gson gson = new Gson();
   private Context mContext;
 
@@ -324,14 +324,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           }
         }
-
-        db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " (" + BaseColumns._ID
-                   + " INTEGER PRIMARY KEY," + PlayingMood.COL_GROUP_VALUE + " TEXT,"
-                   + PlayingMood.COL_MOOD_NAME + " TEXT," + PlayingMood.COL_MOOD_VALUE + " TEXT,"
-                   + PlayingMood.COL_INITIAL_MAX_BRI + " INTEGER,"
-                   + PlayingMood.COL_MILI_TIME_STARTED
-                   + " INTEGER" + ");");
-
       }
       case 6:{
         //land and fall through to next case
@@ -469,6 +461,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           groupValues.put(GroupColumns.BULB_DATABASE_ID, bulbBaseId);
           db.insert(GroupColumns.TABLE_NAME, null, groupValues);
         }
+      } case 10:{
+
+        db.execSQL("DROP TABLE IF EXISTS " + PlayingMood.TABLE_NAME);
+
+        db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " (" + BaseColumns._ID
+                   + " INTEGER PRIMARY KEY," + PlayingMood.COL_GROUP_VALUE + " TEXT,"
+                   + PlayingMood.COL_MOOD_NAME + " TEXT," + PlayingMood.COL_MOOD_VALUE + " TEXT,"
+                   + PlayingMood.COL_MOOD_BRI + " INTEGER,"
+                   + PlayingMood.COL_MILI_TIME_STARTED + " INTEGER,"
+                   + PlayingMood.COL_INTERNAL_PROGRESS + " INTEGER"
+                   + ");");
       }
     }
   }

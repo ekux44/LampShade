@@ -179,7 +179,9 @@ public final class Definitions {
      */
     public static final String COL_MOOD_VALUE = "D_MOOD_VALUE_COLUMN";
 
-    public static final String COL_INITIAL_MAX_BRI = "D_COL_INITIAL_MAX_BRI";
+    public static final String COL_MOOD_BRI = "D_COL_INITIAL_MAX_BRI";
+
+    public static final String COL_INTERNAL_PROGRESS = "D_COL_INTERNAL_PROGRESS";
 
     /**
      * the original mood start time measured in miliseconds using SystemClock elapsedRealTime()
@@ -195,13 +197,10 @@ public final class Definitions {
 
     public static final String GROUP_NAME = "Group_Name";
     public static final String MOOD_NAME = "Mood_Name";
-    public static final String LOWERCASE_GROUP_NAME = "Lowercase_Group_Name";
-    public static final String LOWERCASE_MOOD_NAME = "Lowercase_Mood_Name";
     public static final String ENCODED_MOOD = "Encoded_Mood";
     public static final String BRIDGES = "Bridges";
     public static final String MD5 = "MD5";
     public static final String FRAG_MANAGER_DIALOG_TAG = "dialog";
-    public static final String IPV4dot = ".";
     public static final String FALLBACK_USERNAME_HASH = "f01623452466afd4eba5c1ed0a0a9395";
     public final static String ALARM_DETAILS = "alarmDetailsBundle";
     public final static String HUE_STATE = "HueState";

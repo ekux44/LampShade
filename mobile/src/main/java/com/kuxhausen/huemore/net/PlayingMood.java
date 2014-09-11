@@ -114,6 +114,9 @@ public class PlayingMood {
     return false;
   }
 
+  /**
+   * @return anticipated tme of the next event, calculated in elapsed realtime milliseconds
+   */
   public long getNextEventInCurrentMillis() {
     if (!hasFutureEvents()) {
       throw new IllegalStateException();
