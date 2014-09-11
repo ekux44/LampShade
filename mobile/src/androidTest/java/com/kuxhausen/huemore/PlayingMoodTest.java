@@ -24,21 +24,21 @@ public class PlayingMoodTest extends AndroidTestCase {
 
   public void testConstructor() {
     try {
-      new PlayingMood(null, "", new Group(null, null), 1, -1000);
+      new PlayingMood(null, "", new Group(null, null), 1, -1000, null);
       fail();
     } catch (IllegalArgumentException e) {
     }
 
-    new PlayingMood(new Mood(), null, new Group(null, null), 1, -1000);
+    new PlayingMood(new Mood(), null, new Group(null, null), 1, -1000, null);
 
     try {
-      new PlayingMood(new Mood(), "", null, 1, -1000);
+      new PlayingMood(new Mood(), "", null, 1, -1000, null);
       fail();
     } catch (IllegalArgumentException e) {
     }
 
     try {
-      new PlayingMood(new Mood(), "", new Group(null, null), 0, -1000);
+      new PlayingMood(new Mood(), "", new Group(null, null), 0, -1000, null);
       fail();
     } catch (IllegalArgumentException e) {
     }
@@ -47,7 +47,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     String gName = "some group";
     Mood m = new Mood();
     Group g = new Group(null, gName);
-    PlayingMood pm = new PlayingMood(m, mName, g, 1, -1000);
+    PlayingMood pm = new PlayingMood(m, mName, g, 1, -1000, null);
     assertEquals(g, pm.getGroup());
     assertEquals(m, pm.getMood());
     assertEquals(mName, pm.getMoodName());
@@ -82,7 +82,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     long startTime = 543l;
     long dayStartTime = 12l;
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(startTime, pm.getNextEventInCurrentMillis());
@@ -129,7 +129,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     long startTime = 543l;
     long dayStartTime = 12l;
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(startTime, pm.getNextEventInCurrentMillis());
@@ -188,7 +188,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     long startTime = 543l;
     long dayStartTime = 12l;
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(startTime + 0, pm.getNextEventInCurrentMillis());
@@ -253,9 +253,119 @@ public class PlayingMoodTest extends AndroidTestCase {
   }
 
   /**
-   * playing a daily mood
+   * playing a timed looping mood with saves & resumes
    */
   public void testFunctionality4() {
+    BulbState bs1 = new BulbState();
+    bs1.setOn(true);
+
+    BulbState bs2 = new BulbState();
+    bs2.set255Bri(127);
+
+    Event e1 = new Event(bs1, 0);
+    e1.setMilliTime(0);
+    Event e2 = new Event(bs2, 1);
+    e2.setMilliTime(100);
+    Event[] eRay = {e1, e2};
+
+    Mood m = new Mood();
+    m.events = eRay;
+    m.setNumChannels(2);
+    m.setInfiniteLooping(true);
+    m.setLoopMilliTime(200);
+
+    Long bulb1 = 123l;
+    Long bulb2 = 456l;
+    Long[] bulbs = {bulb1, bulb2};
+    Group g = new Group(Arrays.asList(bulbs), "");
+
+    long startTime = 543l;
+    long dayStartTime = 12l;
+
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(startTime + 0, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick1 = pm.tick(startTime + 0);
+    assertEquals(1, tick1.size());
+    assertEquals(bs1, tick1.get(0).second);
+    assertEquals(1, tick1.get(0).first.size());
+    assertEquals(bulb1, tick1.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(startTime + 100, pm.getNextEventInCurrentMillis());
+
+    assertEquals(0, pm.tick(startTime + 1).size());
+
+    long savedProgress = pm.getInternalProgress();
+    long savedStartTime = pm.getStartTime();
+    pm = new PlayingMood(m, "", g, savedStartTime, dayStartTime, savedProgress);
+
+    assertEquals(0, pm.tick(startTime + 99).size());
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(startTime + 100, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick3 = pm.tick(startTime + 100);
+    assertEquals(1, tick3.size());
+    assertEquals(bs2, tick3.get(0).second);
+    assertEquals(1, tick3.get(0).first.size());
+    assertEquals(bulb2, tick3.get(0).first.get(0));
+
+    assertEquals(0, pm.tick(startTime + 101).size());
+
+    savedProgress = pm.getInternalProgress();
+    savedStartTime = pm.getStartTime();
+    pm = new PlayingMood(m, "", g, savedStartTime, dayStartTime, savedProgress);
+
+    assertEquals(0, pm.tick(startTime + 199).size());
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(startTime + 200, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick5 = pm.tick(startTime + 200);
+    assertEquals(1, tick5.size());
+    assertEquals(bs1, tick5.get(0).second);
+    assertEquals(1, tick5.get(0).first.size());
+    assertEquals(bulb1, tick5.get(0).first.get(0));
+
+    assertEquals(0, pm.tick(startTime + 201).size());
+
+    savedProgress = pm.getInternalProgress();
+    savedStartTime = pm.getStartTime();
+    pm = new PlayingMood(m, "", g, savedStartTime, dayStartTime, savedProgress);
+
+    assertEquals(0, pm.tick(startTime + 299).size());
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(startTime + 300, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick7 = pm.tick(startTime + 300);
+    assertEquals(1, tick7.size());
+    assertEquals(bs2, tick7.get(0).second);
+    assertEquals(1, tick7.get(0).first.size());
+    assertEquals(bulb2, tick7.get(0).first.get(0));
+
+    assertEquals(0, pm.tick(startTime + 301).size());
+
+    savedProgress = pm.getInternalProgress();
+    savedStartTime = pm.getStartTime();
+    pm = new PlayingMood(m, "", g, savedStartTime, dayStartTime, savedProgress);
+
+    assertEquals(0, pm.tick(startTime + 399).size());
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(startTime + 400, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick9 = pm.tick(startTime + 400);
+    assertEquals(1, tick9.size());
+    assertEquals(bs1, tick9.get(0).second);
+    assertEquals(1, tick9.get(0).first.size());
+    assertEquals(bulb1, tick9.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+  }
+
+  /**
+   * playing a daily mood with some save/restarts
+   */
+  public void testFunctionality5() {
     long startTime = 543l;
     long dayStartTime = 12l;
 
@@ -283,7 +393,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long[] bulbs = {bulb1, bulb2};
     Group g = new Group(Arrays.asList(bulbs), "");
 
-    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime);
+    PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
 
     assertTrue(pm.hasFutureEvents());
     assertEquals(dayStartTime + 5 * millisPerHour, pm.getNextEventInCurrentMillis());
@@ -342,6 +452,27 @@ public class PlayingMoodTest extends AndroidTestCase {
     assertEquals(bs1, tick11.get(0).second);
     assertEquals(1, tick11.get(0).first.size());
     assertEquals(bulb1, tick11.get(0).first.get(0));
+
+    long savedProgress = pm.getInternalProgress();
+    long savedStartTime = pm.getStartTime();
+    pm =
+        new PlayingMood(m, "", g, savedStartTime, dayStartTime + 48 * millisPerHour, savedProgress);
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 61 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick13 = pm.tick(dayStartTime + 61 * millisPerHour);
+    assertEquals(1, tick13.size());
+    assertEquals(bs2, tick13.get(0).second);
+    assertEquals(1, tick13.get(0).first.size());
+    assertEquals(bulb2, tick13.get(0).first.get(0));
+
+    assertTrue(pm.hasFutureEvents());
+    assertEquals(dayStartTime + 77 * millisPerHour, pm.getNextEventInCurrentMillis());
+    List<Pair<List<Long>, BulbState>> tick15 = pm.tick(dayStartTime + 77 * millisPerHour);
+    assertEquals(1, tick15.size());
+    assertEquals(bs1, tick15.get(0).second);
+    assertEquals(1, tick15.get(0).first.size());
+    assertEquals(bulb1, tick15.get(0).first.get(0));
 
   }
 }

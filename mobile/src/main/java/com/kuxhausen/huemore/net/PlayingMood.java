@@ -39,7 +39,7 @@ public class PlayingMood {
    * @param startTime    in elapsed realtime milliseconds
    * @param dayStartTime in elapsed realtime milliseconds (may be negative)
    */
-  public PlayingMood(Mood m, String moodName, Group g, long startTime, long dayStartTime) {
+  public PlayingMood(Mood m, String moodName, Group g, long startTime, long dayStartTime, Long internalProgress) {
     if (m == null || g == null || startTime < 1l) {
       throw new IllegalArgumentException();
     }
@@ -78,6 +78,18 @@ public class PlayingMood {
       mStartTime = startTime;
       mLastTickedTime = startTime - 1;
     }
+
+    if(internalProgress!=null) {
+      mLastTickedTime = internalProgress;
+    }
+  }
+
+  public long getStartTime(){
+    return mStartTime;
+  }
+
+  public long getInternalProgress(){
+    return mLastTickedTime;
   }
 
   private List<Long> getChannelBulbIds(int channelNum) {
