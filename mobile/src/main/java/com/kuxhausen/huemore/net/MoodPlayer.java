@@ -2,20 +2,15 @@ package com.kuxhausen.huemore.net;
 
 import com.google.gson.Gson;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.SystemClock;
-import android.util.Log;
+import android.util.Pair;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.FutureEncodingException;
-import com.kuxhausen.huemore.persistence.HueUrlEncoder;
-import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.timing.AlarmReciever;
+import com.kuxhausen.huemore.timing.Conversions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,25 +37,24 @@ public class MoodPlayer {
   public MoodPlayer(Context c, DeviceManager m) {
     mContext = c;
     mDeviceManager = m;
+
+    restoreNappingMoods();
   }
 
-  public boolean conflictsWithOngoingPlaying(Group g) {
-    for (int i = 0; i < mPlayingMoods.size(); i++) {
-      if (!mPlayingMoods.get(i).getMood().isSimple()
-          && mPlayingMoods.get(i).getGroup().conflictsWith(g)) {
-        return true;
-      }
+  public void playMood(Group g, Mood m, String mName, Integer maxBri) {
+    playMood(g, m, mName, maxBri, SystemClock.elapsedRealtime(), null);
+  }
+
+  public void playMood(Group g, Mood m, String mName, Integer maxBri, Long savedStartTime,
+                       Long savedProgress) {
+    if (g == null) {
+      throw new IllegalArgumentException();
     }
-    return false;
-  }
-
-  public void playMood(Group g, Mood m, String mName, Integer maxBri, Long miliTimeStarted) {
-    assert g != null;
 
     PlayingMood
         pm =
-        new PlayingMood(mDeviceManager, g, m, mName, miliTimeStarted,
-                        SystemClock.elapsedRealtime());
+        new PlayingMood(m, mName, g, savedStartTime, Conversions.getDayStartElapsedRealTimeMillis(),
+                        savedProgress);
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().conflictsWith(pm.getGroup())) {
@@ -85,7 +79,9 @@ public class MoodPlayer {
   }
 
   public void cancelMood(Group g) {
-    assert g != null;
+    if (g == null) {
+      throw new IllegalArgumentException();
+    }
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {
       if (mPlayingMoods.get(i).getGroup().equals(g)) {
@@ -118,6 +114,7 @@ public class MoodPlayer {
   }
 
   public void onDestroy() {
+    saveNappingMoods();
     if (countDownTimer != null) {
       countDownTimer.cancel();
     }
@@ -134,10 +131,21 @@ public class MoodPlayer {
 
         @Override
         public void onTick(long millisUntilFinished) {
+          for (PlayingMood pm : getPlayingMoods()) {
+
+            List<Pair<List<Long>, BulbState>> toDo = pm.tick(SystemClock.elapsedRealtime());
+            for (Pair<List<Long>, BulbState> eachBatch : toDo) {
+              BulbState toSend = eachBatch.second;
+              for (Long id : eachBatch.first) {
+                mDeviceManager.obtainBrightnessManager(pm.getGroup())
+                    .setState(mDeviceManager.getNetworkBulb(id), toSend);
+              }
+            }
+          }
+
           boolean activeMoodsChanged = false;
           for (int i = 0; i < mPlayingMoods.size(); i++) {
-            boolean ongoing = mPlayingMoods.get(i).onTick(SystemClock.elapsedRealtime());
-            if (!ongoing) {
+            if (!mPlayingMoods.get(i).hasFutureEvents()) {
               PlayingMood pm = mPlayingMoods.get(i);
 
               mPlayingMoods.remove(i);
@@ -162,12 +170,8 @@ public class MoodPlayer {
     }
   }
 
-  public boolean hasImminentPendingWork() {
-    for (PlayingMood pm : mPlayingMoods) {
-      if (pm.hasImminentPendingWork()) {
-        return true;
-      }
-    }
+  public boolean shouldNap() {
+    //TODO
     return false;
   }
 
@@ -175,7 +179,10 @@ public class MoodPlayer {
    * to save power, service is shutting down so ongoing moods should be schedule to be restarted in
    * time for their next events
    */
-  public void saveOngoingAndScheduleResores() {
+  private void saveNappingMoods() {
+    //TODO
+    /*
+
     // calculated from SystemClock.elapsedRealtime
     long awakenTime = Long.MAX_VALUE;
     for (PlayingMood pm : mPlayingMoods) {
@@ -201,10 +208,13 @@ public class MoodPlayer {
     Log.d("mood", "awaken future millis offset " + (awakenTime - SystemClock.elapsedRealtime()));
 
     AlarmReciever.scheduleInternalAlarm(mContext, awakenTime);
+
+    */
   }
 
-  public void restoreFromSaved() {
-    String[] projectionColumns =
+  private void restoreNappingMoods() {
+    //TODO
+    /*String[] projectionColumns =
         {Definitions.PlayingMood.COL_GROUP_VALUE,
          Definitions.PlayingMood.COL_MOOD_NAME,
          Definitions.PlayingMood.COL_MOOD_VALUE,
@@ -229,7 +239,7 @@ public class MoodPlayer {
       Log.d("mood", "restore at" + SystemClock.elapsedRealtime() + " from " + miliTimeStarted);
 
       this.playMood(g, m, mName, initialMaxB, miliTimeStarted);
-    }
+    }*/
   }
 
 

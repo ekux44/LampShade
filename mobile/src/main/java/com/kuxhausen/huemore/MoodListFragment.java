@@ -258,7 +258,7 @@ public class MoodListFragment extends ListFragment
     if (service.getDeviceManager().getSelectedGroup() != null) {
       service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(),
                                        Utils.getMoodFromDatabase(moodName, getActivity()), moodName,
-                                       null, null);
+                                       null);
     }
 
     getActivity().supportInvalidateOptionsMenu();

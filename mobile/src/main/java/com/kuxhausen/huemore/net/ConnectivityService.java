@@ -162,7 +162,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
             moodName = (moodName == null) ? "Unknown Mood" : moodName;
             mMoodPlayer
-                .playMood(g, moodPairs.second.first, moodName, moodPairs.second.second, null);
+                .playMood(g, moodPairs.second.first, moodName, moodPairs.second.second);
           }
         } catch (InvalidEncodingException e) {
           Intent i = new Intent(this, DecodeErrorActivity.class);
@@ -177,10 +177,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         Group g = Group.loadFromDatabase(groupName, this);
         Mood m = Utils.getMoodFromDatabase(moodName, this);
 
-        mMoodPlayer.playMood(g, m, moodName, maxBri, null);
-      } else if (intent.hasExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS)
-                 && intent.getExtras().getBoolean(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS)) {
-        mMoodPlayer.restoreFromSaved();
+        mMoodPlayer.playMood(g, m, moodName, maxBri);
       }
     }
 
@@ -197,9 +194,9 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     boolean waitingOnPendingNetworking = false;
     Log.d("power", "calculateWakeNeeds");
 
-    if (mMoodPlayer.hasImminentPendingWork()) {
-      waitingOnPlayingMood = true;
-    }
+    //if (!mMoodPlayer.shouldNap()) {
+    waitingOnPlayingMood = true;
+    //}
 
     for (Connection c : mDeviceManager.getConnections()) {
       if (c.hasPendingWork()) {
@@ -227,7 +224,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     } else if (!mBound && mMoodPlayer.getPlayingMoods().size() > 0) {
       // save ongoing moods and schedule a broadcast to restart service before next playing mood
       // event
-      mMoodPlayer.saveOngoingAndScheduleResores();
+      //mMoodPlayer.saveOngoingAndScheduleResores();
 
       if (mWakelock != null) {
         mWakelock.release();

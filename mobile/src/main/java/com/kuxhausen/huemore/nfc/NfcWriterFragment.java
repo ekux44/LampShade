@@ -143,7 +143,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 
     pendingIntent =
         PendingIntent.getActivity(context, 0,
-                                  new Intent(context, context.getClass())
+                                  new Intent(context, NavigationDrawerActivity.class)
                                       .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0
         );
     IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
@@ -277,7 +277,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
       brightness = brightnessBar.getProgress();
     }
 
-    context.getService().getMoodPlayer().playMood(g, m, moodName, brightness, null);
+    context.getService().getMoodPlayer().playMood(g, m, moodName, brightness);
   }
 
   public String getSerializedByValue() {

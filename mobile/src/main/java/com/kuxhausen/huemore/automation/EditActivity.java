@@ -184,22 +184,6 @@ public class EditActivity extends NetworkManagedActivity implements
     return super.onOptionsItemSelected(item);
   }
 
-  public void preview() {
-
-    String groupName = ((TextView) groupSpinner.getSelectedView()).getText().toString();
-    Group g = Group.loadFromDatabase(groupName, context);
-
-    String moodName = ((TextView) moodSpinner.getSelectedView()).getText().toString();
-    Mood m = Utils.getMoodFromDatabase(moodName, this);
-
-    Integer brightness = null;
-    if (brightnessBar.getVisibility() == View.VISIBLE) {
-      brightness = brightnessBar.getProgress();
-    }
-
-    this.getService().getMoodPlayer().playMood(g, m, moodName, brightness, null);
-  }
-
   public String getSerializedByNamePreview() {
     LegacyGMB gmb = new LegacyGMB();
     gmb.group = ((TextView) groupSpinner.getSelectedView()).getText().toString();
