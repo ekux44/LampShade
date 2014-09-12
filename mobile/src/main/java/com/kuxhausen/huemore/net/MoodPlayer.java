@@ -80,7 +80,6 @@ public class MoodPlayer {
     }
 
     mPlayingMoods.add(pm);
-    ensureLooping();
 
     // update notifications
     onActiveMoodsChanged();
@@ -126,29 +125,6 @@ public class MoodPlayer {
     saveNappingMoods();
     if (countDownTimer != null) {
       countDownTimer.cancel();
-    }
-  }
-
-  public void ensureLooping() {
-    // runs at the rate to execute 10 times per second
-    if (countDownTimer == null) {
-      countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / MOODS_TIMES_PER_SECOND)) {
-
-        @Override
-        public void onFinish() {
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-          MoodPlayer.this.tick();
-
-          if (mPlayingMoods.isEmpty()) {
-            countDownTimer = null;
-            this.cancel();
-          }
-        }
-      };
-      countDownTimer.start();
     }
   }
 

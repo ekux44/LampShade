@@ -45,7 +45,7 @@ public class DeviceManager {
     loadEverythingFromDatabase();
   }
 
-  public void loadEverythingFromDatabase() {
+  private void loadEverythingFromDatabase() {
     destroyManagers();
     { // load all connections from the database
       mConnections = new ArrayList<Connection>();
