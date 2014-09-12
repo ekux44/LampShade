@@ -60,6 +60,8 @@ public class LifxConnection implements Connection {
     String bulbDeviceId = cursor.getString(4);
     LifxBulb.ExtraData bulbData = gson.fromJson(cursor.getString(5), LifxBulb.ExtraData.class);
     int currentMaxBri = cursor.getInt(6);
+    cursor.close();
+
     mBulb = new LifxBulb(c, bulbBaseId, bulbName, bulbDeviceId, bulbData, this);
   }
 

@@ -22,8 +22,11 @@ public class Utils {
         ctx.getContentResolver().query(Definitions.MoodColumns.MOODS_URI, moodColumns,
                                        MoodColumns.COL_MOOD_NAME + "=?", mWhereClause, null);
     moodCursor.moveToFirst();
+    String encodedMood = moodCursor.getString(0);
+    moodCursor.close();
+
     try {
-      return HueUrlEncoder.decode(moodCursor.getString(0)).second.first;
+      return HueUrlEncoder.decode(encodedMood).second.first;
     } catch (InvalidEncodingException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

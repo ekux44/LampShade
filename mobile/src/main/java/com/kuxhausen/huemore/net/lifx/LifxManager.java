@@ -56,6 +56,8 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
           gson.fromJson(cursor.getString(4), LifxConnection.ExtraData.class);
       connections.add(new LifxConnection(c, baseId, name, deviceId, data, dm));
     }
+    cursor.close();
+
     Log.d("lifx", connections.size() + " connections loaded");
     return connections;
   }

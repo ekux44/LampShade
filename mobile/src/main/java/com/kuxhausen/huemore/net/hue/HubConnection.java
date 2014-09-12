@@ -90,6 +90,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       HueBulbData bulbData = gson.fromJson(cursor.getString(5), HueBulbData.class);
       mBulbList.add(new HueBulb(c, bulbBaseId, bulbName, bulbDeviceId, bulbData, this));
     }
+    cursor.close();
 
     // junk?
     mDeviceManager = dm;
@@ -159,6 +160,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       HubData data = gson.fromJson(cursor.getString(4), HubData.class);
       hubs.add(new HubConnection(c, baseId, name, deviceId, data, dm));
     }
+    cursor.close();
 
     // initialize all connections
     for (HubConnection h : hubs) {

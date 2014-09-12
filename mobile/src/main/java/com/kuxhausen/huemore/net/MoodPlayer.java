@@ -242,6 +242,7 @@ public class MoodPlayer {
 
       this.playMood(g, m, mName, moodBri, miliTimeStarted, colInternalProgress);
     }
+    cursor.close();
 
     mContext.getContentResolver().delete(Definitions.PlayingMood.URI, null, null);
   }

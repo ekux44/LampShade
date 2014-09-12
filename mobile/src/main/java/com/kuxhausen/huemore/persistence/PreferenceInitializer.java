@@ -115,6 +115,8 @@ public class PreferenceInitializer {
       cdf.show(act.getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
     }
+    cursor.close();
+
     if (!settings.contains(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS)) {
       Editor edit = settings.edit();
       edit.putInt(PreferenceKeys.NUMBER_OF_CONNECTED_BULBS, 1);

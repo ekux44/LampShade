@@ -39,6 +39,7 @@ public class Group {
     while (cursor.moveToNext()) {
       netBulbDbIds.add(cursor.getLong(0));
     }
+    cursor.close();
 
     Group result = new Group(netBulbDbIds, name);
     return result;
@@ -63,6 +64,7 @@ public class Group {
       if (cursor.moveToFirst()) {
         netBulbDbIds.add(cursor.getLong(0));
       }
+      cursor.close();
     }
 
     Group result = new Group(netBulbDbIds, groupName);
