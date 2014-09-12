@@ -122,7 +122,8 @@ public class MoodPlayer {
   }
 
   public void onDestroy() {
-    saveNappingMoods();
+    if(nextEventTime()!=null)
+      saveNappingMoods();
     if (countDownTimer != null) {
       countDownTimer.cancel();
     }
@@ -241,6 +242,8 @@ public class MoodPlayer {
 
       this.playMood(g, m, mName, moodBri, miliTimeStarted, colInternalProgress);
     }
+
+    mContext.getContentResolver().delete(Definitions.PlayingMood.URI, null, null);
   }
 
 

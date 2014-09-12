@@ -2,6 +2,8 @@ package com.kuxhausen.huemore.net;
 
 import android.content.Context;
 import android.os.PowerManager;
+import android.os.SystemClock;
+import android.util.Log;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
@@ -11,6 +13,8 @@ import alt.android.os.CountDownTimer;
 public class LifecycleController {
 
   public static final long TICKS_PER_SECOND = 10l;
+  public static final long EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP = 2;
+  public static final long MINIMUM_NAP_MILLISECONDS = 500l;
 
   private Context mContext;
   private OnActiveMoodsChangedListener mMoodsListener;
@@ -50,6 +54,8 @@ public class LifecycleController {
   }
 
   public synchronized void onStartNapping() {
+    Log.i("lifecycle", "onStartNapping");
+
     if (mLifecycleState != LifecycleState.DEAD) {
       throw new IllegalStateException();
     }
@@ -58,30 +64,33 @@ public class LifecycleController {
   }
 
   public synchronized void onStartWorking() {
-    synchronized (this) {
-      if (mLifecycleState != LifecycleState.NAPPING) {
-        throw new IllegalStateException();
-      }
+    Log.i("lifecycle", "onStartWorking");
 
-      PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-      mWakeLock =
-          pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, mContext.getString(R.string.app_name));
-      mWakeLock.acquire();
-
-      mDeviceManager = new DeviceManager(mContext);
-
-      mMoodPlayer = new MoodPlayer(mContext, mDeviceManager);
-      mMoodPlayer.addOnActiveMoodsChangedListener(mMoodsListener);
-
-      mInternalClock = new InternalClock();
-      mInternalClock.start();
-
-      mLifecycleState = LifecycleState.WORKING;
+    if (mLifecycleState != LifecycleState.NAPPING) {
+      throw new IllegalStateException();
     }
+
+    PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+    mWakeLock =
+        pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, mContext.getString(R.string.app_name));
+    mWakeLock.acquire();
+
+    mDeviceManager = new DeviceManager(mContext);
+
+    mMoodPlayer = new MoodPlayer(mContext, mDeviceManager);
+    mMoodPlayer.addOnActiveMoodsChangedListener(mMoodsListener);
+
+    mInternalClock = new InternalClock();
+    mInternalClock.start();
+
+    mLifecycleState = LifecycleState.WORKING;
+
     mMoodsListener.onActiveMoodsChanged();
   }
 
   public synchronized void onStartBound() {
+    Log.i("lifecycle", "onStartBound");
+
     if (mLifecycleState != LifecycleState.WORKING) {
       throw new IllegalStateException();
     }
@@ -90,6 +99,8 @@ public class LifecycleController {
   }
 
   public synchronized void onStopBound() {
+    Log.i("lifecycle", "onStopBound");
+
     if (mLifecycleState != LifecycleState.BOUND_TO_UI) {
       throw new IllegalStateException();
     }
@@ -98,6 +109,8 @@ public class LifecycleController {
   }
 
   public synchronized void onStopWorking() {
+    Log.i("lifecycle", "onStopWorking");
+
     if (mLifecycleState != LifecycleState.WORKING) {
       throw new IllegalStateException();
     }
@@ -118,6 +131,8 @@ public class LifecycleController {
   }
 
   public synchronized void onStopNappng() {
+    Log.i("lifecycle", "onStopNapping");
+
     mLifecycleState = LifecycleState.DEAD;
   }
 
@@ -130,6 +145,8 @@ public class LifecycleController {
 
   public class InternalClock extends CountDownTimer {
 
+    long ticksTillSleep = LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP;
+
     public InternalClock() {
       super(Long.MAX_VALUE, (1000l / TICKS_PER_SECOND));
     }
@@ -141,11 +158,33 @@ public class LifecycleController {
      */
     @Override
     public void onTick(long millisUntilFinished) {
-      //every tenth of a second, pump mood player (which will in turn pump playing moods)
-      mMoodPlayer.tick();
+      synchronized (LifecycleController.this) {
+        //every tenth of a second, pump mood player (which will in turn pump playing moods)
+        mMoodPlayer.tick();
 
-      //also check device manager & mood player to see if can sleep
+        Log.i("wtf", "tick");
 
+        //also check device manager & mood player to see if can sleep
+        if (mMoodPlayer.nextEventTime() == null || mMoodPlayer.nextEventTime() > (
+            SystemClock.elapsedRealtime() + LifecycleController.MINIMUM_NAP_MILLISECONDS)) {
+          ticksTillSleep--;
+
+          Log.i("wtf", "NextEventTime null or > (elapsedRealtime+MINIMUM_NAP_MILLIS)");
+
+          if (ticksTillSleep < LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP) {
+
+            Log.i("wtf",
+                  "(ticksTillSleep < LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP");
+
+            if (LifecycleController.this.getLifecycleState() == LifecycleState.WORKING) {
+              Log.i("wtf", "currently Working");
+              LifecycleController.this.onStopWorking();
+            }
+          }
+        } else {
+          ticksTillSleep = LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP;
+        }
+      }
     }
 
     /**
