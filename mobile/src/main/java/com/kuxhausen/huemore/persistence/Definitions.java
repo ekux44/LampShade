@@ -217,7 +217,6 @@ public final class Definitions {
     public static final String MAX_BRIGHTNESS = "MAX_BRIGHTNESS";
     public static final String NAV_DRAWER_PAGE = "NAV_DRAWER_PAGE";
     public static final String GROUPBULB_TAB = "GROUPBULB_TAB";
-    public static final String FLAG_AWAKEN_PLAYING_MOODS = "FLAG_AWAKEN_PLAYING_MOODS";
     public static final String FLAG_SHOW_NAV_DRAWER = "FLAG_SHOW_NAV_DRAWER";
     public static final String VOICE_INPUT = "VOICE_INPUT";
     public static final String VOICE_INPUT_LIST = "VOICE_INPUT_LIST";

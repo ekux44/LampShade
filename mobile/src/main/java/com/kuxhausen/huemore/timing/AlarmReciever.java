@@ -176,7 +176,6 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
       Log.d("alarm", "napping mood wakeup");
 
       Intent trasmitter = new Intent(context, ConnectivityService.class);
-      trasmitter.putExtra(InternalArguments.FLAG_AWAKEN_PLAYING_MOODS, true);
       startWakefulService(context, trasmitter);
     } else if (intent.getAction() != null
                && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.\\d\\..*")) {

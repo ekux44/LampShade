@@ -127,8 +127,6 @@ public class LampShadeProvider extends ContentProvider {
   public Uri insert(Uri uri, ContentValues values) {
     ArrayList<Uri> toNotify = new ArrayList<Uri>();
 
-    String table = null;
-
     // Constructs a new query builder and sets its table name
     SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
@@ -138,12 +136,10 @@ public class LampShadeProvider extends ContentProvider {
     switch (sUriMatcher.match(uri)) {
       case PLAYINGMOOD:
         qb.setTables(PlayingMood.TABLE_NAME);
-        table = PlayingMood.TABLE_NAME;
         toNotify.add(PlayingMood.URI);
         break;
       case NETCONNECTIONS:
         qb.setTables(NetConnectionColumns.TABLE_NAME);
-        table = NetConnectionColumns.TABLE_NAME;
         toNotify.add(NetConnectionColumns.URI);
 
         toNotify.add(GroupColumns.GROUPS_URI);
@@ -151,26 +147,22 @@ public class LampShadeProvider extends ContentProvider {
         break;
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
-        table = NetBulbColumns.TABLE_NAME;
         toNotify.add(NetBulbColumns.URI);
         toNotify.add(GroupColumns.GROUPS_URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
         qb.setTables(Definitions.AlarmColumns.TABLE_NAME);
-        table = Definitions.AlarmColumns.TABLE_NAME;
         toNotify.add(AlarmColumns.ALARMS_URI);
         toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPS:
         qb.setTables(Definitions.GroupColumns.TABLE_NAME);
-        table = Definitions.GroupColumns.TABLE_NAME;
         toNotify.add(GroupColumns.GROUPS_URI);
         toNotify.add(GroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
         qb.setTables(Definitions.MoodColumns.TABLE_NAME);
-        table = Definitions.MoodColumns.TABLE_NAME;
         toNotify.add(Definitions.MoodColumns.MOODS_URI);
         break;
       default:
