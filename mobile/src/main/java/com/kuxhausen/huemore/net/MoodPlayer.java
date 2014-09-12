@@ -27,13 +27,6 @@ import alt.android.os.CountDownTimer;
 
 public class MoodPlayer {
 
-  /**
-   * How long in milis before the next event the ExecutorService should begin waking back up
-   */
-  private final static long MILIS_AWAKEN_STARTUP_TIME = 100;
-
-  private final static int MOODS_TIMES_PER_SECOND = 10;
-
   private Gson gson = new Gson();
   private Context mContext;
   private DeviceManager mDeviceManager;
@@ -189,7 +182,7 @@ public class MoodPlayer {
    */
   private synchronized void saveNappingMoods() {
     long awakenTime = nextEventTime();
-    awakenTime -= MILIS_AWAKEN_STARTUP_TIME;
+    awakenTime -= LifecycleController.MILIS_AWAKEN_STARTUP_TIME;
 
     mContext.getContentResolver().delete(Definitions.PlayingMood.URI, null, null);
 
