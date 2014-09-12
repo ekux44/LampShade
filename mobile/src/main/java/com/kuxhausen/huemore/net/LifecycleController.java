@@ -3,7 +3,6 @@ package com.kuxhausen.huemore.net;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
@@ -11,7 +10,6 @@ import com.kuxhausen.huemore.R;
 import alt.android.os.CountDownTimer;
 
 public class LifecycleController {
-
 
   /**
    * How long in milis before the next event the ExecutorService should begin waking back up
@@ -61,7 +59,7 @@ public class LifecycleController {
   }
 
   public synchronized void onStartNapping() {
-    Log.i("lifecycle", "onStartNapping");
+    //Log.i("lifecycle", "onStartNapping");
 
     if (mLifecycleState != LifecycleState.DEAD) {
       throw new IllegalStateException();
@@ -71,7 +69,7 @@ public class LifecycleController {
   }
 
   public synchronized void onStartWorking() {
-    Log.i("lifecycle", "onStartWorking");
+    //Log.i("lifecycle", "onStartWorking");
 
     if (mLifecycleState != LifecycleState.NAPPING) {
       throw new IllegalStateException();
@@ -96,7 +94,7 @@ public class LifecycleController {
   }
 
   public synchronized void onStartBound() {
-    Log.i("lifecycle", "onStartBound");
+    //Log.i("lifecycle", "onStartBound");
 
     if (mLifecycleState != LifecycleState.WORKING) {
       throw new IllegalStateException();
@@ -106,7 +104,7 @@ public class LifecycleController {
   }
 
   public synchronized void onStopBound() {
-    Log.i("lifecycle", "onStopBound");
+    //Log.i("lifecycle", "onStopBound");
 
     if (mLifecycleState != LifecycleState.BOUND_TO_UI) {
       throw new IllegalStateException();
@@ -116,7 +114,7 @@ public class LifecycleController {
   }
 
   public synchronized void onStopWorking() {
-    Log.i("lifecycle", "onStopWorking");
+    //Log.i("lifecycle", "onStopWorking");
 
     if (mLifecycleState != LifecycleState.WORKING) {
       throw new IllegalStateException();
@@ -138,7 +136,7 @@ public class LifecycleController {
   }
 
   public synchronized void onStopNappng() {
-    Log.i("lifecycle", "onStopNapping");
+    //Log.i("lifecycle", "onStopNapping");
 
     mLifecycleState = LifecycleState.DEAD;
   }
@@ -169,22 +167,21 @@ public class LifecycleController {
         //every tenth of a second, pump mood player (which will in turn pump playing moods)
         mMoodPlayer.tick();
 
-        Log.i("wtf", "tick");
+        //Log.i("wtf", "tick");
 
         //also check device manager & mood player to see if can sleep
         if (mMoodPlayer.nextEventTime() == null || mMoodPlayer.nextEventTime() > (
             SystemClock.elapsedRealtime() + LifecycleController.MINIMUM_NAP_MILLISECONDS)) {
           ticksTillSleep--;
 
-          Log.i("wtf", "NextEventTime null or > (elapsedRealtime+MINIMUM_NAP_MILLIS)");
+          //Log.i("wtf", "NextEventTime null or > (elapsedRealtime+MINIMUM_NAP_MILLIS)");
 
           if (ticksTillSleep < 0) {
 
-            Log.i("wtf",
-                  "(ticksTillSleep < LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP");
+            //Log.i("wtf","(ticksTillSleep < LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP");
 
             if (LifecycleController.this.getLifecycleState() == LifecycleState.WORKING) {
-              Log.i("wtf", "currently Working");
+              //Log.i("wtf", "currently Working");
               LifecycleController.this.onStopWorking();
             }
           }
@@ -199,7 +196,6 @@ public class LifecycleController {
      */
     @Override
     public void onFinish() {
-
     }
   }
 }

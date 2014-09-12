@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
@@ -198,8 +197,6 @@ public class MoodPlayer {
       mContext.getContentResolver().insert(Definitions.PlayingMood.URI, cv);
     }
 
-    Log.d("mood", "awaken future millis offset " + (awakenTime - SystemClock.elapsedRealtime()));
-
     AlarmReciever.scheduleInternalAlarm(mContext, awakenTime);
   }
 
@@ -228,10 +225,6 @@ public class MoodPlayer {
       Integer moodBri = cursor.getInt(3);
       Long miliTimeStarted = cursor.getLong(4);
       Long colInternalProgress = cursor.getLong(5);
-
-      Log.d("mood",
-            "restore at" + SystemClock.elapsedRealtime() + " from " + miliTimeStarted + " with "
-            + colInternalProgress);
 
       this.playMood(g, m, mName, moodBri, miliTimeStarted, colInternalProgress);
     }
