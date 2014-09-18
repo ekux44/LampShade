@@ -107,7 +107,7 @@
 	<string name="hint_remote_address">IP Address or URL</string>
 	<string name="toast_hue_connection_updated">Connection Updated</string>
 	<string name="notification_overflow_more">more</string>
-	<string name="max_brightness">Max Brightness</string>
+	<string name="max_brightness">Mood Brightness</string>
 	<string name="saved">Saved</string>
 	<string name="action_connection_error">Connection Error</string>
     <string name="empty_list_connections">Not paired with any lights. Click the plus button to add a new connection.</string>
