@@ -18,8 +18,8 @@ android {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 10
         targetSdkVersion 18
-        versionCode 67
-        versionName "2.8.10"
+        versionCode 68
+        versionName "2.9.0"
     }
     buildTypes {
         release {
