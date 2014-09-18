@@ -31,12 +31,12 @@ public class PlayingMood {
   private long mLastTickedTime;
 
   /**
-   * @param startTime    in elapsed realtime milliseconds
+   * @param startTime    in elapsed realtime milliseconds (may be negative)
    * @param dayStartTime in elapsed realtime milliseconds (may be negative)
    */
   public PlayingMood(Mood m, String moodName, Group g, long startTime, long dayStartTime,
                      Long internalProgress) {
-    if (m == null || g == null || startTime < 1l) {
+    if (m == null || g == null) {
       throw new IllegalArgumentException();
     }
 
