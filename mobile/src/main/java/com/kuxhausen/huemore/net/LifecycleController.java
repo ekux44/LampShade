@@ -14,12 +14,12 @@ public class LifecycleController {
   /**
    * How long in milis before the next event the ExecutorService should begin waking back up
    */
-  public static final long MILIS_AWAKEN_STARTUP_TIME = 150l;
+  public static final long MILIS_AWAKEN_STARTUP_TIME = 1500l;
   public static final long TICKS_PER_SECOND = 10l;
-  public static final long EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP = 25;
+  public static final long EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP = 50;
   public static final long
       MINIMUM_NAP_MILLISECONDS =
-      2 * ((EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP * TICKS_PER_SECOND) + MILIS_AWAKEN_STARTUP_TIME);
+      ((EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP * 1000)/TICKS_PER_SECOND) + MILIS_AWAKEN_STARTUP_TIME;
 
   private Context mContext;
   private OnActiveMoodsChangedListener mMoodsListener;
@@ -83,13 +83,13 @@ public class LifecycleController {
     mDeviceManager = new DeviceManager(mContext);
 
     mMoodPlayer = new MoodPlayer(mContext, mDeviceManager);
-    mMoodPlayer.addOnActiveMoodsChangedListener(mMoodsListener);
 
     mInternalClock = new InternalClock();
     mInternalClock.start();
 
     mLifecycleState = LifecycleState.WORKING;
 
+    mMoodPlayer.addOnActiveMoodsChangedListener(mMoodsListener);
     mMoodsListener.onActiveMoodsChanged();
   }
 
