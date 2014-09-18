@@ -60,7 +60,7 @@ public class BrightnessManager {
 
     //in volume bri mode, new color with unspecified bri is assumed to at 100% of current volume
     if (mPolicy == BrightnessPolicy.VOLUME_BRI && adjusted.get255Bri() == null && (
-        adjusted.getMiredCT() != null || adjusted.xy != null)) {
+        adjusted.getMiredCT() != null || adjusted.getXY() != null)) {
       adjusted.set255Bri(255);
     }
 

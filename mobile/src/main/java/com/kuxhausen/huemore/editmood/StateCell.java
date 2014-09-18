@@ -48,7 +48,7 @@ public class StateCell {
       rowView = inflater.inflate(R.layout.edit_mood_colortemp_row, parent, false);
       TextView stateText = (TextView) rowView.findViewById(R.id.ctTextView);
       stateText.setText(hs.getKelvinCT()+"K");
-    } else if (hs.xy != null) {
+    } else if (hs.getXY() != null) {
       rowView = inflater.inflate(R.layout.edit_mood_row, parent, false);
 
       ImageView state_color = (ImageView) rowView.findViewById(R.id.stateColorView);
@@ -98,8 +98,8 @@ public class StateCell {
       hsv[1] = (float) (hueSat[1]);
       hsv[2] = (hs.get255Bri() != null) ? hs.get255Bri() / 255f : 1f; // remember relative brightness
       return Color.HSVToColor(hsv);
-    } else if (hs.xy != null) {
-      float[] hueSat = (sRGB) ? Utils.xyTOsRGBhs(hs.xy) : Utils.xyTOhs(hs.xy);
+    } else if (hs.getXY() != null) {
+      float[] hueSat = (sRGB) ? Utils.xyTOsRGBhs(hs.getXY()) : Utils.xyTOhs(hs.getXY());
       float[] hsv = new float[3];
       hsv[0] = (float) (hueSat[0] * 360);
       hsv[1] = (float) (hueSat[1]);

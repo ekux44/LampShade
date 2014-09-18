@@ -98,6 +98,19 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getKelvinCT());
   }
 
+  public void testXY(){
+    BulbState bs = new BulbState();
+    assertEquals(null, bs.getXY());
+
+    bs.setXY(new float[]{.2f, .4f});
+    assertEquals(.2f, bs.getXY()[0]);
+    assertEquals(.4f, bs.getXY()[1]);
+
+    bs.setXY(new float[]{});
+    assertEquals(null, bs.getXY());
+
+  }
+
   public void testOn() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getOn());
@@ -221,15 +234,15 @@ public class BulbStateTest extends AndroidTestCase {
     state2.setOn(false);
     assertEquals(state1, state2);
 
-    state1.xy = new float[]{.2f, .2f};
+    state1.setXY(new float[]{.2f, .2f});
     assertFalse(state1.equals(state2));
-    state2.xy = new float[]{.75f, .2f};
+    state2.setXY(new float[]{.75f, .2f});
     assertFalse(state1.equals(state2));
-    state2.xy = new float[]{.2f, .75f};
+    state2.setXY(new float[]{.2f, .75f});
     assertFalse(state1.equals(state2));
-    state2.xy = new float[]{.75f, .75f};
+    state2.setXY(new float[]{.75f, .75f});
     assertFalse(state1.equals(state2));
-    state2.xy = new float[]{.2f, .2f};
+    state2.setXY(new float[]{.2f, .2f});
     assertEquals(state1, state2);
   }
 }

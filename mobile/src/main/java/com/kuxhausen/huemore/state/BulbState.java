@@ -41,7 +41,7 @@ public class BulbState {
    * coordinates are not in the CIE color space, the closest color to the coordinates will be
    * chosen.
    */
-  public float[] xy;
+  private float[] xy;
   /**
    * The Mired Color temperature of the light. 2012 connected lights are capable of 153 (6500K) to
    * 500 (2000K).

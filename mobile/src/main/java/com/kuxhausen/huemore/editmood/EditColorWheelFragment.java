@@ -57,7 +57,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
       state.set255Bri((int) (newHSV[2] * 255f));
     }
     state.setOn(true);
-    state.xy = newXY;
+    state.setXY(newXY);
     state.setKelvinCT(null);
     if (EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE
                                                      - EditStatePagerDialogFragment.hasNoRecentStates)) {
@@ -68,8 +68,8 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
   @Override
   public boolean stateChanged() {
     BulbState state = statePager.getState();
-    if (state.xy != null) {
-      float[] hueSat = Utils.xyTOhs(state.xy);
+    if (state.getXY() != null) {
+      float[] hueSat = Utils.xyTOhs(state.getXY());
       // don't forget relative brightness if set
       float[] hsv = {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
       state.setOn(true);

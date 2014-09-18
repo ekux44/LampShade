@@ -39,7 +39,7 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
     for (int i = 0; i < simpleX.length; i++) {
       BulbState hs = new BulbState();
       float[] conversionXY = {simpleX[i], simpleY[i]};
-      hs.xy = conversionXY;
+      hs.setXY(conversionXY);
       hs.setOn(true);
       hs.setEffect(Effect.NONE);
       hs.setTransitionTime(BulbState.TRANSITION_TIME_DEFAULT);

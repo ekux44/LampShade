@@ -165,7 +165,7 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(false);
 
       // Put xy flag
-      mBitSet.incrementingSet(bs.xy != null);
+      mBitSet.incrementingSet(bs.getXY() != null);
 
       // Put ct flag
       mBitSet.incrementingSet(bs.getMiredCT() != null);
@@ -190,11 +190,11 @@ public class HueUrlEncoder {
     }
 
     /** Put 64 bit xy **/
-    if (bs.xy != null) {
-      int x = Float.floatToIntBits(bs.xy[0]);
+    if (bs.getXY() != null) {
+      int x = Float.floatToIntBits(bs.getXY()[0]);
       mBitSet.addNumber(x, 32);
 
-      int y = Float.floatToIntBits(bs.xy[1]);
+      int y = Float.floatToIntBits(bs.getXY()[1]);
       mBitSet.addNumber(y, 32);
     }
 
@@ -332,14 +332,14 @@ public class HueUrlEncoder {
     if (hue != null && sat != null) {
       float[] hsv = {(hue * 360) / 65535, sat / 255f, 1};
       float[] input = {hsv[0] / 360f, hsv[1]};
-      bs.xy = Utils.hsTOxy(input);
+      bs.setXY(Utils.hsTOxy(input));
     }
 
     /** Get 64 bit xy **/
     if (propertiesFlags[4]) {
       Float x = Float.intBitsToFloat(mBitSet.extractNumber(32));
       Float y = Float.intBitsToFloat(mBitSet.extractNumber(32));
-      bs.xy = new float[]{x, y};
+      bs.setXY(new float[]{x, y});
     }
 
     /** Get 9 bit ct **/
