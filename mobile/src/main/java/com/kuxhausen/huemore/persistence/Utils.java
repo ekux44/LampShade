@@ -66,7 +66,7 @@ public class Utils {
    * @param s in 0 to 1 in the wide RGB D65 space
    * @return CIE 1931 xy each ranging 0 to 1
    */
-  public static Float[] hsTOxy(Float[] input) {
+  public static float[] hsTOxy(float[] input) {
 
     float h = Float.valueOf(input[0]);
     float s = Float.valueOf(input[1]);
@@ -96,7 +96,7 @@ public class Utils {
     float x = X / (X + Y + Z);
     float y = Y / (X + Y + Z);
 
-    Float[] result = {x, y};
+    float[] result = {x, y};
 
     // Log.e("colorspace", "h"+h+" s"+s+" to x"+x+" y"+y);
     return result;
@@ -110,7 +110,7 @@ public class Utils {
    * @param y CIE 1931 y ranging from 0 to 1
    * @return h, s each ranging 0 to 1 in the wide RGB D65 space
    */
-  public static Float[] xyTOhs(Float[] input) {
+  public static float[] xyTOhs(float[] input) {
     float x = Float.valueOf(input[0]);
     float y = Float.valueOf(input[1]);
 
@@ -148,7 +148,7 @@ public class Utils {
     h = Math.max(0f, Math.min(h, 1f));
     s = Math.max(0f, Math.min(s, 1f));
 
-    Float[] result = {h, s};
+    float[] result = {h, s};
     // Log.e("colorspace", "h"+h+" s"+s+" from x"+x+" y"+y);
     return result;
   }
@@ -159,7 +159,7 @@ public class Utils {
    * @param y CIE 1931 y ranging from 0 to 1
    * @return h, s each ranging 0 to 1 in the sRGB D65 space
    */
-  public static Float[] xyTOsRGBhs(Float[] input) {
+  public static float[] xyTOsRGBhs(float[] input) {
     float x = Float.valueOf(input[0]);
     float y = Float.valueOf(input[1]);
 
@@ -197,7 +197,7 @@ public class Utils {
     h = Math.max(0f, Math.min(h, 1f));
     s = Math.max(0f, Math.min(s, 1f));
 
-    Float[] result = {h, s};
+    float[] result = {h, s};
     // Log.e("colorspace", "h"+h+" s"+s+" from x"+x+" y"+y);
     return result;
   }
@@ -209,7 +209,7 @@ public class Utils {
    * @param ct Planckian locus color temperature in Mirads
    * @return x, y in CIE 1931 each ranging 0 to 1
    */
-  public static Float[] ctTOxy(float ctMirads) {
+  public static float[] ctTOxy(float ctMirads) {
     double ct = 1000000 / ctMirads;
     double xc = 0;
     double yc = 0;
@@ -241,7 +241,7 @@ public class Utils {
           - 0.37001483d;
     }
     Log.e("ctConversion", ct + " , " + xc + " , " + yc);
-    Float[] result = {(float) xc, (float) yc};
+    float[] result = {(float) xc, (float) yc};
     return result;
   }
 

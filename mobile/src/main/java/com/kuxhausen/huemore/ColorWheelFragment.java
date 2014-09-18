@@ -40,7 +40,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   {
     hs.setOn(true);
     hs.setEffect(Effect.NONE);
-    Float[] lol = {.5f, .5f};
+    float[] lol = {.5f, .5f};
     hs.xy = lol;// TODO change
 
   }
@@ -86,7 +86,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
     if (bs.xy != null) {
       hs.xy = bs.xy;
 
-      Float[] hueSat = Utils.xyTOhs(hs.xy);
+      float[] hueSat = Utils.xyTOhs(hs.xy);
       float[] hsv = {hueSat[0] * 360, hueSat[1], 1f};
 
       int rgb = Color.HSVToColor(hsv);
@@ -149,7 +149,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
     int blue = ((rgb) & 0xFF);
     Color.RGBToHSV(red, green, blue, hsv);
 
-    Float[] input = {hsv[0] / 360f, hsv[1]};
+    float[] input = {hsv[0] / 360f, hsv[1]};
     hs.xy = Utils.hsTOxy(input);
     preview();
   }

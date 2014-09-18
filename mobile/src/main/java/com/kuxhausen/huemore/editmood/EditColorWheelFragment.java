@@ -48,8 +48,8 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     int green = ((rgb >>> 8) & 0xFF);
     int blue = ((rgb) & 0xFF);
     Color.RGBToHSV(red, green, blue, newHSV);
-    Float[] newHueSat = {newHSV[0] / 360f, newHSV[1]};
-    Float[] newXY = Utils.hsTOxy(newHueSat);
+    float[] newHueSat = {newHSV[0] / 360f, newHSV[1]};
+    float[] newXY = Utils.hsTOxy(newHueSat);
 
     BulbState state = statePager.getState();
     // relative brightness
@@ -69,7 +69,7 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
   public boolean stateChanged() {
     BulbState state = statePager.getState();
     if (state.xy != null) {
-      Float[] hueSat = Utils.xyTOhs(state.xy);
+      float[] hueSat = Utils.xyTOhs(state.xy);
       // don't forget relative brightness if set
       float[] hsv = {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
       state.setOn(true);

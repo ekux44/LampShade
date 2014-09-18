@@ -41,7 +41,7 @@ public class BulbState {
    * coordinates are not in the CIE color space, the closest color to the coordinates will be
    * chosen.
    */
-  public Float[] xy;
+  public float[] xy;
   /**
    * The Mired Color temperature of the light. 2012 connected lights are capable of 153 (6500K) to
    * 500 (2000K).
@@ -143,7 +143,7 @@ public class BulbState {
       delta.transitiontime = o.transitiontime;
     }
 
-    if (o.xy != null && (xy == null || !(xy[0].equals(o.xy[0]) && xy[1].equals(o.xy[1])))) {
+    if (o.xy != null && (xy == null || !(xy[0]==(o.xy[0]) && xy[1]==(o.xy[1])))) {
       delta.xy = o.xy;
     } else if (o.ct != null && (ct == null || !ct.equals(o.ct))) {
       delta.ct = o.ct;
@@ -279,14 +279,6 @@ public class BulbState {
     on = newOn;
   }
 
-  public boolean hasOnlyBri() {
-    if (on == null && bri != null && xy == null && ct == null
-        && alert == null && effect == null && transitiontime == null) {
-      return true;
-    }
-    return false;
-  }
-
   public Integer getPercentBri() {
     if (bri == null) {
       return bri;
@@ -342,6 +334,22 @@ public class BulbState {
       ct = newCT;
     } else {
       ct = Math.max(1, (1000000 / Math.max(1, newCT)));
+    }
+  }
+
+  public float[] getXY(){
+    if(xy == null || xy.length!=2){
+      return null;
+    } else {
+      return xy;
+    }
+  }
+
+  public void setXY(float[] newXY){
+    if(newXY!=null && newXY.length!=2){
+      xy = null;
+    } else {
+      xy = newXY;
     }
   }
 
