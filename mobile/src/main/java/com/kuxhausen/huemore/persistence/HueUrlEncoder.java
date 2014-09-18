@@ -258,7 +258,7 @@ public class HueUrlEncoder {
       mBitSet.addNumber(timeArray.indexOf(e.getLegacyTime()), getBitLength(timeArray.size()));
 
       // add mood lookup number
-      mBitSet.addNumber(bulbStateToStringList.indexOf(e.state.toString()),
+      mBitSet.addNumber(bulbStateToStringList.indexOf(e.getBulbState().toString()),
                         getBitLength(stateArray.size()));
     }
   }
@@ -288,7 +288,7 @@ public class HueUrlEncoder {
   private static ArrayList<BulbState> generateStatesArray(Mood mood) {
     HashMap<String, BulbState> statemap = new HashMap<String, BulbState>();
     for (Event e : mood.events) {
-      statemap.put(e.state.toString(), e.state);
+      statemap.put(e.getBulbState().toString(), e.getBulbState());
     }
     ArrayList<BulbState> statesArray = new ArrayList<BulbState>();
     statesArray.addAll(statemap.values());
@@ -478,13 +478,13 @@ public class HueUrlEncoder {
 
         for (int i = 0; i < numEvents; i++) {
           Event e = new Event();
-          e.channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
+          int channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 
-          e.setLegacyTime(timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))]);
+          long time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
 
-          e.state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
+          BulbState state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
 
-          eList[i] = e;
+          eList[i] = new Event(state, channel, time);
         }
         mood.events = eList;
 
@@ -502,20 +502,17 @@ public class HueUrlEncoder {
 
         /** Decode each state **/
         for (int i = 0; i < numStates; i++) {
-          Event e = new Event();
           // decode each state
-          e.state = extractState(mBitSet);
+          BulbState state = extractState(mBitSet);
 
           // convert from old brightness stuffing to new relative brightness + total brightness
           // system
-          if (e.state.get255Bri() != null) {
-            brightness = e.state.get255Bri();
-            e.state.set255Bri(null);
+          if (state.get255Bri() != null) {
+            brightness = state.get255Bri();
+            state.set255Bri(null);
           }
 
-          e.channel = i;
-          e.setLegacyTime(0);
-          eventArray[i] = e;
+          eventArray[i] = new Event(state, i, 0l);
         }
         mood.events = eventArray;
         mood.setNumChannels(numStates);

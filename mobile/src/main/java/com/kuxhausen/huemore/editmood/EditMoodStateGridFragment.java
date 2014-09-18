@@ -216,7 +216,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
           moodRows.get(row).relativeTimeslot.setStartTime(e.getLegacyTime());
         }
       }
-      moodRows.get(row).cellRay.get(e.channel).hs = e.state;
+      moodRows.get(row).cellRay.get(e.channel).hs = e.getBulbState();
     }
 
     // set loop button
@@ -247,10 +247,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       for (int c = 0; c < moodRows.get(r).cellRay.size(); c++) {
         StateCell mr = moodRows.get(r).cellRay.get(c);
         if (mr.hs != null && !mr.hs.isEmpty()) {
-          Event e = new Event();
-          e.channel = c;
-          e.setLegacyTime(getTime(r));
-          e.state = mr.hs;
+          Event e = new Event(mr.hs, c, getTime(r));
           events.add(e);
         }
       }
@@ -265,7 +262,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     return m;
   }
 
-  private int getTime(int row) {
+  private long getTime(int row) {
     if (row > -1 && row < moodRows.size()) {
       if (pageType == PageType.DAILY_PAGE) {
         return moodRows.get(row).dailyTimeslot.getStartTime();
@@ -328,10 +325,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         bs.setAlert(Alert.FLASH_ONCE);
         bs.setOn(true);
 
-        Event e = new Event();
-        e.channel = channelToFlash;
-        e.setLegacyTime(0);
-        e.state = bs;
+        Event e = new Event(bs, channelToFlash, 0l);
         Event[] eRay = {e};
         showChanM.events = eRay;
 

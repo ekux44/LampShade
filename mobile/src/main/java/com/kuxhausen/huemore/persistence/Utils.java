@@ -40,10 +40,7 @@ public class Utils {
 
   public static Mood generateSimpleMood(BulbState bs) {
     // boilerplate
-    Event e = new Event();
-    e.channel = 0;
-    e.setLegacyTime(0);
-    e.state = bs;
+    Event e = new Event(bs, 0, 0l);
     Event[] eRay = {e};
     // more boilerplate
     Mood m = new Mood();

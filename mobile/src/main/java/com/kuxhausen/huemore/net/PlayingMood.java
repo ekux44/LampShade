@@ -166,7 +166,7 @@ public class PlayingMood {
           if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
               && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
-            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.getBulbState()));
           }
         }
       }
@@ -181,7 +181,7 @@ public class PlayingMood {
           if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
               && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
-            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.getBulbState()));
           }
         }
       }
@@ -190,7 +190,7 @@ public class PlayingMood {
       for (Event e : mMood.events) {
         if (sinceTime < (e.getMilliTime() + mStartTime)
             && (e.getMilliTime() + mStartTime) <= throughTime) {
-          result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.state));
+          result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.channel), e.getBulbState()));
         }
       }
     }

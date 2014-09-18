@@ -122,10 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           Event[] events = new Event[stateJson.size()];
           for (int i = 0; i < stateJson.size(); i++) {
-            Event e = new Event();
-            e.state = gson.fromJson(stateJson.get(i), BulbState.class);
-            e.setLegacyTime(0);
-            e.channel = i;
+            Event e = new Event(gson.fromJson(stateJson.get(i), BulbState.class), i, 0l);
             events[i] = e;
           }
           Mood m = new Mood();
