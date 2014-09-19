@@ -262,12 +262,15 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     return m;
   }
 
+  /**
+   * @return time in milliseconds
+   */
   private long getTime(int row) {
     if (row > -1 && row < moodRows.size()) {
       if (pageType == PageType.DAILY_PAGE) {
-        return moodRows.get(row).dailyTimeslot.getStartTime();
+        return 100l * moodRows.get(row).dailyTimeslot.getStartTime();
       } else if (pageType == PageType.RELATIVE_PAGE) {
-        return moodRows.get(row).relativeTimeslot.getStartTime();
+        return 100l * moodRows.get(row).relativeTimeslot.getStartTime();
       }
     }
     return 0;

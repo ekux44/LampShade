@@ -73,9 +73,9 @@ public class LegacyTests {
         Log.e("tests", tNum + "event" + i + "TimeNotEqual");
         return false;
       }
-      if (!m1.events[i].state.equals(m2.events[i].state)) {
-        Log.e("tests", m1.events[i].state.toString());
-        Log.e("tests", m2.events[i].state.toString());
+      if (!m1.events[i].getBulbState().equals(m2.events[i].getBulbState())) {
+        Log.e("tests", m1.events[i].getBulbState().toString());
+        Log.e("tests", m2.events[i].getBulbState().toString());
         Log.e("tests", tNum + "event" + i + "StateNotEqual");
         return false;
       }

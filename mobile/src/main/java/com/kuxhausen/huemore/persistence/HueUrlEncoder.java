@@ -480,11 +480,11 @@ public class HueUrlEncoder {
           Event e = new Event();
           int channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 
-          long time = timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
+          long milliseconds = 100l * timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
 
           BulbState state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
 
-          eList[i] = new Event(state, channel, time);
+          eList[i] = new Event(state, channel, milliseconds);
         }
         mood.events = eList;
 

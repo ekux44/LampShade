@@ -77,7 +77,7 @@ public class Mood implements Cloneable {
     }
     HashSet<Integer> times = new HashSet<Integer>();
     for (Event e : events) {
-      if (e != null && e.getLegacyTime() != null && times.add(e.getLegacyTime())) {
+      if (e != null && times.add(e.getLegacyTime())) {
         result++;
       }
     }
@@ -106,7 +106,7 @@ public class Mood implements Cloneable {
       return true;
     }
     for (Event e : events) {
-      if (e != null && e.getLegacyTime() != null && e.getLegacyTime() != 0) {
+      if (e != null && e.getLegacyTime() != 0) {
         return false;
       }
     }
