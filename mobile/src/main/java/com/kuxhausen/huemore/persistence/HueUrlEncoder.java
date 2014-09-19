@@ -441,7 +441,7 @@ public class HueUrlEncoder {
           // 20 bit timestamp
           timeArray[i] = mBitSet.extractNumber(20);
         }
-        mood.usesTiming = !(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0));
+        mood.setUsesTiming(!(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0)));
 
         int numStates;
         if (encodingVersion >= 4) {
@@ -516,7 +516,7 @@ public class HueUrlEncoder {
         mood.events = eventArray;
         mood.setNumChannels(numStates);
         mood.timeAddressingRepeatPolicy = false;
-        mood.usesTiming = false;
+        mood.setUsesTiming(false);
 
       } else {
         throw new FutureEncodingException();

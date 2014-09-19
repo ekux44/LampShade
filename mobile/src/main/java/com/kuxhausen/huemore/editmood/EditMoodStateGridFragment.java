@@ -177,7 +177,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   }
 
   public static PageType calculateMoodType(Mood m) {
-    if (!m.usesTiming) {
+    if (!m.getUsesTiming()) {
       return PageType.SIMPLE_PAGE;
     } else if (m.timeAddressingRepeatPolicy == true) {
       return PageType.DAILY_PAGE;
@@ -230,9 +230,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   protected Mood getMood() {
     Mood m = new Mood();
     if (pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE) {
-      m.usesTiming = true;
+      m.setUsesTiming(true);
     } else {
-      m.usesTiming = false;
+      m.setUsesTiming(false);
     }
     m.setNumChannels(gridCols());
     if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE) {
@@ -320,7 +320,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         break;
       case R.id.infoImageButton:
         Mood showChanM = new Mood();
-        showChanM.usesTiming = false;
+        showChanM.setUsesTiming(false);
         showChanM.setNumChannels(gridCols());
 
         int channelToFlash = (Integer) v.getTag();

@@ -11,7 +11,7 @@ public class Mood implements Cloneable {
 
   public Event[] events;
   private int numChannels;
-  public Boolean usesTiming;
+  private boolean mUsesTiming;
   /**
    * in units of 1/10 of a second
    */
@@ -28,7 +28,6 @@ public class Mood implements Cloneable {
 
   public Mood() {
     timeAddressingRepeatPolicy = false;
-    usesTiming = false;
     numChannels = 1;
     numLoops = 0;
     events = new Event[0];
@@ -134,5 +133,13 @@ public class Mood implements Cloneable {
 
   public void setLoopMilliTime(long milliseconds) {
     loopIterationTimeLength = (int) (milliseconds / 100l);
+  }
+
+  public void setUsesTiming(boolean usesTiming){
+    mUsesTiming = usesTiming;
+  }
+
+  public boolean getUsesTiming(){
+    return mUsesTiming;
   }
 }
