@@ -477,7 +477,6 @@ public class HueUrlEncoder {
         Event[] eList = new Event[numEvents];
 
         for (int i = 0; i < numEvents; i++) {
-          Event e = new Event();
           int channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 
           long milliseconds = 100l * timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];

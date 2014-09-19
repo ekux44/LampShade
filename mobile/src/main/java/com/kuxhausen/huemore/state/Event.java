@@ -8,7 +8,7 @@ public class Event implements Comparable<Event> {
   /**
    * 0 indexed *
    */
-  private Integer channel;
+  private int channel;
   /**
    * in units of 1/10 of a second
    */
@@ -19,27 +19,20 @@ public class Event implements Comparable<Event> {
     return ((Long) time).compareTo(another.time);
   }
 
-  public Event() {
-  }
+  public Event(BulbState state, int channel, long militime) {
+    if (state == null) {
+      throw new IllegalArgumentException();
+    }
 
-  public Event(BulbState state, int channel, long time) {
     this.state = state;
     this.channel = channel;
-    this.time = time;
+    this.time = time / 100l;
   }
 
   @Override
   public Event clone() {
     Gson gson = new Gson();
     return gson.fromJson(gson.toJson(this), Event.class);
-  }
-
-  public Event(BulbState state, int channel) {
-    this(state, channel, 0l);
-  }
-
-  public void setMilliTime(long milliseconds) {
-    time = milliseconds / 100l;
   }
 
   public long getMilliTime() {

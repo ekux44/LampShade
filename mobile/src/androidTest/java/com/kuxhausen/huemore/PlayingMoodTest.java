@@ -58,10 +58,8 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(0);
-    Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(0);
+    Event e1 = new Event(bs1, 0, 0l);
+    Event e2 = new Event(bs2, 1, 0l);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -105,10 +103,8 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(0);
-    Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(100);
+    Event e1 = new Event(bs1, 0, 0l);
+    Event e2 = new Event(bs2, 1, 100l);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -162,10 +158,8 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(0);
-    Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(100);
+    Event e1 = new Event(bs1, 0, 0l);
+    Event e2 = new Event(bs2, 1, 100l);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -256,10 +250,8 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(0);
-    Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(100);
+    Event e1 = new Event(bs1, 0, 0);
+    Event e2 = new Event(bs2, 1, 100);
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -371,10 +363,8 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(5 * millisPerHour);
-    Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(13 * millisPerHour);
+    Event e1 = new Event(bs1, 0, (5 * millisPerHour));
+    Event e2 = new Event(bs2, 1, (13 * millisPerHour));
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
@@ -485,10 +475,8 @@ public class PlayingMoodTest extends AndroidTestCase {
     BulbState bs2 = new BulbState();
     bs2.set255Bri(127);
 
-    Event e1 = new Event(bs1, 0);
-    e1.setMilliTime(5 * millisPerHour);
-    Event e2 = new Event(bs2, 1);
-    e2.setMilliTime(13 * millisPerHour);
+    Event e1 = new Event(bs1, 0, (5 * millisPerHour));
+    Event e2 = new Event(bs2, 1, (13 * millisPerHour));
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
