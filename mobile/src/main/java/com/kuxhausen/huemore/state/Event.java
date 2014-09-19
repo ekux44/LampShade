@@ -2,6 +2,8 @@ package com.kuxhausen.huemore.state;
 
 import com.google.gson.Gson;
 
+import com.kuxhausen.huemore.persistence.Utils;
+
 public class Event implements Comparable<Event> {
 
   private BulbState mState;
@@ -12,11 +14,11 @@ public class Event implements Comparable<Event> {
   /**
    * in units of 1/10 of a second
    */
-  private long mDeciseconds;
+  private int mDeciseconds;
 
   @Override
   public int compareTo(Event another) {
-    return ((Long) mDeciseconds).compareTo(another.mDeciseconds);
+    return ((Integer) mDeciseconds).compareTo(another.mDeciseconds);
   }
 
   public Event(BulbState state, int channel, long milliseconds) {
@@ -26,7 +28,7 @@ public class Event implements Comparable<Event> {
 
     mState = state;
     mChannel = channel;
-    this.mDeciseconds = milliseconds / 100l;
+    this.mDeciseconds = Utils.toDeciSeconds(milliseconds);
   }
 
   @Override
@@ -36,14 +38,14 @@ public class Event implements Comparable<Event> {
   }
 
   public long getMilliTime() {
-    return mDeciseconds * 100l;
+    return Utils.fromDeciSeconds(mDeciseconds);
   }
 
   /**
    * in units of 1/10 of a second
    */
   public int getLegacyTime() {
-    return ((Long) mDeciseconds).intValue();
+    return (mDeciseconds);
   }
 
   public BulbState getBulbState() {

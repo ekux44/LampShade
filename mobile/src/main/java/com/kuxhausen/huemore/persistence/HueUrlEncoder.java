@@ -479,7 +479,7 @@ public class HueUrlEncoder {
         for (int i = 0; i < numEvents; i++) {
           int channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 
-          long milliseconds = 100l * timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))];
+          long milliseconds = Utils.fromDeciSeconds(timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))]);
 
           BulbState state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
 
