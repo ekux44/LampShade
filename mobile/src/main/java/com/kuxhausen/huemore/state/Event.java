@@ -4,29 +4,29 @@ import com.google.gson.Gson;
 
 public class Event implements Comparable<Event> {
 
-  private BulbState state;
+  private BulbState mState;
   /**
    * 0 indexed *
    */
-  private int channel;
+  private int mChannel;
   /**
    * in units of 1/10 of a second
    */
-  private long time;
+  private long mDeciseconds;
 
   @Override
   public int compareTo(Event another) {
-    return ((Long) time).compareTo(another.time);
+    return ((Long) mDeciseconds).compareTo(another.mDeciseconds);
   }
 
-  public Event(BulbState state, int channel, long militime) {
+  public Event(BulbState state, int channel, long milliseconds) {
     if (state == null) {
       throw new IllegalArgumentException();
     }
 
-    this.state = state;
-    this.channel = channel;
-    this.time = time / 100l;
+    mState = state;
+    mChannel = channel;
+    this.mDeciseconds = milliseconds / 100l;
   }
 
   @Override
@@ -36,21 +36,21 @@ public class Event implements Comparable<Event> {
   }
 
   public long getMilliTime() {
-    return time * 100l;
+    return mDeciseconds * 100l;
   }
 
   /**
    * in units of 1/10 of a second
    */
   public int getLegacyTime() {
-    return ((Long) time).intValue();
+    return ((Long) mDeciseconds).intValue();
   }
 
   public BulbState getBulbState() {
-    return state;
+    return mState;
   }
 
   public int getChannel() {
-    return channel;
+    return mChannel;
   }
 }
