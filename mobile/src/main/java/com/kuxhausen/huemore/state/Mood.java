@@ -20,7 +20,7 @@ public class Mood implements Cloneable {
    * if true, timestamps in events are offsets from beginning of the day, otherwise they are offsets
    * from mood start time
    */
-  public Boolean timeAddressingRepeatPolicy;
+  private Boolean timeAddressingRepeatPolicy;
   /**
    * max value 126 (127 special cased to infinity) *
    */

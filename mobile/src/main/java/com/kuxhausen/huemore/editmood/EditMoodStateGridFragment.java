@@ -179,7 +179,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   public static PageType calculateMoodType(Mood m) {
     if (!m.getUsesTiming()) {
       return PageType.SIMPLE_PAGE;
-    } else if (m.timeAddressingRepeatPolicy == true) {
+    } else if (m.getTimeAddressingRepeatPolicy() == true) {
       return PageType.DAILY_PAGE;
     } else {
       return PageType.RELATIVE_PAGE;
@@ -236,9 +236,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     }
     m.setNumChannels(gridCols());
     if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE) {
-      m.timeAddressingRepeatPolicy = true;
+      m.setTimeAddressingRepeatPolicy(true);
     } else {
-      m.timeAddressingRepeatPolicy = false;
+      m.setTimeAddressingRepeatPolicy(false);
     }
     m.setInfiniteLooping(parentFrag.isChecked());
 

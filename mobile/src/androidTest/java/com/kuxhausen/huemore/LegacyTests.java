@@ -44,11 +44,11 @@ public class LegacyTests {
       Log.e("tests", tNum + "infiniteLoopingNotEqual");
       return false;
     }
-    if (m1.timeAddressingRepeatPolicy != m2.timeAddressingRepeatPolicy) {
+    if (m1.getTimeAddressingRepeatPolicy() != m2.getTimeAddressingRepeatPolicy()) {
       Log.e("tests", tNum + "timeAddressingRepeatPolicyNotEqual");
       return false;
     }
-    if (m1.usesTiming != m2.usesTiming) {
+    if (m1.getUsesTiming() != m2.getUsesTiming()) {
       Log.e("tests", tNum + "usesTimingNotEqual");
       return false;
     }

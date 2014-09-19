@@ -140,7 +140,7 @@ public class HueUrlEncoder {
    */
   private static void addTimingRepeatPolicy(ManagedBitSet mBitSet, Mood mood) {
     // 1 bit timing addressing reference mode
-    mBitSet.incrementingSet(mood.timeAddressingRepeatPolicy);
+    mBitSet.incrementingSet(mood.getTimeAddressingRepeatPolicy());
 
     // 7 bit timing repeat number (max value specialcased to infinity)
     mBitSet.addNumber(mood.getNumLoops(), 7);
@@ -427,7 +427,7 @@ public class HueUrlEncoder {
         mood.setNumChannels(numChannels);
 
         // 1 bit timing addressing reference mode
-        mood.timeAddressingRepeatPolicy = mBitSet.incrementingGet();
+        mood.setTimeAddressingRepeatPolicy(mBitSet.incrementingGet());
 
         // 7 bit timing repeat number
         mood.setNumLoops(mBitSet.extractNumber(7));
@@ -515,7 +515,7 @@ public class HueUrlEncoder {
         }
         mood.events = eventArray;
         mood.setNumChannels(numStates);
-        mood.timeAddressingRepeatPolicy = false;
+        mood.setTimeAddressingRepeatPolicy(false);
         mood.setUsesTiming(false);
 
       } else {

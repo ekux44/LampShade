@@ -126,7 +126,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             events[i] = e;
           }
           Mood m = new Mood();
-          m.timeAddressingRepeatPolicy = false;
           m.setNumChannels(stateJson.size());
           m.events = events;
 
