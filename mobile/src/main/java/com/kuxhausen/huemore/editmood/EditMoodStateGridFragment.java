@@ -222,7 +222,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     // set loop button
     parentFrag.setChecked(mFromDB.isInfiniteLooping());
 
-    loopTimeslot.setStartTime(mFromDB.loopIterationTimeLength);
+    loopTimeslot.setStartTime(Utils.toDeciSeconds(mFromDB.getLoopMilliTime()));
 
     redrawGrid();
   }
@@ -258,7 +258,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     }
 
     m.events = eRay;
-    m.loopIterationTimeLength = loopTimeslot.getStartTime();
+    m.setLoopMilliTime(Utils.fromDeciSeconds(loopTimeslot.getStartTime()));
     return m;
   }
 

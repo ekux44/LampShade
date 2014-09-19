@@ -126,7 +126,7 @@ public class HueUrlEncoder {
     addListOfEvents(mBitSet, mood, timeArray, stateArray);
 
     // Set 20 bit timestamps representing the loopIterationTimeLength
-    mBitSet.addNumber(mood.loopIterationTimeLength, 20);
+    mBitSet.addNumber(Utils.toDeciSeconds(mood.getLoopMilliTime()), 20);
 
     String encoded = mBitSet.getBase64Encoding();
     // bug fix against newlines in encodeLegacy
@@ -489,7 +489,7 @@ public class HueUrlEncoder {
 
         // 20 bit loopIterationTimeLength is only difference between encodingVersion=1 & =2
         if (encodingVersion >= 2) {
-          mood.loopIterationTimeLength = mBitSet.extractNumber(20);
+          mood.setLoopMilliTime(Utils.fromDeciSeconds(mBitSet.extractNumber(20)));
         }
 
       } else if (encodingVersion == 0) {

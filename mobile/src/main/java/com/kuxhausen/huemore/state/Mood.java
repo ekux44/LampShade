@@ -15,7 +15,7 @@ public class Mood implements Cloneable {
   /**
    * in units of 1/10 of a second
    */
-  public int loopIterationTimeLength;
+  private int loopIterationTimeLength;
   /**
    * if true, timestamps in events are offsets from beginning of the day, otherwise they are offsets
    * from mood start time

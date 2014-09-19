@@ -241,4 +241,18 @@ public class Utils {
     return result;
   }
 
+  /**
+   * @return deciseconds
+   */
+  public static int toDeciSeconds(long milliseconds) {
+    return (int)(milliseconds / 100l);
+  }
+
+  /**
+   * @return milliseconds
+   */
+  public static long fromDeciSeconds(int deciseconds) {
+    return deciseconds * 100l;
+  }
+
 }
