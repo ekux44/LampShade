@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.net;
+package com.kuxhausen.huemore;
 
 import android.test.AndroidTestCase;
 
