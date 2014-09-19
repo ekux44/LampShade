@@ -216,7 +216,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
           moodRows.get(row).relativeTimeslot.setStartTime(e.getLegacyTime());
         }
       }
-      moodRows.get(row).cellRay.get(e.channel).hs = e.getBulbState();
+      moodRows.get(row).cellRay.get(e.getChannel()).hs = e.getBulbState();
     }
 
     // set loop button

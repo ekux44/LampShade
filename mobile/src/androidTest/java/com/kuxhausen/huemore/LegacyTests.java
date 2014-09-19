@@ -65,7 +65,7 @@ public class LegacyTests {
       return false;
     }
     for (int i = 0; i < m1.events.length; i++) {
-      if (m1.events[i].channel != m2.events[i].channel) {
+      if (m1.events[i].getChannel() != m2.events[i].getChannel()) {
         Log.e("tests", tNum + "event" + i + "ChannelNotEqual");
         return false;
       }

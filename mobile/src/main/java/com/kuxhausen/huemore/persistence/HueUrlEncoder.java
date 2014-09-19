@@ -252,7 +252,7 @@ public class HueUrlEncoder {
     for (Event e : mood.events) {
 
       // add channel number
-      mBitSet.addNumber(e.channel, getBitLength(mood.getNumChannels()));
+      mBitSet.addNumber(e.getChannel(), getBitLength(mood.getNumChannels()));
 
       // add timestamp lookup number
       mBitSet.addNumber(timeArray.indexOf(e.getLegacyTime()), getBitLength(timeArray.size()));

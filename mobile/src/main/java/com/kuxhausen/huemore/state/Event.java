@@ -8,7 +8,7 @@ public class Event implements Comparable<Event> {
   /**
    * 0 indexed *
    */
-  public Integer channel;
+  private Integer channel;
   /**
    * in units of 1/10 of a second
    */
@@ -22,7 +22,7 @@ public class Event implements Comparable<Event> {
   public Event() {
   }
 
-  public Event(BulbState state, Integer channel, long time) {
+  public Event(BulbState state, int channel, long time) {
     this.state = state;
     this.channel = channel;
     this.time = time;
@@ -55,5 +55,9 @@ public class Event implements Comparable<Event> {
 
   public BulbState getBulbState() {
     return state;
+  }
+
+  public int getChannel() {
+    return channel;
   }
 }

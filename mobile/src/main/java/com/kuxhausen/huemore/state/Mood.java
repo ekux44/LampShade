@@ -95,7 +95,7 @@ public class Mood implements Cloneable {
       if (!timeslotMapping.containsKey(e.getLegacyTime())) {
         timeslotMapping.put(e.getLegacyTime(), ++curRow);
       }
-      colorGrid[timeslotMapping.get(e.getLegacyTime())][e.channel] = e.getBulbState();
+      colorGrid[timeslotMapping.get(e.getLegacyTime())][e.getChannel()] = e.getBulbState();
     }
 
     return colorGrid;
