@@ -60,22 +60,22 @@ public class LegacyTests {
       Log.e("tests", tNum + "numLoopsNotEqual");
       return false;
     }
-    if (m1.events.length != m2.events.length) {
+    if (m1.getEvents().length != m2.getEvents().length) {
       Log.e("tests", tNum + "numEventsNotEqual");
       return false;
     }
-    for (int i = 0; i < m1.events.length; i++) {
-      if (m1.events[i].getChannel() != m2.events[i].getChannel()) {
+    for (int i = 0; i < m1.getEvents().length; i++) {
+      if (m1.getEvents()[i].getChannel() != m2.getEvents()[i].getChannel()) {
         Log.e("tests", tNum + "event" + i + "ChannelNotEqual");
         return false;
       }
-      if (m1.events[i].getLegacyTime() != m2.events[i].getLegacyTime()) {
+      if (m1.getEvents()[i].getLegacyTime() != m2.getEvents()[i].getLegacyTime()) {
         Log.e("tests", tNum + "event" + i + "TimeNotEqual");
         return false;
       }
-      if (!m1.events[i].getBulbState().equals(m2.events[i].getBulbState())) {
-        Log.e("tests", m1.events[i].getBulbState().toString());
-        Log.e("tests", m2.events[i].getBulbState().toString());
+      if (!m1.getEvents()[i].getBulbState().equals(m2.getEvents()[i].getBulbState())) {
+        Log.e("tests", m1.getEvents()[i].getBulbState().toString());
+        Log.e("tests", m2.getEvents()[i].getBulbState().toString());
         Log.e("tests", tNum + "event" + i + "StateNotEqual");
         return false;
       }

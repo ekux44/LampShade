@@ -127,7 +127,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           }
           Mood m = new Mood();
           m.setNumChannels(stateJson.size());
-          m.events = events;
+          m.setEvents(events);
 
           cv.put(MoodColumns.COL_MOOD_NAME, key);
           cv.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(m));

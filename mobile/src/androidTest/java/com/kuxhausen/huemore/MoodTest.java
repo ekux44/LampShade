@@ -36,7 +36,7 @@ public class MoodTest extends AndroidTestCase {
     Event e1 = new Event(bs1, 0, 0);
 
     Mood m = new Mood();
-    m.events = new Event[]{e1};
+    m.setEvents(new Event[]{e1});
 
     assertFalse(m.getTimeAddressingRepeatPolicy());
     assertFalse(m.isInfiniteLooping());
@@ -62,7 +62,7 @@ public class MoodTest extends AndroidTestCase {
     Event e3 = new Event(bs1, 2, 0);
 
     Mood m = new Mood();
-    m.events = new Event[]{e1, e2, e3};
+    m.setEvents(new Event[]{e1, e2, e3});
 
     assertFalse(m.getTimeAddressingRepeatPolicy());
     assertFalse(m.isInfiniteLooping());
@@ -87,7 +87,7 @@ public class MoodTest extends AndroidTestCase {
     Event e2 = new Event(bs2, 1, 5000l);
 
     Mood m = new Mood();
-    m.events = new Event[]{e1, e2};
+    m.setEvents(new Event[]{e1, e2});
     m.setNumChannels(2);
 
     assertFalse(m.getTimeAddressingRepeatPolicy());
@@ -113,7 +113,7 @@ public class MoodTest extends AndroidTestCase {
     Event e2 = new Event(bs2, 1, 1000l);
 
     Mood m = new Mood();
-    m.events = new Event[]{e1, e2};
+    m.setEvents(new Event[]{e1, e2});
     m.setNumChannels(2);
     m.setInfiniteLooping(true);
     m.setLoopMilliTime(2000l);
@@ -141,7 +141,7 @@ public class MoodTest extends AndroidTestCase {
     Event e2 = new Event(bs2, 0, 2468024l);
 
     Mood m = new Mood();
-    m.events = new Event[]{e1, e2};
+    m.setEvents(new Event[]{e1, e2});
     m.setNumChannels(2);
     m.setTimeAddressingRepeatPolicy(true);
 

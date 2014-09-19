@@ -197,7 +197,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     // calculate & set number of rows, and fill with times
     int rows = 0;
     int time = -1;
-    for (Event e : mFromDB.events) {
+    for (Event e : mFromDB.getEvents()) {
       if (e.getLegacyTime() != time) {
         rows++;
         time = e.getLegacyTime();
@@ -207,7 +207,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
     int row = -1;
     time = -1;
-    for (Event e : mFromDB.events) {
+    for (Event e : mFromDB.getEvents()) {
       if (e.getLegacyTime() != time) {
         row++;
         time = e.getLegacyTime();
@@ -257,7 +257,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       eRay[i] = events.get(i);
     }
 
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setLoopMilliTime(Utils.fromDeciSeconds(loopTimeslot.getStartTime()));
     return m;
   }
@@ -330,7 +330,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
         Event e = new Event(bs, channelToFlash, 0l);
         Event[] eRay = {e};
-        showChanM.events = eRay;
+        showChanM.setEvents(eRay);
 
         ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
         service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM,

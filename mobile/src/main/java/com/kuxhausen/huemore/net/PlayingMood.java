@@ -54,7 +54,7 @@ public class PlayingMood {
       Arrays.fill(lastTickedTimePerChannel, dayStartTime - 1);
 
       for (int numCycles = -1; numCycles < 1; numCycles++) {
-        for (Event e : m.events) {
+        for (Event e : m.getEvents()) {
 
           long
               adjustedEventTime =
@@ -108,7 +108,7 @@ public class PlayingMood {
     if (mMood.isInfiniteLooping()) {
       return true;
     }
-    if ((mMood.events[mMood.events.length - 1].getMilliTime() + mStartTime) > mLastTickedTime) {
+    if ((mMood.getEvents()[mMood.getEvents().length - 1].getMilliTime() + mStartTime) > mLastTickedTime) {
       return true;
     }
     return false;
@@ -128,7 +128,7 @@ public class PlayingMood {
           mStartTime + ((mLastTickedTime - mStartTime) / mMood.getLoopMilliTime())
                        * mMood.getLoopMilliTime();
       for (int numCycles = 0; numCycles < 2; numCycles++) {
-        for (Event e : mMood.events) {
+        for (Event e : mMood.getEvents()) {
           if (e.getMilliTime() + cycleStart + (numCycles * mMood.getLoopMilliTime())
               > mLastTickedTime) {
             return e.getMilliTime() + cycleStart + (numCycles * mMood.getLoopMilliTime());
@@ -136,7 +136,7 @@ public class PlayingMood {
         }
       }
     } else {
-      for (Event e : mMood.events) {
+      for (Event e : mMood.getEvents()) {
         if (e.getMilliTime() + mStartTime > mLastTickedTime) {
           return e.getMilliTime() + mStartTime;
         }
@@ -162,7 +162,7 @@ public class PlayingMood {
       for (int numCycles = priorLoops;
            mStartTime + (numCycles * mMood.getLoopMilliTime()) <= throughTime;
            numCycles++) {
-        for (Event e : mMood.events) {
+        for (Event e : mMood.getEvents()) {
           if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
               && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
@@ -177,7 +177,7 @@ public class PlayingMood {
       for (int numCycles = priorLoops;
            mStartTime + (numCycles * mMood.getLoopMilliTime()) <= throughTime;
            numCycles++) {
-        for (Event e : mMood.events) {
+        for (Event e : mMood.getEvents()) {
           if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
               && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
@@ -187,7 +187,7 @@ public class PlayingMood {
       }
 
     } else {
-      for (Event e : mMood.events) {
+      for (Event e : mMood.getEvents()) {
         if (sinceTime < (e.getMilliTime() + mStartTime)
             && (e.getMilliTime() + mStartTime) <= throughTime) {
           result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()), e.getBulbState()));

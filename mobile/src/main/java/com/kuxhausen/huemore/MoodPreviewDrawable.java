@@ -127,7 +127,7 @@ public class MoodPreviewDrawable extends Drawable {
     boarderPaint.setColor(0xffffffff);
     boarderSize = new RectF();
 
-    if (mood != null && mood.events != null && mood.events.length > 0) {
+    if (mood != null && mood.getEvents().length > 0) {
       mData.clear();
       BulbState[][] bsMat = mood.getEventStatesAsSparseMatrix();
       maxRow = bsMat.length;

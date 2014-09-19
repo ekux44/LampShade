@@ -9,7 +9,7 @@ public class Mood implements Cloneable {
 
   public final static long NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
 
-  public Event[] events;
+  private Event[] mEvents;
   private int numChannels;
   private boolean mUsesTiming;
   /**
@@ -30,7 +30,7 @@ public class Mood implements Cloneable {
     timeAddressingRepeatPolicy = false;
     numChannels = 1;
     numLoops = 0;
-    events = new Event[0];
+    mEvents = new Event[0];
   }
 
   public void setInfiniteLooping(boolean infinite) {
@@ -71,16 +71,27 @@ public class Mood implements Cloneable {
 
   public int getNumTimeslots() {
     int result = 0;
-    if (events == null) {
+    if (mEvents == null) {
       return result;
     }
     HashSet<Integer> times = new HashSet<Integer>();
-    for (Event e : events) {
+    for (Event e : mEvents) {
       if (e != null && times.add(e.getLegacyTime())) {
         result++;
       }
     }
     return result;
+  }
+
+  public void setEvents(Event[] events){
+    if(events==null){
+      throw new IllegalArgumentException();
+    }
+    mEvents = events;
+  }
+
+  public Event[] getEvents(){
+    return mEvents;
   }
 
   public BulbState[][] getEventStatesAsSparseMatrix() {
@@ -90,7 +101,7 @@ public class Mood implements Cloneable {
     HashMap<Integer, Integer> timeslotMapping = new HashMap<Integer, Integer>();
     BulbState[][] colorGrid = new BulbState[maxRow][maxCol];
     int curRow = -1;
-    for (Event e : events) {
+    for (Event e : mEvents) {
       if (!timeslotMapping.containsKey(e.getLegacyTime())) {
         timeslotMapping.put(e.getLegacyTime(), ++curRow);
       }
@@ -101,10 +112,10 @@ public class Mood implements Cloneable {
   }
 
   public boolean isSimple() {
-    if (events == null) {
+    if (mEvents == null) {
       return true;
     }
-    for (Event e : events) {
+    for (Event e : mEvents) {
       if (e != null && e.getLegacyTime() != 0) {
         return false;
       }

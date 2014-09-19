@@ -72,7 +72,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
         this.startService(intent);
 
         boolean on = false;
-        if (mood.events[0].getBulbState().getOn() != null && mood.events[0].getBulbState().getOn()) {
+        if (mood.getEvents().length >0 && mood.getEvents()[0].getBulbState().getOn()) {
           on = true;
         }
         mOnButton.setChecked(on);

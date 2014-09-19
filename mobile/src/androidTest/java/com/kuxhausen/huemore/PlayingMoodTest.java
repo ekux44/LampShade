@@ -63,7 +63,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setNumChannels(2);
 
     Long bulb1 = 123l;
@@ -108,7 +108,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setNumChannels(2);
 
     Long bulb1 = 123l;
@@ -163,7 +163,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setNumChannels(2);
     m.setInfiniteLooping(true);
     m.setLoopMilliTime(200);
@@ -255,7 +255,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setNumChannels(2);
     m.setInfiniteLooping(true);
     m.setLoopMilliTime(200);
@@ -368,7 +368,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setNumChannels(2);
     m.setTimeAddressingRepeatPolicy(true);
 
@@ -480,7 +480,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Event[] eRay = {e1, e2};
 
     Mood m = new Mood();
-    m.events = eRay;
+    m.setEvents(eRay);
     m.setNumChannels(2);
     m.setTimeAddressingRepeatPolicy(true);
 

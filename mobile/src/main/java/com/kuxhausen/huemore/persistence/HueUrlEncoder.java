@@ -121,7 +121,7 @@ public class HueUrlEncoder {
     }
 
     // Set 12 bit number of events
-    mBitSet.addNumber(mood.events.length, 12);
+    mBitSet.addNumber(mood.getEvents().length, 12);
 
     addListOfEvents(mBitSet, mood, timeArray, stateArray);
 
@@ -249,7 +249,7 @@ public class HueUrlEncoder {
     }
     ArrayList<String> bulbStateToStringList =
         new ArrayList<String>(Arrays.asList(bulbStateToStringArray));
-    for (Event e : mood.events) {
+    for (Event e : mood.getEvents()) {
 
       // add channel number
       mBitSet.addNumber(e.getChannel(), getBitLength(mood.getNumChannels()));
@@ -277,7 +277,7 @@ public class HueUrlEncoder {
 
   private static ArrayList<Integer> generateTimesArray(Mood mood) {
     HashSet<Integer> timeset = new HashSet<Integer>();
-    for (Event e : mood.events) {
+    for (Event e : mood.getEvents()) {
       timeset.add(e.getLegacyTime());
     }
     ArrayList<Integer> timesArray = new ArrayList<Integer>();
@@ -287,7 +287,7 @@ public class HueUrlEncoder {
 
   private static ArrayList<BulbState> generateStatesArray(Mood mood) {
     HashMap<String, BulbState> statemap = new HashMap<String, BulbState>();
-    for (Event e : mood.events) {
+    for (Event e : mood.getEvents()) {
       statemap.put(e.getBulbState().toString(), e.getBulbState());
     }
     ArrayList<BulbState> statesArray = new ArrayList<BulbState>();
@@ -485,7 +485,7 @@ public class HueUrlEncoder {
 
           eList[i] = new Event(state, channel, milliseconds);
         }
-        mood.events = eList;
+        mood.setEvents(eList);
 
         // 20 bit loopIterationTimeLength is only difference between encodingVersion=1 & =2
         if (encodingVersion >= 2) {
@@ -513,7 +513,7 @@ public class HueUrlEncoder {
 
           eventArray[i] = new Event(state, i, 0l);
         }
-        mood.events = eventArray;
+        mood.setEvents(eventArray);
         mood.setNumChannels(numStates);
         mood.setTimeAddressingRepeatPolicy(false);
         mood.setUsesTiming(false);
