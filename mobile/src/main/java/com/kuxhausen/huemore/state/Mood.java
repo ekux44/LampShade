@@ -2,6 +2,7 @@ package com.kuxhausen.huemore.state;
 
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -83,14 +84,14 @@ public class Mood implements Cloneable {
     return result;
   }
 
-  public void setEvents(Event[] events){
-    if(events==null){
+  public void setEvents(Event[] events) {
+    if (events == null) {
       throw new IllegalArgumentException();
     }
     mEvents = events;
   }
 
-  public Event[] getEvents(){
+  public Event[] getEvents() {
     return mEvents;
   }
 
@@ -146,11 +147,26 @@ public class Mood implements Cloneable {
     loopIterationTimeLength = (int) (milliseconds / 100l);
   }
 
-  public void setUsesTiming(boolean usesTiming){
+  public void setUsesTiming(boolean usesTiming) {
     mUsesTiming = usesTiming;
   }
 
-  public boolean getUsesTiming(){
+  public boolean getUsesTiming() {
     return mUsesTiming;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof Mood)) {
+      throw new IllegalArgumentException();
+    }
+
+    return (Arrays.equals(this.getEvents(), ((Mood) obj).getEvents())
+            && this.getNumChannels() == ((Mood) obj).getNumChannels()
+            && this.isInfiniteLooping() == ((Mood) obj).isInfiniteLooping()
+            && this.getUsesTiming() == ((Mood) obj).getUsesTiming()
+            && this.getLoopMilliTime() == ((Mood) obj).getLoopMilliTime()
+            && this.getTimeAddressingRepeatPolicy() == ((Mood) obj)
+        .getTimeAddressingRepeatPolicy());
   }
 }
