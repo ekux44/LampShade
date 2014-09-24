@@ -57,7 +57,7 @@ public class ManagedBitSet {
     return set.get(index++);
   }
 
-  public static BitSet toBitSet(byte[] bytes) {
+  private static BitSet toBitSet(byte[] bytes) {
     BitSet bits = new BitSet();
     for (int i = 0; i < bytes.length; i++) {
       byte mask = 1;
@@ -73,8 +73,6 @@ public class ManagedBitSet {
   }
 
   /**
-   * @param set
-   * @param index
    * @param value
    * @param length
    */
@@ -85,6 +83,8 @@ public class ManagedBitSet {
         this.incrementingSet(((value & bitMask) > 0));
         bitMask = bitMask >>> 1;
       }
+    } else {
+      throw new IllegalStateException();
     }
   }
 
