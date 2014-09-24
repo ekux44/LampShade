@@ -55,4 +55,15 @@ public class Event implements Comparable<Event> {
   public int getChannel() {
     return mChannel;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null || !(obj instanceof Event)) {
+      throw new IllegalArgumentException();
+    }
+
+    return (this.getBulbState().equals(((Event) obj).getBulbState())
+            && (this.getChannel() == ((Event) obj).getChannel())
+            && (this.getMilliTime() == ((Event) obj).getMilliTime()));
+  }
 }
