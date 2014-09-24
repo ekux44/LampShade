@@ -6,6 +6,8 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.util.Arrays;
+
 //TODO flush out
 public class MoodTest extends AndroidTestCase {
 
@@ -25,6 +27,17 @@ public class MoodTest extends AndroidTestCase {
     assertEquals(1, m.getNumChannels());
     assertEquals(0, m.getNumTimeslots());
     assertEquals(0, m.getEventStatesAsSparseMatrix().length);
+
+    BulbState bs = new BulbState();
+    bs.setOn(true);
+    Mood m2 = new Mood(bs);
+    assertFalse(m2.getTimeAddressingRepeatPolicy());
+    assertFalse(m2.isInfiniteLooping());
+    assertTrue(m2.isSimple());
+    assertEquals(1, m2.getNumChannels());
+    assertEquals(1, m2.getNumTimeslots());
+    assertTrue(Arrays.equals(new Event[]{new Event(bs, 0, 0l)}, m2.getEvents()));
+
   }
 
   public void testEquals() {

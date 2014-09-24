@@ -34,6 +34,13 @@ public class Mood implements Cloneable {
     mEvents = new Event[0];
   }
 
+  public Mood(BulbState simple) {
+    timeAddressingRepeatPolicy = false;
+    numChannels = 1;
+    numLoops = 0;
+    mEvents = new Event[]{new Event(simple, 0, 0l)};
+  }
+
   public void setInfiniteLooping(boolean infinite) {
     if (infinite) {
       numLoops = 127;

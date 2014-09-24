@@ -38,17 +38,6 @@ public class Utils {
     }
   }
 
-  public static Mood generateSimpleMood(BulbState bs) {
-    // boilerplate
-    Event e = new Event(bs, 0, 0l);
-    Event[] eRay = {e};
-    // more boilerplate
-    Mood m = new Mood();
-    m.setEvents(eRay);
-
-    return m;
-  }
-
   public static boolean hasProVersion(Context c) {
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(c);
     return settings.getInt(PreferenceKeys.BULBS_UNLOCKED, 0) > PreferenceKeys.ALWAYS_FREE_BULBS;
