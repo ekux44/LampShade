@@ -1,0 +1,10 @@
+4 bit versioning
+6 bit number channels (this number used to calculate w1, bit width of channel address)
+1 bit timing addressing reference mode (0 for mood start, 1 for day start)
+6 bit timing repeat policy (max value special cased to infinity)
+6 bit number times, n2 (w2, bit width of time address inferred)
+n2 list of 20 bit times
+6 bit number states, n3 (w3, bit width of state address inferred)
+n3 long list of states (each state length self defined)
+8 bit number of event triplets (n4)
+n4 list of event triplets (w1, w2, w3)

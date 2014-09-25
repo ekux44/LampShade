@@ -1,0 +1,12 @@
+10 bit inclusion flags
+9 api properties
+4 bit special properties 
+
+special properties states
+toggle
+toggle with rounding
+toggle with on bias
+toggle with off bias
+invert brightness
+invert hue
+invert saturation
