@@ -32,7 +32,7 @@ public class ManagedBitSet {
     return Base64.encodeToString(intermediaryResult, Base64.URL_SAFE);
   }
 
-  private static byte[] fromBitSet(BitSet bits, int length) {
+  public static byte[] fromBitSet(BitSet bits, int length) {
     while (length % 8 != 0) {
       length++;
     }
@@ -57,7 +57,7 @@ public class ManagedBitSet {
     return set.get(index++);
   }
 
-  private static BitSet toBitSet(byte[] bytes) {
+  public static BitSet toBitSet(byte[] bytes) {
     BitSet bits = new BitSet();
     for (int i = 0; i < bytes.length; i++) {
       byte mask = 1;
