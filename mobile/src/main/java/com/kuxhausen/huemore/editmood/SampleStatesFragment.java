@@ -62,7 +62,7 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
     }
     {
       BulbState hs = new BulbState();
-      hs.setOn(true);
+      hs.setOn(false);
       hs.setEffect(Effect.NONE);
 
       StateCell mr = new StateCell(statePager.getActivity());
