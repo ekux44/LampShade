@@ -161,7 +161,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   private void stopPreview() {
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
-    service.getMoodPlayer().cancelMood(service.getDeviceManager().getSelectedGroup());
+    if(service.getDeviceManager().getSelectedGroup()!=null)
+      service.getMoodPlayer().cancelMood(service.getDeviceManager().getSelectedGroup());
+    //else there is nothing relevant to stop
   }
 
   @Override
