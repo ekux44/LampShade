@@ -9,6 +9,7 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     String mName = "some mood";
     String gName = "some group";
     Mood m = new Mood();
-    Group g = new Group(null, gName);
+    Group g = new Group(new ArrayList<Long>(), gName);
     PlayingMood pm = new PlayingMood(m, mName, g, 1, -1000, null);
     assertEquals(g, pm.getGroup());
     assertEquals(m, pm.getMood());

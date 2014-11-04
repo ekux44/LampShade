@@ -84,8 +84,11 @@ public class Group {
 
   @Override
   public boolean equals(Object g) {
-    if (g instanceof Group && this.mName.equals(((Group) g).getName())) {
-      return true;
+    if (g instanceof Group) {
+      if (this.getNetworkBulbDatabaseIds().equals(((Group) g).getNetworkBulbDatabaseIds())) {
+        //can't use this.mName.equals(((Group) g).getName())) { because NFC
+        return true;
+      }
     }
     return false;
   }
