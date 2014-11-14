@@ -4,6 +4,7 @@ import android.test.AndroidTestCase;
 
 import com.kuxhausen.huemore.alarm.AlarmData;
 import com.kuxhausen.huemore.alarm.AlarmLogic;
+import com.kuxhausen.huemore.alarm.DaysOfWeek;
 
 import java.util.Calendar;
 
@@ -34,8 +35,12 @@ public class AlarmLogicTest extends AndroidTestCase {
     Calendar twoDaysForward = Calendar.getInstance();
     twoDaysForward.set(2014, Calendar.JULY, 27, 13, 44);
 
-    boolean[] noRepeatRay = new boolean[7];
-    AlarmData ad1 = new AlarmData(-1, null, null, null, true, noRepeatRay, oneDayForward.getTimeInMillis());
+    DaysOfWeek noRepeats = new DaysOfWeek();
+    AlarmData ad1 = new AlarmData(-1);
+    ad1.setEnabled(true);
+    ad1.setNextTime(oneDayForward.getTimeInMillis());
+    ad1.setHour(14);
+    ad1.setMinute(44);
 
     assertEquals((Long)oneDayForward.getTimeInMillis(), AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
 

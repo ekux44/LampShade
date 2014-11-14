@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
@@ -54,8 +53,8 @@ public class LampShadeProvider extends ContentProvider {
       sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
       sUriMatcher.addURI(Definitions.AUTHORITY,
                          Definitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
-      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
-      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
+      sUriMatcher.addURI(Definitions.AUTHORITY, Definitions.DeprecatedAlarmColumns.PATH_ALARMS, ALARMS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, Definitions.DeprecatedAlarmColumns.PATH_INDIVIDUAL_ALARM,
                          INDIVIDUAL_ALARM);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
@@ -89,9 +88,9 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(NetBulbColumns.URI);
         break;
       case ALARMS:
-        table = (AlarmColumns.TABLE_NAME);
-        toNotify.add(AlarmColumns.ALARMS_URI);
-        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
+        table = (Definitions.DeprecatedAlarmColumns.TABLE_NAME);
+        toNotify.add(Definitions.DeprecatedAlarmColumns.ALARMS_URI);
+        toNotify.add(Definitions.DeprecatedAlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPBULBS:
         table = (GroupColumns.TABLE_NAME);
@@ -152,9 +151,9 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
-        qb.setTables(Definitions.AlarmColumns.TABLE_NAME);
-        toNotify.add(AlarmColumns.ALARMS_URI);
-        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
+        qb.setTables(Definitions.DeprecatedAlarmColumns.TABLE_NAME);
+        toNotify.add(Definitions.DeprecatedAlarmColumns.ALARMS_URI);
+        toNotify.add(Definitions.DeprecatedAlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPS:
         qb.setTables(Definitions.GroupColumns.TABLE_NAME);
@@ -223,13 +222,13 @@ public class LampShadeProvider extends ContentProvider {
         groupBy = null;
         break;
       case INDIVIDUAL_ALARM:
-        qb.appendWhere(AlarmColumns._ID + "=" + uri.getLastPathSegment());
-        qb.setTables(AlarmColumns.TABLE_NAME);
+        qb.appendWhere(Definitions.DeprecatedAlarmColumns._ID + "=" + uri.getLastPathSegment());
+        qb.setTables(Definitions.DeprecatedAlarmColumns.TABLE_NAME);
         groupBy = null;
-        uri = AlarmColumns.ALARMS_URI;
+        uri = Definitions.DeprecatedAlarmColumns.ALARMS_URI;
         break;
       case ALARMS:
-        qb.setTables(AlarmColumns.TABLE_NAME);
+        qb.setTables(Definitions.DeprecatedAlarmColumns.TABLE_NAME);
         groupBy = null;
         break;
       case GROUPS:
@@ -362,9 +361,9 @@ public class LampShadeProvider extends ContentProvider {
         }
         break;
       case ALARMS:
-        count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);
-        toNotify.add(AlarmColumns.ALARMS_URI);
-        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
+        count = db.update(Definitions.DeprecatedAlarmColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(Definitions.DeprecatedAlarmColumns.ALARMS_URI);
+        toNotify.add(Definitions.DeprecatedAlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       default:
         // If the incoming pattern is invalid, throws an exception.

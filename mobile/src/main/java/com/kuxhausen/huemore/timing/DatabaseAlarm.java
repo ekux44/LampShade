@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.DateFormat;
 
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.Calendar;
 
@@ -23,7 +23,7 @@ public class DatabaseAlarm {
 
   public DatabaseAlarm(Context context, Uri uri) {
     c = context;
-    String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
+    String[] columns = {Definitions.DeprecatedAlarmColumns.STATE, BaseColumns._ID};
     Cursor cursor = context.getContentResolver().query(uri, columns, null, null, null);
 
     cursor.moveToPosition(0);
@@ -94,7 +94,7 @@ public class DatabaseAlarm {
 
     String moodSelect2 = BaseColumns._ID + "=?";
     String[] moodArg2 = {"" + this.getID()};
-    c.getContentResolver().delete(AlarmColumns.ALARMS_URI, moodSelect2, moodArg2);
+    c.getContentResolver().delete(Definitions.DeprecatedAlarmColumns.ALARMS_URI, moodSelect2, moodArg2);
   }
 
   public void saveToDB() {
@@ -102,9 +102,9 @@ public class DatabaseAlarm {
     String[] rowArg = {"" + id};
 
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(AlarmColumns.STATE, gson.toJson(aState));
+    mNewValues.put(Definitions.DeprecatedAlarmColumns.STATE, gson.toJson(aState));
 
-    c.getContentResolver().update(AlarmColumns.ALARMS_URI, mNewValues, rowSelect, rowArg);
+    c.getContentResolver().update(Definitions.DeprecatedAlarmColumns.ALARMS_URI, mNewValues, rowSelect, rowArg);
 
   }
 }

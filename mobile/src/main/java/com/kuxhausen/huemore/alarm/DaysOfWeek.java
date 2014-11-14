@@ -31,11 +31,11 @@ public final class DaysOfWeek {
     mDaysAsBits.set(day, dayEnabled);
   }
 
-  public boolean noDaysSet() {
+  public boolean isNoDaysSet() {
     return mDaysAsBits.isEmpty();
   }
 
-  public boolean allDaysSet() {
+  public boolean isAllDaysSet() {
     int[]
         daysOfWeek =
         {Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY,

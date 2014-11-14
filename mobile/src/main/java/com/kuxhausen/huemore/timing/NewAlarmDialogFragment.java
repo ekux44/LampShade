@@ -335,10 +335,10 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     }
     // Defines an object to contain the new values to insert
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(Definitions.AlarmColumns.STATE, gson.toJson(as));
+    mNewValues.put(Definitions.DeprecatedAlarmColumns.STATE, gson.toJson(as));
 
     Uri locationOfNewAlarm =
-        getActivity().getContentResolver().insert(Definitions.AlarmColumns.ALARMS_URI,
+        getActivity().getContentResolver().insert(Definitions.DeprecatedAlarmColumns.ALARMS_URI,
                                                   mNewValues);
 
     DatabaseAlarm ar = new DatabaseAlarm(getActivity(), locationOfNewAlarm);

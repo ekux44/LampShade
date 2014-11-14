@@ -12,7 +12,6 @@ import android.util.Pair;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
@@ -136,11 +135,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       }
 
       case 2: {
-        db.execSQL("DROP TABLE IF EXISTS " + AlarmColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME);
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + AlarmColumns.TABLE_NAME + " (" + BaseColumns._ID
-                   + " INTEGER PRIMARY KEY," + AlarmColumns.STATE + " TEXT,"
-                   + AlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME + " (" + BaseColumns._ID
+                   + " INTEGER PRIMARY KEY," + Definitions.DeprecatedAlarmColumns.STATE + " TEXT,"
+                   + Definitions.DeprecatedAlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 
         // remove the sunset mood
         String[] moodArgs = {"Sunset"};

@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 public class AlarmsListFragment extends ListFragment implements
@@ -47,7 +47,7 @@ public class AlarmsListFragment extends ListFragment implements
      */
     getLoaderManager().initLoader(ALARMS_LOADER, null, this);
 
-    String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
+    String[] columns = {Definitions.DeprecatedAlarmColumns.STATE, BaseColumns._ID};
     dataSource =
         new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null, columns,
                             new int[]{R.id.subTextView}, 0);
@@ -130,9 +130,9 @@ public class AlarmsListFragment extends ListFragment implements
     switch (loaderID) {
       case ALARMS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
+        String[] columns = {Definitions.DeprecatedAlarmColumns.STATE, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                AlarmColumns.ALARMS_URI, // Table
+                                Definitions.DeprecatedAlarmColumns.ALARMS_URI, // Table
                                 columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

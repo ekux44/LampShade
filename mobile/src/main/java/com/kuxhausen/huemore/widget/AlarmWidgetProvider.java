@@ -20,7 +20,7 @@ import android.widget.RemoteViews;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.timing.AlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
@@ -85,7 +85,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
       final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
       final ComponentName cn = new ComponentName(context, AlarmWidgetProvider.class);
       sDataObserver = new AlarmDataProviderObserver(mgr, cn, sWorkerQueue);
-      r.registerContentObserver(AlarmColumns.ALARMS_URI, true, sDataObserver);
+      r.registerContentObserver(Definitions.DeprecatedAlarmColumns.ALARMS_URI, true, sDataObserver);
     }
   }
 

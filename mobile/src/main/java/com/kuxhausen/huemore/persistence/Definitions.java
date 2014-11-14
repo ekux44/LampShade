@@ -10,7 +10,7 @@ public final class Definitions {
 
   public static final String SLASH = "/";
 
-  public static final class AlarmColumns implements BaseColumns {
+  public static final class DeprecatedAlarmColumns implements BaseColumns {
 
     public static final String TABLE_NAME = "alarms";
 
@@ -40,9 +40,35 @@ public final class Definitions {
     public static final String INTENT_REQUEST_CODE = "Dintent_request_code";
 
     // This class cannot be instantiated
+    private DeprecatedAlarmColumns() {
+    }
+  }
+
+
+  public static final class AlarmColumns implements BaseColumns {
+
+    public static final String TABLE_NAME = "alarms";
+    public static final String PATH_ALARMS = "alarms";
+
+    /**
+     * The content:// style URL for this table
+     */
+    public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_ALARMS);
+
+    public static final String COL_GROUP_NAME = "COL_GROUP_NAME";
+    public static final String COL_MOOD_NAME = "COL_MOOD_NAME";
+    public static final String COL_BRIGHTNESS = "COL_BRIGHTNESS";
+    public static final String COL_IS_ENABLED = "COL_IS_ENABLED";
+    public static final String COL_REPEAT_DAYS = "COL_REPEAT_DAYS";
+    public static final String COL_HOUR = "COL_HOUR";
+    public static final String COL_MINUTE = "COL_MINUTE";
+    public static final String COL_NEXT_TIME = "COL_NEXT_TIME";
+
+    // This class cannot be instantiated
     private AlarmColumns() {
     }
   }
+
 
   public static final class GroupColumns implements BaseColumns {
 

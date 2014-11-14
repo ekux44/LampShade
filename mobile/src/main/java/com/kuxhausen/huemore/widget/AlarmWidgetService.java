@@ -15,7 +15,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.timing.AlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
@@ -129,8 +129,8 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     ContentResolver r = mContext.getContentResolver();
-    String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
-    mCursor = r.query(AlarmColumns.ALARMS_URI, columns, null, null, null);
+    String[] columns = {Definitions.DeprecatedAlarmColumns.STATE, BaseColumns._ID};
+    mCursor = r.query(Definitions.DeprecatedAlarmColumns.ALARMS_URI, columns, null, null, null);
 
   }
 }

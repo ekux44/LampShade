@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
 public class BootSetter extends BroadcastReceiver {
@@ -22,9 +21,9 @@ public class BootSetter extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
     if (settings.contains(PreferenceKeys.FIRST_RUN)) {
-      String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
+      String[] columns = {Definitions.DeprecatedAlarmColumns.STATE, BaseColumns._ID};
       Cursor cursor =
-          context.getContentResolver().query(AlarmColumns.ALARMS_URI, columns, null, null, null);
+          context.getContentResolver().query(Definitions.DeprecatedAlarmColumns.ALARMS_URI, columns, null, null, null);
 
       cursor.moveToPosition(-1);// not the same as move to first!
       while (cursor.moveToNext()) {
