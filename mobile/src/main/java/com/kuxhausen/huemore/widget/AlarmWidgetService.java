@@ -17,7 +17,7 @@ import android.widget.RemoteViewsService;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.timing.AlarmState;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
 /**
@@ -76,7 +76,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     if (mCursor.moveToPosition(position)) {
       json = mCursor.getString(0);
       DatabaseAlarm aRow =
-          new DatabaseAlarm(mContext, gson.fromJson(json, AlarmState.class), mCursor.getInt(1));
+          new DatabaseAlarm(mContext, gson.fromJson(json, DeprecatedAlarmState.class), mCursor.getInt(1));
       timeText = aRow.getTime();
       subText = aRow.getSecondaryDescription();
       alarmOn = aRow.getAlarmState().isScheduled();

@@ -12,6 +12,7 @@ import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 
 public class BootSetter extends BroadcastReceiver {
 
@@ -28,7 +29,7 @@ public class BootSetter extends BroadcastReceiver {
       cursor.moveToPosition(-1);// not the same as move to first!
       while (cursor.moveToNext()) {
         DatabaseAlarm ar =
-            new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), AlarmState.class),
+            new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), DeprecatedAlarmState.class),
                               cursor.getInt(1));
         if (ar.getAlarmState().isScheduled()) {
           AlarmReciever.createAlarms(context, ar);

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 
 import java.util.Calendar;
 
@@ -23,7 +24,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
 
 
   public static void updateAlarmTimes(Context context, DatabaseAlarm dbAlarm) {
-    AlarmState as = dbAlarm.getAlarmState();
+    DeprecatedAlarmState as = dbAlarm.getAlarmState();
 
     if (!as.isRepeating()) {
       Calendar timeAdjustedCal = Calendar.getInstance();
@@ -71,7 +72,7 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
   public static void createAlarms(Context context, DatabaseAlarm dbAlarm) {
     updateAlarmTimes(context, dbAlarm);
 
-    AlarmState as = dbAlarm.getAlarmState();
+    DeprecatedAlarmState as = dbAlarm.getAlarmState();
     Calendar soonestTime = null;
 
     if (!as.isRepeating()) {
@@ -105,17 +106,17 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
     dbAlarm.saveToDB();
   }
 
-  private static void scheduleAlarm(Context context, AlarmState alarmState, Long timeInMillis) {
+  private static void scheduleAlarm(Context context, DeprecatedAlarmState deprecatedAlarmState, Long timeInMillis) {
 
-    PendingIntent pIntent = calculatePendingIntent(context, alarmState, 0);
+    PendingIntent pIntent = calculatePendingIntent(context, deprecatedAlarmState, 0);
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMillis, pIntent);
   }
 
-  private static void scheduleWeeklyAlarm(Context context, AlarmState alarmState,
+  private static void scheduleWeeklyAlarm(Context context, DeprecatedAlarmState deprecatedAlarmState,
                                           Long timeInMillis, int dayOfWeek) {
 
-    PendingIntent pIntent = calculatePendingIntent(context, alarmState, dayOfWeek);
+    PendingIntent pIntent = calculatePendingIntent(context, deprecatedAlarmState, dayOfWeek);
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, AlarmManager.INTERVAL_DAY * 7,
                           pIntent);
@@ -133,21 +134,21 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
                  pendingIntent);
   }
 
-  public static void cancelAlarm(Context context, AlarmState alarmState) {
+  public static void cancelAlarm(Context context, DeprecatedAlarmState deprecatedAlarmState) {
     for (int i = 0; i < 8; i++) {
-      PendingIntent pIntent = calculatePendingIntent(context, alarmState, i);
+      PendingIntent pIntent = calculatePendingIntent(context, deprecatedAlarmState, i);
       AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
       alarmMgr.cancel(pIntent);
     }
     {
       // reverse scheduledForFuture boolean to hit both possibilities
-      alarmState.setScheduledForFuture(alarmState.isScheduled());
+      deprecatedAlarmState.setScheduledForFuture(deprecatedAlarmState.isScheduled());
       for (int i = 0; i < 8; i++) {
-        PendingIntent pIntent = calculatePendingIntent(context, alarmState, i);
+        PendingIntent pIntent = calculatePendingIntent(context, deprecatedAlarmState, i);
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(pIntent);
       }
-      alarmState.setScheduledForFuture(alarmState.isScheduled());
+      deprecatedAlarmState.setScheduledForFuture(deprecatedAlarmState.isScheduled());
     }
   }
 
@@ -155,10 +156,10 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
    * day of week Sunday = 1, Saturday = 7, 0=not repeating so we don't care, 8=transient/not user
    * visible
    */
-  private static PendingIntent calculatePendingIntent(Context context, AlarmState alarmState,
+  private static PendingIntent calculatePendingIntent(Context context, DeprecatedAlarmState deprecatedAlarmState,
                                                       int dayOfWeek) {
     Gson gson = new Gson();
-    String aState = gson.toJson(alarmState);
+    String aState = gson.toJson(deprecatedAlarmState);
 
     Intent intent = new Intent(context, AlarmReciever.class);
     intent.setAction("com.kuxhausen.huemore." + dayOfWeek + "." + aState);
@@ -179,9 +180,9 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
       startWakefulService(context, trasmitter);
     } else if (intent.getAction() != null
                && intent.getAction().matches("com\\.kuxhausen\\.huemore\\.\\d\\..*")) {
-      AlarmState as =
+      DeprecatedAlarmState as =
           gson.fromJson(intent.getExtras().getString(InternalArguments.ALARM_DETAILS),
-                        AlarmState.class);
+                        DeprecatedAlarmState.class);
       Log.d("alarm", "wakeup for user alarm");
 
       Intent trasmitter = new Intent(context, ConnectivityService.class);

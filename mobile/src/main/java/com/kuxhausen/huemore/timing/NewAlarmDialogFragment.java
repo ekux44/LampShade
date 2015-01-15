@@ -31,6 +31,7 @@ import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
 import java.util.Calendar;
@@ -311,7 +312,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       priorState.delete();
     }
 
-    AlarmState as = new AlarmState();
+    DeprecatedAlarmState as = new DeprecatedAlarmState();
     as.group = ((Cursor) groupSpinner.getSelectedItem()).getString(0);
     as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
     as.brightness = brightnessBar.getProgress();

@@ -22,7 +22,7 @@ import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.timing.AlarmState;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
 /**
@@ -96,7 +96,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
 
       String json = intent.getStringExtra(InternalArguments.ALARM_JSON);
       int id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
-      DatabaseAlarm aRow = new DatabaseAlarm(ctx, gson.fromJson(json, AlarmState.class), id);
+      DatabaseAlarm aRow = new DatabaseAlarm(ctx, gson.fromJson(json, DeprecatedAlarmState.class), id);
       aRow.toggle();
     }
 

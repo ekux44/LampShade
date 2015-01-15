@@ -14,6 +14,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 
 import java.util.ArrayList;
 
@@ -50,8 +51,8 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
       cursor.moveToPosition(-1);// not the same as move to first!
       while (cursor.moveToNext()) {
         // Log.e("changeCursor _row",
-        // gson.fromJson(cursor.getString(0),AlarmState.class).mood);
-        list.add(new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), AlarmState.class),
+        // gson.fromJson(cursor.getString(0),DeprecatedAlarmState.class).mood);
+        list.add(new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), DeprecatedAlarmState.class),
                                    cursor.getInt(1)));
       }
     }

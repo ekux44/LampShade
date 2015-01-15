@@ -10,12 +10,13 @@ import android.provider.BaseColumns;
 import android.text.format.DateFormat;
 
 import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
 
 import java.util.Calendar;
 
 public class DatabaseAlarm {
 
-  private AlarmState aState;
+  private DeprecatedAlarmState aState;
   private Context c;
   private int id;
   Gson gson = new Gson();
@@ -27,17 +28,17 @@ public class DatabaseAlarm {
     Cursor cursor = context.getContentResolver().query(uri, columns, null, null, null);
 
     cursor.moveToPosition(0);
-    aState = gson.fromJson(cursor.getString(0), AlarmState.class);
+    aState = gson.fromJson(cursor.getString(0), DeprecatedAlarmState.class);
     id = cursor.getInt(1);
   }
 
-  public DatabaseAlarm(Context context, AlarmState as, int db_ID) {
+  public DatabaseAlarm(Context context, DeprecatedAlarmState as, int db_ID) {
     c = context;
     aState = as;
     id = db_ID;
   }
 
-  public AlarmState getAlarmState() {
+  public DeprecatedAlarmState getAlarmState() {
     return aState;
   }
 
