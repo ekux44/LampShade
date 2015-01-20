@@ -55,13 +55,43 @@ public final class Definitions {
      */
     public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_ALARMS);
 
+    /**
+     * String, must be valid entry in Groups table
+     */
     public static final String COL_GROUP_NAME = "COL_GROUP_NAME";
-    public static final String COL_MOOD_NAME = "COL_MOOD_NAME";
+
+    /* row id of mood in moods database
+     */
+    public static final String COL_MOOD_ID = "COL_MOOD_ID";
+
+    /**
+     * int or null
+     */
     public static final String COL_BRIGHTNESS = "COL_BRIGHTNESS";
+
+    /**
+     * int, 0 = false,  1 = true
+     */
     public static final String COL_IS_ENABLED = "COL_IS_ENABLED";
+
+    /**
+     * int, encoding by DaysOfWeek class
+     */
     public static final String COL_REPEAT_DAYS = "COL_REPEAT_DAYS";
+
+    /**
+     * int
+     */
     public static final String COL_HOUR = "COL_HOUR";
+
+    /**
+     * int
+     */
     public static final String COL_MINUTE = "COL_MINUTE";
+
+    /**
+     * long or null
+     */
     public static final String COL_NEXT_TIME = "COL_NEXT_TIME";
 
     // This class cannot be instantiated

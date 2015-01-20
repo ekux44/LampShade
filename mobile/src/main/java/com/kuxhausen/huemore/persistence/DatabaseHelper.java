@@ -11,7 +11,10 @@ import android.provider.BaseColumns;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
@@ -22,6 +25,7 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -137,9 +141,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       case 2: {
         db.execSQL("DROP TABLE IF EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME);
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME + " (" + BaseColumns._ID
-                   + " INTEGER PRIMARY KEY," + Definitions.DeprecatedAlarmColumns.STATE + " TEXT,"
-                   + Definitions.DeprecatedAlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME + " ("
+            + BaseColumns._ID + " INTEGER PRIMARY KEY,"
+            + Definitions.DeprecatedAlarmColumns.STATE + " TEXT,"
+            + Definitions.DeprecatedAlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 
         // remove the sunset mood
         String[] moodArgs = {"Sunset"};
@@ -319,13 +325,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           }
         }
       }
-      case 6:{
+      case 6: {
         //land and fall through to next case
       }
-      case 7:{
+      case 7: {
         //land and fall through to next case
       }
-      case 8:{
+      case 8: {
         //land and fall through to next case
       }
       case 9: {
@@ -455,7 +461,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           groupValues.put(GroupColumns.BULB_DATABASE_ID, bulbBaseId);
           db.insert(GroupColumns.TABLE_NAME, null, groupValues);
         }
-      } case 10:{
+      }
+      case 10: {
 
         db.execSQL("DROP TABLE IF EXISTS " + PlayingMood.TABLE_NAME);
 
@@ -466,6 +473,116 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    + PlayingMood.COL_MILI_TIME_STARTED + " INTEGER,"
                    + PlayingMood.COL_INTERNAL_PROGRESS + " INTEGER"
                    + ");");
+      }
+      case 11: {
+        /* load everything from old alarms table */
+
+        ContentValues cv = new ContentValues();
+        String[]
+            oldAlarmColumns =
+            {Definitions.DeprecatedAlarmColumns.STATE,
+             Definitions.DeprecatedAlarmColumns.INTENT_REQUEST_CODE};
+        Cursor
+            oldAlarmsCursor =
+            db.query(Definitions.DeprecatedAlarmColumns.TABLE_NAME, oldAlarmColumns, null, null,
+                     null, null, null);
+
+        ArrayList<Pair<DeprecatedAlarmState, Long>>
+            oldList =
+            new ArrayList<Pair<DeprecatedAlarmState, Long>>();
+        while (oldAlarmsCursor.moveToNext()) {
+          String jsonOldState = oldAlarmsCursor.getString(0);
+          long oldIntentRequestCode = oldAlarmsCursor.getLong(1);
+          DeprecatedAlarmState oldState = gson.fromJson(jsonOldState, DeprecatedAlarmState.class);
+
+          oldList.add(new Pair<DeprecatedAlarmState, Long>(oldState, oldIntentRequestCode));
+        }
+
+        /* restructure alarms table */
+
+        db.execSQL("DROP TABLE IF EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME);
+
+        db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " (" +
+                   BaseColumns._ID + " INTEGER PRIMARY KEY," +
+                   AlarmColumns.COL_GROUP_NAME + " TEXT," +
+                   AlarmColumns.COL_MOOD_ID + " INTEGER," +
+                   AlarmColumns.COL_BRIGHTNESS + " INTEGER," +
+                   AlarmColumns.COL_IS_ENABLED + " INTEGER," +
+                   AlarmColumns.COL_REPEAT_DAYS + " INTEGER," +
+                   AlarmColumns.COL_HOUR + " INTEGER," +
+                   AlarmColumns.COL_MINUTE + " INTEGER," +
+                   AlarmColumns.COL_NEXT_TIME + " INTEGER" +
+                   " FOREIGN KEY (" + AlarmColumns.COL_MOOD_ID + ") REFERENCES " +
+                   MoodColumns.TABLE_NAME + " (" + MoodColumns._ID + " ) ON DELETE CASCADE " +
+                   ");");
+
+        /* now save all the migrated data to the new table */
+
+        for (Pair<DeprecatedAlarmState, Long> oldRow : oldList) {
+          DeprecatedAlarmState oldState = oldRow.first;
+          AlarmData alarm = new AlarmData(-1);
+
+          alarm.setGroupName(oldState.group);
+
+          ContentValues moodVals = new ContentValues();
+          String[] moodCols = {MoodColumns._ID};
+          String[] moodArgs = {oldState.mood};
+          Cursor
+              moodCursor =
+              db.query(MoodColumns.TABLE_NAME, moodCols, MoodColumns.COL_MOOD_NAME + " =?",
+                       moodArgs, null, null, null);
+          if (moodCursor.moveToFirst()) {
+            alarm.setMood(moodCursor.getLong(0), oldState.mood);
+          } else {
+            //this mood doesn't actually exist, so this alarm must be discarded
+            continue;
+          }
+
+          alarm.setBrightness(oldState.brightness);
+
+          alarm.setEnabled(oldState.isScheduled());
+
+          if (oldState.isRepeating()) {
+            DaysOfWeek days = new DaysOfWeek();
+            for (int i = 0; i < 7; i++) {
+              days.setDay(i + 1, oldState.getRepeatingDays()[i]);
+            }
+            alarm.setRepeatDays(days);
+          }
+
+          Long timeInMillis = null;
+          if (oldState.isRepeating()) {
+            for (Long daysTime : oldState.getRepeatingTimes()) {
+              if (daysTime != null) {
+                timeInMillis = daysTime;
+              }
+            }
+          } else {
+            timeInMillis = oldState.getRepeatingTimes()[0];
+          }
+
+          if (timeInMillis != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(timeInMillis);
+
+            alarm.setHour(cal.get(Calendar.HOUR_OF_DAY));
+
+            alarm.setMinute(cal.get(Calendar.MINUTE));
+
+          } else {
+            //this alarm time is invalid, so this alarm must be discarded
+            continue;
+          }
+
+          //TODO insert row into new table
+
+        }
+
+
+
+        /* now reschedule all alarms */
+        //TODO write migration here
+
       }
     }
   }

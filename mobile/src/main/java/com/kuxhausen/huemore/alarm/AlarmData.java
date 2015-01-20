@@ -3,6 +3,7 @@ package com.kuxhausen.huemore.alarm;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 
 public class AlarmData {
@@ -11,7 +12,8 @@ public class AlarmData {
   public final static String[] QUERY_COLUMNS = {
       AlarmColumns._ID,
       AlarmColumns.COL_GROUP_NAME,
-      AlarmColumns.COL_MOOD_NAME,
+      AlarmColumns.COL_MOOD_ID,
+      Definitions.MoodColumns.COL_MOOD_NAME,
       AlarmColumns.COL_BRIGHTNESS,
       AlarmColumns.COL_IS_ENABLED,
       AlarmColumns.COL_REPEAT_DAYS,
@@ -21,9 +23,9 @@ public class AlarmData {
   };
 
   private long mId;
-
-  private String mMoodName;
   private String mGroupName;
+  private long mMoodId;
+  private String mMoodName; // this is only to be read by the UI, and never saved to database
   private Integer mBrightness;
   private boolean mIsEnabled;
   private DaysOfWeek mRepeatDays;
@@ -42,29 +44,31 @@ public class AlarmData {
   public AlarmData(Cursor cursor) {
     mId = cursor.getLong(0);
 
-    setMoodName(cursor.getString(1));
+    setGroupName(cursor.getString(1));
 
-    setGroupName(cursor.getString(2));
+    setMood(cursor.getLong(2), cursor.getString(3));
 
-    if (!cursor.isNull(3)) {
-      setBrightness(cursor.getInt(3));
+    if (!cursor.isNull(4)) {
+      setBrightness(cursor.getInt(4));
     }
 
-    setEnabled(cursor.getInt(4) != 0);
+    setEnabled(cursor.getInt(5) != 0);
 
-    setRepeatDays(new DaysOfWeek((byte) cursor.getInt(5)));
+    setRepeatDays(new DaysOfWeek((byte) cursor.getInt(6)));
 
-    setHour(cursor.getInt(6));
+    setHour(cursor.getInt(7));
 
-    setMinute(cursor.getInt(7));
+    setMinute(cursor.getInt(8));
 
-    setNextTime(cursor.getLong(8));
+    if (!cursor.isNull(9)) {
+      setNextTime(cursor.getLong(9));
+    }
   }
 
   public ContentValues getValues() {
     ContentValues cv = new ContentValues();
     cv.put(AlarmColumns.COL_GROUP_NAME, getGroupName());
-    cv.put(AlarmColumns.COL_MOOD_NAME, getMoodName());
+    cv.put(AlarmColumns.COL_MOOD_ID, mMoodId);
     cv.put(AlarmColumns.COL_BRIGHTNESS, getBrightness());
     cv.put(AlarmColumns.COL_IS_ENABLED, isEnabled() ? 1 : 0);
     cv.put(AlarmColumns.COL_REPEAT_DAYS, getRepeatDays().getValue());
@@ -88,11 +92,16 @@ public class AlarmData {
     mGroupName = name;
   }
 
+  public long getmMoodId() {
+    return mMoodId;
+  }
+
   public String getMoodName() {
     return mMoodName;
   }
 
-  public void setMoodName(String name) {
+  public void setMood(long id, String name) {
+    mMoodId = id;
     mMoodName = name;
   }
 
@@ -139,7 +148,7 @@ public class AlarmData {
     mMinute = minute;
   }
 
-  public long getNextTime() {
+  public Long getNextTime() {
     return mNextTime;
   }
 
