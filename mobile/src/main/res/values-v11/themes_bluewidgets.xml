@@ -3,34 +3,13 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="BlueWidgets" parent="Theme.Blueactionbar">
-
-    <item name="android:editTextBackground">@drawable/bluewidgets_edit_text_holo_dark</item>
-
-    <item name="android:textColorHighlight">#9933b5e5</item>
-    <item name="android:textSelectHandleLeft">@drawable/bluewidgets_text_select_handle_left</item>
-    <item name="android:textSelectHandleRight">@drawable/bluewidgets_text_select_handle_right</item>
-    <item name="android:textSelectHandle">@drawable/bluewidgets_text_select_handle_middle</item>
-
-    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewBlueWidgets</item>
+  <style name="BlueWidgets" parent="BlueColoring">
 
     <item name="android:listChoiceIndicatorMultiple">@drawable/bluewidgets_btn_check_holo_dark</item>
 
     <item name="android:listChoiceIndicatorSingle">@drawable/bluewidgets_btn_radio_holo_dark</item>
 
-    <item name="android:buttonStyle">@style/ButtonBlueWidgets</item>
-
-    <item name="android:imageButtonStyle">@style/ImageButtonBlueWidgets</item>
-
-    <item name="android:dropDownSpinnerStyle">@style/SpinnerBlueWidgets</item>
-
-    <item name="android:progressBarStyleHorizontal">@style/ProgressBarBlueWidgets</item>
-
     <item name="android:seekBarStyle">@style/SeekBarBlueWidgets</item>
-
-    <item name="android:ratingBarStyle">@style/RatingBarBlueWidgets</item>
-
-    <item name="android:buttonStyleToggle">@style/ToggleBlueWidgets</item>
 
     <item name="android:listChoiceBackgroundIndicator">@drawable/bluewidgets_list_selector_holo_dark</item>
 

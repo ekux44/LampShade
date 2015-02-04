@@ -3,7 +3,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="GreenWidgets" parent="Theme.Blueactionbar">
+  <style name="GreenWidgets" parent="GreenColoring">
 
     <item name="android:progressBarStyleHorizontal">@style/ProgressBarGreenWidgets</item>
 

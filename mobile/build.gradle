@@ -12,12 +12,12 @@ android {
             storePassword 'How now brown cow. How now brown cow.'
         }
     }
-    compileSdkVersion 20
-    buildToolsVersion '20.0.0'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 10
-        targetSdkVersion 18
+        targetSdkVersion 21
         versionCode 71
         versionName "2.9.3"
     }
@@ -29,11 +29,11 @@ android {
     productFlavors {
         playEdition {
             minSdkVersion 10
-            targetSdkVersion 18
+            targetSdkVersion 21
         }
         compatabilityEdition {
             minSdkVersion 10
-            targetSdkVersion 18
+            targetSdkVersion 21
         }
     }
 }
@@ -41,9 +41,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
-    compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:gridlayout-v7:18.0.0'
-    compile 'com.google.android.gms:play-services:5.0.+'
+    compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':lifix')
