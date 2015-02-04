@@ -566,16 +566,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cal.setTimeInMillis(timeInMillis);
 
             alarm.setHour(cal.get(Calendar.HOUR_OF_DAY));
-
             alarm.setMinute(cal.get(Calendar.MINUTE));
-
           } else {
             //this alarm time is invalid, so this alarm must be discarded
             continue;
           }
 
-          //TODO insert row into new table
-
+          db.insert(AlarmColumns.TABLE_NAME, null, alarm.getValues());
         }
 
 

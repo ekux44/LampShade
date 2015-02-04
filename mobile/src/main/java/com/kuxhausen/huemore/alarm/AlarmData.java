@@ -92,7 +92,7 @@ public class AlarmData {
     mGroupName = name;
   }
 
-  public long getmMoodId() {
+  public long getMoodId() {
     return mMoodId;
   }
 
