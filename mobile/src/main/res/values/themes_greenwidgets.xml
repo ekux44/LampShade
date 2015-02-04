@@ -9,15 +9,11 @@
 
     <item name="colorPrimaryDark">@color/green_primarydark</item>
 
-    <item name="android:progressBarStyleHorizontal">@style/ProgressBarGreenWidgets</item>
-
     <item name="android:seekBarStyle">@style/SeekBarGreenWidgets</item>
 
     <item name="android:listViewStyle">@style/ListViewGreenWidgets</item>
 
     <item name="android:listViewWhiteStyle">@style/ListViewGreenWidgets.White</item>
-
-    <item name="android:spinnerItemStyle">@style/SpinnerItemGreenWidgets</item>
 
   </style>
 

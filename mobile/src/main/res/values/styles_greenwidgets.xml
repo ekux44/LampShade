@@ -3,13 +3,6 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="ProgressBarGreenWidgets" parent="android:Widget.ProgressBar.Horizontal">
-      <item name="android:progressDrawable">@drawable/greenwidgets_progress_horizontal_holo_dark</item>
-      <item name="android:indeterminateDrawable">@drawable/greenwidgets_progress_indeterminate_horizontal_holo_dark</item>
-      <item name="android:minHeight">16dip</item>
-      <item name="android:maxHeight">16dip</item>
-  </style>
-
   <style name="SeekBarGreenWidgets" parent="android:Widget.SeekBar">
       <item name="android:progressDrawable">@drawable/greenwidgets_scrubber_progress_horizontal_holo_dark</item>
       <item name="android:indeterminateDrawable">@drawable/greenwidgets_scrubber_progress_horizontal_holo_dark</item>
@@ -27,10 +20,6 @@
 
   <style name="ListViewGreenWidgets.White" parent="android:Widget.ListView.White">
       <item name="android:listSelector">@drawable/greenwidgets_list_selector_holo_dark</item>
-  </style>
-
-  <style name="SpinnerItemGreenWidgets" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
-      <item name="android:textColor">#ffffff</item>
   </style>
 
 </resources>

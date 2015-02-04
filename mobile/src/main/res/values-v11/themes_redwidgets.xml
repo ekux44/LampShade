@@ -9,8 +9,6 @@
 
     <item name="colorPrimaryDark">@color/red_primarydark</item>
 
-    <item name="android:progressBarStyleHorizontal">@style/ProgressBarRedWidgets</item>
-
     <item name="android:seekBarStyle">@style/SeekBarRedWidgets</item>
 
     <item name="android:listChoiceBackgroundIndicator">@drawable/redwidgets_list_selector_holo_dark</item>

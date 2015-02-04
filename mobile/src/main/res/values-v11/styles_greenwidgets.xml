@@ -3,11 +3,6 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="ProgressBarGreenWidgets" parent="android:Widget.Holo.ProgressBar.Horizontal">
-      <item name="android:progressDrawable">@drawable/greenwidgets_progress_horizontal_holo_dark</item>
-      <item name="android:indeterminateDrawable">@drawable/greenwidgets_progress_indeterminate_horizontal_holo_dark</item>
-  </style>
-
   <style name="SeekBarGreenWidgets" parent="android:Widget.Holo.SeekBar">
       <item name="android:progressDrawable">@drawable/greenwidgets_scrubber_progress_horizontal_holo_dark</item>
       <item name="android:indeterminateDrawable">@drawable/greenwidgets_scrubber_progress_horizontal_holo_dark</item>

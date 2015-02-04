@@ -3,13 +3,6 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="ProgressBarRedWidgets" parent="android:Widget.ProgressBar.Horizontal">
-      <item name="android:progressDrawable">@drawable/redwidgets_progress_horizontal_holo_dark</item>
-      <item name="android:indeterminateDrawable">@drawable/redwidgets_progress_indeterminate_horizontal_holo_dark</item>
-      <item name="android:minHeight">16dip</item>
-      <item name="android:maxHeight">16dip</item>
-  </style>
-
   <style name="SeekBarRedWidgets" parent="android:Widget.SeekBar">
       <item name="android:progressDrawable">@drawable/redwidgets_scrubber_progress_horizontal_holo_dark</item>
       <item name="android:indeterminateDrawable">@drawable/redwidgets_scrubber_progress_horizontal_holo_dark</item>
@@ -29,10 +22,6 @@
       <item name="android:listSelector">@drawable/redwidgets_list_selector_holo_dark</item>
   </style>
 
-  <style name="SpinnerItemRedWidgets" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
-      <item name="android:textColor">#ffffff</item>
-  </style>
-  
   <style name="RatingBarredwidgets" parent="android:Widget.RatingBar">
       <item name="android:progressDrawable">@drawable/redwidgets_ratingbar_full_holo_dark</item>
       <item name="android:indeterminateDrawable">@drawable/redwidgets_ratingbar_full_holo_dark</item>
