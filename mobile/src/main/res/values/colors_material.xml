@@ -6,5 +6,26 @@
     <color name="lightgreen700">#689F38</color>
     <color name="red500">#F44336</color>
     <color name="red700">#D32F2F</color>
+    <color name="grey500">#9E9E9E</color>
+    <color name="grey700">#616161</color>
 
+    <color name="holo_blue500">#33b5e5</color>
+    <color name="holo_blue700">#0099CC</color>
+    <color name="holo_lightgreen500">#99cc00</color>
+    <color name="holo_lightgreen700">#669900</color>
+    <color name="holo_red500">#ff4444</color>
+    <color name="holo_red700">#CC0000</color>
+
+
+    <color name="bluewidgets_color">@color/holo_blue500</color>
+    <color name="greenwidgets_color">@color/holo_lightgreen500</color>
+    <color name="redwidgets_color">@color/holo_red500</color>
+
+    <color name="blue_primary">@color/holo_blue500</color>
+    <color name="green_primary">@color/holo_lightgreen500</color>
+    <color name="red_primary">@color/holo_red500</color>
+
+    <color name="blue_primarydark">@color/holo_blue700</color>
+    <color name="green_primarydark">@color/holo_lightgreen700</color>
+    <color name="red_primarydark">@color/holo_red700</color>
 </resources>

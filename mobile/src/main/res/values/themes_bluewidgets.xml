@@ -3,7 +3,11 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="BlueWidgets" parent="BlueColoring">
+  <style name="BlueWidgets" parent="@style/Theme.Blueactionbar">
+
+    <item name="colorPrimary">@color/blue_primary</item>
+
+    <item name="colorPrimaryDark">@color/blue_primarydark</item>
 
     <item name="android:seekBarStyle">@style/SeekBarBlueWidgets</item>
 
