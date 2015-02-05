@@ -9,6 +9,8 @@
 
     <item name="colorPrimaryDark">@color/green_primarydark</item>
 
+    <item name="colorAccent">@color/green_accent</item>
+
     <item name="android:seekBarStyle">@style/SeekBarGreenWidgets</item>
 
     <item name="android:listChoiceBackgroundIndicator">@drawable/greenwidgets_list_selector_holo_dark</item>

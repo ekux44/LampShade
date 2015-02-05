@@ -11,6 +11,10 @@
 
     <color name="holo_blue500">#33b5e5</color>
     <color name="holo_blue700">#0099CC</color>
+    <color name="holo_blue710">#0091C4</color>
+    <color name="holo_blue720">#008ABC</color>
+    <color name="holo_blue730">#007EB3</color>
+
     <color name="holo_lightgreen500">#99cc00</color>
     <color name="holo_lightgreen700">#669900</color>
     <color name="holo_red500">#ff4444</color>
@@ -21,11 +25,16 @@
     <color name="greenwidgets_color">@color/holo_lightgreen500</color>
     <color name="redwidgets_color">@color/holo_red500</color>
 
-    <color name="blue_primary">@color/holo_blue500</color>
-    <color name="green_primary">@color/holo_lightgreen500</color>
-    <color name="red_primary">@color/holo_red500</color>
+    <color name="blue_primary">@color/holo_blue700</color>
+    <color name="green_primary">@color/holo_lightgreen700</color>
+    <color name="red_primary">@color/holo_red700</color>
 
-    <color name="blue_primarydark">@color/holo_blue700</color>
+    <color name="blue_primarydark">@color/holo_blue730</color>
     <color name="green_primarydark">@color/holo_lightgreen700</color>
     <color name="red_primarydark">@color/holo_red700</color>
+
+    <color name="blue_accent">@color/holo_blue500</color>
+    <color name="green_accent">@color/holo_lightgreen500</color>
+    <color name="red_accent">@color/holo_red500</color>
+
 </resources>

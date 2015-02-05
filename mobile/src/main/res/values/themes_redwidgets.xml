@@ -9,6 +9,8 @@
 
     <item name="colorPrimaryDark">@color/red_primarydark</item>
 
+    <item name="colorAccent">@color/red_accent</item>
+
     <item name="android:seekBarStyle">@style/SeekBarRedWidgets</item>
 
     <item name="android:listViewStyle">@style/ListViewRedWidgets</item>
