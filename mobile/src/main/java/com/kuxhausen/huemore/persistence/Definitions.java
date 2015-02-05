@@ -3,6 +3,8 @@ package com.kuxhausen.huemore.persistence;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.kuxhausen.huemore.BuildConfig;
+
 /**
  * Convenience definitions for Database Hander and Preferences
  */
@@ -258,7 +260,7 @@ public final class Definitions {
     public static final String BUY_ME_A_BULB_DONATION_1 = "buy_me_a_bulb_donation_1";
   }
 
-  public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";
+  public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.database";
   private static final String SCHEME = "content://";
 
 

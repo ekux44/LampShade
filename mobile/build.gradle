@@ -25,6 +25,9 @@ android {
         release {
             signingConfig signingConfigs.playRelease
         }
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
     productFlavors {
         playEdition {

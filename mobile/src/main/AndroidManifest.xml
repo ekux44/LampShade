@@ -39,7 +39,7 @@
         </activity>
         <provider
             android:name="com.kuxhausen.huemore.persistence.LampShadeProvider"
-            android:authorities="com.kuxhausen.provider.huemore.database"
+            android:authorities= "${applicationId}.provider.database"
             android:exported="true" >
         </provider>
 
