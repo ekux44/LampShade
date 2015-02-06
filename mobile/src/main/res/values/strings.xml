@@ -50,7 +50,7 @@
     <string name="next_scheduled_intro">Next alarm</string>
     <string name="update_welcome_title">New in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
-    <string name="update_message">Please update HueMore to the newest version.</string>
+    <string name="update_message">Please update LampShade to the newest version.</string>
     <string name="update_opt_out">Disable update reminders</string>
     <string name="update">Update</string>
     <string name="action_hub_status">Hub Status</string>
