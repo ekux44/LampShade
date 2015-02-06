@@ -21,6 +21,4 @@
         android:text="@string/empty_list_groups"
         android:padding="8dp"/>
 
-    <include layout="@layout/horizontal_divider_line_green"/>
-
 </LinearLayout>
