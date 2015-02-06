@@ -29,8 +29,9 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_blueactionbar</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_blueactionbar</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Blueactionbar</item>
-        
-        
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ActionBar.Solid.Blueactionbar" parent="@style/Widget.AppCompat.ActionBar.Solid">
