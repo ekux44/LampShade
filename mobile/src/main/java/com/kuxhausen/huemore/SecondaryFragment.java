@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -72,6 +73,11 @@ public class SecondaryFragment extends Fragment
     mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
     mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
         R.color.redwidgets_color));
+    mMoodManualSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.blue_primary));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      mMoodManualSlidingTabLayout.setElevation(
+          this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+    }
 
     mSettings = PreferenceManager.getDefaultSharedPreferences(parrentA);
     if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
@@ -135,6 +141,8 @@ public class SecondaryFragment extends Fragment
     parrentA.registerOnServiceConnectedListener(this);
     this.setHasOptionsMenu(true);
 
+    parrentA.getSupportActionBar().setElevation(0);
+
     setMode();
   }
 
@@ -175,6 +183,9 @@ public class SecondaryFragment extends Fragment
       parrentA.getService().getDeviceManager().removeBrightnessListener(this);
       parrentA.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
     }
+
+    parrentA.getSupportActionBar()
+        .setElevation(getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
   }
 
   @Override
