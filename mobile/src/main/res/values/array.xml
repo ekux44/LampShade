@@ -51,6 +51,19 @@
     
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
+    <array name="language_names">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Français</item>
+        <item>Nederlands</item>
+    </array>
+    <array name="language_codes">
+        <item>en</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>nl</item>
+    </array>
     
     <string name="device_hue">Philips Hue</string>
     <string name="device_lifx">LIFX</string>

@@ -241,6 +241,7 @@ public final class Definitions {
     public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
     public static final String CACHED_EXECUTING_ENCODED_MOOD = "CACHED_EXECUTING_ENCODED_MOOD";
     public static final String SHOW_ACTIVITY_ON_NFC_READ = "SHOW_ACTIVITY_ON_NFC_READ";
+    public static final String USER_SELECTED_LOCALE_LANG = "USER_SELECTED_LOCALE_LANG";
   }
 
   /**

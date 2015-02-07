@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 
+import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions;
@@ -20,6 +21,8 @@ public class VoiceReadRouterActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Helpers.applyLocalizationPreference(this);
+
     setContentView(R.layout.placeholder);
     startVoiceRecognitionActivity();
   }

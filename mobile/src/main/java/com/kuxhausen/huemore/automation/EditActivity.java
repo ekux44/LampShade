@@ -27,6 +27,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
@@ -77,6 +78,8 @@ public class EditActivity extends NetworkManagedActivity implements
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Helpers.applyLocalizationPreference(this);
+
     setContentView(R.layout.edit_automation);
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
     // check full version unlocked

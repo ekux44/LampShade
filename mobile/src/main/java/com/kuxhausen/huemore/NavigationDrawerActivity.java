@@ -74,9 +74,11 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Helpers.applyLocalizationPreference(this);
+
     setContentView(R.layout.activity_navigation_drawer);
 
-    mToolbar = (Toolbar)findViewById(R.id.my_awesome_toolbar);
+    mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
     setSupportActionBar(mToolbar);
 
     if (Utils.hasProVersion(this)) {
@@ -101,7 +103,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     mDrawerView = findViewById(R.id.left_drawer);
 
-    alt.android.os.Utils.fixBackgroundRepeat(findViewById(R.id.lampshade_banner));
+    Helpers.fixBackgroundRepeat(findViewById(R.id.lampshade_banner));
 
     mNotificationList = (ListView) findViewById(R.id.notification_list);
 

@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
@@ -42,6 +43,8 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Helpers.applyLocalizationPreference(this);
+
     setContentView(R.layout.nfc_reader);
     this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
