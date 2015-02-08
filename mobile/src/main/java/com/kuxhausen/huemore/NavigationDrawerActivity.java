@@ -120,12 +120,10 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
                                               R.string.drawer_close /* "close drawer" description for accessibility */
     ) {
       public void onDrawerClosed(View view) {
-        getSupportActionBar().setTitle(mTitle);
         supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
 
       public void onDrawerOpened(View drawerView) {
-        getSupportActionBar().setTitle(mDrawerTitle);
         supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
     };
