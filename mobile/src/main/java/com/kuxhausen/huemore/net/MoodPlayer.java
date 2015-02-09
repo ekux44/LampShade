@@ -78,7 +78,7 @@ public class MoodPlayer {
     mDeviceManager.onStateChanged();
   }
 
-  public void cancelMood(Group g) {
+  public synchronized void cancelMood(Group g) {
     if (g == null) {
       throw new IllegalArgumentException();
     }
@@ -99,6 +99,13 @@ public class MoodPlayer {
     mDeviceManager.onStateChanged();
   }
 
+  public synchronized void cancelAllMoods() {
+    for (int i = mPlayingMoods.size() - 1; i >= 0; i--) {
+      //unschedule
+      mPlayingMoods.remove(i);
+    }
+  }
+
   public void addOnActiveMoodsChangedListener(OnActiveMoodsChangedListener l) {
     moodsChangedListeners.add(l);
   }
@@ -114,8 +121,9 @@ public class MoodPlayer {
   }
 
   public void onDestroy() {
-    if(nextEventTime()!=null)
+    if (nextEventTime() != null) {
       saveNappingMoods();
+    }
     if (countDownTimer != null) {
       countDownTimer.cancel();
     }

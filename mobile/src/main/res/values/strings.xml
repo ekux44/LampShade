@@ -119,6 +119,8 @@
     <string name="dialog_title_searching_for_lights">Searching for lights</string>
     <string name="dialog_title_import_mood">Shared Mood</string>
     <string name="language_prompt">Language</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_stop_all">Stop All</string>
 
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>
