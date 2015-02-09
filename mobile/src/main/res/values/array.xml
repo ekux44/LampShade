@@ -5,6 +5,9 @@
     <string name="nfc">NFC</string>
     <string name="color_temp_initial_value">3200</string>
     <string name="cap_short_none"></string>
+    <string name="action_debugging_tools">Debugging Tools</string>
+    <string name="action_debug_add_fake_bulb">Add fake bulb</string>
+
     <integer-array name="transition_values_array">
         <item>4</item>
         <item>10</item>

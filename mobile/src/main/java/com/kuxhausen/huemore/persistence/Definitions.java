@@ -129,6 +129,7 @@ public final class Definitions {
 
     public static final class NetBulbType {
 
+      public static final int DEBUG = 0;
       public static final int PHILIPS_HUE = 1;
       public static final int LIFX = 2;
     }

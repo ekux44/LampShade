@@ -35,7 +35,16 @@
                 android:layout_height="@dimen/bordered_button_height"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp" />
-			<LinearLayout android:layout_width="wrap_content"
+            <Button
+                 android:id="@+id/action_debugging"
+                 android:layout_width="fill_parent"
+                 android:text="@string/action_debugging_tools"
+                 android:layout_height="@dimen/bordered_button_height"
+                 android:layout_marginLeft="16dp"
+                 android:layout_marginRight="16dp"
+                 android:visibility="gone"/>
+
+            <LinearLayout android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"

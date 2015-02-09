@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
+import com.kuxhausen.huemore.widget.DebugDialogFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,12 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 
     Button communitiesButton = (Button) myView.findViewById(R.id.action_communities);
     communitiesButton.setOnClickListener(this);
+
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      Button debugButton = (Button) myView.findViewById(R.id.action_debugging);
+      debugButton.setOnClickListener(this);
+      debugButton.setVisibility(View.VISIBLE);
+    }
 
     mSettings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 
@@ -85,6 +92,12 @@ public class SettingsFragment extends Fragment implements OnClickListener,
       case R.id.action_communities:
         CommunityDialogFragment communities = new CommunityDialogFragment();
         communities.show(getChildFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+        break;
+      case R.id.action_debugging:
+        DebugDialogFragment debug = new DebugDialogFragment();
+        debug.show(getActivity().getSupportFragmentManager(),
+                    InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+        break;
     }
   }
 
