@@ -225,6 +225,7 @@ public final class Definitions {
     public static final String VOICE_INPUT = "VOICE_INPUT";
     public static final String VOICE_INPUT_LIST = "VOICE_INPUT_LIST";
     public static final String VOICE_INPUT_CONFIDENCE_ARRAY = "VOICE_INPUT_CONFIDENCE_ARRAY";
+    public static final String CLICK_ACTION = "com.kuxhausen.huemore.CLICK_ACTION";
   }
 
   public static final class PreferenceKeys {

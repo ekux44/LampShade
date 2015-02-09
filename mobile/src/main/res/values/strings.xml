@@ -121,6 +121,7 @@
     <string name="language_prompt">Language</string>
     <string name="action_stop">Stop</string>
     <string name="action_stop_all">Stop All</string>
+    <string name="widget_small_groups_label">LampShade Small Groups</string>
 
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>

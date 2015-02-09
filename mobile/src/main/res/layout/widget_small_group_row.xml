@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:longClickable="true"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/groupTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/groups"
+        style="?android:attr/textAppearanceMedium"
+        android:paddingLeft="4dp"/>
+
+    <Button
+        android:id="@+id/offButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cap_off" />
+
+    <Button
+        android:id="@+id/onButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cap_on" />
+
+</LinearLayout>

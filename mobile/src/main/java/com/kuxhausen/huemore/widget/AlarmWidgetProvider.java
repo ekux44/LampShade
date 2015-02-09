@@ -26,7 +26,7 @@ import com.kuxhausen.huemore.timing.AlarmState;
 import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
 /**
- * Our data observer just notifies an update for all weather widgets when it detects a change.
+ * Our data observer just notifies an update for all alarms widgets when it detects a change.
  */
 class AlarmDataProviderObserver extends ContentObserver {
 
@@ -57,9 +57,6 @@ class AlarmDataProviderObserver extends ContentObserver {
  * The weather widget's AppWidgetProvider.
  */
 public class AlarmWidgetProvider extends AppWidgetProvider {
-
-  public static String CLICK_ACTION = "com.example.android.weatherlistwidget.CLICK";
-  public static String REFRESH_ACTION = "com.example.android.weatherlistwidget.REFRESH";
 
   private static HandlerThread sWorkerThread;
   private static Handler sWorkerQueue;
@@ -92,7 +89,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
   @Override
   public void onReceive(Context ctx, Intent intent) {
     final String action = intent.getAction();
-    if (action.equals(CLICK_ACTION)) {
+    if (action.equals(InternalArguments.CLICK_ACTION)) {
 
       String json = intent.getStringExtra(InternalArguments.ALARM_JSON);
       int id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
@@ -108,7 +105,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
     RemoteViews rv;
     // Specify the service to provide data for the collection widget. Note that we need to
     // embed the appWidgetId via the data otherwise it will be ignored.
-    rv = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+    rv = new RemoteViews(context.getPackageName(), R.layout.widget_alarms_layout);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       final Intent intent = new Intent(context, AlarmWidgetService.class);
       intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -121,7 +118,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
       rv.setEmptyView(R.id.alarm_list, R.id.empty_view);
 
       final Intent onClickIntent = new Intent(context, AlarmWidgetProvider.class);
-      onClickIntent.setAction(AlarmWidgetProvider.CLICK_ACTION);
+      onClickIntent.setAction(InternalArguments.CLICK_ACTION);
       onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
       onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
       final PendingIntent onClickPendingIntent =

@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.widget.RemoteViews;
 
-import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
@@ -28,12 +27,12 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 /**
  * Our data observer just notifies an update for all group widgets when it detects a change.
  */
-class GroupDataProviderObserver extends ContentObserver {
+class SmallGroupDataProviderObserver extends ContentObserver {
 
   private AppWidgetManager mAppWidgetManager;
   private ComponentName mComponentName;
 
-  GroupDataProviderObserver(AppWidgetManager mgr, ComponentName cn, Handler h) {
+  SmallGroupDataProviderObserver(AppWidgetManager mgr, ComponentName cn, Handler h) {
     super(h);
     mAppWidgetManager = mgr;
     mComponentName = cn;
@@ -56,17 +55,17 @@ class GroupDataProviderObserver extends ContentObserver {
 /**
  * The weather widget's AppWidgetProvider.
  */
-public class GroupWidgetProvider extends AppWidgetProvider {
+public class SmallGroupWidgetProvider extends AppWidgetProvider {
 
   private static HandlerThread sWorkerThread;
   private static Handler sWorkerQueue;
-  private static GroupDataProviderObserver sDataObserver;
+  private static SmallGroupDataProviderObserver sDataObserver;
 
   Gson gson = new Gson();
 
-  public GroupWidgetProvider() {
+  public SmallGroupWidgetProvider() {
     // Start the worker thread
-    sWorkerThread = new HandlerThread("GroupWidgetProvider-worker");
+    sWorkerThread = new HandlerThread("SmallGroupWidgetProvider-worker");
     sWorkerThread.start();
     sWorkerQueue = new Handler(sWorkerThread.getLooper());
   }
@@ -80,8 +79,8 @@ public class GroupWidgetProvider extends AppWidgetProvider {
     final ContentResolver r = context.getContentResolver();
     if (sDataObserver == null) {
       final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-      final ComponentName cn = new ComponentName(context, GroupWidgetProvider.class);
-      sDataObserver = new GroupDataProviderObserver(mgr, cn, sWorkerQueue);
+      final ComponentName cn = new ComponentName(context, SmallGroupWidgetProvider.class);
+      sDataObserver = new SmallGroupDataProviderObserver(mgr, cn, sWorkerQueue);
       r.registerContentObserver(GroupColumns.GROUPS_URI, true, sDataObserver);
     }
   }
@@ -108,9 +107,9 @@ public class GroupWidgetProvider extends AppWidgetProvider {
     RemoteViews rv;
     // Specify the service to provide data for the collection widget. Note that we need to
     // embed the appWidgetId via the data otherwise it will be ignored.
-    rv = new RemoteViews(context.getPackageName(), R.layout.widget_group_layout);
+    rv = new RemoteViews(context.getPackageName(), R.layout.widget_small_group_layout);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      final Intent intent = new Intent(context, GroupWidgetService.class);
+      final Intent intent = new Intent(context, SmallGroupWidgetService.class);
       intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
       intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
@@ -120,7 +119,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       // view of the collection view.
       rv.setEmptyView(R.id.group_list, R.id.empty_view);
 
-      final Intent onClickIntent = new Intent(context, GroupWidgetProvider.class);
+      final Intent onClickIntent = new Intent(context, SmallGroupWidgetProvider.class);
       onClickIntent.setAction(InternalArguments.CLICK_ACTION);
       onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
       onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
@@ -128,21 +127,6 @@ public class GroupWidgetProvider extends AppWidgetProvider {
           PendingIntent.getBroadcast(context, 1, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setPendingIntentTemplate(R.id.group_list, onClickPendingIntent);
 
-      final Intent startVoiceIntent = new Intent(context, VoiceReadRouterActivity.class);
-      startVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-      final PendingIntent openVoicePendingIntent =
-          PendingIntent.getActivity(context, 2, startVoiceIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
-      rv.setOnClickPendingIntent(R.id.voice_icon, openVoicePendingIntent);
-
-      final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
-      openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE,
-                                 NavigationDrawerActivity.GROUP_FRAG);
-      openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      final PendingIntent openHueMorePendingIntent =
-          PendingIntent.getActivity(context, 3, openHueMoreIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
-      rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
     }
     return rv;
   }

@@ -3,10 +3,10 @@
     android:minWidth="240dp"
     android:minHeight="180dp"
     android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/widget_group_layout"
+    android:initialLayout="@layout/widget_alarms_layout"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="keyguard|home_screen"
-    android:minResizeHeight="120dp" android:minResizeWidth="180dp" android:previewImage="@drawable/widget_preview_groups">
+    android:minResizeHeight="120dp" android:minResizeWidth="180dp" android:previewImage="@drawable/widget_preview_alarms">
 </appwidget-provider>
 <!-- 86400000 is the value of AlarmManager.INTERVAL_DAY - or once per day. -->
 
