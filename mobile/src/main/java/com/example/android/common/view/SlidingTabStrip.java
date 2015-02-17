@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 
 class SlidingTabStrip extends LinearLayout {
 
-  private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 1;
+  private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 0;
   private static final byte DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0x26;
   private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 4;
   private static final int DEFAULT_SELECTED_INDICATOR_COLOR = 0xFF33B5E5;

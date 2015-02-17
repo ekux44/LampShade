@@ -50,7 +50,7 @@
     <string name="next_scheduled_intro">Next alarm</string>
     <string name="update_welcome_title">New in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
-    <string name="update_message">Please update HueMore to the newest version.</string>
+    <string name="update_message">Please update LampShade to the newest version.</string>
     <string name="update_opt_out">Disable update reminders</string>
     <string name="update">Update</string>
     <string name="action_hub_status">Hub Status</string>
@@ -118,6 +118,10 @@
     <string name="action_refresh">Refresh</string>
     <string name="dialog_title_searching_for_lights">Searching for lights</string>
     <string name="dialog_title_import_mood">Shared Mood</string>
+    <string name="language_prompt">Language</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_stop_all">Stop All</string>
+    <string name="widget_small_groups_label">LampShade Small Groups</string>
 
 	<string name="help_title_gettingstarted">Getting Started</string>
 	<string name="help_title_editingmoods">Creating and Editing Moods</string>

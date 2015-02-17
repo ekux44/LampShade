@@ -5,6 +5,9 @@
     <string name="nfc">NFC</string>
     <string name="color_temp_initial_value">3200</string>
     <string name="cap_short_none"></string>
+    <string name="action_debugging_tools">Debugging Tools</string>
+    <string name="action_debug_add_fake_bulb">Add fake bulb</string>
+
     <integer-array name="transition_values_array">
         <item>4</item>
         <item>10</item>
@@ -51,6 +54,19 @@
     
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
+    <array name="language_names">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Français</item>
+        <item>Nederlands</item>
+    </array>
+    <array name="language_codes">
+        <item>en</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>nl</item>
+    </array>
     
     <string name="device_hue">Philips Hue</string>
     <string name="device_lifx">LIFX</string>

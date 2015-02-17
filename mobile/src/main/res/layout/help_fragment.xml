@@ -20,6 +20,4 @@
 			    android:textAppearance="?android:attr/textAppearanceMedium"/>
 		</LinearLayout>
 	</ScrollView>
-
-	<include layout="@layout/horizontal_divider_line_blue"/>
 </LinearLayout>

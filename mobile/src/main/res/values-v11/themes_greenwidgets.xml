@@ -3,9 +3,13 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="GreenWidgets" parent="Theme.Blueactionbar">
+  <style name="GreenWidgets" parent="@style/Theme.Blueactionbar">
 
-    <item name="android:progressBarStyleHorizontal">@style/ProgressBarGreenWidgets</item>
+    <item name="colorPrimary">@color/green_primary</item>
+
+    <item name="colorPrimaryDark">@color/green_primarydark</item>
+
+    <item name="colorAccent">@color/green_accent</item>
 
     <item name="android:seekBarStyle">@style/SeekBarGreenWidgets</item>
 

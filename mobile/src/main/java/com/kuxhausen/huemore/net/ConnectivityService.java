@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
 import android.util.Pair;
@@ -128,6 +127,10 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
       Bundle extras = intent.getExtras();
       if (extras != null) {
+        if (extras.getBoolean(InternalArguments.FLAG_CANCEL_PLAYING, false)) {
+          mLifecycleController.getMoodPlayer().cancelAllMoods();
+        }
+
         if (extras.containsKey(InternalArguments.VOICE_INPUT) || extras.containsKey(
             InternalArguments.VOICE_INPUT_LIST)) {
           String best = extras.getString(InternalArguments.VOICE_INPUT);
@@ -201,17 +204,17 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       this.stopForeground(true);
     } else {
       // Creates an explicit intent for an Activity in your app
-      Intent resultIntent = new Intent(this, NavigationDrawerActivity.class);
-      resultIntent.putExtra(InternalArguments.FLAG_SHOW_NAV_DRAWER, true);
-      PendingIntent resultPendingIntent =
-          PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+      Intent openI = new Intent(this, NavigationDrawerActivity.class);
+      openI.putExtra(InternalArguments.FLAG_SHOW_NAV_DRAWER, true);
+      PendingIntent
+          openPI = PendingIntent.getActivity(this, 0, openI, PendingIntent.FLAG_UPDATE_CURRENT);
 
       // create basic compatibility notification
       NotificationCompat.Builder mBuilder =
           new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_notification_whiteshade)
               .setContentTitle(this.getResources().getString(R.string.app_name))
               .setContentText(getMoodPlayer().getPlayingMoods().get(0).toString())
-              .setContentIntent(resultPendingIntent);
+              .setContentIntent(openPI);
 
       // now create rich notification for supported devices
       List<PlayingMood> playing = getMoodPlayer().getPlayingMoods();
@@ -224,6 +227,18 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
                               + this.getResources().getString(R.string.notification_overflow_more));
       }
       mBuilder.setStyle(iStyle);
+
+      //now add cancel button for supported devices
+      Intent stopI = new Intent(this, ConnectivityService.class);
+      stopI.putExtra(InternalArguments.FLAG_CANCEL_PLAYING, true);
+      PendingIntent
+          stopPI = PendingIntent.getService(this, 0, stopI, PendingIntent.FLAG_UPDATE_CURRENT);
+
+      String
+          message =
+          (playing.size() == 1) ? getResources().getString(R.string.action_stop_all)
+                                : getResources().getString(R.string.action_stop);
+      mBuilder.addAction(R.drawable.ic_action_discard, message, stopPI);
 
       this.startForeground(notificationId, mBuilder.build());
     }

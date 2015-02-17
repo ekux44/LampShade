@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -71,6 +72,11 @@ public class MainFragment extends Fragment implements
     mGroupBulbSlidingTabLayout.setViewPager(mGroupBulbViewPager);
     mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
         R.color.greenwidgets_color));
+    mGroupBulbSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.blue_primary));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      mGroupBulbSlidingTabLayout.setElevation(
+          this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+    }
 
     // add custom page changed lister to sych bulb/group tabs with nav drawer
     mForwardPage = new ForwardingPageListener();
@@ -96,6 +102,11 @@ public class MainFragment extends Fragment implements
       mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
       mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
           R.color.redwidgets_color));
+      mMoodManualSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.blue_primary));
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        mMoodManualSlidingTabLayout.setElevation(
+            this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+      }
 
       mBrightnessDescriptor = (TextView) myView.findViewById(R.id.brightnessDescripterTextView);
       mBrightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
@@ -115,7 +126,7 @@ public class MainFragment extends Fragment implements
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            if(dm.getSelectedGroup()!=null) {
+            if (dm.getSelectedGroup() != null) {
               dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
             }
           }
@@ -139,7 +150,7 @@ public class MainFragment extends Fragment implements
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
           if (fromUser) {
             DeviceManager dm = mParent.getService().getDeviceManager();
-            if(dm.getSelectedGroup()!=null) {
+            if (dm.getSelectedGroup() != null) {
               dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
             }
           }
@@ -160,6 +171,8 @@ public class MainFragment extends Fragment implements
       mGroupBulbViewPager.setCurrentItem(b.getInt(InternalArguments.GROUPBULB_TAB));
       b.remove(InternalArguments.GROUPBULB_TAB);
     }
+
+    mParent.getSupportActionBar().setElevation(0);
 
     setMode();
   }
@@ -201,6 +214,8 @@ public class MainFragment extends Fragment implements
       mParent.getService().getDeviceManager().removeBrightnessListener(this);
       mParent.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
     }
+    mParent.getSupportActionBar()
+        .setElevation(getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
   }
 
   @Override
@@ -246,7 +261,8 @@ public class MainFragment extends Fragment implements
   public void onStateChanged() {
     DeviceManager dm = mParent.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null && dm.getSelectedGroup()!=null) {
+    if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null
+        && dm.getSelectedGroup() != null) {
       int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
       mBrightnessBar.setProgress(brightness);
       mMaxBrightnessBar.setProgress(brightness);

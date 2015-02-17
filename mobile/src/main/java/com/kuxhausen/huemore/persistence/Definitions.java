@@ -3,6 +3,8 @@ package com.kuxhausen.huemore.persistence;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.kuxhausen.huemore.BuildConfig;
+
 /**
  * Convenience definitions for Database Hander and Preferences
  */
@@ -127,6 +129,7 @@ public final class Definitions {
 
     public static final class NetBulbType {
 
+      public static final int DEBUG = 0;
       public static final int PHILIPS_HUE = 1;
       public static final int LIFX = 2;
     }
@@ -218,9 +221,11 @@ public final class Definitions {
     public static final String NAV_DRAWER_PAGE = "NAV_DRAWER_PAGE";
     public static final String GROUPBULB_TAB = "GROUPBULB_TAB";
     public static final String FLAG_SHOW_NAV_DRAWER = "FLAG_SHOW_NAV_DRAWER";
+    public static final String FLAG_CANCEL_PLAYING = "FLAG_CANCEL_PLAYING";
     public static final String VOICE_INPUT = "VOICE_INPUT";
     public static final String VOICE_INPUT_LIST = "VOICE_INPUT_LIST";
     public static final String VOICE_INPUT_CONFIDENCE_ARRAY = "VOICE_INPUT_CONFIDENCE_ARRAY";
+    public static final String CLICK_ACTION = "com.kuxhausen.huemore.CLICK_ACTION";
   }
 
   public static final class PreferenceKeys {
@@ -239,6 +244,7 @@ public final class Definitions {
     public static final String UNNAMED_MOOD_NUMBER = "UNNAMED_MOOD_NUMBER";
     public static final String CACHED_EXECUTING_ENCODED_MOOD = "CACHED_EXECUTING_ENCODED_MOOD";
     public static final String SHOW_ACTIVITY_ON_NFC_READ = "SHOW_ACTIVITY_ON_NFC_READ";
+    public static final String USER_SELECTED_LOCALE_LANG = "USER_SELECTED_LOCALE_LANG";
   }
 
   /**
@@ -258,7 +264,7 @@ public final class Definitions {
     public static final String BUY_ME_A_BULB_DONATION_1 = "buy_me_a_bulb_donation_1";
   }
 
-  public static final String AUTHORITY = "com.kuxhausen.provider.huemore.database";
+  public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.database";
   private static final String SCHEME = "content://";
 
 

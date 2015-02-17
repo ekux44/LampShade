@@ -20,7 +20,5 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/empty_list_connections"
         android:padding="8dp"/>
-
-    <include layout="@layout/horizontal_divider_line_blue"/>
     
 </LinearLayout>

@@ -20,13 +20,11 @@
         <com.larswerkman.holocolorpicker.SaturationBar
     		android:id="@+id/saturationbar"
     		android:layout_width="match_parent"
-    		android:layout_height="wrap_content"
-    		android:paddingBottom="8dp"/>
-        
+    		android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:id="@+id/colorLoopLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal" >
@@ -38,7 +36,7 @@
                 android:padding="8dp"
                 android:text="@string/toggleColorLoop" />
 
-            <ToggleButton
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/colorLoopCompoundButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

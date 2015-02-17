@@ -21,24 +21,24 @@
             android:src="@drawable/ic_action_lampshade" />
 
         <TextView
-            android:id="@+id/groups_title"
+            android:id="@+id/alarms_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:text="@string/groups"
+            android:text="@string/alarms"
             android:textAllCaps="true"
             android:textSize="24sp" />
 
         <ImageView
-            android:id="@+id/voice_icon"
+            android:id="@+id/alarms_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:adjustViewBounds="true"
             android:paddingLeft="8dp"
             android:scaleType="fitStart"
-            android:src="@drawable/ic_action_mic" />
+            android:src="@drawable/ic_action_alarms" />
 
     </LinearLayout>
     <ImageView
@@ -54,7 +54,7 @@
         android:layout_weight="1"
         android:layout_gravity="center">
         <ListView
-            android:id="@+id/group_list"
+            android:id="@+id/alarm_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
         <TextView
@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="gone"
-            android:text="@string/empty_group_list_text"
+            android:text="@string/empty_view_text"
             android:textSize="20sp" />
     </FrameLayout>
 </LinearLayout>

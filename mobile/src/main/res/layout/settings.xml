@@ -17,30 +17,62 @@
 			<Button
 			    android:id="@+id/rateButton"
 			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/rate_on_google_play" 
-			    android:padding="8dp" />
+			    android:text="@string/rate_on_google_play"
+                android:layout_height="@dimen/bordered_button_height"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
 			<Button
 			    android:id="@+id/action_unlocks"
 			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/action_unlocks" 
-			    android:padding="8dp" />
+			    android:text="@string/action_unlocks"
+                android:layout_height="@dimen/bordered_button_height"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
 			<Button
 			    android:id="@+id/action_communities"
 			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:text="@string/action_communities" 
-			    android:padding="8dp" />
-			<CheckBox
-			    android:id="@+id/showNfcReadPageCheckBox"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="@string/show_NFC_read_page_descriptor"
-			    android:padding="8dp" />
-			
+			    android:text="@string/action_communities"
+                android:layout_height="@dimen/bordered_button_height"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
+            <Button
+                 android:id="@+id/action_debugging"
+                 android:layout_width="fill_parent"
+                 android:text="@string/action_debugging_tools"
+                 android:layout_height="@dimen/bordered_button_height"
+                 android:layout_marginLeft="16dp"
+                 android:layout_marginRight="16dp"
+                 android:visibility="gone"/>
+
+            <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/language_prompt"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="16dp"
+                    android:textSize="@dimen/abc_text_size_body_2_material"
+                    />
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/language_selector"
+                    android:layout_gravity="center_vertical"
+                    android:entries="@array/language_names"
+                    android:gravity="center_vertical"
+                />
+            </LinearLayout>
+            <CheckBox
+                    android:id="@+id/showNfcReadPageCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/show_NFC_read_page_descriptor"
+                    android:layout_margin="16dp" />
         </LinearLayout>
     </ScrollView>
-    
-    <include layout="@layout/horizontal_divider_line_blue"/>
 </LinearLayout>

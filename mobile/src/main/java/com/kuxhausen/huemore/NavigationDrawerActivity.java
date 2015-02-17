@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 public class NavigationDrawerActivity extends NetworkManagedActivity implements
                                                                      OnBackStackChangedListener {
 
+  private Toolbar mToolbar;
   private DrawerLayout mDrawerLayout;
   private View mDrawerView;
   private ListView mDrawerList, mNotificationList;
@@ -72,7 +74,12 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Helpers.applyLocalizationPreference(this);
+
     setContentView(R.layout.activity_navigation_drawer);
+
+    mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+    setSupportActionBar(mToolbar);
 
     if (Utils.hasProVersion(this)) {
       mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_pro_titles);
@@ -87,12 +94,16 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     // set a custom shadow that overlays the main content when the drawer opens
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+    mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.blue_primarydark));
+
     // set up the drawer's list view with items and click listener
     mDrawerList
         .setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mDrawerTitles));
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     mDrawerView = findViewById(R.id.left_drawer);
+
+    Helpers.fixBackgroundRepeat(findViewById(R.id.lampshade_banner));
 
     mNotificationList = (ListView) findViewById(R.id.notification_list);
 
@@ -109,12 +120,10 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
                                               R.string.drawer_close /* "close drawer" description for accessibility */
     ) {
       public void onDrawerClosed(View view) {
-        getSupportActionBar().setTitle(mTitle);
         supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
 
       public void onDrawerOpened(View drawerView) {
-        getSupportActionBar().setTitle(mDrawerTitle);
         supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
     };

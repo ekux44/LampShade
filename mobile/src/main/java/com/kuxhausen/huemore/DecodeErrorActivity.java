@@ -19,7 +19,10 @@ public class DecodeErrorActivity extends ActionBarActivity implements OnClickLis
   boolean decoderErrorUpgrade;
 
   @Override
-  public void onCreate(Bundle b) {
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Helpers.applyLocalizationPreference(this);
+
     setContentView(R.layout.decoder_error_activity);
     this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
