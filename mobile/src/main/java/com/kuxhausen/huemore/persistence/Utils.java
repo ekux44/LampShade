@@ -1,16 +1,11 @@
 package com.kuxhausen.huemore.persistence;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
-import com.kuxhausen.huemore.state.BulbState;
-import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
 public class Utils {
@@ -48,8 +43,8 @@ public class Utils {
    */
   public static float[] hsTOxy(float[] input) {
 
-    float h = Float.valueOf(input[0]);
-    float s = Float.valueOf(input[1]);
+    float h = input[0];
+    float s = input[1];
 
     h = Math.max(0f, Math.min(h, 1f));
     s = Math.max(0f, Math.min(s, 1f));
@@ -91,8 +86,8 @@ public class Utils {
    * @return h, s each ranging 0 to 1 in the wide RGB D65 space
    */
   public static float[] xyTOhs(float[] input) {
-    float x = Float.valueOf(input[0]);
-    float y = Float.valueOf(input[1]);
+    float x = input[0];
+    float y = input[1];
 
     float z = 1.0f - x - y;
     float Y = 1f; // The given brightness value
@@ -140,8 +135,8 @@ public class Utils {
    * @return h, s each ranging 0 to 1 in the sRGB D65 space
    */
   public static float[] xyTOsRGBhs(float[] input) {
-    float x = Float.valueOf(input[0]);
-    float y = Float.valueOf(input[1]);
+    float x = input[0];
+    float y = input[1];
 
     float z = 1.0f - x - y;
     float Y = 1f; // The given brightness value
@@ -229,7 +224,7 @@ public class Utils {
    * @return deciseconds
    */
   public static int toDeciSeconds(long milliseconds) {
-    return (int)(milliseconds / 100l);
+    return (int) (milliseconds / 100l);
   }
 
   /**
