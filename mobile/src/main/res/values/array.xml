@@ -33,16 +33,8 @@
         <item>@string/help_content_automationpluggin</item>
         <item>@string/help_content_faq</item>
     </string-array>
-	
-    <string-array name="navigation_drawer_titles">
-	    <item>@string/action_bulbs</item>
-	    <item>@string/groups</item>
-        <item>@string/action_connections</item>
-        <item>@string/action_settings</item>
-        <item>@string/action_help</item>
-    </string-array>
     
-    <string-array name="navigation_drawer_pro_titles">
+    <string-array name="navigation_drawer_titles">
 	    <item>@string/action_bulbs</item>
 	    <item>@string/groups</item>
         <item>@string/action_connections</item>

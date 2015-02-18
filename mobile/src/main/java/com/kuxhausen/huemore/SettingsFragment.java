@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.widget.DebugDialogFragment;
@@ -44,9 +43,6 @@ public class SettingsFragment extends Fragment implements OnClickListener,
 
     Button rateButton = (Button) myView.findViewById(R.id.rateButton);
     rateButton.setOnClickListener(this);
-
-    Button unlocksButton = (Button) myView.findViewById(R.id.action_unlocks);
-    unlocksButton.setOnClickListener(this);
 
     Button communitiesButton = (Button) myView.findViewById(R.id.action_communities);
     communitiesButton.setOnClickListener(this);
@@ -84,10 +80,6 @@ public class SettingsFragment extends Fragment implements OnClickListener,
       case R.id.rateButton:
         this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
                                                                     + "com.kuxhausen.huemore")));
-        break;
-      case R.id.action_unlocks:
-        UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-        unlocks.show(getChildFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         break;
       case R.id.action_communities:
         CommunityDialogFragment communities = new CommunityDialogFragment();

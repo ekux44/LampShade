@@ -97,12 +97,6 @@ public class EditActivity extends NetworkManagedActivity implements
 
     cancelButton = (Button) this.findViewById(R.id.cancel);
     cancelButton.setOnClickListener(this);
-    if (!Utils.hasProVersion(this)) {
-      Intent i = new Intent(this, NavigationDrawerActivity.class);
-      i.putExtra(InternalArguments.PROMPT_UPGRADE, true);
-      startActivity(i);
-      setResult(Activity.RESULT_CANCELED);
-    }
 
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =

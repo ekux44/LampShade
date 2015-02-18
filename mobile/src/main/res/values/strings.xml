@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Settings</string>
-    <string name="action_unlocks">Unlocks</string>
     <string name="cap_manual">MANUAL</string>
     <string name="cap_bulbs">BULBS</string>
     <string name="cap_hue_sat_mode">HUE</string>
@@ -31,9 +30,6 @@
     <string name="temperature">Color Temperature (K)</string>
     <string name="toggleColorLoop">Loop Colors :</string>
     <string name="rate_on_google_play">Rate on Google Play</string>
-    <string name="unlock_pro_prompt">Unlock Pro Version!</string>
-    <string name="unlock_pro_already">You already have the Pro Version!</string>
-    <string name="unlock_pro_descriptor">Pro version enables Alarms, Tasker, Locale and NFC features.</string>
     <string name="nfc_tag_detected">Tag Detected</string>
     <string name="nfc_tag_not_detected">Tag Not Found</string>
     <string name="nfc_tag_write_prompt">Write to Tag</string>

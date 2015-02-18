@@ -34,6 +34,10 @@ android {
             minSdkVersion 10
             targetSdkVersion 21
         }
+        amazonEdition {
+            minSdkVersion 10
+            targetSdkVersion 21
+        }
         compatabilityEdition {
             minSdkVersion 10
             targetSdkVersion 21

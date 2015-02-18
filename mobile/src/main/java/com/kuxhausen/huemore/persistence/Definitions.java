@@ -208,7 +208,6 @@ public final class Definitions {
     public final static String ALARM_DETAILS = "alarmDetailsBundle";
     public final static String HUE_STATE = "HueState";
     public final static String PREVIOUS_STATE = "PreviousState";
-    public final static String PROMPT_UPGRADE = "PromptUpgrade";
     public final static String ALARM_ID = "AlarmId";
     public final static String ALARM_JSON = "AlarmJson";
     public final static String DECODER_ERROR_UPGRADE = "DecoderErrorUpgrade";
@@ -236,8 +235,6 @@ public final class Definitions {
     public static final String DONE_WITH_WELCOME_DIALOG = "DONE_WITH_WELCOME_DIALOG";
     public static final String HAS_SHOWN_COMMUNITY_DIALOG = "HAS_SHOWN_COMMUNITY_DIALOG";
     public static final String UPDATE_OPT_OUT = "Update_Opt_Out";
-    public static final String BULBS_UNLOCKED = "Bulbs_Unlocked";
-    public static final int ALWAYS_FREE_BULBS = 10;
     public static final String NUMBER_OF_CONNECTED_BULBS = "Number_Of_Connected_Bulbs";
     public static final String VERSION_NUMBER = "Version_Number";
     public static final String UNNAMED_GROUP_NUMBER = "UNNAMED_GROUP_NUMBER";
@@ -256,12 +253,6 @@ public final class Definitions {
     public static final String LOCAL_BRIDGE_IP_ADDRESS = "Local_Bridge_IP_Address";
     public static final String INTERNET_BRIDGE_IP_ADDRESS = "Internet_Bridge_IP_Address";
     public static final String HASHED_USERNAME = "Hashed_Username";
-  }
-
-  public static final class PlayItems {
-
-    public static final String FIVE_BULB_UNLOCK_1 = "five_bulb_unlock_1";
-    public static final String BUY_ME_A_BULB_DONATION_1 = "buy_me_a_bulb_donation_1";
   }
 
   public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.database";

@@ -71,17 +71,10 @@ public class PreferenceInitializer {
       edit.commit();
     }
 
-    /*
-     * { //debug mode only Editor edit = settings.edit();
-     * edit.putInt(PreferencesKeys.BULBS_UNLOCKED, 50); edit.commit(); }
-     */
-
     if (!settings.contains(PreferenceKeys.FIRST_RUN)) {
       // Mark no longer first run in preferences cache
       Editor edit = settings.edit();
       edit.putBoolean(PreferenceKeys.FIRST_RUN, false);
-      edit.putInt(PreferenceKeys.BULBS_UNLOCKED, PreferenceKeys.ALWAYS_FREE_BULBS);// TODO load from
-      // google store
       edit.commit();
     } else if (settings.getInt(PreferenceKeys.VERSION_NUMBER, -1) < act.getResources().getInteger(
         R.integer.major_update_version)) {

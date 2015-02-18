@@ -27,8 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.kuxhausen.huemore.billing.BillingManager;
-import com.kuxhausen.huemore.billing.UnlocksDialogFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.ConnectionListFragment;
@@ -38,7 +36,6 @@ import com.kuxhausen.huemore.nfc.NfcWriterFragment;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
-import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.timing.AlarmsListFragment;
 
@@ -65,8 +62,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public final static String BASE_FRAG_TAG = "FragTag";
   public Tag myTag;
 
-  private BillingManager mBillingManager;
-
   private SharedPreferences mSettings;
 
   private Bundle mResumeBundle;
@@ -81,11 +76,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
     setSupportActionBar(mToolbar);
 
-    if (Utils.hasProVersion(this)) {
-      mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_pro_titles);
-    } else {
-      mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_titles);
-    }
+    mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_titles);
 
     mTitle = mDrawerTitle = getTitle();
 
@@ -137,12 +128,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
   }
 
-  @Override
-  protected void onStart() {
-    super.onStart();
-    mBillingManager = new BillingManager(this);
-  }
-
   public void onResume() {
     super.onResume();
 
@@ -167,12 +152,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     Bundle b = mResumeBundle;
     if (b != null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)) {
-
-      if (b.getInt(InternalArguments.NAV_DRAWER_PAGE) != NavigationDrawerActivity.ALARM_FRAG
-          || Utils.hasProVersion(this)) {
-        // quick and dirty hack to prevent free users from hitting alarms, TODO redo
-        selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
-      }
+      selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
       b.remove(InternalArguments.NAV_DRAWER_PAGE);
     } else {
       if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
@@ -187,12 +167,6 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       b.remove(InternalArguments.FLAG_SHOW_NAV_DRAWER);
     }
 
-    if (b != null && b.containsKey(InternalArguments.PROMPT_UPGRADE)
-        && b.getBoolean(InternalArguments.PROMPT_UPGRADE)) {
-      UnlocksDialogFragment unlocks = new UnlocksDialogFragment();
-      unlocks.show(getSupportFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-      b.remove(InternalArguments.PROMPT_UPGRADE);
-    }
     mResumeBundle = null;
   }
 
@@ -479,35 +453,10 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     this.supportInvalidateOptionsMenu();
   }
 
-
-  @Override
-  protected void onStop() {
-    super.onStop();
-    //we don't want billing still running in background when user leaves but moods still playing
-    if (mBillingManager != null) {
-      mBillingManager.onDestroy();
-    }
-  }
-
   @Override
   protected void onDestroy() {
     mNotificationAdapter.onDestroy();
-
-    //billing should have been destroyed in onStop, but try again in case onStop was skipped
-    if (mBillingManager != null) {
-      mBillingManager.onDestroy();
-    }
     super.onDestroy();
   }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (mBillingManager != null) {
-      mBillingManager.onActivityResult(requestCode, resultCode, data);
-    }
-  }
-
-  public BillingManager getBillingManager() {
-    return mBillingManager;
-  }
 }

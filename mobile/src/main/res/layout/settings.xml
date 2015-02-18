@@ -21,14 +21,8 @@
                 android:layout_height="@dimen/bordered_button_height"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp" />
-			<Button
-			    android:id="@+id/action_unlocks"
-			    android:layout_width="fill_parent"
-			    android:text="@string/action_unlocks"
-                android:layout_height="@dimen/bordered_button_height"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
-			<Button
+
+            <Button
 			    android:id="@+id/action_communities"
 			    android:layout_width="fill_parent"
 			    android:text="@string/action_communities"

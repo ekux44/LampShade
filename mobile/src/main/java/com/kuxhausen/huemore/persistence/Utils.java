@@ -38,11 +38,6 @@ public class Utils {
     }
   }
 
-  public static boolean hasProVersion(Context c) {
-    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(c);
-    return settings.getInt(PreferenceKeys.BULBS_UNLOCKED, 0) > PreferenceKeys.ALWAYS_FREE_BULBS;
-  }
-
   /**
    * Inspired by https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/blob/master/ApplicationDesignNotes
    * /RGB%20to%20xy%20Color%20conversion.md
