@@ -10,11 +10,12 @@ import android.os.PowerManager;
 
 import com.kuxhausen.huemore.persistence.Definitions;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 public class ReinitalizerReceiver extends BroadcastReceiver {
 
   /**
-   * Schedules alarm on ACTION_BOOT_COMPLETED.  Reschedules alarm on TIME_SET, TIMEZONE_CHANGED
+   * Schedules alarm on ACTION_BOOT_COMPLETED.  Reschedules alarm on TIME_SET, TIMEZONE_CHANGED,
+   * MY_PACKAGE_REPLACED
    */
   @Override
   public void onReceive(final Context context, Intent intent) {
