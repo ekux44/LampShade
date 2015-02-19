@@ -32,6 +32,8 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
+import java.util.Calendar;
+
 public class NewAlarmDialogFragment extends DialogFragment implements OnClickListener,
                                                                       LoaderManager.LoaderCallbacks<Cursor>,
                                                                       OnRepeatSelectedListener {
@@ -99,7 +101,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
 
         onRepeatSelected(optionalState.getRepeatDays());
 
-        timePick.setCurrentHour(optionalState.getHour());
+        timePick.setCurrentHour(optionalState.getHourOfDay());
         timePick.setCurrentMinute(optionalState.getMinute());
       }
     }
@@ -276,7 +278,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     data.setRepeatDays(repeats);
     data.setEnabled(true);
     data.setAlarmTime(AlarmLogic.computeNextAlarmTime(timePick.getCurrentHour(),
-                                                         timePick.getCurrentMinute(), repeats));
+                                                      timePick.getCurrentMinute(), repeats,
+                                                      Calendar.getInstance()));
 
     AlarmLogic.saveChangesToDB(getActivity(), data);
     AlarmReceiver.registerAlarm(getActivity(), data);

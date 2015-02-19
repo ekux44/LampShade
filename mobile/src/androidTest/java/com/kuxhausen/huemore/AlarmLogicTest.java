@@ -70,61 +70,49 @@ public class AlarmLogicTest extends AndroidTestCase {
     super.tearDown();
   }
 
-  public void testComputeNextAlarmTime0() {
-
-    AlarmData ad1 = new AlarmData(-1);
-    ad1.setEnabled(false);
-    ad1.setHour(oneDayForward.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(oneDayForward.get(Calendar.MINUTE));
-
-    assertNull(AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
-  }
-
   public void testComputeNextAlarmTime1() {
 
-    AlarmData ad1 = new AlarmData(-1);
+    AlarmData ad1 = new AlarmData();
     ad1.setEnabled(true);
-    ad1.setHour(oneDayForward.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(oneDayForward.get(Calendar.MINUTE));
+    ad1.setAlarmTime(oneDayForward);
 
-    assertEquals((Long) oneDayForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
+    assertEquals(oneDayForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(),
+                                                                ad1.getRepeatDays(), now));
 
   }
 
   public void testComputeNextAlarmTime2() {
 
-    AlarmData ad1 = new AlarmData(-1);
+    AlarmData ad1 = new AlarmData();
     ad1.setEnabled(true);
-    ad1.setHour(oneMinForward.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(oneMinForward.get(Calendar.MINUTE));
+    ad1.setAlarmTime(oneMinForward);
 
-    assertEquals((Long) oneDayOneMinForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
+    assertEquals(oneDayOneMinForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                                      ad1.getMinute(),
+                                                                      ad1.getRepeatDays(), now));
 
   }
 
   public void testComputeNextAlarmTime3() {
 
-    AlarmData ad1 = new AlarmData(-1);
+    AlarmData ad1 = new AlarmData();
     ad1.setEnabled(true);
-    ad1.setHour(oneHourForward.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(oneHourForward.get(Calendar.MINUTE));
+    ad1.setAlarmTime(oneHourForward);
 
-    assertEquals((Long) oneHourForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
+    assertEquals(oneHourForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                                 ad1.getMinute(),
+                                                                 ad1.getRepeatDays(), now));
 
   }
 
   public void testComputeNextAlarmTime4() {
 
-    AlarmData ad1 = new AlarmData(-1);
+    AlarmData ad1 = new AlarmData();
     ad1.setEnabled(true);
-    ad1.setHour(yesterday.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(yesterday.get(Calendar.MINUTE));
+    ad1.setAlarmTime(yesterday);
 
-    assertEquals((Long) oneDayForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
+    assertEquals(oneDayForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(),
+                                                                ad1.getRepeatDays(), now));
   }
 
   public void testComputeNextAlarmTime1Repeating() {
@@ -132,23 +120,28 @@ public class AlarmLogicTest extends AndroidTestCase {
     DaysOfWeek fridays = new DaysOfWeek();
     fridays.setDay(Calendar.FRIDAY, true);
 
-    AlarmData ad1 = new AlarmData(-1);
+    AlarmData ad1 = new AlarmData();
     ad1.setEnabled(true);
-    ad1.setHour(yesterday.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(yesterday.get(Calendar.MINUTE));
+    ad1.setAlarmTime(yesterday);
     ad1.setRepeatDays(fridays);
 
-    assertEquals((Long) sixDaysForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
+    assertEquals(sixDaysForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                                 ad1.getMinute(),
+                                                                 ad1.getRepeatDays(), now));
 
-    assertEquals((Long) sixDaysForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, oneDayOneMinForward.getTimeInMillis()));
+    assertEquals(sixDaysForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                                 ad1.getMinute(),
+                                                                 ad1.getRepeatDays(),
+                                                                 oneDayOneMinForward));
 
-    assertEquals((Long) yesterday.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, twoDaysPrior.getTimeInMillis()));
+    assertEquals(yesterday, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                            ad1.getMinute(),
+                                                            ad1.getRepeatDays(),
+                                                            twoDaysPrior));
 
-    assertEquals((Long) thirteenDaysForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, sixDaysForward.getTimeInMillis()));
+    assertEquals(thirteenDaysForward, AlarmLogic
+        .computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(), ad1.getRepeatDays(),
+                              sixDaysForward));
 
   }
 
@@ -158,22 +151,25 @@ public class AlarmLogicTest extends AndroidTestCase {
     weekends.setDay(Calendar.SATURDAY, true);
     weekends.setDay(Calendar.SUNDAY, true);
 
-    AlarmData ad1 = new AlarmData(-1);
+    AlarmData ad1 = new AlarmData();
     ad1.setEnabled(true);
-    ad1.setHour(yesterday.get(Calendar.HOUR_OF_DAY));
-    ad1.setMinute(yesterday.get(Calendar.MINUTE));
+    ad1.setAlarmTime(yesterday);
     ad1.setRepeatDays(weekends);
 
-    assertEquals((Long) now.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, yesterday.getTimeInMillis()));
+    assertEquals(now, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(),
+                                                      ad1.getRepeatDays(), yesterday));
 
-    assertEquals((Long) oneDayForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, now.getTimeInMillis()));
+    assertEquals(oneDayForward, AlarmLogic
+        .computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(), ad1.getRepeatDays(), now));
 
-    assertEquals((Long) sevenDaysForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, oneDayOneMinForward.getTimeInMillis()));
+    assertEquals(sevenDaysForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                                   ad1.getMinute(),
+                                                                   ad1.getRepeatDays(),
+                                                                   oneDayOneMinForward));
 
-    assertEquals((Long) eightDaysForward.getTimeInMillis(),
-                 AlarmLogic.computeNextAlarmTime(ad1, sevenDaysForward.getTimeInMillis()));
+    assertEquals(eightDaysForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
+                                                                   ad1.getMinute(),
+                                                                   ad1.getRepeatDays(),
+                                                                   sevenDaysForward));
   }
 }

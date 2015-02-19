@@ -7,78 +7,9 @@ import android.preference.PreferenceManager;
 
 import com.kuxhausen.huemore.persistence.Definitions;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AlarmLogic {
-
-
-  public static Long computeNextAlarmTime(AlarmData alarmData, long currentUnixTime) {
-    if (alarmData.isEnabled()) {
-
-      Calendar now = Calendar.getInstance();
-      now.setTimeInMillis(currentUnixTime);
-      now.add(Calendar.MINUTE, 1); // jump ahead 1 minute to disallow alarm going off immediately
-
-      if (alarmData.getRepeatDays().isNoDaysSet()) {
-        Calendar alarmTime = Calendar.getInstance();
-        alarmTime.setTimeInMillis(currentUnixTime);
-        alarmTime.set(Calendar.HOUR_OF_DAY, alarmData.getHour());
-        alarmTime.getTimeInMillis(); // force internals fields to be recomputed after set
-        alarmTime.set(Calendar.MINUTE, alarmData.getMinute());
-        alarmTime.getTimeInMillis(); // force internals fields to be recomputed after set
-
-        while (!alarmTime.after(now)) {
-          alarmTime.add(Calendar.DAY_OF_YEAR, 1);
-        }
-
-        return alarmTime.getTimeInMillis();
-
-      } else {
-        ArrayList<Long> repeatingDays = new ArrayList<Long>();
-
-        for (int dayNo = 1; dayNo <= 7; dayNo++) {
-          if (alarmData.getRepeatDays().isDaySet(dayNo)) {
-
-            Calendar alarmTime = Calendar.getInstance();
-            alarmTime.setTimeInMillis(currentUnixTime);
-
-            alarmTime.set(Calendar.DAY_OF_WEEK, dayNo);
-            alarmTime.getTimeInMillis(); // force internals fields to be recomputed after set
-
-            alarmTime.set(Calendar.HOUR_OF_DAY, alarmData.getHour());
-            alarmTime.getTimeInMillis(); // force internals fields to be recomputed after set
-            alarmTime.set(Calendar.MINUTE, alarmData.getMinute());
-            alarmTime.getTimeInMillis(); // force internals fields to be recomputed after set
-
-            //move adjust this alarmTime such that it is the first occurrence of this day of week after now
-            {
-              while (!alarmTime.before(now)) {
-                alarmTime.add(Calendar.WEEK_OF_YEAR, -1);
-              }
-              while (!alarmTime.after(now)) {
-                alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
-              }
-            }
-
-            repeatingDays.add(alarmTime.getTimeInMillis());
-          }
-        }
-        //now return the earliest valid day
-        if (repeatingDays.size() > 0) {
-          long result = Long.MAX_VALUE;
-          for (long dayTime : repeatingDays) {
-            if (dayTime < result) {
-              result = dayTime;
-            }
-          }
-          return result;
-        }
-
-      }
-    }
-    return null;
-  }
 
   /**
    * if enabled and alarm time has passed, replaced with next upcoming alarm time. If not repeating,
@@ -91,30 +22,34 @@ public class AlarmLogic {
       mustBeAfter.add(Calendar.MINUTE, 1);
 
       Calendar cal = data.getAlarmTime();
-      if (cal.before(mustBeAfter)) {
+      if (!cal.after(mustBeAfter)) {
         if (data.getRepeatDays().isNoDaysSet()) {
           data.setEnabled(false);
         } else {
           data.setAlarmTime(
-              computeNextAlarmTime(data.getHour(), data.getMinute(), data.getRepeatDays()));
+              computeNextAlarmTime(data.getHourOfDay(), data.getMinute(), data.getRepeatDays(),
+                                   Calendar.getInstance()));
         }
         saveChangesToDB(context, data);
       }
     }
   }
 
-  public static Calendar computeNextAlarmTime(int hour, int minute, DaysOfWeek repeats) {
+  public static Calendar computeNextAlarmTime(int hourOfDay, int minute, DaysOfWeek repeats,
+                                              Calendar currentTime) {
     Calendar mustBeAfter = Calendar.getInstance();
+    mustBeAfter.setTimeInMillis(currentTime.getTimeInMillis());
     mustBeAfter.add(Calendar.MINUTE, 1);
 
     Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(currentTime.getTimeInMillis());
     calendar.set(Calendar.MINUTE, minute);
-    calendar.set(Calendar.HOUR, hour);
+    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     calendar.getTime(); //force internal recompute
 
-    while (calendar.before(mustBeAfter)) {
+    while (!calendar.after(mustBeAfter)) {
       calendar.add(Calendar.DAY_OF_WEEK, 1);
 
       //if alarm is only valid on certain days, keep incrementing till one of those days reached
@@ -179,7 +114,8 @@ public class AlarmLogic {
     if (!data.isEnabled()) {
       data.setEnabled(true);
       data.setAlarmTime(
-          computeNextAlarmTime(data.getHour(), data.getMinute(), data.getRepeatDays()));
+          computeNextAlarmTime(data.getHourOfDay(), data.getMinute(), data.getRepeatDays(),
+                               Calendar.getInstance()));
       saveChangesToDB(context, data);
       AlarmReceiver.registerAlarm(context, data);
     } else {

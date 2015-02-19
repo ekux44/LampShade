@@ -78,7 +78,7 @@ public class AlarmData {
     cv.put(AlarmColumns.COL_BRIGHTNESS, getBrightness());
     cv.put(AlarmColumns.COL_IS_ENABLED, isEnabled() ? 1 : 0);
     cv.put(AlarmColumns.COL_REPEAT_DAYS, getRepeatDays().getValue());
-    cv.put(AlarmColumns.COL_HOUR, getHour());
+    cv.put(AlarmColumns.COL_HOUR, getHourOfDay());
     cv.put(AlarmColumns.COL_MINUTE, getMinute());
 
     return cv;
@@ -140,16 +140,12 @@ public class AlarmData {
     mRepeatDays = days;
   }
 
-  public int getHour() {
+  public int getHourOfDay() {
     return mHour;
   }
 
   public int getMinute() {
     return mMinute;
-  }
-
-  public void setMinute(int minute) {
-    mMinute = minute;
   }
 
   public void setAlarmTime(Calendar calendar) {
