@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.timing;
+package com.kuxhausen.huemore.alarm;
 
 import android.database.Cursor;
 import android.os.Build;
@@ -22,21 +22,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.alarm.AlarmData;
-import com.kuxhausen.huemore.alarm.AlarmLogic;
-import com.kuxhausen.huemore.alarm.AlarmReceiver;
-import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
-import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
 
 import java.util.Calendar;
 
 public class NewAlarmDialogFragment extends DialogFragment implements OnClickListener,
                                                                       LoaderManager.LoaderCallbacks<Cursor>,
-                                                                      OnRepeatSelectedListener {
+                                                                      RepeatDialogFragment.OnRepeatSelectedListener {
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;

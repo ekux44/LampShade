@@ -24,7 +24,6 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.timing.AlarmReciever;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
 import java.util.List;
@@ -116,7 +115,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       }
 
       // remove any possible launched wakelocks
-      AlarmReciever.completeWakefulIntent(intent);
+      ConnectivityServiceLauncher.completeWakefulIntent(intent);
       FireReceiver.completeWakefulIntent(intent);
       VoiceInputReceiver.completeWakefulIntent(intent);
 

@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.timing;
+package com.kuxhausen.huemore.alarm;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -19,9 +19,6 @@ import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.alarm.AlarmData;
-import com.kuxhausen.huemore.alarm.AlarmLogic;
-import com.kuxhausen.huemore.alarm.AlarmReceiver;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 

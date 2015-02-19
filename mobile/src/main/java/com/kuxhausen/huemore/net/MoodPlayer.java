@@ -16,7 +16,6 @@ import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.timing.AlarmReciever;
 import com.kuxhausen.huemore.timing.Conversions;
 
 import java.util.ArrayList;
@@ -205,7 +204,7 @@ public class MoodPlayer {
       mContext.getContentResolver().insert(Definitions.PlayingMood.URI, cv);
     }
 
-    AlarmReciever.scheduleInternalAlarm(mContext, awakenTime);
+    ConnectivityServiceLauncher.scheduleInternalAlarm(mContext, awakenTime);
   }
 
   private synchronized void restoreNappingMoods() {

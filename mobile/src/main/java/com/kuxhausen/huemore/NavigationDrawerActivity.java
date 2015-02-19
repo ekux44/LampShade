@@ -37,7 +37,7 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.timing.AlarmsListFragment;
+import com.kuxhausen.huemore.alarm.AlarmsListFragment;
 
 import java.util.ArrayList;
 

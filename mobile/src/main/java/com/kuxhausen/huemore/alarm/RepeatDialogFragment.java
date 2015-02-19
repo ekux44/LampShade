@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.timing;
+package com.kuxhausen.huemore.alarm;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.alarm.DaysOfWeek;
 
 public class RepeatDialogFragment extends DialogFragment implements
                                                          DialogInterface.OnMultiChoiceClickListener {
@@ -32,8 +31,8 @@ public class RepeatDialogFragment extends DialogFragment implements
       @Override
       public void onClick(DialogInterface dialog, int id) {
         DaysOfWeek days = new DaysOfWeek();
-        for(int i = 0; i<7; i++){
-          days.setDay(i+1, checkedItems[i]);
+        for (int i = 0; i < 7; i++) {
+          days.setDay(i + 1, checkedItems[i]);
         }
         resultListener.onRepeatSelected(days);
       }

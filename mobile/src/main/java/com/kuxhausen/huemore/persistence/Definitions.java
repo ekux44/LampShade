@@ -292,6 +292,7 @@ public final class Definitions {
     public static final String CLICK_ACTION = "com.kuxhausen.huemore.CLICK_ACTION";
     public static final String ALARM_HANDLER_THREAD = "ALARM_HANDLER_THREAD";
     public static final String ALARM_INTENT_ACTION = "com.kuxhausen.huemore.alarm";
+    public static final String CONNECTIVITY_SERVICE_INTENT_ACTION = "com.kuxhausen.huemore.net";
   }
 
   public static final class PreferenceKeys {

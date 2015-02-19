@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.timing;
+package com.kuxhausen.huemore.alarm;
 
 import com.google.gson.Gson;
 
@@ -14,9 +14,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.alarm.AlarmData;
-import com.kuxhausen.huemore.alarm.AlarmLogic;
-import com.kuxhausen.huemore.alarm.AlarmReceiver;
 
 import java.util.ArrayList;
 

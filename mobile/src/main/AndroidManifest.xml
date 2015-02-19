@@ -195,7 +195,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever"
+        <receiver android:name=".net.ConnectivityServiceLauncher"
             android:exported="false">
         </receiver>
 
