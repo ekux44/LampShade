@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.DaysOfWeek;
 
 public class RepeatDialogFragment extends DialogFragment implements
                                                          DialogInterface.OnMultiChoiceClickListener {
@@ -16,7 +17,7 @@ public class RepeatDialogFragment extends DialogFragment implements
 
   public interface OnRepeatSelectedListener {
 
-    public void onRepeatSelected(boolean[] repeats);
+    public void onRepeatSelected(DaysOfWeek repeats);
   }
 
   @Override
@@ -30,8 +31,11 @@ public class RepeatDialogFragment extends DialogFragment implements
     builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int id) {
-        resultListener.onRepeatSelected(checkedItems);
-
+        DaysOfWeek days = new DaysOfWeek();
+        for(int i = 0; i<7; i++){
+          days.setDay(i+1, checkedItems[i]);
+        }
+        resultListener.onRepeatSelected(days);
       }
     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override

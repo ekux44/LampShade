@@ -9,7 +9,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.text.format.DateUtils;
+import android.widget.Toast;
 
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
@@ -50,7 +53,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     }
   }
 
-  public static AlarmData getAlarm(Context context, int id) {
+  public static AlarmData getAlarm(Context context, long id) {
     Cursor
         cursor =
         context.getContentResolver()
@@ -78,9 +81,13 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmMgr.set(AlarmManager.RTC_WAKEUP, data.getAlarmTime().getTimeInMillis(), pending);
 
+    Toast.makeText(context, context.getString(R.string.next_scheduled_intro) + " " + DateUtils
+        .getRelativeTimeSpanString(data.getAlarmTime().getTimeInMillis()), Toast.LENGTH_SHORT)
+        .show();
+
   }
 
-  public static void upregisterAlarm(Context context, AlarmData data) {
+  public static void unregisterAlarm(Context context, AlarmData data) {
     PendingIntent pending = generatePendingIntent(context, data);
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmMgr.cancel(pending);
@@ -104,12 +111,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
           data.setAlarmTime(
               computeNextAlarmTime(data.getHour(), data.getMinute(), data.getRepeatDays()));
         }
-
-        String rowSelect = AlarmColumns._ID + "=?";
-        String[] rowArg = {"" + data.getId()};
-        context.getContentResolver()
-            .update(AlarmColumns.ALARMS_URI, data.getValues(), rowSelect, rowArg);
-
+        saveChangesToDB(context, data);
       }
     }
   }
@@ -137,6 +139,28 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     }
 
     return calendar;
+  }
+
+  public static void insertAlarmToDB(Context context, AlarmData data) {
+    long
+        baseId =
+        Long.parseLong(
+            context.getContentResolver().insert(AlarmColumns.ALARMS_URI, data.getValues())
+                .getLastPathSegment());
+    data.setId(baseId);
+  }
+
+  public static void saveChangesToDB(Context context, AlarmData data) {
+    String rowSelect = AlarmColumns._ID + "=?";
+    String[] rowArg = {"" + data.getId()};
+    context.getContentResolver()
+        .update(AlarmColumns.ALARMS_URI, data.getValues(), rowSelect, rowArg);
+  }
+
+  public static void deleteAlarmFromDB(Context context, AlarmData data) {
+    String rowSelect = AlarmColumns._ID + "=?";
+    String[] rowArg = {"" + data.getId()};
+    context.getContentResolver().delete(AlarmColumns.ALARMS_URI, rowSelect, rowArg);
   }
 
   public static void updateGloablIntentId(Context context) {

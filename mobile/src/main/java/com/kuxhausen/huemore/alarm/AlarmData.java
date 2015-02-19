@@ -1,8 +1,11 @@
 package com.kuxhausen.huemore.alarm;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.text.format.DateFormat;
 
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 
@@ -26,7 +29,7 @@ public class AlarmData {
       AlarmColumns.COL_MINUTE
   };
 
-  private long mId;
+  private long mId = -1; //the immutable database ID, or -1 if not in database
   private String mGroupName;
   private long mMoodId;
   private String mMoodName; // this is only to be read by the UI, and never saved to database
@@ -39,8 +42,7 @@ public class AlarmData {
   private int mHour; //using 24 hour time
   private int mMinute;
 
-  public AlarmData(long databaseId) {
-    mId = databaseId;
+  public AlarmData() {
     mRepeatDays = new DaysOfWeek();
   }
 
@@ -86,6 +88,9 @@ public class AlarmData {
     return mId;
   }
 
+  public void setId(long id) {
+    mId = id;
+  }
 
   public String getGroupName() {
     return mGroupName;
@@ -165,5 +170,36 @@ public class AlarmData {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
     return calendar;
+  }
+
+  public String getUserTimeString(Context c) {
+    return DateFormat.getTimeFormat(c).format(getAlarmTime());
+  }
+
+  public String getSecondaryDescription(Context c) {
+    String result = getGroupName() + " \u2192 " + getMoodName();
+
+    if (!getRepeatDays().isNoDaysSet()) {
+      result += "   " + repeatsToString(c, getRepeatDays());
+    }
+    return result;
+  }
+
+  public static String repeatsToString(Context c, DaysOfWeek repeats) {
+    String result = "";
+    String[] days = c.getResources().getStringArray(R.array.cap_short_repeat_days);
+
+    if (repeats.isAllDaysSet()) {
+      result = c.getResources().getString(R.string.cap_short_every_day);
+    } else if (repeats.isNoDaysSet()) {
+      result = c.getResources().getString(R.string.cap_short_none);
+    } else {
+      for (int i = 0; i < 7; i++) {
+        if (repeats.isDaySet(i + 1)) {
+          result += days[i] + " ";
+        }
+      }
+    }
+    return result;
   }
 }

@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmReceiver;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
@@ -32,7 +34,7 @@ public class AlarmsListFragment extends ListFragment implements
   // Identifies a particular Loader being used in this component
   private static final int ALARMS_LOADER = 0;
   private AlarmRowAdapter dataSource;
-  private DatabaseAlarm selectedRow;
+  private AlarmData selectedRow;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,7 +94,7 @@ public class AlarmsListFragment extends ListFragment implements
 
     LinearLayout selected =
         (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-    selectedRow = ((DatabaseAlarm) selected.getChildAt(0).getTag());
+    selectedRow = ((AlarmData) selected.getChildAt(0).getTag());
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_alarm, menu);
   }
@@ -106,10 +108,10 @@ public class AlarmsListFragment extends ListFragment implements
         NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
         nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         nadf.onLoadLoaderManager(selectedRow);
-
         return true;
       case R.id.contextalarmmenu_delete:
-        selectedRow.delete();
+        AlarmReceiver.unregisterAlarm(mParrent, selectedRow);
+        AlarmReceiver.deleteAlarmFromDB(mParrent, selectedRow);
         return true;
       default:
         return super.onContextItemSelected(item);
