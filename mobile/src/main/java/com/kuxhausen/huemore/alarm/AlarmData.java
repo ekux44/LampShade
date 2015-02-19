@@ -6,6 +6,8 @@ import android.database.Cursor;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 
+import java.util.Calendar;
+
 public class AlarmData {
 
   // must be kept in sync with AlarmData constructor
@@ -17,9 +19,11 @@ public class AlarmData {
       AlarmColumns.COL_BRIGHTNESS,
       AlarmColumns.COL_IS_ENABLED,
       AlarmColumns.COL_REPEAT_DAYS,
+      AlarmColumns.COL_YEAR,
+      AlarmColumns.COL_MONTH,
+      AlarmColumns.COL_DAY,
       AlarmColumns.COL_HOUR,
-      AlarmColumns.COL_MINUTE,
-      AlarmColumns.COL_NEXT_TIME
+      AlarmColumns.COL_MINUTE
   };
 
   private long mId;
@@ -29,9 +33,11 @@ public class AlarmData {
   private Integer mBrightness;
   private boolean mIsEnabled;
   private DaysOfWeek mRepeatDays;
+  private int mYear;
+  private int mMonth;
+  private int mDay;
   private int mHour; //using 24 hour time
   private int mMinute;
-  private Long mNextTime;
 
   public AlarmData(long databaseId) {
     mId = databaseId;
@@ -56,13 +62,11 @@ public class AlarmData {
 
     setRepeatDays(new DaysOfWeek((byte) cursor.getInt(6)));
 
-    setHour(cursor.getInt(7));
-
-    setMinute(cursor.getInt(8));
-
-    if (!cursor.isNull(9)) {
-      setNextTime(cursor.getLong(9));
-    }
+    mYear = cursor.getInt(7);
+    mMonth = cursor.getInt(8);
+    mDay = cursor.getInt(9);
+    mHour = cursor.getInt(10);
+    mMinute = cursor.getInt(11);
   }
 
   public ContentValues getValues() {
@@ -74,7 +78,6 @@ public class AlarmData {
     cv.put(AlarmColumns.COL_REPEAT_DAYS, getRepeatDays().getValue());
     cv.put(AlarmColumns.COL_HOUR, getHour());
     cv.put(AlarmColumns.COL_MINUTE, getMinute());
-    cv.put(AlarmColumns.COL_NEXT_TIME, getNextTime());
 
     return cv;
   }
@@ -136,10 +139,6 @@ public class AlarmData {
     return mHour;
   }
 
-  public void setHour(int hour) {
-    mHour = hour;
-  }
-
   public int getMinute() {
     return mMinute;
   }
@@ -148,11 +147,23 @@ public class AlarmData {
     mMinute = minute;
   }
 
-  public Long getNextTime() {
-    return mNextTime;
+  public void setAlarmTime(Calendar calendar) {
+    mYear = calendar.get(Calendar.YEAR);
+    mMonth = calendar.get(Calendar.MONTH);
+    mDay = calendar.get(Calendar.DAY_OF_MONTH);
+    mHour = calendar.get(Calendar.HOUR_OF_DAY);
+    mMinute = calendar.get(Calendar.MINUTE);
   }
 
-  public void setNextTime(long nextTime) {
-    mNextTime = nextTime;
+  public Calendar getAlarmTime() {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.YEAR, mYear);
+    calendar.set(Calendar.MONTH, mMonth);
+    calendar.set(Calendar.DAY_OF_MONTH, mDay);
+    calendar.set(Calendar.HOUR_OF_DAY, mHour);
+    calendar.set(Calendar.MINUTE, mMinute);
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
+    return calendar;
   }
 }

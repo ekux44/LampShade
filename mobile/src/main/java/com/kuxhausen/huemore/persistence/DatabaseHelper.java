@@ -509,9 +509,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    AlarmColumns.COL_BRIGHTNESS + " INTEGER," +
                    AlarmColumns.COL_IS_ENABLED + " INTEGER," +
                    AlarmColumns.COL_REPEAT_DAYS + " INTEGER," +
+                   AlarmColumns.COL_YEAR + " INTEGER," +
+                   AlarmColumns.COL_MONTH + " INTEGER," +
+                   AlarmColumns.COL_DAY + " INTEGER," +
                    AlarmColumns.COL_HOUR + " INTEGER," +
                    AlarmColumns.COL_MINUTE + " INTEGER," +
-                   AlarmColumns.COL_NEXT_TIME + " INTEGER" +
                    " FOREIGN KEY (" + AlarmColumns.COL_MOOD_ID + ") REFERENCES " +
                    MoodColumns.TABLE_NAME + " (" + MoodColumns._ID + " ) ON DELETE CASCADE " +
                    ");");
@@ -564,9 +566,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           if (timeInMillis != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(timeInMillis);
-
-            alarm.setHour(cal.get(Calendar.HOUR_OF_DAY));
-            alarm.setMinute(cal.get(Calendar.MINUTE));
+            //TODO set time
           } else {
             //this alarm time is invalid, so this alarm must be discarded
             continue;

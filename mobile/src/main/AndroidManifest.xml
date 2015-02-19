@@ -104,15 +104,7 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        
-        <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever" >
-        </receiver>
 
-        <receiver android:name="com.kuxhausen.huemore.timing.BootSetter" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name="com.kuxhausen.huemore.widget.AlarmWidgetProvider"
             android:exported="true" android:label="@string/widget_alarms_label">
@@ -174,13 +166,21 @@
             android:exported="true">
         </activity>
 
-        <receiver android:name="com.kuxhausen.huemore.alarm.ReinitalizerReciever">
+        <receiver android:name="com.kuxhausen.huemore.alarm.ReinitalizerReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.kuxhausen.huemore.timing.AlarmReciever"
+            android:exported="false">
+        </receiver>
+
+        <receiver android:name="com.kuxhausen.huemore.alarm.AlarmReceiver"
+            android:exported="false">
         </receiver>
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />

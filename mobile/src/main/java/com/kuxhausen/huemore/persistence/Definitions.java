@@ -82,17 +82,28 @@ public final class Definitions {
     /**
      * int
      */
+    public static final String COL_YEAR = "COL_YEAR";
+
+    /**
+     * int
+     */
+    public static final String COL_MONTH = "COL_MONTH";
+
+    /**
+     * int
+     */
+    public static final String COL_DAY = "COL_DAY";
+
+
+    /**
+     * int
+     */
     public static final String COL_HOUR = "COL_HOUR";
 
     /**
      * int
      */
     public static final String COL_MINUTE = "COL_MINUTE";
-
-    /**
-     * long or null
-     */
-    public static final String COL_NEXT_TIME = "COL_NEXT_TIME";
 
     // This class cannot be instantiated
     private AlarmColumns() {
@@ -278,6 +289,7 @@ public final class Definitions {
     public static final String VOICE_INPUT_LIST = "VOICE_INPUT_LIST";
     public static final String VOICE_INPUT_CONFIDENCE_ARRAY = "VOICE_INPUT_CONFIDENCE_ARRAY";
     public static final String ALARM_HANDLER_THREAD = "ALARM_HANDLER_THREAD";
+    public static final String ALARM_INTENT_ACTION = "com.kuxhausen.huemore.alarm";
   }
 
   public static final class PreferenceKeys {

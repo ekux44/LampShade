@@ -228,6 +228,7 @@ public class LampShadeProvider extends ContentProvider {
         uri = Definitions.DeprecatedAlarmColumns.ALARMS_URI;
         break;
       case ALARMS:
+        //TODO switch to new joined alarms
         qb.setTables(Definitions.DeprecatedAlarmColumns.TABLE_NAME);
         groupBy = null;
         break;
