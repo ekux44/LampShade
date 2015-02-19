@@ -1,8 +1,8 @@
-package com.kuxhausen.huemore.timing;
+package com.kuxhausen.huemore.persistence;
 
 import java.util.Calendar;
 
-public class AlarmState {
+public class DeprecatedAlarmState {
 
   public String mood;
   public String group;
@@ -20,7 +20,7 @@ public class AlarmState {
   private Long[] scheduledTimes;
 
   /**
-   * returns the value of AlarmState's boolean scheduledForFuture unless that value is out of date
+   * returns the value of DeprecatedAlarmState's boolean scheduledForFuture unless that value is out of date
    * (ex: nonrepeating alarm with past timevalues cannot be scheduledForFuture)
    */
   public boolean isScheduled() {
@@ -123,7 +123,7 @@ public class AlarmState {
     }
   }
 
-  public AlarmState() {
+  public DeprecatedAlarmState() {
   }
 
 }

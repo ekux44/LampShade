@@ -2,7 +2,6 @@ package com.kuxhausen.huemore.timing;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -20,6 +19,9 @@ import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
+import com.kuxhausen.huemore.alarm.AlarmReceiver;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
@@ -32,7 +34,7 @@ public class AlarmsListFragment extends ListFragment implements
   // Identifies a particular Loader being used in this component
   private static final int ALARMS_LOADER = 0;
   private AlarmRowAdapter dataSource;
-  private DatabaseAlarm selectedRow;
+  private AlarmData selectedRow;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +49,8 @@ public class AlarmsListFragment extends ListFragment implements
      */
     getLoaderManager().initLoader(ALARMS_LOADER, null, this);
 
-    String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
     dataSource =
-        new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null, columns,
+        new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null, AlarmData.QUERY_COLUMNS,
                             new int[]{R.id.subTextView}, 0);
 
     setListAdapter(dataSource);
@@ -92,7 +93,7 @@ public class AlarmsListFragment extends ListFragment implements
 
     LinearLayout selected =
         (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-    selectedRow = ((DatabaseAlarm) selected.getChildAt(0).getTag());
+    selectedRow = ((AlarmData) selected.getChildAt(0).getTag());
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_alarm, menu);
   }
@@ -106,10 +107,10 @@ public class AlarmsListFragment extends ListFragment implements
         NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
         nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         nadf.onLoadLoaderManager(selectedRow);
-
         return true;
       case R.id.contextalarmmenu_delete:
-        selectedRow.delete();
+        AlarmReceiver.unregisterAlarm(mParrent, selectedRow);
+        AlarmLogic.deleteAlarmFromDB(mParrent, selectedRow);
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -130,10 +131,9 @@ public class AlarmsListFragment extends ListFragment implements
     switch (loaderID) {
       case ALARMS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {AlarmColumns.STATE, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
                                 AlarmColumns.ALARMS_URI, // Table
-                                columns, // Projection to return
+                                AlarmData.QUERY_COLUMNS, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments
                                 null // Default sort order

@@ -14,6 +14,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
+import com.kuxhausen.huemore.alarm.AlarmReceiver;
 
 import java.util.ArrayList;
 
@@ -21,14 +24,14 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 
   private Cursor cursor;
   private Context context;
-  private ArrayList<DatabaseAlarm> list = new ArrayList<DatabaseAlarm>();
+  private ArrayList<AlarmData> list = new ArrayList<AlarmData>();
   Gson gson = new Gson();
 
-  private ArrayList<DatabaseAlarm> getList() {
+  private ArrayList<AlarmData> getList() {
     return list;
   }
 
-  public DatabaseAlarm getRow(int position) {
+  public AlarmData getRow(int position) {
     return getList().get(position);
   }
 
@@ -45,14 +48,11 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
   public void changeCursor(Cursor c) {
     super.changeCursor(c);
     this.cursor = c;
-    list = new ArrayList<DatabaseAlarm>();
+    list = new ArrayList<AlarmData>();
     if (cursor != null) {
       cursor.moveToPosition(-1);// not the same as move to first!
       while (cursor.moveToNext()) {
-        // Log.e("changeCursor _row",
-        // gson.fromJson(cursor.getString(0),AlarmState.class).mood);
-        list.add(new DatabaseAlarm(context, gson.fromJson(cursor.getString(0), AlarmState.class),
-                                   cursor.getInt(1)));
+        list.add(new AlarmData(cursor));
       }
     }
   }
@@ -67,8 +67,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
       LayoutInflater inflater = ((Activity) context).getLayoutInflater();
       rowView = inflater.inflate(R.layout.alarm_row, null);
 
-      // Hold the view objects in an object, that way the don't need to be
-      // "re-  finded"
+      // Hold the view objects in an object, that way the don't need to be "re-found"
       view = new ViewHolder();
 
       view.scheduledButton = (CompoundButton) rowView.findViewById(R.id.alarmOnOffCompoundButton);
@@ -81,16 +80,14 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
       view = (ViewHolder) rowView.getTag();
     }
 
-    /** Set data to your Views. */
-
-    DatabaseAlarm item = getList().get(position);
+    AlarmData item = getList().get(position);
     view.taggedView.setTag(item);
     view.scheduledButton.setTag(item);
     view.scheduledButton.setOnCheckedChangeListener(null);
-    view.scheduledButton.setChecked(item.getAlarmState().isScheduled());
+    view.scheduledButton.setChecked(item.isEnabled());
     view.scheduledButton.setOnCheckedChangeListener(this);
-    view.time.setText(item.getTime());
-    view.secondaryDescription.setText(item.getSecondaryDescription());
+    view.time.setText(item.getUserTimeString(context));
+    view.secondaryDescription.setText(item.getSecondaryDescription(context));
     return rowView;
   }
 
@@ -104,15 +101,14 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    DatabaseAlarm ar = (DatabaseAlarm) buttonView.getTag();
-    if (ar.getAlarmState().isScheduled() != isChecked) {
-      ar.toggle();
+    AlarmData ar = (AlarmData) buttonView.getTag();
+    if (ar.isEnabled() != isChecked) {
+      AlarmLogic.toggleAlarm(context, ar);
     }
   }
 
   @Override
   public int getCount() {
-    // Log.e("getCount", ""+((getList() != null) ? getList().size() : 0));
     return (getList() != null) ? getList().size() : 0;
   }
 }

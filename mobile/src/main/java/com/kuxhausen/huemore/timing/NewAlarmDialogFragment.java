@@ -1,11 +1,6 @@
 package com.kuxhausen.huemore.timing;
 
-import com.google.gson.Gson;
-
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -27,13 +22,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
+import com.kuxhausen.huemore.alarm.AlarmReceiver;
+import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.timing.RepeatDialogFragment.OnRepeatSelectedListener;
-
-import java.util.Calendar;
 
 public class NewAlarmDialogFragment extends DialogFragment implements OnClickListener,
                                                                       LoaderManager.LoaderCallbacks<Cursor>,
@@ -47,25 +44,19 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
   private SimpleCursorAdapter groupDataSource, moodDataSource;
   private Button repeatButton;
   private TextView repeatView;
-  private Gson gson = new Gson();
-  private boolean[] repeats = new boolean[7];
-  private TimePicker timePick;
-  private DatabaseAlarm priorState;
 
-  public void onLoadLoaderManager(DatabaseAlarm optionalState) {
+  private DaysOfWeek repeats = new DaysOfWeek();
+  private TimePicker timePick;
+  private AlarmData priorState;
+
+  public void onLoadLoaderManager(AlarmData optionalState) {
     if (optionalState != null) {
       this.priorState = optionalState;
     }
     if (groupSpinner != null && moodSpinner != null) {
-      /*
-       * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
-       * onCreateLoader().
-       */
       LoaderManager lm = getActivity().getSupportLoaderManager();
       lm.restartLoader(GROUPS_LOADER, null, this);
       lm.restartLoader(MOODS_LOADER, null, this);
-      // lm.initLoader(GROUPS_LOADER, null, this);
-      // lm.initLoader(MOODS_LOADER, null, this);
 
       int layout =
           Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
@@ -90,7 +81,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         // apply initial state
         int moodPos = 0;
         for (int i = 0; i < moodDataSource.getCount(); i++) {
-          if (moodDataSource.getItem(i).equals(optionalState.getAlarmState().mood)) {
+          if (moodDataSource.getItem(i).equals(optionalState.getMoodName())) {
             moodPos = i;
           }
         }
@@ -98,28 +89,18 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
 
         int groupPos = 0;
         for (int i = 0; i < groupDataSource.getCount(); i++) {
-          if (groupDataSource.getItem(i).equals(optionalState.getAlarmState().group)) {
+          if (groupDataSource.getItem(i).equals(optionalState.getGroupName())) {
             groupPos = i;
           }
         }
         groupSpinner.setSelection(groupPos);
 
-        brightnessBar.setProgress(optionalState.getAlarmState().brightness);
+        brightnessBar.setProgress(optionalState.getBrightness());
 
-        onRepeatSelected(optionalState.getAlarmState().getRepeatingDays());
+        onRepeatSelected(optionalState.getRepeatDays());
 
-        Calendar projectedTime = Calendar.getInstance();
-        if (optionalState.getAlarmState().isRepeating()) {
-          for (int i = 0; i < optionalState.getAlarmState().getRepeatingDays().length; i++) {
-            if (optionalState.getAlarmState().getRepeatingDays()[i]) {
-              projectedTime.setTimeInMillis(optionalState.getAlarmState().getRepeatingTimes()[i]);
-            }
-          }
-        } else {
-          projectedTime.setTimeInMillis(optionalState.getAlarmState().getTime());
-        }
-        timePick.setCurrentHour(projectedTime.get(Calendar.HOUR_OF_DAY));
-        timePick.setCurrentMinute(projectedTime.get(Calendar.MINUTE));
+        timePick.setCurrentHour(optionalState.getHour());
+        timePick.setCurrentMinute(optionalState.getMinute());
       }
     }
   }
@@ -127,10 +108,6 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-
-    for (int i = 0; i < repeats.length; i++) {
-      repeats[i] = false;
-    }
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.edit_alarm_dialog, container, false);
@@ -239,7 +216,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       int moodPos = 0;
       for (int i = 0; i < moodDataSource.getCount(); i++) {
         if (((Cursor) moodDataSource.getItem(i)).getString(0).equals(
-            priorState.getAlarmState().mood)) {
+            priorState.getMoodName())) {
           moodPos = i;
         }
       }
@@ -248,7 +225,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       int groupPos = 0;
       for (int i = 0; i < groupDataSource.getCount(); i++) {
         if (((Cursor) groupDataSource.getItem(i)).getString(0).equals(
-            priorState.getAlarmState().group)) {
+            priorState.getGroupName())) {
           groupPos = i;
         }
       }
@@ -276,73 +253,33 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
   }
 
   @Override
-  public void onRepeatSelected(boolean[] r) {
-    repeatView.setText(repeatsToString(getActivity(), r));
-    repeats = r;
+  public void onRepeatSelected(DaysOfWeek days) {
+    repeatView.setText(AlarmData.repeatsToString(getActivity(), days));
+    repeats = days;
   }
 
-  public static String repeatsToString(Context c, boolean[] repeats) {
-    String result = "";
-    String[] days = c.getResources().getStringArray(R.array.cap_short_repeat_days);
-
-    boolean all = true;
-    boolean none = false;
-    for (boolean bool : repeats) {
-      all &= bool;
-      none |= bool;
-    }
-    if (all) {
-      result = c.getResources().getString(R.string.cap_short_every_day);
-    } else if (!none) {
-      result = c.getResources().getString(R.string.cap_short_none);
-    } else {
-      for (int i = 0; i < 7; i++) {
-        if (repeats[i]) {
-          result += days[i] + " ";
-        }
-      }
-    }
-    return result;
-  }
 
   public void onCreateAlarm() {
+    AlarmData data;
     if (priorState != null) {
-      // delete old one
-      priorState.delete();
-    }
-
-    AlarmState as = new AlarmState();
-    as.group = ((Cursor) groupSpinner.getSelectedItem()).getString(0);
-    as.mood = ((Cursor) moodSpinner.getSelectedItem()).getString(0);
-    as.brightness = brightnessBar.getProgress();
-    as.setRepeatingDays(repeats);
-    as.setScheduledForFuture(true);
-
-    Calendar projectedTime = Calendar.getInstance();
-    projectedTime.setLenient(true);
-    projectedTime.set(Calendar.HOUR_OF_DAY, timePick.getCurrentHour());
-    projectedTime.set(Calendar.MINUTE, timePick.getCurrentMinute());
-    projectedTime.set(Calendar.SECOND, 0);
-
-    if (as.isRepeating()) {
-      long[] l = new long[7];
-      for (int i = 0; i < 7; i++) {
-        l[i] = projectedTime.getTimeInMillis();
-      }
-      as.setRepeatingTimes(l);
+      AlarmReceiver.unregisterAlarm(getActivity(), priorState);
+      data = priorState;
     } else {
-      as.setTime(projectedTime.getTimeInMillis());
+      data = new AlarmData();
+      AlarmLogic.insertAlarmToDB(getActivity(), data);
     }
-    // Defines an object to contain the new values to insert
-    ContentValues mNewValues = new ContentValues();
-    mNewValues.put(Definitions.AlarmColumns.STATE, gson.toJson(as));
 
-    Uri locationOfNewAlarm =
-        getActivity().getContentResolver().insert(Definitions.AlarmColumns.ALARMS_URI,
-                                                  mNewValues);
+    data.setGroupName(((Cursor) groupSpinner.getSelectedItem()).getString(0));
+    data.setMood(((Cursor) moodSpinner.getSelectedItem()).getLong(1),
+                 ((Cursor) moodSpinner.getSelectedItem()).getString(0));
+    data.setBrightness(brightnessBar.getProgress());
+    data.setRepeatDays(repeats);
+    data.setEnabled(true);
+    data.setAlarmTime(AlarmLogic.computeNextAlarmTime(timePick.getCurrentHour(),
+                                                         timePick.getCurrentMinute(), repeats));
 
-    DatabaseAlarm ar = new DatabaseAlarm(getActivity(), locationOfNewAlarm);
-    AlarmReciever.createAlarms(getActivity(), ar);
+    AlarmLogic.saveChangesToDB(getActivity(), data);
+    AlarmReceiver.registerAlarm(getActivity(), data);
   }
 
 }

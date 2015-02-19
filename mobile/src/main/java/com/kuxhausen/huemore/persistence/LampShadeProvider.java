@@ -35,7 +35,7 @@ public class LampShadeProvider extends ContentProvider {
   /**
    * Constants used by the Uri matcher to choose an action based on the pattern of the incoming URI
    */
-  private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5,
+  private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4,
       NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
 
   /**
@@ -55,8 +55,6 @@ public class LampShadeProvider extends ContentProvider {
       sUriMatcher.addURI(Definitions.AUTHORITY,
                          Definitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
-      sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_INDIVIDUAL_ALARM,
-                         INDIVIDUAL_ALARM);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
       sUriMatcher.addURI(Definitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
@@ -91,7 +89,6 @@ public class LampShadeProvider extends ContentProvider {
       case ALARMS:
         table = (AlarmColumns.TABLE_NAME);
         toNotify.add(AlarmColumns.ALARMS_URI);
-        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPBULBS:
         table = (GroupColumns.TABLE_NAME);
@@ -152,9 +149,8 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
-        qb.setTables(Definitions.AlarmColumns.TABLE_NAME);
+        qb.setTables(AlarmColumns.TABLE_NAME);
         toNotify.add(AlarmColumns.ALARMS_URI);
-        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPS:
         qb.setTables(Definitions.GroupColumns.TABLE_NAME);
@@ -222,14 +218,12 @@ public class LampShadeProvider extends ContentProvider {
         qb.setTables(NetBulbColumns.TABLE_NAME);
         groupBy = null;
         break;
-      case INDIVIDUAL_ALARM:
-        qb.appendWhere(AlarmColumns._ID + "=" + uri.getLastPathSegment());
-        qb.setTables(AlarmColumns.TABLE_NAME);
-        groupBy = null;
-        uri = AlarmColumns.ALARMS_URI;
-        break;
       case ALARMS:
-        qb.setTables(AlarmColumns.TABLE_NAME);
+        qb.setTables(AlarmColumns.TABLE_NAME
+                     + " JOIN "
+                     + MoodColumns.TABLE_NAME
+                     + " ON (" + AlarmColumns.COL_MOOD_ID + " = " + MoodColumns.TABLE_NAME + "."
+                     + MoodColumns._ID + ")");
         groupBy = null;
         break;
       case GROUPS:
@@ -364,7 +358,6 @@ public class LampShadeProvider extends ContentProvider {
       case ALARMS:
         count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);
         toNotify.add(AlarmColumns.ALARMS_URI);
-        toNotify.add(AlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       default:
         // If the incoming pattern is invalid, throws an exception.

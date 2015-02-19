@@ -33,17 +33,6 @@ public class Conversions {
     return startOfDay;
   }
 
-  public static long miliEventTimeFromMoodDailyTime(int dailyMoodDeciSeconds) {
-
-    Calendar event = calendarMillisFromMoodDailyTime(dailyMoodDeciSeconds);
-
-    Calendar current = Calendar.getInstance();
-
-    Long miliOffsetFromNow = event.getTimeInMillis() - current.getTimeInMillis();
-
-    return SystemClock.elapsedRealtime() + miliOffsetFromNow;
-  }
-
   /**
    * @return the start of day measured in SystemClock.elapsedRealtime milliseconds (may be negative)
    */
