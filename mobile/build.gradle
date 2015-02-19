@@ -31,15 +31,15 @@ android {
     }
     productFlavors {
         playEdition {
-            minSdkVersion 10
+            minSdkVersion 12
             targetSdkVersion 21
         }
         amazonEdition {
-            minSdkVersion 10
+            minSdkVersion 12
             targetSdkVersion 21
         }
         compatabilityEdition {
-            minSdkVersion 10
+            minSdkVersion 12
             targetSdkVersion 21
         }
     }
