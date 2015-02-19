@@ -18,6 +18,7 @@ import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
 
@@ -34,7 +35,7 @@ public class LampShadeProvider extends ContentProvider {
   /**
    * Constants used by the Uri matcher to choose an action based on the pattern of the incoming URI
    */
-  private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4, INDIVIDUAL_ALARM = 5,
+  private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4,
       NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
 
   /**
@@ -54,8 +55,6 @@ public class LampShadeProvider extends ContentProvider {
       sUriMatcher.addURI(Definitions.AUTHORITY,
                          Definitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, Definitions.DeprecatedAlarmColumns.PATH_ALARMS, ALARMS);
-      sUriMatcher.addURI(Definitions.AUTHORITY, Definitions.DeprecatedAlarmColumns.PATH_INDIVIDUAL_ALARM,
-                         INDIVIDUAL_ALARM);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
       sUriMatcher.addURI(Definitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
@@ -90,7 +89,6 @@ public class LampShadeProvider extends ContentProvider {
       case ALARMS:
         table = (Definitions.DeprecatedAlarmColumns.TABLE_NAME);
         toNotify.add(Definitions.DeprecatedAlarmColumns.ALARMS_URI);
-        toNotify.add(Definitions.DeprecatedAlarmColumns.INDIVIDUAL_ALARM_URI);
         break;
       case GROUPBULBS:
         table = (GroupColumns.TABLE_NAME);
@@ -151,9 +149,14 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
-        qb.setTables(Definitions.DeprecatedAlarmColumns.TABLE_NAME);
-        toNotify.add(Definitions.DeprecatedAlarmColumns.ALARMS_URI);
-        toNotify.add(Definitions.DeprecatedAlarmColumns.INDIVIDUAL_ALARM_URI);
+
+        qb.setTables(AlarmColumns.TABLE_NAME
+                     +" JOIN "
+                     + MoodColumns.TABLE_NAME
+                     +" ON ("+AlarmColumns.COL_MOOD_ID+" = "+MoodColumns.TABLE_NAME+"."+MoodColumns._ID+")");
+
+        qb.setTables(Definitions.AlarmColumns.TABLE_NAME);
+        toNotify.add(Definitions.AlarmColumns.ALARMS_URI);
         break;
       case GROUPS:
         qb.setTables(Definitions.GroupColumns.TABLE_NAME);
@@ -220,12 +223,6 @@ public class LampShadeProvider extends ContentProvider {
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
         groupBy = null;
-        break;
-      case INDIVIDUAL_ALARM:
-        qb.appendWhere(Definitions.DeprecatedAlarmColumns._ID + "=" + uri.getLastPathSegment());
-        qb.setTables(Definitions.DeprecatedAlarmColumns.TABLE_NAME);
-        groupBy = null;
-        uri = Definitions.DeprecatedAlarmColumns.ALARMS_URI;
         break;
       case ALARMS:
         //TODO switch to new joined alarms
