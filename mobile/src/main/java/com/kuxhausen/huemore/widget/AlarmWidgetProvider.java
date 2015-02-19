@@ -20,10 +20,10 @@ import android.widget.RemoteViews;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
-import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
 /**
  * Our data observer just notifies an update for all weather widgets when it detects a change.
@@ -94,10 +94,9 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
     final String action = intent.getAction();
     if (action.equals(CLICK_ACTION)) {
 
-      String json = intent.getStringExtra(InternalArguments.ALARM_JSON);
-      int id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
-      DatabaseAlarm aRow = new DatabaseAlarm(ctx, gson.fromJson(json, DeprecatedAlarmState.class), id);
-      aRow.toggle();
+      long id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
+      AlarmData data = AlarmLogic.getAlarm(ctx, id);
+      AlarmLogic.toggleAlarm(ctx, data);
     }
 
     super.onReceive(ctx, intent);

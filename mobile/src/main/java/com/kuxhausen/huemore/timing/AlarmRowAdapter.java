@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
 import com.kuxhausen.huemore.alarm.AlarmReceiver;
 
 import java.util.ArrayList;
@@ -102,17 +103,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     AlarmData ar = (AlarmData) buttonView.getTag();
     if (ar.isEnabled() != isChecked) {
-      if (isChecked) {
-        ar.setEnabled(true);
-        ar.setAlarmTime(
-            AlarmReceiver.computeNextAlarmTime(ar.getHour(), ar.getMinute(), ar.getRepeatDays()));
-        AlarmReceiver.saveChangesToDB(context, ar);
-        AlarmReceiver.registerAlarm(context, ar);
-      } else {
-        AlarmReceiver.unregisterAlarm(context, ar);
-        ar.setEnabled(false);
-        AlarmReceiver.saveChangesToDB(context, ar);
-      }
+      AlarmLogic.toggleAlarm(context, ar);
     }
   }
 

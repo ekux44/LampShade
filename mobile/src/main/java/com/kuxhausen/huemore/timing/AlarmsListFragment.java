@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
 import com.kuxhausen.huemore.alarm.AlarmReceiver;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
@@ -111,7 +112,7 @@ public class AlarmsListFragment extends ListFragment implements
         return true;
       case R.id.contextalarmmenu_delete:
         AlarmReceiver.unregisterAlarm(mParrent, selectedRow);
-        AlarmReceiver.deleteAlarmFromDB(mParrent, selectedRow);
+        AlarmLogic.deleteAlarmFromDB(mParrent, selectedRow);
         return true;
       default:
         return super.onContextItemSelected(item);

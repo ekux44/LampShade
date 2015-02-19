@@ -269,12 +269,10 @@ public final class Definitions {
     public static final String MD5 = "MD5";
     public static final String FRAG_MANAGER_DIALOG_TAG = "dialog";
     public static final String FALLBACK_USERNAME_HASH = "f01623452466afd4eba5c1ed0a0a9395";
-    public final static String ALARM_DETAILS = "alarmDetailsBundle";
     public final static String HUE_STATE = "HueState";
     public final static String PREVIOUS_STATE = "PreviousState";
     public final static String PROMPT_UPGRADE = "PromptUpgrade";
     public final static String ALARM_ID = "AlarmId";
-    public final static String ALARM_JSON = "AlarmJson";
     public final static String DECODER_ERROR_UPGRADE = "DecoderErrorUpgrade";
     public static final String DURATION_TIME = "DurationTime";
     public static final String HELP_PAGE = "HelpPage";

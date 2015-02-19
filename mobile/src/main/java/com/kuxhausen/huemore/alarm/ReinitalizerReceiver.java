@@ -28,7 +28,7 @@ public class ReinitalizerReceiver extends BroadcastReceiver {
       wl.acquire();
 
       // We must increment the global id out of the async task to prevent race conditions
-      AlarmReceiver.updateGloablIntentId(context);
+      AlarmLogic.updateGloablIntentId(context);
 
       AlarmAsyncHandler.post(new Runnable() {
         @Override
@@ -54,7 +54,7 @@ public class ReinitalizerReceiver extends BroadcastReceiver {
     while (cursor.moveToNext()) {
       AlarmData row = new AlarmData(cursor);
 
-      AlarmReceiver.updateAlarm(context, row);
+      AlarmLogic.updateAlarm(context, row);
 
       AlarmReceiver.registerAlarm(context, row);
     }

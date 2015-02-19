@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.alarm.AlarmData;
+import com.kuxhausen.huemore.alarm.AlarmLogic;
 import com.kuxhausen.huemore.alarm.AlarmReceiver;
 import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.persistence.Definitions;
@@ -265,7 +266,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       data = priorState;
     } else {
       data = new AlarmData();
-      AlarmReceiver.insertAlarmToDB(getActivity(), data);
+      AlarmLogic.insertAlarmToDB(getActivity(), data);
     }
 
     data.setGroupName(((Cursor) groupSpinner.getSelectedItem()).getString(0));
@@ -274,10 +275,10 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     data.setBrightness(brightnessBar.getProgress());
     data.setRepeatDays(repeats);
     data.setEnabled(true);
-    data.setAlarmTime(AlarmReceiver.computeNextAlarmTime(timePick.getCurrentHour(),
+    data.setAlarmTime(AlarmLogic.computeNextAlarmTime(timePick.getCurrentHour(),
                                                          timePick.getCurrentMinute(), repeats));
 
-    AlarmReceiver.saveChangesToDB(getActivity(), data);
+    AlarmLogic.saveChangesToDB(getActivity(), data);
     AlarmReceiver.registerAlarm(getActivity(), data);
   }
 

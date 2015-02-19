@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.widget;
 
-import com.google.gson.Gson;
-
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
@@ -10,15 +8,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.alarm.AlarmData;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.DeprecatedAlarmState;
-import com.kuxhausen.huemore.timing.DatabaseAlarm;
 
 /**
  * This is the service that provides the factory to be bound to the collection service.
@@ -42,7 +38,6 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
   private Context mContext;
   private Cursor mCursor;
   private int mAppWidgetId;
-  Gson gson = new Gson();
 
   public StackRemoteViewsFactory(Context context, Intent intent) {
     mContext = context;
@@ -70,17 +65,15 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     // Get the data for this position from the content provider
     String timeText = "0:00 AM";
     String subText = "Error";
-    String json = "";
-    int rowID = -1;
+    long rowID = -1;
     boolean alarmOn = false;
     if (mCursor.moveToPosition(position)) {
-      json = mCursor.getString(0);
-      DatabaseAlarm aRow =
-          new DatabaseAlarm(mContext, gson.fromJson(json, DeprecatedAlarmState.class), mCursor.getInt(1));
-      timeText = aRow.getTime();
-      subText = aRow.getSecondaryDescription();
-      alarmOn = aRow.getAlarmState().isScheduled();
-      rowID = aRow.getID();
+      AlarmData data = new AlarmData(mCursor);
+
+      timeText = data.getUserTimeString(mContext);
+      subText = data.getSecondaryDescription(mContext);
+      alarmOn = data.isEnabled();
+      rowID = data.getId();
     }
 
     final int itemId = R.layout.widget_alarm_row;
@@ -96,8 +89,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     // Set the click intent so that we can handle it and show a toast message
     final Intent fillInIntent = new Intent();
     final Bundle extras = new Bundle();
-    extras.putInt(InternalArguments.ALARM_ID, rowID);
-    extras.putString(InternalArguments.ALARM_JSON, json);
+    extras.putLong(InternalArguments.ALARM_ID, rowID);
     fillInIntent.putExtras(extras);
     rv.setOnClickFillInIntent(R.id.alarmOnOffImageButton, fillInIntent);
 
@@ -129,8 +121,8 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     ContentResolver r = mContext.getContentResolver();
-    String[] columns = {Definitions.DeprecatedAlarmColumns.STATE, BaseColumns._ID};
-    mCursor = r.query(Definitions.DeprecatedAlarmColumns.ALARMS_URI, columns, null, null, null);
+    mCursor =
+        r.query(Definitions.AlarmColumns.ALARMS_URI, AlarmData.QUERY_COLUMNS, null, null, null);
 
   }
 }

@@ -522,7 +522,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         for (Pair<DeprecatedAlarmState, Long> oldRow : oldList) {
           DeprecatedAlarmState oldState = oldRow.first;
-          AlarmData alarm = new AlarmData(-1);
+          AlarmData alarm = new AlarmData();
 
           alarm.setGroupName(oldState.group);
 
