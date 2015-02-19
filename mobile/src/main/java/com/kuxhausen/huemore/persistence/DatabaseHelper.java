@@ -526,7 +526,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           alarm.setGroupName(oldState.group);
 
-          ContentValues moodVals = new ContentValues();
           String[] moodCols = {MoodColumns._ID};
           String[] moodArgs = {oldState.mood};
           Cursor
@@ -566,7 +565,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           if (timeInMillis != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(timeInMillis);
-            //TODO set time
+            alarm.setAlarmTime(cal);
           } else {
             //this alarm time is invalid, so this alarm must be discarded
             continue;
@@ -574,12 +573,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           db.insert(AlarmColumns.TABLE_NAME, null, alarm.getValues());
         }
-
-
-
-        /* now reschedule all alarms */
-        //TODO write migration here
-
       }
     }
   }
