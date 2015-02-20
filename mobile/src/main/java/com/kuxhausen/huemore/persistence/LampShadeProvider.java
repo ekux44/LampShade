@@ -23,6 +23,7 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LampShadeProvider extends ContentProvider {
 
@@ -37,6 +38,12 @@ public class LampShadeProvider extends ContentProvider {
    */
   private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4,
       NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
+
+  /**
+   * projection mapping between content provider value names and sql column names to enable
+   * unambiguous joins in alarm query
+   */
+  private static HashMap<String, String> sAlarmQueryProjectionMap;
 
   /**
    * A block that instantiates and sets static objects
@@ -58,6 +65,21 @@ public class LampShadeProvider extends ContentProvider {
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
       sUriMatcher.addURI(Definitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
+
+      sAlarmQueryProjectionMap = new HashMap<String, String>();
+      sAlarmQueryProjectionMap
+          .put(AlarmColumns._ID, AlarmColumns.TABLE_NAME + "." + AlarmColumns._ID);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_GROUP_NAME, AlarmColumns.COL_GROUP_NAME);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_MOOD_ID, AlarmColumns.COL_MOOD_ID);
+      sAlarmQueryProjectionMap.put(MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_NAME);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_BRIGHTNESS, AlarmColumns.COL_BRIGHTNESS);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_IS_ENABLED, AlarmColumns.COL_IS_ENABLED);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_REPEAT_DAYS, AlarmColumns.COL_REPEAT_DAYS);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_YEAR, AlarmColumns.COL_YEAR);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_MONTH, AlarmColumns.COL_MONTH);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_DAY, AlarmColumns.COL_DAY);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_HOUR, AlarmColumns.COL_HOUR);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_MINUTE, AlarmColumns.COL_MINUTE);
     }
   }
 
@@ -219,6 +241,7 @@ public class LampShadeProvider extends ContentProvider {
         groupBy = null;
         break;
       case ALARMS:
+        qb.setProjectionMap(sAlarmQueryProjectionMap);
         qb.setTables(AlarmColumns.TABLE_NAME
                      + " JOIN "
                      + MoodColumns.TABLE_NAME

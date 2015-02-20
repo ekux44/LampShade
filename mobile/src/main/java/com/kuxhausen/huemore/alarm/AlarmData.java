@@ -169,7 +169,7 @@ public class AlarmData {
   }
 
   public String getUserTimeString(Context c) {
-    return DateFormat.getTimeFormat(c).format(getAlarmTime());
+    return DateFormat.getTimeFormat(c).format(getAlarmTime().getTime());
   }
 
   public String getSecondaryDescription(Context c) {

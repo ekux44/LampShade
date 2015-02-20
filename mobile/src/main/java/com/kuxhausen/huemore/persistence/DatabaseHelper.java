@@ -31,7 +31,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 11;
+  private static final int DATABASE_VERSION = 12;
   Gson gson = new Gson();
   private Context mContext;
 

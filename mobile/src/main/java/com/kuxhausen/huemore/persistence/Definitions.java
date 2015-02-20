@@ -16,21 +16,6 @@ public final class Definitions {
 
     public static final String TABLE_NAME = "alarms";
 
-    public static final String PATH_ALARMS = "alarms";
-    /**
-     * The content:// style URL for this table
-     */
-    public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_ALARMS);
-
-
-    public static final String PATH_INDIVIDUAL_ALARM = "alarms/#";
-    /**
-     * The content:// style URL for this table
-     */
-    public static final Uri INDIVIDUAL_ALARM_URI = Uri.parse(SCHEME + AUTHORITY + SLASH
-                                                             + PATH_INDIVIDUAL_ALARM);
-
-
     /**
      * JSon'd HueState object of other state data to override mood
      */

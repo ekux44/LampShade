@@ -257,13 +257,12 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
 
 
   public void onCreateAlarm() {
-    AlarmData data;
+    AlarmData data = new AlarmData();
+    boolean priorExisted = false;
     if (priorState != null) {
       AlarmReceiver.unregisterAlarm(getActivity(), priorState);
       data = priorState;
-    } else {
-      data = new AlarmData();
-      AlarmLogic.insertAlarmToDB(getActivity(), data);
+      priorExisted = true;
     }
 
     data.setGroupName(((Cursor) groupSpinner.getSelectedItem()).getString(0));
@@ -276,7 +275,11 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
                                                       timePick.getCurrentMinute(), repeats,
                                                       Calendar.getInstance()));
 
-    AlarmLogic.saveChangesToDB(getActivity(), data);
+    if (priorExisted) {
+      AlarmLogic.saveChangesToDB(getActivity(), data);
+    } else {
+      AlarmLogic.insertAlarmToDB(getActivity(), data);
+    }
     AlarmReceiver.registerAlarm(getActivity(), data);
   }
 
