@@ -511,8 +511,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                    AlarmColumns.COL_REPEAT_DAYS + " INTEGER," +
                    AlarmColumns.COL_YEAR + " INTEGER," +
                    AlarmColumns.COL_MONTH + " INTEGER," +
-                   AlarmColumns.COL_DAY + " INTEGER," +
-                   AlarmColumns.COL_HOUR + " INTEGER," +
+                   AlarmColumns.COL_DAY_OF_MONTH + " INTEGER," +
+                   AlarmColumns.COL_HOUR_OF_DAY + " INTEGER," +
                    AlarmColumns.COL_MINUTE + " INTEGER," +
                    " FOREIGN KEY (" + AlarmColumns.COL_MOOD_ID + ") REFERENCES " +
                    MoodColumns.TABLE_NAME + " (" + MoodColumns._ID + " ) ON DELETE CASCADE " +

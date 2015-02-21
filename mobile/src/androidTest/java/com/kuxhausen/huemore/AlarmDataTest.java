@@ -88,8 +88,8 @@ public class AlarmDataTest extends AndroidTestCase {
 
     assertEquals(nowValues.get(AlarmColumns.COL_YEAR), now.get(Calendar.YEAR));
     assertEquals(nowValues.get(AlarmColumns.COL_MONTH), now.get(Calendar.MONTH));
-    assertEquals(nowValues.get(AlarmColumns.COL_DAY), now.get(Calendar.DAY_OF_MONTH));
-    assertEquals(nowValues.get(AlarmColumns.COL_HOUR), now.get(Calendar.HOUR_OF_DAY));
+    assertEquals(nowValues.get(AlarmColumns.COL_DAY_OF_MONTH), now.get(Calendar.DAY_OF_MONTH));
+    assertEquals(nowValues.get(AlarmColumns.COL_HOUR_OF_DAY), now.get(Calendar.HOUR_OF_DAY));
     assertEquals(nowValues.get(AlarmColumns.COL_MINUTE), now.get(Calendar.MINUTE));
   }
 

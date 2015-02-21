@@ -24,8 +24,8 @@ public class AlarmData {
       AlarmColumns.COL_REPEAT_DAYS,
       AlarmColumns.COL_YEAR,
       AlarmColumns.COL_MONTH,
-      AlarmColumns.COL_DAY,
-      AlarmColumns.COL_HOUR,
+      AlarmColumns.COL_DAY_OF_MONTH,
+      AlarmColumns.COL_HOUR_OF_DAY,
       AlarmColumns.COL_MINUTE
   };
 
@@ -82,8 +82,8 @@ public class AlarmData {
     Calendar calendar = getAlarmTime();
     cv.put(AlarmColumns.COL_YEAR, calendar.get(Calendar.YEAR));
     cv.put(AlarmColumns.COL_MONTH, calendar.get(Calendar.MONTH));
-    cv.put(AlarmColumns.COL_DAY, calendar.get(Calendar.DAY_OF_MONTH));
-    cv.put(AlarmColumns.COL_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
+    cv.put(AlarmColumns.COL_DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
+    cv.put(AlarmColumns.COL_HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
     cv.put(AlarmColumns.COL_MINUTE, calendar.get(Calendar.MINUTE));
 
     return cv;

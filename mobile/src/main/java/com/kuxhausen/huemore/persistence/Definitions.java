@@ -79,13 +79,13 @@ public final class Definitions {
     /**
      * int, day of month
      */
-    public static final String COL_DAY = "COL_DAY";
+    public static final String COL_DAY_OF_MONTH = "COL_DAY_OF_MONTH";
 
 
     /**
      * int, hour of day (24 hour time)
      */
-    public static final String COL_HOUR = "COL_HOUR";
+    public static final String COL_HOUR_OF_DAY = "COL_HOUR_OF_DAY";
 
     /**
      * int

@@ -77,8 +77,8 @@ public class LampShadeProvider extends ContentProvider {
       sAlarmQueryProjectionMap.put(AlarmColumns.COL_REPEAT_DAYS, AlarmColumns.COL_REPEAT_DAYS);
       sAlarmQueryProjectionMap.put(AlarmColumns.COL_YEAR, AlarmColumns.COL_YEAR);
       sAlarmQueryProjectionMap.put(AlarmColumns.COL_MONTH, AlarmColumns.COL_MONTH);
-      sAlarmQueryProjectionMap.put(AlarmColumns.COL_DAY, AlarmColumns.COL_DAY);
-      sAlarmQueryProjectionMap.put(AlarmColumns.COL_HOUR, AlarmColumns.COL_HOUR);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_DAY_OF_MONTH, AlarmColumns.COL_DAY_OF_MONTH);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_HOUR_OF_DAY, AlarmColumns.COL_HOUR_OF_DAY);
       sAlarmQueryProjectionMap.put(AlarmColumns.COL_MINUTE, AlarmColumns.COL_MINUTE);
     }
   }
