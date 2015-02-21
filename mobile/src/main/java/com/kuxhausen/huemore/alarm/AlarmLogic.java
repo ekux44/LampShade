@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.kuxhausen.huemore.BuildConfig;
 import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 
 import java.util.Calendar;
 
@@ -67,10 +68,13 @@ public class AlarmLogic {
   }
 
   public static AlarmData getAlarm(Context context, long id) {
-    Cursor
-        cursor =
-        context.getContentResolver()
-            .query(Definitions.AlarmColumns.ALARMS_URI, AlarmData.QUERY_COLUMNS, null, null, null);
+    String
+        rowSelect =
+        Definitions.AlarmColumns.TABLE_NAME + "." + Definitions.AlarmColumns._ID + "=?";
+    String[] rowArg = {"" + id};
+    Cursor cursor = context.getContentResolver().query(AlarmColumns.ALARMS_URI,
+                                                       AlarmData.QUERY_COLUMNS, rowSelect, rowArg,
+                                                       null);
 
     if (cursor.moveToFirst()) {
       return new AlarmData(cursor);

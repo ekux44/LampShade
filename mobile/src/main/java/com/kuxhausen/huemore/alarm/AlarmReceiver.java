@@ -25,7 +25,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
       int intentId = intent.getIntExtra(PreferenceKeys.ALARM_GLOBAL_ID, -1);
 
       if (globalId == intentId) {
-        int alarmId = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
+        long alarmId = intent.getLongExtra(InternalArguments.ALARM_ID, -1);
 
         AlarmData alarm = AlarmLogic.getAlarm(context, alarmId);
         if (alarm != null) {
@@ -54,7 +54,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     intent.putExtra(InternalArguments.ALARM_ID, data.getId());
     intent.putExtra(PreferenceKeys.ALARM_GLOBAL_ID, AlarmLogic.getGlobalId(context));
 
-    return PendingIntent.getBroadcast(context, -1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    return PendingIntent
+        .getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
   public static void registerAlarm(Context context, AlarmData data) {
