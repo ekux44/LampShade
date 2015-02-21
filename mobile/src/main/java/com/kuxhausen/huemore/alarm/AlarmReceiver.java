@@ -58,6 +58,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
   }
 
   public static void registerAlarm(Context context, AlarmData data) {
+    AlarmLogic.logAlarm("RegisterAlarm", data);
+
     PendingIntent pending = generatePendingIntent(context, data);
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -73,6 +75,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
   }
 
   public static void unregisterAlarm(Context context, AlarmData data) {
+    AlarmLogic.logAlarm("UnregisterAlarm", data);
+
     PendingIntent pending = generatePendingIntent(context, data);
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmMgr.cancel(pending);

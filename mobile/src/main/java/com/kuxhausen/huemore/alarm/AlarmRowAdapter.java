@@ -78,6 +78,7 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
     }
 
     AlarmData item = getList().get(position);
+    AlarmLogic.logAlarm("GetView", item);
     view.taggedView.setTag(item);
     view.scheduledButton.setTag(item);
     view.scheduledButton.setOnCheckedChangeListener(null);

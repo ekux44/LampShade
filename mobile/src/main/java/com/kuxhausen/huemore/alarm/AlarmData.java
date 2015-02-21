@@ -38,8 +38,8 @@ public class AlarmData {
   private DaysOfWeek mRepeatDays;
   private int mYear;
   private int mMonth;
-  private int mDay;
-  private int mHour; //using 24 hour time
+  private int mDayOfMonth; // day of month
+  private int mHourOfDay; //using 24 hour time
   private int mMinute;
 
   public AlarmData() {
@@ -66,8 +66,8 @@ public class AlarmData {
 
     mYear = cursor.getInt(7);
     mMonth = cursor.getInt(8);
-    mDay = cursor.getInt(9);
-    mHour = cursor.getInt(10);
+    mDayOfMonth = cursor.getInt(9);
+    mHourOfDay = cursor.getInt(10);
     mMinute = cursor.getInt(11);
   }
 
@@ -78,8 +78,13 @@ public class AlarmData {
     cv.put(AlarmColumns.COL_BRIGHTNESS, getBrightness());
     cv.put(AlarmColumns.COL_IS_ENABLED, isEnabled() ? 1 : 0);
     cv.put(AlarmColumns.COL_REPEAT_DAYS, getRepeatDays().getValue());
-    cv.put(AlarmColumns.COL_HOUR, getHourOfDay());
-    cv.put(AlarmColumns.COL_MINUTE, getMinute());
+
+    Calendar calendar = getAlarmTime();
+    cv.put(AlarmColumns.COL_YEAR, calendar.get(Calendar.YEAR));
+    cv.put(AlarmColumns.COL_MONTH, calendar.get(Calendar.MONTH));
+    cv.put(AlarmColumns.COL_DAY, calendar.get(Calendar.DAY_OF_MONTH));
+    cv.put(AlarmColumns.COL_HOUR, calendar.get(Calendar.HOUR_OF_DAY));
+    cv.put(AlarmColumns.COL_MINUTE, calendar.get(Calendar.MINUTE));
 
     return cv;
   }
@@ -141,7 +146,7 @@ public class AlarmData {
   }
 
   public int getHourOfDay() {
-    return mHour;
+    return mHourOfDay;
   }
 
   public int getMinute() {
@@ -151,8 +156,8 @@ public class AlarmData {
   public void setAlarmTime(Calendar calendar) {
     mYear = calendar.get(Calendar.YEAR);
     mMonth = calendar.get(Calendar.MONTH);
-    mDay = calendar.get(Calendar.DAY_OF_MONTH);
-    mHour = calendar.get(Calendar.HOUR_OF_DAY);
+    mDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+    mHourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
     mMinute = calendar.get(Calendar.MINUTE);
   }
 
@@ -160,8 +165,8 @@ public class AlarmData {
     Calendar calendar = Calendar.getInstance();
     calendar.set(Calendar.YEAR, mYear);
     calendar.set(Calendar.MONTH, mMonth);
-    calendar.set(Calendar.DAY_OF_MONTH, mDay);
-    calendar.set(Calendar.HOUR_OF_DAY, mHour);
+    calendar.set(Calendar.DAY_OF_MONTH, mDayOfMonth);
+    calendar.set(Calendar.HOUR_OF_DAY, mHourOfDay);
     calendar.set(Calendar.MINUTE, mMinute);
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);

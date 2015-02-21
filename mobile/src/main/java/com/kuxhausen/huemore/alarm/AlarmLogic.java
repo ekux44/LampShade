@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import com.kuxhausen.huemore.BuildConfig;
 import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.Calendar;
@@ -16,6 +18,7 @@ public class AlarmLogic {
    * mark disabled. Saves changes to database
    */
   public static void updateAlarm(Context context, AlarmData data) {
+    logAlarm("UpdateAlarm", data);
     if (data.isEnabled()) {
 
       Calendar mustBeAfter = Calendar.getInstance();
@@ -77,6 +80,7 @@ public class AlarmLogic {
   }
 
   public static void insertAlarmToDB(Context context, AlarmData data) {
+    logAlarm("DBinsert", data);
     long
         baseId =
         Long.parseLong(
@@ -87,6 +91,7 @@ public class AlarmLogic {
   }
 
   public static void saveChangesToDB(Context context, AlarmData data) {
+    logAlarm("DBupdate", data);
     String rowSelect = Definitions.AlarmColumns._ID + "=?";
     String[] rowArg = {"" + data.getId()};
     context.getContentResolver()
@@ -94,6 +99,7 @@ public class AlarmLogic {
   }
 
   public static void deleteAlarmFromDB(Context context, AlarmData data) {
+    logAlarm("DBdelete", data);
     String rowSelect = Definitions.AlarmColumns._ID + "=?";
     String[] rowArg = {"" + data.getId()};
     context.getContentResolver().delete(Definitions.AlarmColumns.ALARMS_URI, rowSelect, rowArg);
@@ -111,6 +117,7 @@ public class AlarmLogic {
   }
 
   public static void toggleAlarm(Context context, AlarmData data) {
+    logAlarm("Toggled", data);
     if (!data.isEnabled()) {
       data.setEnabled(true);
       data.setAlarmTime(
@@ -122,6 +129,28 @@ public class AlarmLogic {
       AlarmReceiver.unregisterAlarm(context, data);
       data.setEnabled(false);
       saveChangesToDB(context, data);
+    }
+  }
+
+  public static void logAlarm(String eventMessage, AlarmData alarmData) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      StringBuilder sb = new StringBuilder(eventMessage);
+      sb.append(',');
+      Calendar time = alarmData.getAlarmTime();
+      sb.append(time.get(Calendar.YEAR));
+      sb.append(',');
+      sb.append(time.get(Calendar.MONTH));
+      sb.append(',');
+      sb.append(time.get(Calendar.DAY_OF_MONTH));
+      sb.append(',');
+      sb.append(time.get(Calendar.HOUR_OF_DAY));
+      sb.append(',');
+      sb.append(time.get(Calendar.MINUTE));
+      sb.append(',');
+      sb.append(alarmData.getMoodName());
+      sb.append(',');
+      sb.append(alarmData.getGroupName());
+      Log.i("AlarmDebug", sb.toString());
     }
   }
 }
