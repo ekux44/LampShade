@@ -138,7 +138,10 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     switch (v.getId()) {
       case R.id.repeatButton:
         RepeatDialogFragment rdf = new RepeatDialogFragment();
-        rdf.resultListener = this;
+        Bundle args = new Bundle();
+        args.putByte(InternalArguments.DAYS_OF_WEEK_AS_BYTE, repeats.getValue());
+        rdf.setArguments(args);
+        rdf.setResultListener(this);
         rdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         break;
       case R.id.okay:
