@@ -9,7 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
@@ -106,7 +106,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     // between the sliding drawer and the action bar app icon
     mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
                                               mDrawerLayout, /* DrawerLayout object */
-                                              R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+                                              mToolbar,
                                               R.string.drawer_open, /* "open drawer" description for accessibility */
                                               R.string.drawer_close /* "close drawer" description for accessibility */
     ) {
