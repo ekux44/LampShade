@@ -97,11 +97,51 @@ public final class Definitions {
     }
   }
 
+  public static final class GroupColumns implements BaseColumns {
+
+    public static final String TABLE_NAME = "groups";
+
+    public static final String PATH_GROUPS = "groups";
+    public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPS);
+
+    public static final String COL_GROUP_NAME = "GROUP_NAME";
+    public static final String COL_GROUP_LOWERCASE_NAME = "COL_GROUP_LOWERCASE_NAME";
+
+    // This class cannot be instantiated
+    private GroupColumns() {
+    }
+  }
+
+  public static final class GroupBulbColumns implements BaseColumns {
+
+    public static final String TABLE_NAME = "groupbulbs";
+
+    public static final String PATH_GROUPBULBS = "groupbulbs";
+    public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPBULBS);
+
+    /**
+     * Points to the Group table entry for the Group this is part of
+     */
+    public static final String GROUP_ID = "GROUP_ID";
+
+    /**
+     * order within group in which bulbs should be used when applying mood (lowest number = first)
+     */
+    public static final String BULB_PRECEDENCE = "BULB_PRECEDENCE";
+
+    /**
+     * Points to the NetBulb table entry for this bulb
+     */
+    public static final String NET_BULB_ID = "NET_BULB_ID";
+
+    // This class cannot be instantiated
+    private GroupBulbColumns() {
+    }
+  }
 
   public static final class DeprecatedGroupColumns implements BaseColumns {
 
     public static final String TABLE_NAME = "groups";
-
 
     public static final String PATH_GROUPS = "groups";
     public static final Uri GROUPS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPS);
@@ -136,16 +176,7 @@ public final class Definitions {
 
     public static final String TABLE_NAME = "moods";
 
-    /**
-     * The scheme part for this provider's URI
-     */
-    private static final String SCHEME = "content://";
-
     public static final String PATH_MOODS = "moods";
-
-    /**
-     * The content:// style URL for this table
-     */
     public static final Uri MOODS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_MOODS);
 
     public static final String COL_MOOD_VALUE = "Dstate";
@@ -163,7 +194,6 @@ public final class Definitions {
     public static final String TABLE_NAME = "netbulbs";
 
     public static final String PATH = "netbulbs";
-
     public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
 
     public static final String NAME_COLUMN = "D_NAME_COLUMN";
@@ -196,7 +226,6 @@ public final class Definitions {
     public static final String TABLE_NAME = "netconnection";
 
     public static final String PATH = "netconnection";
-
     public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
 
     public static final String NAME_COLUMN = "D_NAME_COLUMN";
@@ -218,7 +247,6 @@ public final class Definitions {
     public static final String TABLE_NAME = "playingmood";
 
     public static final String PATH = "playingmood";
-
     public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
 
     /**
