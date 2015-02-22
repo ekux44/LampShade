@@ -14,7 +14,7 @@ import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
@@ -57,10 +57,9 @@ public class LampShadeProvider extends ContentProvider {
     sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     {
-      sUriMatcher.addURI(Definitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, DeprecatedGroupColumns.PATH_GROUPS, GROUPS);
       sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
-      sUriMatcher.addURI(Definitions.AUTHORITY,
-                         Definitions.GroupColumns.PATH_GROUPBULBS, GROUPBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, DeprecatedGroupColumns.PATH_GROUPBULBS, GROUPBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
@@ -101,8 +100,8 @@ public class LampShadeProvider extends ContentProvider {
         table = NetConnectionColumns.TABLE_NAME;
         toNotify.add(NetConnectionColumns.URI);
         toNotify.add(NetBulbColumns.URI);
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI);
+        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
+        toNotify.add(DeprecatedGroupColumns.GROUPBULBS_URI);
         break;
       case NETBULBS:
         table = NetBulbColumns.TABLE_NAME;
@@ -113,9 +112,9 @@ public class LampShadeProvider extends ContentProvider {
         toNotify.add(AlarmColumns.ALARMS_URI);
         break;
       case GROUPBULBS:
-        table = (GroupColumns.TABLE_NAME);
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI);
+        table = (DeprecatedGroupColumns.TABLE_NAME);
+        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
+        toNotify.add(DeprecatedGroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
         table = (Definitions.MoodColumns.TABLE_NAME);
@@ -161,23 +160,25 @@ public class LampShadeProvider extends ContentProvider {
         qb.setTables(NetConnectionColumns.TABLE_NAME);
         toNotify.add(NetConnectionColumns.URI);
 
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
+        toNotify.add(
+            DeprecatedGroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
         toNotify.add(NetBulbColumns.URI);
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
+        toNotify.add(
+            DeprecatedGroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
         qb.setTables(AlarmColumns.TABLE_NAME);
         toNotify.add(AlarmColumns.ALARMS_URI);
         break;
       case GROUPS:
-        qb.setTables(Definitions.GroupColumns.TABLE_NAME);
-        toNotify.add(GroupColumns.GROUPS_URI);
-        toNotify.add(GroupColumns.GROUPBULBS_URI);
+        qb.setTables(DeprecatedGroupColumns.TABLE_NAME);
+        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
+        toNotify.add(DeprecatedGroupColumns.GROUPBULBS_URI);
         break;
       case MOODS:
         qb.setTables(Definitions.MoodColumns.TABLE_NAME);
@@ -250,8 +251,8 @@ public class LampShadeProvider extends ContentProvider {
         groupBy = null;
         break;
       case GROUPS:
-        qb.setTables(GroupColumns.TABLE_NAME);
-        groupBy = GroupColumns.GROUP;
+        qb.setTables(DeprecatedGroupColumns.TABLE_NAME);
+        groupBy = DeprecatedGroupColumns.GROUP;
         break;
       case GROUPBULBS:
         if ((selection != null)
@@ -261,7 +262,9 @@ public class LampShadeProvider extends ContentProvider {
                        .charAt(0) == ((char) 8))) {
 
           qb.setTables(NetBulbColumns.TABLE_NAME);
-          String[] groupColumns = {NetBulbColumns._ID + " AS " + GroupColumns.BULB_DATABASE_ID};
+          String[]
+              groupColumns =
+              {NetBulbColumns._ID + " AS " + DeprecatedGroupColumns.BULB_DATABASE_ID};
 
           Cursor c = qb.query(db, groupColumns, // using our own projection for 'All' mood as it's
                               // hitting a different database.
@@ -270,7 +273,7 @@ public class LampShadeProvider extends ContentProvider {
           c.setNotificationUri(getContext().getContentResolver(), uri);
           return c;
         }
-        qb.setTables(GroupColumns.TABLE_NAME);
+        qb.setTables(DeprecatedGroupColumns.TABLE_NAME);
         groupBy = null;
         break;
       case MOODS:
@@ -315,7 +318,7 @@ public class LampShadeProvider extends ContentProvider {
 
       return mc;
     } else if (sUriMatcher.match(uri) == GROUPS) {
-      String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
+      String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
       MatrixCursor c1 = new MatrixCursor(columns);
 
       SQLiteQueryBuilder querryBulbs = new SQLiteQueryBuilder();
@@ -373,9 +376,10 @@ public class LampShadeProvider extends ContentProvider {
           //Don't notify. This should be moved to a separate table at some point.
         } else {
           toNotify.add(NetBulbColumns.URI);
-          toNotify.add(GroupColumns.GROUPS_URI);
+          toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
           toNotify
-              .add(GroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+              .add(
+                  DeprecatedGroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         }
         break;
       case ALARMS:

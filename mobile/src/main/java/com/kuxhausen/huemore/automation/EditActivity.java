@@ -31,13 +31,8 @@ import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
-import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
-import com.kuxhausen.huemore.persistence.Utils;
-import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.state.Mood;
 
 public class EditActivity extends NetworkManagedActivity implements
                                                          LoaderManager.LoaderCallbacks<Cursor>,
@@ -131,7 +126,7 @@ public class EditActivity extends NetworkManagedActivity implements
     brightnessCheckBox.setOnCheckedChangeListener(this);
 
     groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
-    String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
+    String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
         new SimpleCursorAdapter(this, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -215,11 +210,12 @@ public class EditActivity extends NetworkManagedActivity implements
   public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
     switch (loaderID) {
       case GROUPS_LOADER:
-        String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
-        return new CursorLoader(this, GroupColumns.GROUPS_URI, gColumns, null, null, null);
+        String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
+        return new CursorLoader(this, DeprecatedGroupColumns.GROUPS_URI, gColumns, null, null,
+                                null);
       case MOODS_LOADER:
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
-        return new CursorLoader(this, Definitions.MoodColumns.MOODS_URI, mColumns, null,
+        return new CursorLoader(this, MoodColumns.MOODS_URI, mColumns, null,
                                 null, null);
       default:
         return null;

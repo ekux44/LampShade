@@ -24,8 +24,7 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
@@ -98,10 +97,10 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
         // if there was a previous mood we're editing, remove it
         if (initialName != null) {
-          String groupSelect = GroupColumns.GROUP + "=?";
+          String groupSelect = DeprecatedGroupColumns.GROUP + "=?";
           String[] groupArg = {initialName};
           getActivity().getContentResolver().delete(
-              Definitions.GroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
+              DeprecatedGroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
         }
 
         String groupName = nameEditText.getText().toString();
@@ -124,12 +123,14 @@ public class EditGroupDialogFragment extends DialogFragment implements
           if (set.get(i)) {
             ContentValues mNewValues = new ContentValues();
 
-            mNewValues.put(GroupColumns.GROUP, groupName);
-            mNewValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
-            mNewValues.put(GroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
-            mNewValues.put(GroupColumns.PRECEDENCE, i);
+            mNewValues.put(DeprecatedGroupColumns.GROUP, groupName);
+            mNewValues.put(DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME,
+                           groupName.toLowerCase().trim());
+            mNewValues.put(DeprecatedGroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
+            mNewValues.put(DeprecatedGroupColumns.PRECEDENCE, i);
 
-            getActivity().getContentResolver().insert(GroupColumns.GROUPS_URI, mNewValues);
+            getActivity().getContentResolver()
+                .insert(DeprecatedGroupColumns.GROUPS_URI, mNewValues);
           }
 
           cursor.moveToNext();
@@ -154,7 +155,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
       case BULBS_LOADER:
         // Returns a new CursorLoader
         return new CursorLoader(getActivity(), // Parent activity context
-                                Definitions.NetBulbColumns.URI, // Table
+                                NetBulbColumns.URI, // Table
                                 columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

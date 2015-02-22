@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.widget;
 
-import com.google.gson.Gson;
-
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
@@ -15,8 +13,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 /**
@@ -41,7 +38,6 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
   private Context mContext;
   private Cursor mCursor;
   private int mAppWidgetId;
-  Gson gson = new Gson();
 
   public GroupStackRemoteViewsFactory(Context context, Intent intent) {
     mContext = context;
@@ -129,8 +125,8 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     }
 
     ContentResolver r = mContext.getContentResolver();
-    String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
-    mCursor = r.query(Definitions.GroupColumns.GROUPS_URI, columns, null, null, null);
+    String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
+    mCursor = r.query(DeprecatedGroupColumns.GROUPS_URI, columns, null, null, null);
 
   }
 }

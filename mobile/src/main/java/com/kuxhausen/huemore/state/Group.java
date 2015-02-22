@@ -3,8 +3,8 @@ package com.kuxhausen.huemore.state;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +29,11 @@ public class Group {
 
   public static Group loadFromDatabase(String name, Context c) {
 
-    String[] groupColumns = {GroupColumns.BULB_DATABASE_ID};
+    String[] groupColumns = {DeprecatedGroupColumns.BULB_DATABASE_ID};
     String[] gWhereClause = {name};
     Cursor cursor =
-        c.getContentResolver().query(GroupColumns.GROUPBULBS_URI, groupColumns,
-                                     GroupColumns.GROUP + "=?", gWhereClause, null);
+        c.getContentResolver().query(DeprecatedGroupColumns.GROUPBULBS_URI, groupColumns,
+                                     DeprecatedGroupColumns.GROUP + "=?", gWhereClause, null);
 
     ArrayList<Long> netBulbDbIds = new ArrayList<Long>();
     while (cursor.moveToNext()) {
@@ -48,17 +48,17 @@ public class Group {
   public static Group loadFromLegacyData(Integer[] bulbs, String groupName, Context c) {
     ArrayList<Long> netBulbDbIds = new ArrayList<Long>();
 
-    String[] projections = {Definitions.NetBulbColumns._ID};
+    String[] projections = {NetBulbColumns._ID};
     for (Integer deviceId : bulbs) {
       String[] selectionArgs =
-          {"" + deviceId, "" + Definitions.NetBulbColumns.NetBulbType.PHILIPS_HUE};
+          {"" + deviceId, "" + NetBulbColumns.NetBulbType.PHILIPS_HUE};
 
       Cursor cursor =
           c.getContentResolver().query(
-              Definitions.NetBulbColumns.URI,
+              NetBulbColumns.URI,
               projections,
-              Definitions.NetBulbColumns.DEVICE_ID_COLUMN + " =? AND "
-              + Definitions.NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
+              NetBulbColumns.DEVICE_ID_COLUMN + " =? AND "
+              + NetBulbColumns.TYPE_COLUMN + " =?", selectionArgs, null
           );
 
       if (cursor.moveToFirst()) {

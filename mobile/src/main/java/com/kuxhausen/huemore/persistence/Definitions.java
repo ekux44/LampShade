@@ -98,7 +98,7 @@ public final class Definitions {
   }
 
 
-  public static final class GroupColumns implements BaseColumns {
+  public static final class DeprecatedGroupColumns implements BaseColumns {
 
     public static final String TABLE_NAME = "groups";
 
@@ -128,7 +128,7 @@ public final class Definitions {
 
 
     // This class cannot be instantiated
-    private GroupColumns() {
+    private DeprecatedGroupColumns() {
     }
   }
 

@@ -26,8 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.Group;
 
@@ -66,7 +65,7 @@ public class GroupListFragment extends ListFragment implements
      */
     getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
-    String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
+    String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
 
     dataSource =
         new SimpleCursorAdapter(contextThemeWrapper, layout, null, columns,
@@ -154,9 +153,9 @@ public class GroupListFragment extends ListFragment implements
     switch (item.getItemId()) {
 
       case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
-        String groupSelect = GroupColumns.GROUP + "=?";
+        String groupSelect = DeprecatedGroupColumns.GROUP + "=?";
         String[] groupArg = {longSelected.getText().toString()};
-        getActivity().getContentResolver().delete(Definitions.GroupColumns.GROUPBULBS_URI,
+        getActivity().getContentResolver().delete(DeprecatedGroupColumns.GROUPBULBS_URI,
                                                   groupSelect, groupArg);
         return true;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
@@ -196,9 +195,9 @@ public class GroupListFragment extends ListFragment implements
     switch (loaderID) {
       case GROUPS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {GroupColumns.GROUP, BaseColumns._ID};
+        String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                Definitions.GroupColumns.GROUPS_URI, // Table
+                                DeprecatedGroupColumns.GROUPS_URI, // Table
                                 columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

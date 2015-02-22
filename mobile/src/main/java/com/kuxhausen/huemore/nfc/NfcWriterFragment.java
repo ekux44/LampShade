@@ -39,8 +39,7 @@ import android.widget.Toast;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -123,7 +122,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     brightnessCheckBox.setOnCheckedChangeListener(this);
 
     groupSpinner = (Spinner) myView.findViewById(R.id.groupSpinner);
-    String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
+    String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
         new SimpleCursorAdapter(context, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -305,11 +304,12 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
     switch (loaderID) {
       case GROUPS_LOADER:
-        String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
-        return new CursorLoader(context, GroupColumns.GROUPS_URI, gColumns, null, null, null);
+        String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
+        return new CursorLoader(context, DeprecatedGroupColumns.GROUPS_URI, gColumns, null, null,
+                                null);
       case MOODS_LOADER:
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
-        return new CursorLoader(context, Definitions.MoodColumns.MOODS_URI, mColumns, null,
+        return new CursorLoader(context, MoodColumns.MOODS_URI, mColumns, null,
                                 null, null);
       default:
         return null;

@@ -22,8 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 
@@ -60,7 +59,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
           ? android.R.layout.simple_list_item_activated_1
           : android.R.layout.simple_list_item_1;
 
-      String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
+      String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
       groupDataSource =
           new SimpleCursorAdapter(getActivity(), layout, null, gColumns,
                                   new int[]{android.R.id.text1}, 0);
@@ -167,9 +166,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     switch (loaderID) {
       case GROUPS_LOADER:
         // Returns a new CursorLoader
-        String[] gColumns = {GroupColumns.GROUP, BaseColumns._ID};
+        String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                Definitions.GroupColumns.GROUPS_URI, // Table
+                                DeprecatedGroupColumns.GROUPS_URI, // Table
                                 gColumns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments
@@ -179,7 +178,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
         // Returns a new CursorLoader
         String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                Definitions.MoodColumns.MOODS_URI, // Table
+                                MoodColumns.MOODS_URI, // Table
                                 mColumns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments

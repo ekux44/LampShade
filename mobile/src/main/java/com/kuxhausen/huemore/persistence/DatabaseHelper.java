@@ -15,7 +15,7 @@ import com.kuxhausen.huemore.alarm.AlarmData;
 import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
@@ -58,8 +58,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                + " TEXT"
                + ");");
 
-    db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " (" + BaseColumns._ID
-               + " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT," + GroupColumns.PRECEDENCE
+    db.execSQL("CREATE TABLE " + DeprecatedGroupColumns.TABLE_NAME + " (" + BaseColumns._ID
+               + " INTEGER PRIMARY KEY," + DeprecatedGroupColumns.GROUP + " TEXT,"
+               + DeprecatedGroupColumns.PRECEDENCE
                + " INTEGER," + "Dbulb" + " INTEGER" + ");");
 
     this.onUpgrade(db, 1, DATABASE_VERSION);
@@ -238,9 +239,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         /** Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
 
         String[] oldGroupColumns =
-            {GroupColumns._ID, GroupColumns.GROUP, GroupColumns.PRECEDENCE, "Dbulb"};
+            {DeprecatedGroupColumns._ID, Definitions.DeprecatedGroupColumns.GROUP,
+             DeprecatedGroupColumns.PRECEDENCE, "Dbulb"};
         Cursor oldGroupCursor =
-            db.query(Definitions.GroupColumns.TABLE_NAME, oldGroupColumns, null, null,
+            db.query(DeprecatedGroupColumns.TABLE_NAME, oldGroupColumns, null, null,
                      null, null, null);
 
         // load all the old group data into here <name, list of hue hub bulb <precedence, hub bulb
@@ -299,13 +301,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         /* rebuild the sql tables */
-        db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DeprecatedGroupColumns.TABLE_NAME);
 
-        db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " (" + BaseColumns._ID
-                   + " INTEGER PRIMARY KEY," + GroupColumns.GROUP + " TEXT,"
-                   + GroupColumns.PRECEDENCE
-                   + " INTEGER," + GroupColumns.BULB_DATABASE_ID + " INTEGER," + " FOREIGN KEY ("
-                   + GroupColumns.BULB_DATABASE_ID + ") REFERENCES " + NetBulbColumns.TABLE_NAME
+        db.execSQL("CREATE TABLE " + DeprecatedGroupColumns.TABLE_NAME + " (" + BaseColumns._ID
+                   + " INTEGER PRIMARY KEY," + DeprecatedGroupColumns.GROUP + " TEXT,"
+                   + DeprecatedGroupColumns.PRECEDENCE
+                   + " INTEGER," + DeprecatedGroupColumns.BULB_DATABASE_ID + " INTEGER,"
+                   + " FOREIGN KEY ("
+                   + DeprecatedGroupColumns.BULB_DATABASE_ID + ") REFERENCES "
+                   + NetBulbColumns.TABLE_NAME
                    + " ("
                    + NetBulbColumns._ID + " ) ON DELETE CASCADE " + ");");
 
@@ -317,10 +321,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             long bulbBaseId = hubIdToBaseIdMapping.get(oldPair.second);
 
             ContentValues groupValues = new ContentValues();
-            groupValues.put(GroupColumns.GROUP, groupName);
-            groupValues.put(GroupColumns.PRECEDENCE, bulbPrecidence);
-            groupValues.put(GroupColumns.BULB_DATABASE_ID, bulbBaseId);
-            db.insert(GroupColumns.TABLE_NAME, null, groupValues);
+            groupValues.put(DeprecatedGroupColumns.GROUP, groupName);
+            groupValues.put(DeprecatedGroupColumns.PRECEDENCE, bulbPrecidence);
+            groupValues.put(DeprecatedGroupColumns.BULB_DATABASE_ID, bulbBaseId);
+            db.insert(DeprecatedGroupColumns.TABLE_NAME, null, groupValues);
 
           }
         }
@@ -408,9 +412,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //now migrate groups to add a lowercase name field
 
         String[] oldGroupColumns =
-            {GroupColumns.GROUP, GroupColumns.PRECEDENCE, GroupColumns.BULB_DATABASE_ID};
+            {DeprecatedGroupColumns.GROUP, DeprecatedGroupColumns.PRECEDENCE,
+             DeprecatedGroupColumns.BULB_DATABASE_ID};
         Cursor oldGroupCursor =
-            db.query(GroupColumns.TABLE_NAME, oldGroupColumns, null, null, null, null, null);
+            db.query(DeprecatedGroupColumns.TABLE_NAME, oldGroupColumns, null, null, null, null,
+                     null);
 
         // load all the old group data into here <name, <precedence,bulb_database_id>>
         ArrayList<Pair<String, Pair<Long, Long>>>
@@ -436,15 +442,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         /* rebuild the sql tables */
-        db.execSQL("DROP TABLE IF EXISTS " + GroupColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DeprecatedGroupColumns.TABLE_NAME);
 
-        db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
+        db.execSQL("CREATE TABLE " + DeprecatedGroupColumns.TABLE_NAME + " ("
                    + BaseColumns._ID + " INTEGER PRIMARY KEY,"
-                   + GroupColumns.GROUP + " TEXT,"
-                   + GroupColumns.COL_GROUP_LOWERCASE_NAME + " TEXT,"
-                   + GroupColumns.PRECEDENCE + " INTEGER,"
-                   + GroupColumns.BULB_DATABASE_ID + " INTEGER,"
-                   + " FOREIGN KEY (" + GroupColumns.BULB_DATABASE_ID + ") REFERENCES "
+                   + DeprecatedGroupColumns.GROUP + " TEXT,"
+                   + DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME + " TEXT,"
+                   + DeprecatedGroupColumns.PRECEDENCE + " INTEGER,"
+                   + DeprecatedGroupColumns.BULB_DATABASE_ID + " INTEGER,"
+                   + " FOREIGN KEY (" + DeprecatedGroupColumns.BULB_DATABASE_ID + ") REFERENCES "
                    + NetBulbColumns.TABLE_NAME + " (" + NetBulbColumns._ID + " ) ON DELETE CASCADE "
                    + ");");
 
@@ -455,11 +461,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           Long bulbBaseId = item.second.second;
 
           ContentValues groupValues = new ContentValues();
-          groupValues.put(GroupColumns.GROUP, groupName);
-          groupValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
-          groupValues.put(GroupColumns.PRECEDENCE, bulbPrecidence);
-          groupValues.put(GroupColumns.BULB_DATABASE_ID, bulbBaseId);
-          db.insert(GroupColumns.TABLE_NAME, null, groupValues);
+          groupValues.put(DeprecatedGroupColumns.GROUP, groupName);
+          groupValues
+              .put(DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
+          groupValues.put(DeprecatedGroupColumns.PRECEDENCE, bulbPrecidence);
+          groupValues.put(DeprecatedGroupColumns.BULB_DATABASE_ID, bulbBaseId);
+          db.insert(DeprecatedGroupColumns.TABLE_NAME, null, groupValues);
         }
       }
       case 10: {

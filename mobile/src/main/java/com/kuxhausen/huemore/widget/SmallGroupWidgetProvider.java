@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.widget;
 
-import com.google.gson.Gson;
-
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -20,7 +18,7 @@ import android.widget.RemoteViews;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 
@@ -61,8 +59,6 @@ public class SmallGroupWidgetProvider extends AppWidgetProvider {
   private static Handler sWorkerQueue;
   private static SmallGroupDataProviderObserver sDataObserver;
 
-  Gson gson = new Gson();
-
   public SmallGroupWidgetProvider() {
     // Start the worker thread
     sWorkerThread = new HandlerThread("SmallGroupWidgetProvider-worker");
@@ -81,7 +77,7 @@ public class SmallGroupWidgetProvider extends AppWidgetProvider {
       final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
       final ComponentName cn = new ComponentName(context, SmallGroupWidgetProvider.class);
       sDataObserver = new SmallGroupDataProviderObserver(mgr, cn, sWorkerQueue);
-      r.registerContentObserver(GroupColumns.GROUPS_URI, true, sDataObserver);
+      r.registerContentObserver(DeprecatedGroupColumns.GROUPS_URI, true, sDataObserver);
     }
   }
 

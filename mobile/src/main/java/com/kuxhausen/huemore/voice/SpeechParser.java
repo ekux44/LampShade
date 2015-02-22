@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 
@@ -123,12 +123,12 @@ public class SpeechParser {
   }
 
   private static String checkGroupName(Context c, String lowercaseGroupName) {
-    String[] groupColumns = {GroupColumns.GROUP}; // careful, hardcoded all still fragile
+    String[] groupColumns = {DeprecatedGroupColumns.GROUP}; // careful, hardcoded all still fragile
     String[] gWhereClause = {lowercaseGroupName};
     Cursor
         groupCursor =
-        c.getContentResolver().query(GroupColumns.GROUPBULBS_URI, groupColumns,
-                                     GroupColumns.COL_GROUP_LOWERCASE_NAME + "=?", gWhereClause,
+        c.getContentResolver().query(DeprecatedGroupColumns.GROUPBULBS_URI, groupColumns,
+                                     DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME + "=?", gWhereClause,
                                      null);
     if (groupCursor.getCount() > 0) {
       groupCursor.moveToFirst();
