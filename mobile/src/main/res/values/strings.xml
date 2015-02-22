@@ -43,7 +43,7 @@
     <string name="transition_intro">Fade In:</string>
     <string name="alarm_repeat">Repeat:</string>
     <string name="cap_short_every_day">EVERY DAY</string>
-    <string name="next_scheduled_intro">Next alarm</string>
+    <string name="next_scheduled_intro">Next LampShade alarm</string>
     <string name="update_welcome_title">New in LampShade 2.7</string>
     <string name="hub_discovery_disclaimer">Searching for the hub. This may take a minute.</string>
     <string name="update_message">Please update LampShade to the newest version.</string>
