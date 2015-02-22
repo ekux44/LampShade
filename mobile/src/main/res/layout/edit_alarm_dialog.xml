@@ -20,9 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal" />
-            
-            <include layout="@layout/horizontal_divider_line_blue"/>            
-                
+
 			<LinearLayout
        	 	android:layout_width="match_parent"
         	android:layout_height="wrap_content"
@@ -72,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingLeft="8dp"
-                android:text="@string/brightness" />
+                android:text="@string/max_brightness" />
 
             <SeekBar
                 android:id="@+id/brightnessBar"
@@ -80,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:max="255"
                 android:paddingBottom="8dp"
-                android:progress="127" />
+                android:progress="255" />
             <LinearLayout
        	 	android:layout_width="match_parent"
         	android:layout_height="wrap_content"
@@ -102,12 +100,13 @@
             	    android:text="@string/cap_short_none"
             	    android:textSize="16sp" />
 	
-            </LinearLayout> 
+            </LinearLayout>
+
+            <include layout="@layout/horizontal_divider_line_blue"/>
+
+            <include layout="@layout/confirmation_bar"/>
+
         </LinearLayout>
     </ScrollView>
-
-    <include layout="@layout/horizontal_divider_line_blue"/>
-    
-	<include layout="@layout/confirmation_bar"/>
 
 </LinearLayout>

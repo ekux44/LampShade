@@ -12,6 +12,4 @@
         android:layout_weight="1" >
     </ListView>
 
-    <include layout="@layout/horizontal_divider_line_blue"/>
-    
 </LinearLayout>
