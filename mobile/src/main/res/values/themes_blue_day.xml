@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="blue_day" parent="Theme.AppCompat">
+
+    <item name="colorPrimary">@color/day_primary</item>
+
+    <item name="colorPrimaryDark">@color/day_primary_dark</item>
+
+    <item name="colorAccent">@color/accent</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarblue_day</item>
+
+    <item name="android:listViewStyle">@style/ListViewblue_day</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewblue_day.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemblue_day</item>
+
+  </style>
+
+</resources>
