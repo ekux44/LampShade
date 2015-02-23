@@ -85,7 +85,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     // set a custom shadow that overlays the main content when the drawer opens
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-    mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.blue_primarydark));
+    mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.day_primary_dark));
 
     // set up the drawer's list view with items and click listener
     mDrawerList

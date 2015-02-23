@@ -44,12 +44,6 @@ public class GroupListFragment extends ListFragment implements
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
 
-    // create ContextThemeWrapper from the original Activity Context with the custom theme
-    final Context contextThemeWrapper =
-        new ContextThemeWrapper(this.getActivity(), R.style.GreenWidgets);
-    // clone the inflater using the ContextThemeWrapper
-    LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
@@ -57,7 +51,7 @@ public class GroupListFragment extends ListFragment implements
         : android.R.layout.simple_list_item_1;
 
     // Inflate the layout for this fragment
-    View myView = localInflater.inflate(R.layout.groups_list_fragment, null);
+    View myView = inflater.inflate(R.layout.groups_list_fragment, null);
 
     /*
      * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
@@ -68,7 +62,7 @@ public class GroupListFragment extends ListFragment implements
     String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
 
     dataSource =
-        new SimpleCursorAdapter(contextThemeWrapper, layout, null, columns,
+        new SimpleCursorAdapter(getActivity(), layout, null, columns,
                                 new int[]{android.R.id.text1}, 0);
 
     setListAdapter(dataSource);

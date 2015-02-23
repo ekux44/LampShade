@@ -22,7 +22,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets">
+            android:theme="@style/blue_day">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +50,7 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
+            android:theme="@style/blue_day" >
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
@@ -67,20 +67,20 @@
             android:name="com.kuxhausen.huemore.DecodeErrorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets" >
+            android:theme="@style/blue_day" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets"
+            android:theme="@style/blue_day"
             android:noHistory="true" >
         </activity>
         <activity
             android:name="com.kuxhausen.huemore.nfc.NfcReadRouterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/BlueWidgets"
+            android:theme="@style/blue_day"
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />

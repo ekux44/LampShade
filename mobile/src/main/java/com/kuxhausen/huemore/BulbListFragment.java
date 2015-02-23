@@ -47,12 +47,6 @@ public class BulbListFragment extends ListFragment
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    // create ContextThemeWrapper from the original Activity Context with the custom theme
-    final Context contextThemeWrapper =
-        new ContextThemeWrapper(this.getActivity(), R.style.GreenWidgets);
-    // clone the inflater using the ContextThemeWrapper
-    LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
@@ -62,13 +56,13 @@ public class BulbListFragment extends ListFragment
     getLoaderManager().initLoader(BULBS_LOADER, null, this);
 
     dataSource =
-        new SimpleCursorAdapter(contextThemeWrapper, layout, null, columns,
+        new SimpleCursorAdapter(getActivity(), layout, null, columns,
                                 new int[]{android.R.id.text1}, 0);
 
     setListAdapter(dataSource);
 
     // Inflate the layout for this fragment
-    View myView = localInflater.inflate(R.layout.bulb_view, null);
+    View myView = inflater.inflate(R.layout.bulb_view, null);
 
     return myView;
   }

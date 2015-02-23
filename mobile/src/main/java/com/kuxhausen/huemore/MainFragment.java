@@ -71,8 +71,8 @@ public class MainFragment extends Fragment implements
         (SlidingTabLayout) myView.findViewById(R.id.bulb_group_sliding_tabs);
     mGroupBulbSlidingTabLayout.setViewPager(mGroupBulbViewPager);
     mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
-        R.color.greenwidgets_color));
-    mGroupBulbSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.blue_primary));
+        R.color.accent));
+    mGroupBulbSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       mGroupBulbSlidingTabLayout.setElevation(
           this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
@@ -101,8 +101,8 @@ public class MainFragment extends Fragment implements
           (SlidingTabLayout) myView.findViewById(R.id.manual_mood_sliding_tabs);
       mMoodManualSlidingTabLayout.setViewPager(mMoodManualViewPager);
       mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
-          R.color.redwidgets_color));
-      mMoodManualSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.blue_primary));
+          R.color.accent));
+      mMoodManualSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         mMoodManualSlidingTabLayout.setElevation(
             this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));

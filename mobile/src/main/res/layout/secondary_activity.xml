@@ -5,7 +5,7 @@
 
 	<include layout="@layout/manual_mood_paging"/>
 	
-	<include layout="@layout/horizontal_divider_line_red"/>
+	<include layout="@layout/horizontal_divider_line_blue"/>
 
     <TextView
         android:id="@+id/brightnessDescripterTextView"
@@ -17,7 +17,6 @@
 
     <SeekBar
         android:id="@+id/brightnessBar"
-        style="@style/SeekBarRedWidgets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="100"
@@ -26,7 +25,6 @@
 	
 	<SeekBar
         android:id="@+id/maxBrightnessBar"
-        style="@style/SeekBarBlueWidgets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="100"

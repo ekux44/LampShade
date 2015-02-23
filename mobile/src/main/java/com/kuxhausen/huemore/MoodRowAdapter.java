@@ -87,12 +87,7 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
       // Get a new instance of the row layout view
       LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
-      // create ContextThemeWrapper from the original Activity Context with the custom theme
-      final Context contextThemeWrapper = new ContextThemeWrapper(context, R.style.RedWidgets);
-      // clone the inflater using the ContextThemeWrapper
-      LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
-
-      moodRowView = localInflater.inflate(R.layout.mood_row, null);
+      moodRowView = inflater.inflate(R.layout.mood_row, null);
       TextView textView = (TextView) moodRowView.findViewById(android.R.id.text1);
       textView.setLongClickable(true);
       CheckBox checkBox = (CheckBox) moodRowView.findViewById(R.id.star);
