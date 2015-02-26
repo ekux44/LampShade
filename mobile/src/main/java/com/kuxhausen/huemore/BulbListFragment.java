@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +34,10 @@ public class BulbListFragment extends ListFragment
   private static final String[] columns = {NetBulbColumns.NAME_COLUMN,
                                            NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID};
 
-  public CursorAdapter dataSource;
-
-  public TextView selected, longSelected; // updated on long click
-  private int selectedPos = -1;
-  private NetworkManagedActivity parrentActivity;
-
-  ArrayList<String> bulbNameList;
+  private CursorAdapter mDataSource;
+  private TextView mSelected, mLongSelected; // updated on long click
+  private int mSelectedPos = -1;
+  private NetworkManagedActivity mParent;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,11 +50,11 @@ public class BulbListFragment extends ListFragment
 
     getLoaderManager().initLoader(BULBS_LOADER, null, this);
 
-    dataSource =
+    mDataSource =
         new SimpleCursorAdapter(getActivity(), layout, null, columns,
                                 new int[]{android.R.id.text1}, 0);
 
-    setListAdapter(dataSource);
+    setListAdapter(mDataSource);
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.bulb_view, null);
@@ -70,7 +65,7 @@ public class BulbListFragment extends ListFragment
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
-    parrentActivity = (NetworkManagedActivity) activity;
+    mParent = (NetworkManagedActivity) activity;
   }
 
   @Override
@@ -82,8 +77,8 @@ public class BulbListFragment extends ListFragment
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (selected != null && selectedPos > -1) {
-      getListView().setItemChecked(selectedPos, false);
+    if (mSelected != null && mSelectedPos > -1) {
+      getListView().setItemChecked(mSelectedPos, false);
     }
   }
 
@@ -91,7 +86,7 @@ public class BulbListFragment extends ListFragment
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+    mLongSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_bulb, menu);
@@ -100,7 +95,7 @@ public class BulbListFragment extends ListFragment
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
 
-    if (longSelected == null) {
+    if (mLongSelected == null) {
       return false;
     }
 
@@ -123,16 +118,16 @@ public class BulbListFragment extends ListFragment
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    selected = ((TextView) (v));
-    selectedPos = position;
+    mSelected = ((TextView) (v));
+    mSelectedPos = position;
 
     ArrayList<Long> bulbIds = new ArrayList<Long>();
-    bulbIds.add(dataSource.getItemId(position));
-    Group g = new Group(bulbIds, selected.getText().toString());
-    parrentActivity.setGroup(g);
+    bulbIds.add(mDataSource.getItemId(position));
+    Group g = new Group(bulbIds, mSelected.getText().toString());
+    mParent.setGroup(g);
 
     // Set the item as checked to be highlighted when in two-pane layout
-    getListView().setItemChecked(selectedPos, true);
+    getListView().setItemChecked(mSelectedPos, true);
   }
 
   @Override
@@ -162,7 +157,7 @@ public class BulbListFragment extends ListFragment
      * Moves the query results into the adapter, causing the ListView fronting this adapter to
      * re-display
      */
-    dataSource.changeCursor(cursor);
+    mDataSource.changeCursor(cursor);
     registerForContextMenu(getListView());
   }
 
@@ -172,6 +167,6 @@ public class BulbListFragment extends ListFragment
      * Clears out the adapter's reference to the Cursor. This prevents memory leaks.
      */
     // unregisterForContextMenu(getListView());
-    dataSource.changeCursor(null);
+    mDataSource.changeCursor(null);
   }
 }

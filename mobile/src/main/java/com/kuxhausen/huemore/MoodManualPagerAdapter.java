@@ -8,11 +8,11 @@ public class MoodManualPagerAdapter extends FragmentPagerAdapter {
   public static final int MOOD_LOCATION = 1;
   public static final int MANUAL_LOCATION = 0;
 
-  private Fragment frag;
+  private Fragment mFrag;
 
   public MoodManualPagerAdapter(Fragment f) {
     super(f.getChildFragmentManager());
-    frag = f;
+    mFrag = f;
   }
 
   @Override
@@ -36,9 +36,9 @@ public class MoodManualPagerAdapter extends FragmentPagerAdapter {
   public CharSequence getPageTitle(int position) {
     switch (position) {
       case MOOD_LOCATION:
-        return frag.getString(R.string.moods).toUpperCase();
+        return mFrag.getString(R.string.moods).toUpperCase();
       case MANUAL_LOCATION:
-        return frag.getString(R.string.cap_manual);
+        return mFrag.getString(R.string.cap_manual);
     }
     return "";
   }

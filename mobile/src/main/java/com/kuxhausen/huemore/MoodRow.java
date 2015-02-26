@@ -8,10 +8,10 @@ import com.kuxhausen.huemore.state.Mood;
 
 public class MoodRow {
 
-  Mood mValue;
-  long id;
-  String mName, mLowercaseName;
-  int mPriority;
+  private Mood mValue;
+  private long id;
+  private String mName, mLowercaseName;
+  private int mPriority;
 
   public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
 
@@ -44,5 +44,13 @@ public class MoodRow {
     mNewValues.put(Definitions.MoodColumns.COL_MOOD_PRIORITY, mPriority);
     c.getContentResolver()
         .update(Definitions.MoodColumns.MOODS_URI, mNewValues, rowSelect, rowArg);
+  }
+
+  public String getName(){
+    return mName;
+  }
+
+  public Mood getMood(){
+    return mValue;
   }
 }

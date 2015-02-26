@@ -29,7 +29,7 @@ public class SecondaryFragment extends Fragment
     implements OnServiceConnectedListener, OnActiveMoodsChangedListener,
                DeviceManager.OnStateChangedListener {
 
-  private NavigationDrawerActivity parrentA;
+  private NavigationDrawerActivity mParent;
 
   private SharedPreferences mSettings;
   private ViewPager mMoodManualViewPager;
@@ -46,17 +46,17 @@ public class SecondaryFragment extends Fragment
 
     View myView = inflater.inflate(R.layout.secondary_activity, null);
 
-    parrentA = (NavigationDrawerActivity) this.getActivity();
+    mParent = (NavigationDrawerActivity) this.getActivity();
 
-    parrentA.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    mParent.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
         < Configuration.SCREENLAYOUT_SIZE_LARGE) {
       //if not in splitscreen mode, try change page title to any selected group
-      if (parrentA.boundToService()) {
-        Group currentlySelected = parrentA.getService().getDeviceManager().getSelectedGroup();
+      if (mParent.boundToService()) {
+        Group currentlySelected = mParent.getService().getDeviceManager().getSelectedGroup();
         if (currentlySelected != null) {
-          parrentA.getSupportActionBar().setTitle(currentlySelected.getName());
+          mParent.getSupportActionBar().setTitle(currentlySelected.getName());
         }
       }
     }
@@ -79,7 +79,7 @@ public class SecondaryFragment extends Fragment
           this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
     }
 
-    mSettings = PreferenceManager.getDefaultSharedPreferences(parrentA);
+    mSettings = PreferenceManager.getDefaultSharedPreferences(mParent);
     if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true)) {
       mMoodManualViewPager.setCurrentItem(MoodManualPagerAdapter.MOOD_LOCATION);
     }
@@ -100,7 +100,7 @@ public class SecondaryFragment extends Fragment
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
-          DeviceManager dm = parrentA.getService().getDeviceManager();
+          DeviceManager dm = mParent.getService().getDeviceManager();
           if (dm.getSelectedGroup() != null) {
             dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
           }
@@ -124,7 +124,7 @@ public class SecondaryFragment extends Fragment
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
-          DeviceManager dm = parrentA.getService().getDeviceManager();
+          DeviceManager dm = mParent.getService().getDeviceManager();
           if (dm.getSelectedGroup() != null) {
             dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
           }
@@ -138,18 +138,18 @@ public class SecondaryFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
-    parrentA.registerOnServiceConnectedListener(this);
+    mParent.registerOnServiceConnectedListener(this);
     this.setHasOptionsMenu(true);
 
-    parrentA.getSupportActionBar().setElevation(0);
+    mParent.getSupportActionBar().setElevation(0);
 
     setMode();
   }
 
   @Override
   public void onServiceConnected() {
-    parrentA.getService().getDeviceManager().registerBrightnessListener(this);
-    parrentA.getService().getMoodPlayer().addOnActiveMoodsChangedListener(this);
+    mParent.getService().getDeviceManager().registerBrightnessListener(this);
+    mParent.getService().getMoodPlayer().addOnActiveMoodsChangedListener(this);
     setMode();
   }
 
@@ -159,12 +159,12 @@ public class SecondaryFragment extends Fragment
   }
 
   public void setMode() {
-    if (!parrentA.boundToService() || mBrightnessBar == null) {
+    if (!mParent.boundToService() || mBrightnessBar == null) {
       return;
     }
 
-    Group g = parrentA.getService().getDeviceManager().getSelectedGroup();
-    BrightnessManager bm = parrentA.getService().getDeviceManager().peekBrightnessManager(g);
+    Group g = mParent.getService().getDeviceManager().getSelectedGroup();
+    BrightnessManager bm = mParent.getService().getDeviceManager().peekBrightnessManager(g);
 
     if (bm != null && bm.getPolicy() == BrightnessManager.BrightnessPolicy.VOLUME_BRI) {
       mBrightnessBar.setVisibility(View.GONE);
@@ -179,12 +179,12 @@ public class SecondaryFragment extends Fragment
 
   public void onPause() {
     super.onPause();
-    if (parrentA.boundToService()) {
-      parrentA.getService().getDeviceManager().removeBrightnessListener(this);
-      parrentA.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
+    if (mParent.boundToService()) {
+      mParent.getService().getDeviceManager().removeBrightnessListener(this);
+      mParent.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
     }
 
-    parrentA.getSupportActionBar()
+    mParent.getSupportActionBar()
         .setElevation(getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
   }
 
@@ -214,7 +214,7 @@ public class SecondaryFragment extends Fragment
     // Handle item selection
     switch (item.getItemId()) {
       case android.R.id.home:
-        parrentA.onBackPressed();
+        mParent.onBackPressed();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -223,8 +223,8 @@ public class SecondaryFragment extends Fragment
 
   @Override
   public void onStateChanged() {
-    if (parrentA != null && parrentA.boundToService()) {
-      DeviceManager dm = parrentA.getService().getDeviceManager();
+    if (mParent != null && mParent.boundToService()) {
+      DeviceManager dm = mParent.getService().getDeviceManager();
 
       if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null
           && dm.getSelectedGroup() != null) {

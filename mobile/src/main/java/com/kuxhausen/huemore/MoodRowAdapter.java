@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
-import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
@@ -19,10 +18,9 @@ import java.util.ArrayList;
 public class MoodRowAdapter extends SimpleCursorAdapter {
 
   private Cursor cursor;
-  private Context context;
+  private Activity mActivity;
   private ArrayList<MoodRow> list = new ArrayList<MoodRow>();
-  MoodListFragment moodListFrag;
-
+  private MoodListFragment moodListFrag;
 
   private ArrayList<MoodRow> getList() {
     return list;
@@ -32,11 +30,11 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     return getList().get(position);
   }
 
-  public MoodRowAdapter(MoodListFragment frag, Context context, int layout, Cursor c,
+  public MoodRowAdapter(MoodListFragment frag, Activity activity, int layout, Cursor c,
                         String[] from, int[] to, int flags) {
-    super(context, layout, c, from, to, flags);
+    super(activity, layout, c, from, to, flags);
     this.cursor = c;
-    this.context = context;
+    this.mActivity = activity;
     this.moodListFrag = frag;
     changeCursor(c);
   }
@@ -79,14 +77,14 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
 
     if (moodRowView == null) {
       // Get a new instance of the row layout view
-      LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+      LayoutInflater inflater = (mActivity).getLayoutInflater();
 
       moodRowView = inflater.inflate(R.layout.mood_row, null);
       TextView textView = (TextView) moodRowView.findViewById(android.R.id.text1);
       textView.setLongClickable(true);
       View starView = moodRowView.findViewById(android.R.id.text2);
 
-      // Hold the view objects in an object, that way the don't need to be "re-  finded"
+      // Hold the view objects in an object, that way the don't need to be "re-found"
       viewHolder = new ViewHolder();
       moodRowView.setTag(viewHolder);
       viewHolder.mText = textView;
@@ -98,11 +96,11 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
     /** Set data to your Views. */
     MoodRow item = getList().get(position);
     viewHolder.mData = item;
-    if (!viewHolder.mText.getText().equals(item.mName)) {
-      viewHolder.mText.setText(item.mName);
+    if (!viewHolder.mText.getText().equals(item.getName())) {
+      viewHolder.mText.setText(item.getName());
       MoodPreviewDrawable mDraw =
-          new MoodPreviewDrawable(context.getResources().getDisplayMetrics());
-      mDraw.setMood(item.mValue);
+          new MoodPreviewDrawable(mActivity.getResources().getDisplayMetrics());
+      mDraw.setMood(item.getMood());
       viewHolder.mText.setCompoundDrawablesWithIntrinsicBounds(mDraw, null, null, null);
     }
     viewHolder.mText.setOnClickListener(new OnClickForwardingListener(moodListFrag, position));

@@ -8,11 +8,11 @@ public class GroupBulbPagerAdapter extends FragmentPagerAdapter {
   public static final int GROUP_LOCATION = 1;
   public static final int BULB_LOCATION = 0;
 
-  private Fragment frag;
+  private Fragment mFrag;
 
   public GroupBulbPagerAdapter(Fragment f) {
     super(f.getChildFragmentManager());
-    frag = f;
+    mFrag = f;
   }
 
   @Override
@@ -36,9 +36,9 @@ public class GroupBulbPagerAdapter extends FragmentPagerAdapter {
   public CharSequence getPageTitle(int position) {
     switch (position) {
       case GROUP_LOCATION:
-        return frag.getString(R.string.groups).toUpperCase();
+        return mFrag.getString(R.string.groups).toUpperCase();
       case BULB_LOCATION:
-        return frag.getString(R.string.cap_bulbs);
+        return mFrag.getString(R.string.cap_bulbs);
     }
     return "";
   }

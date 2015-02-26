@@ -28,7 +28,7 @@ import java.util.Locale;
 public class SettingsFragment extends Fragment implements OnClickListener,
                                                           AdapterView.OnItemSelectedListener {
 
-  SharedPreferences mSettings;
+  private SharedPreferences mSettings;
   private CheckBox mEnableNfcReadPage;
   private Spinner mLanguageSelector;
   private List<String> mLocalizationCodes;
@@ -88,7 +88,7 @@ public class SettingsFragment extends Fragment implements OnClickListener,
       case R.id.action_debugging:
         DebugDialogFragment debug = new DebugDialogFragment();
         debug.show(getActivity().getSupportFragmentManager(),
-                    InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+                   InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         break;
     }
   }

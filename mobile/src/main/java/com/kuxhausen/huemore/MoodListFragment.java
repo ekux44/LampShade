@@ -31,35 +31,30 @@ import com.kuxhausen.huemore.persistence.Utils;
 public class MoodListFragment extends ListFragment
     implements LoaderManager.LoaderCallbacks<Cursor> {
 
-  NavigationDrawerActivity parrentA;
+  NavigationDrawerActivity mParent;
 
   // Identifies a particular Loader being used in this component
   private static final int MOODS_LOADER = 0;
-  public MoodRowAdapter dataSource;
+  private MoodRowAdapter mDataSource;
 
-  public View selected, longSelected; // updated on long click
-  private int selectedPos = -1;
+  private View mSelected, mLongSelected; // updated on long click
+  private int mSelectedPos = -1;
   private ShareActionProvider mShareActionProvider;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
 
-    parrentA = (NavigationDrawerActivity) this.getActivity();
+    mParent = (NavigationDrawerActivity) this.getActivity();
 
-
-    /*
-     * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
-     * onCreateLoader().
-     */
     getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
     String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
-    dataSource =
+    mDataSource =
         new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null, columns,
                            new int[]{android.R.id.text1}, 0);
 
-    setListAdapter(dataSource);
+    setListAdapter(mDataSource);
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.moods_list_fragment, container, false);
 
@@ -92,13 +87,13 @@ public class MoodListFragment extends ListFragment
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
     }
-    if (selectedPos > -1 && selected != null) {
+    if (mSelectedPos > -1 && mSelected != null) {
       /** Getting the actionprovider associated with the menu item whose id is share */
       mShareActionProvider =
           (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
 
       /** Getting the target intent */
-      Intent intent = getDefaultShareIntent("" + dataSource.getTextFromRowView(selected));
+      Intent intent = getDefaultShareIntent("" + mDataSource.getTextFromRowView(mSelected));
 
       /** Setting a share intent */
       if (intent != null) {
@@ -117,7 +112,7 @@ public class MoodListFragment extends ListFragment
     // Handle item selection
     switch (item.getItemId()) {
       case R.id.action_add_mood:
-        parrentA.showEditMood(null);
+        mParent.showEditMood(null);
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -139,11 +134,11 @@ public class MoodListFragment extends ListFragment
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (selected != null && selectedPos > -1) {
-      getListView().setItemChecked(selectedPos, false);
+    if (mSelected != null && mSelectedPos > -1) {
+      getListView().setItemChecked(mSelectedPos, false);
     }
-    selectedPos = -1;
-    selected = null;
+    mSelectedPos = -1;
+    mSelected = null;
     if (getActivity() != null) {
       getActivity().supportInvalidateOptionsMenu();
     }
@@ -153,12 +148,12 @@ public class MoodListFragment extends ListFragment
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    longSelected = ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+    mLongSelected = ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
 
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_mood, menu);
 
-    if (dataSource.getRowFromView(longSelected).isStared()) {
+    if (mDataSource.getRowFromView(mLongSelected).isStared()) {
       menu.findItem(R.id.contextmoodmenu_star).setVisible(false);
       menu.findItem(R.id.contextmoodmenu_unstar).setVisible(true);
     } else {
@@ -172,21 +167,21 @@ public class MoodListFragment extends ListFragment
 
     switch (item.getItemId()) {
       case R.id.contextmoodmenu_star:
-        dataSource.getRowFromView(longSelected).starChanged(this.getActivity(), true);
+        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), true);
         getLoaderManager().restartLoader(MOODS_LOADER, null, this);
         return true;
       case R.id.contextmoodmenu_unstar:
-        dataSource.getRowFromView(longSelected).starChanged(this.getActivity(), false);
+        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), false);
         getLoaderManager().restartLoader(MOODS_LOADER, null, this);
         return true;
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
-        String[] moodArg = {dataSource.getTextFromRowView(longSelected)};
+        String[] moodArg = {mDataSource.getTextFromRowView(mLongSelected)};
         getActivity().getContentResolver().delete(Definitions.MoodColumns.MOODS_URI,
                                                   moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
-        parrentA.showEditMood(dataSource.getTextFromRowView(longSelected));
+        mParent.showEditMood(mDataSource.getTextFromRowView(mLongSelected));
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -229,7 +224,7 @@ public class MoodListFragment extends ListFragment
      * Moves the query results into the adapter, causing the ListView fronting this adapter to
      * re-display
      */
-    dataSource.changeCursor(cursor);
+    mDataSource.changeCursor(cursor);
     registerForContextMenu(getListView());
     getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
   }
@@ -240,18 +235,18 @@ public class MoodListFragment extends ListFragment
      * Clears out the adapter's reference to the Cursor. This prevents memory leaks.
      */
     // unregisterForContextMenu(getListView());
-    dataSource.changeCursor(null);
+    mDataSource.changeCursor(null);
   }
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    selected = v;
-    selectedPos = position;
+    mSelected = v;
+    mSelectedPos = position;
 
-    getListView().setItemChecked(selectedPos, true);
+    getListView().setItemChecked(mSelectedPos, true);
 
     // Notify the parent activity of selected item
-    String moodName = dataSource.getTextFromRowView(selected);
+    String moodName = mDataSource.getTextFromRowView(mSelected);
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
 
     if (service.getDeviceManager().getSelectedGroup() != null) {

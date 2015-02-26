@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.ConnectivityService;
@@ -26,30 +25,18 @@ import com.larswerkman.holocolorpicker.SaturationBar;
 public class ColorWheelFragment extends Fragment implements OnCheckedChangeListener,
                                                             com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
 
-  public interface OnColorChangedListener {
-
-    void colorChanged(int color, int hue);
-
-    float getSaturation();
-  }
-
-  ColorPicker picker;
-  SaturationBar saturationBar;
+  private static Gson gson = new Gson();
+  private CompoundButton mColorLoop;
+  private ColorPicker mPicker;
+  private SaturationBar mSaturationBar;
   private BulbState hs = new BulbState();
 
   {
     hs.setOn(true);
     hs.setEffect(Effect.NONE);
-    hs.setXY (new float[]{.5f, .5f});// TODO change
-
+    hs.setXY(new float[]{.5f, .5f});// TODO change
   }
 
-  Gson gson = new Gson();
-
-  CompoundButton colorLoop;
-
-  LinearLayout colorLoopLayout, transitionLayout;
-  boolean colorLoopLayoutVisible = true;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,10 +45,10 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
 
     View groupDialogView = inflater.inflate(R.layout.colorwheel_mood_fragment, null);
 
-    picker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
-    saturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);
-    picker.addSaturationBar(saturationBar);
-    picker.setShowOldCenterColor(false);
+    mPicker = (ColorPicker) groupDialogView.findViewById(R.id.picker);
+    mSaturationBar = (SaturationBar) groupDialogView.findViewById(R.id.saturationbar);
+    mPicker.addSaturationBar(mSaturationBar);
+    mPicker.setShowOldCenterColor(false);
 
     Bundle args = getArguments();
     if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
@@ -71,12 +58,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
     }
     loadPrevious(hs);
 
-    if (colorLoopLayoutVisible) {
-      colorLoop = (CompoundButton) groupDialogView.findViewById(R.id.colorLoopCompoundButton);
-      colorLoopLayout = (LinearLayout) groupDialogView.findViewById(R.id.colorLoopLayout);
-    } else {
-      groupDialogView.findViewById(R.id.colorLoopLayout).setVisibility(View.GONE);
-    }
+    mColorLoop = (CompoundButton) groupDialogView.findViewById(R.id.colorLoopCompoundButton);
 
     return groupDialogView;
   }
@@ -90,26 +72,16 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
 
       int rgb = Color.HSVToColor(hsv);
 
-      picker.setColor(rgb);
+      mPicker.setColor(rgb);
 
-      saturationBar.setSaturation(hsv[1]);
+      mSaturationBar.setSaturation(hsv[1]);
     }
   }
 
   public void onStart() {
     super.onStart();
-    picker.setOnColorChangedListener(this);
-    if (colorLoopLayoutVisible) {
-      colorLoop.setOnCheckedChangeListener(this);
-    }
-  }
-
-  public void hideColorLoop() {
-    colorLoopLayoutVisible = false;
-    colorLoop = null;
-    if (colorLoopLayout != null) {
-      colorLoopLayout.setVisibility(View.GONE);
-    }
+    mPicker.setOnColorChangedListener(this);
+    mColorLoop.setOnCheckedChangeListener(this);
   }
 
   public void preview() {
@@ -118,11 +90,12 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
       if (service != null) {
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
-        if(g!=null) {
+        if (g != null) {
           BrightnessManager briManager = dm.obtainBrightnessManager(g);
           for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-            if (dm.getNetworkBulb(bulbId) != null)
+            if (dm.getNetworkBulb(bulbId) != null) {
               briManager.setState(dm.getNetworkBulb(bulbId), hs);
+            }
           }
         }
       }

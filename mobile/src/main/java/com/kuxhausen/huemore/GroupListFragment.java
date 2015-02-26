@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Build;
@@ -14,7 +13,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,10 +33,10 @@ public class GroupListFragment extends ListFragment implements
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0;
-  public CursorAdapter dataSource;
-  public TextView selected, longSelected; // updated on long click
-  public int selectedPos = -1;
-  private NetworkManagedActivity gbpfCallback;
+  public CursorAdapter mDataSource;
+  private TextView mSelected, mLongSelected; // updated on long click
+  private int mSelectedPos = -1;
+  private NetworkManagedActivity mParent;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,11 +59,11 @@ public class GroupListFragment extends ListFragment implements
 
     String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
 
-    dataSource =
+    mDataSource =
         new SimpleCursorAdapter(getActivity(), layout, null, columns,
                                 new int[]{android.R.id.text1}, 0);
 
-    setListAdapter(dataSource);
+    setListAdapter(mDataSource);
 
     setHasOptionsMenu(true);
     return myView;
@@ -114,14 +112,14 @@ public class GroupListFragment extends ListFragment implements
   @Override
   public void onAttach(Activity activity) {
     super.onAttach(activity);
-    gbpfCallback = (NetworkManagedActivity) activity;
+    mParent = (NetworkManagedActivity) activity;
   }
 
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (selected != null && selectedPos > -1) {
-      getListView().setItemChecked(selectedPos, false);
+    if (mSelected != null && mSelectedPos > -1) {
+      getListView().setItemChecked(mSelectedPos, false);
     }
   }
 
@@ -129,8 +127,8 @@ public class GroupListFragment extends ListFragment implements
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    longSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-    if (longSelected.getText().toString().equals(this.getActivity().getString(R.string.cap_all))) {
+    mLongSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+    if (mLongSelected.getText().toString().equals(this.getActivity().getString(R.string.cap_all))) {
       return;
     }
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
@@ -140,7 +138,7 @@ public class GroupListFragment extends ListFragment implements
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
 
-    if (longSelected == null) {
+    if (mLongSelected == null) {
       return false;
     }
 
@@ -148,14 +146,14 @@ public class GroupListFragment extends ListFragment implements
 
       case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
         String groupSelect = DeprecatedGroupColumns.GROUP + "=?";
-        String[] groupArg = {longSelected.getText().toString()};
+        String[] groupArg = {mLongSelected.getText().toString()};
         getActivity().getContentResolver().delete(DeprecatedGroupColumns.GROUPBULBS_URI,
                                                   groupSelect, groupArg);
         return true;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
         Bundle args = new Bundle();
-        args.putString(InternalArguments.GROUP_NAME, longSelected.getText().toString());
+        args.putString(InternalArguments.GROUP_NAME, mLongSelected.getText().toString());
         ngdf.setArguments(args);
         ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
 
@@ -168,11 +166,12 @@ public class GroupListFragment extends ListFragment implements
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    selected = ((TextView) (v));
-    selectedPos = position;
+    mSelected = ((TextView) (v));
+    mSelectedPos = position;
 
     // Notify the parent activity of selected bulbs
-    gbpfCallback.setGroup(Group.loadFromDatabase(selected.getText().toString(), this.gbpfCallback));
+    mParent
+        .setGroup(Group.loadFromDatabase(mSelected.getText().toString(), this.mParent));
 
   }
 
@@ -209,7 +208,7 @@ public class GroupListFragment extends ListFragment implements
      * Moves the query results into the adapter, causing the ListView fronting this adapter to
      * re-display
      */
-    dataSource.changeCursor(cursor);
+    mDataSource.changeCursor(cursor);
     registerForContextMenu(getListView());
   }
 
@@ -219,6 +218,6 @@ public class GroupListFragment extends ListFragment implements
      * Clears out the adapter's reference to the Cursor. This prevents memory leaks.
      */
     // unregisterForContextMenu(getListView());
-    dataSource.changeCursor(null);
+    mDataSource.changeCursor(null);
   }
 }

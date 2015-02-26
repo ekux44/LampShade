@@ -23,7 +23,7 @@ public class PromptUpdateDialogFragment extends DialogFragment implements OnChec
 
   CheckBox optOut;
 
-  private NetworkManagedActivity parrentActivity;
+  private NetworkManagedActivity mParent;
 
   @Override
   public void onAttach(Activity activity) {
@@ -32,7 +32,7 @@ public class PromptUpdateDialogFragment extends DialogFragment implements OnChec
     // This makes sure that the container activity has implemented
     // the callback interface. If not, it throws an exception.
     try {
-      parrentActivity = (NetworkManagedActivity) activity;
+      mParent = (NetworkManagedActivity) activity;
     } catch (ClassCastException e) {
     }
   }
@@ -54,7 +54,7 @@ public class PromptUpdateDialogFragment extends DialogFragment implements OnChec
     builder.setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int id) {
-        parrentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri
+        mParent.startActivity(new Intent(Intent.ACTION_VIEW, Uri
             .parse("market://details?id=" + "com.kuxhausen.huemore")));
       }
     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -69,7 +69,7 @@ public class PromptUpdateDialogFragment extends DialogFragment implements OnChec
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(parrentActivity);
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mParent);
     Editor edit = settings.edit();
     if (isChecked) {
       edit.putBoolean(PreferenceKeys.UPDATE_OPT_OUT, true);
