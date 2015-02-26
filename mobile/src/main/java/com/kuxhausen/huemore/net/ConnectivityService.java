@@ -21,9 +21,11 @@ import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.DatabaseGroup;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.state.NfcGroup;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
 import java.util.List;
@@ -163,7 +165,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
           Pair<Integer[], Pair<Mood, Integer>> moodPairs = HueUrlEncoder.decode(encodedMood);
 
           if (moodPairs.second.first != null) {
-            Group g = Group.loadFromLegacyData(moodPairs.first, groupName, this);
+            Group g = new NfcGroup(moodPairs.first, groupName, this);
 
             moodName = (moodName == null) ? "Unknown Mood" : moodName;
 
@@ -179,7 +181,7 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
           startActivity(i);
         }
       } else if (moodName != null && groupName != null) {
-        Group g = Group.loadFromDatabase(groupName, this);
+        Group g = new DatabaseGroup(groupName, this);
         Mood m = Utils.getMoodFromDatabase(moodName, this);
 
         getMoodPlayer().playMood(g, m, moodName, maxBri);

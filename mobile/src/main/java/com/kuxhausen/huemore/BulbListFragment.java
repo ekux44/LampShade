@@ -24,6 +24,7 @@ import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.state.Group;
+import com.kuxhausen.huemore.state.SyntheticGroup;
 
 import java.util.ArrayList;
 
@@ -123,7 +124,7 @@ public class BulbListFragment extends ListFragment
 
     ArrayList<Long> bulbIds = new ArrayList<Long>();
     bulbIds.add(mDataSource.getItemId(position));
-    Group g = new Group(bulbIds, mSelected.getText().toString());
+    Group g = new SyntheticGroup(bulbIds, mSelected.getText().toString());
     mParent.setGroup(g);
 
     // Set the item as checked to be highlighted when in two-pane layout

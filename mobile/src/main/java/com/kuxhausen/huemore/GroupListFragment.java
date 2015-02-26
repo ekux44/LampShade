@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.state.DatabaseGroup;
 import com.kuxhausen.huemore.state.Group;
 
 public class GroupListFragment extends ListFragment implements
@@ -171,7 +172,7 @@ public class GroupListFragment extends ListFragment implements
 
     // Notify the parent activity of selected bulbs
     mParent
-        .setGroup(Group.loadFromDatabase(mSelected.getText().toString(), this.mParent));
+        .setGroup(new DatabaseGroup(mSelected.getText().toString(), this.mParent));
 
   }
 

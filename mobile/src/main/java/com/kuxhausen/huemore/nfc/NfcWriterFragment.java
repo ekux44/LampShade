@@ -43,6 +43,7 @@ import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.DatabaseGroup;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
@@ -266,7 +267,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   public void preview() {
 
     String groupName = ((TextView) groupSpinner.getSelectedView()).getText().toString();
-    Group g = Group.loadFromDatabase(groupName, context);
+    Group g = new DatabaseGroup(groupName, context);
 
     String moodName = ((TextView) moodSpinner.getSelectedView()).getText().toString();
     Mood m = Utils.getMoodFromDatabase(moodName, context);
@@ -283,7 +284,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     String url = "lampshade.io/nfc?";
 
     Group g =
-        Group.loadFromDatabase(((TextView) groupSpinner.getSelectedView()).getText().toString(),
+        new DatabaseGroup(((TextView) groupSpinner.getSelectedView()).getText().toString(),
                                context);
 
     Mood m =

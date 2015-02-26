@@ -28,6 +28,7 @@ import com.kuxhausen.huemore.persistence.InvalidEncodingException;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.state.NfcGroup;
 
 import java.nio.charset.Charset;
 
@@ -126,7 +127,7 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
     ConnectivityService service = this.getService();
     if (service != null) {
       DeviceManager dm = service.getDeviceManager();
-      Group g = Group.loadFromLegacyData(mBulbs, null, this);
+      Group g = new NfcGroup(mBulbs, null, this);
       BrightnessManager briManager = dm.obtainBrightnessManager(g);
       for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
         if(dm.getNetworkBulb(bulbId)!=null)
