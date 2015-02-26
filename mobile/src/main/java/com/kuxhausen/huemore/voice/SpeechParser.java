@@ -128,16 +128,18 @@ public class SpeechParser {
     Cursor
         groupCursor =
         c.getContentResolver().query(DeprecatedGroupColumns.GROUPBULBS_URI, groupColumns,
-                                     DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME + "=?", gWhereClause,
+                                     DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME + "=?",
+                                     gWhereClause,
                                      null);
+    String result = null;
     if (groupCursor.getCount() > 0) {
       groupCursor.moveToFirst();
-      return groupCursor.getString(0);
+      result = groupCursor.getString(0);
     } else if (lowercaseGroupName.equals(c.getString(R.string.cap_all).toLowerCase())) {
-      return c.getString(R.string.cap_all);
-    } else {
-      return null;
+      result = c.getString(R.string.cap_all);
     }
+    groupCursor.close();
+    return result;
   }
 
   private static String checkMoodName(Context c, String lowercaseNameCandidate) {
@@ -148,11 +150,12 @@ public class SpeechParser {
         c.getContentResolver().query(MoodColumns.MOODS_URI, moodColumns,
                                      MoodColumns.COL_MOOD_LOWERCASE_NAME + "=?", mWhereClause,
                                      null);
+    String result = null;
     if (moodCursor.getCount() > 0) {
       moodCursor.moveToFirst();
-      return moodCursor.getString(0);
-    } else {
-      return null;
+      result = moodCursor.getString(0);
     }
+    moodCursor.close();
+    return result;
   }
 }

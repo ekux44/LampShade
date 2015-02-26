@@ -67,8 +67,6 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     SIMPLE_PAGE, RELATIVE_PAGE, DAILY_PAGE
   }
 
-  ;
-
   public void setMoodMode(int spinnerPos) {
     if (pageType.ordinal() != spinnerPos) {
       if (spinnerPos == PageType.SIMPLE_PAGE.ordinal()) {

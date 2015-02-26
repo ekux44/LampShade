@@ -36,7 +36,7 @@ public class ConnectionRowAdapter extends ArrayAdapter<Connection> {
 
     if (rowView == null) {
       // Get a new instance of the row layout view
-      LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+      LayoutInflater inflater = (context).getLayoutInflater();
       rowView = inflater.inflate(R.layout.connection_row, null);
 
       // Hold the view objects in an object, that way the don't need to be "re-finded"

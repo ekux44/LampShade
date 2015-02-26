@@ -182,7 +182,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
           confirmed.setPercentBri((int) (color.getBrightness() * 100.0));
 
           //TODO improve lifx color logic
-          confirmed.setKelvinCT((int) color.getKelvin());
+          confirmed.setKelvinCT(color.getKelvin());
           float[] hs = {color.getHue() / 360.0f, color.getSaturation()};
           confirmed.setXY(Utils.hsTOxy(hs));
 

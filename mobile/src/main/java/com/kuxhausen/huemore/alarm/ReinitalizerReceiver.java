@@ -60,5 +60,6 @@ public class ReinitalizerReceiver extends BroadcastReceiver {
         AlarmReceiver.registerAlarm(context, row);
       }
     }
+    cursor.close();
   }
 }

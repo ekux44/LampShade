@@ -49,6 +49,7 @@ public class HueUrlEncoder {
         int hueBulbNum = Integer.parseInt(s);
         legacyArray[hueBulbNum] = hueBulbNum;
       }
+      cursor.close();
     }
 
     return encodeLegacy(m, legacyArray, brightness);
@@ -441,7 +442,8 @@ public class HueUrlEncoder {
           // 20 bit timestamp
           timeArray[i] = mBitSet.extractNumber(20);
         }
-        mood.setUsesTiming(!(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0)));
+        mood.setUsesTiming(
+            !(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0)));
 
         int numStates;
         if (encodingVersion >= 4) {
@@ -479,7 +481,9 @@ public class HueUrlEncoder {
         for (int i = 0; i < numEvents; i++) {
           int channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
 
-          long milliseconds = Utils.fromDeciSeconds(timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))]);
+          long
+              milliseconds =
+              Utils.fromDeciSeconds(timeArray[mBitSet.extractNumber(getBitLength(numTimestamps))]);
 
           BulbState state = stateArray[mBitSet.extractNumber(getBitLength(numStates))];
 

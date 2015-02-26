@@ -137,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           cv.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(m));
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
+        cursor.close();
       }
 
       case 2: {
@@ -215,7 +216,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           cv.put(MoodColumns.COL_MOOD_VALUE, moodMap.get(key));
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
-
+        moodCursor.close();
       }
       case 5: {
         db.execSQL("CREATE TABLE " + NetConnectionColumns.TABLE_NAME + " (" + BaseColumns._ID
@@ -328,6 +329,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           }
         }
+        oldGroupCursor.close();
       }
       case 6: {
         //land and fall through to next case
@@ -468,6 +470,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           groupValues.put(DeprecatedGroupColumns.BULB_DATABASE_ID, bulbBaseId);
           db.insert(DeprecatedGroupColumns.TABLE_NAME, null, groupValues);
         }
+        moodCursor.close();
+        oldGroupCursor.close();
       }
       case 10: {
 
@@ -579,7 +583,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           }
 
           db.insert(AlarmColumns.TABLE_NAME, null, alarm.getValues());
+          moodCursor.close();
         }
+        oldAlarmsCursor.close();
       }
     }
   }

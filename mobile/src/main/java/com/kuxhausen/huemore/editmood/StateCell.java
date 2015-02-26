@@ -94,15 +94,15 @@ public class StateCell {
     if (hs.getMiredCT() != null) {
       float[] hueSat = Utils.xyTOhs(Utils.ctTOxy(hs.getMiredCT()));
       float[] hsv = new float[3];
-      hsv[0] = (float) (hueSat[0] * 360);
-      hsv[1] = (float) (hueSat[1]);
+      hsv[0] = (hueSat[0] * 360);
+      hsv[1] = (hueSat[1]);
       hsv[2] = (hs.get255Bri() != null) ? hs.get255Bri() / 255f : 1f; // remember relative brightness
       return Color.HSVToColor(hsv);
     } else if (hs.getXY() != null) {
       float[] hueSat = (sRGB) ? Utils.xyTOsRGBhs(hs.getXY()) : Utils.xyTOhs(hs.getXY());
       float[] hsv = new float[3];
-      hsv[0] = (float) (hueSat[0] * 360);
-      hsv[1] = (float) (hueSat[1]);
+      hsv[0] = (hueSat[0] * 360);
+      hsv[1] = (hueSat[1]);
       hsv[2] = (hs.get255Bri() != null) ? hs.get255Bri() / 255f : 1f; // remember relative brightness
       return Color.HSVToColor(hsv);
     } else {

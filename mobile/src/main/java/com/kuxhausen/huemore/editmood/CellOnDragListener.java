@@ -31,7 +31,7 @@ class CellOnDragListener implements View.OnDragListener {
     switch (action) {
       case DragEvent.ACTION_DRAG_STARTED:
         // Determines if this View can accept the dragged data
-        if (((ViewType) event.getLocalState()).equals(mViewType)) {
+        if ((event.getLocalState()).equals(mViewType)) {
           return true;
         }
         return false;
@@ -94,9 +94,6 @@ class CellOnDragListener implements View.OnDragListener {
         }
         return true;
     }
-    ;
     return false;
   }
-
-  ;
 }

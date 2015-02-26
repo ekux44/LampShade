@@ -68,6 +68,8 @@ public class AlarmLogic {
   }
 
   public static AlarmData getAlarm(Context context, long id) {
+    AlarmData result = null;
+
     String
         rowSelect =
         Definitions.AlarmColumns.TABLE_NAME + "." + Definitions.AlarmColumns._ID + "=?";
@@ -77,10 +79,10 @@ public class AlarmLogic {
                                                        null);
 
     if (cursor.moveToFirst()) {
-      return new AlarmData(cursor);
-    } else {
-      return null;
+      result = new AlarmData(cursor);
     }
+    cursor.close();
+    return result;
   }
 
   public static void insertAlarmToDB(Context context, AlarmData data) {
