@@ -109,8 +109,8 @@
     <string name="empty_list_connections">Not paired with any lights. Click the plus button to add a new connection.</string>
     <string name="empty_list_bulbs">Not paired with any lights. Go to the Connections page to setup lights.</string>
     <string name="empty_list_groups">Not paired with any lights. Go to the Connections page to setup lights.</string>
-    <string name="mark_favorite">Favorite</string>
-    <string name="mark_not_favorite">UnFavorite</string>
+    <string name="mark_favorite">Favorite ★</string>
+    <string name="mark_not_favorite">UnFavorite ☆</string>
     <string name="action_refresh">Refresh</string>
     <string name="dialog_title_searching_for_lights">Searching for lights</string>
     <string name="dialog_title_import_mood">Shared Mood</string>

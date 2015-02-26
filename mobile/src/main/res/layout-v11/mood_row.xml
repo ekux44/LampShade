@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:gravity="center_vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal">
 
-    <include
-        layout="@android:layout/simple_list_item_activated_1"
+    <TextView
+        android:id="@android:id/text1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_marginLeft="6dip"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <CheckBox
-        android:id="@+id/star"
-        style="@style/Star"
+    <TextView
+        android:id="@android:id/text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"/>
+        android:layout_marginRight="6dip"
+        android:gravity="center_vertical"
+        android:text="@string/star"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 </LinearLayout>

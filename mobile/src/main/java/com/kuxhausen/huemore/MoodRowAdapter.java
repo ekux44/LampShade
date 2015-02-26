@@ -1,18 +1,13 @@
 package com.kuxhausen.huemore;
 
-import com.google.gson.Gson;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
@@ -26,7 +21,6 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
   private Cursor cursor;
   private Context context;
   private ArrayList<MoodRow> list = new ArrayList<MoodRow>();
-  Gson gson = new Gson();
   MoodListFragment moodListFrag;
 
 
@@ -90,41 +84,52 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
       moodRowView = inflater.inflate(R.layout.mood_row, null);
       TextView textView = (TextView) moodRowView.findViewById(android.R.id.text1);
       textView.setLongClickable(true);
-      CheckBox checkBox = (CheckBox) moodRowView.findViewById(R.id.star);
+      View starView = moodRowView.findViewById(android.R.id.text2);
 
       // Hold the view objects in an object, that way the don't need to be "re-  finded"
       viewHolder = new ViewHolder();
       moodRowView.setTag(viewHolder);
-      viewHolder.ctv = textView;
-      viewHolder.starView = checkBox;
+      viewHolder.mText = textView;
+      viewHolder.mStar = starView;
     } else {
       viewHolder = (ViewHolder) moodRowView.getTag();
     }
 
     /** Set data to your Views. */
     MoodRow item = getList().get(position);
-    if (!viewHolder.ctv.getText().equals(item.mName)) {
-      viewHolder.ctv.setText(item.mName);
+    viewHolder.mData = item;
+    if (!viewHolder.mText.getText().equals(item.mName)) {
+      viewHolder.mText.setText(item.mName);
       MoodPreviewDrawable mDraw =
           new MoodPreviewDrawable(context.getResources().getDisplayMetrics());
       mDraw.setMood(item.mValue);
-      viewHolder.ctv.setCompoundDrawablesWithIntrinsicBounds(mDraw, null, null, null);
+      viewHolder.mText.setCompoundDrawablesWithIntrinsicBounds(mDraw, null, null, null);
     }
-    viewHolder.ctv.setOnClickListener(new OnClickForwardingListener(moodListFrag, position));
+    viewHolder.mText.setOnClickListener(new OnClickForwardingListener(moodListFrag, position));
 
-    //remove old listener before setting value so other row being reused from is not affected
-    viewHolder.starView.setOnCheckedChangeListener(null);
-    viewHolder.starView.setChecked(item.isStared());
-    viewHolder.starView
-        .setOnCheckedChangeListener(new OnCheckListener(context, this, position, moodListFrag));
+    if (item.isStared()) {
+      viewHolder.mStar.setVisibility(View.VISIBLE);
+    } else {
+      viewHolder.mStar.setVisibility(View.INVISIBLE);
+    }
 
     return moodRowView;
   }
 
+
+  public String getTextFromRowView(View row) {
+    return ((TextView) row.findViewById(android.R.id.text1)).getText().toString();
+  }
+
+  public MoodRow getRowFromView(View view) {
+    return ((ViewHolder) view.getTag()).mData;
+  }
+
   protected static class ViewHolder {
 
-    protected TextView ctv;
-    protected CheckBox starView;
+    protected TextView mText;
+    protected View mStar;
+    protected MoodRow mData;
   }
 
   public class OnClickForwardingListener implements OnClickListener {
@@ -142,30 +147,6 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
       View textView = v;
       mlf.onListItemClick(mlf.getListView(), textView, position, textView.getId());
     }
-
   }
 
-  public class OnCheckListener implements CompoundButton.OnCheckedChangeListener {
-
-    Context mContext;
-    MoodRowAdapter mla;
-    int position;
-    MoodListFragment mlf;
-
-    public OnCheckListener(Context c, MoodRowAdapter adapt, int pos, MoodListFragment frag) {
-      mContext = c;
-      mla = adapt;
-      position = pos;
-      mlf = frag;
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-      if (mla.getRow(position).isStared() != isChecked) {
-        mla.getRow(position).starChanged(mContext, isChecked);
-        mlf.markCanRefresh();
-      }
-    }
-
-  }
 }

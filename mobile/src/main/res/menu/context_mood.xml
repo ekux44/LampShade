@@ -1,12 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/contextmoodmenu_edit"
+        android:id="@+id/contextmoodmenu_star"
         android:orderInCategory="0"
+        android:title="@string/mark_favorite"/>
+    <item
+        android:id="@+id/contextmoodmenu_unstar"
+        android:orderInCategory="0"
+        android:title="@string/mark_not_favorite"
+        android:visible="false"/>
+    <item
+        android:id="@+id/contextmoodmenu_edit"
+        android:orderInCategory="1"
         android:title="@string/contextmenu_edit"/>
     <item
         android:id="@+id/contextmoodmenu_delete"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:title="@string/contextmenu_delete"/>
 
 </menu>

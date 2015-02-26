@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions;
@@ -41,7 +40,6 @@ public class MoodListFragment extends ListFragment
   public View selected, longSelected; // updated on long click
   private int selectedPos = -1;
   private ShareActionProvider mShareActionProvider;
-  private boolean mCanRefresh;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,7 +98,7 @@ public class MoodListFragment extends ListFragment
           (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
 
       /** Getting the target intent */
-      Intent intent = getDefaultShareIntent("" + getTextFromRowView(selected));
+      Intent intent = getDefaultShareIntent("" + dataSource.getTextFromRowView(selected));
 
       /** Setting a share intent */
       if (intent != null) {
@@ -112,26 +110,12 @@ public class MoodListFragment extends ListFragment
       shareItem.setVisible(false);
     }
 
-    MenuItem refreshItem = menu.findItem(R.id.action_refresh_moods);
-    if (mCanRefresh) {
-      refreshItem.setEnabled(true);
-      refreshItem.setVisible(true);
-    } else {
-      refreshItem.setEnabled(false);
-      refreshItem.setVisible(false);
-    }
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     // Handle item selection
     switch (item.getItemId()) {
-
-      case R.id.action_refresh_moods:
-        mCanRefresh = false;
-        parrentA.supportInvalidateOptionsMenu();
-        getLoaderManager().restartLoader(MOODS_LOADER, null, this);
-        return true;
       case R.id.action_add_mood:
         parrentA.showEditMood(null);
         return true;
@@ -173,21 +157,36 @@ public class MoodListFragment extends ListFragment
 
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_mood, menu);
+
+    if (dataSource.getRowFromView(longSelected).isStared()) {
+      menu.findItem(R.id.contextmoodmenu_star).setVisible(false);
+      menu.findItem(R.id.contextmoodmenu_unstar).setVisible(true);
+    } else {
+      menu.findItem(R.id.contextmoodmenu_star).setVisible(true);
+      menu.findItem(R.id.contextmoodmenu_unstar).setVisible(false);
+    }
   }
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
 
     switch (item.getItemId()) {
-
+      case R.id.contextmoodmenu_star:
+        dataSource.getRowFromView(longSelected).starChanged(this.getActivity(), true);
+        getLoaderManager().restartLoader(MOODS_LOADER, null, this);
+        return true;
+      case R.id.contextmoodmenu_unstar:
+        dataSource.getRowFromView(longSelected).starChanged(this.getActivity(), false);
+        getLoaderManager().restartLoader(MOODS_LOADER, null, this);
+        return true;
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
-        String[] moodArg = {getTextFromRowView(longSelected)};
+        String[] moodArg = {dataSource.getTextFromRowView(longSelected)};
         getActivity().getContentResolver().delete(Definitions.MoodColumns.MOODS_URI,
                                                   moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
-        parrentA.showEditMood(getTextFromRowView(longSelected));
+        parrentA.showEditMood(dataSource.getTextFromRowView(longSelected));
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -252,7 +251,7 @@ public class MoodListFragment extends ListFragment
     getListView().setItemChecked(selectedPos, true);
 
     // Notify the parent activity of selected item
-    String moodName = getTextFromRowView(selected);
+    String moodName = dataSource.getTextFromRowView(selected);
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
 
     if (service.getDeviceManager().getSelectedGroup() != null) {
@@ -262,16 +261,5 @@ public class MoodListFragment extends ListFragment
     }
 
     getActivity().supportInvalidateOptionsMenu();
-  }
-
-  private String getTextFromRowView(View row) {
-    return ((TextView) row.findViewById(android.R.id.text1)).getText().toString();
-  }
-
-  public void markCanRefresh() {
-    if (!mCanRefresh) {
-      parrentA.supportInvalidateOptionsMenu();
-    }
-    mCanRefresh = true;
   }
 }

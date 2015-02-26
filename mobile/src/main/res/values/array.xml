@@ -7,6 +7,7 @@
     <string name="cap_short_none"></string>
     <string name="action_debugging_tools">Debugging Tools</string>
     <string name="action_debug_add_fake_bulb">Add fake bulb</string>
+    <string name="star">★</string>
 
     <integer-array name="transition_values_array">
         <item>4</item>
