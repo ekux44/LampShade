@@ -106,6 +106,9 @@ public final class Definitions {
 
     public static final String COL_GROUP_NAME = "GROUP_NAME";
     public static final String COL_GROUP_LOWERCASE_NAME = "COL_GROUP_LOWERCASE_NAME";
+    public static final String COL_GROUP_PRIORITY = "COL_GROUP_PRIORITY";
+
+    public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
 
     // This class cannot be instantiated
     private GroupColumns() {
@@ -183,6 +186,8 @@ public final class Definitions {
     public static final String COL_MOOD_NAME = "Dmood";
     public static final String COL_MOOD_LOWERCASE_NAME = "D_COL_MOOD_LOWERCASE_NAME";
     public static final String COL_MOOD_PRIORITY = "D_COL_MOOD_PRIORITY";
+
+    public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
 
     // This class cannot be instantiated
     private MoodColumns() {

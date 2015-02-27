@@ -3,7 +3,7 @@ package com.kuxhausen.huemore;
 import android.content.ContentValues;
 import android.content.Context;
 
-import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.state.Mood;
 
 public class MoodRow {
@@ -12,8 +12,6 @@ public class MoodRow {
   private long id;
   private String mName, mLowercaseName;
   private int mPriority;
-
-  public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
 
   public MoodRow(String name, long dbid, Mood mood, String lowercaseName, int priority) {
     id = dbid;
@@ -24,7 +22,7 @@ public class MoodRow {
   }
 
   public boolean isStared() {
-    if (mPriority == STARRED_PRIORITY) {
+    if (mPriority == MoodColumns.STARRED_PRIORITY) {
       return true;
     }
     return false;
@@ -32,25 +30,25 @@ public class MoodRow {
 
   public void starChanged(Context c, boolean isStared) {
     if (isStared) {
-      mPriority = STARRED_PRIORITY;
+      mPriority = MoodColumns.STARRED_PRIORITY;
     } else {
-      mPriority = UNSTARRED_PRIORITY;
+      mPriority = MoodColumns.UNSTARRED_PRIORITY;
     }
 
-    String rowSelect = Definitions.MoodColumns._ID + "=?";
+    String rowSelect = MoodColumns._ID + "=?";
     String[] rowArg = {"" + id};
 
     ContentValues mNewValues = new ContentValues();
-    mNewValues.put(Definitions.MoodColumns.COL_MOOD_PRIORITY, mPriority);
+    mNewValues.put(MoodColumns.COL_MOOD_PRIORITY, mPriority);
     c.getContentResolver()
-        .update(Definitions.MoodColumns.MOODS_URI, mNewValues, rowSelect, rowArg);
+        .update(MoodColumns.MOODS_URI, mNewValues, rowSelect, rowArg);
   }
 
-  public String getName(){
+  public String getName() {
     return mName;
   }
 
-  public Mood getMood(){
+  public Mood getMood() {
     return mValue;
   }
 }
