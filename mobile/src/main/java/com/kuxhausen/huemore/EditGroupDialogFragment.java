@@ -10,7 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -36,20 +35,15 @@ import java.util.ArrayList;
 public class EditGroupDialogFragment extends DialogFragment implements
                                                             LoaderManager.LoaderCallbacks<Cursor> {
 
-  private static final int BULBS_LOADER = 0;
-  private static final String[] columns = {NetBulbColumns.NAME_COLUMN,
-                                           NetBulbColumns.DEVICE_ID_COLUMN, BaseColumns._ID};
+  private static final int NET_BULBS_LOADER = 0;
+  private static final String[] net_columns = {NetBulbColumns.NAME_COLUMN,
+                                               NetBulbColumns.DEVICE_ID_COLUMN, NetBulbColumns._ID};
 
   public CursorAdapter dataSource;
-
-  ListView bulbsListView;
-  EditText nameEditText;
-
-  String initialName;
-
-  ArrayList<Long> includedNetBulbIds = new ArrayList<Long>();
-
-  private NetworkManagedActivity parrentActivity;
+  private ListView mBulbsListView;
+  private EditText mNameEditText;
+  private DatabaseGroup initialGroup;
+  private NetworkManagedActivity mParent;
 
   @Override
   public void onAttach(Activity activity) {
@@ -58,7 +52,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
     // This makes sure that the container activity has implemented
     // the callback interface. If not, it throws an exception.
     try {
-      parrentActivity = (NetworkManagedActivity) activity;
+      mParent = (NetworkManagedActivity) activity;
     } catch (ClassCastException e) {
     }
   }
@@ -70,72 +64,64 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
     LayoutInflater inflater = getActivity().getLayoutInflater();
     View groupDialogView = inflater.inflate(R.layout.edit_group_dialog, null);
-    bulbsListView = ((ListView) groupDialogView.findViewById(R.id.listView1));
-    bulbsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+    mBulbsListView = ((ListView) groupDialogView.findViewById(R.id.listView1));
+    mBulbsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-    getLoaderManager().initLoader(BULBS_LOADER, null, this);
+    getLoaderManager().initLoader(NET_BULBS_LOADER, null, this);
 
     dataSource =
         new SimpleCursorAdapter(this.getActivity(),
-                                android.R.layout.simple_list_item_multiple_choice, null, columns,
-                                new int[]{android.R.id.text1}, 0);
+                                android.R.layout.simple_list_item_multiple_choice, null,
+                                net_columns, new int[]{android.R.id.text1}, 0);
 
-    bulbsListView.setAdapter(dataSource);
+    mBulbsListView.setAdapter(dataSource);
 
     builder.setView(groupDialogView);
 
-    nameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
+    mNameEditText = (EditText) groupDialogView.findViewById(R.id.editText1);
 
     Bundle args = this.getArguments();
-    if (args != null && args.containsKey(InternalArguments.GROUP_NAME)) {
-      initialName = args.getString(InternalArguments.GROUP_NAME);
-      nameEditText.setText(initialName);
+    if (args != null && args.containsKey(InternalArguments.GROUP_ID)) {
+      initialGroup = new DatabaseGroup(args.getLong(InternalArguments.GROUP_ID), mParent);
+      mNameEditText.setText(initialGroup.getName());
     }
 
     builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int id) {
 
-        // if there was a previous mood we're editing, remove it
-        if (initialName != null) {
-          String groupSelect = DeprecatedGroupColumns.GROUP + "=?";
-          String[] groupArg = {initialName};
-          getActivity().getContentResolver().delete(
-              DeprecatedGroupColumns.GROUPBULBS_URI, groupSelect, groupArg);
-        }
-
-        String groupName = nameEditText.getText().toString();
+        String groupName = mNameEditText.getText().toString();
         if (groupName == null || groupName.length() < 1) {
           SharedPreferences settings =
-              PreferenceManager.getDefaultSharedPreferences(parrentActivity);
+              PreferenceManager.getDefaultSharedPreferences(mParent);
           int unnamedNumber = 1 + settings.getInt(PreferenceKeys.UNNAMED_GROUP_NUMBER, 0);
           Editor edit = settings.edit();
           edit.putInt(PreferenceKeys.UNNAMED_GROUP_NUMBER, unnamedNumber);
           edit.commit();
           groupName =
-              parrentActivity.getResources().getString(R.string.unnamed_group) + " "
+              mParent.getResources().getString(R.string.unnamed_group) + " "
               + unnamedNumber;
         }
 
-        SparseBooleanArray set = bulbsListView.getCheckedItemPositions();
+        if(initialGroup==null){
+          initialGroup = DatabaseGroup.createGroup(groupName, mParent);
+        }
+
+        initialGroup.setName(groupName, mParent);
+
+        ArrayList<Long> bulbIds = new ArrayList<Long>();
+        SparseBooleanArray set = mBulbsListView.getCheckedItemPositions();
         Cursor cursor = dataSource.getCursor();
         cursor.moveToFirst();
         for (int i = 0; i < cursor.getCount(); i++) {
           if (set.get(i)) {
-            ContentValues mNewValues = new ContentValues();
-
-            mNewValues.put(DeprecatedGroupColumns.GROUP, groupName);
-            mNewValues.put(DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME,
-                           groupName.toLowerCase().trim());
-            mNewValues.put(DeprecatedGroupColumns.BULB_DATABASE_ID, cursor.getLong(2));
-            mNewValues.put(DeprecatedGroupColumns.PRECEDENCE, i);
-
-            getActivity().getContentResolver()
-                .insert(DeprecatedGroupColumns.GROUPS_URI, mNewValues);
+            bulbIds.add(cursor.getLong(2));
           }
-
           cursor.moveToNext();
         }
+        cursor.close();
+
+        initialGroup.setNetBulbDatabaseIds(bulbIds, mParent);
       }
     }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override
@@ -153,11 +139,11 @@ public class EditGroupDialogFragment extends DialogFragment implements
      * Takes action based on the ID of the Loader that's being created
      */
     switch (loaderID) {
-      case BULBS_LOADER:
+      case NET_BULBS_LOADER:
         // Returns a new CursorLoader
         return new CursorLoader(getActivity(), // Parent activity context
                                 NetBulbColumns.URI, // Table
-                                columns, // Projection to return
+                                net_columns, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments
                                 null // Default sort order
@@ -176,16 +162,15 @@ public class EditGroupDialogFragment extends DialogFragment implements
      */
     dataSource.changeCursor(cursor);
 
-    if (initialName != null) {
-      Group g = new DatabaseGroup(initialName, parrentActivity);
+    if (initialGroup != null) {
 
       cursor.moveToFirst();
       for (int i = 0; i < cursor.getCount(); i++) {
 
-        if (g.getNetworkBulbDatabaseIds().contains(cursor.getLong(2))) {
-          bulbsListView.setItemChecked(i, true);
+        if (initialGroup.getNetworkBulbDatabaseIds().contains(cursor.getLong(2))) {
+          mBulbsListView.setItemChecked(i, true);
         } else {
-          bulbsListView.setItemChecked(i, false);
+          mBulbsListView.setItemChecked(i, false);
         }
 
         cursor.moveToNext();

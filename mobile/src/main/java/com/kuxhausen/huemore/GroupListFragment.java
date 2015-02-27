@@ -122,6 +122,14 @@ public class GroupListFragment extends ListFragment implements
     }
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_group, menu);
+
+    if (mDataSource.getRowFromView(mLongSelected).isStared()) {
+      menu.findItem(R.id.contextmoodmenu_star).setVisible(false);
+      menu.findItem(R.id.contextmoodmenu_unstar).setVisible(true);
+    } else {
+      menu.findItem(R.id.contextmoodmenu_star).setVisible(true);
+      menu.findItem(R.id.contextmoodmenu_unstar).setVisible(false);
+    }
   }
 
   @Override
@@ -132,7 +140,14 @@ public class GroupListFragment extends ListFragment implements
     }
 
     switch (item.getItemId()) {
-
+      case R.id.contextmoodmenu_star:
+        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), true);
+        getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
+        return true;
+      case R.id.contextmoodmenu_unstar:
+        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), false);
+        getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
+        return true;
       case R.id.contextgroupmenu_delete:
         mDataSource.getRowFromView(mLongSelected).deleteSelf(mParent);
         return true;

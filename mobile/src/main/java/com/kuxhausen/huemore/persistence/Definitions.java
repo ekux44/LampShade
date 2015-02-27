@@ -312,6 +312,7 @@ public final class Definitions {
     public static final String ALARM_INTENT_ACTION = "com.kuxhausen.huemore.alarm";
     public static final String CONNECTIVITY_SERVICE_INTENT_ACTION = "com.kuxhausen.huemore.net";
     public static final String DAYS_OF_WEEK_AS_BYTE = "DAYS_OF_WEEK_AS_BYTE";
+    public static final String GROUP_ID = "GROUP_ID";
   }
 
   public static final class PreferenceKeys {

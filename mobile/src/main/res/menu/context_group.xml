@@ -1,6 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/contextgroupmenu_star"
+        android:orderInCategory="0"
+        android:title="@string/mark_favorite"/>
+    <item
+        android:id="@+id/contextgroupmenu_unstar"
+        android:orderInCategory="0"
+        android:title="@string/mark_not_favorite"
+        android:visible="false"/>
+    <item
         android:id="@+id/contextgroupmenu_edit"
         android:orderInCategory="0"
         android:title="@string/contextmenu_edit"/>

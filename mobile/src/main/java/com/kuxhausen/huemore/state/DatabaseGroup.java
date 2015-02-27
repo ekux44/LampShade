@@ -31,13 +31,15 @@ public class DatabaseGroup extends Group {
   private long mId;
   private String mName, mLowercaseName;
   private int mPriority;
-  private List<Long> mGroupBulbId;
-  private List<Integer> mGroupBulbPrecedence;
-  private List<Long> mGroupBulbNetId;
+  private List<Long> mGroupBulbNetId = new ArrayList<Long>();
 
 
   public DatabaseGroup(String name, Context c) {
     this(getGroupCursor(name, c), c);
+  }
+
+  public DatabaseGroup(long id, Context c) {
+    this(getGroupCursor(id, c), c);
   }
 
   public DatabaseGroup(Cursor groupCursor, Context c) {
@@ -55,14 +57,8 @@ public class DatabaseGroup extends Group {
                                      GroupBulbColumns.COL_GROUP_ID + "=?", bulbWhere,
                                      GroupBulbColumns.COL_BULB_PRECEDENCE + " ASC");
 
-    mGroupBulbId = new ArrayList<Long>();
-    mGroupBulbPrecedence = new ArrayList<Integer>();
-    mGroupBulbNetId = new ArrayList<Long>();
-
     bulbCursor.moveToPosition(-1);
     while (bulbCursor.moveToNext()) {
-      mGroupBulbId.add(bulbCursor.getLong(0));
-      mGroupBulbPrecedence.add(bulbCursor.getInt(2));
       mGroupBulbNetId.add(bulbCursor.getLong(3));
     }
 
@@ -85,20 +81,57 @@ public class DatabaseGroup extends Group {
     }
   }
 
+  public static Cursor getGroupCursor(long id, Context c) {
+    String[] groupWhere = {"" + id};
+    Cursor
+        groupCursor =
+        c.getContentResolver()
+            .query(GroupColumns.URI, GROUP_QUERY_COLUMNS, GroupColumns._ID + "=?", groupWhere,
+                   null);
+
+    if (groupCursor.moveToFirst()) {
+      return groupCursor;
+    } else {
+      throw new IllegalStateException("Group id " + id + " not in database");
+    }
+  }
+
   @Override
   public String getName() {
     return mName;
   }
 
   public void setName(String name, Context c) {
-    mName = name;
-    mLowercaseName = name.toLowerCase();
-    saveGroupUpdate(c);
+    if (!mName.equals(name)) {
+      mName = name;
+      mLowercaseName = name.toLowerCase().trim();
+      saveGroupUpdate(c);
+    }
   }
 
   @Override
   public List<Long> getNetworkBulbDatabaseIds() {
     return mGroupBulbNetId;
+  }
+
+  public void setNetBulbDatabaseIds(List<Long> bulbIdList, Context c) {
+    if (!mGroupBulbNetId.equals(bulbIdList)) {
+
+      String where = GroupBulbColumns.COL_GROUP_ID + "=?";
+      String[] whereArgs = {"" + mId};
+      c.getContentResolver().delete(GroupBulbColumns.URI, where, whereArgs);
+
+      for (int i = 0; i < bulbIdList.size(); i++) {
+        ContentValues values = new ContentValues();
+        values.put(GroupBulbColumns.COL_GROUP_ID, mId);
+        values.put(GroupBulbColumns.COL_BULB_PRECEDENCE, i);
+        values.put(GroupBulbColumns.COL_NET_BULB_ID, bulbIdList.get(i));
+
+        c.getContentResolver().insert(GroupBulbColumns.URI, values);
+      }
+
+      mGroupBulbNetId = bulbIdList;
+    }
   }
 
   public boolean isStared() {
@@ -116,15 +149,28 @@ public class DatabaseGroup extends Group {
   }
 
   private void saveGroupUpdate(Context c) {
-    ContentValues mValues = new ContentValues();
-    mValues.put(GroupColumns.COL_GROUP_NAME, mName);
-    mValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, mLowercaseName);
-    mValues.put(GroupColumns.COL_GROUP_PRIORITY, mPriority);
+    ContentValues values = new ContentValues();
+    values.put(GroupColumns.COL_GROUP_NAME, mName);
+    values.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, mLowercaseName);
+    values.put(GroupColumns.COL_GROUP_PRIORITY, mPriority);
 
     String where = GroupColumns._ID + "=?";
     String[] whereArg = {"" + mId};
 
-    c.getContentResolver().update(GroupColumns.URI, mValues, where, whereArg);
+    c.getContentResolver().update(GroupColumns.URI, values, where, whereArg);
+  }
+
+  public static DatabaseGroup createGroup(String name, Context c) {
+    ContentValues values = new ContentValues();
+    values.put(GroupColumns.COL_GROUP_NAME, name);
+    values.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, name.toLowerCase());
+    values.put(GroupColumns.COL_GROUP_PRIORITY, GroupColumns.UNSTARRED_PRIORITY);
+
+    long
+        id =
+        Long.parseLong(
+            c.getContentResolver().insert(GroupColumns.URI, values).getLastPathSegment());
+    return new DatabaseGroup(id, c);
   }
 
   /*
@@ -135,10 +181,8 @@ public class DatabaseGroup extends Group {
     String[] whereArgs = {"" + mId};
     c.getContentResolver().delete(GroupColumns.URI, groupWhere, whereArgs);
 
-    mId = -1;
-    mName = "";
-    mLowercaseName = "";
-    mPriority = -1;
+    mId = mPriority = -1;
+    mName = mLowercaseName = "";
   }
 
 }
