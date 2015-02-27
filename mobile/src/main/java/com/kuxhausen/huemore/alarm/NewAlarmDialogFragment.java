@@ -3,7 +3,6 @@ package com.kuxhausen.huemore.alarm;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -22,7 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 
@@ -34,6 +33,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
+  private static final String[] GROUP_SELECTION = {GroupColumns.COL_GROUP_NAME, GroupColumns._ID};
+  private static final String[] MOOD_SELECTION = {MoodColumns.COL_MOOD_NAME, MoodColumns._ID};
 
   private SeekBar brightnessBar;
   private Spinner groupSpinner, moodSpinner;
@@ -59,16 +60,14 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
           ? android.R.layout.simple_list_item_activated_1
           : android.R.layout.simple_list_item_1;
 
-      String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
       groupDataSource =
-          new SimpleCursorAdapter(getActivity(), layout, null, gColumns,
+          new SimpleCursorAdapter(getActivity(), layout, null, GROUP_SELECTION,
                                   new int[]{android.R.id.text1}, 0);
       groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       groupSpinner.setAdapter(groupDataSource);
 
-      String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
       moodDataSource =
-          new SimpleCursorAdapter(getActivity(), layout, null, mColumns,
+          new SimpleCursorAdapter(getActivity(), layout, null, MOOD_SELECTION,
                                   new int[]{android.R.id.text1}, 0);
       moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       moodSpinner.setAdapter(moodDataSource);
@@ -165,25 +164,9 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
      */
     switch (loaderID) {
       case GROUPS_LOADER:
-        // Returns a new CursorLoader
-        String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
-        return new CursorLoader(getActivity(), // Parent activity context
-                                DeprecatedGroupColumns.GROUPS_URI, // Table
-                                gColumns, // Projection to return
-                                null, // No selection clause
-                                null, // No selection arguments
-                                null // Default sort order
-        );
+        return new CursorLoader(getActivity(),GroupColumns.URI, GROUP_SELECTION,null,null,null);
       case MOODS_LOADER:
-        // Returns a new CursorLoader
-        String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
-        return new CursorLoader(getActivity(), // Parent activity context
-                                MoodColumns.MOODS_URI, // Table
-                                mColumns, // Projection to return
-                                null, // No selection clause
-                                null, // No selection arguments
-                                null // Default sort order
-        );
+        return new CursorLoader(getActivity(), MoodColumns.MOODS_URI, MOOD_SELECTION, null, null, null);
       default:
         // An invalid id was passed in
         return null;

@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.nfc;
 
-import com.google.gson.Gson;
-
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,7 +12,6 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -39,7 +36,7 @@ import android.widget.Toast;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
@@ -65,10 +62,10 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 
   NavigationDrawerActivity context;
 
-  Gson gson = new Gson();
-
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
+  private static final String[] GROUP_SELECTION = {GroupColumns.COL_GROUP_NAME, GroupColumns._ID};
+  private static final String[] MOOD_SELECTION = {MoodColumns.COL_MOOD_NAME, MoodColumns._ID};
 
   private SeekBar brightnessBar;
   private CheckBox brightnessCheckBox;
@@ -77,7 +74,6 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   private SimpleCursorAdapter groupDataSource, moodDataSource;
 
   private GroupMoodBrightness priorGMB;
-
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,16 +119,14 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     brightnessCheckBox.setOnCheckedChangeListener(this);
 
     groupSpinner = (Spinner) myView.findViewById(R.id.groupSpinner);
-    String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
-        new SimpleCursorAdapter(context, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
+        new SimpleCursorAdapter(context, layout, null, GROUP_SELECTION, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) myView.findViewById(R.id.moodSpinner);
-    String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
     moodDataSource =
-        new SimpleCursorAdapter(context, layout, null, mColumns, new int[]{android.R.id.text1}, 0);
+        new SimpleCursorAdapter(context, layout, null, MOOD_SELECTION, new int[]{android.R.id.text1}, 0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     moodSpinner.setAdapter(moodDataSource);
 
@@ -285,7 +279,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
 
     Group g =
         new DatabaseGroup(((TextView) groupSpinner.getSelectedView()).getText().toString(),
-                               context);
+                          context);
 
     Mood m =
         Utils.getMoodFromDatabase(((TextView) moodSpinner.getSelectedView()).getText().toString(),
@@ -305,13 +299,9 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
     switch (loaderID) {
       case GROUPS_LOADER:
-        String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
-        return new CursorLoader(context, DeprecatedGroupColumns.GROUPS_URI, gColumns, null, null,
-                                null);
+        return new CursorLoader(context, GroupColumns.URI, GROUP_SELECTION, null, null, null);
       case MOODS_LOADER:
-        String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
-        return new CursorLoader(context, MoodColumns.MOODS_URI, mColumns, null,
-                                null, null);
+        return new CursorLoader(context, MoodColumns.MOODS_URI, MOOD_SELECTION, null, null, null);
       default:
         return null;
     }

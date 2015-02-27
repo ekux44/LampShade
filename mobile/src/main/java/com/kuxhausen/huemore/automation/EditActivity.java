@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -31,7 +30,7 @@ import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 
 public class EditActivity extends NetworkManagedActivity implements
@@ -60,6 +59,8 @@ public class EditActivity extends NetworkManagedActivity implements
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0, MOODS_LOADER = 1;
+  private static final String[] GROUP_SELECTION = {GroupColumns.COL_GROUP_NAME, GroupColumns._ID};
+  private static final String[] MOOD_SELECTION = {MoodColumns.COL_MOOD_NAME, MoodColumns._ID};
 
   private SeekBar brightnessBar;
   private CheckBox brightnessCheckBox;
@@ -126,16 +127,14 @@ public class EditActivity extends NetworkManagedActivity implements
     brightnessCheckBox.setOnCheckedChangeListener(this);
 
     groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
-    String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
     groupDataSource =
-        new SimpleCursorAdapter(this, layout, null, gColumns, new int[]{android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, GROUP_SELECTION, new int[]{android.R.id.text1}, 0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) this.findViewById(R.id.moodSpinner);
-    String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
     moodDataSource =
-        new SimpleCursorAdapter(this, layout, null, mColumns, new int[]{android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, MOOD_SELECTION, new int[]{android.R.id.text1}, 0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     moodSpinner.setAdapter(moodDataSource);
 
@@ -210,13 +209,9 @@ public class EditActivity extends NetworkManagedActivity implements
   public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
     switch (loaderID) {
       case GROUPS_LOADER:
-        String[] gColumns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
-        return new CursorLoader(this, DeprecatedGroupColumns.GROUPS_URI, gColumns, null, null,
-                                null);
+        return new CursorLoader(this, GroupColumns.URI, GROUP_SELECTION, null, null, null);
       case MOODS_LOADER:
-        String[] mColumns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID};
-        return new CursorLoader(this, MoodColumns.MOODS_URI, mColumns, null,
-                                null, null);
+        return new CursorLoader(this, MoodColumns.MOODS_URI, MOOD_SELECTION, null, null, null);
       default:
         return null;
     }

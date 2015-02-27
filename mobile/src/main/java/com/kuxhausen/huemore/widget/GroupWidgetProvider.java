@@ -19,7 +19,7 @@ import android.widget.RemoteViews;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 
@@ -78,7 +78,7 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       final AppWidgetManager mgr = AppWidgetManager.getInstance(context);
       final ComponentName cn = new ComponentName(context, GroupWidgetProvider.class);
       sDataObserver = new GroupDataProviderObserver(mgr, cn, sWorkerQueue);
-      r.registerContentObserver(DeprecatedGroupColumns.GROUPS_URI, true, sDataObserver);
+      r.registerContentObserver(GroupColumns.URI, true, sDataObserver);
     }
   }
 

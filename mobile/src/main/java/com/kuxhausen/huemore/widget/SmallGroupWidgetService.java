@@ -8,12 +8,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 
 /**
@@ -125,8 +124,8 @@ class SmallGroupStackRemoteViewsFactory implements RemoteViewsService.RemoteView
     }
 
     ContentResolver r = mContext.getContentResolver();
-    String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
-    mCursor = r.query(DeprecatedGroupColumns.GROUPS_URI, columns, null, null, null);
+    String[] columns = {GroupColumns.COL_GROUP_NAME, GroupColumns._ID};
+    mCursor = r.query(GroupColumns.URI, columns, null, null, null);
 
   }
 }
