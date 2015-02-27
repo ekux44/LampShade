@@ -3,15 +3,11 @@ package com.kuxhausen.huemore;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,17 +20,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.DatabaseGroup;
-import com.kuxhausen.huemore.state.Group;
 
 public class GroupListFragment extends ListFragment implements
                                                     LoaderManager.LoaderCallbacks<Cursor> {
 
   // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0;
-  public CursorAdapter mDataSource;
+  public DatabaseGroupsAdapter mDataSource;
   private TextView mSelected, mLongSelected; // updated on long click
   private int mSelectedPos = -1;
   private NetworkManagedActivity mParent;
@@ -42,12 +37,6 @@ public class GroupListFragment extends ListFragment implements
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-
-    // We need to use a different list item layout for devices older than Honeycomb
-    int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-        ? android.R.layout.simple_list_item_activated_1
-        : android.R.layout.simple_list_item_1;
 
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.groups_list_fragment, null);
@@ -58,11 +47,10 @@ public class GroupListFragment extends ListFragment implements
      */
     getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
-    String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
-
     mDataSource =
-        new SimpleCursorAdapter(getActivity(), layout, null, columns,
-                                new int[]{android.R.id.text1}, 0);
+        new DatabaseGroupsAdapter(getActivity(), R.layout.mood_row, null,
+                                  DatabaseGroup.GROUP_QUERY_COLUMNS, new int[]{android.R.id.text1},
+                                  0);
 
     setListAdapter(mDataSource);
 
@@ -145,11 +133,8 @@ public class GroupListFragment extends ListFragment implements
 
     switch (item.getItemId()) {
 
-      case R.id.contextgroupmenu_delete: // <-- your custom menu item id here
-        String groupSelect = DeprecatedGroupColumns.GROUP + "=?";
-        String[] groupArg = {mLongSelected.getText().toString()};
-        getActivity().getContentResolver().delete(DeprecatedGroupColumns.GROUPBULBS_URI,
-                                                  groupSelect, groupArg);
+      case R.id.contextgroupmenu_delete:
+        mDataSource.getRowFromView(mLongSelected).deleteSelf(mParent);
         return true;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
@@ -171,9 +156,7 @@ public class GroupListFragment extends ListFragment implements
     mSelectedPos = position;
 
     // Notify the parent activity of selected bulbs
-    mParent
-        .setGroup(new DatabaseGroup(mSelected.getText().toString(), this.mParent));
-
+    mParent.setGroup(mDataSource.getRow(position));
   }
 
   /**
@@ -189,10 +172,9 @@ public class GroupListFragment extends ListFragment implements
     switch (loaderID) {
       case GROUPS_LOADER:
         // Returns a new CursorLoader
-        String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
         return new CursorLoader(getActivity(), // Parent activity context
-                                DeprecatedGroupColumns.GROUPS_URI, // Table
-                                columns, // Projection to return
+                                GroupColumns.URI, // Table
+                                DatabaseGroup.GROUP_QUERY_COLUMNS, // Projection to return
                                 null, // No selection clause
                                 null, // No selection arguments
                                 null // Default sort order

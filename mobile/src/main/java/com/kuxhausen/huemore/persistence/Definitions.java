@@ -104,9 +104,9 @@ public final class Definitions {
     public static final String PATH_GROUPS = "groups";
     public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPS);
 
-    public static final String COL_GROUP_NAME = "GROUP_NAME";
-    public static final String COL_GROUP_LOWERCASE_NAME = "COL_GROUP_LOWERCASE_NAME";
-    public static final String COL_GROUP_PRIORITY = "COL_GROUP_PRIORITY";
+    public static final String COL_GROUP_NAME = "D_COL_GROUP_NAME";
+    public static final String COL_GROUP_LOWERCASE_NAME = "D_COL_GROUP_LOWERCASE_NAME";
+    public static final String COL_GROUP_PRIORITY = "D_COL_GROUP_PRIORITY";
 
     public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
 
@@ -125,17 +125,17 @@ public final class Definitions {
     /**
      * Points to the Group table entry for the Group this is part of
      */
-    public static final String GROUP_ID = "GROUP_ID";
+    public static final String COL_GROUP_ID = "D_COL_GROUP_ID";
 
     /**
      * order within group in which bulbs should be used when applying mood (lowest number = first)
      */
-    public static final String BULB_PRECEDENCE = "BULB_PRECEDENCE";
+    public static final String COL_BULB_PRECEDENCE = "D_COL_BULB_PRECEDENCE";
 
     /**
      * Points to the NetBulb table entry for this bulb
      */
-    public static final String NET_BULB_ID = "NET_BULB_ID";
+    public static final String COL_NET_BULB_ID = "D_COL_NET_BULB_ID";
 
     // This class cannot be instantiated
     private GroupBulbColumns() {
