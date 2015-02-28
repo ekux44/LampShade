@@ -134,8 +134,6 @@ public class SpeechParser {
     if (groupCursor.getCount() > 0) {
       groupCursor.moveToFirst();
       result = groupCursor.getString(0);
-    } else if (lowercaseGroupName.equals(c.getString(R.string.cap_all).toLowerCase())) {
-      result = c.getString(R.string.cap_all);
     }
     groupCursor.close();
     return result;

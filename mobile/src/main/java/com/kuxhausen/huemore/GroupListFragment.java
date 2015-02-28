@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
@@ -27,10 +26,9 @@ import com.kuxhausen.huemore.state.DatabaseGroup;
 public class GroupListFragment extends ListFragment implements
                                                     LoaderManager.LoaderCallbacks<Cursor> {
 
-  // Identifies a particular Loader being used in this component
   private static final int GROUPS_LOADER = 0;
   public DatabaseGroupsAdapter mDataSource;
-  private TextView mSelected, mLongSelected; // updated on long click
+  private DatabaseGroup mSelected, mLongSelected; // updated on long click
   private int mSelectedPos = -1;
   private NetworkManagedActivity mParent;
 
@@ -38,13 +36,8 @@ public class GroupListFragment extends ListFragment implements
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
 
-    // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.groups_list_fragment, null);
 
-    /*
-     * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
-     * onCreateLoader().
-     */
     getLoaderManager().initLoader(GROUPS_LOADER, null, this);
 
     mDataSource =
@@ -116,58 +109,62 @@ public class GroupListFragment extends ListFragment implements
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    mLongSelected = (TextView) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-    if (mLongSelected.getText().toString().equals(this.getActivity().getString(R.string.cap_all))) {
-      return;
-    }
+    mLongSelected =
+        mDataSource.getRowFromView(((AdapterView.AdapterContextMenuInfo) menuInfo).targetView);
+
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_group, menu);
 
-    if (mDataSource.getRowFromView(mLongSelected).isStared()) {
+    if (mLongSelected.isStared()) {
       menu.findItem(R.id.contextmoodmenu_star).setVisible(false);
       menu.findItem(R.id.contextmoodmenu_unstar).setVisible(true);
     } else {
       menu.findItem(R.id.contextmoodmenu_star).setVisible(true);
       menu.findItem(R.id.contextmoodmenu_unstar).setVisible(false);
     }
+
+    if (mLongSelected.isStared()) {
+      menu.findItem(R.id.contextmoodmenu_edit).setVisible(false);
+      menu.findItem(R.id.contextmoodmenu_delete).setVisible(false);
+    }
   }
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
-
     if (mLongSelected == null) {
       return false;
     }
 
     switch (item.getItemId()) {
       case R.id.contextmoodmenu_star:
-        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), true);
+        mLongSelected.starChanged(this.getActivity(), true);
         getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
-        return true;
+        break;
       case R.id.contextmoodmenu_unstar:
-        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), false);
+        mLongSelected.starChanged(this.getActivity(), false);
         getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
-        return true;
+        break;
       case R.id.contextgroupmenu_delete:
-        mDataSource.getRowFromView(mLongSelected).deleteSelf(mParent);
-        return true;
+        mLongSelected.deleteSelf(mParent);
+        break;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
         Bundle args = new Bundle();
-        args.putString(InternalArguments.GROUP_NAME, mLongSelected.getText().toString());
+        args.putLong(InternalArguments.GROUP_ID, mLongSelected.getId());
         ngdf.setArguments(args);
         ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-
-        return true;
-
+        break;
       default:
         return super.onContextItemSelected(item);
     }
+
+    mLongSelected = null;
+    return true;
   }
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    mSelected = ((TextView) (v));
+    mSelected = mDataSource.getRowFromView(v);
     mSelectedPos = position;
 
     // Notify the parent activity of selected bulbs

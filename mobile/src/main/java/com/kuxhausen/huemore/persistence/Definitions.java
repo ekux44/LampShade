@@ -107,8 +107,11 @@ public final class Definitions {
     public static final String COL_GROUP_NAME = "D_COL_GROUP_NAME";
     public static final String COL_GROUP_LOWERCASE_NAME = "D_COL_GROUP_LOWERCASE_NAME";
     public static final String COL_GROUP_PRIORITY = "D_COL_GROUP_PRIORITY";
+    public static final String COL_GROUP_FLAGS = "D_COL_GROUP_FLAGS";
 
-    public final static int UNSTARRED_PRIORITY = 1, STARRED_PRIORITY = 2;
+    public final static int PRIORITY_UNSTARRED = 1, PRIORITY_STARRED = 2;
+
+    public final static int FLAG_NORMAL = 0, FLAG_ALL = 1;
 
     // This class cannot be instantiated
     private GroupColumns() {

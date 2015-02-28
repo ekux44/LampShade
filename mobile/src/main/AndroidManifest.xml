@@ -42,6 +42,12 @@
             android:exported="true" >
         </provider>
 
+        <receiver android:name="com.kuxhausen.huemore.persistence.LocalizationReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Listen for the "edit" action -->
         <activity
             android:name="com.kuxhausen.huemore.automation.EditActivity"

@@ -5,16 +5,16 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.provider.BaseColumns;
 
-import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
@@ -36,7 +36,7 @@ public class LampShadeProvider extends ContentProvider {
   /**
    * Constants used by the Uri matcher to choose an action based on the pattern of the incoming URI
    */
-  private static final int GROUPS = 1, MOODS = 2, GROUPBULBS = 3, ALARMS = 4,
+  private static final int GROUPS = 1, MOODS = 2, GROUP = 3, GROUPBULBS = 4, ALARMS = 5,
       NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
 
   /**
@@ -57,9 +57,9 @@ public class LampShadeProvider extends ContentProvider {
     sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     {
-      sUriMatcher.addURI(Definitions.AUTHORITY, DeprecatedGroupColumns.PATH_GROUPS, GROUPS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
       sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
-      sUriMatcher.addURI(Definitions.AUTHORITY, DeprecatedGroupColumns.PATH_GROUPBULBS, GROUPBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, GroupBulbColumns.PATH_GROUPBULBS, GROUPBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
@@ -100,8 +100,8 @@ public class LampShadeProvider extends ContentProvider {
         table = NetConnectionColumns.TABLE_NAME;
         toNotify.add(NetConnectionColumns.URI);
         toNotify.add(NetBulbColumns.URI);
-        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
-        toNotify.add(DeprecatedGroupColumns.GROUPBULBS_URI);
+        toNotify.add(GroupColumns.URI);
+        toNotify.add(GroupBulbColumns.URI);
         break;
       case NETBULBS:
         table = NetBulbColumns.TABLE_NAME;
@@ -111,10 +111,15 @@ public class LampShadeProvider extends ContentProvider {
         table = (AlarmColumns.TABLE_NAME);
         toNotify.add(AlarmColumns.ALARMS_URI);
         break;
+      case GROUP:
+        table = (GroupColumns.TABLE_NAME);
+        toNotify.add(GroupColumns.URI);
+        toNotify.add(GroupBulbColumns.URI);
+        break;
       case GROUPBULBS:
-        table = (DeprecatedGroupColumns.TABLE_NAME);
-        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
-        toNotify.add(DeprecatedGroupColumns.GROUPBULBS_URI);
+        table = (GroupBulbColumns.TABLE_NAME);
+        toNotify.add(GroupBulbColumns.URI);
+        toNotify.add(GroupColumns.URI);
         break;
       case MOODS:
         table = (Definitions.MoodColumns.TABLE_NAME);
@@ -145,6 +150,8 @@ public class LampShadeProvider extends ContentProvider {
   public Uri insert(Uri uri, ContentValues values) {
     ArrayList<Uri> toNotify = new ArrayList<Uri>();
 
+    SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
     // Constructs a new query builder and sets its table name
     SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
@@ -159,26 +166,26 @@ public class LampShadeProvider extends ContentProvider {
       case NETCONNECTIONS:
         qb.setTables(NetConnectionColumns.TABLE_NAME);
         toNotify.add(NetConnectionColumns.URI);
-
-        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
-        toNotify.add(
-            DeprecatedGroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         break;
       case NETBULBS:
         qb.setTables(NetBulbColumns.TABLE_NAME);
         toNotify.add(NetBulbColumns.URI);
-        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
-        toNotify.add(
-            DeprecatedGroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
+        toNotify.add(GroupColumns.URI);
+        toNotify.add(GroupBulbColumns.URI); // must notify the all mood that more bulbs exist
         break;
       case ALARMS:
         qb.setTables(AlarmColumns.TABLE_NAME);
         toNotify.add(AlarmColumns.ALARMS_URI);
         break;
       case GROUPS:
-        qb.setTables(DeprecatedGroupColumns.TABLE_NAME);
-        toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
-        toNotify.add(DeprecatedGroupColumns.GROUPBULBS_URI);
+        qb.setTables(GroupColumns.TABLE_NAME);
+        toNotify.add(GroupColumns.URI);
+        toNotify.add(GroupBulbColumns.URI);
+        break;
+      case GROUPBULBS:
+        qb.setTables(GroupBulbColumns.TABLE_NAME);
+        toNotify.add(GroupBulbColumns.URI);
+        toNotify.add(GroupColumns.URI);
         break;
       case MOODS:
         qb.setTables(Definitions.MoodColumns.TABLE_NAME);
@@ -189,13 +196,29 @@ public class LampShadeProvider extends ContentProvider {
         throw new IllegalArgumentException("Unknown URI " + uri);
     }
 
-    SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
     long insertId = db.insert(qb.getTables(), null, values);
     if (insertId == -1) {
-      // insert failed, do update
-      // db.update("groups", null, cv);
-      // TODO
+      // insert failed
+      // TODO handle better
+    }
+
+    if (sUriMatcher.match(uri) == NETBULBS) {
+      //insert the NetBulb into the all mood
+      String[] gColumns = {GroupColumns._ID};
+      String gWhere = GroupColumns.COL_GROUP_FLAGS + "=?";
+      String[] gWhereArgs = {"" + GroupColumns.FLAG_ALL};
+      Cursor gCursor = db.query(GroupColumns.TABLE_NAME, gColumns, gWhere, gWhereArgs, null, null,
+                                null);
+      gCursor.moveToFirst();
+      long allGroupId = gCursor.getLong(0);
+
+      long netBulbsCount = DatabaseUtils.queryNumEntries(db, NetBulbColumns.TABLE_NAME);
+
+      ContentValues gbValues = new ContentValues();
+      gbValues.put(GroupBulbColumns.COL_GROUP_ID, allGroupId);
+      gbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, netBulbsCount - 1);
+      gbValues.put(GroupBulbColumns.COL_NET_BULB_ID, insertId);
+      db.insert(GroupBulbColumns.TABLE_NAME, null, values);
     }
 
     for (Uri me : toNotify) {
@@ -251,29 +274,11 @@ public class LampShadeProvider extends ContentProvider {
         groupBy = null;
         break;
       case GROUPS:
-        qb.setTables(DeprecatedGroupColumns.TABLE_NAME);
-        groupBy = DeprecatedGroupColumns.GROUP;
+        qb.setTables(GroupColumns.TABLE_NAME);
+        groupBy = null;
         break;
       case GROUPBULBS:
-        if ((selection != null)
-            && selectionArgs.length > 0
-            && (selectionArgs[0].equals(this.getContext().getString(R.string.cap_all))
-                || selectionArgs[0]
-                       .charAt(0) == ((char) 8))) {
-
-          qb.setTables(NetBulbColumns.TABLE_NAME);
-          String[]
-              groupColumns =
-              {NetBulbColumns._ID + " AS " + DeprecatedGroupColumns.BULB_DATABASE_ID};
-
-          Cursor c = qb.query(db, groupColumns, // using our own projection for 'All' mood as it's
-                              // hitting a different database.
-                              null, null, groupBy, null, sortOrder);
-
-          c.setNotificationUri(getContext().getContentResolver(), uri);
-          return c;
-        }
-        qb.setTables(DeprecatedGroupColumns.TABLE_NAME);
+        qb.setTables(GroupBulbColumns.TABLE_NAME);
         groupBy = null;
         break;
       case MOODS:
@@ -317,21 +322,6 @@ public class LampShadeProvider extends ContentProvider {
       mc.setNotificationUri(getContext().getContentResolver(), uri);
 
       return mc;
-    } else if (sUriMatcher.match(uri) == GROUPS) {
-      String[] columns = {DeprecatedGroupColumns.GROUP, BaseColumns._ID};
-      MatrixCursor c1 = new MatrixCursor(columns);
-
-      SQLiteQueryBuilder querryBulbs = new SQLiteQueryBuilder();
-      querryBulbs.setTables(NetBulbColumns.TABLE_NAME);
-      String[] groupColumns = {NetBulbColumns._ID};
-      Cursor c = querryBulbs.query(db, groupColumns, null, null, null, null, null);
-      // only show All group if there are any NetBulbs
-      if (c.getCount() > 0) {
-        Object[] tempCol0 = {this.getContext().getString(R.string.cap_all), 0};
-        c1.addRow(tempCol0);
-      }
-      Cursor[] tempC = {c1, c2};
-      cRay = tempC;
     } else {
       Cursor[] tempC = {c2};
       cRay = tempC;
@@ -376,11 +366,15 @@ public class LampShadeProvider extends ContentProvider {
           //Don't notify. This should be moved to a separate table at some point.
         } else {
           toNotify.add(NetBulbColumns.URI);
-          toNotify.add(DeprecatedGroupColumns.GROUPS_URI);
-          toNotify
-              .add(
-                  DeprecatedGroupColumns.GROUPBULBS_URI); // must notify the all mood that more bulbs exist
         }
+        break;
+      case GROUP:
+        count = db.update(GroupColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(GroupColumns.URI);
+        break;
+      case GROUPBULBS:
+        count = db.update(GroupBulbColumns.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(GroupBulbColumns.URI);
         break;
       case ALARMS:
         count = db.update(AlarmColumns.TABLE_NAME, values, selection, selectionArgs);

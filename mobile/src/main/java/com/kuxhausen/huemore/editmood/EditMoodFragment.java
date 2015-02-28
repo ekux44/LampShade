@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.kuxhausen.huemore.MoodRow;
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
@@ -208,7 +207,7 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
           priorName = moodName;
         } else {
 
-          mNewValues.put(MoodColumns.COL_MOOD_PRIORITY, MoodRow.UNSTARRED_PRIORITY);
+          mNewValues.put(MoodColumns.COL_MOOD_PRIORITY, MoodColumns.UNSTARRED_PRIORITY);
           parrentA.getContentResolver().insert(MoodColumns.MOODS_URI, mNewValues);
         }
 

@@ -80,7 +80,7 @@ public class SharedMoodDialog extends DialogFragment {
         mNewValues.put(MoodColumns.COL_MOOD_NAME, moodName);
         mNewValues.put(MoodColumns.COL_MOOD_LOWERCASE_NAME, moodName.toLowerCase().trim());
         mNewValues.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(mMood));
-        mNewValues.put(MoodColumns.COL_MOOD_PRIORITY, MoodRow.UNSTARRED_PRIORITY);
+        mNewValues.put(MoodColumns.COL_MOOD_PRIORITY, MoodColumns.UNSTARRED_PRIORITY);
 
         mActivity.getContentResolver().insert(MoodColumns.MOODS_URI, mNewValues);
       }
