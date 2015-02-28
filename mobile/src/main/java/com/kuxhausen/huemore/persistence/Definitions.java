@@ -12,6 +12,7 @@ public final class Definitions {
 
   public static final String SLASH = "/";
 
+  @Deprecated
   public static final class DeprecatedAlarmColumns implements BaseColumns {
 
     public static final String TABLE_NAME = "alarms";
@@ -45,7 +46,7 @@ public final class Definitions {
     /**
      * String, must be valid entry in Groups table
      */
-    public static final String COL_GROUP_NAME = "COL_GROUP_NAME";
+    public static final String COL_GROUP_ID = "COL_GROUP_ID";
 
     /* row id of mood in moods database
      */
@@ -145,22 +146,15 @@ public final class Definitions {
     }
   }
 
+  @Deprecated
   public static final class DeprecatedGroupColumns implements BaseColumns {
 
     public static final String TABLE_NAME = "groups";
-
-    public static final String PATH_GROUPS = "groups";
-    public static final Uri GROUPS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPS);
-
-    public static final String PATH_GROUPBULBS = "groupbulbs";
-    public static final Uri GROUPBULBS_URI = Uri
-        .parse(SCHEME + AUTHORITY + SLASH + PATH_GROUPBULBS);
 
     /**
      * which group this bulb row is part of
      */
     public static final String GROUP = "Dgroup";
-    public static final String COL_GROUP_LOWERCASE_NAME = "D_COL_GROUP_LOWERCASE_NAME";
 
     /**
      * order in which bulb configurations should be used when applying mood (lowest number = first)
@@ -171,7 +165,6 @@ public final class Definitions {
      * Points to the NetBulb table entry for this bulb
      */
     public static final String BULB_DATABASE_ID = "Dbulb_database_id";
-
 
     // This class cannot be instantiated
     private DeprecatedGroupColumns() {

@@ -164,9 +164,10 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
      */
     switch (loaderID) {
       case GROUPS_LOADER:
-        return new CursorLoader(getActivity(),GroupColumns.URI, GROUP_SELECTION,null,null,null);
+        return new CursorLoader(getActivity(), GroupColumns.URI, GROUP_SELECTION, null, null, null);
       case MOODS_LOADER:
-        return new CursorLoader(getActivity(), MoodColumns.MOODS_URI, MOOD_SELECTION, null, null, null);
+        return new CursorLoader(getActivity(), MoodColumns.MOODS_URI, MOOD_SELECTION, null, null,
+                                null);
       default:
         // An invalid id was passed in
         return null;
@@ -250,7 +251,8 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       priorExisted = true;
     }
 
-    data.setGroupName(((Cursor) groupSpinner.getSelectedItem()).getString(0));
+    data.setGroup(((Cursor) groupSpinner.getSelectedItem()).getLong(1),
+                  ((Cursor) groupSpinner.getSelectedItem()).getString(0));
     data.setMood(((Cursor) moodSpinner.getSelectedItem()).getLong(1),
                  ((Cursor) moodSpinner.getSelectedItem()).getString(0));
     data.setBrightness(brightnessBar.getProgress());

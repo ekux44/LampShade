@@ -68,7 +68,8 @@ public class LampShadeProvider extends ContentProvider {
       sAlarmQueryProjectionMap = new HashMap<String, String>();
       sAlarmQueryProjectionMap
           .put(AlarmColumns._ID, AlarmColumns.TABLE_NAME + "." + AlarmColumns._ID);
-      sAlarmQueryProjectionMap.put(AlarmColumns.COL_GROUP_NAME, AlarmColumns.COL_GROUP_NAME);
+      sAlarmQueryProjectionMap.put(AlarmColumns.COL_GROUP_ID, AlarmColumns.COL_GROUP_ID);
+      sAlarmQueryProjectionMap.put(GroupColumns.COL_GROUP_NAME, GroupColumns.COL_GROUP_NAME);
       sAlarmQueryProjectionMap.put(AlarmColumns.COL_MOOD_ID, AlarmColumns.COL_MOOD_ID);
       sAlarmQueryProjectionMap.put(MoodColumns.COL_MOOD_NAME, MoodColumns.COL_MOOD_NAME);
       sAlarmQueryProjectionMap.put(AlarmColumns.COL_BRIGHTNESS, AlarmColumns.COL_BRIGHTNESS);
@@ -267,6 +268,10 @@ public class LampShadeProvider extends ContentProvider {
       case ALARMS:
         qb.setProjectionMap(sAlarmQueryProjectionMap);
         qb.setTables(AlarmColumns.TABLE_NAME
+                     + " JOIN "
+                     + GroupColumns.TABLE_NAME
+                     + " ON (" + AlarmColumns.COL_GROUP_ID + " = " + GroupColumns.TABLE_NAME + "."
+                     + GroupColumns._ID + ")"
                      + " JOIN "
                      + MoodColumns.TABLE_NAME
                      + " ON (" + AlarmColumns.COL_MOOD_ID + " = " + MoodColumns.TABLE_NAME + "."

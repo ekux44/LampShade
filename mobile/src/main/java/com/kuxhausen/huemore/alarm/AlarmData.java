@@ -16,7 +16,8 @@ public class AlarmData {
   // must be kept in sync with AlarmData constructor
   public final static String[] QUERY_COLUMNS = {
       AlarmColumns._ID,
-      AlarmColumns.COL_GROUP_NAME,
+      AlarmColumns.COL_GROUP_ID,
+      Definitions.GroupColumns.COL_GROUP_NAME,
       AlarmColumns.COL_MOOD_ID,
       Definitions.MoodColumns.COL_MOOD_NAME,
       AlarmColumns.COL_BRIGHTNESS,
@@ -30,7 +31,8 @@ public class AlarmData {
   };
 
   private long mId = -1; //the immutable database ID, or -1 if not in database
-  private String mGroupName;
+  private long mGroupId;
+  private String mGroupName; // this is only to be read by the UI, and never saved to database
   private long mMoodId;
   private String mMoodName; // this is only to be read by the UI, and never saved to database
   private Integer mBrightness;
@@ -52,28 +54,28 @@ public class AlarmData {
   public AlarmData(Cursor cursor) {
     mId = cursor.getLong(0);
 
-    setGroupName(cursor.getString(1));
+    setGroup(cursor.getLong(1), cursor.getString(2));
 
-    setMood(cursor.getLong(2), cursor.getString(3));
+    setMood(cursor.getLong(3), cursor.getString(4));
 
-    if (!cursor.isNull(4)) {
-      setBrightness(cursor.getInt(4));
+    if (!cursor.isNull(5)) {
+      setBrightness(cursor.getInt(5));
     }
 
-    setEnabled(cursor.getInt(5) != 0);
+    setEnabled(cursor.getInt(6) != 0);
 
-    setRepeatDays(new DaysOfWeek((byte) cursor.getInt(6)));
+    setRepeatDays(new DaysOfWeek((byte) cursor.getInt(7)));
 
-    mYear = cursor.getInt(7);
-    mMonth = cursor.getInt(8);
-    mDayOfMonth = cursor.getInt(9);
-    mHourOfDay = cursor.getInt(10);
-    mMinute = cursor.getInt(11);
+    mYear = cursor.getInt(8);
+    mMonth = cursor.getInt(9);
+    mDayOfMonth = cursor.getInt(10);
+    mHourOfDay = cursor.getInt(11);
+    mMinute = cursor.getInt(12);
   }
 
   public ContentValues getValues() {
     ContentValues cv = new ContentValues();
-    cv.put(AlarmColumns.COL_GROUP_NAME, getGroupName());
+    cv.put(AlarmColumns.COL_GROUP_ID, mGroupId);
     cv.put(AlarmColumns.COL_MOOD_ID, mMoodId);
     cv.put(AlarmColumns.COL_BRIGHTNESS, getBrightness());
     cv.put(AlarmColumns.COL_IS_ENABLED, isEnabled() ? 1 : 0);
@@ -97,11 +99,16 @@ public class AlarmData {
     mId = id;
   }
 
+  public long getGroupId() {
+    return mGroupId;
+  }
+
   public String getGroupName() {
     return mGroupName;
   }
 
-  public void setGroupName(String name) {
+  public void setGroup(long id, String name) {
+    mGroupId = id;
     mGroupName = name;
   }
 

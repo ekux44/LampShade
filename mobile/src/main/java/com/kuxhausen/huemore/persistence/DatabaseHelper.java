@@ -16,6 +16,8 @@ import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
+import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
@@ -411,8 +413,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
 
-        //now migrate groups to add a lowercase name field
+        moodCursor.close();
+      }
+      case 10: {
 
+        db.execSQL("DROP TABLE IF EXISTS " + PlayingMood.TABLE_NAME);
+
+        db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " (" + BaseColumns._ID
+                   + " INTEGER PRIMARY KEY," + PlayingMood.COL_GROUP_VALUE + " TEXT,"
+                   + PlayingMood.COL_MOOD_NAME + " TEXT," + PlayingMood.COL_MOOD_VALUE + " TEXT,"
+                   + PlayingMood.COL_MOOD_BRI + " INTEGER,"
+                   + PlayingMood.COL_MILI_TIME_STARTED + " INTEGER,"
+                   + PlayingMood.COL_INTERNAL_PROGRESS + " INTEGER"
+                   + ");");
+      }
+      case 11: {
+        /* query existing groups data */
         String[] oldGroupColumns =
             {DeprecatedGroupColumns.GROUP, DeprecatedGroupColumns.PRECEDENCE,
              DeprecatedGroupColumns.BULB_DATABASE_ID};
@@ -420,7 +436,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.query(DeprecatedGroupColumns.TABLE_NAME, oldGroupColumns, null, null, null, null,
                      null);
 
-        // load all the old group data into here <name, <precedence,bulb_database_id>>
+        /* load all the old group data into here <name, <precedence,bulb_database_id>> */
         ArrayList<Pair<String, Pair<Long, Long>>>
             oldGroupList =
             new ArrayList<Pair<String, Pair<Long, Long>>>();
@@ -442,50 +458,77 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           oldGroupList.add(new Pair<String, Pair<Long, Long>>(name, new Pair<Long, Long>(precedence,
                                                                                          bulbDatabaseId)));
         }
+        oldGroupCursor.close();
 
         /* rebuild the sql tables */
         db.execSQL("DROP TABLE IF EXISTS " + DeprecatedGroupColumns.TABLE_NAME);
 
-        db.execSQL("CREATE TABLE " + DeprecatedGroupColumns.TABLE_NAME + " ("
-                   + BaseColumns._ID + " INTEGER PRIMARY KEY,"
-                   + DeprecatedGroupColumns.GROUP + " TEXT,"
-                   + DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME + " TEXT,"
-                   + DeprecatedGroupColumns.PRECEDENCE + " INTEGER,"
-                   + DeprecatedGroupColumns.BULB_DATABASE_ID + " INTEGER,"
-                   + " FOREIGN KEY (" + DeprecatedGroupColumns.BULB_DATABASE_ID + ") REFERENCES "
-                   + NetBulbColumns.TABLE_NAME + " (" + NetBulbColumns._ID + " ) ON DELETE CASCADE "
+        db.execSQL("CREATE TABLE " + GroupColumns.TABLE_NAME + " ("
+                   + GroupColumns._ID + " INTEGER PRIMARY KEY,"
+                   + GroupColumns.COL_GROUP_NAME + " TEXT,"
+                   + GroupColumns.COL_GROUP_LOWERCASE_NAME + " TEXT,"
+                   + GroupColumns.COL_GROUP_PRIORITY + " INTEGER,"
+                   + GroupColumns.COL_GROUP_FLAGS + " INTEGER"
                    + ");");
 
-        /* now add the groups to the new table */
+        db.execSQL("CREATE TABLE " + GroupBulbColumns.TABLE_NAME + " ("
+                   + GroupBulbColumns._ID + " INTEGER PRIMARY KEY,"
+                   + GroupBulbColumns.COL_GROUP_ID + " INTEGER,"
+                   + GroupBulbColumns.COL_BULB_PRECEDENCE + " INTEGER,"
+                   + GroupBulbColumns.COL_NET_BULB_ID + " INTEGER,"
+                   + " FOREIGN KEY (" + GroupBulbColumns.COL_GROUP_ID + ") REFERENCES "
+                   + GroupColumns.TABLE_NAME + " (" + GroupColumns._ID + " ) ON DELETE CASCADE,"
+                   + " FOREIGN KEY (" + GroupBulbColumns.COL_NET_BULB_ID + ") REFERENCES "
+                   + NetBulbColumns.TABLE_NAME + " (" + NetBulbColumns._ID + " ) ON DELETE CASCADE"
+                   + ");");
+
+
+        /* now add existing groups to the new tables */
         for (Pair<String, Pair<Long, Long>> item : oldGroupList) {
           String groupName = item.first;
           Long bulbPrecidence = item.second.first;
-          Long bulbBaseId = item.second.second;
+          Long netBulbId = item.second.second;
 
           ContentValues groupValues = new ContentValues();
-          groupValues.put(DeprecatedGroupColumns.GROUP, groupName);
-          groupValues
-              .put(DeprecatedGroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
-          groupValues.put(DeprecatedGroupColumns.PRECEDENCE, bulbPrecidence);
-          groupValues.put(DeprecatedGroupColumns.BULB_DATABASE_ID, bulbBaseId);
-          db.insert(DeprecatedGroupColumns.TABLE_NAME, null, groupValues);
+          groupValues.put(GroupColumns.COL_GROUP_NAME, groupName);
+          groupValues.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, groupName.toLowerCase().trim());
+          groupValues.put(GroupColumns.COL_GROUP_PRIORITY, GroupColumns.PRIORITY_UNSTARRED);
+          groupValues.put(GroupColumns.COL_GROUP_FLAGS, GroupColumns.FLAG_NORMAL);
+          long groupId = db.insert(GroupColumns.TABLE_NAME, null, groupValues);
+
+          ContentValues groupBulbValues = new ContentValues();
+          groupBulbValues.put(GroupBulbColumns.COL_GROUP_ID, groupId);
+          groupBulbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, bulbPrecidence);
+          groupBulbValues.put(GroupBulbColumns.COL_NET_BULB_ID, netBulbId);
+          db.insert(GroupBulbColumns.TABLE_NAME, null, groupBulbValues);
         }
-        moodCursor.close();
-        oldGroupCursor.close();
-      }
-      case 10: {
 
-        db.execSQL("DROP TABLE IF EXISTS " + PlayingMood.TABLE_NAME);
+        /* Now add the all group */
+        String allName = mContext.getString(R.string.cap_all);
+        ContentValues allValue = new ContentValues();
+        allValue.put(GroupColumns.COL_GROUP_NAME, allName);
+        allValue.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, allName.toLowerCase().trim());
+        allValue.put(GroupColumns.COL_GROUP_PRIORITY, GroupColumns.PRIORITY_STARRED);
+        allValue.put(GroupColumns.COL_GROUP_FLAGS, GroupColumns.FLAG_ALL);
+        long allGroupId = db.insert(GroupColumns.TABLE_NAME, null, allValue);
 
-        db.execSQL("CREATE TABLE " + PlayingMood.TABLE_NAME + " (" + BaseColumns._ID
-                   + " INTEGER PRIMARY KEY," + PlayingMood.COL_GROUP_VALUE + " TEXT,"
-                   + PlayingMood.COL_MOOD_NAME + " TEXT," + PlayingMood.COL_MOOD_VALUE + " TEXT,"
-                   + PlayingMood.COL_MOOD_BRI + " INTEGER,"
-                   + PlayingMood.COL_MILI_TIME_STARTED + " INTEGER,"
-                   + PlayingMood.COL_INTERNAL_PROGRESS + " INTEGER"
-                   + ");");
-      }
-      case 11: {
+        String[] netBulbColumns = {NetBulbColumns._ID};
+        Cursor netBulbCursor =
+            db.query(NetBulbColumns.TABLE_NAME, netBulbColumns, null, null, null, null, null);
+
+        for (int i = 0; i < netBulbCursor.getCount(); i++) {
+          long netBulbId = netBulbCursor.getLong(0);
+          netBulbCursor.moveToNext();
+
+          ContentValues allBulbValues = new ContentValues();
+          allBulbValues.put(GroupBulbColumns.COL_GROUP_ID, allGroupId);
+          allBulbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, i);
+          allBulbValues.put(GroupBulbColumns.COL_NET_BULB_ID, netBulbId);
+
+          db.insert(GroupBulbColumns.TABLE_NAME, null, allBulbValues);
+        }
+
+
         /* load everything from old alarms table */
 
         ContentValues cv = new ContentValues();
@@ -515,7 +558,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " (" +
                    BaseColumns._ID + " INTEGER PRIMARY KEY," +
-                   AlarmColumns.COL_GROUP_NAME + " TEXT," +
+                   AlarmColumns.COL_GROUP_ID + " INTEGER," +
                    AlarmColumns.COL_MOOD_ID + " INTEGER," +
                    AlarmColumns.COL_BRIGHTNESS + " INTEGER," +
                    AlarmColumns.COL_IS_ENABLED + " INTEGER," +
@@ -535,7 +578,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           DeprecatedAlarmState oldState = oldRow.first;
           AlarmData alarm = new AlarmData();
 
-          alarm.setGroupName(oldState.group);
+          String[] groupCols = {GroupColumns._ID};
+          String groupWhere = GroupColumns.COL_GROUP_NAME + " =?";
+          String[] groupWhereArgs = {oldState.group};
+          Cursor
+              groupCursor =
+              db.query(GroupColumns.TABLE_NAME, groupCols, groupWhere, groupWhereArgs, null, null,
+                       null);
+          if (groupCursor.moveToFirst()) {
+            alarm.setGroup(groupCursor.getLong(0), oldState.group);
+          } else {
+            //this group doesn't actually exist, so this alarm must be discarded
+            continue;
+          }
 
           String[] moodCols = {MoodColumns._ID};
           String[] moodArgs = {oldState.mood};

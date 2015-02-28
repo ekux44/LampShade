@@ -108,7 +108,7 @@ public class DatabaseGroup extends Group {
     }
   }
 
-  public long getId(){
+  public long getId() {
     return mId;
   }
 
