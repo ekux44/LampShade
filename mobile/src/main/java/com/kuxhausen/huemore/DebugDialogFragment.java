@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.widget;
+package com.kuxhausen.huemore;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

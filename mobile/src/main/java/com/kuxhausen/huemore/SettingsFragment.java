@@ -19,7 +19,6 @@ import android.widget.Spinner;
 
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
-import com.kuxhausen.huemore.widget.DebugDialogFragment;
 
 import java.util.Arrays;
 import java.util.List;
