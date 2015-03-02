@@ -37,8 +37,7 @@ public class MoodListFragment extends ListFragment
   private static final int MOODS_LOADER = 0;
   private MoodRowAdapter mDataSource;
 
-  private View mSelected, mLongSelected; // updated on long click
-  private int mSelectedPos = -1;
+  private int mSelectedPos, mLongSelectedPos = -1; // updated on click, long click
   private ShareActionProvider mShareActionProvider;
 
   @Override
@@ -49,10 +48,7 @@ public class MoodListFragment extends ListFragment
 
     getLoaderManager().initLoader(MOODS_LOADER, null, this);
 
-    String[] columns = {MoodColumns.COL_MOOD_NAME, BaseColumns._ID, MoodColumns.COL_MOOD_VALUE};
-    mDataSource =
-        new MoodRowAdapter(this, this.getActivity(), R.layout.mood_row, null, columns,
-                           new int[]{android.R.id.text1}, 0);
+    mDataSource = new MoodRowAdapter(this.getActivity(), R.layout.mood_row, null, 0);
 
     setListAdapter(mDataSource);
     // Inflate the layout for this fragment
@@ -87,13 +83,13 @@ public class MoodListFragment extends ListFragment
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
     }
-    if (mSelectedPos > -1 && mSelected != null) {
+    if (mSelectedPos > -1) {
       /** Getting the actionprovider associated with the menu item whose id is share */
       mShareActionProvider =
           (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
 
       /** Getting the target intent */
-      Intent intent = getDefaultShareIntent("" + mDataSource.getTextFromRowView(mSelected));
+      Intent intent = getDefaultShareIntent("" + mDataSource.getRow(mSelectedPos).getName());
 
       /** Setting a share intent */
       if (intent != null) {
@@ -134,11 +130,10 @@ public class MoodListFragment extends ListFragment
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (mSelected != null && mSelectedPos > -1) {
+    if (mSelectedPos > -1) {
       getListView().setItemChecked(mSelectedPos, false);
+      mSelectedPos = -1;
     }
-    mSelectedPos = -1;
-    mSelected = null;
     if (getActivity() != null) {
       getActivity().supportInvalidateOptionsMenu();
     }
@@ -148,12 +143,14 @@ public class MoodListFragment extends ListFragment
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    mLongSelected = ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
+    mLongSelectedPos = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+
+    MoodRow longSelected = mDataSource.getRow(mLongSelectedPos);
 
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_mood, menu);
 
-    if (mDataSource.getRowFromView(mLongSelected).isStared()) {
+    if (longSelected.isStared()) {
       menu.findItem(R.id.contextmoodmenu_star).setVisible(false);
       menu.findItem(R.id.contextmoodmenu_unstar).setVisible(true);
     } else {
@@ -164,24 +161,28 @@ public class MoodListFragment extends ListFragment
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
+    if (mLongSelectedPos == -1) {
+      return false;
+    }
+    MoodRow longSelected = mDataSource.getRow(mLongSelectedPos);
 
     switch (item.getItemId()) {
       case R.id.contextmoodmenu_star:
-        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), true);
+        longSelected.starChanged(this.getActivity(), true);
         getLoaderManager().restartLoader(MOODS_LOADER, null, this);
         return true;
       case R.id.contextmoodmenu_unstar:
-        mDataSource.getRowFromView(mLongSelected).starChanged(this.getActivity(), false);
+        longSelected.starChanged(this.getActivity(), false);
         getLoaderManager().restartLoader(MOODS_LOADER, null, this);
         return true;
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
-        String[] moodArg = {mDataSource.getTextFromRowView(mLongSelected)};
+        String[] moodArg = {longSelected.getName()};
         getActivity().getContentResolver().delete(Definitions.MoodColumns.MOODS_URI,
                                                   moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
-        mParent.showEditMood(mDataSource.getTextFromRowView(mLongSelected));
+        mParent.showEditMood(longSelected.getName());
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -240,13 +241,12 @@ public class MoodListFragment extends ListFragment
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    mSelected = v;
     mSelectedPos = position;
 
     getListView().setItemChecked(mSelectedPos, true);
 
     // Notify the parent activity of selected item
-    String moodName = mDataSource.getTextFromRowView(mSelected);
+    String moodName = mDataSource.getRow(mSelectedPos).getName();
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
 
     if (service.getDeviceManager().getSelectedGroup() != null) {

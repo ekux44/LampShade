@@ -98,6 +98,7 @@ public class GroupListFragment extends ListFragment implements
     // two-pane layout
     if (mSelectedPos > -1) {
       getListView().setItemChecked(mSelectedPos, false);
+      mSelectedPos = -1;
     }
   }
 
@@ -106,10 +107,6 @@ public class GroupListFragment extends ListFragment implements
     super.onCreateContextMenu(menu, v, menuInfo);
 
     mLongSelectedPos = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
-
-    if (mLongSelectedPos == -1) {
-      return;
-    }
 
     DatabaseGroup longSelected = mDataSource.getRow(mLongSelectedPos);
 
@@ -135,7 +132,6 @@ public class GroupListFragment extends ListFragment implements
     if (mLongSelectedPos == -1) {
       return false;
     }
-
     DatabaseGroup longSelected = mDataSource.getRow(mLongSelectedPos);
 
     switch (item.getItemId()) {
