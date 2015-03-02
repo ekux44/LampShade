@@ -1,23 +1,22 @@
 package com.kuxhausen.huemore;
 
-import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.state.DatabaseGroup;
 
 import java.util.ArrayList;
 
-public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
+public class DatabaseGroupsAdapter extends ResourceCursorAdapter {
 
-  private GroupListFragment mFrag;
-  private Activity mActivity;
   private ArrayList<DatabaseGroup> mList = new ArrayList<DatabaseGroup>();
+
+  public DatabaseGroupsAdapter(Context context, int layout, Cursor c, int flags) {
+    super(context, layout, c, flags);
+  }
 
   private ArrayList<DatabaseGroup> getList() {
     return mList;
@@ -25,15 +24,6 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
 
   public DatabaseGroup getRow(int position) {
     return getList().get(position);
-  }
-
-  public DatabaseGroupsAdapter(GroupListFragment frag, Activity activity, int layout, Cursor c,
-                               String[] from, int[] to,
-                               int flags) {
-    super(activity, layout, c, from, to, flags);
-    mFrag = frag;
-    mActivity = activity;
-    changeCursor(c);
   }
 
   @Override
@@ -47,11 +37,11 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
     if (cursor != null) {
       cursor.moveToPosition(-1); // not the same as move to first!
       while (cursor.moveToNext()) {
-        mList.add(new DatabaseGroup(cursor, mActivity));
+        mList.add(new DatabaseGroup(cursor, this.mContext));
       }
+      cursor.moveToFirst();
+      this.notifyDataSetChanged();
     }
-    Log.e("DatabaseAdapter", "" + mList.size());
-    notifyDataSetChanged();
   }
 
   @Override
@@ -59,68 +49,43 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
     return (getList() != null) ? getList().size() : 0;
   }
 
+  /**
+   * Bind an existing view to the data pointed to by cursor
+   *
+   * @param rowView Existing view, returned earlier by newView
+   * @param context Interface to application's global information
+   * @param cursor  The cursor from which to get the data. The cursor is already
+   */
   @Override
-  public View getView(int position, View rowView, ViewGroup parent) {
+  public void bindView(View rowView, Context context, Cursor cursor) {
     ViewHolder viewHolder;
 
-    if (rowView == null) {
-      // Get a new instance of the row layout view
-      LayoutInflater inflater = (mActivity).getLayoutInflater();
-
-      rowView = inflater.inflate(R.layout.mood_row, null);
-      TextView textView = (TextView) rowView.findViewById(android.R.id.text1);
-      textView.setLongClickable(true);
-      View starView = rowView.findViewById(android.R.id.text2);
+    if (rowView.getTag() == null) {
+      viewHolder = new ViewHolder();
+      viewHolder.groupName = (TextView) rowView.findViewById(android.R.id.text1);
+      viewHolder.star = rowView.findViewById(android.R.id.text2);
 
       // Hold the view objects in an object, that way the don't need to be "re-found"
-      viewHolder = new ViewHolder();
       rowView.setTag(viewHolder);
-      viewHolder.mText = textView;
-      viewHolder.mStar = starView;
     } else {
       viewHolder = (ViewHolder) rowView.getTag();
     }
 
     /** Set data to your Views. */
-    DatabaseGroup item = getList().get(position);
-    if (!viewHolder.mText.getText().equals(item.getName())) {
-      viewHolder.mText.setText(item.getName());
+    DatabaseGroup item = getList().get(cursor.getPosition());
+    if (!viewHolder.groupName.getText().equals(item.getName())) {
+      viewHolder.groupName.setText(item.getName());
     }
-    viewHolder.mText.setOnClickListener(new OnClickForwardingListener(mFrag, position));
-
     if (item.isStared()) {
-      viewHolder.mStar.setVisibility(View.VISIBLE);
+      viewHolder.star.setVisibility(View.VISIBLE);
     } else {
-      viewHolder.mStar.setVisibility(View.INVISIBLE);
+      viewHolder.star.setVisibility(View.INVISIBLE);
     }
-
-    return rowView;
-  }
-
-  public String getTextFromRowView(View row) {
-    return ((TextView) row.findViewById(android.R.id.text1)).getText().toString();
   }
 
   protected static class ViewHolder {
 
-    protected TextView mText;
-    protected View mStar;
-  }
-
-  public class OnClickForwardingListener implements View.OnClickListener {
-
-    GroupListFragment glf;
-    int position;
-
-    public OnClickForwardingListener(GroupListFragment frag, int pos) {
-      glf = frag;
-      position = pos;
-    }
-
-    @Override
-    public void onClick(View v) {
-      View textView = v;
-      glf.onListItemClick(glf.getListView(), textView, position, textView.getId());
-    }
+    protected TextView groupName;
+    protected View star;
   }
 }

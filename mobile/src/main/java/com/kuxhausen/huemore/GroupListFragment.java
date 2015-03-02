@@ -36,9 +36,7 @@ public class GroupListFragment extends ListFragment implements
                            Bundle savedInstanceState) {
     getLoaderManager().initLoader(GROUPS_LOADER, null, this);
     mDataSource =
-        new DatabaseGroupsAdapter(this, getActivity(), R.layout.mood_row, null,
-                                  DatabaseGroup.GROUP_QUERY_COLUMNS, new int[]{android.R.id.text1},
-                                  0);
+        new DatabaseGroupsAdapter(getActivity(), R.layout.mood_row, null, 0);
     setListAdapter(mDataSource);
 
     View myView = inflater.inflate(R.layout.groups_list_fragment, null);
