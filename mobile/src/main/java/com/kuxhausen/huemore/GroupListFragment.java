@@ -28,26 +28,23 @@ public class GroupListFragment extends ListFragment implements
 
   private static final int GROUPS_LOADER = 0;
   public DatabaseGroupsAdapter mDataSource;
-  private DatabaseGroup mSelected, mLongSelected; // updated on long click
-  private int mSelectedPos = -1;
+  private int mSelectedPos, mLongSelectedPos = -1; // updated on long click
   private NetworkManagedActivity mParent;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+    getLoaderManager().initLoader(GROUPS_LOADER, null, this);
+    mDataSource =
+        new DatabaseGroupsAdapter(this, getActivity(), R.layout.mood_row, null,
+                                  DatabaseGroup.GROUP_QUERY_COLUMNS, new int[]{android.R.id.text1},
+                                  0);
+    setListAdapter(mDataSource);
 
     View myView = inflater.inflate(R.layout.groups_list_fragment, null);
 
-    getLoaderManager().initLoader(GROUPS_LOADER, null, this);
-
-    mDataSource =
-        new DatabaseGroupsAdapter(getActivity(), R.layout.mood_row, null,
-                                  DatabaseGroup.GROUP_QUERY_COLUMNS, new int[]{android.R.id.text1},
-                                  0);
-
-    setListAdapter(mDataSource);
-
     setHasOptionsMenu(true);
+
     return myView;
   }
 
@@ -55,6 +52,7 @@ public class GroupListFragment extends ListFragment implements
   public void onResume() {
     super.onResume();
     this.setHasOptionsMenu(true);
+    this.invalidateSelection();
   }
 
   @Override
@@ -100,7 +98,7 @@ public class GroupListFragment extends ListFragment implements
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
-    if (mSelected != null && mSelectedPos > -1) {
+    if (mSelectedPos > -1) {
       getListView().setItemChecked(mSelectedPos, false);
     }
   }
@@ -109,48 +107,55 @@ public class GroupListFragment extends ListFragment implements
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    mLongSelected =
-        mDataSource.getRowFromView(((AdapterView.AdapterContextMenuInfo) menuInfo).targetView);
+    mLongSelectedPos = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+
+    if (mLongSelectedPos == -1) {
+      return;
+    }
+
+    DatabaseGroup longSelected = mDataSource.getRow(mLongSelectedPos);
 
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_group, menu);
 
-    if (mLongSelected.isStared()) {
-      menu.findItem(R.id.contextmoodmenu_star).setVisible(false);
-      menu.findItem(R.id.contextmoodmenu_unstar).setVisible(true);
+    if (longSelected.isStared()) {
+      menu.findItem(R.id.contextgroupmenu_star).setVisible(false);
+      menu.findItem(R.id.contextgroupmenu_unstar).setVisible(true);
     } else {
-      menu.findItem(R.id.contextmoodmenu_star).setVisible(true);
-      menu.findItem(R.id.contextmoodmenu_unstar).setVisible(false);
+      menu.findItem(R.id.contextgroupmenu_star).setVisible(true);
+      menu.findItem(R.id.contextgroupmenu_unstar).setVisible(false);
     }
 
-    if (mLongSelected.isStared()) {
-      menu.findItem(R.id.contextmoodmenu_edit).setVisible(false);
-      menu.findItem(R.id.contextmoodmenu_delete).setVisible(false);
+    if (longSelected.isALL()) {
+      menu.findItem(R.id.contextgroupmenu_edit).setVisible(false);
+      menu.findItem(R.id.contextgroupmenu_delete).setVisible(false);
     }
   }
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
-    if (mLongSelected == null) {
+    if (mLongSelectedPos == -1) {
       return false;
     }
 
+    DatabaseGroup longSelected = mDataSource.getRow(mLongSelectedPos);
+
     switch (item.getItemId()) {
-      case R.id.contextmoodmenu_star:
-        mLongSelected.starChanged(this.getActivity(), true);
+      case R.id.contextgroupmenu_star:
+        longSelected.starChanged(this.getActivity(), true);
         getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
         break;
-      case R.id.contextmoodmenu_unstar:
-        mLongSelected.starChanged(this.getActivity(), false);
+      case R.id.contextgroupmenu_unstar:
+        longSelected.starChanged(this.getActivity(), false);
         getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
         break;
       case R.id.contextgroupmenu_delete:
-        mLongSelected.deleteSelf(mParent);
+        longSelected.deleteSelf(mParent);
         break;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
         Bundle args = new Bundle();
-        args.putLong(InternalArguments.GROUP_ID, mLongSelected.getId());
+        args.putLong(InternalArguments.GROUP_ID, longSelected.getId());
         ngdf.setArguments(args);
         ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         break;
@@ -158,17 +163,16 @@ public class GroupListFragment extends ListFragment implements
         return super.onContextItemSelected(item);
     }
 
-    mLongSelected = null;
+    mLongSelectedPos = -1;
     return true;
   }
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    mSelected = mDataSource.getRowFromView(v);
     mSelectedPos = position;
 
     // Notify the parent activity of selected bulbs
-    mParent.setGroup(mDataSource.getRow(position));
+    mParent.setGroup(mDataSource.getRow(mSelectedPos));
   }
 
   /**

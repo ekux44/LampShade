@@ -3,6 +3,7 @@ package com.kuxhausen.huemore;
 import android.app.Activity;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
 
+  private GroupListFragment mFrag;
   private Activity mActivity;
   private ArrayList<DatabaseGroup> mList = new ArrayList<DatabaseGroup>();
 
@@ -25,10 +27,12 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
     return getList().get(position);
   }
 
-  public DatabaseGroupsAdapter(Activity activity, int layout, Cursor c, String[] from, int[] to,
+  public DatabaseGroupsAdapter(GroupListFragment frag, Activity activity, int layout, Cursor c,
+                               String[] from, int[] to,
                                int flags) {
     super(activity, layout, c, from, to, flags);
-    this.mActivity = activity;
+    mFrag = frag;
+    mActivity = activity;
     changeCursor(c);
   }
 
@@ -46,6 +50,8 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
         mList.add(new DatabaseGroup(cursor, mActivity));
       }
     }
+    Log.e("DatabaseAdapter", "" + mList.size());
+    notifyDataSetChanged();
   }
 
   @Override
@@ -54,34 +60,33 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
-    View moodRowView = convertView;
+  public View getView(int position, View rowView, ViewGroup parent) {
     ViewHolder viewHolder;
 
-    if (moodRowView == null) {
+    if (rowView == null) {
       // Get a new instance of the row layout view
       LayoutInflater inflater = (mActivity).getLayoutInflater();
 
-      moodRowView = inflater.inflate(R.layout.mood_row, null);
-      TextView textView = (TextView) moodRowView.findViewById(android.R.id.text1);
+      rowView = inflater.inflate(R.layout.mood_row, null);
+      TextView textView = (TextView) rowView.findViewById(android.R.id.text1);
       textView.setLongClickable(true);
-      View starView = moodRowView.findViewById(android.R.id.text2);
+      View starView = rowView.findViewById(android.R.id.text2);
 
       // Hold the view objects in an object, that way the don't need to be "re-found"
       viewHolder = new ViewHolder();
-      moodRowView.setTag(viewHolder);
+      rowView.setTag(viewHolder);
       viewHolder.mText = textView;
       viewHolder.mStar = starView;
     } else {
-      viewHolder = (ViewHolder) moodRowView.getTag();
+      viewHolder = (ViewHolder) rowView.getTag();
     }
 
     /** Set data to your Views. */
     DatabaseGroup item = getList().get(position);
-    viewHolder.mData = item;
     if (!viewHolder.mText.getText().equals(item.getName())) {
       viewHolder.mText.setText(item.getName());
     }
+    viewHolder.mText.setOnClickListener(new OnClickForwardingListener(mFrag, position));
 
     if (item.isStared()) {
       viewHolder.mStar.setVisibility(View.VISIBLE);
@@ -89,22 +94,33 @@ public class DatabaseGroupsAdapter extends SimpleCursorAdapter {
       viewHolder.mStar.setVisibility(View.INVISIBLE);
     }
 
-    return moodRowView;
+    return rowView;
   }
-
 
   public String getTextFromRowView(View row) {
     return ((TextView) row.findViewById(android.R.id.text1)).getText().toString();
-  }
-
-  public DatabaseGroup getRowFromView(View view) {
-    return ((ViewHolder) view.getTag()).mData;
   }
 
   protected static class ViewHolder {
 
     protected TextView mText;
     protected View mStar;
-    protected DatabaseGroup mData;
+  }
+
+  public class OnClickForwardingListener implements View.OnClickListener {
+
+    GroupListFragment glf;
+    int position;
+
+    public OnClickForwardingListener(GroupListFragment frag, int pos) {
+      glf = frag;
+      position = pos;
+    }
+
+    @Override
+    public void onClick(View v) {
+      View textView = v;
+      glf.onListItemClick(glf.getListView(), textView, position, textView.getId());
+    }
   }
 }

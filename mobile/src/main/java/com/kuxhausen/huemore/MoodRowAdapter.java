@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class MoodRowAdapter extends SimpleCursorAdapter {
 
-  private Cursor cursor;
   private Activity mActivity;
   private ArrayList<MoodRow> list = new ArrayList<MoodRow>();
   private MoodListFragment moodListFrag;
@@ -33,7 +32,6 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
   public MoodRowAdapter(MoodListFragment frag, Activity activity, int layout, Cursor c,
                         String[] from, int[] to, int flags) {
     super(activity, layout, c, from, to, flags);
-    this.cursor = c;
     this.mActivity = activity;
     this.moodListFrag = frag;
     changeCursor(c);
@@ -43,10 +41,9 @@ public class MoodRowAdapter extends SimpleCursorAdapter {
   /***
    * Cursor expected to have at each row {mood name, mood id}
    */
-  public void changeCursor(Cursor c) {
-    super.changeCursor(c);
+  public void changeCursor(Cursor cursor) {
+    super.changeCursor(cursor);
     // Log.e("changeCursor", ""+c);
-    this.cursor = c;
     list = new ArrayList<MoodRow>();
     if (cursor != null) {
       cursor.moveToPosition(-1);// not the same as move to first!

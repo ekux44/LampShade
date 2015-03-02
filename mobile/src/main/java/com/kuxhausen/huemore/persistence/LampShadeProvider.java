@@ -36,8 +36,8 @@ public class LampShadeProvider extends ContentProvider {
   /**
    * Constants used by the Uri matcher to choose an action based on the pattern of the incoming URI
    */
-  private static final int GROUPS = 1, MOODS = 2, GROUP = 3, GROUPBULBS = 4, ALARMS = 5,
-      NETBULBS = 6, NETCONNECTIONS = 7, PLAYINGMOOD = 8;
+  private static final int GROUPS = 1, GROUPBULBS = 2, MOODS = 3, ALARMS = 4,
+      NETBULBS = 5, NETCONNECTIONS = 6, PLAYINGMOOD = 7;
 
   /**
    * projection mapping between content provider value names and sql column names to enable
@@ -58,8 +58,8 @@ public class LampShadeProvider extends ContentProvider {
 
     {
       sUriMatcher.addURI(Definitions.AUTHORITY, GroupColumns.PATH_GROUPS, GROUPS);
-      sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
       sUriMatcher.addURI(Definitions.AUTHORITY, GroupBulbColumns.PATH_GROUPBULBS, GROUPBULBS);
+      sUriMatcher.addURI(Definitions.AUTHORITY, MoodColumns.PATH_MOODS, MOODS);
       sUriMatcher.addURI(Definitions.AUTHORITY, AlarmColumns.PATH_ALARMS, ALARMS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
@@ -112,7 +112,7 @@ public class LampShadeProvider extends ContentProvider {
         table = (AlarmColumns.TABLE_NAME);
         toNotify.add(AlarmColumns.ALARMS_URI);
         break;
-      case GROUP:
+      case GROUPS:
         table = (GroupColumns.TABLE_NAME);
         toNotify.add(GroupColumns.URI);
         toNotify.add(GroupBulbColumns.URI);
@@ -281,6 +281,11 @@ public class LampShadeProvider extends ContentProvider {
       case GROUPS:
         qb.setTables(GroupColumns.TABLE_NAME);
         groupBy = null;
+        if (sortOrder == null || sortOrder.equals("")) {
+          sortOrder =
+              GroupColumns.COL_GROUP_PRIORITY + " DESC," + GroupColumns.COL_GROUP_LOWERCASE_NAME
+              + " COLLATE UNICODE";
+        }
         break;
       case GROUPBULBS:
         qb.setTables(GroupBulbColumns.TABLE_NAME);
@@ -373,7 +378,7 @@ public class LampShadeProvider extends ContentProvider {
           toNotify.add(NetBulbColumns.URI);
         }
         break;
-      case GROUP:
+      case GROUPS:
         count = db.update(GroupColumns.TABLE_NAME, values, selection, selectionArgs);
         toNotify.add(GroupColumns.URI);
         break;

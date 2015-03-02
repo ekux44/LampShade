@@ -60,8 +60,6 @@ public class DatabaseGroup extends Group {
     mPriority = groupCursor.getInt(3);
     mFlags = groupCursor.getInt(4);
 
-    groupCursor.close();
-
     String[] bulbWhere = {"" + mId};
     Cursor
         bulbCursor =
@@ -173,7 +171,7 @@ public class DatabaseGroup extends Group {
     values.put(GroupColumns.COL_GROUP_NAME, mName);
     values.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, mLowercaseName);
     values.put(GroupColumns.COL_GROUP_PRIORITY, mPriority);
-    values.put(GroupColumns.COL_GROUP_PRIORITY, mFlags);
+    values.put(GroupColumns.COL_GROUP_FLAGS, mFlags);
 
     String where = GroupColumns._ID + "=?";
     String[] whereArg = {"" + mId};
