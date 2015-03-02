@@ -7,15 +7,17 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.kuxhausen.huemore.alarm.AlarmsListFragment;
 import com.kuxhausen.huemore.editmood.EditMoodFragment;
 import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.ConnectionListFragment;
@@ -37,7 +40,6 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.persistence.PreferenceInitializer;
 import com.kuxhausen.huemore.state.Group;
-import com.kuxhausen.huemore.alarm.AlarmsListFragment;
 
 import java.util.ArrayList;
 
@@ -51,20 +53,19 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   private ActionBarDrawerToggle mDrawerToggle;
   private NotificationRowAdapter mNotificationAdapter;
 
-  private CharSequence mDrawerTitle;
   private CharSequence mTitle;
-  private String[] mDrawerTitles;
-  // private Fragment[] mFragments = new Fragment[mDrawerTitles.length];
+  private ArrayList<String> mDrawerTitles;
+  private ArrayMap<String, Integer> mDrawerTitlePositions;
 
   public int mSelectedItemPosition;
-  public final static int BULB_FRAG = 0, GROUP_FRAG = 1, CONNECTIONS_FRAG = 2, SETTINGS_FRAG = 3,
-      HELP_FRAG = 4, ALARM_FRAG = 5, NFC_FRAG = 6;
-  public final static String BASE_FRAG_TAG = "FragTag";
   public Tag myTag;
 
   private SharedPreferences mSettings;
 
   private Bundle mResumeBundle;
+
+  private String TITLE_BULB_FRAG, TITLE_GROUP_FRAG, TITLE_CONNECTIONS_FRAG, TITLE_ALARM_FRAG,
+      TITLE_NFC_FRAG, TITLE_SETTINGS_FRAG, TITLE_HELP_FRAG;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +74,12 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
     setContentView(R.layout.activity_navigation_drawer);
 
+    generateDrawerTitles();
+
     mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
     setSupportActionBar(mToolbar);
 
-    mDrawerTitles = this.getResources().getStringArray(R.array.navigation_drawer_titles);
-
-    mTitle = mDrawerTitle = getTitle();
+    mTitle = getTitle();
 
     mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     mDrawerList = (ListView) findViewById(R.id.drawer_list);
@@ -128,6 +129,37 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     PreferenceInitializer.initializedPreferencesAndShowDialogs(this);
   }
 
+  private void generateDrawerTitles() {
+    TITLE_BULB_FRAG = getString(R.string.nav_drawer_bulbs);
+    TITLE_GROUP_FRAG = getString(R.string.nav_drawer_groups);
+    TITLE_CONNECTIONS_FRAG = getString(R.string.nav_drawer_connections);
+    TITLE_ALARM_FRAG = getString(R.string.nav_drawer_alarms);
+    TITLE_NFC_FRAG = getString(R.string.nav_drawer_nfc);
+    TITLE_SETTINGS_FRAG = getString(R.string.nav_drawer_settings);
+    TITLE_HELP_FRAG = getString(R.string.nav_drawer_help);
+
+    /** Generate the drawer items list for this device **/
+    mDrawerTitles = new ArrayList<>();
+    mDrawerTitles.add(TITLE_BULB_FRAG);
+    mDrawerTitles.add(TITLE_GROUP_FRAG);
+    mDrawerTitles.add(TITLE_CONNECTIONS_FRAG);
+    //Alarms only supported on 3.1+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+      mDrawerTitles.add(TITLE_ALARM_FRAG);
+    }
+    //Only show NFC option on supported devices
+    if (NfcAdapter.getDefaultAdapter(this) == null) {
+      mDrawerTitles.add(TITLE_NFC_FRAG);
+    }
+    mDrawerTitles.add(TITLE_SETTINGS_FRAG);
+    mDrawerTitles.add(TITLE_HELP_FRAG);
+
+    mDrawerTitlePositions = new ArrayMap<String, Integer>();
+    for (int i = 0; i < mDrawerTitles.size(); i++) {
+      mDrawerTitlePositions.put(mDrawerTitles.get(i), i);
+    }
+  }
+
   public void onResume() {
     super.onResume();
 
@@ -151,14 +183,17 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     super.onResumeFragments();
 
     Bundle b = mResumeBundle;
-    if (b != null && b.containsKey(InternalArguments.NAV_DRAWER_PAGE)) {
-      selectItem(b.getInt(InternalArguments.NAV_DRAWER_PAGE), b);
-      b.remove(InternalArguments.NAV_DRAWER_PAGE);
+    if (b != null && b.containsKey(InternalArguments.NAV_DRAWER_TITLE)) {
+      String desiredTitle = b.getString(InternalArguments.NAV_DRAWER_TITLE);
+      if (mDrawerTitlePositions.containsKey(desiredTitle)) {
+        selectItem(mDrawerTitlePositions.get(desiredTitle), b);
+      }
+      b.remove(InternalArguments.NAV_DRAWER_TITLE);
     } else {
       if (mSettings.getBoolean(PreferenceKeys.DEFAULT_TO_GROUPS, false)) {
-        selectItem(GROUP_FRAG, b);
+        selectItem(mDrawerTitlePositions.get(TITLE_GROUP_FRAG), b);
       } else {
-        selectItem(BULB_FRAG, b);
+        selectItem(mDrawerTitlePositions.get(TITLE_BULB_FRAG), b);
       }
     }
 
@@ -196,7 +231,8 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       }
     }
     //hide connectivity error icon on connections page or no error
-    if (mSelectedItemPosition == CONNECTIONS_FRAG || hasPendingOrSuccessfulConnections) {
+    if (mSelectedItemPosition == mDrawerTitlePositions.get(TITLE_CONNECTIONS_FRAG)
+        || hasPendingOrSuccessfulConnections) {
       MenuItem unlocksItem = menu.findItem(R.id.action_connectivity_error);
       unlocksItem.setEnabled(false);
       unlocksItem.setVisible(false);
@@ -241,66 +277,59 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     }
 
     // record the groupbulb tab state and pass in bundle to main
-    if (position == GROUP_FRAG) {
+    if (position == mDrawerTitlePositions.get(TITLE_GROUP_FRAG)) {
       b.putInt(InternalArguments.GROUPBULB_TAB, GroupBulbPagerAdapter.GROUP_LOCATION);
       saveTab(GroupBulbPagerAdapter.GROUP_LOCATION);
-    } else if (position == BULB_FRAG) {
+    } else if (position == mDrawerTitlePositions.get(TITLE_BULB_FRAG)) {
       b.putInt(InternalArguments.GROUPBULB_TAB, GroupBulbPagerAdapter.BULB_LOCATION);
       saveTab(GroupBulbPagerAdapter.BULB_LOCATION);
     }
 
     // this allows Bulb & Group to show up twice in NavBar but share fragment
     int actualPosition = position;
-    if (actualPosition == GROUP_FRAG) {
-      actualPosition = BULB_FRAG;
+    if (actualPosition == mDrawerTitlePositions.get(TITLE_GROUP_FRAG)) {
+      actualPosition = mDrawerTitlePositions.get(TITLE_BULB_FRAG);
     }
 
     mSelectedItemPosition = position;
     cleanUpActionBar();
 
-    String selectedFragTag = BASE_FRAG_TAG + actualPosition;
-
-    Fragment selectedFrag = getSupportFragmentManager().findFragmentByTag(selectedFragTag);
+    Fragment
+        selectedFrag =
+        getSupportFragmentManager().findFragmentByTag(mDrawerTitles.get(actualPosition));
 
     if (selectedFrag == null) {
-      switch (actualPosition) {
-        case BULB_FRAG:
-          selectedFrag = new MainFragment();
-          break;
-        case CONNECTIONS_FRAG:
-          selectedFrag = new ConnectionListFragment();
-          break;
-        case SETTINGS_FRAG:
-          selectedFrag = new SettingsFragment();
-          break;
-        case HELP_FRAG:
-          selectedFrag = new HelpFragment();
-          break;
-        case ALARM_FRAG:
-          selectedFrag = new AlarmsListFragment();
-          break;
-        case NFC_FRAG:
-          selectedFrag = new NfcWriterFragment();
-          break;
+      if (mDrawerTitles.get(actualPosition).equals(TITLE_BULB_FRAG)) {
+        selectedFrag = new MainFragment();
+      } else if (mDrawerTitles.get(actualPosition).equals(TITLE_CONNECTIONS_FRAG)) {
+        selectedFrag = new ConnectionListFragment();
+      } else if (mDrawerTitles.get(actualPosition).equals(TITLE_SETTINGS_FRAG)) {
+        selectedFrag = new SettingsFragment();
+      } else if (mDrawerTitles.get(actualPosition).equals(TITLE_HELP_FRAG)) {
+        selectedFrag = new HelpFragment();
+      } else if (mDrawerTitles.get(actualPosition).equals(TITLE_ALARM_FRAG)) {
+        selectedFrag = new AlarmsListFragment();
+      } else if (mDrawerTitles.get(actualPosition).equals(TITLE_NFC_FRAG)) {
+        selectedFrag = new NfcWriterFragment();
       }
       selectedFrag.setArguments(b);
     } else {
       // if can't pass groupbulb tab data in bundle because frag already exists, pass directly
-      if (actualPosition == BULB_FRAG) {
+      if (actualPosition == mDrawerTitlePositions.get(TITLE_BULB_FRAG)) {
         ((MainFragment) selectedFrag).setTab(b.getInt(InternalArguments.GROUPBULB_TAB));
       }
     }
 
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    fragmentManager.beginTransaction().replace(R.id.content_frame, selectedFrag, selectedFragTag)
-        .commit();
+    fragmentManager.beginTransaction()
+        .replace(R.id.content_frame, selectedFrag, mDrawerTitles.get(actualPosition)).commit();
 
     this.supportInvalidateOptionsMenu();
 
     // update selected item and title, then close the drawer
     mDrawerList.setItemChecked(position, true);
-    setTitle(mDrawerTitles[position]);
+    setTitle(mDrawerTitles.get(position));
     mDrawerLayout.closeDrawer(mDrawerView);
   }
 
@@ -354,7 +383,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public void showHelp(String pageName) {
     Bundle b = new Bundle();
     b.putString(InternalArguments.HELP_PAGE, pageName);
-    selectItem(HELP_FRAG, b);
+    selectItem(mDrawerTitlePositions.get(TITLE_HELP_FRAG), b);
 
     // TODO find a way of showing help page without clearning back stack yet still enabling nav
     // drawer
@@ -368,7 +397,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   }
 
   public void showConnectivity() {
-    selectItem(CONNECTIONS_FRAG, null);
+    selectItem(mDrawerTitlePositions.get(TITLE_CONNECTIONS_FRAG), null);
 
     // TODO find a way of showing connectivity page without clearning back stack yet still enabling
     // nav drawer
@@ -392,9 +421,11 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     super.setGroup(g);
 
     MainFragment frag = null;
-    if (mSelectedItemPosition == BULB_FRAG || mSelectedItemPosition == GROUP_FRAG) {
+    if (mSelectedItemPosition == mDrawerTitlePositions.get(TITLE_BULB_FRAG)
+        || mSelectedItemPosition == mDrawerTitlePositions.get(TITLE_GROUP_FRAG)) {
       frag =
-          ((MainFragment) getSupportFragmentManager().findFragmentByTag(BASE_FRAG_TAG + BULB_FRAG));
+          ((MainFragment) getSupportFragmentManager()
+              .findFragmentByTag(TITLE_BULB_FRAG));
     }
     if (frag != null) {
       if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
@@ -425,12 +456,12 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public void markSelected(int pagerPosition) {
     int drawerPosition;
     if (pagerPosition == GroupBulbPagerAdapter.BULB_LOCATION) {
-      drawerPosition = NavigationDrawerActivity.BULB_FRAG;
+      drawerPosition = mDrawerTitlePositions.get(TITLE_BULB_FRAG);
     } else {
-      drawerPosition = NavigationDrawerActivity.GROUP_FRAG;
+      drawerPosition = mDrawerTitlePositions.get(TITLE_GROUP_FRAG);
     }
     mDrawerList.setItemChecked(drawerPosition, true);
-    setTitle(mDrawerTitles[drawerPosition]);
+    setTitle(mDrawerTitles.get(drawerPosition));
     saveTab(pagerPosition);
   }
 

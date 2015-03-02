@@ -296,7 +296,7 @@ public final class Definitions {
     public static final String COLUMN = "Column";
     public static final String NET_BULB_DATABASE_ID = "NET_BULB_DATABASE_ID";
     public static final String MAX_BRIGHTNESS = "MAX_BRIGHTNESS";
-    public static final String NAV_DRAWER_PAGE = "NAV_DRAWER_PAGE";
+    public static final String NAV_DRAWER_TITLE = "NAV_DRAWER_TITLE";
     public static final String GROUPBULB_TAB = "GROUPBULB_TAB";
     public static final String FLAG_SHOW_NAV_DRAWER = "FLAG_SHOW_NAV_DRAWER";
     public static final String FLAG_CANCEL_PLAYING = "FLAG_CANCEL_PLAYING";

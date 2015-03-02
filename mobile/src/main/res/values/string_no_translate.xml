@@ -34,16 +34,14 @@
         <item>@string/help_content_automationpluggin</item>
         <item>@string/help_content_faq</item>
     </string-array>
-    
-    <string-array name="navigation_drawer_titles">
-	    <item>@string/action_bulbs</item>
-	    <item>@string/groups</item>
-        <item>@string/action_connections</item>
-        <item>@string/action_settings</item>
-        <item>@string/action_help</item>
-        <item>@string/alarms</item>
-        <item>@string/nfc</item>
-    </string-array>
+
+    <string name="nav_drawer_bulbs">@string/action_bulbs</string>
+    <string name="nav_drawer_groups">@string/groups</string>
+    <string name="nav_drawer_connections">@string/action_connections</string>
+    <string name="nav_drawer_alarms">@string/alarms</string>
+    <string name="nav_drawer_nfc">@string/nfc</string>
+    <string name="nav_drawer_settings">@string/action_settings</string>
+    <string name="nav_drawer_help">@string/action_help</string>
     
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

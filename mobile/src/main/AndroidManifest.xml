@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kuxhausen.huemore" >
+<manifest
+    package="com.kuxhausen.huemore"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_lampshade"
         android:installLocation="internalOnly"
-        android:label="@string/app_name" >
+        android:label="@string/app_name">
         <activity
-            android:name="com.kuxhausen.huemore.NavigationDrawerActivity"
+            android:name=".NavigationDrawerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/blue_day">
+            android:theme="@style/blue_day"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,64 +31,65 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="lampshade.io"
-                    android:path="/share" />
+
+                <data
+                    android:host="lampshade.io"
+                    android:path="/share"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <provider
-            android:name="com.kuxhausen.huemore.persistence.LampShadeProvider"
-            android:authorities= "${applicationId}.provider.database"
-            android:exported="true" >
-        </provider>
+            android:name=".persistence.LampShadeProvider"
+            android:authorities="${applicationId}.provider.database"
+            android:exported="true" />
 
-        <receiver android:name="com.kuxhausen.huemore.persistence.LocalizationReceiver">
+        <receiver android:name=".persistence.LocalizationReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
         </receiver>
 
-        <!-- Listen for the "edit" action -->
+        <!-- Listen for the Tasker "edit" action -->
         <activity
-            android:name="com.kuxhausen.huemore.automation.EditActivity"
+            android:name=".automation.EditActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:icon="@drawable/ic_launcher_lampshade"
             android:label="@string/app_name"
             android:noHistory="true"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/blue_day" >
+            android:theme="@style/blue_day"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
-        <!-- Listen for the "fire" action -->
-        <receiver android:name="com.kuxhausen.huemore.automation.FireReceiver" >
+        <!-- Listen for the Tasker "fire" action -->
+        <receiver android:name=".automation.FireReceiver">
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.kuxhausen.huemore.automation.VoiceInputReceiver" >
-        </receiver>
+        <receiver android:name=".automation.VoiceInputReceiver" />
+
         <activity
-            android:name="com.kuxhausen.huemore.DecodeErrorActivity"
+            android:name=".DecodeErrorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/blue_day" >
-        </activity>
-        <activity
-            android:name="com.kuxhausen.huemore.nfc.NfcReaderActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
             android:theme="@style/blue_day"
-            android:noHistory="true" >
-        </activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.kuxhausen.huemore.nfc.NfcReadRouterActivity"
+            android:name=".nfc.NfcReaderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
+            android:noHistory="true"
             android:theme="@style/blue_day"
-            android:noHistory="true" >
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".nfc.NfcReadRouterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:noHistory="true"
+            android:theme="@style/blue_day"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -111,28 +113,29 @@
         </activity>
 
         <receiver
-            android:name="com.kuxhausen.huemore.widget.AlarmWidgetProvider"
-            android:exported="true" android:label="@string/widget_alarms_label">
+            android:name=".widget.AlarmWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_alarms_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
             </intent-filter>
-            <!-- This specifies the widget provider info -->
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/alarm_widgetinfo" />
         </receiver>
 
         <service
-            android:name="com.kuxhausen.huemore.widget.AlarmWidgetService"
+            android:name=".widget.AlarmWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        
-   		<receiver
-            android:name="com.kuxhausen.huemore.widget.GroupWidgetProvider"
-            android:exported="true" android:label="@string/widget_groups_label">
+
+        <receiver
+            android:name=".widget.GroupWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_groups_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -145,13 +148,14 @@
         </receiver>
 
         <service
-            android:name="com.kuxhausen.huemore.widget.GroupWidgetService"
+            android:name=".widget.GroupWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver
-                android:name="com.kuxhausen.huemore.widget.SmallGroupWidgetProvider"
-                android:exported="true" android:label="@string/widget_small_groups_label">
+            android:name=".widget.SmallGroupWidgetProvider"
+            android:exported="true"
+            android:label="@string/widget_small_groups_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -159,38 +163,36 @@
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
             </intent-filter>
             <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/small_group_widgetinfo" />
+                android:name="android.appwidget.provider"
+                android:resource="@xml/small_group_widgetinfo" />
         </receiver>
 
         <service
-                android:name="com.kuxhausen.huemore.widget.SmallGroupWidgetService"
-                android:exported="false"
-                android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:name=".widget.SmallGroupWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service
-            android:name="com.kuxhausen.huemore.net.ConnectivityService"
+            android:name=".net.ConnectivityService"
             android:enabled="true"
             android:exported="false"
-            android:icon="@drawable/ic_launcher_lampshade" >
-        </service>
+            android:icon="@drawable/ic_launcher_lampshade" />
 
-        <service android:name="com.kuxhausen.huemore.wear.WearService">
+        <service android:name=".wear.WearService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
 
         <activity
-            android:name="com.kuxhausen.huemore.widget.VoiceReadRouterActivity"
+            android:name=".widget.VoiceReadRouterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="true"
             android:taskAffinity=""
-            android:exported="true">
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name="com.kuxhausen.huemore.alarm.ReinitalizerReceiver">
+        <receiver android:name=".alarm.ReinitalizerReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIME_SET" />
@@ -200,15 +202,16 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".net.ConnectivityServiceLauncher"
-            android:exported="false">
-        </receiver>
+        <receiver
+            android:name=".net.ConnectivityServiceLauncher"
+            android:exported="false" />
 
-        <receiver android:name="com.kuxhausen.huemore.alarm.AlarmReceiver"
-            android:exported="false">
-        </receiver>
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:exported="false" />
 
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
-
 </manifest>

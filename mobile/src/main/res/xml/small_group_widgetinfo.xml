@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="120dp"
-    android:minHeight="90dp"
-    android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/widget_small_group_layout"
+    android:minHeight="90dp"
+    android:minResizeHeight="90dp"
+    android:minResizeWidth="120dp"
+    android:minWidth="120dp"
+    android:previewImage="@drawable/widget_preview_small_groups"
     android:resizeMode="horizontal|vertical"
-    android:widgetCategory="keyguard|home_screen"
-    android:minResizeHeight="90dp" android:minResizeWidth="120dp" android:previewImage="@drawable/widget_preview_small_groups">
-</appwidget-provider>
-<!-- 86400000 is the value of AlarmManager.INTERVAL_DAY - or once per day. -->
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="keyguard|home_screen"></appwidget-provider>
 

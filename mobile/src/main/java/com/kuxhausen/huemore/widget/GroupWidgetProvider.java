@@ -132,8 +132,8 @@ public class GroupWidgetProvider extends AppWidgetProvider {
       rv.setOnClickPendingIntent(R.id.voice_icon, openVoicePendingIntent);
 
       final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
-      openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE,
-                                 NavigationDrawerActivity.GROUP_FRAG);
+      openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_TITLE,
+                                 context.getString(R.string.nav_drawer_groups));
       openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
       final PendingIntent openHueMorePendingIntent =
           PendingIntent.getActivity(context, 3, openHueMoreIntent,

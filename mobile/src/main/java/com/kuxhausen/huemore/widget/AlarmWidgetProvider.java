@@ -125,21 +125,21 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
       rv.setPendingIntentTemplate(R.id.alarm_list, onClickPendingIntent);
 
       Intent openAlarmsIntent = new Intent(context, NavigationDrawerActivity.class);
-      openAlarmsIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE,
-                                NavigationDrawerActivity.ALARM_FRAG);
+      openAlarmsIntent.putExtra(InternalArguments.NAV_DRAWER_TITLE,
+                                context.getString(R.string.nav_drawer_alarms));
       openAlarmsIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      final PendingIntent openAlarmsPendingIntent =
-          PendingIntent.getActivity(context, NavigationDrawerActivity.ALARM_FRAG, openAlarmsIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
+      final PendingIntent openAlarmsPendingIntent = PendingIntent.getActivity(context, 1,
+                                                                              openAlarmsIntent,
+                                                                              PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setOnClickPendingIntent(R.id.alarms_icon, openAlarmsPendingIntent);
 
       final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
-      openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_PAGE,
-                                 NavigationDrawerActivity.GROUP_FRAG);
+      openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_TITLE,
+                                 context.getString(R.string.nav_drawer_groups));
       openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      final PendingIntent openHueMorePendingIntent =
-          PendingIntent.getActivity(context, -1, openHueMoreIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
+      final PendingIntent openHueMorePendingIntent = PendingIntent.getActivity(context, 2,
+                                                                               openHueMoreIntent,
+                                                                               PendingIntent.FLAG_UPDATE_CURRENT);
       rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
     }
     return rv;

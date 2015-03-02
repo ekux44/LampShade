@@ -19,7 +19,7 @@ public class ReinitalizerReceiver extends BroadcastReceiver {
    */
   @Override
   public void onReceive(final Context context, Intent intent) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
 
       final String action = intent.getAction();
 
