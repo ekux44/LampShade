@@ -14,18 +14,19 @@ import java.util.ArrayList;
 
 public class MoodRowAdapter extends ResourceCursorAdapter {
 
-  private ArrayList<MoodRow> list = new ArrayList<MoodRow>();
+  private ArrayList<MoodRow> mList = new ArrayList<MoodRow>();
 
   public MoodRowAdapter(Context context, int layout, Cursor c, int flags) {
     super(context, layout, c, flags);
   }
 
-  private ArrayList<MoodRow> getList() {
-    return list;
+  public MoodRow getRow(int position) {
+    return mList.get(position);
   }
 
-  public MoodRow getRow(int position) {
-    return getList().get(position);
+  @Override
+  public int getCount() {
+    return mList.size();
   }
 
   @Override
@@ -34,14 +35,14 @@ public class MoodRowAdapter extends ResourceCursorAdapter {
    */
   public void changeCursor(Cursor cursor) {
     super.changeCursor(cursor);
-    list.clear();
+    mList.clear();
     if (cursor != null) {
       cursor.moveToPosition(-1);// not the same as move to first!
       while (cursor.moveToNext()) {
         try {
-          list.add(new MoodRow(cursor.getString(0), cursor.getLong(1),
-                               HueUrlEncoder.decode(cursor.getString(
-                                   2)).second.first, cursor.getString(3), cursor.getInt(4)));
+          mList.add(new MoodRow(cursor.getString(0), cursor.getLong(1),
+                                HueUrlEncoder.decode(cursor.getString(
+                                    2)).second.first, cursor.getString(3), cursor.getInt(4)));
         } catch (InvalidEncodingException e) {
         } catch (FutureEncodingException e) {
         }
@@ -49,11 +50,6 @@ public class MoodRowAdapter extends ResourceCursorAdapter {
       cursor.moveToFirst();
       notifyDataSetChanged();
     }
-  }
-
-  @Override
-  public int getCount() {
-    return (getList() != null) ? getList().size() : 0;
   }
 
   @Override
@@ -72,7 +68,7 @@ public class MoodRowAdapter extends ResourceCursorAdapter {
     }
 
     /** Set data to your Views. */
-    MoodRow item = getList().get(cursor.getPosition());
+    MoodRow item = mList.get(cursor.getPosition());
     if (!viewHolder.moodName.getText().equals(item.getName())) {
       viewHolder.moodName.setText(item.getName());
       MoodPreviewDrawable mDraw =

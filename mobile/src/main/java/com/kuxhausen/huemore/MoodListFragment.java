@@ -161,9 +161,6 @@ public class MoodListFragment extends ListFragment
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
-    if (mLongSelectedPos == -1) {
-      return false;
-    }
     MoodRow longSelected = mDataSource.getRow(mLongSelectedPos);
 
     switch (item.getItemId()) {

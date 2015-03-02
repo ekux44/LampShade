@@ -28,7 +28,7 @@ public class GroupListFragment extends ListFragment implements
 
   private static final int GROUPS_LOADER = 0;
   public DatabaseGroupsAdapter mDataSource;
-  private int mSelectedPos, mLongSelectedPos = -1; // updated on long click
+  private int mSelectedPos, mLongSelectedPos = -1; // updated on click, long click
   private NetworkManagedActivity mParent;
 
   @Override
@@ -71,7 +71,6 @@ public class GroupListFragment extends ListFragment implements
   public boolean onOptionsItemSelected(MenuItem item) {
     // Handle item selection
     switch (item.getItemId()) {
-
       case R.id.action_add_group:
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
         ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
@@ -129,9 +128,6 @@ public class GroupListFragment extends ListFragment implements
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
-    if (mLongSelectedPos == -1) {
-      return false;
-    }
     DatabaseGroup longSelected = mDataSource.getRow(mLongSelectedPos);
 
     switch (item.getItemId()) {
@@ -157,7 +153,6 @@ public class GroupListFragment extends ListFragment implements
         return super.onContextItemSelected(item);
     }
 
-    mLongSelectedPos = -1;
     return true;
   }
 

@@ -1,14 +1,9 @@
 package com.kuxhausen.huemore.alarm;
 
-import com.google.gson.Gson;
-
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.LayoutInflater;
+import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -17,76 +12,64 @@ import com.kuxhausen.huemore.R;
 
 import java.util.ArrayList;
 
-public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedChangeListener {
+public class AlarmRowAdapter extends ResourceCursorAdapter implements OnCheckedChangeListener {
 
-  private Cursor cursor;
-  private Context context;
-  private ArrayList<AlarmData> list = new ArrayList<AlarmData>();
-  Gson gson = new Gson();
+  private ArrayList<AlarmData> mList = new ArrayList<AlarmData>();
 
-  private ArrayList<AlarmData> getList() {
-    return list;
+  public AlarmRowAdapter(Context context, int layout, Cursor c, int flags) {
+    super(context, layout, c, flags);
   }
 
   public AlarmData getRow(int position) {
-    return getList().get(position);
-  }
-
-  public AlarmRowAdapter(Context context, int layout, Cursor c, String[] from, int[] to,
-                         int flags) {
-    super(context, layout, c, from, to, flags);
-    this.cursor = c;
-    this.context = context;
-
-    changeCursor(c);
+    return mList.get(position);
   }
 
   @Override
-  public void changeCursor(Cursor c) {
-    super.changeCursor(c);
-    this.cursor = c;
-    list = new ArrayList<AlarmData>();
+  public int getCount() {
+    return mList.size();
+  }
+
+  @Override
+  public void changeCursor(Cursor cursor) {
+    super.changeCursor(cursor);
+    mList.clear();
     if (cursor != null) {
       cursor.moveToPosition(-1);// not the same as move to first!
       while (cursor.moveToNext()) {
-        list.add(new AlarmData(cursor));
+        mList.add(new AlarmData(cursor));
       }
+      cursor.moveToFirst();
+      notifyDataSetChanged();
     }
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
-    View rowView = convertView;
-    ViewHolder view;
+  public void bindView(View rowView, Context context, Cursor cursor) {
+    ViewHolder viewHolder;
 
-    if (rowView == null) {
-      // Get a new instance of the row layout view
-      LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-      rowView = inflater.inflate(R.layout.alarm_row, null);
+    if (rowView.getTag() == null) {
+      viewHolder = new ViewHolder();
+      viewHolder.scheduledButton =
+          (CompoundButton) rowView.findViewById(R.id.alarmOnOffCompoundButton);
+      viewHolder.time = (TextView) rowView.findViewById(R.id.timeTextView);
+      viewHolder.secondaryDescription = (TextView) rowView.findViewById(R.id.subTextView);
 
       // Hold the view objects in an object, that way the don't need to be "re-found"
-      view = new ViewHolder();
-
-      view.scheduledButton = (CompoundButton) rowView.findViewById(R.id.alarmOnOffCompoundButton);
-      view.time = (TextView) rowView.findViewById(R.id.timeTextView);
-      view.taggedView = rowView.findViewById(R.id.rowExcludingCompoundButton);
-      view.secondaryDescription = (TextView) rowView.findViewById(R.id.subTextView);
-
-      rowView.setTag(view);
+      rowView.setTag(viewHolder);
     } else {
-      view = (ViewHolder) rowView.getTag();
+      viewHolder = (ViewHolder) rowView.getTag();
     }
 
-    AlarmData item = getList().get(position);
-    AlarmLogic.logAlarm("GetView", item);
-    view.taggedView.setTag(item);
-    view.scheduledButton.setTag(item);
-    view.scheduledButton.setOnCheckedChangeListener(null);
-    view.scheduledButton.setChecked(item.isEnabled());
-    view.scheduledButton.setOnCheckedChangeListener(this);
-    view.time.setText(item.getUserTimeString(context));
-    view.secondaryDescription.setText(item.getSecondaryDescription(context));
-    return rowView;
+    /** Set data to your Views. */
+    AlarmData item = mList.get(cursor.getPosition());
+    AlarmLogic.logAlarm("BindView", item);
+
+    viewHolder.scheduledButton.setTag(item);
+    viewHolder.scheduledButton.setOnCheckedChangeListener(null);
+    viewHolder.scheduledButton.setChecked(item.isEnabled());
+    viewHolder.scheduledButton.setOnCheckedChangeListener(this);
+    viewHolder.time.setText(item.getUserTimeString(context));
+    viewHolder.secondaryDescription.setText(item.getSecondaryDescription(context));
   }
 
   protected static class ViewHolder {
@@ -94,19 +77,13 @@ public class AlarmRowAdapter extends SimpleCursorAdapter implements OnCheckedCha
     protected TextView time;
     protected TextView secondaryDescription;
     protected CompoundButton scheduledButton;
-    protected View taggedView;
   }
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     AlarmData ar = (AlarmData) buttonView.getTag();
     if (ar.isEnabled() != isChecked) {
-      AlarmLogic.toggleAlarm(context, ar);
+      AlarmLogic.toggleAlarm(mContext, ar);
     }
-  }
-
-  @Override
-  public int getCount() {
-    return (getList() != null) ? getList().size() : 0;
   }
 }

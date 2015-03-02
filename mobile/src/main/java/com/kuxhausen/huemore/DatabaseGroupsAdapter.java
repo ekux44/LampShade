@@ -18,12 +18,13 @@ public class DatabaseGroupsAdapter extends ResourceCursorAdapter {
     super(context, layout, c, flags);
   }
 
-  private ArrayList<DatabaseGroup> getList() {
-    return mList;
+  public DatabaseGroup getRow(int position) {
+    return mList.get(position);
   }
 
-  public DatabaseGroup getRow(int position) {
-    return getList().get(position);
+  @Override
+  public int getCount() {
+    return mList.size();
   }
 
   @Override
@@ -32,7 +33,6 @@ public class DatabaseGroupsAdapter extends ResourceCursorAdapter {
    */
   public void changeCursor(Cursor cursor) {
     super.changeCursor(cursor);
-
     mList.clear();
     if (cursor != null) {
       cursor.moveToPosition(-1); // not the same as move to first!
@@ -40,22 +40,10 @@ public class DatabaseGroupsAdapter extends ResourceCursorAdapter {
         mList.add(new DatabaseGroup(cursor, this.mContext));
       }
       cursor.moveToFirst();
-      this.notifyDataSetChanged();
+      notifyDataSetChanged();
     }
   }
 
-  @Override
-  public int getCount() {
-    return (getList() != null) ? getList().size() : 0;
-  }
-
-  /**
-   * Bind an existing view to the data pointed to by cursor
-   *
-   * @param rowView Existing view, returned earlier by newView
-   * @param context Interface to application's global information
-   * @param cursor  The cursor from which to get the data. The cursor is already
-   */
   @Override
   public void bindView(View rowView, Context context, Cursor cursor) {
     ViewHolder viewHolder;
@@ -72,7 +60,7 @@ public class DatabaseGroupsAdapter extends ResourceCursorAdapter {
     }
 
     /** Set data to your Views. */
-    DatabaseGroup item = getList().get(cursor.getPosition());
+    DatabaseGroup item = mList.get(cursor.getPosition());
     if (!viewHolder.groupName.getText().equals(item.getName())) {
       viewHolder.groupName.setText(item.getName());
     }

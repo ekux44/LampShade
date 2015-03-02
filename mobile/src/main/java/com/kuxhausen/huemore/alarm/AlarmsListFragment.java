@@ -6,7 +6,6 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.R;
@@ -25,30 +23,21 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 public class AlarmsListFragment extends ListFragment implements
                                                      LoaderManager.LoaderCallbacks<Cursor> {
 
-  private NavigationDrawerActivity mParrent;
-
-
-  // Identifies a particular Loader being used in this component
   private static final int ALARMS_LOADER = 0;
+  private NavigationDrawerActivity mParent;
   private AlarmRowAdapter dataSource;
-  private AlarmData selectedRow;
+  private int mLongSelectedPos = -1; // updated on long click
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mParrent = (NavigationDrawerActivity) this.getActivity();
+    mParent = (NavigationDrawerActivity) this.getActivity();
 
-    /*
-     * Initializes the CursorLoader. The GROUPS_LOADER value is eventually passed to
-     * onCreateLoader().
-     */
     getLoaderManager().initLoader(ALARMS_LOADER, null, this);
 
-    dataSource =
-        new AlarmRowAdapter(this.getActivity(), R.layout.alarm_row, null, AlarmData.QUERY_COLUMNS,
-                            new int[]{R.id.subTextView}, 0);
+    dataSource = new AlarmRowAdapter(getActivity(), R.layout.alarm_row, null, 0);
 
     setListAdapter(dataSource);
 
@@ -58,7 +47,7 @@ public class AlarmsListFragment extends ListFragment implements
 
     getActivity().setTitle(R.string.alarms);
 
-    ((ActionBarActivity) this.getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    mParent.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     return myView;
   }
 
@@ -77,7 +66,7 @@ public class AlarmsListFragment extends ListFragment implements
         nadf.onLoadLoaderManager(null);
         return true;
       case R.id.action_help:
-        mParrent.showHelp(this.getResources().getString(R.string.help_title_alarms));
+        mParent.showHelp(this.getResources().getString(R.string.help_title_alarms));
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -88,26 +77,25 @@ public class AlarmsListFragment extends ListFragment implements
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    LinearLayout selected =
-        (LinearLayout) ((AdapterView.AdapterContextMenuInfo) menuInfo).targetView;
-    selectedRow = ((AlarmData) selected.getChildAt(0).getTag());
+    mLongSelectedPos = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+
     android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
     inflater.inflate(R.menu.context_alarm, menu);
   }
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
+    AlarmData longSelectedRow = dataSource.getRow(mLongSelectedPos);
 
     switch (item.getItemId()) {
-
       case R.id.contextalarmmenu_edit:
         NewAlarmDialogFragment nadf = new NewAlarmDialogFragment();
         nadf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-        nadf.onLoadLoaderManager(selectedRow);
+        nadf.onLoadLoaderManager(longSelectedRow);
         return true;
       case R.id.contextalarmmenu_delete:
-        AlarmReceiver.unregisterAlarm(mParrent, selectedRow);
-        AlarmLogic.deleteAlarmFromDB(mParrent, selectedRow);
+        AlarmReceiver.unregisterAlarm(mParent, longSelectedRow);
+        AlarmLogic.deleteAlarmFromDB(mParent, longSelectedRow);
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -121,7 +109,6 @@ public class AlarmsListFragment extends ListFragment implements
    */
   @Override
   public Loader<Cursor> onCreateLoader(int loaderID, Bundle arg1) {
-    // Log.e("onCreateLoader", ""+loaderID);
     /*
      * Takes action based on the ID of the Loader that's being created
      */
@@ -143,7 +130,6 @@ public class AlarmsListFragment extends ListFragment implements
 
   @Override
   public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-    // Log.e("onLoaderFinished", arg0.toString());
     /*
      * Moves the query results into the adapter, causing the ListView fronting this adapter to
      * re-display
@@ -154,7 +140,6 @@ public class AlarmsListFragment extends ListFragment implements
 
   @Override
   public void onLoaderReset(Loader<Cursor> arg0) {
-    // Log.e("onLoaderReset", arg0.toString());
     /*
      * Clears out the adapter's reference to the Cursor. This prevents memory leaks.
      */
