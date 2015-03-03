@@ -8,6 +8,7 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.state.SyntheticGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +26,12 @@ public class PlayingMoodTest extends AndroidTestCase {
 
   public void testConstructor() {
     try {
-      new PlayingMood(null, "", new Group(null, null), 1, -1000, null);
+      new PlayingMood(null, "", new SyntheticGroup(null, null), 1, -1000, null);
       fail();
     } catch (IllegalArgumentException e) {
     }
 
-    new PlayingMood(new Mood(), null, new Group(null, null), 1, -1000, null);
+    new PlayingMood(new Mood(), null, new SyntheticGroup(null, null), 1, -1000, null);
 
     try {
       new PlayingMood(new Mood(), "", null, 1, -1000, null);
@@ -41,7 +42,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     String mName = "some mood";
     String gName = "some group";
     Mood m = new Mood();
-    Group g = new Group(new ArrayList<Long>(), gName);
+    Group g = new SyntheticGroup(new ArrayList<Long>(), gName);
     PlayingMood pm = new PlayingMood(m, mName, g, 1, -1000, null);
     assertEquals(g, pm.getGroup());
     assertEquals(m, pm.getMood());
@@ -70,7 +71,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long bulb1 = 123l;
     Long bulb2 = 456l;
     Long[] bulbs = {bulb1, bulb2};
-    Group g = new Group(Arrays.asList(bulbs), "");
+    Group g = new SyntheticGroup(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
     long dayStartTime = 12l;
@@ -115,7 +116,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long bulb1 = 123l;
     Long bulb2 = 456l;
     Long[] bulbs = {bulb1, bulb2};
-    Group g = new Group(Arrays.asList(bulbs), "");
+    Group g = new SyntheticGroup(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
     long dayStartTime = 12l;
@@ -172,7 +173,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long bulb1 = 123l;
     Long bulb2 = 456l;
     Long[] bulbs = {bulb1, bulb2};
-    Group g = new Group(Arrays.asList(bulbs), "");
+    Group g = new SyntheticGroup(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
     long dayStartTime = 12l;
@@ -264,7 +265,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long bulb1 = 123l;
     Long bulb2 = 456l;
     Long[] bulbs = {bulb1, bulb2};
-    Group g = new Group(Arrays.asList(bulbs), "");
+    Group g = new SyntheticGroup(Arrays.asList(bulbs), "");
 
     long startTime = 543l;
     long dayStartTime = 12l;
@@ -376,7 +377,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long bulb1 = 123l;
     Long bulb2 = 456l;
     Long[] bulbs = {bulb1, bulb2};
-    Group g = new Group(Arrays.asList(bulbs), "");
+    Group g = new SyntheticGroup(Arrays.asList(bulbs), "");
 
     PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
 
@@ -488,7 +489,7 @@ public class PlayingMoodTest extends AndroidTestCase {
     Long bulb1 = 123l;
     Long bulb2 = 456l;
     Long[] bulbs = {bulb1, bulb2};
-    Group g = new Group(Arrays.asList(bulbs), "");
+    Group g = new SyntheticGroup(Arrays.asList(bulbs), "");
 
     PlayingMood pm = new PlayingMood(m, "", g, startTime, dayStartTime, null);
 
