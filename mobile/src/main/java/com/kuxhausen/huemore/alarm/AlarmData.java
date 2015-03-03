@@ -35,6 +35,9 @@ public class AlarmData {
   private String mGroupName; // this is only to be read by the UI, and never saved to database
   private long mMoodId;
   private String mMoodName; // this is only to be read by the UI, and never saved to database
+  /**
+   * null or 0 - 255
+   */
   private Integer mBrightness;
   private boolean mIsEnabled;
   private DaysOfWeek mRepeatDays;
@@ -127,6 +130,13 @@ public class AlarmData {
 
   public Integer getBrightness() {
     return mBrightness;
+  }
+
+  public Integer getPercentBrightness() {
+    if (mBrightness == null) {
+      return null;
+    }
+    return (int) (mBrightness / 2.55);
   }
 
   public void setBrightness(Integer brightness) {

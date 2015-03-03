@@ -38,7 +38,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
           //now start playing this alarm
           Intent transmitter = new Intent(context, ConnectivityService.class);
-          transmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, alarm.getBrightness());
+          transmitter.putExtra(InternalArguments.MAX_BRIGHTNESS, alarm.getPercentBrightness());
           transmitter.putExtra(InternalArguments.MOOD_NAME, alarm.getMoodName());
           transmitter.putExtra(InternalArguments.GROUP_NAME, alarm.getGroupName());
           startWakefulService(context, transmitter);
