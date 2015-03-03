@@ -25,4 +25,7 @@ public class SyntheticGroup extends Group {
     return mNetworkBulbDatabaseIds;
   }
 
+  public static SyntheticGroup asSynthetic(Group group) {
+    return new SyntheticGroup(group.getNetworkBulbDatabaseIds(), group.getName());
+  }
 }

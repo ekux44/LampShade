@@ -17,7 +17,7 @@ import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-
+import com.kuxhausen.huemore.state.SyntheticGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,7 +195,8 @@ public class MoodPlayer {
 
     for (PlayingMood pm : mPlayingMoods) {
       ContentValues cv = new ContentValues();
-      cv.put(Definitions.PlayingMood.COL_GROUP_VALUE, gson.toJson(pm.getGroup()));
+      cv.put(Definitions.PlayingMood.COL_GROUP_VALUE, gson.toJson(SyntheticGroup.asSynthetic(
+          pm.getGroup())));
       cv.put(Definitions.PlayingMood.COL_MOOD_NAME, pm.getMoodName());
       cv.put(Definitions.PlayingMood.COL_MOOD_VALUE, HueUrlEncoder.encode(pm.getMood()));
       cv.put(Definitions.PlayingMood.COL_MOOD_BRI,
@@ -222,7 +223,7 @@ public class MoodPlayer {
                                             null, null, null);
     cursor.moveToPosition(-1);// not the same as move to first!
     while (cursor.moveToNext()) {
-      Group g = gson.fromJson(cursor.getString(0), Group.class);
+      SyntheticGroup g = gson.fromJson(cursor.getString(0), SyntheticGroup.class);
       String mName = cursor.getString(1);
       Mood m = null;
       try {
