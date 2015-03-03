@@ -277,6 +277,10 @@ public class LampShadeProvider extends ContentProvider {
                      + " ON (" + AlarmColumns.COL_MOOD_ID + " = " + MoodColumns.TABLE_NAME + "."
                      + MoodColumns._ID + ")");
         groupBy = null;
+        if (sortOrder == null || sortOrder.equals("")) {
+          sortOrder =
+              AlarmColumns.COL_HOUR_OF_DAY + " ASC, " + AlarmColumns.COL_MINUTE + " ASC";
+        }
         break;
       case GROUPS:
         qb.setTables(GroupColumns.TABLE_NAME);
