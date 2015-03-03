@@ -7,6 +7,9 @@ import java.util.List;
 public class BrightnessManager {
 
   private BrightnessPolicy mPolicy;
+  /**
+   * 1 - 100
+   */
   private Integer mVolumeBri;
   private List<NetworkBulb> mBulbs;
 
@@ -74,7 +77,10 @@ public class BrightnessManager {
     netBulb.setState(adjusted);
   }
 
-  //Does not update lights, only valid in volume mode
+  /**
+   * Does not update lights, only valid in volume mode
+   * @param newVolume ranges from 1 to 100
+   */
   public void setVolumeWithoutUpdate(int newVolume) {
     if (mPolicy != BrightnessPolicy.VOLUME_BRI) {
       throw new IllegalStateException();
@@ -83,6 +89,9 @@ public class BrightnessManager {
     mVolumeBri = newVolume;
   }
 
+  /**
+   * @param brightness ranges from 1 to 100
+   */
   public void setBrightness(int brightness) {
     int newBrightness = Math.max(1, Math.min(100, brightness));
 
@@ -125,6 +134,9 @@ public class BrightnessManager {
     }
   }
 
+  /**
+   * @return brightness ranging from 1 to 100
+   */
   public int getBrightness() {
     if (mPolicy == BrightnessPolicy.VOLUME_BRI) {
       if (mVolumeBri == null) {

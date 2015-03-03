@@ -53,7 +53,7 @@ public final class Definitions {
     public static final String COL_MOOD_ID = "COL_MOOD_ID";
 
     /**
-     * int or null
+     * 0-255 or null
      */
     public static final String COL_BRIGHTNESS = "COL_BRIGHTNESS";
 
