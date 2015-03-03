@@ -13,10 +13,11 @@ import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.InvalidEncodingException;
+import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
-import com.kuxhausen.huemore.timing.Conversions;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class MoodPlayer {
 
     PlayingMood
         pm =
-        new PlayingMood(m, mName, g, savedStartTime, Conversions.getDayStartElapsedRealTimeMillis(),
+        new PlayingMood(m, mName, g, savedStartTime, Utils.getDayStartElapsedRealTimeMillis(),
                         savedProgress);
 
     for (int i = 0; i < mPlayingMoods.size(); i++) {

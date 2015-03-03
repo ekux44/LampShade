@@ -13,7 +13,7 @@ import android.widget.TimePicker;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.timing.Conversions;
+import com.kuxhausen.huemore.persistence.Utils;
 
 import java.util.Calendar;
 
@@ -44,7 +44,7 @@ public class TimeOfDayTimeslot implements OnClickListener {
     if (frag == null || frag.getActivity() == null) {
       return "";
     }
-    Calendar c = Conversions.calendarMillisFromMoodDailyTime(moodEventTime);
+    Calendar c = Utils.calendarMillisFromMoodDailyTime(moodEventTime);
     return DateFormat.getTimeFormat(frag.getActivity()).format(c.getTime());
   }
 
@@ -82,7 +82,7 @@ public class TimeOfDayTimeslot implements OnClickListener {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
       // Use the current time as the default values for the picker
-      Calendar c = Conversions.calendarMillisFromMoodDailyTime(t.moodEventTime);
+      Calendar c = Utils.calendarMillisFromMoodDailyTime(t.moodEventTime);
       int hour = c.get(Calendar.HOUR_OF_DAY);
       int minute = c.get(Calendar.MINUTE);
 
@@ -98,10 +98,10 @@ public class TimeOfDayTimeslot implements OnClickListener {
       c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 
       Calendar previousTimeslotCal =
-          Conversions.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.mPosition));
+          Utils.calendarMillisFromMoodDailyTime(t.frag.computeMinimumValue(t.mPosition));
 
       if (previousTimeslotCal.before(c)) {
-        t.setStartTime(Conversions.moodDailyTimeFromCalendarMillis(c));
+        t.setStartTime(Utils.moodDailyTimeFromCalendarMillis(c));
       } else {
         t.setStartTime(t.frag.computeMinimumValue(t.mPosition));
       }
