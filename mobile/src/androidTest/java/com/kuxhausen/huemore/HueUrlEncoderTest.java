@@ -85,6 +85,7 @@ public class HueUrlEncoderTest extends AndroidTestCase {
     }
   }
 
+  /* TODO finish
   public void testInvalidEncodingExceptionV4() {
     ManagedBitSet bits = new ManagedBitSet();
 
@@ -104,9 +105,9 @@ public class HueUrlEncoderTest extends AndroidTestCase {
     bits.incrementingSet(false);
 
     //TODO add more
-  }
+  } */
 
-  private void assertInvalidEncoding(ManagedBitSet mbs){
+  private void assertInvalidEncoding(ManagedBitSet mbs) {
     try {
       String encoded = mbs.getBase64Encoding();
       Mood decoded = HueUrlEncoder.decode(encoded).second.first;
