@@ -219,7 +219,7 @@ public class LampShadeProvider extends ContentProvider {
       gbValues.put(GroupBulbColumns.COL_GROUP_ID, allGroupId);
       gbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, netBulbsCount - 1);
       gbValues.put(GroupBulbColumns.COL_NET_BULB_ID, insertId);
-      db.insert(GroupBulbColumns.TABLE_NAME, null, values);
+      db.insert(GroupBulbColumns.TABLE_NAME, null, gbValues);
     }
 
     for (Uri me : toNotify) {
