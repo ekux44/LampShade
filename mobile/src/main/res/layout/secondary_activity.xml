@@ -1,35 +1,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-	<include layout="@layout/manual_mood_paging"/>
-	
-	<include layout="@layout/horizontal_divider_line_blue"/>
+    <com.example.android.common.view.SlidingTabLayout
+        android:elevation="@dimen/elevation_action_bar"
+        android:id="@+id/manual_mood_sliding_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/manual_mood_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/brightnessDescripterTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="8dp"
-        android:text="@string/brightness" />
-
-    <SeekBar
-        android:id="@+id/brightnessBar"
+    <LinearLayout
+        android:elevation="@dimen/elevation_action_bar"
+        android:background="@color/grey_800"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="100"
-        android:paddingBottom="8dp"
-        android:progress="50" />
-	
-	<SeekBar
-        android:id="@+id/maxBrightnessBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:paddingBottom="8dp"
-        android:progress="50"
-        android:visibility="gone" />
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/brightnessDescripterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:text="@string/brightness" />
+
+        <SeekBar
+            android:id="@+id/brightnessBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:paddingBottom="8dp"
+            android:progress="50" />
+
+        <SeekBar
+            android:id="@+id/maxBrightnessBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:paddingBottom="8dp"
+            android:progress="50"
+            android:visibility="gone" />
+    </LinearLayout>
 </LinearLayout>

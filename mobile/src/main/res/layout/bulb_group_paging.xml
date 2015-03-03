@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<com.example.android.common.view.SlidingTabLayout
-	    android:id="@+id/bulb_group_sliding_tabs"
+        android:elevation="@dimen/elevation_action_bar"
+        android:id="@+id/bulb_group_sliding_tabs"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content" />
 	<android.support.v4.view.ViewPager
 		android:id="@+id/bulb_group_pager"
-		android:layout_width="match_parent" 
+		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1"/>
 </merge>

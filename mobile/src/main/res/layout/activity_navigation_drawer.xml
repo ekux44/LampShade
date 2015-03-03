@@ -17,6 +17,7 @@
             android:id="@+id/my_awesome_toolbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:elevation="@dimen/elevation_action_bar"
             android:minHeight="?attr/actionBarSize"
             android:background="?attr/colorPrimary" />
 

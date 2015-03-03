@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="bordered_button_height">48dp</dimen>
+    <dimen name="elevation_action_bar">8dp</dimen>
 </resources>

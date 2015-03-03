@@ -3,7 +3,6 @@ package com.kuxhausen.huemore;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -73,10 +72,6 @@ public class MainFragment extends Fragment implements
     mGroupBulbSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
         R.color.accent));
     mGroupBulbSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      mGroupBulbSlidingTabLayout.setElevation(
-          this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
-    }
 
     // add custom page changed lister to sych bulb/group tabs with nav drawer
     mForwardPage = new ForwardingPageListener();
@@ -103,10 +98,6 @@ public class MainFragment extends Fragment implements
       mMoodManualSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(
           R.color.accent));
       mMoodManualSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        mMoodManualSlidingTabLayout.setElevation(
-            this.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
-      }
 
       mBrightnessDescriptor = (TextView) myView.findViewById(R.id.brightnessDescripterTextView);
       mBrightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
@@ -162,6 +153,12 @@ public class MainFragment extends Fragment implements
   }
 
   @Override
+  public void onStart() {
+    super.onStart();
+    mParent.getSupportActionBar().setElevation(0);
+  }
+
+  @Override
   public void onResume() {
     super.onResume();
     mParent.registerOnServiceConnectedListener(this);
@@ -171,8 +168,6 @@ public class MainFragment extends Fragment implements
       mGroupBulbViewPager.setCurrentItem(b.getInt(InternalArguments.GROUPBULB_TAB));
       b.remove(InternalArguments.GROUPBULB_TAB);
     }
-
-    mParent.getSupportActionBar().setElevation(0);
 
     setMode();
   }
@@ -208,14 +203,20 @@ public class MainFragment extends Fragment implements
     }
   }
 
+  @Override
   public void onPause() {
     super.onPause();
     if (mParent.boundToService()) {
       mParent.getService().getDeviceManager().removeBrightnessListener(this);
       mParent.getService().getMoodPlayer().removeOnActiveMoodsChangedListener(this);
     }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
     mParent.getSupportActionBar()
-        .setElevation(getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        .setElevation(getResources().getDimension(R.dimen.elevation_action_bar));
   }
 
   @Override
