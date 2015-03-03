@@ -4,22 +4,24 @@
     android:layout_height="wrap_content"
     android:longClickable="true"
     android:orientation="horizontal"
-    android:padding="4dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/groupTextView"
-        style="?android:attr/textAppearanceMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:paddingLeft="4dp"
-        android:text="@string/groups" />
+        android:paddingLeft="8dp"
+        android:text="@string/groups"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
         android:id="@+id/offButton"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:text="@string/cap_off" />
 
     <Button
@@ -27,6 +29,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:text="@string/cap_on" />
 
 </LinearLayout>
