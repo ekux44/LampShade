@@ -441,6 +441,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             oldGroupList =
             new ArrayList<Pair<String, Pair<Long, Long>>>();
 
+        oldGroupCursor.moveToPosition(-1);
         while (oldGroupCursor.moveToNext()) {
 
           String name = oldGroupCursor.getString(0);
@@ -516,6 +517,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor netBulbCursor =
             db.query(NetBulbColumns.TABLE_NAME, netBulbColumns, null, null, null, null, null);
 
+        netBulbCursor.moveToFirst();
         for (int i = 0; i < netBulbCursor.getCount(); i++) {
           long netBulbId = netBulbCursor.getLong(0);
           netBulbCursor.moveToNext();
@@ -527,6 +529,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           db.insert(GroupBulbColumns.TABLE_NAME, null, allBulbValues);
         }
+        netBulbCursor.close();
 
 
         /* load everything from old alarms table */
@@ -542,8 +545,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                      null, null, null);
 
         ArrayList<Pair<DeprecatedAlarmState, Long>>
-            oldList =
-            new ArrayList<Pair<DeprecatedAlarmState, Long>>();
+            oldList = new ArrayList<Pair<DeprecatedAlarmState, Long>>();
+        oldAlarmsCursor.moveToPosition(-1);
         while (oldAlarmsCursor.moveToNext()) {
           String jsonOldState = oldAlarmsCursor.getString(0);
           long oldIntentRequestCode = oldAlarmsCursor.getLong(1);
@@ -551,6 +554,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
           oldList.add(new Pair<DeprecatedAlarmState, Long>(oldState, oldIntentRequestCode));
         }
+        oldAlarmsCursor.close();
 
         /* restructure alarms table */
 
