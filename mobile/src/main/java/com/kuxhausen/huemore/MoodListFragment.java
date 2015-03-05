@@ -161,25 +161,23 @@ public class MoodListFragment extends ListFragment
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
-    MoodRow longSelected = mDataSource.getRow(mLongSelectedPos);
-
     switch (item.getItemId()) {
       case R.id.contextmoodmenu_star:
-        longSelected.starChanged(this.getActivity(), true);
+        mDataSource.getRow(mLongSelectedPos).starChanged(this.getActivity(), true);
         getLoaderManager().restartLoader(MOODS_LOADER, null, this);
         return true;
       case R.id.contextmoodmenu_unstar:
-        longSelected.starChanged(this.getActivity(), false);
+        mDataSource.getRow(mLongSelectedPos).starChanged(this.getActivity(), false);
         getLoaderManager().restartLoader(MOODS_LOADER, null, this);
         return true;
       case R.id.contextmoodmenu_delete:
         String moodSelect = MoodColumns.COL_MOOD_NAME + "=?";
-        String[] moodArg = {longSelected.getName()};
+        String[] moodArg = {mDataSource.getRow(mLongSelectedPos).getName()};
         getActivity().getContentResolver().delete(Definitions.MoodColumns.MOODS_URI,
                                                   moodSelect, moodArg);
         return true;
       case R.id.contextmoodmenu_edit:
-        mParent.showEditMood(longSelected.getName());
+        mParent.showEditMood(mDataSource.getRow(mLongSelectedPos).getName());
         return true;
       default:
         return super.onContextItemSelected(item);

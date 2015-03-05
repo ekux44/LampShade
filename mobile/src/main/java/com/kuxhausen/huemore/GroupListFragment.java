@@ -128,24 +128,22 @@ public class GroupListFragment extends ListFragment implements
 
   @Override
   public boolean onContextItemSelected(android.view.MenuItem item) {
-    DatabaseGroup longSelected = mDataSource.getRow(mLongSelectedPos);
-
     switch (item.getItemId()) {
       case R.id.contextgroupmenu_star:
-        longSelected.starChanged(this.getActivity(), true);
+        mDataSource.getRow(mLongSelectedPos).starChanged(this.getActivity(), true);
         getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
         break;
       case R.id.contextgroupmenu_unstar:
-        longSelected.starChanged(this.getActivity(), false);
+        mDataSource.getRow(mLongSelectedPos).starChanged(this.getActivity(), false);
         getLoaderManager().restartLoader(GROUPS_LOADER, null, this);
         break;
       case R.id.contextgroupmenu_delete:
-        longSelected.deleteSelf(mParent);
+        mDataSource.getRow(mLongSelectedPos).deleteSelf(mParent);
         break;
       case R.id.contextgroupmenu_edit: // <-- your custom menu item id here
         EditGroupDialogFragment ngdf = new EditGroupDialogFragment();
         Bundle args = new Bundle();
-        args.putLong(InternalArguments.GROUP_ID, longSelected.getId());
+        args.putLong(InternalArguments.GROUP_ID, mDataSource.getRow(mLongSelectedPos).getId());
         ngdf.setArguments(args);
         ngdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
         break;
