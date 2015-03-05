@@ -23,12 +23,10 @@ import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 import com.kuxhausen.huemore.state.DatabaseGroup;
-import com.kuxhausen.huemore.state.Group;
 
 import java.util.ArrayList;
 

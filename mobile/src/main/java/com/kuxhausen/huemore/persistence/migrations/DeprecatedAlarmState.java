@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.persistence;
+package com.kuxhausen.huemore.persistence.migrations;
 
 import java.util.Calendar;
 

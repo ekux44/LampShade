@@ -19,6 +19,7 @@ import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
+import com.kuxhausen.huemore.persistence.migrations.DatabaseHelper;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Mood;
 

@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.persistence;
+package com.kuxhausen.huemore.persistence.migrations;
 
 import com.google.gson.Gson;
 
@@ -14,14 +14,17 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.alarm.AlarmData;
 import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.Definitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.migrations.DeprecatedDefinitions.DeprecatedGroupColumns;
+import com.kuxhausen.huemore.persistence.migrations.DeprecatedDefinitions.DeprecatedAlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
+import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -143,13 +146,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       }
 
       case 2: {
-        db.execSQL("DROP TABLE IF EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DeprecatedAlarmColumns.TABLE_NAME);
 
         db.execSQL(
-            "CREATE TABLE IF NOT EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME + " ("
+            "CREATE TABLE IF NOT EXISTS " + DeprecatedAlarmColumns.TABLE_NAME + " ("
             + BaseColumns._ID + " INTEGER PRIMARY KEY,"
-            + Definitions.DeprecatedAlarmColumns.STATE + " TEXT,"
-            + Definitions.DeprecatedAlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
+            + DeprecatedAlarmColumns.STATE + " TEXT,"
+            + DeprecatedAlarmColumns.INTENT_REQUEST_CODE + " INTEGER" + ");");
 
         // remove the sunset mood
         String[] moodArgs = {"Sunset"};
@@ -242,7 +245,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         /** Migrate the groups Database & add placeholder entries into the NetBulb table as needed */
 
         String[] oldGroupColumns =
-            {DeprecatedGroupColumns._ID, Definitions.DeprecatedGroupColumns.GROUP,
+            {DeprecatedGroupColumns._ID, DeprecatedGroupColumns.GROUP,
              DeprecatedGroupColumns.PRECEDENCE, "Dbulb"};
         Cursor oldGroupCursor =
             db.query(DeprecatedGroupColumns.TABLE_NAME, oldGroupColumns, null, null,
@@ -537,11 +540,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         String[]
             oldAlarmColumns =
-            {Definitions.DeprecatedAlarmColumns.STATE,
-             Definitions.DeprecatedAlarmColumns.INTENT_REQUEST_CODE};
+            {DeprecatedAlarmColumns.STATE,
+             DeprecatedAlarmColumns.INTENT_REQUEST_CODE};
         Cursor
             oldAlarmsCursor =
-            db.query(Definitions.DeprecatedAlarmColumns.TABLE_NAME, oldAlarmColumns, null, null,
+            db.query(DeprecatedAlarmColumns.TABLE_NAME, oldAlarmColumns, null, null,
                      null, null, null);
 
         ArrayList<Pair<DeprecatedAlarmState, Long>>
@@ -558,7 +561,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         /* restructure alarms table */
 
-        db.execSQL("DROP TABLE IF EXISTS " + Definitions.DeprecatedAlarmColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DeprecatedAlarmColumns.TABLE_NAME);
 
         db.execSQL("CREATE TABLE " + AlarmColumns.TABLE_NAME + " (" +
                    BaseColumns._ID + " INTEGER PRIMARY KEY," +
