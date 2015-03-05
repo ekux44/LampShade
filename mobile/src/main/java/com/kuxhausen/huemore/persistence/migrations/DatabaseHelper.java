@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.support.v4.util.ArrayMap;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.R;
@@ -16,8 +17,6 @@ import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
-import com.kuxhausen.huemore.persistence.migrations.DeprecatedDefinitions.DeprecatedGroupColumns;
-import com.kuxhausen.huemore.persistence.migrations.DeprecatedDefinitions.DeprecatedAlarmColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
@@ -25,6 +24,8 @@ import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
+import com.kuxhausen.huemore.persistence.migrations.DeprecatedDefinitions.DeprecatedAlarmColumns;
+import com.kuxhausen.huemore.persistence.migrations.DeprecatedDefinitions.DeprecatedGroupColumns;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
@@ -440,14 +441,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                      null);
 
         /* load all the old group data into here <name, <precedence,bulb_database_id>> */
-        ArrayList<Pair<String, Pair<Long, Long>>>
-            oldGroupList =
-            new ArrayList<Pair<String, Pair<Long, Long>>>();
+        ArrayMap<String, ArrayList<Pair<Long, Long>>>
+            oldGroupMapping =
+            new ArrayMap<String, ArrayList<Pair<Long, Long>>>();
 
         oldGroupCursor.moveToPosition(-1);
         while (oldGroupCursor.moveToNext()) {
 
-          String name = oldGroupCursor.getString(0);
+          String groupName = oldGroupCursor.getString(0);
           long precedence = 0;
           try {
             precedence = oldGroupCursor.getLong(1);
@@ -459,8 +460,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           } catch (Exception e) {
           }
 
-          oldGroupList.add(new Pair<String, Pair<Long, Long>>(name, new Pair<Long, Long>(precedence,
-                                                                                         bulbDatabaseId)));
+          Pair bulbData = new Pair<Long, Long>(precedence, bulbDatabaseId);
+          if (!oldGroupMapping.containsKey(groupName)) {
+            oldGroupMapping.put(groupName, new ArrayList<Pair<Long, Long>>());
+          }
+          oldGroupMapping.get(groupName).add(bulbData);
         }
         oldGroupCursor.close();
 
@@ -488,10 +492,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         /* now add existing groups to the new tables */
-        for (Pair<String, Pair<Long, Long>> item : oldGroupList) {
-          String groupName = item.first;
-          Long bulbPrecidence = item.second.first;
-          Long netBulbId = item.second.second;
+        for (String groupName : oldGroupMapping.keySet()) {
 
           ContentValues groupValues = new ContentValues();
           groupValues.put(GroupColumns.COL_GROUP_NAME, groupName);
@@ -500,11 +501,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           groupValues.put(GroupColumns.COL_GROUP_FLAGS, GroupColumns.FLAG_NORMAL);
           long groupId = db.insert(GroupColumns.TABLE_NAME, null, groupValues);
 
-          ContentValues groupBulbValues = new ContentValues();
-          groupBulbValues.put(GroupBulbColumns.COL_GROUP_ID, groupId);
-          groupBulbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, bulbPrecidence);
-          groupBulbValues.put(GroupBulbColumns.COL_NET_BULB_ID, netBulbId);
-          db.insert(GroupBulbColumns.TABLE_NAME, null, groupBulbValues);
+          for (Pair<Long, Long> bulbData : oldGroupMapping.get(groupName)) {
+            Long bulbPrecedence = bulbData.first;
+            Long netBulbId = bulbData.second;
+
+            ContentValues groupBulbValues = new ContentValues();
+            groupBulbValues.put(GroupBulbColumns.COL_GROUP_ID, groupId);
+            groupBulbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, bulbPrecedence);
+            groupBulbValues.put(GroupBulbColumns.COL_NET_BULB_ID, netBulbId);
+            db.insert(GroupBulbColumns.TABLE_NAME, null, groupBulbValues);
+          }
         }
 
         /* Now add the all group */
