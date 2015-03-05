@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -24,16 +23,20 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.DatabaseGroup;
 
 public class GroupListFragment extends ListFragment implements
-                                                    LoaderManager.LoaderCallbacks<Cursor> {
+                                                    LoaderManager.LoaderCallbacks<Cursor>,
+                                                    SelectableList {
 
   private static final int GROUPS_LOADER = 0;
   public DatabaseGroupsAdapter mDataSource;
   private int mSelectedPos, mLongSelectedPos = -1; // updated on click, long click
-  private NetworkManagedActivity mParent;
+  private NavigationDrawerActivity mParent;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
+    mParent = (NavigationDrawerActivity) getActivity();
+
     getLoaderManager().initLoader(GROUPS_LOADER, null, this);
     mDataSource =
         new DatabaseGroupsAdapter(getActivity(), R.layout.mood_row, null, 0);
@@ -84,14 +87,16 @@ public class GroupListFragment extends ListFragment implements
   public void onStart() {
     super.onStart();
     getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+    mParent.trackSelectableList(this);
   }
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    mParent = (NetworkManagedActivity) activity;
+  public void onStop() {
+    super.onStop();
+    mParent.forgetSelectableList(this);
   }
 
+  @Override
   public void invalidateSelection() {
     // Set the previous selected item as checked to be unhighlighted when in
     // two-pane layout
@@ -159,7 +164,7 @@ public class GroupListFragment extends ListFragment implements
     mSelectedPos = position;
 
     // Notify the parent activity of selected bulbs
-    mParent.setGroup(mDataSource.getRow(mSelectedPos));
+    mParent.setGroup(mDataSource.getRow(mSelectedPos), this);
   }
 
   /**

@@ -67,6 +67,8 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   private String TITLE_BULB_FRAG, TITLE_GROUP_FRAG, TITLE_CONNECTIONS_FRAG, TITLE_ALARM_FRAG,
       TITLE_NFC_FRAG, TITLE_SETTINGS_FRAG, TITLE_HELP_FRAG;
 
+  private ArrayList<SelectableList> mSelectableLists;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -75,6 +77,8 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     setContentView(R.layout.activity_navigation_drawer);
 
     generateDrawerTitles();
+
+    mSelectableLists = new ArrayList<>();
 
     mToolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
     setSupportActionBar(mToolbar);
@@ -416,30 +420,37 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
 
   }
 
-  @Override
-  public void setGroup(Group g) {
+  public void setGroup(Group g, SelectableList from) {
     super.setGroup(g);
 
-    MainFragment frag = null;
-    if (mSelectedItemPosition == mDrawerTitlePositions.get(TITLE_BULB_FRAG)
-        || mSelectedItemPosition == mDrawerTitlePositions.get(TITLE_GROUP_FRAG)) {
-      frag =
-          ((MainFragment) getSupportFragmentManager()
-              .findFragmentByTag(TITLE_BULB_FRAG));
-    }
-    if (frag != null) {
-      if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
-          >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
-        frag.invalidateSelection();
-      } else if (boundToService()) {
-        SecondaryFragment drillDownFrag = new SecondaryFragment();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().addToBackStack("group")
-            .replace(R.id.content_frame, drillDownFrag).commit();
-
+    for (SelectableList selectable : mSelectableLists) {
+      if (selectable != from) {
+        selectable.invalidateSelection();
       }
     }
+
+    if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+        < Configuration.SCREENLAYOUT_SIZE_LARGE & boundToService()) {
+      SecondaryFragment drillDownFrag = new SecondaryFragment();
+
+      FragmentManager fragmentManager = getSupportFragmentManager();
+      fragmentManager.beginTransaction().addToBackStack("group")
+          .replace(R.id.content_frame, drillDownFrag).commit();
+
+    }
+  }
+
+  @Override
+  public void setGroup(Group g) {
+    setGroup(g, null);
+  }
+
+  public void trackSelectableList(SelectableList list) {
+    mSelectableLists.add(list);
+  }
+
+  public void forgetSelectableList(SelectableList list) {
+    mSelectableLists.remove(list);
   }
 
   @Override

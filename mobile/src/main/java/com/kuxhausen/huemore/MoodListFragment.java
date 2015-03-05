@@ -29,7 +29,7 @@ import com.kuxhausen.huemore.persistence.HueUrlEncoder;
 import com.kuxhausen.huemore.persistence.Utils;
 
 public class MoodListFragment extends ListFragment
-    implements LoaderManager.LoaderCallbacks<Cursor> {
+    implements LoaderManager.LoaderCallbacks<Cursor>, SelectableList {
 
   NavigationDrawerActivity mParent;
 
@@ -119,6 +119,13 @@ public class MoodListFragment extends ListFragment
   public void onStart() {
     super.onStart();
     getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+    mParent.trackSelectableList(this);
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    mParent.forgetSelectableList(this);
   }
 
   @Override

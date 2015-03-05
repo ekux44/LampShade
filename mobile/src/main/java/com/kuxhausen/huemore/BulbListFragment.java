@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ import com.kuxhausen.huemore.state.SyntheticGroup;
 import java.util.ArrayList;
 
 public class BulbListFragment extends ListFragment
-    implements LoaderManager.LoaderCallbacks<Cursor> {
+    implements LoaderManager.LoaderCallbacks<Cursor>, SelectableList {
 
   private static final int BULBS_LOADER = 0;
   private static final String[] columns = {NetBulbColumns.NAME_COLUMN,
@@ -38,11 +37,13 @@ public class BulbListFragment extends ListFragment
   private CursorAdapter mDataSource;
   private TextView mSelected, mLongSelected; // updated on long click
   private int mSelectedPos = -1;
-  private NetworkManagedActivity mParent;
+  private NavigationDrawerActivity mParent;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+    mParent = (NavigationDrawerActivity) getActivity();
+
     // We need to use a different list item layout for devices older than Honeycomb
     int layout =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
@@ -64,15 +65,16 @@ public class BulbListFragment extends ListFragment
   }
 
   @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    mParent = (NetworkManagedActivity) activity;
-  }
-
-  @Override
   public void onStart() {
     super.onStart();
     getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+    mParent.trackSelectableList(this);
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    mParent.forgetSelectableList(this);
   }
 
   public void invalidateSelection() {
@@ -125,7 +127,7 @@ public class BulbListFragment extends ListFragment
     ArrayList<Long> bulbIds = new ArrayList<Long>();
     bulbIds.add(mDataSource.getItemId(position));
     Group g = new SyntheticGroup(bulbIds, mSelected.getText().toString());
-    mParent.setGroup(g);
+    mParent.setGroup(g, this);
 
     // Set the item as checked to be highlighted when in two-pane layout
     getListView().setItemChecked(mSelectedPos, true);
