@@ -18,7 +18,7 @@ android {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 73
+        versionCode 73 // version code in wear module must kept in sync with this
         versionName "3.0.1"
     }
     buildTypes {
@@ -47,11 +47,14 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
+    compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:gridlayout-v7:18.0.0'
-    compile 'com.google.android.gms:play-services-all-wear:6.5.87'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':lifix')
+    playEditionCompile 'com.google.android.gms:play-services-wearable:6.5.87'
+    playEditionWearApp project(':wear')
+
+
 }
