@@ -35,7 +35,7 @@ android {
             targetSdkVersion 21
         }
         compatabilityEdition {
-            minSdkVersion 12
+            minSdkVersion 10
             targetSdkVersion 21
         }
     }
