@@ -2,7 +2,10 @@ package com.kuxhausen.huemore.net.hue.api;
 
 import com.google.gson.Gson;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.text.format.Formatter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,6 +30,7 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
   private OnHubFoundListener mResultListener;
   Gson gson = new Gson();
+  Context mContext;
 
   // The container Activity must implement this interface so the frag can
   // deliver messages
@@ -38,8 +42,9 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
     public void onHubFoundResult(Bridge[] bridges);
   }
 
-  public HubSearch(OnHubFoundListener resultListener) {
+  public HubSearch(OnHubFoundListener resultListener, Context c) {
     mResultListener = resultListener;
+    mContext = c;
   }
 
   public Bridge[] getBridgesAPI() {
@@ -116,13 +121,14 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
     HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
     DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
+    String ipNetNumber = getNetworkBase();
     for (int i = 0; i < 256; i++) {
 
       if (this.isCancelled()) {
         i = 256;
       }
 
-      Bridge possible = checkIP((i + 100) % 256, client);
+      Bridge possible = checkIP(ipNetNumber, (i + 100) % 256, client);
       if (possible != null) {
         results.add(possible);
       }
@@ -132,12 +138,27 @@ public class HubSearch extends AsyncTask<Void, Void, Bridge[]> {
 
   }
 
+  //Assumes ClassC IPV4, TODO rewrite
+  public String getNetworkBase() {
+    try {
+      WifiManager wm = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+      String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+      for (int z = ip.length(); z > 0; z--) {
+        if (ip.charAt(z - 1) == '.') {
+          return ip.substring(0, z);
+        }
+      }
+    } catch (Exception e) {
+    }
+    return "192.168.1.";
+  }
+
   // TODO rewrite
-  private Bridge checkIP(int local, HttpClient client) {
+  private Bridge checkIP(String base, int local, HttpClient client) {
     String username = "asdf";
 
     Bridge candidate = new Bridge();
-    candidate.internalipaddress = "192.168.1." + local;
+    candidate.internalipaddress = base + local;
 
     StringBuilder builder = new StringBuilder();
 

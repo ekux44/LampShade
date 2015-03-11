@@ -54,7 +54,7 @@ public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFo
 
   @TargetApi(11)
   public void startDiscovery() {
-    hubSearch = new HubSearch(this);
+    hubSearch = new HubSearch(this, getActivity());
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       hubSearch.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     } else {
