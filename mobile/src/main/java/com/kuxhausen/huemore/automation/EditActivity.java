@@ -14,7 +14,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kuxhausen.huemore.Helpers;
-import com.kuxhausen.huemore.NavigationDrawerActivity;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
@@ -128,17 +126,17 @@ public class EditActivity extends NetworkManagedActivity implements
 
     groupSpinner = (Spinner) this.findViewById(R.id.groupSpinner);
     groupDataSource =
-        new SimpleCursorAdapter(this, layout, null, GROUP_SELECTION, new int[]{android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, GROUP_SELECTION, new int[]{android.R.id.text1},
+                                0);
     groupDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     groupSpinner.setAdapter(groupDataSource);
 
     moodSpinner = (Spinner) this.findViewById(R.id.moodSpinner);
     moodDataSource =
-        new SimpleCursorAdapter(this, layout, null, MOOD_SELECTION, new int[]{android.R.id.text1}, 0);
+        new SimpleCursorAdapter(this, layout, null, MOOD_SELECTION, new int[]{android.R.id.text1},
+                                0);
     moodDataSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     moodSpinner.setAdapter(moodDataSource);
-
-    this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
   }
 
   @Override
@@ -162,17 +160,6 @@ public class EditActivity extends NetworkManagedActivity implements
         super.finish();
         break;
     }
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle item selection
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        this.startActivity(new Intent(this, NavigationDrawerActivity.class));
-        return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   public String getSerializedByNamePreview() {
