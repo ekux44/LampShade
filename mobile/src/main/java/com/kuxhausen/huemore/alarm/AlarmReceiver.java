@@ -33,7 +33,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
           AlarmLogic.updateAlarm(context, alarm);
           //schedule next alarm if repeating
           if (alarm.isEnabled()) {
-            registerAlarm(context, alarm);
+            registerAlarm(context, alarm, false);
           }
 
           //now start playing this alarm
@@ -58,7 +58,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         .getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  public static void registerAlarm(Context context, AlarmData data) {
+  public static void registerAlarm(Context context, AlarmData data, boolean showToast) {
     AlarmLogic.logAlarm("RegisterAlarm", data);
 
     PendingIntent pending = generatePendingIntent(context, data);
@@ -69,10 +69,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     } else {
       alarmMgr.setExact(AlarmManager.RTC_WAKEUP, data.getAlarmTime().getTimeInMillis(), pending);
     }
-    Toast.makeText(context, context.getString(R.string.next_scheduled_intro) + " " + DateUtils
-        .getRelativeTimeSpanString(data.getAlarmTime().getTimeInMillis()), Toast.LENGTH_SHORT)
-        .show();
-
+    
+    if (showToast) {
+      Toast.makeText(context, context.getString(R.string.next_scheduled_intro) + " " + DateUtils
+          .getRelativeTimeSpanString(
+              data.getAlarmTime().getTimeInMillis()), Toast.LENGTH_SHORT).show();
+    }
   }
 
   public static void unregisterAlarm(Context context, AlarmData data) {

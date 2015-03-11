@@ -57,7 +57,7 @@ public class ReinitalizerReceiver extends BroadcastReceiver {
       AlarmLogic.updateAlarm(context, row);
 
       if (row.isEnabled()) {
-        AlarmReceiver.registerAlarm(context, row);
+        AlarmReceiver.registerAlarm(context, row, false);
       }
     }
     cursor.close();

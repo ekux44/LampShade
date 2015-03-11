@@ -130,7 +130,7 @@ public class AlarmLogic {
           computeNextAlarmTime(data.getHourOfDay(), data.getMinute(), data.getRepeatDays(),
                                Calendar.getInstance()));
       saveChangesToDB(context, data);
-      AlarmReceiver.registerAlarm(context, data);
+      AlarmReceiver.registerAlarm(context, data, true);
     } else {
       AlarmReceiver.unregisterAlarm(context, data);
       data.setEnabled(false);

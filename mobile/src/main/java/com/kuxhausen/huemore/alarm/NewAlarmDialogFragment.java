@@ -267,7 +267,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
     } else {
       AlarmLogic.insertAlarmToDB(getActivity(), data);
     }
-    AlarmReceiver.registerAlarm(getActivity(), data);
+    AlarmReceiver.registerAlarm(getActivity(), data, true);
   }
 
 }
