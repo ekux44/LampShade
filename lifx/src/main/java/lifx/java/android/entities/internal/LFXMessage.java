@@ -8,6 +8,8 @@
 
 package lifx.java.android.entities.internal;
 
+import android.util.Log;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -223,10 +225,11 @@ public class LFXMessage
 	
 	public static LFXMessage messageWithMessageData( byte [] data)
 	{
-		if( data == null || data.length == 0)
-		{
-			return null;
-		}
+          if( data == null || data.length == 0 || getTypeFromMessageData(data) == null)
+          {
+            Log.d("warning", "invalid type" + StructleTypes.getShortValue(data[32], data[33]));
+            return null;
+          }
 		
 		byte[] bytes = new byte[data.length];
 		LFXByteUtils.copyBytesIntoByteArray( bytes, data);
