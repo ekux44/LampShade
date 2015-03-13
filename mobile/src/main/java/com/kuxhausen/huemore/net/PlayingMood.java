@@ -102,13 +102,17 @@ public class PlayingMood {
   }
 
   public boolean hasFutureEvents() {
+    if (mMood.getEvents().length == 0) {
+      return false;
+    }
     if (mMood.getTimeAddressingRepeatPolicy()) {
       return true;
     }
     if (mMood.isInfiniteLooping()) {
       return true;
     }
-    if ((mMood.getEvents()[mMood.getEvents().length - 1].getMilliTime() + mStartTime) > mLastTickedTime) {
+    if ((mMood.getEvents()[mMood.getEvents().length - 1].getMilliTime() + mStartTime)
+        > mLastTickedTime) {
       return true;
     }
     return false;
@@ -166,7 +170,8 @@ public class PlayingMood {
           if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
               && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
-            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()), e.getBulbState()));
+            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()),
+                                                       e.getBulbState()));
           }
         }
       }
@@ -181,7 +186,8 @@ public class PlayingMood {
           if (sinceTime < (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
               && (e.getMilliTime() + mStartTime + (numCycles * mMood.getLoopMilliTime()))
                  <= throughTime) {
-            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()), e.getBulbState()));
+            result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()),
+                                                       e.getBulbState()));
           }
         }
       }
@@ -190,7 +196,8 @@ public class PlayingMood {
       for (Event e : mMood.getEvents()) {
         if (sinceTime < (e.getMilliTime() + mStartTime)
             && (e.getMilliTime() + mStartTime) <= throughTime) {
-          result.add(new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()), e.getBulbState()));
+          result.add(
+              new Pair<List<Long>, BulbState>(getChannelBulbIds(e.getChannel()), e.getBulbState()));
         }
       }
     }
