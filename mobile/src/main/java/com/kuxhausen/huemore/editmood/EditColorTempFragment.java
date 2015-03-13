@@ -51,15 +51,21 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
     tempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
     tempEditText.setVisibility(View.VISIBLE);
 
-    tempEditText.setText(hs.getKelvinCT()+"K");
+    tempEditText.setText(hs.getKelvinCT() + "");
 
     tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
-          int temp = Integer.parseInt((tempEditText.getText().toString()));
-          temp = Math.max(temp, 0);
+          int temp;
+          try {
+            temp = Integer.parseInt((tempEditText.getText().toString()));
+          } catch (NumberFormatException e) {
+            temp = Integer.MAX_VALUE;
+          }
+          temp = Math.max(temp, seekBarOffset);
           temp = Math.min(temp, seekBarOffset + seekBar.getMax());
+          tempEditText.setText(temp + "");
           seekBar.setProgress(temp - seekBarOffset);
           hs.setKelvinCT(temp);
           statePager.setState(hs, EditColorTempFragment.this, "ct");
