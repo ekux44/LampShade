@@ -178,18 +178,6 @@
             android:exported="false"
             android:icon="@drawable/ic_launcher_lampshade" />
 
-        <receiver android:name="wear.WearNotificationLauncher">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".wear.WearService">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".widget.VoiceReadRouterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -215,9 +203,5 @@
         <receiver
             android:name=".alarm.AlarmReceiver"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
     </application>
 </manifest>
