@@ -152,9 +152,9 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       mDrawerTitles.add(TITLE_ALARM_FRAG);
     }
     //Only show NFC option on supported devices
-    if (NfcAdapter.getDefaultAdapter(this) == null) {
-      mDrawerTitles.add(TITLE_NFC_FRAG);
-    }
+    //if (NfcAdapter.getDefaultAdapter(this) == null) {
+    mDrawerTitles.add(TITLE_NFC_FRAG);
+    //}
     mDrawerTitles.add(TITLE_SETTINGS_FRAG);
     mDrawerTitles.add(TITLE_HELP_FRAG);
 
