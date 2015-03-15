@@ -4,8 +4,6 @@ The lightswitch app.
 Currently supports Philips Hue, LIFX
 
 <h2>Licenses</h2>
-
-```
   * LampShade, LampShade.io, and the LampShade Logo are trademarks of Eric Kuxhausen, and are not released under any license.
   * Instead, the open source version of this app is called LampShadium
   * The greyscale version of the LampShade logo is released under the [CC BY-ND 4.0 License](https://creativecommons.org/licenses/by-nd/4.0/) Note: this means you may not edit the logo!
@@ -20,7 +18,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
 
 <h2>Getting Started</h2>
 1. Download Android Studio
