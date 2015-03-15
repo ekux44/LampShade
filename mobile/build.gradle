@@ -18,8 +18,8 @@ android {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 75 // version code in wear module must kept in sync with this
-        versionName "3.0.3"
+        versionCode 76 // version code in wear module must kept in sync with this
+        versionName "3.0.4"
     }
     buildTypes {
         release {
