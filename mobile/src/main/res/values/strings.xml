@@ -48,13 +48,11 @@
     <string name="update_message">Please update LampShade to the newest version.</string>
     <string name="update_opt_out">Disable update reminders</string>
     <string name="update">Update</string>
-    <string name="reset_hub_connection">Reset Hub Connection</string>
     <string name="hub_connection_error">Not connected to hub!</string>
     <string name="empty_view_text">No alarms found…</string>
     <string name="cap_all">ALL</string>
     <string name="cap_on">ON</string>
     <string name="cap_off">OFF</string>
-    <string name="cap_random">RANDOM</string>
     <string name="broken_mood_link">Oops! This mood link cannot be read</string>
     <string name="update_required">This mood requires an updated version of LampShade</string>
     <string name="corrupted_mood">This mood cannot be read</string>
@@ -109,7 +107,6 @@
     <string name="empty_list_groups">Not paired with any lights. Go to the Connections page to setup lights.</string>
     <string name="mark_favorite">Favorite ★</string>
     <string name="mark_not_favorite">UnFavorite ☆</string>
-    <string name="action_refresh">Refresh</string>
     <string name="dialog_title_searching_for_lights">Searching for lights</string>
     <string name="dialog_title_import_mood">Shared Mood</string>
     <string name="language_prompt">Language</string>
