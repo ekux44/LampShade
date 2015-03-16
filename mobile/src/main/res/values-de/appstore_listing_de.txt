@@ -1,0 +1,35 @@
+LampShade bietet eine komfortable und nützliche Bedienung ihrer Smart-Home Lampen.
+Kompatibel zu: Philips Hue
+
+Mit LampShade.io kann man:
+• einzelne Räume mittels Gruppen verwalten
+• Definiere eine Szene mit wunderschönen animierten Farbmustern
+Erstelle eigene Szenen und teile diese mit der LampShade Community
+• Lockscreen und homescreen widgets
+• Licht - Weckfunktion
+• NFC Tag Unterstützung
+• Automatisierungs-Plugin, welches Tasker, Locale und Llama unterstützt.
+
+
+LampShade.io ist in Deutsch, Dutch, Englisch und Französisch über Community Übersetzungen verfügbar.
+
+Vergessen Sie nicht die automatischen Updates zu aktivieren, damit Sie keine zukünftigen Funktionen verpassen!
+
+Zukünftige Entwicklungsziele:
+• weitere Widgets
+• Sprachsteuerung
+• Unterstützt das gleichzeitige Abspielen mehrerer Szenen
+• Verbesserte Nutzung der Remote-Funktionalität
+• Synchronisation zwischen mehreren Geräten
+• Unterstützung für weitere Lichtsteuerungen
+
+Getestet auf:
+Nexus 5
+Nexus 7
+Samsung Galaxy Tab 10.1
+Android 2.3 Emulator
+
+
+LampShade.io war vorher unter HueMore bekannt
+Copyright 2013-2014 Eric Kuxhausen.
+Alle Rechte vorbehalten.

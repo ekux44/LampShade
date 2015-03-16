@@ -1,0 +1,35 @@
+LampShade est un moyen pratique et efficace de contrôler vos éclairages connectés.
+Actuellement pris en charge : Philips Hue
+
+LampShade.io vous permet de :
+• Contrôler des pièces entières en créant des groupes
+• Créer l'ambiance avec de belles animations colorées
+• Créer des ambiances personnalisées à partager avec la communauté LampShade
+• Widgets pour l'écran d'accueil et l'écran de verrouillage
+• Alarmes lumineuses
+• Écriture de tags NFC pour activer des ambiances
+• Plugin d'automatisation pour Tasker, Locale et Llama
+
+
+LampShade.io est disponible en allemand, anglais, français et néerlandais grâce à la communauté.
+
+N'oubliez pas d'activer les mises à jour automatiques pour bénéficier des nouvelles fonctionnalités dès leur sortie !
+
+Prochains objectifs de développement :
+• Plus de widgets
+• Contrôle vocal
+• Possibilité d'utiliser différentes ambiances en même temps
+• Meilleur prise en charge du contrôle à distance hors de chez-vous
+• Synchronisation entre appareils
+• Prise en charge d'autres systèmes d'éclairage connecté
+
+Testé sur :
+• Nexus 5
+• Nexus 7
+• Samsung Galaxy Tab 10.1
+• Émulateur Android 2.3
+
+
+LampShade.io était précédemment nommé HueMore
+Copyright 2013-2014 Eric Kuxhausen.
+Tous droits réservés.
