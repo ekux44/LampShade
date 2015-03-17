@@ -10,12 +10,12 @@ android {
             storePassword 'How now brown cow. How now brown cow.'
         }
     }
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.0"
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
-        minSdkVersion 21
-        targetSdkVersion 21
+        minSdkVersion 20
+        targetSdkVersion 22
         versionCode 76 // must match the value in mobile
     }
     buildTypes {
@@ -27,7 +27,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:22.0.0'
     compile 'com.google.android.support:wearable:1.1.0'
     compile 'com.google.android.gms:play-services-wearable:6.5.87'
 }
