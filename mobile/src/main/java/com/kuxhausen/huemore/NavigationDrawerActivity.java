@@ -60,6 +60,12 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
   public int mSelectedItemPosition;
   public Tag myTag;
 
+  /**
+   * For tracking drill-down navigation. Number of up-navigation-actions away from the top. At the
+   * top level, value is 0 and hamburger/nav drawer shown instead of up arrow.
+   */
+  private int mLayersDeep = 0;
+
   private SharedPreferences mSettings;
 
   private Bundle mResumeBundle;
@@ -125,6 +131,21 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     };
     mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+    mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (mLayersDeep != 0) {
+          onBackPressed();
+        } else if (mDrawerLayout.isDrawerOpen(mDrawerView)) {
+          mDrawerLayout.closeDrawer(mDrawerView);
+        } else {
+          mDrawerLayout.openDrawer(mDrawerView);
+        }
+
+      }
+    });
+    mDrawerToggle.syncState();
+
     Bundle b = getIntent().getExtras();
     mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -161,6 +182,15 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     mDrawerTitlePositions = new ArrayMap<String, Integer>();
     for (int i = 0; i < mDrawerTitles.size(); i++) {
       mDrawerTitlePositions.put(mDrawerTitles.get(i), i);
+    }
+  }
+
+  @Override
+  public void onBackPressed() {
+    super.onBackPressed();
+
+    if (mLayersDeep > 0) {
+      mLayersDeep--;
     }
   }
 
@@ -329,6 +359,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     fragmentManager.beginTransaction()
         .replace(R.id.content_frame, selectedFrag, mDrawerTitles.get(actualPosition)).commit();
 
+    mLayersDeep = 0;
     this.supportInvalidateOptionsMenu();
 
     // update selected item and title, then close the drawer
@@ -384,6 +415,11 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     }
   }
 
+  private void onDrillDownNavigation() {
+    mLayersDeep++;
+    this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+  }
+
   public void showHelp(String pageName) {
     Bundle b = new Bundle();
     b.putString(InternalArguments.HELP_PAGE, pageName);
@@ -418,6 +454,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     fragmentManager.beginTransaction().addToBackStack("mood").replace(R.id.content_frame, frag)
         .commit();
 
+    onDrillDownNavigation();
   }
 
   public void setGroup(Group g, SelectableList from) {
@@ -437,6 +474,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
       fragmentManager.beginTransaction().addToBackStack("group")
           .replace(R.id.content_frame, drillDownFrag).commit();
 
+      onDrillDownNavigation();
     }
   }
 

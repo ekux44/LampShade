@@ -62,8 +62,6 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
 
     parrentA = (NavigationDrawerActivity) this.getActivity();
 
-    parrentA.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     // Inflate the custom view
     nameEditText =
         (EditText) LayoutInflater.from(parrentA).inflate(R.layout.mood_name_edit_text, null);
@@ -169,9 +167,6 @@ public class EditMoodFragment extends Fragment implements OnItemSelectedListener
   public boolean onOptionsItemSelected(MenuItem item) {
     // Handle item selection
     switch (item.getItemId()) {
-      case android.R.id.home:
-        parrentA.onBackPressed();
-        return true;
       case R.id.action_play:
         stateGridFragment.preview();
         return true;

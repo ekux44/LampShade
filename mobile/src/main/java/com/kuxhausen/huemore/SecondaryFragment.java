@@ -47,8 +47,6 @@ public class SecondaryFragment extends Fragment
 
     mParent = (NavigationDrawerActivity) this.getActivity();
 
-    mParent.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
         < Configuration.SCREENLAYOUT_SIZE_LARGE) {
       //if not in splitscreen mode, try change page title to any selected group
@@ -140,7 +138,6 @@ public class SecondaryFragment extends Fragment
   public void onResume() {
     super.onResume();
     mParent.registerOnServiceConnectedListener(this);
-    this.setHasOptionsMenu(true);
 
     setMode();
   }
@@ -211,18 +208,6 @@ public class SecondaryFragment extends Fragment
   public void invalidateSelection() {
     ((MoodListFragment) (mMoodManualPagerAdapter.getItem(MoodManualPagerAdapter.MOOD_LOCATION)))
         .invalidateSelection();
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle item selection
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        mParent.onBackPressed();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
   }
 
   @Override
