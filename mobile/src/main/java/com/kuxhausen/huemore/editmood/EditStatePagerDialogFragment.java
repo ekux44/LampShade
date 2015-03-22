@@ -2,6 +2,7 @@ package com.kuxhausen.huemore.editmood;
 
 import com.google.gson.Gson;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -13,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.BrightnessManager;
@@ -33,6 +36,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   EditMoodStateGridFragment parrentMood;
 
   ViewPager mViewPager;
+  private SlidingTabLayout mSlidingTabLayout;
   static int currentPage;
   public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3;
   private BulbState currentState;
@@ -83,11 +87,12 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
         // TODO warn users with toast if no selected group
         DeviceManager dm = service.getDeviceManager();
         Group g = dm.getSelectedGroup();
-        if(g!=null) {
+        if (g != null) {
           BrightnessManager briManager = dm.obtainBrightnessManager(g);
           for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
-            if (dm.getNetworkBulb(bulbId) != null)
+            if (dm.getNetworkBulb(bulbId) != null) {
               briManager.setState(dm.getNetworkBulb(bulbId), currentState);
+            }
           }
         }
       }
@@ -103,6 +108,14 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     }
   }
 
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState) {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+    // request a window without the title
+    dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+    return dialog;
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,7 +149,13 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
       }
 
     });
-    this.getDialog().setTitle(getActivity().getString(R.string.actionmenu_new_color));
+
+    // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
+    // it's PagerAdapter set.
+    mSlidingTabLayout = (SlidingTabLayout) myView.findViewById(R.id.sliding_tabs);
+    mSlidingTabLayout.setViewPager(mViewPager);
+    mSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.accent));
+    mSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
 
     Button cancelButton = (Button) myView.findViewById(R.id.cancel);
     cancelButton.setOnClickListener(this);
