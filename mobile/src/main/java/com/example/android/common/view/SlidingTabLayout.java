@@ -16,6 +16,7 @@ package com.example.android.common.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
@@ -28,6 +29,8 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.kuxhausen.huemore.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -65,9 +68,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
   private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
 
   private int mTitleOffset;
-
   private int mTabViewLayoutId;
   private int mTabViewTextViewId;
+  private boolean scrollableTabs;
 
   private ViewPager mViewPager;
   private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
@@ -84,6 +87,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
   public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
+
+    // Read in custom attributes
+    TypedArray a = context.getTheme().obtainStyledAttributes(
+        attrs,
+        R.styleable.SlidingTabLayout,
+        0, 0);
+
+    try {
+      scrollableTabs = a.getBoolean(R.styleable.SlidingTabLayout_scrollableTabs, false);
+    } finally {
+      a.recycle();
+    }
 
     // Disable the Scroll Bar
     setHorizontalScrollBarEnabled(false);
@@ -186,8 +201,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
     int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
     textView.setPadding(padding, padding, padding, padding);
 
-    textView.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
-
+    if (!scrollableTabs) {
+      textView.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
+    }
     return textView;
   }
 
