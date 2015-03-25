@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
 import java.util.ArrayList;
 
-public class SampleStatesFragment extends Fragment implements OnCreateColorListener,
-                                                              OnClickListener {
+public class SampleStatesFragment extends Fragment implements
+                                                   EditStatePagerDialogFragment.OnStateChangedListener,
+                                                   OnClickListener {
 
   private GridView g;
   private StateCellAdapter adapter;
@@ -101,7 +101,8 @@ public class SampleStatesFragment extends Fragment implements OnCreateColorListe
     lastSelectedPosition = (Integer) v.getTag();
     list.get(lastSelectedPosition).selected = true;
     adapter.notifyDataSetChanged();
-    statePager.setState(list.get(lastSelectedPosition).hs, this, "sample");
+    statePager
+        .setStateIfVisible(list.get(lastSelectedPosition).hs, this, EditStatePager.SAMPLE_PAGE);
   }
 
 

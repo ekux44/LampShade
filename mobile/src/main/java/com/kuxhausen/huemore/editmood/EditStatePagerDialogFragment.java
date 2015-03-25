@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.view.LayoutInflater;
@@ -31,40 +29,36 @@ import com.kuxhausen.huemore.state.Group;
 
 public class EditStatePagerDialogFragment extends DialogFragment implements OnClickListener {
 
-  NewMoodPagerAdapter mNewColorPagerAdapter;
-  static OnCreateColorListener[] newColorFragments;
-  EditMoodStateGridFragment parrentMood;
+  private EditStatePager mStatePagerAdapter;
+  private EditMoodStateGridFragment mEditMoodFrag;
+  private ViewPager mViewPager;
+  private int mCurrentPagePosition;
+  private BulbState mCurrentState;
+  private Spinner mTransitionSpinner;
+  private int[] mTransitionValues;
+  private Gson gson = new Gson();
+  private int mRow, mCol;
 
-  ViewPager mViewPager;
-  private SlidingTabLayout mSlidingTabLayout;
-  static int currentPage;
-  public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3;
-  private BulbState currentState;
-  Spinner transitionSpinner;
-  int[] transitionValues;
-  Gson gson = new Gson();
-  private int row, col;
-
-  /**
-   * 1 if true, 0 if false *
-   */
-  static int hasNoRecentStates = 1;
+  public EditMoodStateGridFragment getStateGridFragment() {
+    return mEditMoodFrag;
+  }
 
   public BulbState getState() {
-    if (currentState == null) {
-      currentState = new BulbState();
+    if (mCurrentState == null) {
+      mCurrentState = new BulbState();
     }
-    return currentState;
+    return mCurrentState;
   }
 
-  public void setState(BulbState newState, OnCreateColorListener initiator,
-                       String optionalMessage) {
-    currentState = newState.clone();
-    setSpinner();
-    this.stateChanged(initiator);
+  public void setStateIfVisible(BulbState newState, OnStateChangedListener initiator, int pageNo) {
+    if (mStatePagerAdapter.convertToPageNumber(mCurrentPagePosition) == pageNo) {
+      mCurrentState = newState.clone();
+      setSpinner();
+      this.stateChanged(initiator);
+    }
   }
 
-  public interface OnCreateColorListener {
+  public interface OnStateChangedListener {
 
     /**
      * return true if well suited to display updated data **
@@ -74,8 +68,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     public void setStatePager(EditStatePagerDialogFragment statePage);
   }
 
-  private void stateChanged(OnCreateColorListener initiator) {
-    for (OnCreateColorListener listener : newColorFragments) {
+  private void stateChanged(OnStateChangedListener initiator) {
+    for (OnStateChangedListener listener : mStatePagerAdapter.getColorListeners()) {
       if (listener != initiator && listener != null) {
         listener.stateChanged();
       }
@@ -91,7 +85,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
           BrightnessManager briManager = dm.obtainBrightnessManager(g);
           for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
             if (dm.getNetworkBulb(bulbId) != null) {
-              briManager.setState(dm.getNetworkBulb(bulbId), currentState);
+              briManager.setState(dm.getNetworkBulb(bulbId), mCurrentState);
             }
           }
         }
@@ -99,13 +93,8 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     }
   }
 
-  public void setParrentMood(EditMoodStateGridFragment eamf) {
-    parrentMood = eamf;
-    if (RecentStatesFragment.extractUniques(eamf.moodRows).size() > 0) {
-      hasNoRecentStates = 0;
-    } else {
-      hasNoRecentStates = 1;
-    }
+  public void setEditMoodFrag(EditMoodStateGridFragment frag) {
+    mEditMoodFrag = frag;
   }
 
   @Override
@@ -124,54 +113,58 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.color_dialog_pager, container, false);
 
-    transitionSpinner = (Spinner) myView.findViewById(R.id.transitionSpinner);
+    mTransitionSpinner = (Spinner) myView.findViewById(R.id.transitionSpinner);
     ArrayAdapter<CharSequence> adapter =
         ArrayAdapter.createFromResource(getActivity(), R.array.transition_names_array,
                                         android.R.layout.simple_spinner_item);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    transitionSpinner.setAdapter(adapter);
+    mTransitionSpinner.setAdapter(adapter);
 
-    transitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
+    mTransitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
 
-    // Create an adapter that when requested, will return a fragment
-    // representing an object in the collection.
-    mNewColorPagerAdapter = new NewMoodPagerAdapter(this);
+    boolean hasRecentStates = false;
+    if (RecentStatesFragment.extractUniques(mEditMoodFrag.moodRows).size() > 0) {
+      hasRecentStates = true;
+    }
+    mStatePagerAdapter = new EditStatePager(this, hasRecentStates);
 
     mViewPager = (ViewPager) myView.findViewById(R.id.pager);
-    mViewPager.setAdapter(mNewColorPagerAdapter);
+    mViewPager.setAdapter(mStatePagerAdapter);
     mViewPager.setOffscreenPageLimit(3);
-    currentPage = 0;
-    mViewPager.setOnPageChangeListener(new SimpleOnPageChangeListener() {
-
-      @Override
-      public void onPageSelected(int position) {
-        currentPage = position;
-      }
-
-    });
 
     // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
     // it's PagerAdapter set.
-    mSlidingTabLayout = (SlidingTabLayout) myView.findViewById(R.id.sliding_tabs);
-    mSlidingTabLayout.setViewPager(mViewPager);
-    mSlidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.accent));
-    mSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
+    SlidingTabLayout slidingTabLayout = (SlidingTabLayout) myView.findViewById(R.id.sliding_tabs);
+    slidingTabLayout.setViewPager(mViewPager);
+    slidingTabLayout.setSelectedIndicatorColors(this.getResources().getColor(R.color.accent));
+    slidingTabLayout.setBackgroundColor(getResources().getColor(R.color.day_primary));
+
+    mCurrentPagePosition = 0;
+    slidingTabLayout.setOnPageChangeListener(new SimpleOnPageChangeListener() {
+
+      @Override
+      public void onPageSelected(int position) {
+        mCurrentPagePosition = position;
+      }
+
+    });
 
     Button cancelButton = (Button) myView.findViewById(R.id.cancel);
     cancelButton.setOnClickListener(this);
     Button okayButton = (Button) myView.findViewById(R.id.okay);
     okayButton.setOnClickListener(this);
 
-    newColorFragments = new OnCreateColorListener[mNewColorPagerAdapter.getCount()];
-
     Bundle args = this.getArguments();
     if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
-      row = args.getInt(InternalArguments.ROW);
-      col = args.getInt(InternalArguments.COLUMN);
+      mRow = args.getInt(InternalArguments.ROW);
+      mCol = args.getInt(InternalArguments.COLUMN);
 
-      currentState =
+      mCurrentState =
           gson.fromJson(args.getString(InternalArguments.PREVIOUS_STATE), BulbState.class);
-      routeState(currentState);
+      ((OnStateChangedListener) mStatePagerAdapter.getItemFromPageNumber(
+          EditStatePager.RECENT_PAGE)).stateChanged();
+      mViewPager
+          .setCurrentItem(mStatePagerAdapter.convertToPagePosition(EditStatePager.RECENT_PAGE));
 
       setSpinner();
     }
@@ -180,93 +173,14 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   }
 
   private void setSpinner() {
-    if (currentState.getTransitionTime() != null) {
+    if (mCurrentState.getTransitionTime() != null) {
       int pos = 0;
-      for (int i = 0; i < transitionValues.length; i++) {
-        if (currentState.getTransitionTime() == transitionValues[i]) {
+      for (int i = 0; i < mTransitionValues.length; i++) {
+        if (mCurrentState.getTransitionTime() == mTransitionValues[i]) {
           pos = i;
         }
       }
-      transitionSpinner.setSelection(pos);
-    }
-  }
-
-  private void routeState(BulbState bs) {
-    if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(RECENT_PAGE)).stateChanged()) {
-      mViewPager.setCurrentItem(RECENT_PAGE);
-    } else if (((OnCreateColorListener) mNewColorPagerAdapter.getItem(SAMPLE_PAGE))
-        .stateChanged()) {
-      mViewPager.setCurrentItem(SAMPLE_PAGE);
-    } else if (((OnCreateColorListener) mNewColorPagerAdapter
-        .getItem(TEMP_PAGE - hasNoRecentStates))
-        .stateChanged()) {
-      mViewPager.setCurrentItem(TEMP_PAGE - hasNoRecentStates);
-    } else if (((OnCreateColorListener) mNewColorPagerAdapter
-        .getItem(WHEEL_PAGE - hasNoRecentStates))
-        .stateChanged()) {
-      mViewPager.setCurrentItem(WHEEL_PAGE - hasNoRecentStates);
-    } else {
-      mViewPager.setCurrentItem(RECENT_PAGE);
-    }
-  }
-
-  /**
-   * A {@link android.support.v4.app.FragmentStatePagerAdapter} that returns a fragment representing
-   * an object in the collection.
-   */
-  public static class NewMoodPagerAdapter extends FragmentPagerAdapter {
-
-    EditStatePagerDialogFragment frag;
-
-    public NewMoodPagerAdapter(EditStatePagerDialogFragment fragment) {
-      super(fragment.getChildFragmentManager());
-      frag = fragment;
-    }
-
-    @Override
-    public Fragment getItem(int i) {
-      if (newColorFragments[i] != null) {
-        return (Fragment) newColorFragments[i];
-      }
-
-      if (i == SAMPLE_PAGE) {
-        newColorFragments[i] = new SampleStatesFragment();
-        newColorFragments[i].setStatePager(frag);
-        return (Fragment) newColorFragments[i];
-      } else if (i == WHEEL_PAGE - frag.hasNoRecentStates) {
-        newColorFragments[i] = new EditColorWheelFragment();
-        newColorFragments[i].setStatePager(frag);
-        return (Fragment) newColorFragments[i];
-      } else if (i == TEMP_PAGE - frag.hasNoRecentStates) {
-        newColorFragments[i] = new EditColorTempFragment();
-        newColorFragments[i].setStatePager(frag);
-        return (Fragment) newColorFragments[i];
-      } else if (i == RECENT_PAGE) {
-        newColorFragments[i] = new RecentStatesFragment();
-        newColorFragments[i].setStatePager(frag);
-        return (Fragment) newColorFragments[i];
-      } else {
-        return null;
-      }
-    }
-
-    @Override
-    public int getCount() {
-      return 4 - frag.hasNoRecentStates;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int i) {
-      if (i == SAMPLE_PAGE) {
-        return frag.getActivity().getString(R.string.cap_sample_state);
-      } else if (i == WHEEL_PAGE - frag.hasNoRecentStates) {
-        return frag.getActivity().getString(R.string.cap_hue_sat_mode);
-      } else if (i == TEMP_PAGE - frag.hasNoRecentStates) {
-        return frag.getActivity().getString(R.string.cap_color_temp_mode);
-      } else if (i == RECENT_PAGE) {
-        return frag.getActivity().getString(R.string.cap_recent_state);
-      }
-      return "";
+      mTransitionSpinner.setSelection(pos);
     }
   }
 
@@ -274,15 +188,15 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.okay:
-        if (transitionSpinner != null) {
-          currentState
-              .setTransitionTime(transitionValues[transitionSpinner.getSelectedItemPosition()]);
+        if (mTransitionSpinner != null) {
+          mCurrentState
+              .setTransitionTime(mTransitionValues[mTransitionSpinner.getSelectedItemPosition()]);
         }
 
         Intent i = new Intent();
-        i.putExtra(InternalArguments.HUE_STATE, gson.toJson(currentState));
-        i.putExtra(InternalArguments.ROW, row);
-        i.putExtra(InternalArguments.COLUMN, col);
+        i.putExtra(InternalArguments.HUE_STATE, gson.toJson(mCurrentState));
+        i.putExtra(InternalArguments.ROW, mRow);
+        i.putExtra(InternalArguments.COLUMN, mCol);
 
         if (this.getTargetFragment() != null) {
           getTargetFragment().onActivityResult(-1, -1, i);

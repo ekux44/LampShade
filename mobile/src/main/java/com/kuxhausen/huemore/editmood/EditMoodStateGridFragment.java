@@ -159,8 +159,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
   private void stopPreview() {
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
-    if(service.getDeviceManager().getSelectedGroup()!=null)
+    if (service.getDeviceManager().getSelectedGroup() != null) {
       service.getMoodPlayer().cancelMood(service.getDeviceManager().getSelectedGroup());
+    }
     //else there is nothing relevant to stop
   }
 
@@ -300,7 +301,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         stopPreview();
         mStateGrid.setStateSelectionByTag(v);
         EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-        cpdf.setParrentMood(this);
+        cpdf.setEditMoodFrag(this);
         Bundle args = new Bundle();
         args.putString(InternalArguments.PREVIOUS_STATE,
                        gson.toJson(this.getCell(mStateGrid.getSelectedCellRowCol()).hs));
@@ -626,7 +627,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       case R.id.contextstatemenu_edit:
         stopPreview();
         EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
-        cpdf.setParrentMood(this);
+        cpdf.setEditMoodFrag(this);
         Bundle args = new Bundle();
         args.putString(InternalArguments.PREVIOUS_STATE,
                        gson.toJson(getCell(mStateGrid.getSelectedCellRowCol()).hs));

@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class RecentStatesFragment extends Fragment implements OnCreateColorListener,
-                                                              OnClickListener {
+public class RecentStatesFragment extends Fragment implements
+                                                   EditStatePagerDialogFragment.OnStateChangedListener,
+                                                   OnClickListener {
 
   private GridView g;
   private StateCellAdapter adapter;
@@ -69,7 +69,8 @@ public class RecentStatesFragment extends Fragment implements OnCreateColorListe
     lastSelectedPosition = (Integer) v.getTag();
     list.get(lastSelectedPosition).selected = true;
     adapter.notifyDataSetChanged();
-    statePager.setState(list.get(lastSelectedPosition).hs, this, "recent");
+    statePager.setStateIfVisible(list.get(lastSelectedPosition).hs, this,
+                                 EditStatePager.RECENT_PAGE);
   }
 
 
@@ -99,6 +100,6 @@ public class RecentStatesFragment extends Fragment implements OnCreateColorListe
   @Override
   public void setStatePager(EditStatePagerDialogFragment statePage) {
     statePager = statePage;
-    loadPrevious(statePager.parrentMood.moodRows);
+    loadPrevious(statePager.getStateGridFragment().moodRows);
   }
 }

@@ -14,12 +14,11 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class EditColorTempFragment extends Fragment implements OnSeekBarChangeListener,
-                                                               OnCreateColorListener {
+                                                               EditStatePagerDialogFragment.OnStateChangedListener {
 
   private BulbState hs = new BulbState();
 
@@ -68,7 +67,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
           tempEditText.setText(temp + "");
           seekBar.setProgress(temp - seekBarOffset);
           hs.setKelvinCT(temp);
-          statePager.setState(hs, EditColorTempFragment.this, "ct");
+          statePager.setStateIfVisible(hs, EditColorTempFragment.this, EditStatePager.TEMP_PAGE);
         }
         return false;
       }
@@ -83,7 +82,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
     if (fromUser) {
       hs.setKelvinCT(seekBarOffset + seekBar.getProgress());
       tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-      statePager.setState(hs, this, "ct");
+      statePager.setStateIfVisible(hs, this, EditStatePager.TEMP_PAGE);
     }
   }
 

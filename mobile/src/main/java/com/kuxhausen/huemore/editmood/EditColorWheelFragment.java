@@ -8,15 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.editmood.EditStatePagerDialogFragment.OnCreateColorListener;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
-public class EditColorWheelFragment extends Fragment implements OnCreateColorListener,
-                                                                com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener {
+public class EditColorWheelFragment extends Fragment implements
+                                                     EditStatePagerDialogFragment.OnStateChangedListener,
+                                                     ColorPicker.OnColorChangedListener {
 
   ColorPicker picker;
   SaturationBar saturationBar;
@@ -59,10 +59,8 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     state.setOn(true);
     state.setXY(newXY);
     state.setKelvinCT(null);
-    if (EditStatePagerDialogFragment.currentPage == (EditStatePagerDialogFragment.WHEEL_PAGE
-                                                     - EditStatePagerDialogFragment.hasNoRecentStates)) {
-      statePager.setState(state, this, "wheel");
-    }
+
+    statePager.setStateIfVisible(state, this, EditStatePager.WHEEL_PAGE);
   }
 
   @Override
@@ -71,7 +69,9 @@ public class EditColorWheelFragment extends Fragment implements OnCreateColorLis
     if (state.getXY() != null) {
       float[] hueSat = Utils.xyTOhs(state.getXY());
       // don't forget relative brightness if set
-      float[] hsv = {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
+      float[]
+          hsv =
+          {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
       state.setOn(true);
 
       int rgb = Color.HSVToColor(hsv);
