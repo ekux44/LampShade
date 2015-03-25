@@ -15,13 +15,13 @@ import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
 public class EditColorWheelFragment extends Fragment implements
-                                                     EditStatePagerDialogFragment.OnStateChangedListener,
+                                                     EditStateDialogFragment.OnStateChangedListener,
                                                      ColorPicker.OnColorChangedListener {
 
   ColorPicker picker;
   SaturationBar saturationBar;
   ValueBar valueBar;
-  EditStatePagerDialogFragment statePager;
+  EditStateDialogFragment statePager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +89,7 @@ public class EditColorWheelFragment extends Fragment implements
   }
 
   @Override
-  public void setStatePager(EditStatePagerDialogFragment statePage) {
+  public void setStatePager(EditStateDialogFragment statePage) {
     statePager = statePage;
   }
 }

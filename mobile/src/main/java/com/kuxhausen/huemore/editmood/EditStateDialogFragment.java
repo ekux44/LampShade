@@ -27,7 +27,7 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 
-public class EditStatePagerDialogFragment extends DialogFragment implements OnClickListener {
+public class EditStateDialogFragment extends DialogFragment implements OnClickListener {
 
   private EditStatePager mStatePagerAdapter;
   private EditMoodStateGridFragment mEditMoodFrag;
@@ -65,7 +65,7 @@ public class EditStatePagerDialogFragment extends DialogFragment implements OnCl
      */
     public boolean stateChanged();
 
-    public void setStatePager(EditStatePagerDialogFragment statePage);
+    public void setStatePager(EditStateDialogFragment statePage);
   }
 
   private void stateChanged(OnStateChangedListener initiator) {

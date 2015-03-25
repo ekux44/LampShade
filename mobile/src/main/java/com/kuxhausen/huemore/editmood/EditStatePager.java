@@ -9,19 +9,19 @@ public class EditStatePager extends FragmentPagerAdapter {
 
   public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3;
 
-  private EditStatePagerDialogFragment.OnStateChangedListener[] newColorFragments;
-  private EditStatePagerDialogFragment frag;
+  private EditStateDialogFragment.OnStateChangedListener[] newColorFragments;
+  private EditStateDialogFragment frag;
   private boolean mHasRecentStates;
 
-  public EditStatePager(EditStatePagerDialogFragment fragment, boolean hasRecentStates) {
+  public EditStatePager(EditStateDialogFragment fragment, boolean hasRecentStates) {
     super(fragment.getChildFragmentManager());
     frag = fragment;
     mHasRecentStates = hasRecentStates;
 
-    newColorFragments = new EditStatePagerDialogFragment.OnStateChangedListener[getCount()];
+    newColorFragments = new EditStateDialogFragment.OnStateChangedListener[getCount()];
   }
 
-  public EditStatePagerDialogFragment.OnStateChangedListener[] getColorListeners() {
+  public EditStateDialogFragment.OnStateChangedListener[] getColorListeners() {
     return newColorFragments;
   }
 

@@ -16,13 +16,13 @@ import com.kuxhausen.huemore.state.BulbState.Effect;
 import java.util.ArrayList;
 
 public class SampleStatesFragment extends Fragment implements
-                                                   EditStatePagerDialogFragment.OnStateChangedListener,
+                                                   EditStateDialogFragment.OnStateChangedListener,
                                                    OnClickListener {
 
   private GridView g;
   private StateCellAdapter adapter;
   private int lastSelectedPosition = -1;
-  private EditStatePagerDialogFragment statePager;
+  private EditStateDialogFragment statePager;
   private ArrayList<StateCell> list;
 
   private void loadPresets() {
@@ -130,7 +130,7 @@ public class SampleStatesFragment extends Fragment implements
   }
 
   @Override
-  public void setStatePager(EditStatePagerDialogFragment statePage) {
+  public void setStatePager(EditStateDialogFragment statePage) {
     statePager = statePage;
     loadPresets();
   }

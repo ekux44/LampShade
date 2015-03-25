@@ -18,7 +18,7 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class EditColorTempFragment extends Fragment implements OnSeekBarChangeListener,
-                                                               EditStatePagerDialogFragment.OnStateChangedListener {
+                                                               EditStateDialogFragment.OnStateChangedListener {
 
   private BulbState hs = new BulbState();
 
@@ -32,7 +32,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
   SeekBar seekBar;
   EditText tempEditText;
   final int seekBarOffset = 2000;
-  EditStatePagerDialogFragment statePager;
+  EditStateDialogFragment statePager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,7 +104,7 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
   }
 
   @Override
-  public void setStatePager(EditStatePagerDialogFragment statePage) {
+  public void setStatePager(EditStateDialogFragment statePage) {
     statePager = statePage;
   }
 

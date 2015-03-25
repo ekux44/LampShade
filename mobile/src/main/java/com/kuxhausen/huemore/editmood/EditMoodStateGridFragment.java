@@ -300,7 +300,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       case R.id.clickable_layout:
         stopPreview();
         mStateGrid.setStateSelectionByTag(v);
-        EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+        EditStateDialogFragment cpdf = new EditStateDialogFragment();
         cpdf.setEditMoodFrag(this);
         Bundle args = new Bundle();
         args.putString(InternalArguments.PREVIOUS_STATE,
@@ -626,7 +626,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     switch (item.getItemId()) {
       case R.id.contextstatemenu_edit:
         stopPreview();
-        EditStatePagerDialogFragment cpdf = new EditStatePagerDialogFragment();
+        EditStateDialogFragment cpdf = new EditStateDialogFragment();
         cpdf.setEditMoodFrag(this);
         Bundle args = new Bundle();
         args.putString(InternalArguments.PREVIOUS_STATE,

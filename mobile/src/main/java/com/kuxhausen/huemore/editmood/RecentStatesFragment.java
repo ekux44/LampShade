@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class RecentStatesFragment extends Fragment implements
-                                                   EditStatePagerDialogFragment.OnStateChangedListener,
+                                                   EditStateDialogFragment.OnStateChangedListener,
                                                    OnClickListener {
 
   private GridView g;
   private StateCellAdapter adapter;
   private int lastSelectedPosition = -1;
   private ArrayList<StateCell> list;
-  private EditStatePagerDialogFragment statePager;
+  private EditStateDialogFragment statePager;
 
   public static ArrayList<StateCell> extractUniques(ArrayList<StateRow> rows) {
     ArrayList<StateCell> list = new ArrayList<StateCell>();
@@ -98,7 +98,7 @@ public class RecentStatesFragment extends Fragment implements
   }
 
   @Override
-  public void setStatePager(EditStatePagerDialogFragment statePage) {
+  public void setStatePager(EditStateDialogFragment statePage) {
     statePager = statePage;
     loadPrevious(statePager.getStateGridFragment().moodRows);
   }
