@@ -39,10 +39,16 @@ public class DatabaseGroup extends Group {
     String where = GroupColumns.COL_GROUP_FLAGS + "=?";
     String[] whereArgs = {"" + GroupColumns.FLAG_ALL};
     Cursor
-        c =
+        groupCursor =
         context.getContentResolver()
             .query(GroupColumns.URI, GROUP_QUERY_COLUMNS, where, whereArgs, null);
-    return new DatabaseGroup(c, context);
+    if (groupCursor.moveToFirst()) {
+      DatabaseGroup result = new DatabaseGroup(groupCursor, context);
+      groupCursor.close();
+      return result;
+    } else {
+      throw new IllegalStateException("ALL Group not in database");
+    }
   }
 
   public DatabaseGroup(String name, Context c) {
