@@ -8,7 +8,7 @@ import com.kuxhausen.huemore.state.BulbState;
 
 public class EditStatePager extends FragmentPagerAdapter {
 
-  public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3;
+  public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3, RGB_PAGE = 4;
 
   private EditStateDialogFragment.StateSelector[] newColorFragments;
   private EditStateDialogFragment frag;
@@ -73,6 +73,10 @@ public class EditStatePager extends FragmentPagerAdapter {
         newColorFragments[position] = new RecentStatesFragment();
         newColorFragments[position].initialize(frag, mInitialState);
         return (Fragment) newColorFragments[position];
+      case RGB_PAGE:
+        newColorFragments[position] = new EditRgbFragment();
+        newColorFragments[position].initialize(frag, mInitialState);
+        return (Fragment) newColorFragments[position];
       default:
         return null;
     }
@@ -80,7 +84,7 @@ public class EditStatePager extends FragmentPagerAdapter {
 
   @Override
   public int getCount() {
-    return 4 + (mHasRecentStates ? 0 : -1);
+    return 5 + (mHasRecentStates ? 0 : -1);
   }
 
   @Override
@@ -95,6 +99,8 @@ public class EditStatePager extends FragmentPagerAdapter {
         return frag.getActivity().getString(R.string.cap_color_temp_mode);
       case RECENT_PAGE:
         return frag.getActivity().getString(R.string.cap_recent_state);
+      case RGB_PAGE:
+        return frag.getActivity().getString(R.string.cap_rgb_state);
     }
     return "";
   }
