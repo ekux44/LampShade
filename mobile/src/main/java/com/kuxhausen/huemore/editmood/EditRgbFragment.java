@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -100,8 +99,13 @@ public class EditRgbFragment extends Fragment implements EditStateDialogFragment
 
   @Override
   public void stateChanged(BulbState newState) {
-    if (newState.getXY() != null) {
-      float[] hueSat = Utils.xyTOhs(newState.getXY());
+    if (newState.getMiredCT() != null || newState.getXY() != null) {
+      float[] xy = newState.getXY();
+      if (xy == null) {
+        xy = Utils.ctTOxy(newState.getMiredCT());
+      }
+
+      float[] hueSat = Utils.xyTOhs(xy);
       // don't forget relative brightness if set
       float[]
           hsv =

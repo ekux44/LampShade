@@ -91,8 +91,13 @@ public class EditColorWheelFragment extends Fragment implements
 
   @Override
   public void stateChanged(BulbState newState) {
-    if (newState.getXY() != null) {
-      float[] hueSat = Utils.xyTOhs(newState.getXY());
+    if (newState.getMiredCT() != null || newState.getXY() != null) {
+      float[] xy = newState.getXY();
+      if (xy == null) {
+        xy = Utils.ctTOxy(newState.getMiredCT());
+      }
+
+      float[] hueSat = Utils.xyTOhs(xy);
       // don't forget relative brightness if set
       float[]
           hsv =
