@@ -31,7 +31,7 @@ android {
     }
     productFlavors {
         playEdition {
-            minSdkVersion 12
+            minSdkVersion 10
             targetSdkVersion 22
         }
         compatabilityEdition {
