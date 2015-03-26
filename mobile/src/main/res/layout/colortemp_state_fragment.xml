@@ -19,16 +19,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="4500"
-        android:paddingBottom="8dp"
-        android:progress="2250" />
+        android:paddingBottom="8dp" />
 
     <EditText
         android:id="@+id/temperatureText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number"
-        android:text="@string/color_temp_initial_value" >
+        android:inputType="number" >
     </EditText>
 
 </LinearLayout>

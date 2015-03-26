@@ -18,21 +18,28 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
 public class EditColorTempFragment extends Fragment implements OnSeekBarChangeListener,
-                                                               EditStateDialogFragment.OnStateChangedListener {
+                                                               EditStateDialogFragment.StateSelector {
 
-  private BulbState hs = new BulbState();
+  private final static int SEEK_BAR_OFFSET = 2000;
 
-  {
-    hs.setOn(true);
-    hs.setEffect(Effect.NONE);
+  private BulbState mBulbState;
+  private SeekBar mSeekBar;
+  private EditText mTempEditText;
+  private EditStateDialogFragment mParent;
 
-    hs.setKelvinCT(4000);
+  @Override
+  public void initialize(EditStateDialogFragment statePage, BulbState initialState) {
+    mParent = statePage;
+
+    mBulbState = new BulbState();
+    mBulbState.setOn(true);
+    mBulbState.setEffect(Effect.NONE);
+    if (initialState.getMiredCT() != null) {
+      mBulbState.setMiredCT(initialState.getMiredCT());
+    } else {
+      mBulbState.setKelvinCT(4000);
+    }
   }
-
-  SeekBar seekBar;
-  EditText tempEditText;
-  final int seekBarOffset = 2000;
-  EditStateDialogFragment statePager;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,48 +48,45 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
 
     View groupDialogView = inflater.inflate(R.layout.colortemp_state_fragment, null);
 
-    seekBar = (SeekBar) groupDialogView.findViewById(R.id.temperatureBar);
+    mSeekBar = (SeekBar) groupDialogView.findViewById(R.id.temperatureBar);
 
-    seekBar.setProgress(hs.getKelvinCT() - seekBarOffset);
+    mSeekBar.setOnSeekBarChangeListener(this);
 
-    seekBar.setOnSeekBarChangeListener(this);
+    mTempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
 
-    tempEditText = (EditText) groupDialogView.findViewById(R.id.temperatureText);
-    tempEditText.setVisibility(View.VISIBLE);
-
-    tempEditText.setText(hs.getKelvinCT() + "");
-
-    tempEditText.setOnEditorActionListener(new OnEditorActionListener() {
+    mTempEditText.setOnEditorActionListener(new OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
           int temp;
           try {
-            temp = Integer.parseInt((tempEditText.getText().toString()));
+            temp = Integer.parseInt((mTempEditText.getText().toString()));
           } catch (NumberFormatException e) {
             temp = Integer.MAX_VALUE;
           }
-          temp = Math.max(temp, seekBarOffset);
-          temp = Math.min(temp, seekBarOffset + seekBar.getMax());
-          tempEditText.setText(temp + "");
-          seekBar.setProgress(temp - seekBarOffset);
-          hs.setKelvinCT(temp);
-          statePager.setStateIfVisible(hs, EditColorTempFragment.this, EditStatePager.TEMP_PAGE);
+          temp = Math.max(temp, SEEK_BAR_OFFSET);
+          temp = Math.min(temp, SEEK_BAR_OFFSET + mSeekBar.getMax());
+          mTempEditText.setText(temp + "");
+          mSeekBar.setProgress(temp - SEEK_BAR_OFFSET);
+          mBulbState.setKelvinCT(temp);
+          mParent
+              .setStateIfVisible(mBulbState, EditColorTempFragment.this, EditStatePager.TEMP_PAGE);
         }
         return false;
       }
 
     });
 
+    stateChanged(mBulbState);
     return groupDialogView;
   }
 
   @Override
   public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     if (fromUser) {
-      hs.setKelvinCT(seekBarOffset + seekBar.getProgress());
-      tempEditText.setText("" + (seekBarOffset + seekBar.getProgress()));
-      statePager.setStateIfVisible(hs, this, EditStatePager.TEMP_PAGE);
+      mBulbState.setKelvinCT(SEEK_BAR_OFFSET + seekBar.getProgress());
+      mTempEditText.setText("" + (SEEK_BAR_OFFSET + seekBar.getProgress()));
+      mParent.setStateIfVisible(mBulbState, this, EditStatePager.TEMP_PAGE);
     }
   }
 
@@ -95,17 +99,16 @@ public class EditColorTempFragment extends Fragment implements OnSeekBarChangeLi
   }
 
   @Override
-  public boolean stateChanged() {
-    if (statePager.getState().getMiredCT() != null) {
-      hs.setMiredCT(statePager.getState().getMiredCT());
-      return true;
+  public void stateChanged(BulbState newState) {
+    if (newState.getMiredCT() != null) {
+      mBulbState.setMiredCT(newState.getMiredCT());
+      mSeekBar.setProgress(mBulbState.getKelvinCT() - SEEK_BAR_OFFSET);
+      mTempEditText.setText(mBulbState.getKelvinCT() + "");
     }
-    return false;
   }
 
   @Override
-  public void setStatePager(EditStateDialogFragment statePage) {
-    statePager = statePage;
+  public BulbState getState() {
+    return mBulbState;
   }
-
 }

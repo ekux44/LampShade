@@ -4,24 +4,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.state.BulbState;
 
 public class EditStatePager extends FragmentPagerAdapter {
 
   public final static int SAMPLE_PAGE = 0, RECENT_PAGE = 1, WHEEL_PAGE = 2, TEMP_PAGE = 3;
 
-  private EditStateDialogFragment.OnStateChangedListener[] newColorFragments;
+  private EditStateDialogFragment.StateSelector[] newColorFragments;
   private EditStateDialogFragment frag;
   private boolean mHasRecentStates;
+  private BulbState mInitialState;
 
-  public EditStatePager(EditStateDialogFragment fragment, boolean hasRecentStates) {
+  public EditStatePager(EditStateDialogFragment fragment, boolean hasRecentStates,
+                        BulbState initialState) {
     super(fragment.getChildFragmentManager());
     frag = fragment;
     mHasRecentStates = hasRecentStates;
+    mInitialState = initialState;
 
-    newColorFragments = new EditStateDialogFragment.OnStateChangedListener[getCount()];
+    newColorFragments = new EditStateDialogFragment.StateSelector[getCount()];
   }
 
-  public EditStateDialogFragment.OnStateChangedListener[] getColorListeners() {
+  public EditStateDialogFragment.StateSelector[] getColorListeners() {
     return newColorFragments;
   }
 
@@ -37,8 +41,12 @@ public class EditStatePager extends FragmentPagerAdapter {
     return pageNumber - ((!mHasRecentStates && pageNumber > EditStatePager.RECENT_PAGE) ? 1 : 0);
   }
 
-  public Fragment getItemFromPageNumber(int pageNo) {
-    return getItem(convertToPagePosition(pageNo));
+  public EditStateDialogFragment.StateSelector getStateItemFromPageNumber(int pageNo) {
+    return (EditStateDialogFragment.StateSelector) getItem(convertToPagePosition(pageNo));
+  }
+
+  public EditStateDialogFragment.StateSelector getStateItem(int position) {
+    return (EditStateDialogFragment.StateSelector) getItem(position);
   }
 
   @Override
@@ -51,19 +59,19 @@ public class EditStatePager extends FragmentPagerAdapter {
     switch (page) {
       case SAMPLE_PAGE:
         newColorFragments[position] = new SampleStatesFragment();
-        newColorFragments[position].setStatePager(frag);
+        newColorFragments[position].initialize(frag, mInitialState);
         return (Fragment) newColorFragments[position];
       case WHEEL_PAGE:
         newColorFragments[position] = new EditColorWheelFragment();
-        newColorFragments[position].setStatePager(frag);
+        newColorFragments[position].initialize(frag, mInitialState);
         return (Fragment) newColorFragments[position];
       case TEMP_PAGE:
         newColorFragments[position] = new EditColorTempFragment();
-        newColorFragments[position].setStatePager(frag);
+        newColorFragments[position].initialize(frag, mInitialState);
         return (Fragment) newColorFragments[position];
       case RECENT_PAGE:
         newColorFragments[position] = new RecentStatesFragment();
-        newColorFragments[position].setStatePager(frag);
+        newColorFragments[position].initialize(frag, mInitialState);
         return (Fragment) newColorFragments[position];
       default:
         return null;

@@ -15,29 +15,52 @@ import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
 public class EditColorWheelFragment extends Fragment implements
-                                                     EditStateDialogFragment.OnStateChangedListener,
+                                                     EditStateDialogFragment.StateSelector,
                                                      ColorPicker.OnColorChangedListener {
 
-  ColorPicker picker;
-  SaturationBar saturationBar;
-  ValueBar valueBar;
-  EditStateDialogFragment statePager;
+  private ColorPicker mPicker;
+  private SaturationBar mSaturationBar;
+  private ValueBar mValueBar;
+  private EditStateDialogFragment mParent;
+  private BulbState mBulbState;
+
+  @Override
+  public void initialize(EditStateDialogFragment statePage, BulbState initialState) {
+    mParent = statePage;
+    mBulbState = new BulbState();
+
+    if (initialState.get255Bri() != null) {
+      mBulbState.set255Bri(initialState.get255Bri());
+    } else {
+      mBulbState.set255Bri(255);
+    }
+    if (initialState.getXY() != null) {
+      mBulbState.setXY(initialState.getXY());
+    } else {
+      float[] reading = {0.4571f, 0.4123f};
+      mBulbState.setXY(reading);
+    }
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    mBulbState.setOn(true);
+    mBulbState.setEffect(BulbState.Effect.NONE);
+
     View myView = inflater.inflate(R.layout.colorwheel_state_fragment, null);
 
-    picker = (ColorPicker) myView.findViewById(R.id.picker);
-    saturationBar = (SaturationBar) myView.findViewById(R.id.saturationbar);
-    picker.addSaturationBar(saturationBar);
-    valueBar = (ValueBar) myView.findViewById(R.id.valuebar);
-    picker.addValueBar(valueBar);
-    picker.setShowOldCenterColor(false);
-    picker.setOnColorChangedListener(this);
+    mPicker = (ColorPicker) myView.findViewById(R.id.picker);
+    mSaturationBar = (SaturationBar) myView.findViewById(R.id.saturationbar);
+    mPicker.addSaturationBar(mSaturationBar);
+    mValueBar = (ValueBar) myView.findViewById(R.id.valuebar);
+    mPicker.addValueBar(mValueBar);
+    mPicker.setShowOldCenterColor(false);
+    mPicker.setOnColorChangedListener(this);
 
+    stateChanged(mBulbState);
     return myView;
   }
 
@@ -51,45 +74,40 @@ public class EditColorWheelFragment extends Fragment implements
     float[] newHueSat = {newHSV[0] / 360f, newHSV[1]};
     float[] newXY = Utils.hsTOxy(newHueSat);
 
-    BulbState state = statePager.getState();
     // relative brightness
     if (newHSV[2] != 1f) {
-      state.set255Bri((int) (newHSV[2] * 255f));
+      mBulbState.set255Bri((int) (newHSV[2] * 255f));
     }
-    state.setOn(true);
-    state.setXY(newXY);
-    state.setKelvinCT(null);
 
-    statePager.setStateIfVisible(state, this, EditStatePager.WHEEL_PAGE);
+    mBulbState.setXY(newXY);
+
+    mParent.setStateIfVisible(mBulbState, this, EditStatePager.WHEEL_PAGE);
   }
 
   @Override
-  public boolean stateChanged() {
-    BulbState state = statePager.getState();
-    if (state.getXY() != null) {
-      float[] hueSat = Utils.xyTOhs(state.getXY());
+  public BulbState getState() {
+    return mBulbState;
+  }
+
+  @Override
+  public void stateChanged(BulbState newState) {
+    if (newState.getXY() != null) {
+      float[] hueSat = Utils.xyTOhs(newState.getXY());
       // don't forget relative brightness if set
       float[]
           hsv =
-          {hueSat[0] * 360, hueSat[1], (state.get255Bri() != null) ? state.get255Bri() / 255f : 1f};
-      state.setOn(true);
+          {hueSat[0] * 360, hueSat[1],
+           (newState.get255Bri() != null) ? newState.get255Bri() / 255f : 1f};
 
       int rgb = Color.HSVToColor(hsv);
 
-      if (picker != null && saturationBar != null && valueBar != null) {
-        picker.setOnColorChangedListener(null);
-        picker.setColor(rgb);
-        saturationBar.setSaturation(hsv[1]);
-        picker.setOnColorChangedListener(this);
-        picker.invalidate();
+      if (mPicker != null && mSaturationBar != null && mValueBar != null) {
+        mPicker.setOnColorChangedListener(null);
+        mPicker.setColor(rgb);
+        mSaturationBar.setSaturation(hsv[1]);
+        mPicker.setOnColorChangedListener(this);
+        mPicker.invalidate();
       }
-      return true;
     }
-    return false;
-  }
-
-  @Override
-  public void setStatePager(EditStateDialogFragment statePage) {
-    statePager = statePage;
   }
 }

@@ -9,19 +9,32 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.state.BulbState;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class RecentStatesFragment extends Fragment implements
-                                                   EditStateDialogFragment.OnStateChangedListener,
+                                                   EditStateDialogFragment.StateSelector,
                                                    OnClickListener {
 
-  private GridView g;
-  private StateCellAdapter adapter;
-  private int lastSelectedPosition = -1;
-  private ArrayList<StateCell> list;
-  private EditStateDialogFragment statePager;
+  private BulbState mInitialState;
+  private GridView mGrid;
+  private StateCellAdapter mCellAdapter;
+  private int mLastSelectedPosition = -1;
+  private ArrayList<StateCell> mList;
+  private EditStateDialogFragment mParent;
+
+  @Override
+  public void initialize(EditStateDialogFragment statePage, BulbState initialState) {
+    mParent = statePage;
+    loadPrevious(mParent.getStateGridFragment().moodRows);
+    mInitialState = initialState;
+  }
+
+  private void loadPrevious(ArrayList<StateRow> rows) {
+    mList = extractUniques(rows);
+  }
 
   public static ArrayList<StateCell> extractUniques(ArrayList<StateRow> rows) {
     ArrayList<StateCell> list = new ArrayList<StateCell>();
@@ -39,67 +52,57 @@ public class RecentStatesFragment extends Fragment implements
     return list;
   }
 
-  private void loadPrevious(ArrayList<StateRow> rows) {
-    list = extractUniques(rows);
-  }
-
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     View myView = inflater.inflate(R.layout.grid_view, null);
-    g = (GridView) myView.findViewById(R.id.myGrid);
-    adapter = new StateCellAdapter(this, list, this);
-    g.setAdapter(adapter);
+    mGrid = (GridView) myView.findViewById(R.id.myGrid);
+    mCellAdapter = new StateCellAdapter(this, mList, this);
+    mGrid.setAdapter(mCellAdapter);
+
+    stateChanged(mInitialState);
     return myView;
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    stateChanged();
-  }
-
-  @Override
   public void onClick(View v) {
-    if (lastSelectedPosition > -1) {
-      list.get(lastSelectedPosition).selected = false;
+    if (mLastSelectedPosition > -1) {
+      mList.get(mLastSelectedPosition).selected = false;
     }
-    lastSelectedPosition = (Integer) v.getTag();
-    list.get(lastSelectedPosition).selected = true;
-    adapter.notifyDataSetChanged();
-    statePager.setStateIfVisible(list.get(lastSelectedPosition).hs, this,
-                                 EditStatePager.RECENT_PAGE);
+    mLastSelectedPosition = (Integer) v.getTag();
+    mList.get(mLastSelectedPosition).selected = true;
+    mCellAdapter.notifyDataSetChanged();
+    mParent.setStateIfVisible(mList.get(mLastSelectedPosition).hs, this,
+                              EditStatePager.RECENT_PAGE);
   }
 
+  @Override
+  public BulbState getState() {
+    if (mLastSelectedPosition > -1) {
+      return mList.get(mLastSelectedPosition).hs;
+    } else {
+      return new BulbState();
+    }
+  }
 
   @Override
-  public boolean stateChanged() {
+  public void stateChanged(BulbState newState) {
     int newSelectedPosition = -1;
-    for (int i = 0; i < list.size(); i++) {
-      if (list.get(i).hs.toString().equals(statePager.getState().toString())) {
+    for (int i = 0; i < mList.size(); i++) {
+      if (mList.get(i).hs.toString().equals(newState.toString())) {
         newSelectedPosition = i;
-        list.get(i).selected = true;
+        mList.get(i).selected = true;
       } else {
-        list.get(i).selected = false;
+        mList.get(i).selected = false;
       }
     }
-    if (lastSelectedPosition != newSelectedPosition) {
-      lastSelectedPosition = newSelectedPosition;
-      if (adapter != null) {
-        adapter.notifyDataSetChanged();
+    if (mLastSelectedPosition != newSelectedPosition) {
+      mLastSelectedPosition = newSelectedPosition;
+      if (mCellAdapter != null) {
+        mCellAdapter.notifyDataSetChanged();
       }
     }
-    if (newSelectedPosition != -1) {
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public void setStatePager(EditStateDialogFragment statePage) {
-    statePager = statePage;
-    loadPrevious(statePager.getStateGridFragment().moodRows);
   }
 }

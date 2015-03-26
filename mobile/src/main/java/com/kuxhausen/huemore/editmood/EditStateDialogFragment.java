@@ -33,7 +33,6 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
   private EditMoodStateGridFragment mEditMoodFrag;
   private ViewPager mViewPager;
   private int mCurrentPagePosition;
-  private BulbState mCurrentState;
   private Spinner mTransitionSpinner;
   private int[] mTransitionValues;
   private Gson gson = new Gson();
@@ -43,35 +42,29 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
     return mEditMoodFrag;
   }
 
-  public BulbState getState() {
-    if (mCurrentState == null) {
-      mCurrentState = new BulbState();
-    }
-    return mCurrentState;
-  }
-
-  public void setStateIfVisible(BulbState newState, OnStateChangedListener initiator, int pageNo) {
+  public void setStateIfVisible(BulbState newState, StateSelector initiator, int pageNo) {
     if (mStatePagerAdapter.convertToPageNumber(mCurrentPagePosition) == pageNo) {
-      mCurrentState = newState.clone();
-      setSpinner();
-      this.stateChanged(initiator);
+      setSpinner(newState.getTransitionTime());
+      this.stateChanged(newState, initiator);
     }
   }
 
-  public interface OnStateChangedListener {
+  public interface StateSelector {
 
-    /**
-     * return true if well suited to display updated data **
-     */
-    public boolean stateChanged();
+    public void stateChanged(BulbState newState);
 
-    public void setStatePager(EditStateDialogFragment statePage);
+    public BulbState getState();
+
+    public void initialize(EditStateDialogFragment statePage, BulbState initialState);
   }
 
-  private void stateChanged(OnStateChangedListener initiator) {
-    for (OnStateChangedListener listener : mStatePagerAdapter.getColorListeners()) {
+  private void stateChanged(BulbState partialNewState, StateSelector initiator) {
+    BulbState fullNewState = partialNewState.clone();
+    fullNewState.setTransitionTime(getTransitionTime());
+
+    for (StateSelector listener : mStatePagerAdapter.getColorListeners()) {
       if (listener != initiator && listener != null) {
-        listener.stateChanged();
+        listener.stateChanged(fullNewState);
       }
     }
 
@@ -85,7 +78,7 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
           BrightnessManager briManager = dm.obtainBrightnessManager(g);
           for (Long bulbId : g.getNetworkBulbDatabaseIds()) {
             if (dm.getNetworkBulb(bulbId) != null) {
-              briManager.setState(dm.getNetworkBulb(bulbId), mCurrentState);
+              briManager.setState(dm.getNetworkBulb(bulbId), fullNewState);
             }
           }
         }
@@ -126,7 +119,17 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
     if (RecentStatesFragment.extractUniques(mEditMoodFrag.moodRows).size() > 0) {
       hasRecentStates = true;
     }
-    mStatePagerAdapter = new EditStatePager(this, hasRecentStates);
+    BulbState currentState = new BulbState();
+    Bundle args = this.getArguments();
+    if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
+      mRow = args.getInt(InternalArguments.ROW);
+      mCol = args.getInt(InternalArguments.COLUMN);
+
+      currentState =
+          gson.fromJson(args.getString(InternalArguments.PREVIOUS_STATE), BulbState.class);
+    }
+
+    mStatePagerAdapter = new EditStatePager(this, hasRecentStates, currentState);
 
     mViewPager = (ViewPager) myView.findViewById(R.id.pager);
     mViewPager.setAdapter(mStatePagerAdapter);
@@ -149,34 +152,25 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
 
     });
 
+    if (currentState != null) {
+      mViewPager.setCurrentItem(
+          mStatePagerAdapter.convertToPagePosition(EditStatePager.RECENT_PAGE));
+      setSpinner(currentState.getTransitionTime());
+    }
+
     Button cancelButton = (Button) myView.findViewById(R.id.cancel);
     cancelButton.setOnClickListener(this);
     Button okayButton = (Button) myView.findViewById(R.id.okay);
     okayButton.setOnClickListener(this);
 
-    Bundle args = this.getArguments();
-    if (args != null && args.containsKey(InternalArguments.PREVIOUS_STATE)) {
-      mRow = args.getInt(InternalArguments.ROW);
-      mCol = args.getInt(InternalArguments.COLUMN);
-
-      mCurrentState =
-          gson.fromJson(args.getString(InternalArguments.PREVIOUS_STATE), BulbState.class);
-      ((OnStateChangedListener) mStatePagerAdapter.getItemFromPageNumber(
-          EditStatePager.RECENT_PAGE)).stateChanged();
-      mViewPager
-          .setCurrentItem(mStatePagerAdapter.convertToPagePosition(EditStatePager.RECENT_PAGE));
-
-      setSpinner();
-    }
-
     return myView;
   }
 
-  private void setSpinner() {
-    if (mCurrentState.getTransitionTime() != null) {
+  private void setSpinner(Integer priorTransitionTime) {
+    if (priorTransitionTime != null) {
       int pos = 0;
       for (int i = 0; i < mTransitionValues.length; i++) {
-        if (mCurrentState.getTransitionTime() == mTransitionValues[i]) {
+        if (priorTransitionTime == mTransitionValues[i]) {
           pos = i;
         }
       }
@@ -184,17 +178,19 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
     }
   }
 
+  private Integer getTransitionTime() {
+    return mTransitionValues[mTransitionSpinner.getSelectedItemPosition()];
+  }
+
   @Override
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.okay:
-        if (mTransitionSpinner != null) {
-          mCurrentState
-              .setTransitionTime(mTransitionValues[mTransitionSpinner.getSelectedItemPosition()]);
-        }
+        BulbState state = mStatePagerAdapter.getStateItem(mCurrentPagePosition).getState().clone();
+        state.setTransitionTime(getTransitionTime());
 
         Intent i = new Intent();
-        i.putExtra(InternalArguments.HUE_STATE, gson.toJson(mCurrentState));
+        i.putExtra(InternalArguments.HUE_STATE, gson.toJson(state));
         i.putExtra(InternalArguments.ROW, mRow);
         i.putExtra(InternalArguments.COLUMN, mCol);
 
