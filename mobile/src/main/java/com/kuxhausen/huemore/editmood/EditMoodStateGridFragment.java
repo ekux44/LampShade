@@ -173,8 +173,12 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     }
 
     ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
-    service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(),
-                                     name, null);
+    if (service.getDeviceManager().getSelectedGroup() != null) {
+      service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), getMood(),
+                                       name, null);
+    } else {
+      //TODO maybe toast to warn no group selected
+    }
   }
 
   public static PageType calculateMoodType(Mood m) {
@@ -334,8 +338,12 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         showChanM.setEvents(eRay);
 
         ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
-        service.getMoodPlayer().playMood(service.getDeviceManager().getSelectedGroup(), showChanM,
-                                         null, null);
+        if (service.getDeviceManager().getSelectedGroup() != null) {
+          service.getMoodPlayer()
+              .playMood(service.getDeviceManager().getSelectedGroup(), showChanM, null, null);
+        } else {
+          //TODO maybe toast to warn no group selected
+        }
         break;
     }
 
