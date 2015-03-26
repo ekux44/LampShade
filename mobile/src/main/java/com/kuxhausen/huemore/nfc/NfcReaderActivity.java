@@ -47,7 +47,6 @@ public class NfcReaderActivity extends NetworkManagedActivity implements OnCheck
     Helpers.applyLocalizationPreference(this);
 
     setContentView(R.layout.nfc_reader);
-    this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     mOnButton = (ToggleButton) this.findViewById(R.id.onToggleButton);
 
