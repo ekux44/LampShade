@@ -44,6 +44,8 @@ public class Mood implements Cloneable {
   public void setInfiniteLooping(boolean infinite) {
     if (infinite) {
       numLoops = 127;
+    } else {
+      numLoops = 0;
     }
   }
 
