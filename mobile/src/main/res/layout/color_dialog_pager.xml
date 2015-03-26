@@ -28,17 +28,61 @@
             android:id="@+id/transitionPromptTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="right|center_vertical"
             android:layout_weight="1"
-            android:padding="8dp"
-            android:text="@string/transition_intro" />
+            android:paddingLeft="8dp"
+            android:text="@string/transition_intro"
+            android:textAlignment="gravity" />
 
-        <Spinner
-            android:id="@+id/transitionSpinner"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:padding="8dp" />
+            android:orientation="vertical"
+            android:paddingRight="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/minutesEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="4"
+                    android:inputType="number"
+                    android:maxLength="3" />
+
+                <TextView
+                    android:id="@+id/minutesTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minutes" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/secondsEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="4"
+                    android:inputType="numberDecimal"
+                    android:maxLength="4" />
+
+                <TextView
+                    android:id="@+id/secondsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seconds" />
+
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
     <include layout="@layout/horizontal_divider_line_blue" />

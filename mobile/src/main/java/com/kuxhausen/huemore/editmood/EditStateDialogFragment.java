@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.android.common.view.SlidingTabLayout;
 import com.kuxhausen.huemore.NetworkManagedActivity;
@@ -27,16 +29,18 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 
+import java.text.DecimalFormat;
+
 public class EditStateDialogFragment extends DialogFragment implements OnClickListener {
 
   private EditStatePager mStatePagerAdapter;
   private EditMoodStateGridFragment mEditMoodFrag;
   private ViewPager mViewPager;
   private int mCurrentPagePosition;
-  private Spinner mTransitionSpinner;
-  private int[] mTransitionValues;
+  private EditText mMinutesEditText, mSecondsEditText;
   private Gson gson = new Gson();
   private int mRow, mCol;
+  private DecimalFormat mSecondsFormatter = new DecimalFormat("#.0");
 
   public EditMoodStateGridFragment getStateGridFragment() {
     return mEditMoodFrag;
@@ -44,7 +48,9 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
 
   public void setStateIfVisible(BulbState newState, StateSelector initiator, int pageNo) {
     if (mStatePagerAdapter.convertToPageNumber(mCurrentPagePosition) == pageNo) {
-      setSpinner(newState.getTransitionTime());
+      if (newState.getTransitionTime() != null) {
+        setTransitionTime(newState.getTransitionTime());
+      }
       this.stateChanged(newState, initiator);
     }
   }
@@ -106,15 +112,6 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
     // Inflate the layout for this fragment
     View myView = inflater.inflate(R.layout.color_dialog_pager, container, false);
 
-    mTransitionSpinner = (Spinner) myView.findViewById(R.id.transitionSpinner);
-    ArrayAdapter<CharSequence> adapter =
-        ArrayAdapter.createFromResource(getActivity(), R.array.transition_names_array,
-                                        android.R.layout.simple_spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    mTransitionSpinner.setAdapter(adapter);
-
-    mTransitionValues = getActivity().getResources().getIntArray(R.array.transition_values_array);
-
     boolean hasRecentStates = false;
     if (RecentStatesFragment.extractUniques(mEditMoodFrag.moodRows).size() > 0) {
       hasRecentStates = true;
@@ -152,34 +149,93 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
 
     });
 
-    if (currentState != null) {
-      mViewPager.setCurrentItem(
-          mStatePagerAdapter.convertToPagePosition(EditStatePager.RECENT_PAGE));
-      setSpinner(currentState.getTransitionTime());
-    }
+    mMinutesEditText = (EditText) myView.findViewById(R.id.minutesEditText);
+    mMinutesEditText.setOnEditorActionListener(
+        new TextView.OnEditorActionListener() {
+          @Override
+          public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+              String corrected = ensureMinutesInBounds(v.getText().toString());
+              mMinutesEditText.setText(corrected);
+            }
+            return false;
+          }
+        });
+
+    mSecondsEditText = (EditText) myView.findViewById(R.id.secondsEditText);
+    mSecondsEditText.setOnEditorActionListener(
+        new TextView.OnEditorActionListener() {
+          @Override
+          public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+              String corrected = ensureSecondsInBounds(v.getText().toString());
+              mSecondsEditText.setText(corrected);
+            }
+            return false;
+          }
+        });
 
     Button cancelButton = (Button) myView.findViewById(R.id.cancel);
     cancelButton.setOnClickListener(this);
     Button okayButton = (Button) myView.findViewById(R.id.okay);
     okayButton.setOnClickListener(this);
 
+    if (currentState != null) {
+      mViewPager.setCurrentItem(
+          mStatePagerAdapter.convertToPagePosition(EditStatePager.RECENT_PAGE));
+    }
+
+    if (currentState != null && currentState.getTransitionTime() != null) {
+      setTransitionTime(currentState.getTransitionTime());
+    } else {
+      setTransitionTime(4);
+    }
+
     return myView;
   }
 
-  private void setSpinner(Integer priorTransitionTime) {
-    if (priorTransitionTime != null) {
-      int pos = 0;
-      for (int i = 0; i < mTransitionValues.length; i++) {
-        if (priorTransitionTime == mTransitionValues[i]) {
-          pos = i;
-        }
-      }
-      mTransitionSpinner.setSelection(pos);
+  private String ensureMinutesInBounds(String editTextInput) {
+    Integer temp;
+    try {
+      temp = Integer.parseInt(editTextInput);
+    } catch (NumberFormatException e) {
+      temp = Integer.MIN_VALUE;
     }
+    temp = Math.max(temp, 0);
+    temp = Math.min(temp, 60);
+    return temp.toString();
   }
 
-  private Integer getTransitionTime() {
-    return mTransitionValues[mTransitionSpinner.getSelectedItemPosition()];
+  private String ensureSecondsInBounds(String editTextInput) {
+    int deciseconds;
+    try {
+      deciseconds = Math.round(10 * Float.parseFloat(editTextInput));
+    } catch (NumberFormatException e) {
+      deciseconds = 4;
+    }
+    deciseconds = Math.max(deciseconds, 0);
+    deciseconds = Math.min(deciseconds, 599);
+
+    return mSecondsFormatter.format(deciseconds / 10.0);
+  }
+
+  private void setTransitionTime(int deciseconds) {
+    mSecondsEditText.setText(mSecondsFormatter.format((deciseconds % 600) / 10.0));
+    mMinutesEditText.setText("" + Math.min(deciseconds / 600, 60));
+  }
+
+  private int getTransitionTime() {
+    mSecondsEditText.setText(ensureSecondsInBounds(mSecondsEditText.getText().toString()));
+    mMinutesEditText.setText(ensureMinutesInBounds(mMinutesEditText.getText().toString()));
+
+    int result = 0;
+    String secondsText = mSecondsEditText.getText().toString();
+    result += Math.round(10 * Float.parseFloat(secondsText));
+
+    String minutesText = mMinutesEditText.getText().toString();
+    result += 600 * Integer.parseInt(minutesText);
+
+    return result;
   }
 
   @Override
