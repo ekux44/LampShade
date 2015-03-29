@@ -600,7 +600,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                        null);
           if (groupCursor.moveToFirst()) {
             alarm.setGroup(groupCursor.getLong(0), oldState.group);
+            groupCursor.close();
           } else {
+            groupCursor.close();
             //this group doesn't actually exist, so this alarm must be discarded
             continue;
           }
