@@ -15,10 +15,10 @@ import com.kuxhausen.huemore.state.Group;
 
 import java.util.ArrayList;
 
-public class NetworkManagedActivity extends ActionBarActivity implements
-                                                              OnConnectionStatusChangedListener,
-                                                              OnStateChangedListener,
-                                                              OnServiceConnectedListener {
+public abstract class NetworkManagedActivity extends ActionBarActivity implements
+                                                                       OnConnectionStatusChangedListener,
+                                                                       OnStateChangedListener,
+                                                                       OnServiceConnectedListener {
 
   public void setGroup(Group g) {
     if (mBound) {

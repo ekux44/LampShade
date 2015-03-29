@@ -221,6 +221,7 @@ public class LampShadeProvider extends ContentProvider {
       gbValues.put(GroupBulbColumns.COL_BULB_PRECEDENCE, netBulbsCount - 1);
       gbValues.put(GroupBulbColumns.COL_NET_BULB_ID, insertId);
       db.insert(GroupBulbColumns.TABLE_NAME, null, gbValues);
+      gCursor.close();
     }
 
     for (Uri me : toNotify) {

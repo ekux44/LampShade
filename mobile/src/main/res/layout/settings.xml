@@ -1,72 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-	
-    <ScrollView
+    android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/rateButton"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/bordered_button_height"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/rate_on_google_play" />
+
+        <Button
+            android:id="@+id/action_communities"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/bordered_button_height"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/action_communities" />
+
+        <Button
+            android:id="@+id/action_debugging"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/bordered_button_height"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/action_debugging_tools"
+            android:visibility="gone" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-		    		
-			<Button
-			    android:id="@+id/rateButton"
-			    android:layout_width="fill_parent"
-			    android:text="@string/rate_on_google_play"
-                android:layout_height="@dimen/bordered_button_height"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal">
 
-            <Button
-			    android:id="@+id/action_communities"
-			    android:layout_width="fill_parent"
-			    android:text="@string/action_communities"
-                android:layout_height="@dimen/bordered_button_height"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp" />
-            <Button
-                 android:id="@+id/action_debugging"
-                 android:layout_width="fill_parent"
-                 android:text="@string/action_debugging_tools"
-                 android:layout_height="@dimen/bordered_button_height"
-                 android:layout_marginLeft="16dp"
-                 android:layout_marginRight="16dp"
-                 android:visibility="gone"/>
-
-            <LinearLayout android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginLeft="16dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="16dp"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/language_prompt"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="16dp"
-                    android:textSize="@dimen/abc_text_size_body_2_material"
-                    />
-                <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/language_selector"
-                    android:layout_gravity="center_vertical"
-                    android:entries="@array/language_names"
-                    android:gravity="center_vertical"
-                />
-            </LinearLayout>
-            <CheckBox
-                    android:id="@+id/showNfcReadPageCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/show_NFC_read_page_descriptor"
-                    android:layout_margin="16dp" />
+                android:text="@string/language_prompt"
+                android:textSize="@dimen/abc_text_size_body_2_material" />
+
+            <Spinner
+                android:id="@+id/language_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/language_names"
+                android:gravity="center_vertical" />
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+        <CheckBox
+            android:id="@+id/showNfcReadPageCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/show_NFC_read_page_descriptor" />
+    </LinearLayout>
+</ScrollView>

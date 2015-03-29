@@ -401,7 +401,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                     .PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
                                         HubConnection.this, HubConnection.this);
 
-                Log.d("net.hue.connection.onTick", "perform request list");
+                Log.d("net.hue.connection.onTi", "perform request list");
               }
               requestList = false;
             } else if (mOutgoingStateQueue.size() > 0) {
@@ -416,7 +416,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                   NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
                                                              getRequestQueue(), HubConnection.this,
                                                              stateChange);
-                  Log.d("net.hue.connection.onTick",
+                  Log.d("net.hue.connection.onTi",
                         "perform transmit" + stateChange.hubBulb.getBaseId()
                         + "," + stateChange.sentState.isEmpty()
                         + "," + stateChange.sentState.toString()
@@ -434,7 +434,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                                               getRequestQueue(),
                                               HubConnection.this, HubConnection.this,
                                               toQuerry.getHubBulbNumber());
-                Log.d("net.hue.connection.onTick",
+                Log.d("net.hue.connection.onTi",
                       "perform querry" + toQuerry.getBaseId()
                 );
               }
