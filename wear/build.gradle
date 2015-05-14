@@ -16,7 +16,7 @@ android {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 20
         targetSdkVersion 22
-        versionCode 77 // must match the value in mobile
+        versionCode 78 // must match the value in mobile
     }
     buildTypes {
         release {
