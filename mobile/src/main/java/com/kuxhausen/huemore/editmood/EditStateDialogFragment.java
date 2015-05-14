@@ -30,6 +30,9 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Group;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class EditStateDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -40,7 +43,21 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
   private EditText mMinutesEditText, mSecondsEditText;
   private Gson gson = new Gson();
   private int mRow, mCol;
-  private DecimalFormat mSecondsFormatter = new DecimalFormat("#.0");
+
+  //TODO consider switching locals when user overrides system language
+  private NumberFormat mMinutesFormatter = NumberFormat.getIntegerInstance();
+  private NumberFormat mMinutesFallbackFormatter = NumberFormat.getIntegerInstance(Locale.US);
+  private NumberFormat mSecondsFormatter = NumberFormat.getNumberInstance();
+  private NumberFormat mSecondsFallbackFormatter = NumberFormat.getIntegerInstance(Locale.US);
+
+  {
+    if (mSecondsFormatter instanceof DecimalFormat) {
+      ((DecimalFormat) mSecondsFormatter).setDecimalSeparatorAlwaysShown(true);
+    }
+    if (mSecondsFallbackFormatter instanceof DecimalFormat) {
+      ((DecimalFormat) mSecondsFallbackFormatter).setDecimalSeparatorAlwaysShown(true);
+    }
+  }
 
   public EditMoodStateGridFragment getStateGridFragment() {
     return mEditMoodFrag;
@@ -57,11 +74,11 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
 
   public interface StateSelector {
 
-    public void stateChanged(BulbState newState);
+    void stateChanged(BulbState newState);
 
-    public BulbState getState();
+    BulbState getState();
 
-    public void initialize(EditStateDialogFragment statePage, BulbState initialState);
+    void initialize(EditStateDialogFragment statePage, BulbState initialState);
   }
 
   private void stateChanged(BulbState partialNewState, StateSelector initiator) {
@@ -100,7 +117,6 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = super.onCreateDialog(savedInstanceState);
 
-    // request a window without the title
     dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     return dialog;
   }
@@ -155,7 +171,7 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
           @Override
           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-              String corrected = ensureMinutesInBounds(v.getText().toString());
+              String corrected = formatMinutes(parseMinutes(v.getText().toString()));
               mMinutesEditText.setText(corrected);
             }
             return false;
@@ -168,7 +184,7 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
           @Override
           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-              String corrected = ensureSecondsInBounds(v.getText().toString());
+              String corrected = formatSeconds(parseSeconds(v.getText().toString()));
               mSecondsEditText.setText(corrected);
             }
             return false;
@@ -194,47 +210,65 @@ public class EditStateDialogFragment extends DialogFragment implements OnClickLi
     return myView;
   }
 
-  private String ensureMinutesInBounds(String editTextInput) {
-    Integer temp;
+  /**
+   * @return value in deciseconds
+   */
+  private int parseMinutes(String editTextInput) {
+    int minutes = 0; //default value
     try {
-      temp = Integer.parseInt(editTextInput);
-    } catch (NumberFormatException e) {
-      temp = Integer.MIN_VALUE;
+      minutes = mMinutesFormatter.parse(editTextInput).intValue();
+    } catch (ParseException e) {
+      try {
+        minutes = mMinutesFallbackFormatter.parse(editTextInput).intValue();
+      } catch (ParseException e2) {
+      }
     }
-    temp = Math.max(temp, 0);
-    temp = Math.min(temp, 60);
-    return temp.toString();
+    minutes = Math.max(minutes, 0);
+    minutes = Math.min(minutes, 60);
+
+    return minutes * 600;
   }
 
-  private String ensureSecondsInBounds(String editTextInput) {
-    int deciseconds;
+  /**
+   * @return value in deciseconds
+   */
+  private int parseSeconds(String editTextInput) {
+    double seconds = .4; // default value
     try {
-      deciseconds = Math.round(10 * Float.parseFloat(editTextInput));
-    } catch (NumberFormatException e) {
-      deciseconds = 4;
+      seconds = mSecondsFormatter.parse(editTextInput).doubleValue();
+    } catch (ParseException e) {
+      try {
+        seconds = mSecondsFallbackFormatter.parse(editTextInput).doubleValue();
+      } catch (ParseException e2) {
+      }
     }
+    int deciseconds = (int) Math.round(10 * seconds);
     deciseconds = Math.max(deciseconds, 0);
     deciseconds = Math.min(deciseconds, 599);
 
-    return mSecondsFormatter.format(deciseconds / 10.0);
+    return deciseconds;
+  }
+
+  private String formatMinutes(int deciseconds) {
+    return mMinutesFormatter.format(Math.min(deciseconds / 600, 60));
+  }
+
+  private String formatSeconds(int deciseconds) {
+    return mSecondsFormatter.format(deciseconds % 600 / 10.0);
   }
 
   private void setTransitionTime(int deciseconds) {
-    mSecondsEditText.setText(mSecondsFormatter.format((deciseconds % 600) / 10.0));
-    mMinutesEditText.setText("" + Math.min(deciseconds / 600, 60));
+    mSecondsEditText.setText(formatSeconds(deciseconds));
+    mMinutesEditText.setText(formatMinutes(deciseconds));
   }
 
+  /**
+   * @return transitionTime in deciseconds
+   */
   private int getTransitionTime() {
-    mSecondsEditText.setText(ensureSecondsInBounds(mSecondsEditText.getText().toString()));
-    mMinutesEditText.setText(ensureMinutesInBounds(mMinutesEditText.getText().toString()));
-
     int result = 0;
-    String secondsText = mSecondsEditText.getText().toString();
-    result += Math.round(10 * Float.parseFloat(secondsText));
-
-    String minutesText = mMinutesEditText.getText().toString();
-    result += 600 * Integer.parseInt(minutesText);
-
+    result += parseMinutes(mMinutesEditText.getText().toString());
+    result += parseSeconds(mSecondsEditText.getText().toString());
     return result;
   }
 
