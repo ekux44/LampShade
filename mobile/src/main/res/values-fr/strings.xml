@@ -43,7 +43,7 @@
     <string name="transition_intro">Fondu entrant :</string>
     <string name="alarm_repeat">Répéter :</string>
     <string name="cap_short_every_day">TOUS LES JOURS</string>
-    <string name="next_scheduled_intro">Next LampShade alarm</string>
+    <string name="next_scheduled_intro">Alarme LampShade suivante</string>
     <string name="hub_discovery_disclaimer">Recherche du pont. Cela peut prendre une minute…</string>
     <string name="update_message">Veuillez mettre à jour LampShade vers la dernière version.</string>
     <string name="update_opt_out">Désactiver les rappels de mise à jour</string>
@@ -105,14 +105,14 @@
     <string name="empty_list_connections">Non appairé à des lampes. Cliquez sur le bouton plus pour ajouter une nouvelle connexion.</string>
     <string name="empty_list_bulbs">Non appairé à des lampes. Allez à la page Connexions pour configurer des lampes.</string>
     <string name="empty_list_groups">Non appairé à des lampes. Allez à la page Connexions pour configurer des lampes.</string>
-    <string name="mark_favorite">Favorite ★</string>
-    <string name="mark_not_favorite">UnFavorite ☆</string>
+    <string name="mark_favorite">Favoriser ★</string>
+    <string name="mark_not_favorite">DéFavoriser ☆</string>
     <string name="dialog_title_searching_for_lights">Recherche de lampes…</string>
     <string name="dialog_title_import_mood">Ambiance partagée</string>
-    <string name="language_prompt">Language</string>
-    <string name="action_stop">Stop</string>
-    <string name="action_stop_all">Stop All</string>
-    <string name="widget_small_groups_label">LampShade Small Groups</string>
+    <string name="language_prompt">Langue</string>
+    <string name="action_stop">Arrêter</string>
+    <string name="action_stop_all">Tout arrêter</string>
+    <string name="widget_small_groups_label">Petits groupes LampShade</string>
 
 	<string name="help_title_gettingstarted">Démarrage rapide</string>
 	<string name="help_title_editingmoods">Création et modification des ambiances</string>
@@ -123,9 +123,9 @@
 	
 	<string name="help_content_gettingstarted">Une fois connecté sans fil à vos lampes, vous pouvez en prendre le contrôle.\n\nCommencez par appuyer sur une ampoule ou un groupe d\'ampoule pour les sélectionner.\n\nSur la page suivante, vous pouvez choisir l\'ambiance à utiliser sur votre ou vos ampoule(s). Les ambiances peuvent être de simples couleurs ou des animations lumineuses dynamiques.\n\nLes ambiances dynamiques restent actives jusqu\'à ce que vous les arrêtiez. Pour voir les ambiances en cours, observez l\'icône de LampShade dans la barre de notification de votre appareil. Pour arrêter une ambiance, appliquez une ambiance simple (comme ON ou OFF) aux mêmes ampoules.</string>
 	<string name="help_content_editingmoods">Les ambiances contiennent des états lumineux comme des commandes de couleur ou d\'allumage/extinction.\n\nLorsqu\'une ambiance est utilisée sur un groupe ou une ampoule, ces états sont appliqués.\n\nLes états sont réglés pour prendre effet immédiatement, en fonction d\'une durée après le lancement de l\'ambiance, ou à des heures spécifiques de la journée quand l\'ambiance est utilisée.\n\nLes canaux (colonnes d\'états) vous permettent d\'utiliser plusieurs couleurs en même temps. À chaque fois qu\'une ambiance est utilisée sur un groupe, les lampes du groupes sont assignées équitablement entre les différents canaux, selon un algorithme round-robin.</string>
-	<string name="help_content_alarms">\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
-	<string name="help_content_nfc">\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
-	<string name="help_content_automationpluggin">\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
+	<string name="help_content_alarms">\nLes alarmes vous permettent de programmer des ambiances à déclencher dans le futur.\n\nLes alarmes peuvent être réglées pour être répétées certains jours chaque semaine.\n\nLorsque vous utilisez une alarme avec une ambiance qui modifie la luminosité au fil du temps (par exemple Gentle Sunrise), la barre de luminosité de l\'alarme règle le niveau de luminosité maximal pour cette ambiance.\n\nLes alarmes sont stockées sur votre appareil, elle ne peuvent donc fonctionner que si celui-ci peut contrôler les lampes via le réseau.</string>
+	<string name="help_content_nfc">\n\LampShade permet d\'enregistrer des ambiances sur des tags NFC.\n\nQuand un trio ambiance + groupe + luminosité est enregistré sur un tag, il sera appliqué à chaque fois que vous toucherez le tag avec votre appareil Android (si celui-ci est déverrouillé).\n\nPour utiliser cette fonctionnalité, votre appareil doit prendre en charge l\'écriture de tags NFC et vous devez avoir des tags sur lesquels votre appareil peut écrire.</string>
+	<string name="help_content_automationpluggin">\nLe plug-in d\'automatisation de LampShade prend en charge plusieurs applications, dont Tasker, Locale et Llama. Ces applications utilisent le plug-in pour appliquer des ambiances selon différents critères, comme la position GPS, les notifications entrantes, et bien d\'autres.\n\nLe plug-in est accessible depuis ces applications et propose une page permettant de choisir sur quel groupe appliquer quelle ambiance et à quelle luminosité.</string>
 	<string name="help_content_faq">Q : Pourquoi mes lampes Philips ne changent pas pour un vert vif ?\nR : Les ampoules Philips Hue basiques et pour spots contiennent uniquement des LED bleues, rouges et jaunes, elles ne peuvent donc pas fournir un éclairage vert intense.\n\nQ : Pourquoi mes lampes Philips ne changent pas pour des rouges et bleus sombres ?\nR : Vos lampes Philips tournent peut-être avec une ancienne version de logiciel interne. Utilisez l\'application officielle de Philips pour mettre à jour le firmware de votre pont et de vos ampoules.\n\nQ : Les alarmes de LampShade fonctionnent-elles quand je ne suis pas à la maison ?\nR : Les alarmes de LampShade ne fonctionnent que si LampShade est connecté à vos lampes. Elles ne fonctionneront depuis l\'extérieur que si vous utilisez la fonction d\'accès à distance.</string>
 	
 	<string-array name="mood_types">
