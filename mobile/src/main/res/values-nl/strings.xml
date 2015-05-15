@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_settings">Instellingen</string>
-    <string name="cap_manual">MANUEEL</string>
+    <string name="cap_manual">Handmatig</string>
     <string name="cap_bulbs">LAMPEN</string>
     <string name="cap_hue_sat_mode">TINT</string>
     <string name="cap_color_temp_mode">TEMPERATUUR</string>
@@ -9,7 +9,7 @@
     <string name="moods">Sferen</string>
     <string name="mood_intro">Sfeer:</string>
     <string name="group_intro">Groep:</string>
-    <string name="accept">Okee</string>
+    <string name="accept">OK</string>
     <string name="cancel">Annuleren</string>
     <string name="register_success">Verbinding succesvol</string>
     <string name="register_fail">Kan geen verbinding maken met de Bridge. Zorg ervoor dat het apparaat op dezelfde wifi als de Bridge is aangesloten en toegang heeft tot internet. Probeer het daarna nogmaals.</string>
@@ -22,7 +22,7 @@
     <string name="actionmenu_new_group">Nieuwe groep</string>
     <string name="actionmenu_new_mood">Nieuwe sfeer</string>
     <string name="actionmenu_new_color">Nieuwe kleur</string>
-    <string name="actionmenu_new_alarm">Nieuw alarm</string>
+    <string name="actionmenu_new_alarm">Nieuw Alarm</string>
     <string name="hint_mood_name">sfeer naam</string>
     <string name="hint_group_name">groep naam</string>
     <string name="hint_bulb_name">lamp naam</string>
@@ -38,17 +38,17 @@
     <string name="nfc_disabled">NFC is niet ingeschakeld. Schakel dit in via je toestelinstellingen.</string>
     <string name="nfc_read_done">Klaar</string>
     <string name="nfc_tag_read_success">NFC tag gelezen</string>
-    <string name="nfc_tag_not_supported">Jouw telefoon kan geen data naar NFC tags wegschrijven!</string>
+    <string name="nfc_tag_not_supported">Jouw telefoon kan geen data naar deze NFC tags wegschrijven!</string>
     <string name="alarms">Alarmen</string>
     <string name="transition_intro">Vervagen over:</string>
     <string name="alarm_repeat">Herhaling:</string>
     <string name="cap_short_every_day">ELKE DAG</string>
-    <string name="next_scheduled_intro">Next LampShade alarm</string>
+    <string name="next_scheduled_intro">Volgend LampShade alarm</string>
     <string name="hub_discovery_disclaimer">Bridge opzoeken. Dit kan enige momenten duren.</string>
     <string name="update_message">Update LampShade naar de nieuwste versie</string>
     <string name="update_opt_out">Schakel updateherinneringen uit</string>
     <string name="update">Update</string>
-    <string name="hub_connection_error">Verbonden met Bridge met netwerkadres:</string>
+    <string name="hub_connection_error">Niet verbonden met Bridge!</string>
     <string name="empty_view_text">Geen alarm gevonden…</string>
     <string name="cap_all">ALLE</string>
     <string name="cap_on">AAN</string>
@@ -63,11 +63,11 @@
 	<string name="save">Opslaan</string>
 	<string name="cap_sample_state">VOORBEELD</string>
 	<string name="cap_recent_state">RECENT</string>
-	<string name="share">DEEL</string>
+	<string name="share">Deel</string>
 	<string name="seconds">Seconden</string>
 	<string name="preview">voorbeeld</string>
-	<string name="advanced_timeslot_limit">Sorry, deze versie ondersteunt maximaal 64 kanalen</string>
-	<string name="advanced_channel_limit">Sorry, deze versie ondersteunt maximaal 64 kanalen</string>
+	<string name="advanced_timeslot_limit">Sorry, deze versie ondersteunt maximaal 64 sferen</string>
+	<string name="advanced_channel_limit">Sorry, deze versie ondersteunt maximaal 64 sferen</string>
 	<string name="community_facebook">LampShade.io op Facebook</string>
 	<string name="community_google_plus">LampShade.io op Google+</string>
 	<string name="community_twitter">LampShade.io op Twitter</string>
@@ -80,9 +80,9 @@
 	<string name="unnamed_group">Naamloze Groep</string>
 	<string name="unnamed_mood">Naamloze Sfeer</string>
 	<string name="empty_group_list_text">Geen groepen gevonden…</string>
-	<string name="widget_alarms_label">Alarmen</string>
-	<string name="widget_groups_label">LampShade Alarmen</string>
-	<string name="include_brightness">Helderheid</string>
+	<string name="widget_alarms_label">LampShade Alarmen</string>
+	<string name="widget_groups_label">LampShade Groepen</string>
+	<string name="include_brightness">Inclusief Helderheid</string>
 	<string name="action_play">Bekijk Sfeer</string>
 	<string name="action_help">Help</string>
 	<string name="minutes">Minuten</string>
@@ -93,7 +93,7 @@
 	<string name="action_bulbs">Lampen</string>
 	<string name="actionmenu_new_connection">Verbind met een slim verlichting apparaat</string>
 	<string name="prompt_new_connection_type">Selecteer type apparaat</string>
-	<string name="prompt_local_address">Lokaal Hub IP-adres</string>
+	<string name="prompt_local_address">Lokaal Bridge IP-adres</string>
 	<string name="hint_local_address">IP-adres</string>
 	<string name="prompt_remote_address">Extern IP-Adres (optioneel)</string>
 	<string name="hint_remote_address">IP-adres of URL</string>
@@ -103,33 +103,33 @@
 	<string name="saved">Opgeslagen</string>
 	<string name="action_connection_error">Verbindings Error</string>
     <string name="empty_list_connections">Niet verbonden met lampen, Klik op de plus knop om een nieuwe verbinding toe te voegen.</string>
-    <string name="empty_list_bulbs">Niet verbonden met lampen, Klik op de plus knop om een nieuwe lampen toe te voegen.</string>
+    <string name="empty_list_bulbs">Niet verbonden met lampen, ga naar de verbindingspage om nieuwe lampen toe te voegen.</string>
     <string name="empty_list_groups">Niet verbonden met lampen, Ga naar de Verbing pagina om lampen toe te voegen.</string>
-    <string name="mark_favorite">Favorite ★</string>
-    <string name="mark_not_favorite">UnFavorite ☆</string>
+    <string name="mark_favorite">Favoriet ★</string>
+    <string name="mark_not_favorite">Niet meer Favoriet ☆</string>
     <string name="dialog_title_searching_for_lights">Naar lampen zoeken.</string>
     <string name="dialog_title_import_mood">Gedeelde sfeer</string>
-    <string name="language_prompt">Language</string>
+    <string name="language_prompt">Taal</string>
     <string name="action_stop">Stop</string>
-    <string name="action_stop_all">Stop All</string>
-    <string name="widget_small_groups_label">LampShade Small Groups</string>
+    <string name="action_stop_all">Stop Alles</string>
+    <string name="widget_small_groups_label">LampsShade kleine groepen</string>
 
-	<string name="help_title_gettingstarted">Start</string>
+	<string name="help_title_gettingstarted">Begginnen</string>
 	<string name="help_title_editingmoods">Creëren en bewerken van sferen</string>
 	<string name="help_title_alarms">Alarmen</string>
 	<string name="help_title_nfc">Gebruik met NFC Tags</string>
 	<string name="help_title_automationpluggin">Tasker/Locale/Llama plugin</string>
 	<string name="help_title_faq">FAQ</string>
 	
-	<string name="help_content_gettingstarted">Als je verbonden bent met je lampen kan je begin met het aansturen. Klik eerst op een lamp of groep om deze te selecteren. Je krijgt een pagina met sferen te zien die je op je geselecteerde lamp(en) kan tonen. Sferen kunnen een simpele kleur, patroon of dynamisch verloop zijn. Dynamische sferen stoppen niet automatisch. De huidige sfeer wordt in je notificatiebalk getoond. Klik op \'OFF\' om de lamp te dimmen.</string>
-	<string name="help_content_editingmoods">Moods contain lighting states such as colors and on/off commands.\n\nWhile a mood is played on a group or bulb, these states take effect.\n\nThe states are set to take effect either immediately, over time relative to when the playing starts, or at specific times of the day while the mood is playing.\n\nChannels (columns of states) allow you to play multiple colors at the same time. Each time a mood is played on a group, the group\'s lights will be assigned equally among the channels, round-robin style.</string>
-	<string name="help_content_alarms">\nAlarms allow you to schedule moods to play at some time in the future.\n\nAlarms can be set to repeat on specific days each week.\n\nWhen using alarms with moods that change in brightness over time(such as Gentle Sunrise), the alarm brightness bar sets the maximum brightness for that mood.\n\nAlarms are stored on your device, so they only take effect when your device can reach the lights over the network.</string>
-	<string name="help_content_nfc">\nLampShade supports saving moods to electronic NFC tags.\n\nOnce a mood+group+brightness is saved on the tag, it will play anytime you touch the tag to your Android device (if the device is unlocked).\n\nTo use this feature, your device must support writing to NFC tags, and you need tags your device can write to.</string>
-	<string name="help_content_automationpluggin">\nThe LampShade automation plugin supports many apps including Tasker, Locale, and Llama. These apps can use the plugin to play moods based on various conditions such as gps location, incoming notifications, and much more.\n\nThe plugin is accessed from within these apps, and provides a page for selecting which mood+group+brightness to trigger.</string>
-	<string name="help_content_faq">Q. Why aren\'t my Philips lights changing to bright green?\nA. The Philips Hue regular and downlight models only contain Blue, Red and Yellow LEDs so they cannot display intense greens.\n\nQ. Why aren\'t my Philips lights changing to dark reds or blues?\nA. Your Philips lights might be running outdated software. Use the offcial Philips app to update the firmware on your hub and lightbulbs.\n\nQ. Do LampShade alarms work when I\'m away from home?\nA. LampShade alarms can only take effect when LampShade is connected to your lights. They will only work when away from home if you are using the remote access feature.</string>
+	<string name="help_content_gettingstarted">Als je verbonden bent met je lampen kan je begin met het aansturen. Klik eerst op een lamp of groep om deze te selecteren. Je krijgt een pagina met sferen te zien die je op je geselecteerde lamp(en) kan tonen. Sferen kunnen een simpele kleur, patroon of dynamisch verloop zijn. Dynamische sferen stoppen niet automatisch. De huidige sfeer wordt in je notificatiebalk getoond. Klik op \'OFF\' om de lamp uit te schakelen..</string>
+	<string name="help_content_editingmoods">Sferen bevatten lichtstanden zoals kleuren en aan / uit commando\'s . \n\nWaneer een sfeer wordt afgespeeld op een groep of lamp , blijft deze sfeer van kracht . \n\n De sferen zijn ingesteld op onmiddellijk , na verloop van tijd , of op bepaalde tijdstippen van de dag , terwijl de sfeer aan het spelen is . \ n \ nKanalen ( kolommen van sferen ) daar kunt u meerdere kleuren tegelijk sturen . Elke keer dat een stemming wordt gespeeld op een groep , de groep lichten  zal  gelijk toegekend worden aan de kanalen , round - robin stijl.</string>
+	<string name="help_content_alarms">\nAlarmen toestaan ​​om sferen te spelen op een bepaalde tijd. \ n \ nAlarm kan worden ingesteld om af te gaan op bepaalde dagen in de week. \n \nAWaneer het alarm gebruik word met sferen die veranderen in helderheid  ( zoals Gentle Sunrise ) , de alarmbalk stelt de maximale helderheid in voor die sfeer . \n \nAlarmen zijn opgeslagen op uw apparaat , zodat ze alleen werken wanneer uw toestel de bridge via het netwerk kan bereiken.</string>
+	<string name="help_content_nfc">\ nLampShade ondersteunt het opslaan van stemmingen op  NFC -tags . \ n \ nWanneer  een stemming + groep + helderheid wordt opgeslagen op de tag, zal het elke keer activeren als de NFC tag gelezen word. (als het toestel is ontgrendeld ) . \ n \ nVoor het gebruik van deze functie , moet uw apparaat schrijven naar  NFC -tags ondersteunen , en heb je NFC-tags nodig die uw apparaat kan schrijven.</string>
+	<string name="help_content_automationpluggin">\ nDeLampShade automatisering plugin ondersteunt vele apps waaronder Tasker , Locale , en Lama . Deze apps kunnen de plugin gebruiken om stemmingen te spelen op basis van verschillende omstandigheden, zoals GPS-locatie , binnenkomende meldingen , en nog veel meer . \ N \ nDe plugin is toegankelijk vanuit deze apps , en zorgt voor een pagina voor het selecteren welke mood + groep + helderheid ui te voeren.</string>
+	<string name="help_content_faq">V. Waarom kunnen mijn Philips lampjen niet veranderen naar helder groen ? \n A . De Philips Hue standaard en downlight modellen bevatten blauwe, roode en geele LED\'s  zodat ze niet intens groen kan weergeven. \n \n V .  Waarom kunnen mijn Philips lampjen niet veranderen naar donker rood of blauw ? \n A . Uw Philips lampen draaien op, verouderde software . Gebruik de officiele Philips app om de firmware van uw hub en gloeilampen te actualiseren . Werken de LampShade alarmen als ik niet thuis ben? \n A . LampShade alarmen werken alleen waneer LampShade verbinding heeft met uw lampen . Ze werkt alleen buitenshuis als u gebruik maakt van de remote functie .</string>
 	
 	<string-array name="mood_types">
-        <item>Simpel</item>
+        <item>Eenvoudig</item>
         <item>Getimed</item>
         <item>Dagelijks</item>
     </string-array>
@@ -152,7 +152,7 @@
         <item>ZAT</item>
     </string-array>
     <string-array name="transition_names_array">
-        <item>Default</item>
+        <item>Standaard</item>
         <item>1 seconde</item>
         <item>10 seconden</item>
         <item>1 minuut</item>

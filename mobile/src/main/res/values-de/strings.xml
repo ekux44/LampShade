@@ -43,7 +43,7 @@
     <string name="transition_intro">Einblenden:</string>
     <string name="alarm_repeat">Wiederholen:</string>
     <string name="cap_short_every_day">TÄGLICH</string>
-    <string name="next_scheduled_intro">Next LampShade alarm</string>
+    <string name="next_scheduled_intro">Nächster LampShade Alarm</string>
     <string name="hub_discovery_disclaimer">Es wird nach der Bridge gesucht, dies kann einen Moment dauern.</string>
     <string name="update_message">Bitte aktualisieren Sie LampShade auf die neuste Version.</string>
     <string name="update_opt_out">Update Benachrichtigungen ausschalten</string>
@@ -109,9 +109,9 @@
     <string name="mark_not_favorite">UnFavorite ☆</string>
     <string name="dialog_title_searching_for_lights">Suche nach Lampen</string>
     <string name="dialog_title_import_mood">Geteilte Szene</string>
-    <string name="language_prompt">Language</string>
+    <string name="language_prompt">Sprache</string>
     <string name="action_stop">Stop</string>
-    <string name="action_stop_all">Stop All</string>
+    <string name="action_stop_all">Alle Stoppen</string>
     <string name="widget_small_groups_label">LampShade Small Groups</string>
 
 	<string name="help_title_gettingstarted">Einstieg</string>
