@@ -21,7 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainWearActivity extends Activity {
+public class VoiceInputActivity extends Activity {
 
   private TextView mTextView;
   private GoogleApiClient mGoogleApiClient;
@@ -124,7 +124,7 @@ public class MainWearActivity extends Activity {
           PendingResult<MessageApi.SendMessageResult> result = Wearable.MessageApi.sendMessage(
               mGoogleApiClient,
               node.getId(),
-              MainWearActivity.latestSpeeech,
+              VoiceInputActivity.latestSpeeech,
               null
           );
 
