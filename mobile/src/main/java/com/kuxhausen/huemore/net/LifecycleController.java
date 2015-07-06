@@ -1,11 +1,14 @@
 package com.kuxhausen.huemore.net;
 
+import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
+import com.kuxhausen.huemore.net.dev.DevLogger;
+import com.kuxhausen.huemore.net.dev.ExperimentalDeviceManager;
 
 import alt.android.os.CountDownTimer;
 
@@ -21,7 +24,7 @@ public class LifecycleController {
       MINIMUM_NAP_MILLISECONDS =
       ((EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP * 1000)/TICKS_PER_SECOND) + MILIS_AWAKEN_STARTUP_TIME;
 
-  private Context mContext;
+  private Service mContext;
   private OnActiveMoodsChangedListener mMoodsListener;
 
   private LifecycleState mLifecycleState;
@@ -30,7 +33,10 @@ public class LifecycleController {
   private MoodPlayer mMoodPlayer;
   private InternalClock mInternalClock;
 
-  public LifecycleController(Context c, OnActiveMoodsChangedListener moodsListener) {
+  // Prototype DeviceManager replacement, isolates lighting drivers into separate processes
+  private ExperimentalDeviceManager mExperimentalDeviceManager;
+
+  public LifecycleController(Service c, OnActiveMoodsChangedListener moodsListener) {
     mContext = c;
     mMoodsListener = moodsListener;
     mLifecycleState = LifecycleState.NAPPING;
@@ -81,6 +87,9 @@ public class LifecycleController {
     mWakeLock.acquire();
 
     mDeviceManager = new DeviceManager(mContext);
+    if(DevLogger.NET_DEBUG) {
+      mExperimentalDeviceManager = new ExperimentalDeviceManager(mContext);
+    }
 
     mMoodPlayer = new MoodPlayer(mContext, mDeviceManager);
 
@@ -128,6 +137,11 @@ public class LifecycleController {
 
     mDeviceManager.onDestroy();
     mDeviceManager = null;
+
+    if(DevLogger.NET_DEBUG) {
+      mExperimentalDeviceManager.onDestroy();
+      mExperimentalDeviceManager = null;
+    }
 
     mLifecycleState = LifecycleState.NAPPING;
 

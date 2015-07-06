@@ -203,5 +203,12 @@
         <receiver
             android:name=".alarm.AlarmReceiver"
             android:exported="false" />
+
+        <service
+            android:process=":SampleDevice"
+            android:name=".net.dev.SampleDeviceService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
     </application>
 </manifest>
