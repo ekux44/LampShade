@@ -80,6 +80,7 @@ public class SampleDeviceService extends Service {
           break;
         case ExperimentalDeviceManager.MSG_SET_BRIGHTNESS:
           DevLogger.debugLog("SampleDeviceRecieved: " + msg.arg1);
+          DevLogger.getLogger().accumulate("SDS.SETBRI", msg.arg1);
           mManagerWeakReference.get().mBrightness = msg.arg1;
           try {
             mManagerWeakReference.get().mDeviceManagerMessenger.send(
@@ -94,6 +95,7 @@ public class SampleDeviceService extends Service {
           break;
         case ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS:
           DevLogger.debugLog("SampleDeviceRecieved: ack");
+          DevLogger.getLogger().accumulate("SDM.ACKBRI", msg.arg1);
         default:
           super.handleMessage(msg);
       }

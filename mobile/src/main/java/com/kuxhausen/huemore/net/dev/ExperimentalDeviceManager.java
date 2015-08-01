@@ -137,12 +137,14 @@ public class ExperimentalDeviceManager {
       switch (msg.what) {
         case ExperimentalDeviceManager.MSG_SET_BRIGHTNESS:
           DevLogger.debugLog("DeviceManagerRecieved: " + msg.arg1);
+          DevLogger.getLogger().accumulate("EDM.SETBRI", msg.arg1);
           if (DevLogger.NET_DEBUG) {
             NetExerciser.sleep(5 * Math.random());
           }
           break;
         case ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS:
           DevLogger.debugLog("DeviceManagerRecieved: ack");
+          DevLogger.getLogger().accumulate("EDM.ACKBRI", msg.arg1);
         default:
           super.handleMessage(msg);
       }
