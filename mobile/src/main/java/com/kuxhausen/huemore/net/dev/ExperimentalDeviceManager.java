@@ -31,9 +31,15 @@ public class ExperimentalDeviceManager {
    */
   public static final int MSG_UNREGISTER_CLIENT = 2;
 
-  // Example data to pass, TODO replace with BulbState fields
-  public static final int MSG_SET_BRIGHTNESS = 3;
-  public static final int MSG_ACK_BRIGHTNESS = 4;
+  public static final int MSG_DEBUG_PING = 3;
+  public static final int MSG_DEBUG_ACK = 4;
+
+  public static final int MSG_TARGET_STATEMESSAGE = 5;
+  public static final int MSG_OBSERVED_STATEMESSAGE = 6;
+  public static final int MSG_CONNECTIONS_CONNECTIVITY = 7;
+  public static final int MSG_BULBS_CONNECTIVITY = 8;
+  public static final int MSG_TARGET_BULBNAME = 9;
+  public static final int MSG_LAUNCH_CONFIGURATION = 10;
 
   Service mContext;
 
@@ -135,22 +141,22 @@ public class ExperimentalDeviceManager {
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
-        case ExperimentalDeviceManager.MSG_SET_BRIGHTNESS:
-          DevLogger.debugLog("DeviceManagerRecieved: " + msg.arg1);
-          DevLogger.getLogger().accumulate("EDM.SETBRI", msg.arg1);
+        case ExperimentalDeviceManager.MSG_DEBUG_PING:
+          DevLogger.debugLog("ExperimentalDeviceManager.PING " + msg.arg1);
+          DevLogger.getLogger().accumulate("EDM.PING", msg.arg1);
           if (DevLogger.NET_DEBUG) {
             NetExerciser.simulateWork(5);
           }
           try {
             mManagerWeakReference.get().mSampleMessanger.send(
-                Message.obtain(null, ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS, msg.arg1, 0));
+                Message.obtain(null, ExperimentalDeviceManager.MSG_DEBUG_ACK, msg.arg1, 0));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
             mManagerWeakReference.get().mSampleMessanger = null;
           }
           break;
-        case ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS:
-          DevLogger.debugLog("DeviceManagerRecieved: ack");
+        case ExperimentalDeviceManager.MSG_DEBUG_ACK:
+          DevLogger.debugLog("ExperimentalDeviceManager.ACK " + msg.arg1);
           DevLogger.getLogger().accumulate("EDM.ACKBRI", msg.arg1);
         default:
           super.handleMessage(msg);

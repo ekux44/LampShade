@@ -29,7 +29,7 @@ public class NetExerciser extends AsyncTask<Messenger, Integer, Void> {
   protected void onProgressUpdate(Integer... progress) {
     Message
         msg =
-        Message.obtain(null, ExperimentalDeviceManager.MSG_SET_BRIGHTNESS, progress[0], 0);
+        Message.obtain(null, ExperimentalDeviceManager.MSG_DEBUG_PING, progress[0], 0);
     msg.replyTo = replyToWeakReference.get();
 
     try {
@@ -41,7 +41,6 @@ public class NetExerciser extends AsyncTask<Messenger, Integer, Void> {
   }
 
   protected void onPostExecute() {
-
   }
 
   public static void sleep(double duration) {

@@ -1,102 +1,30 @@
 package com.kuxhausen.huemore.net.dev;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-
-import java.lang.ref.WeakReference;
+import com.kuxhausen.huemore.net.DeviceDriver;
 
 /**
  * Sample implementation of a service that represents a lighting device type to the device manager
  */
-public class SampleDeviceService extends Service {
+public class SampleDeviceService extends SimpleDeviceService {
 
-  /**
-   * When bound to the DeviceManager, keep track of the DeviceManager's messenger
-   */
-  Messenger mDeviceManagerMessenger;
+  private SampleDeviceDriver mDeviceDriver;
 
-  int mBrightness = 0;
-
-  /**
-   * Target we publish for the DeviceManager to send messages to our IncomingHandler.
-   */
-  final Messenger mMessenger = new Messenger(new IncomingHandler(new WeakReference<>(this)));
+  @Override
+  public DeviceDriver getDeviceDriver() {
+    if (mDeviceDriver == null) {
+      mDeviceDriver = new SampleDeviceDriver();
+      mDeviceDriver.initialize(this, this);
+    }
+    return mDeviceDriver;
+  }
 
   @Override
   public void onCreate() {
-    DevLogger.debugLog("SampleDevice: onCreate");
+    super.onCreate();
   }
 
   @Override
   public void onDestroy() {
-    DevLogger.debugLog("SampleDevice: onDestroy");
-  }
-
-  /**
-   * When binding to this service, return an interface to our messenger for sending us messages
-   */
-  @Override
-  public IBinder onBind(Intent intent) {
-    return mMessenger.getBinder();
-  }
-
-  /**
-   * Handles incoming messages from DeviceManager
-   */
-  private static class IncomingHandler extends Handler {
-
-    WeakReference<SampleDeviceService> mManagerWeakReference;
-
-    public IncomingHandler(WeakReference<SampleDeviceService> managerWeakReference) {
-      mManagerWeakReference = managerWeakReference;
-    }
-
-    @Override
-    public void handleMessage(Message msg) {
-      switch (msg.what) {
-        case ExperimentalDeviceManager.MSG_REGISTER_CLIENT:
-          DevLogger.debugLog("SampleDeviceRecieved: registerClient");
-          if (mManagerWeakReference.get().mDeviceManagerMessenger != null) {
-            // Something bad has happened, clear out any state from the old connection
-          }
-          mManagerWeakReference.get().mDeviceManagerMessenger = msg.replyTo;
-
-          if (DevLogger.NET_DEBUG) {
-            // When debugging, generate some test messages
-            new NetExerciser().execute(msg.replyTo, mManagerWeakReference.get().mMessenger);
-          }
-          break;
-        case ExperimentalDeviceManager.MSG_UNREGISTER_CLIENT:
-          DevLogger.debugLog("SampleDeviceRecieved: unregisterClient");
-          mManagerWeakReference.get().mDeviceManagerMessenger = null;
-          break;
-        case ExperimentalDeviceManager.MSG_SET_BRIGHTNESS:
-          DevLogger.debugLog("SampleDeviceRecieved: " + msg.arg1);
-          DevLogger.getLogger().accumulate("SDS.SETBRI", msg.arg1);
-          mManagerWeakReference.get().mBrightness = msg.arg1;
-          if (DevLogger.NET_DEBUG) {
-            NetExerciser.simulateCrash(.05);
-            NetExerciser.simulateWork(5000);
-          }
-          try {
-            mManagerWeakReference.get().mDeviceManagerMessenger.send(
-                Message.obtain(null, ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS, msg.arg1, 0));
-          } catch (RemoteException e) {
-            // The client is dead.  Remove references to it;
-            mManagerWeakReference.get().mDeviceManagerMessenger = null;
-          }
-          break;
-        case ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS:
-          DevLogger.debugLog("SampleDeviceRecieved: ack");
-          DevLogger.getLogger().accumulate("SDM.ACKBRI", msg.arg1);
-        default:
-          super.handleMessage(msg);
-      }
-    }
+    super.onDestroy();
   }
 }
