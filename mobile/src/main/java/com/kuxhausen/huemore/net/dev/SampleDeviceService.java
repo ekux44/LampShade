@@ -61,11 +61,8 @@ public class SampleDeviceService extends Service {
       switch (msg.what) {
         case ExperimentalDeviceManager.MSG_REGISTER_CLIENT:
           DevLogger.debugLog("SampleDeviceRecieved: registerClient");
-
           if (mManagerWeakReference.get().mDeviceManagerMessenger != null) {
             // Something bad has happened, clear out any state from the old connection
-            // TODO ensure MSG_REGISTER_CLIENT always arrived first
-
           }
           mManagerWeakReference.get().mDeviceManagerMessenger = msg.replyTo;
 
@@ -82,15 +79,16 @@ public class SampleDeviceService extends Service {
           DevLogger.debugLog("SampleDeviceRecieved: " + msg.arg1);
           DevLogger.getLogger().accumulate("SDS.SETBRI", msg.arg1);
           mManagerWeakReference.get().mBrightness = msg.arg1;
+          if (DevLogger.NET_DEBUG) {
+            NetExerciser.simulateCrash(.05);
+            NetExerciser.simulateWork(5000);
+          }
           try {
             mManagerWeakReference.get().mDeviceManagerMessenger.send(
                 Message.obtain(null, ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS, msg.arg1, 0));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
             mManagerWeakReference.get().mDeviceManagerMessenger = null;
-          }
-          if (DevLogger.NET_DEBUG) {
-            NetExerciser.sleep(5 * Math.random());
           }
           break;
         case ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS:

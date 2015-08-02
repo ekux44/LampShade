@@ -20,7 +20,7 @@ public class NetExerciser extends AsyncTask<Messenger, Integer, Void> {
     replyToWeakReference = new WeakReference<>(param[1]);
 
     for (int i = 0; i < 100; i++) {
-      sleep(300 * Math.random());
+      sleep(100 * Math.random());
       publishProgress(i);
     }
     return null;
@@ -50,6 +50,16 @@ public class NetExerciser extends AsyncTask<Messenger, Integer, Void> {
     } catch (InterruptedException e) {
       e.printStackTrace();
       throw new RuntimeException("Sleep interupted");
+    }
+  }
+
+  public static void simulateWork(int maxMilliseconds) {
+    sleep(Math.random() * maxMilliseconds);
+  }
+
+  public static void simulateCrash(double probability) {
+    if (Math.random() < probability) {
+      throw new RuntimeException("Simulated crash");
     }
   }
 }

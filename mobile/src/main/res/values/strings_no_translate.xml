@@ -61,7 +61,8 @@
         <item>fr</item>
         <item>nl</item>
     </array>
-    
+
+    <string name="device_sample">Sample Device</string>
     <string name="device_hue">Philips Hue</string>
     <string name="device_lifx">LIFX</string>
     <string name="device_lightpack">LightPack TV</string>

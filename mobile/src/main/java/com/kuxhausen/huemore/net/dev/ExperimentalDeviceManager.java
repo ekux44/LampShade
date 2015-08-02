@@ -139,7 +139,14 @@ public class ExperimentalDeviceManager {
           DevLogger.debugLog("DeviceManagerRecieved: " + msg.arg1);
           DevLogger.getLogger().accumulate("EDM.SETBRI", msg.arg1);
           if (DevLogger.NET_DEBUG) {
-            NetExerciser.sleep(5 * Math.random());
+            NetExerciser.simulateWork(5);
+          }
+          try {
+            mManagerWeakReference.get().mSampleMessanger.send(
+                Message.obtain(null, ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS, msg.arg1, 0));
+          } catch (RemoteException e) {
+            // The client is dead.  Remove references to it;
+            mManagerWeakReference.get().mSampleMessanger = null;
           }
           break;
         case ExperimentalDeviceManager.MSG_ACK_BRIGHTNESS:
