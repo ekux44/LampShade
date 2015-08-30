@@ -79,19 +79,27 @@ public abstract class SimpleDeviceService extends Service implements DeviceListe
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
-        case ExperimentalDeviceManager.MSG_REGISTER_CLIENT:
+        case ExperimentalDeviceManager.MSG_REGISTER_MANAGER:
           DevLogger.debugLog("SimpleDeviceRecieved: registerClient");
           if (mManagerWeakReference.get().mDeviceManagerMessenger != null) {
             // Something bad has happened, clear out any state from the old connection
           }
           mManagerWeakReference.get().mDeviceManagerMessenger = msg.replyTo;
+          try {
+            mManagerWeakReference.get().mDeviceManagerMessenger.send(
+                Message.obtain(null, ExperimentalDeviceManager.MSG_DRIVER_PID,
+                               android.os.Process.myPid(), 0));
+          } catch (RemoteException e) {
+            // The client is dead.  Remove references to it;
+            mManagerWeakReference.get().mDeviceManagerMessenger = null;
+          }
 
           if (DevLogger.NET_DEBUG) {
             // When debugging, generate some test messages
             new NetExerciser().execute(msg.replyTo, mManagerWeakReference.get().mMessenger);
           }
           break;
-        case ExperimentalDeviceManager.MSG_UNREGISTER_CLIENT:
+        case ExperimentalDeviceManager.MSG_UNREGISTER_MANAGER:
           DevLogger.debugLog("SimpleDeviceRecieved: unregisterClient");
           mManagerWeakReference.get().mDeviceManagerMessenger = null;
           break;

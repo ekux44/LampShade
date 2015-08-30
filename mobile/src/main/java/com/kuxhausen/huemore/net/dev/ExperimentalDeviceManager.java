@@ -21,30 +21,50 @@ import java.lang.ref.WeakReference;
  */
 public class ExperimentalDeviceManager {
 
-  /**
-   * Command to the service to register a client, receiving callbacks from the service.  The
-   * Message's replyTo field must be a Messenger of the client where callbacks should be sent.
-   */
-  public static final int MSG_REGISTER_CLIENT = 1;
-  /**
-   * Command to the service to unregister a client, ot stop receiving callbacks from the service
-   */
-  public static final int MSG_UNREGISTER_CLIENT = 2;
+  // Debugging commands
+  public static final int MSG_DEBUG_PING = 101;
+  public static final int MSG_DEBUG_ACK = 102;
 
-  public static final int MSG_DEBUG_PING = 3;
-  public static final int MSG_DEBUG_ACK = 4;
+  // IPC control commands
+  /**
+   * Message from the device manager to a device driver. Command to register the manager. The
+   * Message's replyTo field must be a Messenger of the manager where callbacks should be sent. The
+   * device driver must respond with {@link #MSG_DRIVER_PID}.
+   */
+  public static final int MSG_REGISTER_MANAGER = 201;
+  /**
+   * Message from a device driver to the device manager. Response to {@link #MSG_REGISTER_MANAGER}
+   * containing the Process ID for this device driver.
+   */
+  public static final int MSG_DRIVER_PID = 202;
+  /**
+   * Message from the device manager to a device driver. The device driver must respond within an
+   * {@link #MSG_WATCHDOG_ACK}. If the device manager doesn't receive a response within 1 second,
+   * the device driver may be process killed.
+   */
+  public static final int MSG_WATCHDOG_POLL = 203;
+  /**
+   * Response to {@link #MSG_WATCHDOG_POLL}.
+   */
+  public static final int MSG_WATCHDOG_ACK = 204;
+  /**
+   * Message from the device manager to a driver driver to stop sending messages and shut down.
+   */
+  public static final int MSG_UNREGISTER_MANAGER = 204;
 
-  public static final int MSG_TARGET_STATEMESSAGE = 5;
-  public static final int MSG_OBSERVED_STATEMESSAGE = 6;
-  public static final int MSG_CONNECTIONS_CONNECTIVITY = 7;
-  public static final int MSG_BULBS_CONNECTIVITY = 8;
-  public static final int MSG_TARGET_BULBNAME = 9;
-  public static final int MSG_LAUNCH_CONFIGURATION = 10;
+  // Device control commands
+  public static final int MSG_TARGET_STATEMESSAGE = 301;
+  public static final int MSG_OBSERVED_STATEMESSAGE = 302;
+  public static final int MSG_CONNECTIONS_CONNECTIVITY = 303;
+  public static final int MSG_BULBS_CONNECTIVITY = 304;
+  public static final int MSG_TARGET_BULBNAME = 305;
+  public static final int MSG_LAUNCH_CONFIGURATION = 306;
+
 
   Service mContext;
-
   // TODO generalize to connecting to different device services at the same time
   Messenger mSampleMessanger = null;
+  Integer mSampleDevicePid = null;
   boolean mIsBound;
 
   public ExperimentalDeviceManager(Service s) {
@@ -73,7 +93,7 @@ public class ExperimentalDeviceManager {
       // If we've received the service, and hence registered with it, now is the time to unregister
       if (mSampleMessanger != null) {
         try {
-          Message msg = Message.obtain(null, ExperimentalDeviceManager.MSG_UNREGISTER_CLIENT);
+          Message msg = Message.obtain(null, ExperimentalDeviceManager.MSG_UNREGISTER_MANAGER);
           msg.replyTo = mMessenger;
           mSampleMessanger.send(msg);
         } catch (RemoteException e) {
@@ -101,7 +121,7 @@ public class ExperimentalDeviceManager {
 
       // We want to monitor the service for as long as we are connected to it
       try {
-        Message msg = Message.obtain(null, ExperimentalDeviceManager.MSG_REGISTER_CLIENT);
+        Message msg = Message.obtain(null, ExperimentalDeviceManager.MSG_REGISTER_MANAGER);
         msg.replyTo = mMessenger;
         mSampleMessanger.send(msg);
 
@@ -141,6 +161,8 @@ public class ExperimentalDeviceManager {
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
+        case ExperimentalDeviceManager.MSG_DRIVER_PID:
+          mManagerWeakReference.get().mSampleDevicePid = msg.arg1;
         case ExperimentalDeviceManager.MSG_DEBUG_PING:
           DevLogger.debugLog("ExperimentalDeviceManager.PING " + msg.arg1);
           DevLogger.getLogger().accumulate("EDM.PING", msg.arg1);

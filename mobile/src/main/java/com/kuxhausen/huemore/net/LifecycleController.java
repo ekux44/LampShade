@@ -22,7 +22,7 @@ public class LifecycleController {
   public static final long EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP = 50;
   public static final long
       MINIMUM_NAP_MILLISECONDS =
-      ((EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP * 1000)/TICKS_PER_SECOND) + MILIS_AWAKEN_STARTUP_TIME;
+      ((EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP * 1000) / TICKS_PER_SECOND) + MILIS_AWAKEN_STARTUP_TIME;
 
   private Service mContext;
   private OnActiveMoodsChangedListener mMoodsListener;
@@ -87,7 +87,7 @@ public class LifecycleController {
     mWakeLock.acquire();
 
     mDeviceManager = new DeviceManager(mContext);
-    if(DevLogger.NET_DEBUG) {
+    if (DevLogger.NET_DEBUG) {
       mExperimentalDeviceManager = new ExperimentalDeviceManager(mContext);
     }
 
@@ -138,7 +138,7 @@ public class LifecycleController {
     mDeviceManager.onDestroy();
     mDeviceManager = null;
 
-    if(DevLogger.NET_DEBUG) {
+    if (DevLogger.NET_DEBUG) {
       mExperimentalDeviceManager.onDestroy();
       mExperimentalDeviceManager = null;
     }

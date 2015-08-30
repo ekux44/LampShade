@@ -1,15 +1,11 @@
 package com.kuxhausen.huemore.net.dev;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 
 import com.kuxhausen.huemore.net.DeviceDriver;
 import com.kuxhausen.huemore.net.DeviceListener;
-import com.kuxhausen.huemore.net.NetworkBulb;
 
-import java.util.List;
-
-public class SampleDeviceDriver implements DeviceDriver{
+public class SampleDeviceDriver implements DeviceDriver {
 
   @Override
   public boolean initialize(Context c, DeviceListener listener) {
