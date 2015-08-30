@@ -7,8 +7,6 @@ import android.os.SystemClock;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
-import com.kuxhausen.huemore.net.dev.DevLogger;
-import com.kuxhausen.huemore.net.dev.ExperimentalDeviceManager;
 
 import alt.android.os.CountDownTimer;
 
@@ -32,9 +30,6 @@ public class LifecycleController {
   private DeviceManager mDeviceManager;
   private MoodPlayer mMoodPlayer;
   private InternalClock mInternalClock;
-
-  // Prototype DeviceManager replacement, isolates lighting drivers into separate processes
-  private ExperimentalDeviceManager mExperimentalDeviceManager;
 
   public LifecycleController(Service c, OnActiveMoodsChangedListener moodsListener) {
     mContext = c;
@@ -87,9 +82,6 @@ public class LifecycleController {
     mWakeLock.acquire();
 
     mDeviceManager = new DeviceManager(mContext);
-    if (DevLogger.NET_DEBUG) {
-      mExperimentalDeviceManager = new ExperimentalDeviceManager(mContext);
-    }
 
     mMoodPlayer = new MoodPlayer(mContext, mDeviceManager);
 
@@ -137,11 +129,6 @@ public class LifecycleController {
 
     mDeviceManager.onDestroy();
     mDeviceManager = null;
-
-    if (DevLogger.NET_DEBUG) {
-      mExperimentalDeviceManager.onDestroy();
-      mExperimentalDeviceManager = null;
-    }
 
     mLifecycleState = LifecycleState.NAPPING;
 

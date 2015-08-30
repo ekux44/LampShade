@@ -1,12 +1,14 @@
 package com.kuxhausen.huemore.net;
 
-import android.content.Context;
+import android.app.Service;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Pair;
 
+import com.kuxhausen.huemore.net.dev.DevLogger;
+import com.kuxhausen.huemore.net.dev.IpcMaster;
 import com.kuxhausen.huemore.net.hue.HubConnection;
 import com.kuxhausen.huemore.net.lifx.LifxConnection;
 import com.kuxhausen.huemore.net.lifx.LifxManager;
@@ -20,7 +22,7 @@ import java.util.List;
 public class DeviceManager {
 
   private ArrayList<Connection> mConnections;
-  private Context mContext;
+  private Service mContext;
   private Group selectedGroup;
   private ArrayList<OnConnectionStatusChangedListener> connectionListeners =
       new ArrayList<OnConnectionStatusChangedListener>();
@@ -34,13 +36,19 @@ public class DeviceManager {
       mBrightnessManagers =
       new ArrayList<Pair<Group, BrightnessManager>>();
 
+  // Prototype DeviceManager replacement, isolates lighting drivers into separate processes
+  private IpcMaster mIpcMaster;
 
-  public DeviceManager(Context c) {
+
+  public DeviceManager(Service c) {
     mContext = c;
 
     mConnectionObserver = new MyObserver(new Handler(Looper.getMainLooper()));
     mContext.getContentResolver().registerContentObserver(NetConnectionColumns.URI, true,
                                                           mConnectionObserver);
+    if (DevLogger.NET_DEBUG) {
+      mIpcMaster = new IpcMaster(mContext);
+    }
 
     loadEverythingFromDatabase();
   }
@@ -86,6 +94,10 @@ public class DeviceManager {
     for (Connection c : mConnections) {
       c.onDestroy();
     }
+    if (DevLogger.NET_DEBUG) {
+      mIpcMaster.onDestroy();
+      mIpcMaster = null;
+    }
   }
 
   public Group getSelectedGroup() {
@@ -99,7 +111,7 @@ public class DeviceManager {
   }
 
   public BrightnessManager obtainBrightnessManager(Group g) {
-    assert g!=null;
+    assert g != null;
 
     //if a manager already exists for this group, return it
     for (Pair<Group, BrightnessManager> pair : mBrightnessManagers) {
@@ -129,10 +141,9 @@ public class DeviceManager {
   }
 
   /**
-   * if a BrightnessManager is assigned to that group, return it
-   * else return null
+   * if a BrightnessManager is assigned to that group, return it else return null
    */
-  public BrightnessManager peekBrightnessManager(Group g){
+  public BrightnessManager peekBrightnessManager(Group g) {
     //if a manager exists for this group, return it
     for (Pair<Group, BrightnessManager> pair : mBrightnessManagers) {
       if (pair.first.equals(g)) {

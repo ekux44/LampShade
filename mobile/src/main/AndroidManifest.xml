@@ -206,7 +206,7 @@
 
         <service
             android:process=":SampleDevice"
-            android:name=".net.dev.SampleDeviceService"
+            android:name=".net.dev.SampleIpcMinion"
             android:label="@string/device_sample"
             android:enabled="true"
             android:exported="false" >

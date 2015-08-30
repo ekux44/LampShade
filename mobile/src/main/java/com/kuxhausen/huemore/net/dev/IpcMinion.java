@@ -14,9 +14,10 @@ import com.kuxhausen.huemore.net.DeviceListener;
 import java.lang.ref.WeakReference;
 
 /**
- * Basic implementation of a service that represents a lighting device type to the device manager
+ * Base implementation of a service that represents a device driver in bound Inter-Process
+ * Communication with the device manager
  */
-public abstract class SimpleDeviceService extends Service implements DeviceListener {
+public abstract class IpcMinion extends Service implements DeviceListener {
 
   /**
    * When bound to the DeviceManager, keep track of the DeviceManager's messenger
@@ -57,7 +58,7 @@ public abstract class SimpleDeviceService extends Service implements DeviceListe
     if (mDeviceManagerMessenger != null) {
       try {
         mDeviceManagerMessenger.send(
-            Message.obtain(null, ExperimentalDeviceManager.MSG_OBSERVED_STATEMESSAGE, state));
+            Message.obtain(null, IpcMaster.MSG_OBSERVED_STATEMESSAGE, state));
       } catch (RemoteException e) {
         // The client is dead.  Remove references to it;
         mDeviceManagerMessenger = null;
@@ -70,16 +71,16 @@ public abstract class SimpleDeviceService extends Service implements DeviceListe
    */
   private static class IncomingHandler extends Handler {
 
-    WeakReference<SimpleDeviceService> mManagerWeakReference;
+    WeakReference<IpcMinion> mManagerWeakReference;
 
-    public IncomingHandler(WeakReference<SimpleDeviceService> managerWeakReference) {
+    public IncomingHandler(WeakReference<IpcMinion> managerWeakReference) {
       mManagerWeakReference = managerWeakReference;
     }
 
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
-        case ExperimentalDeviceManager.MSG_REGISTER_MANAGER:
+        case IpcMaster.MSG_REGISTER_MANAGER:
           DevLogger.debugLog("SimpleDeviceRecieved: registerClient");
           if (mManagerWeakReference.get().mDeviceManagerMessenger != null) {
             // Something bad has happened, clear out any state from the old connection
@@ -87,7 +88,7 @@ public abstract class SimpleDeviceService extends Service implements DeviceListe
           mManagerWeakReference.get().mDeviceManagerMessenger = msg.replyTo;
           try {
             mManagerWeakReference.get().mDeviceManagerMessenger.send(
-                Message.obtain(null, ExperimentalDeviceManager.MSG_DRIVER_PID,
+                Message.obtain(null, IpcMaster.MSG_DRIVER_PID,
                                android.os.Process.myPid(), 0));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
@@ -99,45 +100,45 @@ public abstract class SimpleDeviceService extends Service implements DeviceListe
             new NetExerciser().execute(msg.replyTo, mManagerWeakReference.get().mMessenger);
           }
           break;
-        case ExperimentalDeviceManager.MSG_UNREGISTER_MANAGER:
+        case IpcMaster.MSG_UNREGISTER_MANAGER:
           DevLogger.debugLog("SimpleDeviceRecieved: unregisterClient");
           mManagerWeakReference.get().mDeviceManagerMessenger = null;
           break;
 
-        case ExperimentalDeviceManager.MSG_TARGET_STATEMESSAGE:
+        case IpcMaster.MSG_TARGET_STATEMESSAGE:
           mManagerWeakReference.get().getDeviceDriver().targetStateChanged((StateMessage) msg.obj);
           break;
-        case ExperimentalDeviceManager.MSG_TARGET_BULBNAME:
+        case IpcMaster.MSG_TARGET_BULBNAME:
           mManagerWeakReference.get().getDeviceDriver().bulbNameChanged((BulbNameMessage) msg.obj);
           break;
 
-        case ExperimentalDeviceManager.MSG_LAUNCH_CONFIGURATION:
+        case IpcMaster.MSG_LAUNCH_CONFIGURATION:
           mManagerWeakReference.get().getDeviceDriver().launchOnboarding();
           break;
-        case ExperimentalDeviceManager.MSG_CONNECTIONS_CONNECTIVITY:
+        case IpcMaster.MSG_CONNECTIONS_CONNECTIVITY:
           try {
             ConnectivityMessage message =
                 mManagerWeakReference.get().getDeviceDriver().getConnectionConnectivity();
             mManagerWeakReference.get().mDeviceManagerMessenger.send(Message.
-                obtain(null, ExperimentalDeviceManager.MSG_CONNECTIONS_CONNECTIVITY, message));
+                obtain(null, IpcMaster.MSG_CONNECTIONS_CONNECTIVITY, message));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
             mManagerWeakReference.get().mDeviceManagerMessenger = null;
           }
           break;
-        case ExperimentalDeviceManager.MSG_BULBS_CONNECTIVITY:
+        case IpcMaster.MSG_BULBS_CONNECTIVITY:
           try {
             ConnectivityMessage message =
                 mManagerWeakReference.get().getDeviceDriver().getBulbConnectivity();
             mManagerWeakReference.get().mDeviceManagerMessenger.send(Message.
-                obtain(null, ExperimentalDeviceManager.MSG_BULBS_CONNECTIVITY, message));
+                obtain(null, IpcMaster.MSG_BULBS_CONNECTIVITY, message));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
             mManagerWeakReference.get().mDeviceManagerMessenger = null;
           }
           break;
 
-        case ExperimentalDeviceManager.MSG_DEBUG_PING:
+        case IpcMaster.MSG_DEBUG_PING:
           DevLogger.debugLog("SimpleDeviceService.PING " + msg.arg1);
           DevLogger.getLogger().accumulate("SDS.PING", msg.arg1);
           mManagerWeakReference.get().mBrightness = msg.arg1;
@@ -147,13 +148,13 @@ public abstract class SimpleDeviceService extends Service implements DeviceListe
           }
           try {
             mManagerWeakReference.get().mDeviceManagerMessenger.send(
-                Message.obtain(null, ExperimentalDeviceManager.MSG_DEBUG_ACK, msg.arg1, 0));
+                Message.obtain(null, IpcMaster.MSG_DEBUG_ACK, msg.arg1, 0));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
             mManagerWeakReference.get().mDeviceManagerMessenger = null;
           }
           break;
-        case ExperimentalDeviceManager.MSG_DEBUG_ACK:
+        case IpcMaster.MSG_DEBUG_ACK:
           DevLogger.debugLog("SimpleDeviceService.ACK " + msg.arg1);
           DevLogger.getLogger().accumulate("SDS.ACK", msg.arg1);
         default:

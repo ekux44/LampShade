@@ -29,7 +29,7 @@ public class NetExerciser extends AsyncTask<Messenger, Integer, Void> {
   protected void onProgressUpdate(Integer... progress) {
     Message
         msg =
-        Message.obtain(null, ExperimentalDeviceManager.MSG_DEBUG_PING, progress[0], 0);
+        Message.obtain(null, IpcMaster.MSG_DEBUG_PING, progress[0], 0);
     msg.replyTo = replyToWeakReference.get();
 
     try {

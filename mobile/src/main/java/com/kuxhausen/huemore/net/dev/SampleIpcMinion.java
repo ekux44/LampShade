@@ -3,9 +3,10 @@ package com.kuxhausen.huemore.net.dev;
 import com.kuxhausen.huemore.net.DeviceDriver;
 
 /**
- * Sample implementation of a service that represents a lighting device type to the device manager
+ * Sample implementation of a service to represent a device driver in bound Inter-Process
+ * Communication with the device manager
  */
-public class SampleDeviceService extends SimpleDeviceService {
+public class SampleIpcMinion extends IpcMinion {
 
   private SampleDeviceDriver mDeviceDriver;
 

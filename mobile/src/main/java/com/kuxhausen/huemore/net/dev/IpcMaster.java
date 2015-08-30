@@ -14,12 +14,11 @@ import android.os.RemoteException;
 import java.lang.ref.WeakReference;
 
 /**
- * Prototype implementation of the DeviceManager that isolates the driver for each device type into
- * a separate device service running in another processes.
- *
+ * Represents the device manager in bound Inter-Process communication with device driver(s).
+ * <p/>
  * TODO increase fault tolerance and stress test, then bring up with the existing device types
  */
-public class ExperimentalDeviceManager {
+public class IpcMaster {
 
   // Debugging commands
   public static final int MSG_DEBUG_PING = 101;
@@ -67,7 +66,7 @@ public class ExperimentalDeviceManager {
   Integer mSampleDevicePid = null;
   boolean mIsBound;
 
-  public ExperimentalDeviceManager(Service s) {
+  public IpcMaster(Service s) {
     mContext = s;
     doBindService();
   }
@@ -83,7 +82,7 @@ public class ExperimentalDeviceManager {
 
   void doBindService() {
     DevLogger.debugLog("DeviceManagerSending: bind");
-    mContext.bindService(new Intent(mContext, SampleDeviceService.class), mConnection,
+    mContext.bindService(new Intent(mContext, SampleIpcMinion.class), mConnection,
                          Context.BIND_AUTO_CREATE);
     mIsBound = true;
   }
@@ -93,7 +92,7 @@ public class ExperimentalDeviceManager {
       // If we've received the service, and hence registered with it, now is the time to unregister
       if (mSampleMessanger != null) {
         try {
-          Message msg = Message.obtain(null, ExperimentalDeviceManager.MSG_UNREGISTER_MANAGER);
+          Message msg = Message.obtain(null, IpcMaster.MSG_UNREGISTER_MANAGER);
           msg.replyTo = mMessenger;
           mSampleMessanger.send(msg);
         } catch (RemoteException e) {
@@ -121,7 +120,7 @@ public class ExperimentalDeviceManager {
 
       // We want to monitor the service for as long as we are connected to it
       try {
-        Message msg = Message.obtain(null, ExperimentalDeviceManager.MSG_REGISTER_MANAGER);
+        Message msg = Message.obtain(null, IpcMaster.MSG_REGISTER_MANAGER);
         msg.replyTo = mMessenger;
         mSampleMessanger.send(msg);
 
@@ -152,18 +151,18 @@ public class ExperimentalDeviceManager {
    */
   private static class IncomingHandler extends Handler {
 
-    WeakReference<ExperimentalDeviceManager> mManagerWeakReference;
+    WeakReference<IpcMaster> mManagerWeakReference;
 
-    public IncomingHandler(WeakReference<ExperimentalDeviceManager> managerWeakReference) {
+    public IncomingHandler(WeakReference<IpcMaster> managerWeakReference) {
       mManagerWeakReference = managerWeakReference;
     }
 
     @Override
     public void handleMessage(Message msg) {
       switch (msg.what) {
-        case ExperimentalDeviceManager.MSG_DRIVER_PID:
+        case IpcMaster.MSG_DRIVER_PID:
           mManagerWeakReference.get().mSampleDevicePid = msg.arg1;
-        case ExperimentalDeviceManager.MSG_DEBUG_PING:
+        case IpcMaster.MSG_DEBUG_PING:
           DevLogger.debugLog("ExperimentalDeviceManager.PING " + msg.arg1);
           DevLogger.getLogger().accumulate("EDM.PING", msg.arg1);
           if (DevLogger.NET_DEBUG) {
@@ -171,13 +170,13 @@ public class ExperimentalDeviceManager {
           }
           try {
             mManagerWeakReference.get().mSampleMessanger.send(
-                Message.obtain(null, ExperimentalDeviceManager.MSG_DEBUG_ACK, msg.arg1, 0));
+                Message.obtain(null, IpcMaster.MSG_DEBUG_ACK, msg.arg1, 0));
           } catch (RemoteException e) {
             // The client is dead.  Remove references to it;
             mManagerWeakReference.get().mSampleMessanger = null;
           }
           break;
-        case ExperimentalDeviceManager.MSG_DEBUG_ACK:
+        case IpcMaster.MSG_DEBUG_ACK:
           DevLogger.debugLog("ExperimentalDeviceManager.ACK " + msg.arg1);
           DevLogger.getLogger().accumulate("EDM.ACKBRI", msg.arg1);
         default:
