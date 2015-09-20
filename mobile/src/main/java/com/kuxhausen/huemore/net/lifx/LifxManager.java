@@ -13,16 +13,7 @@ import com.kuxhausen.huemore.persistence.Definitions;
 import java.util.ArrayList;
 import java.util.List;
 
-import lifx.java.android.client.LFXClient;
-import lifx.java.android.entities.LFXHSBKColor;
-import lifx.java.android.entities.LFXTypes;
-import lifx.java.android.light.LFXLight;
-import lifx.java.android.light.LFXLightCollection;
-import lifx.java.android.light.LFXTaggedLightCollection;
-import lifx.java.android.network_context.LFXNetworkContext;
-
-public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
-                                    LFXLightCollection.LFXLightCollectionListener {
+public class LifxManager {
 
   private static final String[] columns = {Definitions.NetConnectionColumns._ID,
                                            Definitions.NetConnectionColumns.TYPE_COLUMN,
@@ -32,7 +23,7 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
   private static final Gson gson = new Gson();
 
 
-  private LFXNetworkContext networkContext;
+//  private LFXNetworkContext networkContext;
   private WifiManager.MulticastLock ml = null;
 
   private DeviceManager mDeviceManager;
@@ -63,15 +54,15 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
   }
 
   public void assignLights() {
-    LFXLightCollection allLifxLights = networkContext.getAllLightsCollection();
-    for (LifxConnection userConnection : mConnections) {
-      LFXLight lightExists = allLifxLights.getLightWithDeviceID(userConnection.getDeviceId());
-      if (lightExists != null) {
-        userConnection.lightConnected(lightExists);
-      } else {
-        userConnection.lightDisconnected();
-      }
-    }
+//    LFXLightCollection allLifxLights = networkContext.getAllLightsCollection();
+//    for (LifxConnection userConnection : mConnections) {
+//      LFXLight lightExists = allLifxLights.getLightWithDeviceID(userConnection.getDeviceId());
+//      if (lightExists != null) {
+//        userConnection.lightConnected(lightExists);
+//      } else {
+//        userConnection.lightDisconnected();
+//      }
+//    }
   }
 
   public void onCreate(Context c, DeviceManager dm, List<LifxConnection> toInitialize) {
@@ -85,87 +76,87 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
 
     Log.d("lifx", "lifxManager onCreate");
 
-    networkContext = LFXClient.getSharedInstance(c).getLocalNetworkContext();
-    networkContext.addNetworkContextListener(this);
-    networkContext.getAllLightsCollection().addLightCollectionListener(this);
-    networkContext.connect();
+//    networkContext = LFXClient.getSharedInstance(c).getLocalNetworkContext();
+//    networkContext.addNetworkContextListener(this);
+//    networkContext.getAllLightsCollection().addLightCollectionListener(this);
+//    networkContext.connect();
 
-    Log.d("lifx", " num lights now:" + networkContext.getAllLightsCollection().getLights()
-        .size());
+//    Log.d("lifx", " num lights now:" + networkContext.getAllLightsCollection().getLights()
+//        .size());
 
   }
 
 
   public void onDestroy() {
-    networkContext.disconnect();
+//    networkContext.disconnect();
     if (ml != null) {
       ml.release();
     }
   }
 
-  @Override
-  public void networkContextDidConnect(LFXNetworkContext networkContext) {
-    Log.d("lifx",
-          "didConnect, num lights now:" + networkContext.getAllLightsCollection().getLights()
-              .size()
-    );
-
-    assignLights();
-    mDeviceManager.onConnectionChanged();
-  }
-
-  @Override
-  public void networkContextDidDisconnect(LFXNetworkContext networkContext) {
-    Log.d("lifx", "lifxManager networkContextDidDisconnect");
-
-    assignLights();
-    mDeviceManager.onConnectionChanged();
-  }
-
-  @Override
-  public void networkContextDidAddTaggedLightCollection(LFXNetworkContext networkContext,
-                                                        LFXTaggedLightCollection collection) {
-    Log.d("lifx", "lifxManager networkContextDidAddTaggedLightCollection");
-
-  }
-
-  @Override
-  public void networkContextDidRemoveTaggedLightCollection(LFXNetworkContext networkContext,
-                                                           LFXTaggedLightCollection collection) {
-    Log.d("lifx", "lifxManager networkContextDidRemoveTaggedLightCollection");
-
-  }
-
-  @Override
-  public void lightCollectionDidAddLight(LFXLightCollection lightCollection, LFXLight light) {
-    Log.d("lifx", "lifxManager lightCollectionDidAddLight");
-
-    assignLights();
-    mDeviceManager.onConnectionChanged();
-  }
-
-  @Override
-  public void lightCollectionDidRemoveLight(LFXLightCollection lightCollection, LFXLight light) {
-    Log.d("lifx", "lifxManager lightCollectionDidRemoveLight");
-
-    assignLights();
-    mDeviceManager.onConnectionChanged();
-  }
-
-  @Override
-  public void lightCollectionDidChangeLabel(LFXLightCollection lightCollection, String label) {
-    Log.d("lifx", "lifxManager lightCollectionDidChangeLabel");
-  }
-
-  @Override
-  public void lightCollectionDidChangeColor(LFXLightCollection lightCollection,
-                                            LFXHSBKColor color) {
-    Log.d("lifx", "lifxManager lightCollectionDidChangeColor");
-  }
-
-  @Override
-  public void lightCollectionDidChangeFuzzyPowerState(LFXLightCollection lightCollection,
-                                                      LFXTypes.LFXFuzzyPowerState fuzzyPowerState) {
-    Log.d("lifx", "lifxManager lightCollectionDidChangeFuzzyPowerState");
-  }
+//  @Override
+//  public void networkContextDidConnect(LFXNetworkContext networkContext) {
+//    Log.d("lifx",
+//          "didConnect, num lights now:" + networkContext.getAllLightsCollection().getLights()
+//              .size()
+//    );
+//
+//    assignLights();
+//    mDeviceManager.onConnectionChanged();
+//  }
+//
+//  @Override
+//  public void networkContextDidDisconnect(LFXNetworkContext networkContext) {
+//    Log.d("lifx", "lifxManager networkContextDidDisconnect");
+//
+//    assignLights();
+//    mDeviceManager.onConnectionChanged();
+//  }
+//
+//  @Override
+//  public void networkContextDidAddTaggedLightCollection(LFXNetworkContext networkContext,
+//                                                        LFXTaggedLightCollection collection) {
+//    Log.d("lifx", "lifxManager networkContextDidAddTaggedLightCollection");
+//
+//  }
+//
+//  @Override
+//  public void networkContextDidRemoveTaggedLightCollection(LFXNetworkContext networkContext,
+//                                                           LFXTaggedLightCollection collection) {
+//    Log.d("lifx", "lifxManager networkContextDidRemoveTaggedLightCollection");
+//
+//  }
+//
+//  @Override
+//  public void lightCollectionDidAddLight(LFXLightCollection lightCollection, LFXLight light) {
+//    Log.d("lifx", "lifxManager lightCollectionDidAddLight");
+//
+//    assignLights();
+//    mDeviceManager.onConnectionChanged();
+//  }
+//
+//  @Override
+//  public void lightCollectionDidRemoveLight(LFXLightCollection lightCollection, LFXLight light) {
+//    Log.d("lifx", "lifxManager lightCollectionDidRemoveLight");
+//
+//    assignLights();
+//    mDeviceManager.onConnectionChanged();
+//  }
+//
+//  @Override
+//  public void lightCollectionDidChangeLabel(LFXLightCollection lightCollection, String label) {
+//    Log.d("lifx", "lifxManager lightCollectionDidChangeLabel");
+//  }
+//
+//  @Override
+//  public void lightCollectionDidChangeColor(LFXLightCollection lightCollection,
+//                                            LFXHSBKColor color) {
+//    Log.d("lifx", "lifxManager lightCollectionDidChangeColor");
+//  }
+//
+//  @Override
+//  public void lightCollectionDidChangeFuzzyPowerState(LFXLightCollection lightCollection,
+//                                                      LFXTypes.LFXFuzzyPowerState fuzzyPowerState) {
+//    Log.d("lifx", "lifxManager lightCollectionDidChangeFuzzyPowerState");
+//  }
 }

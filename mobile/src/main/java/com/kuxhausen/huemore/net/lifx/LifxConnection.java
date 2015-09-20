@@ -13,8 +13,6 @@ import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.ArrayList;
 
-import lifx.java.android.light.LFXLight;
-
 public class LifxConnection implements Connection {
 
   private static final String[] bulbColumns = {Definitions.NetBulbColumns._ID,
@@ -32,7 +30,7 @@ public class LifxConnection implements Connection {
   private Context mContext;
   private LifxBulb mBulb;
   DeviceManager mDeviceManager;
-  private LFXLight mLight;
+//  private LFXLight mLight;
 
   public LifxConnection(Context c, Long baseId, String name, String deviceId,
                         ExtraData data, DeviceManager dm) {
@@ -111,14 +109,14 @@ public class LifxConnection implements Connection {
     return mDeviceId;
   }
 
-  public void lightConnected(LFXLight light) {
-    mLight = light;
-    this.mBulb.lightConnected(light);
-  }
+//  public void lightConnected(LFXLight light) {
+//    mLight = light;
+//    this.mBulb.lightConnected(light);
+//  }
 
   public void lightDisconnected() {
-    this.mBulb.lightDisconnected();
-    mLight = null;
+//    this.mBulb.lightDisconnected();
+//    mLight = null;
   }
 
   public DeviceManager getDeviceManager() {

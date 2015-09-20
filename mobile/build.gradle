@@ -49,7 +49,6 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
-    compile project(':lifx')
     playEditionCompile 'com.google.android.gms:play-services-wearable:7.5.0'
     //playEditionWearApp project(':wear')
 }

@@ -28,15 +28,7 @@ import com.kuxhausen.huemore.persistence.Definitions;
 
 import java.util.ArrayList;
 
-import lifx.java.android.client.LFXClient;
-import lifx.java.android.entities.LFXHSBKColor;
-import lifx.java.android.entities.LFXTypes;
-import lifx.java.android.light.LFXLight;
-import lifx.java.android.light.LFXLightCollection;
-import lifx.java.android.network_context.LFXNetworkContext;
-
 public class LifxRegistrationDialog extends DialogFragment implements
-                                                           LFXLightCollection.LFXLightCollectionListener,
                                                            LoaderManager.LoaderCallbacks<Cursor> {
 
   private static final int LIFX_BULBS_LOADER = 0;
@@ -48,7 +40,7 @@ public class LifxRegistrationDialog extends DialogFragment implements
   ListView bulbsListView;
 
   private Context mContext;
-  private LFXNetworkContext networkContext;
+//  private LFXNetworkContext networkContext;
   private WifiManager.MulticastLock ml = null;
   private ArrayAdapter<String> candidateBulbsAdapter;
   private ArrayList<String> candidateBulbNames;
@@ -70,9 +62,9 @@ public class LifxRegistrationDialog extends DialogFragment implements
     ml.setReferenceCounted(true);
     ml.acquire();
 
-    networkContext = LFXClient.getSharedInstance(mContext).getLocalNetworkContext();
-    networkContext.getAllLightsCollection().addLightCollectionListener(this);
-    networkContext.connect();
+//    networkContext = LFXClient.getSharedInstance(mContext).getLocalNetworkContext();
+//    networkContext.getAllLightsCollection().addLightCollectionListener(this);
+//    networkContext.connect();
 
     // Use the Builder class for convenient dialog construction
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -111,41 +103,41 @@ public class LifxRegistrationDialog extends DialogFragment implements
         for (int i = 0; i < candidateBulbNames.size(); i++) {
           //if that candidateLight is checked
           if (set.get(i)) {
-            LFXLight
-                selectedLight =
-                networkContext.getAllLightsCollection()
-                    .getLightWithDeviceID(candidateBulbDeviceIds.get(i));
+//            LFXLight
+//                selectedLight =
+//                networkContext.getAllLightsCollection()
+//                    .getLightWithDeviceID(candidateBulbDeviceIds.get(i));
 
             ContentValues netConnectionValues = new ContentValues();
             netConnectionValues.put(Definitions.NetConnectionColumns.TYPE_COLUMN,
                                     Definitions.NetBulbColumns.NetBulbType.LIFX);
             netConnectionValues.put(Definitions.NetConnectionColumns.JSON_COLUMN,
                                     gson.toJson(new LifxConnection.ExtraData()));
-            netConnectionValues.put(Definitions.NetConnectionColumns.NAME_COLUMN,
-                                    selectedLight.getLabel());
-            netConnectionValues.put(Definitions.NetConnectionColumns.DEVICE_ID_COLUMN,
-                                    selectedLight.getDeviceID());
+//            netConnectionValues.put(Definitions.NetConnectionColumns.NAME_COLUMN,
+//                                    selectedLight.getLabel());
+//            netConnectionValues.put(Definitions.NetConnectionColumns.DEVICE_ID_COLUMN,
+//                                    selectedLight.getDeviceID());
 
-            ContentValues netBulbValues = new ContentValues();
-            netBulbValues
-                .put(Definitions.NetBulbColumns.NAME_COLUMN, selectedLight.getLabel());
-            netBulbValues.put(Definitions.NetBulbColumns.DEVICE_ID_COLUMN,
-                              selectedLight.getDeviceID());
-            netBulbValues.put(Definitions.NetBulbColumns.JSON_COLUMN,
-                              gson.toJson(new LifxBulb.ExtraData()));
-            netBulbValues.put(Definitions.NetBulbColumns.TYPE_COLUMN,
-                              Definitions.NetBulbColumns.NetBulbType.LIFX);
-            netBulbValues.put(Definitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
+//            ContentValues netBulbValues = new ContentValues();
+//            netBulbValues
+//                .put(Definitions.NetBulbColumns.NAME_COLUMN, selectedLight.getLabel());
+//            netBulbValues.put(Definitions.NetBulbColumns.DEVICE_ID_COLUMN,
+//                              selectedLight.getDeviceID());
+//            netBulbValues.put(Definitions.NetBulbColumns.JSON_COLUMN,
+//                              gson.toJson(new LifxBulb.ExtraData()));
+//            netBulbValues.put(Definitions.NetBulbColumns.TYPE_COLUMN,
+//                              Definitions.NetBulbColumns.NetBulbType.LIFX);
+//            netBulbValues.put(Definitions.NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
 
-            toAdd.add(new Pair<ContentValues, ContentValues>(netConnectionValues, netBulbValues));
+//            toAdd.add(new Pair<ContentValues, ContentValues>(netConnectionValues, netBulbValues));
           }
         }
 
         //shut down connection before adding to database (due to devicemanager reload)
-        if (networkContext != null) {
-          networkContext.disconnect();
-          networkContext = null;
-        }
+//        if (networkContext != null) {
+//          networkContext.disconnect();
+//          networkContext = null;
+//        }
 
         //now add everything to database
         for (Pair<ContentValues, ContentValues> valuesPair : toAdd) {
@@ -177,9 +169,9 @@ public class LifxRegistrationDialog extends DialogFragment implements
 
   @Override
   public void onDestroy() {
-    if (networkContext != null) {
-      networkContext.disconnect();
-    }
+//    if (networkContext != null) {
+//      networkContext.disconnect();
+//    }
     if (ml != null) {
       ml.release();
     }
@@ -189,39 +181,39 @@ public class LifxRegistrationDialog extends DialogFragment implements
   private void updateCandidateList() {
     candidateBulbNames.clear();
     candidateBulbDeviceIds.clear();
-    for (LFXLight light : networkContext.getAllLightsCollection().getLights()) {
-      if (!existingBulbDeviceIds.contains(light.getDeviceID())) {
-        candidateBulbNames.add(light.getLabel());
-        candidateBulbDeviceIds.add(light.getDeviceID());
-      }
-    }
+//    for (LFXLight light : networkContext.getAllLightsCollection().getLights()) {
+//      if (!existingBulbDeviceIds.contains(light.getDeviceID())) {
+//        candidateBulbNames.add(light.getLabel());
+//        candidateBulbDeviceIds.add(light.getDeviceID());
+//      }
+//    }
     bulbsListView.setAdapter(candidateBulbsAdapter);
   }
 
-  @Override
-  public void lightCollectionDidAddLight(LFXLightCollection lightCollection, LFXLight light) {
-    updateCandidateList();
-  }
-
-  @Override
-  public void lightCollectionDidRemoveLight(LFXLightCollection lightCollection, LFXLight light) {
-    updateCandidateList();
-  }
-
-  @Override
-  public void lightCollectionDidChangeLabel(LFXLightCollection lightCollection, String label) {
-    updateCandidateList();
-  }
-
-  @Override
-  public void lightCollectionDidChangeColor(LFXLightCollection lightCollection,
-                                            LFXHSBKColor color) {
-  }
-
-  @Override
-  public void lightCollectionDidChangeFuzzyPowerState(LFXLightCollection lightCollection,
-                                                      LFXTypes.LFXFuzzyPowerState fuzzyPowerState) {
-  }
+//  @Override
+//  public void lightCollectionDidAddLight(LFXLightCollection lightCollection, LFXLight light) {
+//    updateCandidateList();
+//  }
+//
+//  @Override
+//  public void lightCollectionDidRemoveLight(LFXLightCollection lightCollection, LFXLight light) {
+//    updateCandidateList();
+//  }
+//
+//  @Override
+//  public void lightCollectionDidChangeLabel(LFXLightCollection lightCollection, String label) {
+//    updateCandidateList();
+//  }
+//
+//  @Override
+//  public void lightCollectionDidChangeColor(LFXLightCollection lightCollection,
+//                                            LFXHSBKColor color) {
+//  }
+//
+//  @Override
+//  public void lightCollectionDidChangeFuzzyPowerState(LFXLightCollection lightCollection,
+//                                                      LFXTypes.LFXFuzzyPowerState fuzzyPowerState) {
+//  }
 
 
   @Override
