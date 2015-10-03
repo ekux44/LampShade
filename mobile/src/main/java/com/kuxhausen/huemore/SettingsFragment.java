@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
@@ -69,6 +70,9 @@ public class SettingsFragment extends Fragment implements OnClickListener,
       mCurrentSelection = mLocalizationCodes.indexOf(currentLang);
       mLanguageSelector.setSelection(mCurrentSelection);
     }
+
+    TextView buildVersionTextView = (TextView) myView.findViewById(R.id.build_version);
+    buildVersionTextView.append(": " + BuildConfig.VERSION_NAME);
 
     return myView;
   }
