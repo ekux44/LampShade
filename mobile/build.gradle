@@ -49,6 +49,7 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
+    compile project(':volley')
     playEditionCompile 'com.google.android.gms:play-services-wearable:7.5.0'
     //playEditionWearApp project(':wear')
 }
