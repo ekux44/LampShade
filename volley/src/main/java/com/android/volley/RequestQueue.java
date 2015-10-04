@@ -77,7 +77,7 @@ public class RequestQueue {
         new PriorityBlockingQueue<Request<?>>();
 
     /** Number of network request dispatcher threads to start. */
-    private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE = 4;
+    private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE = 2; // Was 4, LampShade customization
 
     /** Cache interface for retrieving and storing responses. */
     private final Cache mCache;
