@@ -68,12 +68,7 @@ public class LifxManager {
   public void onCreate(Context c, DeviceManager dm, List<LifxConnection> toInitialize) {
     mDeviceManager = dm;
     mConnections = toInitialize;
-
-    WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-    ml = wifi.createMulticastLock("lifx_samples_tag");
-    ml.setReferenceCounted(true);
-    ml.acquire();
-
+    
     Log.d("lifx", "lifxManager onCreate");
 
 //    networkContext = LFXClient.getSharedInstance(c).getLocalNetworkContext();
@@ -89,9 +84,6 @@ public class LifxManager {
 
   public void onDestroy() {
 //    networkContext.disconnect();
-    if (ml != null) {
-      ml.release();
-    }
   }
 
 //  @Override

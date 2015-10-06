@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    
     lintOptions {
         checkReleaseBuilds false
     }
@@ -49,6 +48,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:gridlayout-v7:18.0.0'
     compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:preference-v7:23.0.1'
+    compile 'com.android.support:preference-v14:23.0.1'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':volley')
