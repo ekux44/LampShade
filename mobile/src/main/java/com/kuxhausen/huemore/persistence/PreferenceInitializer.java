@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.CommunityDialogFragment;
+import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.NewConnectionFragment;
@@ -124,5 +125,8 @@ public class PreferenceInitializer {
     }
     edit.commit();
 
+    // Performance optimization, don't re-run setDefaultValues on release builds
+    boolean reRunSetDefaultValues = Helpers.isDebugVersion();
+    PreferenceManager.setDefaultValues(act, R.xml.settings, reRunSetDefaultValues);
   }
 }

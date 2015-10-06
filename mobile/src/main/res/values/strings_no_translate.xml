@@ -4,7 +4,7 @@
     <string name="nfc">NFC</string>
     <string name="color_temp_initial_value">3200</string>
     <string name="cap_short_none"></string>
-    <string name="action_debugging_tools">Debugging Tools</string>
+    <string name="developer_options_title">Developer options</string>
     <string name="action_debug_add_fake_bulb">Add fake bulb</string>
     <string name="star">★</string>
     <string name="cap_rgb_state">RGB</string>
@@ -48,6 +48,13 @@
     
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="preference_use_system_language">USE_SYSTEM_LANGUAGE</string>
+    <string name="preference_user_selected_locale_lang">USER_SELECTED_LOCALE_LANG</string>
+    <string name="preference_show_nfc_controls">SHOW_ACTIVITY_ON_NFC_READ</string>
+    <string name="preference_social_links">SOCIAL_LINKS</string>
+    <string name="preference_build_version">BUILD_VERSION</string>
+    <string name="preference_developer_options">DEVELOPER_OPTIONS</string>
 
     <array name="language_names">
         <item>English</item>

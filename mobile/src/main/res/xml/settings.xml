@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference android:title="@string/rate_on_google_play">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="market://details?id=com.kuxhausen.huemore" />
+    </Preference>
+
+    <Preference
+        android:key="@string/preference_social_links"
+        android:title="@string/action_communities" />
+
+    <PreferenceCategory android:title="@string/settings_category_general">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/preference_show_nfc_controls"
+            android:summary="@string/settings_nfc_controls_descriptor"
+            android:title="@string/settings_nfc_controls_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:disableDependentsState="true"
+            android:key="@string/preference_use_system_language"
+            android:summary="@string/settings_use_system_language" />
+
+        <ListPreference
+            android:dependency="@string/preference_use_system_language"
+            android:dialogTitle="@string/language_prompt"
+            android:entries="@array/language_names"
+            android:entryValues="@array/language_codes"
+            android:key="@string/preference_user_selected_locale_lang"
+            android:title="@string/language_prompt" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_category_about">
+        <Preference
+            android:key="@string/preference_build_version"
+            android:title="@string/settings_build_version" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

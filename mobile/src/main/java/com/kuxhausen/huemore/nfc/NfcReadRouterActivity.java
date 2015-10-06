@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.kuxhausen.huemore.Helpers;
+import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
@@ -26,7 +27,7 @@ public class NfcReadRouterActivity extends Activity {
     con.startService(srv);
 
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(con);
-    if (settings.getBoolean(PreferenceKeys.SHOW_ACTIVITY_ON_NFC_READ, true)) {
+    if (settings.getBoolean(getString(R.string.preference_show_nfc_controls), true)) {
       Intent i = new Intent(this, NfcReaderActivity.class);
       i.putExtra(InternalArguments.ENCODED_MOOD, encodedMood);
       startActivity(i);

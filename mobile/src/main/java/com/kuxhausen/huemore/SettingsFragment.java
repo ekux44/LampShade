@@ -1,128 +1,98 @@
 package com.kuxhausen.huemore;
 
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-import com.kuxhausen.huemore.persistence.Definitions.PreferenceKeys;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
-public class SettingsFragment extends Fragment implements OnClickListener,
-                                                          AdapterView.OnItemSelectedListener {
-
-  private SharedPreferences mSettings;
-  private CheckBox mEnableNfcReadPage;
-  private Spinner mLanguageSelector;
-  private List<String> mLocalizationCodes;
-  private int mCurrentSelection = 0;
+public class SettingsFragment extends PreferenceFragmentCompat implements
+                                                               SharedPreferences.OnSharedPreferenceChangeListener {
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
-    View myView = inflater.inflate(R.layout.settings, container, false);
+  public void onCreatePreferences(Bundle bundle, String s) {
+    addPreferencesFromResource(R.xml.settings);
 
-    this.getActivity().setTitle(R.string.action_settings);
+    if (Helpers.isDebugVersion()) {
+      Context ctx = getPreferenceManager().getContext();
 
-    Button rateButton = (Button) myView.findViewById(R.id.rateButton);
-    rateButton.setOnClickListener(this);
-
-    Button communitiesButton = (Button) myView.findViewById(R.id.action_communities);
-    communitiesButton.setOnClickListener(this);
-
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      Button debugButton = (Button) myView.findViewById(R.id.action_debugging);
-      debugButton.setOnClickListener(this);
-      debugButton.setVisibility(View.VISIBLE);
+      Preference preference = new Preference(ctx);
+      preference.setKey(getString(R.string.preference_developer_options));
+      preference.setTitle(R.string.developer_options_title);
+      this.getPreferenceScreen().addPreference(preference);
     }
 
-    mSettings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+    showSelectedLanguage();
 
-    mEnableNfcReadPage = (CheckBox) myView.findViewById(R.id.showNfcReadPageCheckBox);
-    if (mSettings.getBoolean(PreferenceKeys.SHOW_ACTIVITY_ON_NFC_READ, true)) {
-      mEnableNfcReadPage.setChecked(true);
-    }
-
-    mLocalizationCodes = Arrays.asList(getResources().getStringArray(R.array.language_codes));
-
-    mLanguageSelector = (Spinner) myView.findViewById(R.id.language_selector);
-    mLanguageSelector.setOnItemSelectedListener(this);
-
-    String currentLang = Locale.getDefault().getLanguage();
-    if (mLocalizationCodes.contains(currentLang)) {
-      mCurrentSelection = mLocalizationCodes.indexOf(currentLang);
-      mLanguageSelector.setSelection(mCurrentSelection);
-    }
-
-    TextView buildVersionTextView = (TextView) myView.findViewById(R.id.build_version);
-    buildVersionTextView.append(": " + BuildConfig.VERSION_NAME);
-
-    return myView;
+    Preference buildVersion = getPreferenceScreen().findPreference(
+        getString(R.string.preference_build_version));
+    buildVersion.setSummary(BuildConfig.VERSION_NAME);
   }
 
-  @Override
-  public void onClick(View v) {
-    switch (v.getId()) {
-      case R.id.rateButton:
-        this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="
-                                                                    + "com.kuxhausen.huemore")));
-        break;
-      case R.id.action_communities:
-        CommunityDialogFragment communities = new CommunityDialogFragment();
-        communities.show(getChildFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-        break;
-      case R.id.action_debugging:
-        DebugDialogFragment debug = new DebugDialogFragment();
-        debug.show(getActivity().getSupportFragmentManager(),
-                   InternalArguments.FRAG_MANAGER_DIALOG_TAG);
-        break;
-    }
-  }
+  public void showSelectedLanguage() {
+    String
+        userSelectedLangCode =
+        getPreferenceManager().getSharedPreferences()
+            .getString(getString(R.string.preference_user_selected_locale_lang), null);
 
-  @Override
-  public void onStop() {
-    super.onStop();
+    String[] langCodes = getResources().getStringArray(R.array.language_codes);
+    String[] langNames = getResources().getStringArray(R.array.language_names);
 
-    Editor edit = mSettings.edit();
-    edit.putBoolean(PreferenceKeys.SHOW_ACTIVITY_ON_NFC_READ, mEnableNfcReadPage.isChecked());
-    edit.commit();
-  }
+    Preference userSelectedLang = getPreferenceScreen().findPreference(
+        getString(R.string.preference_user_selected_locale_lang));
 
-  @Override
-  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-    if (position != mCurrentSelection) {
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-      Editor edit = prefs.edit();
-      edit.putString(PreferenceKeys.USER_SELECTED_LOCALE_LANG, mLocalizationCodes.get(position));
-      edit.commit();
-
-      mCurrentSelection = position;
-
-      //now reload the page with the new language (doesn't work on Gingerbread)
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        getActivity().recreate();
+    for (int i = 0; i < langCodes.length; i++) {
+      if (langCodes[i].equals(userSelectedLangCode)) {
+        userSelectedLang.setSummary(langNames[i]);
+        return;
       }
     }
   }
 
   @Override
-  public void onNothingSelected(AdapterView<?> parent) {
+  public void onResume() {
+    super.onResume();
+    getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override
+  public void onPause() {
+    getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    super.onPause();
+  }
+
+  @Override
+  public boolean onPreferenceTreeClick(Preference preference) {
+    String key = preference.getKey();
+
+    if (getString(R.string.preference_social_links).equals(key)) {
+      CommunityDialogFragment communities = new CommunityDialogFragment();
+      communities.show(getActivity().getSupportFragmentManager(),
+                       InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+      return true;
+
+    } else if (getString(R.string.preference_developer_options).equals(key)) {
+      DebugDialogFragment debug = new DebugDialogFragment();
+      debug.show(getActivity().getSupportFragmentManager(),
+                 InternalArguments.FRAG_MANAGER_DIALOG_TAG);
+      return true;
+
+    }
+    return super.onPreferenceTreeClick(preference);
+  }
+
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    if (getString(R.string.preference_user_selected_locale_lang).equals(key)) {
+      //now reload the page with the new language (doesn't work on Gingerbread)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        getActivity().recreate();
+      } else {
+        showSelectedLanguage();
+      }
+    }
   }
 }
