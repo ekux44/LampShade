@@ -2,9 +2,6 @@ package com.kuxhausen.huemore.net.dev;
 
 import android.content.Context;
 
-import com.kuxhausen.huemore.net.DeviceDriver;
-import com.kuxhausen.huemore.net.DeviceListener;
-
 public class SampleDeviceDriver implements DeviceDriver {
 
   @Override

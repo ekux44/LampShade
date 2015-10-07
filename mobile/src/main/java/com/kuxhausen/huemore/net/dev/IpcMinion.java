@@ -8,9 +8,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-import com.kuxhausen.huemore.net.DeviceDriver;
-import com.kuxhausen.huemore.net.DeviceListener;
-
 import java.lang.ref.WeakReference;
 
 /**

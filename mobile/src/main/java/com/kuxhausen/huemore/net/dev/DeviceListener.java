@@ -1,4 +1,4 @@
-package com.kuxhausen.huemore.net;
+package com.kuxhausen.huemore.net.dev;
 
 import com.kuxhausen.huemore.net.dev.StateMessage;
 

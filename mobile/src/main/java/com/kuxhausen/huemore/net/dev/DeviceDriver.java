@@ -1,10 +1,6 @@
-package com.kuxhausen.huemore.net;
+package com.kuxhausen.huemore.net.dev;
 
 import android.content.Context;
-
-import com.kuxhausen.huemore.net.dev.BulbNameMessage;
-import com.kuxhausen.huemore.net.dev.ConnectivityMessage;
-import com.kuxhausen.huemore.net.dev.StateMessage;
 
 public interface DeviceDriver {
 

@@ -1,7 +1,5 @@
 package com.kuxhausen.huemore.net.dev;
 
-import com.kuxhausen.huemore.net.DeviceDriver;
-
 /**
  * Sample implementation of a service to represent a device driver in bound Inter-Process
  * Communication with the device manager
