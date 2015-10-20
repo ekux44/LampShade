@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
 import com.kuxhausen.huemore.CommunityDialogFragment;
+import com.kuxhausen.huemore.DisableDozeDialogFragment;
 import com.kuxhausen.huemore.Helpers;
 import com.kuxhausen.huemore.NetworkManagedActivity;
 import com.kuxhausen.huemore.R;
@@ -91,6 +92,8 @@ public class PreferenceInitializer {
       edit.putBoolean(PreferenceKeys.DEFAULT_TO_MOODS, true);
       edit.commit();
     }
+
+    DisableDozeDialogFragment.showDozeOptOutIfNeeded(act);
 
     // check to see if the bridge IP address is setup yet
     String[] columns = {BaseColumns._ID, NetConnectionColumns.TYPE_COLUMN};
