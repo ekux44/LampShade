@@ -35,6 +35,9 @@ android {
             targetSdkVersion 22
         }
     }
+    sourceSets {
+        release.res.srcDirs = ['res', '../../trademarks']
+    }
 }
 
 def Properties props = new Properties()
