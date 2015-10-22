@@ -38,7 +38,7 @@ public class DisableDozeDialogFragment extends DialogFragment {
       PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
       return !pm.isIgnoringBatteryOptimizations(BuildConfig.APPLICATION_ID);
     }
-    return true;
+    return false;
   }
 
   public static void showDozeOptOutIfNeeded(AppCompatActivity activity) {
