@@ -17,7 +17,7 @@
             android:summary="@string/settings_nfc_controls_descriptor"
             android:title="@string/settings_nfc_controls_title" />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:disableDependentsState="true"
             android:key="@string/preference_use_system_language"
