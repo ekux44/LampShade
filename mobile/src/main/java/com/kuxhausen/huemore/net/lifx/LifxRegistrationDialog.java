@@ -49,7 +49,7 @@ public class LifxRegistrationDialog extends DialogFragment implements
 
   private Context mContext;
   private LFXNetworkContext networkContext;
-  private WifiManager.MulticastLock ml = null;
+  private WifiManager.MulticastLock multicastLock = null;
   private ArrayAdapter<String> candidateBulbsAdapter;
   private ArrayList<String> candidateBulbNames;
   private ArrayList<String> candidateBulbDeviceIds;
@@ -66,9 +66,9 @@ public class LifxRegistrationDialog extends DialogFragment implements
   public Dialog onCreateDialog(Bundle savedInstanceState) {
 
     WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-    ml = wifi.createMulticastLock("lifx_samples_tag");
-    ml.setReferenceCounted(true);
-    ml.acquire();
+    multicastLock = wifi.createMulticastLock("lifx_samples_tag");
+    multicastLock.setReferenceCounted(true);
+    multicastLock.acquire();
 
     networkContext = LFXClient.getSharedInstance(mContext).getLocalNetworkContext();
     networkContext.getAllLightsCollection().addLightCollectionListener(this);
@@ -146,6 +146,10 @@ public class LifxRegistrationDialog extends DialogFragment implements
           networkContext.disconnect();
           networkContext = null;
         }
+        if (multicastLock != null) {
+          multicastLock.release();
+          multicastLock = null;
+        }
 
         //now add everything to database
         for (Pair<ContentValues, ContentValues> valuesPair : toAdd) {
@@ -179,9 +183,11 @@ public class LifxRegistrationDialog extends DialogFragment implements
   public void onDestroy() {
     if (networkContext != null) {
       networkContext.disconnect();
+      networkContext = null;
     }
-    if (ml != null) {
-      ml.release();
+    if (multicastLock != null) {
+      multicastLock.release();
+      multicastLock = null;
     }
     super.onDestroy();
   }
@@ -189,10 +195,12 @@ public class LifxRegistrationDialog extends DialogFragment implements
   private void updateCandidateList() {
     candidateBulbNames.clear();
     candidateBulbDeviceIds.clear();
-    for (LFXLight light : networkContext.getAllLightsCollection().getLights()) {
-      if (!existingBulbDeviceIds.contains(light.getDeviceID())) {
-        candidateBulbNames.add(light.getLabel());
-        candidateBulbDeviceIds.add(light.getDeviceID());
+    if(networkContext != null) {
+      for (LFXLight light : networkContext.getAllLightsCollection().getLights()) {
+        if (!existingBulbDeviceIds.contains(light.getDeviceID())) {
+          candidateBulbNames.add(light.getLabel());
+          candidateBulbDeviceIds.add(light.getDeviceID());
+        }
       }
     }
     bulbsListView.setAdapter(candidateBulbsAdapter);
