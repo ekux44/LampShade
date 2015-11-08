@@ -52,10 +52,6 @@ class AlarmDataProviderObserver extends ContentObserver {
   }
 }
 
-
-/**
- * The weather widget's AppWidgetProvider.
- */
 public class AlarmWidgetProvider extends AppWidgetProvider {
 
   private static HandlerThread sWorkerThread;

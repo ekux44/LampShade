@@ -49,10 +49,6 @@ class SmallGroupDataProviderObserver extends ContentObserver {
   }
 }
 
-
-/**
- * The weather widget's AppWidgetProvider.
- */
 public class SmallGroupWidgetProvider extends AppWidgetProvider {
 
   private static HandlerThread sWorkerThread;

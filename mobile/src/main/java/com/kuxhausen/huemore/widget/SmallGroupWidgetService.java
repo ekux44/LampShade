@@ -99,12 +99,10 @@ class SmallGroupStackRemoteViewsFactory implements RemoteViewsService.RemoteView
   }
 
   public RemoteViews getLoadingView() {
-    // We aren't going to return a default loading view in this sample
     return null;
   }
 
   public int getViewTypeCount() {
-    // Technically, we have two types of views (the dark and light background views)
     return 1;
   }
 
