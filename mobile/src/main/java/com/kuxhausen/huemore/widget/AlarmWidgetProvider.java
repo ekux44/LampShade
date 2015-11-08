@@ -91,7 +91,7 @@ public class AlarmWidgetProvider extends AppWidgetProvider {
     final String action = intent.getAction();
     if (action.equals(InternalArguments.CLICK_ACTION)) {
 
-      long id = intent.getIntExtra(InternalArguments.ALARM_ID, -1);
+      long id = intent.getLongExtra(InternalArguments.ALARM_ID, -1);
       AlarmData data = AlarmLogic.getAlarm(ctx, id);
       AlarmLogic.toggleAlarm(ctx, data);
     }
