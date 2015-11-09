@@ -56,7 +56,8 @@ public class BrightnessManager {
 
   public void setState(NetworkBulb netBulb, BulbState targetState) {
     if (netBulb == null || targetState == null || !mBulbs.contains(netBulb)) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(
+          (netBulb == null) + "," + (targetState == null) + "," + (!mBulbs.contains(netBulb)));
     }
 
     BulbState adjusted = targetState.clone();
