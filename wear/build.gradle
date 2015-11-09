@@ -6,11 +6,11 @@ android {
         playRelease
     }
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 20
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 82 // must match the value in mobile
     }
     buildTypes {

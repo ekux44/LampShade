@@ -9,11 +9,9 @@ android {
         playRelease
     }
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
-        minSdkVersion 10
-        targetSdkVersion 23
         versionCode 82 // version code in wear module must kept in sync with this
         versionName "3.2.1"
     }
