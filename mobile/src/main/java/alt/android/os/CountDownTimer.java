@@ -42,6 +42,7 @@ import android.os.SystemClock;
  * relevant when the implementation of {@link #onTick(long)} takes an amount of time to execute that
  * is significant compared to the countdown interval.
  */
+// This modified implementation is required for all devices older Android 5.0
 public abstract class CountDownTimer {
 
   /**
