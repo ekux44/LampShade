@@ -69,7 +69,7 @@ public abstract class NetworkManagedActivity extends ActionBarActivity implement
 
   @Override
   public void onResume() {
-    super.onPause();
+    super.onResume();
     // Bind to LocalService
     Intent intent = new Intent(this, ConnectivityService.class);
     startService(intent);
