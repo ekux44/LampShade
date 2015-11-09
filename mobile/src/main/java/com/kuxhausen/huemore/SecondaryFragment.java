@@ -92,10 +92,12 @@ public class SecondaryFragment extends Fragment
 
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-          DeviceManager dm = mParent.getService().getDeviceManager();
-          if (dm.getSelectedGroup() != null) {
-            dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+        if (mParent.boundToService()) {
+          if (fromUser) {
+            DeviceManager dm = mParent.getService().getDeviceManager();
+            if (dm.getSelectedGroup() != null) {
+              dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+            }
           }
         }
       }
@@ -116,10 +118,12 @@ public class SecondaryFragment extends Fragment
 
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-          DeviceManager dm = mParent.getService().getDeviceManager();
-          if (dm.getSelectedGroup() != null) {
-            dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+        if (mParent.boundToService()) {
+          if (fromUser) {
+            DeviceManager dm = mParent.getService().getDeviceManager();
+            if (dm.getSelectedGroup() != null) {
+              dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+            }
           }
         }
       }

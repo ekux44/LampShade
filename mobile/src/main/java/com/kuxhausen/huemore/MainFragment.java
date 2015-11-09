@@ -115,10 +115,12 @@ public class MainFragment extends Fragment implements
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-          if (fromUser) {
-            DeviceManager dm = mParent.getService().getDeviceManager();
-            if (dm.getSelectedGroup() != null) {
-              dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+          if (mParent.boundToService()) {
+            if (fromUser) {
+              DeviceManager dm = mParent.getService().getDeviceManager();
+              if (dm.getSelectedGroup() != null) {
+                dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+              }
             }
           }
         }
@@ -139,10 +141,12 @@ public class MainFragment extends Fragment implements
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-          if (fromUser) {
-            DeviceManager dm = mParent.getService().getDeviceManager();
-            if (dm.getSelectedGroup() != null) {
-              dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+          if (mParent.boundToService()) {
+            if (fromUser) {
+              DeviceManager dm = mParent.getService().getDeviceManager();
+              if (dm.getSelectedGroup() != null) {
+                dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+              }
             }
           }
         }
@@ -260,13 +264,15 @@ public class MainFragment extends Fragment implements
 
   @Override
   public void onStateChanged() {
-    DeviceManager dm = mParent.getService().getDeviceManager();
+    if(mParent.boundToService()) {
+      DeviceManager dm = mParent.getService().getDeviceManager();
 
-    if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null
-        && dm.getSelectedGroup() != null) {
-      int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
-      mBrightnessBar.setProgress(brightness);
-      mMaxBrightnessBar.setProgress(brightness);
+      if (!mIsTrackingTouch && mBrightnessBar != null && mMaxBrightnessBar != null
+          && dm.getSelectedGroup() != null) {
+        int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
+        mBrightnessBar.setProgress(brightness);
+        mMaxBrightnessBar.setProgress(brightness);
+      }
     }
   }
 
