@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
@@ -41,11 +42,11 @@ public class MoodPlayer {
     restoreNappingMoods();
   }
 
-  public void playMood(Group g, Mood m, String mName, Integer maxBri) {
+  public void playMood(@NonNull Group g, Mood m, String mName, Integer maxBri) {
     playMood(g, m, mName, maxBri, SystemClock.elapsedRealtime(), null);
   }
 
-  public synchronized void playMood(Group g, Mood m, String mName, Integer maxBri,
+  public synchronized void playMood(@NonNull Group g, Mood m, String mName, Integer maxBri,
                                     Long savedStartTime,
                                     Long savedProgress) {
     if (g == null) {

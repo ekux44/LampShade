@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
+import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.DecodeErrorActivity;
@@ -181,10 +182,16 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
           startActivity(i);
         }
       } else if (moodName != null && groupName != null) {
-        Group g = new DatabaseGroup(groupName, this);
-        Mood m = Utils.getMoodFromDatabase(moodName, this);
+        Group group = DatabaseGroup.load(groupName, this);
+        Mood mood = Utils.getMoodFromDatabase(moodName, this);
 
-        getMoodPlayer().playMood(g, m, moodName, maxBri);
+        if (group == null) {
+          Log.e("ConnectivityService", "Failed to load group:" + groupName);
+        } else if (mood == null) {
+          Log.e("ConnectivityService", "Failed to load mood:" + moodName);
+        } else {
+          getMoodPlayer().playMood(group, mood, moodName, maxBri);
+        }
       }
     }
 

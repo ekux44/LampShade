@@ -3,6 +3,9 @@ package com.kuxhausen.huemore.state;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
@@ -22,7 +25,7 @@ public class DatabaseGroup extends Group {
   };
 
   // must be kept in sync with DatabaseGroup constructor
-  public final static String[] GROUPBULB_QUERY_COLUMNS = {
+  private final static String[] GROUPBULB_QUERY_COLUMNS = {
       GroupBulbColumns._ID,
       GroupBulbColumns.COL_GROUP_ID,
       GroupBulbColumns.COL_BULB_PRECEDENCE,
@@ -33,7 +36,7 @@ public class DatabaseGroup extends Group {
   private String mName, mLowercaseName;
   private int mPriority;
   private int mFlags;
-  private List<Long> mGroupBulbNetId = new ArrayList<Long>();
+  private List<Long> mGroupBulbNetId = new ArrayList<>();
 
   public static DatabaseGroup loadAllGroup(Context context) {
     String where = GroupColumns.COL_GROUP_FLAGS + "=?";
@@ -51,15 +54,25 @@ public class DatabaseGroup extends Group {
     }
   }
 
-  public DatabaseGroup(String name, Context c) {
-    this(getGroupCursor(name, c), c);
+  public static @Nullable DatabaseGroup load(@NonNull String name, @NonNull Context context) {
+    Cursor cursor = getGroupCursor(name, context);
+    if (cursor != null) {
+      return new DatabaseGroup(cursor, context);
+    } else {
+      return null;
+    }
   }
 
-  public DatabaseGroup(long id, Context c) {
-    this(getGroupCursor(id, c), c);
+  public static @Nullable DatabaseGroup load(long id, @NonNull Context context) {
+    Cursor cursor = getGroupCursor(id, context);
+    if (cursor != null) {
+      return new DatabaseGroup(cursor, context);
+    } else {
+      return null;
+    }
   }
 
-  public DatabaseGroup(Cursor groupCursor, Context c) {
+  public DatabaseGroup(@NonNull Cursor groupCursor, @NonNull Context c) {
     mId = groupCursor.getLong(0);
     mName = groupCursor.getString(1);
     mLowercaseName = groupCursor.getString(2);
@@ -82,7 +95,7 @@ public class DatabaseGroup extends Group {
 
   }
 
-  private static Cursor getGroupCursor(String name, Context c) {
+  private static @Nullable Cursor getGroupCursor(String name, @NonNull Context c) {
     String[] groupWhere = {name};
     Cursor
         groupCursor =
@@ -90,14 +103,33 @@ public class DatabaseGroup extends Group {
             .query(GroupColumns.URI, GROUP_QUERY_COLUMNS, GroupColumns.COL_GROUP_NAME + "=?",
                    groupWhere, null);
 
-    if (groupCursor.moveToFirst()) {
+    if (groupCursor!=null && groupCursor.moveToFirst()) {
       return groupCursor;
     } else {
-      throw new IllegalStateException("Group " + name + " not in database");
+
+      if (groupCursor != null) {
+        groupCursor.close();
+      }
+
+      String[] lowercaseGroupWhere = {name.toLowerCase().trim()};
+      Cursor lowercaseGroupCursor = c.getContentResolver().query(GroupColumns.URI,
+                                                                 GROUP_QUERY_COLUMNS,
+                                                                 GroupColumns.COL_GROUP_LOWERCASE_NAME
+                                                                 + "=?", lowercaseGroupWhere, null);
+      if (lowercaseGroupCursor != null && lowercaseGroupCursor.moveToFirst()) {
+        return lowercaseGroupCursor;
+      } else {
+        Log.w("Database", "Group " + name + " not in database");
+
+        if (lowercaseGroupCursor != null) {
+          lowercaseGroupCursor.close();
+        }
+        return null;
+      }
     }
   }
 
-  private static Cursor getGroupCursor(long id, Context c) {
+  private static @Nullable Cursor getGroupCursor(long id, @NonNull Context c) {
     String[] groupWhere = {"" + id};
     Cursor
         groupCursor =
@@ -105,10 +137,14 @@ public class DatabaseGroup extends Group {
             .query(GroupColumns.URI, GROUP_QUERY_COLUMNS, GroupColumns._ID + "=?", groupWhere,
                    null);
 
-    if (groupCursor.moveToFirst()) {
+    if (groupCursor != null && groupCursor.moveToFirst()) {
       return groupCursor;
     } else {
-      throw new IllegalStateException("Group id " + id + " not in database");
+      Log.w("Database", "Group id " + id + " not in database");
+      if (groupCursor != null) {
+        groupCursor.close();
+      }
+      return null;
     }
   }
 
@@ -188,7 +224,7 @@ public class DatabaseGroup extends Group {
   public static DatabaseGroup createGroup(String name, Context c) {
     ContentValues values = new ContentValues();
     values.put(GroupColumns.COL_GROUP_NAME, name);
-    values.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, name.toLowerCase());
+    values.put(GroupColumns.COL_GROUP_LOWERCASE_NAME, name.toLowerCase().trim());
     values.put(GroupColumns.COL_GROUP_PRIORITY, GroupColumns.PRIORITY_UNSTARRED);
     values.put(GroupColumns.COL_GROUP_FLAGS, GroupColumns.FLAG_NORMAL);
 
@@ -196,7 +232,7 @@ public class DatabaseGroup extends Group {
         id =
         Long.parseLong(
             c.getContentResolver().insert(GroupColumns.URI, values).getLastPathSegment());
-    return new DatabaseGroup(id, c);
+    return load(id, c);
   }
 
   /*

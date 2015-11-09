@@ -80,7 +80,7 @@ public class EditGroupDialogFragment extends DialogFragment implements
 
     Bundle args = this.getArguments();
     if (args != null && args.containsKey(InternalArguments.GROUP_ID)) {
-      initialGroup = new DatabaseGroup(args.getLong(InternalArguments.GROUP_ID), mParent);
+      initialGroup = DatabaseGroup.load(args.getLong(InternalArguments.GROUP_ID), mParent);
       mNameEditText.setText(initialGroup.getName());
     }
 

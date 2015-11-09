@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
@@ -13,13 +14,16 @@ import java.util.Calendar;
 
 public class Utils {
 
-  public static Mood getMoodFromDatabase(String moodName, Context ctx) {
+  public static @Nullable Mood getMoodFromDatabase(String moodName, Context ctx) {
     String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
     String[] mWhereClause = {moodName};
     Cursor moodCursor =
         ctx.getContentResolver().query(Definitions.MoodColumns.MOODS_URI, moodColumns,
                                        MoodColumns.COL_MOOD_NAME + "=?", mWhereClause, null);
-    moodCursor.moveToFirst();
+    if (!moodCursor.moveToFirst()) {
+      moodCursor.close();
+      return null;
+    }
     String encodedMood = moodCursor.getString(0);
     moodCursor.close();
 

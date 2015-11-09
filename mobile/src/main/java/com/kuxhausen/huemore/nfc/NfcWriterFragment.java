@@ -261,7 +261,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
   public void preview() {
 
     String groupName = ((TextView) groupSpinner.getSelectedView()).getText().toString();
-    Group g = new DatabaseGroup(groupName, context);
+    Group g = DatabaseGroup.load(groupName, context);
 
     String moodName = ((TextView) moodSpinner.getSelectedView()).getText().toString();
     Mood m = Utils.getMoodFromDatabase(moodName, context);
@@ -278,7 +278,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
     String url = "lampshade.io/nfc?";
 
     Group g =
-        new DatabaseGroup(((TextView) groupSpinner.getSelectedView()).getText().toString(),
+        DatabaseGroup.load(((TextView) groupSpinner.getSelectedView()).getText().toString(),
                           context);
 
     Mood m =
