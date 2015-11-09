@@ -209,7 +209,7 @@ public class PlayingMood {
    */
   public List<Pair<List<Long>, BulbState>> tick(long throughTime) {
     if (throughTime < mLastTickedTime) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(throughTime+",'"+mLastTickedTime);
     }
 
     long sinceT = mLastTickedTime;
