@@ -63,14 +63,16 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
    * Called after onCreate when service attaching to Activity(s)
    */
   public IBinder onBind(Intent intent) {
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.DEAD) {
-      mLifecycleController.onStartNapping();
-    }
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
-      mLifecycleController.onStartWorking();
-    }
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.WORKING) {
-      mLifecycleController.onStartBound();
+    synchronized (mLifecycleController) {
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.DEAD) {
+        mLifecycleController.onStartNapping();
+      }
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
+        mLifecycleController.onStartWorking();
+      }
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.WORKING) {
+        mLifecycleController.onStartBound();
+      }
     }
 
     return mBinder;
@@ -80,9 +82,11 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   public boolean onUnbind(Intent intent) {
     super.onUnbind(intent);
 
-    if (mLifecycleController.getLifecycleState()
-        == LifecycleController.LifecycleState.BOUND_TO_UI) {
-      mLifecycleController.onStopBound();
+    synchronized (mLifecycleController) {
+      if (mLifecycleController.getLifecycleState()
+          == LifecycleController.LifecycleState.BOUND_TO_UI) {
+        mLifecycleController.onStopBound();
+      }
     }
 
     return true; // ensures onRebind is called
@@ -92,14 +96,16 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   public void onRebind(Intent intent) {
     super.onRebind(intent);
 
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.DEAD) {
-      mLifecycleController.onStartNapping();
-    }
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
-      mLifecycleController.onStartWorking();
-    }
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.WORKING) {
-      mLifecycleController.onStartBound();
+    synchronized (mLifecycleController) {
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.DEAD) {
+        mLifecycleController.onStartNapping();
+      }
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
+        mLifecycleController.onStartWorking();
+      }
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.WORKING) {
+        mLifecycleController.onStartBound();
+      }
     }
   }
 
@@ -110,11 +116,14 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
   public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
 
-      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.DEAD) {
-        mLifecycleController.onStartNapping();
-      }
-      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
-        mLifecycleController.onStartWorking();
+      synchronized (mLifecycleController) {
+        if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.DEAD) {
+          mLifecycleController.onStartNapping();
+        }
+        if (mLifecycleController.getLifecycleState()
+            == LifecycleController.LifecycleState.NAPPING) {
+          mLifecycleController.onStartWorking();
+        }
       }
 
       // remove any possible launched wakelocks
@@ -255,15 +264,17 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
 
   @Override
   public void onDestroy() {
-    if (mLifecycleController.getLifecycleState()
-        == LifecycleController.LifecycleState.BOUND_TO_UI) {
-      mLifecycleController.onStopBound();
-    }
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.WORKING) {
-      mLifecycleController.onStopWorking();
-    }
-    if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
-      mLifecycleController.onStopNappng();
+    synchronized (mLifecycleController) {
+      if (mLifecycleController.getLifecycleState()
+          == LifecycleController.LifecycleState.BOUND_TO_UI) {
+        mLifecycleController.onStopBound();
+      }
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.WORKING) {
+        mLifecycleController.onStopWorking();
+      }
+      if (mLifecycleController.getLifecycleState() == LifecycleController.LifecycleState.NAPPING) {
+        mLifecycleController.onStopNappng();
+      }
     }
 
     super.onDestroy();

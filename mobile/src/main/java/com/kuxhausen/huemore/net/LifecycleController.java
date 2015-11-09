@@ -111,6 +111,9 @@ public class LifecycleController {
       throw new IllegalStateException();
     }
 
+    // Prevent the app from sleeping as the user may be launching into another bound activity.
+    mInternalClock.delaySleep();
+
     mLifecycleState = LifecycleState.WORKING;
   }
 
@@ -158,6 +161,13 @@ public class LifecycleController {
     }
 
     /**
+     * Delay the InternalClock from calling onStopWorking for the next second.
+     */
+    public void delaySleep() {
+      ticksTillSleep += TICKS_PER_SECOND;
+    }
+
+    /**
      * Callback fired on regular interval.
      *
      * @param millisUntilFinished The amount of time until finished.
@@ -165,29 +175,31 @@ public class LifecycleController {
     @Override
     public void onTick(long millisUntilFinished) {
       synchronized (LifecycleController.this) {
-        //every tenth of a second, pump mood player (which will in turn pump playing moods)
-        mMoodPlayer.tick();
+        synchronized (mMoodPlayer) {
+          //every tenth of a second, pump mood player (which will in turn pump playing moods)
+          mMoodPlayer.tick();
 
-        //Log.i("wtf", "tick");
+          //Log.i("wtf", "tick");
 
-        //also check device manager & mood player to see if can sleep
-        if (mMoodPlayer.nextEventTime() == null || mMoodPlayer.nextEventTime() > (
-            SystemClock.elapsedRealtime() + LifecycleController.MINIMUM_NAP_MILLISECONDS)) {
-          ticksTillSleep--;
+          //also check device manager & mood player to see if can sleep
+          if (mMoodPlayer.nextEventTime() == null || mMoodPlayer.nextEventTime() > (
+              SystemClock.elapsedRealtime() + LifecycleController.MINIMUM_NAP_MILLISECONDS)) {
+            ticksTillSleep--;
 
-          //Log.i("wtf", "NextEventTime null or > (elapsedRealtime+MINIMUM_NAP_MILLIS)");
+            //Log.i("wtf", "NextEventTime null or > (elapsedRealtime+MINIMUM_NAP_MILLIS)");
 
-          if (ticksTillSleep < 0) {
+            if (ticksTillSleep < 0) {
 
-            //Log.i("wtf","(ticksTillSleep < LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP");
+              //Log.i("wtf","(ticksTillSleep < LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP");
 
-            if (LifecycleController.this.getLifecycleState() == LifecycleState.WORKING) {
-              //Log.i("wtf", "currently Working");
-              LifecycleController.this.onStopWorking();
+              if (LifecycleController.this.getLifecycleState() == LifecycleState.WORKING) {
+                //Log.i("wtf", "currently Working");
+                LifecycleController.this.onStopWorking();
+              }
             }
+          } else {
+            ticksTillSleep = LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP;
           }
-        } else {
-          ticksTillSleep = LifecycleController.EMPTY_CONSECUTIVE_TICKS_TILL_SLEEP;
         }
       }
     }
