@@ -7,141 +7,141 @@ import java.util.ArrayList;
 public class BulbList {
 
   @SerializedName("1")
-  private Bulb b1;
+  private BulbAttributes b1;
   @SerializedName("2")
-  private Bulb b2;
+  private BulbAttributes b2;
   @SerializedName("3")
-  private Bulb b3;
+  private BulbAttributes b3;
   @SerializedName("4")
-  private Bulb b4;
+  private BulbAttributes b4;
   @SerializedName("5")
-  private Bulb b5;
+  private BulbAttributes b5;
   @SerializedName("6")
-  private Bulb b6;
+  private BulbAttributes b6;
   @SerializedName("7")
-  private Bulb b7;
+  private BulbAttributes b7;
   @SerializedName("8")
-  private Bulb b8;
+  private BulbAttributes b8;
   @SerializedName("9")
-  private Bulb b9;
+  private BulbAttributes b9;
   @SerializedName("10")
-  private Bulb b10;
+  private BulbAttributes b10;
   @SerializedName("11")
-  private Bulb b11;
+  private BulbAttributes b11;
   @SerializedName("12")
-  private Bulb b12;
+  private BulbAttributes b12;
   @SerializedName("13")
-  private Bulb b13;
+  private BulbAttributes b13;
   @SerializedName("14")
-  private Bulb b14;
+  private BulbAttributes b14;
   @SerializedName("15")
-  private Bulb b15;
+  private BulbAttributes b15;
   @SerializedName("16")
-  private Bulb b16;
+  private BulbAttributes b16;
   @SerializedName("17")
-  private Bulb b17;
+  private BulbAttributes b17;
   @SerializedName("18")
-  private Bulb b18;
+  private BulbAttributes b18;
   @SerializedName("19")
-  private Bulb b19;
+  private BulbAttributes b19;
   @SerializedName("20")
-  private Bulb b20;
+  private BulbAttributes b20;
   @SerializedName("21")
-  private Bulb b21;
+  private BulbAttributes b21;
   @SerializedName("22")
-  private Bulb b22;
+  private BulbAttributes b22;
   @SerializedName("23")
-  private Bulb b23;
+  private BulbAttributes b23;
   @SerializedName("24")
-  private Bulb b24;
+  private BulbAttributes b24;
   @SerializedName("25")
-  private Bulb b25;
+  private BulbAttributes b25;
   @SerializedName("26")
-  private Bulb b26;
+  private BulbAttributes b26;
   @SerializedName("27")
-  private Bulb b27;
+  private BulbAttributes b27;
   @SerializedName("28")
-  private Bulb b28;
+  private BulbAttributes b28;
   @SerializedName("29")
-  private Bulb b29;
+  private BulbAttributes b29;
   @SerializedName("30")
-  private Bulb b30;
+  private BulbAttributes b30;
   @SerializedName("31")
-  private Bulb b31;
+  private BulbAttributes b31;
   @SerializedName("32")
-  private Bulb b32;
+  private BulbAttributes b32;
   @SerializedName("33")
-  private Bulb b33;
+  private BulbAttributes b33;
   @SerializedName("34")
-  private Bulb b34;
+  private BulbAttributes b34;
   @SerializedName("35")
-  private Bulb b35;
+  private BulbAttributes b35;
   @SerializedName("36")
-  private Bulb b36;
+  private BulbAttributes b36;
   @SerializedName("37")
-  private Bulb b37;
+  private BulbAttributes b37;
   @SerializedName("38")
-  private Bulb b38;
+  private BulbAttributes b38;
   @SerializedName("39")
-  private Bulb b39;
+  private BulbAttributes b39;
   @SerializedName("40")
-  private Bulb b40;
+  private BulbAttributes b40;
   @SerializedName("41")
-  private Bulb b41;
+  private BulbAttributes b41;
   @SerializedName("42")
-  private Bulb b42;
+  private BulbAttributes b42;
   @SerializedName("43")
-  private Bulb b43;
+  private BulbAttributes b43;
   @SerializedName("44")
-  private Bulb b44;
+  private BulbAttributes b44;
   @SerializedName("45")
-  private Bulb b45;
+  private BulbAttributes b45;
   @SerializedName("46")
-  private Bulb b46;
+  private BulbAttributes b46;
   @SerializedName("47")
-  private Bulb b47;
+  private BulbAttributes b47;
   @SerializedName("48")
-  private Bulb b48;
+  private BulbAttributes b48;
   @SerializedName("49")
-  private Bulb b49;
+  private BulbAttributes b49;
   @SerializedName("50")
-  private Bulb b50;
+  private BulbAttributes b50;
 
   //experimental support for upto 64 hue bulbs. TODO support arbitrary bulbs once NFC rewrite
   @SerializedName("51")
-  private Bulb b51;
+  private BulbAttributes b51;
   @SerializedName("52")
-  private Bulb b52;
+  private BulbAttributes b52;
   @SerializedName("53")
-  private Bulb b53;
+  private BulbAttributes b53;
   @SerializedName("54")
-  private Bulb b54;
+  private BulbAttributes b54;
   @SerializedName("55")
-  private Bulb b55;
+  private BulbAttributes b55;
   @SerializedName("56")
-  private Bulb b56;
+  private BulbAttributes b56;
   @SerializedName("57")
-  private Bulb b57;
+  private BulbAttributes b57;
   @SerializedName("58")
-  private Bulb b58;
+  private BulbAttributes b58;
   @SerializedName("59")
-  private Bulb b59;
+  private BulbAttributes b59;
   @SerializedName("60")
-  private Bulb b60;
+  private BulbAttributes b60;
   @SerializedName("61")
-  private Bulb b61;
+  private BulbAttributes b61;
   @SerializedName("62")
-  private Bulb b62;
+  private BulbAttributes b62;
   @SerializedName("63")
-  private Bulb b63;
+  private BulbAttributes b63;
   @SerializedName("64")
-  private Bulb b64;
+  private BulbAttributes b64;
 
   public BulbList() {
   }
 
-  public Bulb[] getList() {
-    ArrayList<Bulb> ray = new ArrayList<Bulb>();
+  public BulbAttributes[] getList() {
+    ArrayList<BulbAttributes> ray = new ArrayList<BulbAttributes>();
     if (b1 != null) {
       b1.number = "1";
       ray.add(b1);
@@ -401,7 +401,7 @@ public class BulbList {
       ray.add(b64);
     }
 
-    Bulb[] list = new Bulb[ray.size()];
+    BulbAttributes[] list = new BulbAttributes[ray.size()];
     for (int i = 0; i < list.length; i++) {
       list[i] = ray.get(i);
     }

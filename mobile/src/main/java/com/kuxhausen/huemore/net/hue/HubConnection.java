@@ -15,7 +15,6 @@ import com.kuxhausen.huemore.net.Connection;
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
-import com.kuxhausen.huemore.net.hue.api.Bulb;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributesSuccessListener.OnBulbAttributesReturnedListener;
 import com.kuxhausen.huemore.net.hue.api.BulbListSuccessListener.OnBulbListReturnedListener;
@@ -210,10 +209,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
 
   @Override
-  public void onListReturned(Bulb[] result) {
+  public void onListReturned(BulbAttributes[] result) {
     outer:
     for (int i = 0; i < result.length; i++) {
-      Bulb fromHue = result[i];
+      BulbAttributes fromHue = result[i];
 
       for (int j = 0; j < mBulbList.size(); j++) {
         NetworkBulb fromMemory = mBulbList.get(j);

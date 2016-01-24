@@ -146,9 +146,9 @@ public class HueBulb implements NetworkBulb {
     bAttrs.name = name;
 
     for (Route route : mConnection.getBestRoutes()) {
-      NetworkMethods.PreformSetBulbAttributes(route, mConnection.mData.hashedUsername, mContext,
-                                              mConnection.getRequestQueue(), mConnection,
-                                              Integer.parseInt(mDeviceId), bAttrs);
+      NetworkMethods.setBulbAttributes(route, mConnection.mData.hashedUsername, mContext,
+                                       mConnection.getRequestQueue(), mConnection,
+                                       Integer.parseInt(mDeviceId), bAttrs);
     }
   }
 

@@ -15,7 +15,7 @@ public class BulbListSuccessListener extends BasicSuccessListener<BulbList> {
     /**
      * Called by HeadlinesFragment when a list item is selected
      */
-    public void onListReturned(Bulb[] result);
+    public void onListReturned(BulbAttributes[] result);
   }
 
 

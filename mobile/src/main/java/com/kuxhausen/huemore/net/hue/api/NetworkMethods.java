@@ -57,9 +57,9 @@ public class NetworkMethods {
     queue.add(req);
   }
 
-  public static void PreformSetBulbAttributes(Route route, String hash, Context context,
-                                              RequestQueue queue, ConnectionMonitor monitor,
-                                              int bulbNum, BulbAttributes bulbAtt) {
+  public static void setBulbAttributes(Route route, String hash, Context context,
+                                       RequestQueue queue, ConnectionMonitor monitor,
+                                       int bulbNum, BulbAttributes bulbAtt) {
     if (queue == null || bulbAtt == null) {
       return;
     }
@@ -68,7 +68,7 @@ public class NetworkMethods {
     String url = "http://" + route.address + "/api/" + hash + "/lights/" + bulbNum;
 
     GsonRequest<LightsPutResponse[]> req =
-        new GsonRequest<LightsPutResponse[]>(Method.PUT, url, gson.toJson(bulbAtt),
+        new GsonRequest<>(Method.PUT, url, gson.toJson(bulbAtt.getSettableAttributes()),
                                              LightsPutResponse[].class, null,
                                              new BasicSuccessListener<LightsPutResponse[]>(monitor,
                                                                                            route),
