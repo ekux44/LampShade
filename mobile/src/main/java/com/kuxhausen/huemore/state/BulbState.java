@@ -199,64 +199,53 @@ public class BulbState {
   }
 
   @Override
+  // TODO Override hashCode too or rename to matches() and update callers
   public boolean equals(Object obj) {
     if (obj == null || !(obj instanceof BulbState)) {
       throw new IllegalArgumentException();
     }
-
     BulbState other = (BulbState) obj;
 
-    if (this.getOn() != null ^ other.getOn() != null) {
+    if (this.getOn() == null ^ other.getOn() == null) {
       return false;
-    }
-    if (this.getOn() != null && other.getOn() != null && !this.getOn().equals(other.getOn())) {
-      return false;
-    }
-
-    if (this.get255Bri() != null ^ other.get255Bri() != null) {
-      return false;
-    }
-    if (this.get255Bri() != null && other.get255Bri() != null && !this.get255Bri()
-        .equals(other.get255Bri())) {
+    } else if (this.getOn() != null && !this.getOn().equals(other.getOn())) {
       return false;
     }
 
-    if (this.getTransitionTime() != null ^ other.getTransitionTime() != null) {
+    if (this.get255Bri() == null ^ other.get255Bri() == null) {
       return false;
-    }
-    if (this.getTransitionTime() != null && other.getTransitionTime() != null && !this
-        .getTransitionTime().equals(other.getTransitionTime())) {
-      return false;
-    }
-
-    if (this.getAlert() != null ^ other.getAlert() != null) {
-      return false;
-    }
-    if (this.getAlert() != null && other.getAlert() != null && !this.getAlert()
-        .equals(other.getAlert())) {
+    } else if (this.get255Bri() != null && !this.get255Bri().equals(other.get255Bri())) {
       return false;
     }
 
-    if (this.getEffect() != null ^ other.getEffect() != null) {
+    if (this.getTransitionTime() == null ^ other.getTransitionTime() == null) {
       return false;
-    }
-    if (this.getEffect() != null && other.getEffect() != null && !this.getEffect()
-        .equals(other.getEffect())) {
-      return false;
-    }
-
-    if (this.getMiredCT() != null ^ other.getMiredCT() != null) {
-      return false;
-    }
-    if (this.getMiredCT() != null && other.getMiredCT() != null && !this.getMiredCT()
-        .equals(other.getMiredCT())) {
+    } else if (this.getTransitionTime() != null
+               && !this.getTransitionTime().equals(other.getTransitionTime())) {
       return false;
     }
 
-    if (this.xy != null ^ other.xy != null) {
+    if (this.getAlert() == null ^ other.getAlert() == null) {
+      return false;
+    } else if (this.getAlert() != null && !this.getAlert().equals(other.getAlert())) {
       return false;
     }
-    if (this.xy != null && other.xy != null && !Arrays.equals(this.xy, other.xy)) {
+
+    if (this.getEffect() == null ^ other.getEffect() == null) {
+      return false;
+    } else if (this.getEffect() != null && !this.getEffect().equals(other.getEffect())) {
+      return false;
+    }
+
+    if (this.getMiredCT() == null ^ other.getMiredCT() == null) {
+      return false;
+    } else if (this.getMiredCT() != null && !this.getMiredCT().equals(other.getMiredCT())) {
+      return false;
+    }
+
+    if (this.xy == null ^ other.xy == null) {
+      return false;
+    } else if (this.xy != null && !Arrays.equals(this.xy, other.xy)) {
       return false;
     }
 
@@ -264,11 +253,8 @@ public class BulbState {
   }
 
   public boolean isEmpty() {
-    if (on == null && bri == null && xy == null && ct == null
-        && alert == null && effect == null && transitiontime == null) {
-      return true;
-    }
-    return false;
+    return (on == null && bri == null && xy == null && ct == null
+        && alert == null && effect == null && transitiontime == null);
   }
 
   public Boolean getOn() {
@@ -281,7 +267,7 @@ public class BulbState {
 
   public Integer getPercentBri() {
     if (bri == null) {
-      return bri;
+      return null;
     } else {
       return Math.max(1, Math.min(255, (int) Math.round(bri / 2.55)));
     }
@@ -313,7 +299,7 @@ public class BulbState {
 
   public void setMiredCT(Integer newCT) {
     if (newCT == null) {
-      ct = newCT;
+      ct = null;
     } else {
       ct = Math.max(1, newCT);
     }
@@ -331,7 +317,7 @@ public class BulbState {
 
   public void setKelvinCT(Integer newCT) {
     if (newCT == null) {
-      ct = newCT;
+      ct = null;
     } else {
       ct = Math.max(1, (1000000 / Math.max(1, newCT)));
     }
@@ -375,7 +361,7 @@ public class BulbState {
 
   public void setTransitionTime(Integer timeInDeciSeconds) {
     if (timeInDeciSeconds == null) {
-      transitiontime = timeInDeciSeconds;
+      transitiontime = null;
     } else {
       transitiontime = Math.max(0, timeInDeciSeconds);
     }
