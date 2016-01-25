@@ -215,17 +215,22 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       BulbAttributes fromHue = result[i];
 
       for (int j = 0; j < mBulbList.size(); j++) {
-        NetworkBulb fromMemory = mBulbList.get(j);
-
+        HueBulb fromMemory = mBulbList.get(j);
         // check to see if this bulb is already in our database
-        if (fromMemory instanceof HueBulb
-            && ((HueBulb) fromMemory).getHubBulbNumber().equals(fromHue.number)) {
+        if (fromMemory.getHubBulbNumber().equals(fromHue.number)) {
           if (!fromMemory.getName().equals(fromHue.name)) {
-            // same bulb but has been renamed by another device
-            // must update our version
-
+            // A known bulb's name has changed
             ContentValues cv = new ContentValues();
             cv.put(NetBulbColumns.NAME_COLUMN, fromHue.name);
+            String[] selectionArgs = {"" + fromHue.number};
+            mContext.getContentResolver().update(NetBulbColumns.URI, cv,
+                                                 NetBulbColumns.DEVICE_ID_COLUMN + " = ?",
+                                                 selectionArgs);
+          }
+          if (!fromMemory.getData().matches(fromHue.getHueBulbData())) {
+            // A known bulb's data attributes have changed
+            ContentValues cv = new ContentValues();
+            cv.put(NetBulbColumns.JSON_COLUMN, gson.toJson(fromHue.getHueBulbData()));
             String[] selectionArgs = {"" + fromHue.number};
             mContext.getContentResolver().update(NetBulbColumns.URI, cv,
                                                  NetBulbColumns.DEVICE_ID_COLUMN + " = ?",
@@ -242,16 +247,15 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
       cv.put(NetBulbColumns.NAME_COLUMN, bulbName);
       cv.put(NetBulbColumns.DEVICE_ID_COLUMN, bulbDeviceId);
       cv.put(NetBulbColumns.CONNECTION_DATABASE_ID, mBaseId);
-      cv.put(NetBulbColumns.JSON_COLUMN, gson.toJson(new HueBulbData()));
+      cv.put(NetBulbColumns.JSON_COLUMN, gson.toJson(fromHue.getHueBulbData()));
       cv.put(NetBulbColumns.TYPE_COLUMN, NetBulbColumns.NetBulbType.PHILIPS_HUE);
       cv.put(NetBulbColumns.CURRENT_MAX_BRIGHTNESS, 100);
-      String[] selectionArgs = {"" + fromHue.number};
       long bulbBaseId =
           Long.parseLong(mContext.getContentResolver().insert(NetBulbColumns.URI, cv)
                              .getLastPathSegment());
 
-      mBulbList.add(new HueBulb(mContext, bulbBaseId, bulbName, bulbDeviceId, new HueBulbData(),
-                                this));
+      mBulbList.add(new HueBulb(mContext, bulbBaseId, bulbName, bulbDeviceId,
+                                fromHue.getHueBulbData(), this));
 
     }
 

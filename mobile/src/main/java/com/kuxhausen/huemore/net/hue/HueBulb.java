@@ -162,4 +162,7 @@ public class HueBulb implements NetworkBulb {
     return mConnection.getConnectivityState();
   }
 
+  public HueBulbData getData() {
+    return mData;
+  }
 }

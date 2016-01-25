@@ -1,5 +1,6 @@
 package com.kuxhausen.huemore.net.hue.api;
 
+import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.state.BulbState;
 
 public class BulbAttributes {
@@ -10,19 +11,19 @@ public class BulbAttributes {
   public String modelid;
   public String swversion;
   /**
-   * Requires hub firmware 1.4
+   * @since hub firmware 1.4
    */
   public String uniqueid;
   /**
-   * Requires hub firmware 1.7
+   * @since hub firmware 1.7
    */
   public String manufacturername;
   /**
-   * Requires hub firmware 1.9
+   * @since hub firmware 1.9
    */
   public String luminaireuniqueid;
   /**
-   * Internal LampShade field, bulb's number as assigned by the hub
+   * Internal LampShade field. Bulb's number as assigned by the hub.
    */
   public String number;
 
@@ -37,5 +38,16 @@ public class BulbAttributes {
     BulbAttributes settableAttributes = new BulbAttributes();
     settableAttributes.name = this.name;
     return settableAttributes;
+  }
+
+  public HueBulbData getHueBulbData() {
+    HueBulbData data = new HueBulbData();
+    data.type = this.type;
+    data.modelid = this.modelid;
+    data.swversion = this.swversion;
+    data.uniqueid = this.uniqueid;
+    data.manufacturername = this.manufacturername;
+    data.luminaireuniqueid = this.luminaireuniqueid;
+    return data;
   }
 }
