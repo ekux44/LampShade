@@ -106,9 +106,11 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(.2f, bs.getXY()[0]);
     assertEquals(.4f, bs.getXY()[1]);
 
-    bs.setXY(new float[]{});
+    // Test the XY array will never be a length other than 2, even if the device sends bad data
+    Gson gson = new Gson();
+    String json = "{\"xy\":[0.5]}";
+    bs = gson.fromJson(json, BulbState.class);
     assertEquals(null, bs.getXY());
-
   }
 
   public void testOn() {

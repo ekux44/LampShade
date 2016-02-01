@@ -166,7 +166,7 @@ public class HueUrlEncoder {
       mBitSet.incrementingSet(false);
 
       // Put xy flag
-      mBitSet.incrementingSet(bs.getXY() != null);
+      mBitSet.incrementingSet(bs.hasXY());
 
       // Put ct flag
       mBitSet.incrementingSet(bs.getMiredCT() != null);
@@ -191,7 +191,7 @@ public class HueUrlEncoder {
     }
 
     /** Put 64 bit xy **/
-    if (bs.getXY() != null) {
+    if (bs.hasXY()) {
       int x = Float.floatToIntBits(bs.getXY()[0]);
       mBitSet.addNumber(x, 32);
 

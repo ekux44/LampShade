@@ -116,8 +116,8 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
       }
 
       //Send full color, color temp, or just brightness
-      if (bs.getXY() != null || bs.getKelvinCT() != null || bs.get255Bri() != null) {
-        if (bs.getXY() != null) {
+      if (bs.hasXY() || bs.getKelvinCT() != null || bs.get255Bri() != null) {
+        if (bs.hasXY()) {
           float[] hs = Utils.xyTOhs(bs.getXY());
           lifxHue = 360 * hs[0];
           lifxSat = hs[1];

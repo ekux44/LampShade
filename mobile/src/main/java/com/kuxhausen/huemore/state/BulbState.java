@@ -3,6 +3,8 @@ package com.kuxhausen.huemore.state;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import android.support.annotation.Size;
+
 import java.util.Arrays;
 
 public class BulbState {
@@ -328,23 +330,21 @@ public class BulbState {
   }
 
   public boolean hasXY() {
-    return xy != null;
+    return getXY() != null;
   }
 
-  public float[] getXY(){
-    if(xy == null || xy.length!=2){
+  public
+  @Size(2)
+  float[] getXY() {
+    if (xy == null || xy.length != 2) {
       return null;
     } else {
       return xy;
     }
   }
 
-  public void setXY(float[] newXY){
-    if(newXY!=null && newXY.length!=2){
-      xy = null;
-    } else {
-      xy = newXY;
-    }
+  public void setXY(@Size(2) float[] newXY) {
+    xy = newXY;
   }
 
   public Effect getEffect() {

@@ -64,7 +64,7 @@ public class ColorWheelFragment extends Fragment implements OnCheckedChangeListe
   }
 
   public void loadPrevious(BulbState bs) {
-    if (bs.getXY() != null) {
+    if (bs.hasXY()) {
       hs.setXY(bs.getXY());
 
       float[] hueSat = Utils.xyTOhs(hs.getXY());

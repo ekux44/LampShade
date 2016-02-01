@@ -34,7 +34,7 @@ public class EditColorWheelFragment extends Fragment implements
     } else {
       mBulbState.set255Bri(255);
     }
-    if (initialState.getXY() != null) {
+    if (initialState.hasXY()) {
       mBulbState.setXY(initialState.getXY());
     } else {
       float[] reading = {0.4571f, 0.4123f};
@@ -91,7 +91,7 @@ public class EditColorWheelFragment extends Fragment implements
 
   @Override
   public void stateChanged(BulbState newState) {
-    if (newState.getMiredCT() != null || newState.getXY() != null) {
+    if (newState.getMiredCT() != null || newState.hasXY()) {
       float[] xy = newState.getXY();
       if (xy == null) {
         xy = Utils.ctTOxy(newState.getMiredCT());
