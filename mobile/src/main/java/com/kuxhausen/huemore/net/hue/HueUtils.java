@@ -1,12 +1,35 @@
 package com.kuxhausen.huemore.net.hue;
 
+import com.kuxhausen.huemore.persistence.Utils;
+import com.kuxhausen.huemore.state.BulbState;
+
 public class HueUtils {
 
-  enum Gamuts {
-    COLOR_A, COLOR_B, COLOR_C, COLOR_TEMP, DIMMABLE, UNKNOWN
+  enum Gamut {
+    /**
+     * Color light. Supports: on, transitiontime, alert, bri, effect, xy
+     */
+    COLOR_A,
+    /**
+     * Extended color light. Supports: on, transitiontime, alert, bri, ct, effect, xy
+     */
+    COLOR_B,
+    /**
+     * Extended color light. Supports: on, transitiontime, alert, bri, ct, effect, xy
+     */
+    COLOR_C,
+    /**
+     * Color temperature light. Supports: on, transitiontime, alert, bri, ct
+     */
+    COLOR_TEMP,
+    /**
+     * Dimmable light. Supports: on, transitiontime, alert, bri
+     */
+    DIMMABLE,
+    UNKNOWN
   }
 
-  public Gamuts getGamut(String modelid) {
+  private static Gamut getGamut(String modelid) {
     switch (modelid) {
       case "LCT001":
       case "LCT007":
@@ -20,7 +43,7 @@ public class HueUtils {
       case "HEL002":
       case "HIL001":
       case "HIL002":
-        return Gamuts.COLOR_B;
+        return Gamut.COLOR_B;
       case "LST001":
       case "LLC010":
       case "LLC011":
@@ -28,14 +51,10 @@ public class HueUtils {
       case "LLC006":
       case "LLC007":
       case "LLC013":
-        return Gamuts.COLOR_A;
+        return Gamut.COLOR_A;
       case "LLC020":
       case "LST002":
-        return Gamuts.COLOR_C;
-      case "LWB004":
-      case "LWB006":
-      case "LWB007":
-        return Gamuts.DIMMABLE;
+        return Gamut.COLOR_C;
       case "LLM010":
       case "LLM011":
       case "LLM012":
@@ -43,16 +62,20 @@ public class HueUtils {
       case "HML002":
       case "HML003":
       case "HML007":
-        return Gamuts.COLOR_TEMP;
+        return Gamut.COLOR_TEMP;
+      case "LWB004":
+      case "LWB006":
+      case "LWB007":
+        return Gamut.DIMMABLE;
       default:
-        return Gamuts.UNKNOWN;
+        return Gamut.UNKNOWN;
     }
   }
 
   /**
    * @return cie xy bounds for the gammut. Ordered: [xRed, yRed, xGreen, yGreen, xBlue, yBlue].
    */
-  private float[] getBounds(Gamuts gammut) {
+  private static float[] getBounds(Gamut gammut) {
     switch (gammut) {
       case COLOR_A:
         return new float[]{0.704f, 0.296f, 0.2151f, 0.7106f, 0.138f, 0.08f};
@@ -65,7 +88,40 @@ public class HueUtils {
     }
   }
 
-  public void clipToBounds(){
-    //TODO
+  public static BulbState toReachableState(HueBulbData bulbData, BulbState target) {
+    BulbState adjusted = target.clone();
+    Gamut gamut = getGamut(bulbData.modelid);
+
+    switch (gamut) {
+      case COLOR_A:
+        if (target.hasXY()) {
+          adjusted.setXY(Utils.toReachableXY(getBounds(gamut), target.getXY()));
+        } else if (target.hasCT()) {
+          adjusted.setXY(Utils.ctTOxy(target.getMiredCT()));
+          adjusted.setMiredCT(null);
+        }
+        adjusted.setEffect(null);
+      case COLOR_B:
+        if (target.hasXY()) {
+          adjusted.setXY(Utils.toReachableXY(getBounds(gamut), target.getXY()));
+        }
+      case COLOR_C:
+        if (target.hasXY()) {
+          adjusted.setXY(Utils.toReachableXY(getBounds(gamut), target.getXY()));
+        }
+        break;
+      case COLOR_TEMP:
+        adjusted.setXY(null); // TODO opportunistically convert from XY to CT when no CT specified
+        adjusted.setEffect(null);
+        break;
+      case DIMMABLE:
+        adjusted.setXY(null);
+        adjusted.setEffect(null);
+        adjusted.setMiredCT(null);
+        adjusted.setAlert(null);
+        break;
+    }
+
+    return adjusted;
   }
 }

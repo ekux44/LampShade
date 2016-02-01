@@ -48,17 +48,19 @@ public class HueBulb implements NetworkBulb {
   }
 
   @Override
-  public void setState(BulbState bs) {
+  public void setState(BulbState target) {
     this.mConnection.updateDesiredLastChanged();
 
-    desiredState.merge(bs);
+    BulbState reachableTarget = HueUtils.toReachableState(mData, target);
+
+    desiredState.merge(reachableTarget);
 
     mConnection.getLooper().queueSendState(this);
 
     //TODO move or limit to actual state changes
     this.mConnection.getDeviceManager().onStateChanged();
 
-    Log.i("setState", bs.toString());
+    Log.i("setState", reachableTarget.toString());
   }
 
   @Override

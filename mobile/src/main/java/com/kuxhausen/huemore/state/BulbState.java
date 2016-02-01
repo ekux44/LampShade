@@ -293,6 +293,10 @@ public class BulbState {
     }
   }
 
+  public boolean hasCT() {
+    return ct != null;
+  }
+
   public Integer getMiredCT() {
     return ct;
   }
@@ -321,6 +325,10 @@ public class BulbState {
     } else {
       ct = Math.max(1, (1000000 / Math.max(1, newCT)));
     }
+  }
+
+  public boolean hasXY() {
+    return xy != null;
   }
 
   public float[] getXY(){

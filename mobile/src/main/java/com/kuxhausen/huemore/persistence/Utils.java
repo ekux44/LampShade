@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.annotation.Size;
 import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
@@ -14,7 +15,9 @@ import java.util.Calendar;
 
 public class Utils {
 
-  public static @Nullable Mood getMoodFromDatabase(String moodName, Context ctx) {
+  public static
+  @Nullable
+  Mood getMoodFromDatabase(String moodName, Context ctx) {
     String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
     String[] mWhereClause = {moodName};
     Cursor moodCursor =
@@ -225,6 +228,16 @@ public class Utils {
     Log.e("ctConversion", ct + " , " + xc + " , " + yc);
     float[] result = {(float) xc, (float) yc};
     return result;
+  }
+
+  /**
+   * @param gamutBounds list of xy coordinates of maximum reachable colors
+   * @param xy          desired coordinates
+   * @return the desired coordinates, adjusted to be within bounds
+   */
+  public static float[] toReachableXY(@Size(6) float[] gamutBounds, @Size(2) float[] xy) {
+    //TODO
+    return xy;
   }
 
   /**
