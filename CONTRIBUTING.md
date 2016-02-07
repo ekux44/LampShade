@@ -33,4 +33,4 @@ For changes of a trivial nature to comments and documentation, it is not necessa
 ## Submitting Changes
 
 * Push your changes to a topic branch in your fork of the repository.
-* Submit a pull request to the (official repository](https://github.com/ekux44/LampShade)
+* Submit a pull request to the [official repository](https://github.com/ekux44/LampShade)
