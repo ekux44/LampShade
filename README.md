@@ -19,7 +19,7 @@ Support
 Our [Google+ community](https://plus.google.com/communities/117876087643455039742) is the best place to ask questions, report bugs and request features.
 Bug reports and feature requests can also be submitted through the [GitHub Issues tracker](https://github.com/ekux44/LampShade/issues).
 
-Additionally we have a [user guide](user_guide.md) and [developer docs](documentation/index.md).
+Additionally we have a [user guide](documentation/user_guide.md) and [developer docs](documentation/index.md).
 
 Help Improve the App
 --------------------
