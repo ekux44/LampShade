@@ -25,7 +25,7 @@ public class NetworkMethods {
     Gson gson = new Gson();
 
     String url =
-        "http://" + route.address + "/api/" + hash + "/lights/" + pState.hubBulb.getHubBulbNumber()
+        route.address + "/api/" + hash + "/lights/" + pState.hubBulb.getHubBulbNumber()
         + "/state";
 
     GsonRequest<LightsPutResponse[]> req =
@@ -45,7 +45,7 @@ public class NetworkMethods {
       return;
     }
 
-    String url = "http://" + route.address + "/api/" + hash + "/lights/" + bulb;
+    String url = route.address + "/api/" + hash + "/lights/" + bulb;
 
     GsonRequest<BulbAttributes> req =
         new GsonRequest<BulbAttributes>(Method.GET, url, null, BulbAttributes.class, null,
@@ -65,7 +65,7 @@ public class NetworkMethods {
     }
 
     Gson gson = new Gson();
-    String url = "http://" + route.address + "/api/" + hash + "/lights/" + bulbNum;
+    String url = route.address + "/api/" + hash + "/lights/" + bulbNum;
 
     GsonRequest<LightsPutResponse[]> req =
         new GsonRequest<>(Method.PUT, url, gson.toJson(bulbAtt.getSettableAttributes()),
@@ -85,7 +85,7 @@ public class NetworkMethods {
       return;
     }
 
-    String url = "http://" + route.address + "/api/" + hash + "/lights";
+    String url = route.address + "/api/" + hash + "/lights";
 
     GsonRequest<BulbList> req =
         new GsonRequest<BulbList>(Method.GET, url, null, BulbList.class, null,
@@ -112,7 +112,7 @@ public class NetworkMethods {
 
     for (int i = 0; i < bridges.length; i++) {
 
-      String url = "http://" + bridges[i].internalipaddress + "/api/";
+      String url = bridges[i].internalipaddress + "/api/";
 
       GsonRequest<RegistrationResponse[]> req =
           new GsonRequest<RegistrationResponse[]>(Method.POST, url, registrationRequest,
