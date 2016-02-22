@@ -55,8 +55,19 @@ public class ConfigureHubDialogFragment extends DialogFragment {
       @Override
       public void onClick(DialogInterface dialog, int id) {
         HubData hd = new HubData();
-        hd.localHubAddress = mLocalAddress.getText().toString();
-        hd.portForwardedAddress = mRemoteAddress.getText().toString();
+        String localAddress = mLocalAddress.getText().toString();
+        String remoteAddress = mRemoteAddress.getText().toString();
+        
+        if (!localAddress.matches("(?i:https?:).*")) {
+          localAddress = "http://" + localAddress;
+        }
+        
+        if (!remoteAddress.matches("(?i:https?:).*")) {
+          remoteAddress = "http://" + remoteAddress;
+        }
+        
+        hd.localHubAddress = localAddress;
+        hd.portForwardedAddress = remoteAddress;
 
         if (mPriorConnection != null) {
           hd.hashedUsername = mPriorConnection.getHubData().hashedUsername;
