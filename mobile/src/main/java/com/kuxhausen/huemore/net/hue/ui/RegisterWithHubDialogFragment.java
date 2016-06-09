@@ -91,8 +91,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
           progressBar
               .setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0)
                                   / length_in_milliseconds));
-          NetworkMethods.PreformRegister(rq, getListeners(getUserName()), bridges, getUserName(),
-                                         getDeviceType());
+          NetworkMethods.PreformRegister(rq, getListeners(), bridges, getDeviceType());
         }
       }
 
@@ -100,8 +99,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
       public void onFinish() {
         if (isAdded()) {
           // try one last time
-          NetworkMethods.PreformRegister(rq, getListeners(getUserName()), bridges, getUserName(),
-                                         getDeviceType());
+          NetworkMethods.PreformRegister(rq, getListeners(), bridges, getDeviceType());
 
           // launch the failed registration dialog
           RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();
@@ -116,11 +114,11 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
     return builder.create();
   }
 
-  protected Listener<RegistrationResponse[]>[] getListeners(String username) {
+  protected Listener<RegistrationResponse[]>[] getListeners() {
     Listener<RegistrationResponse[]>[] listeners = new Listener[bridges.length];
     for (int i = 0; i < bridges.length; i++) {
       if (bridges[i] != null && bridges[i].internalipaddress != null) {
-        listeners[i] = new RegistrationListener(bridges[i].internalipaddress, username);
+        listeners[i] = new RegistrationListener(bridges[i].internalipaddress);
       }
     }
     return listeners;
@@ -133,24 +131,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
     onDestroyView();
   }
 
-  public String getUserName() {
-
-    try {
-      MessageDigest md;
-      String serialID = Settings.Secure.ANDROID_ID;
-      md = MessageDigest.getInstance(InternalArguments.MD5);
-      String resultString = new BigInteger(1, md.digest(serialID.getBytes())).toString(16);
-
-      return resultString;
-    } catch (NoSuchAlgorithmException e) {
-
-      e.printStackTrace();
-    }
-
-    // fall back on hash of hueMore if android ID fails
-    return InternalArguments.FALLBACK_USERNAME_HASH;
-  }
-
   public String getDeviceType() {
     return getString(R.string.app_name);
   }
@@ -158,11 +138,11 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
   class RegistrationListener implements Listener<RegistrationResponse[]> {
 
     public String bridgeIP;
-    public String username;
+    //public String username;
 
-    public RegistrationListener(String ip, String userName) {
+    public RegistrationListener(String ip) {
       bridgeIP = ip;
-      username = userName;
+      //username = userName;
     }
 
     @Override
@@ -185,7 +165,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
           } else {
             mHubData.localHubAddress = bridgeIP;
           }
-          mHubData.hashedUsername = username;
+          mHubData.hashedUsername = response[0].success.getUsername();
           ContentValues cv = new ContentValues();
 
           cv.put(Definitions.NetConnectionColumns.TYPE_COLUMN,

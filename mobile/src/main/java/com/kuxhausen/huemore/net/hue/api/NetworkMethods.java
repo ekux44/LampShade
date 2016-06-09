@@ -99,14 +99,12 @@ public class NetworkMethods {
 
   public static void PreformRegister(RequestQueue queue,
                                      Listener<RegistrationResponse[]>[] listeners, Bridge[] bridges,
-                                     String username,
                                      String deviceType) {
     if (queue == null || bridges == null) {
       return;
     }
     Gson gson = new Gson();
     RegistrationRequest request = new RegistrationRequest();
-    request.username = username;
     request.devicetype = deviceType;
     String registrationRequest = gson.toJson(request);
 

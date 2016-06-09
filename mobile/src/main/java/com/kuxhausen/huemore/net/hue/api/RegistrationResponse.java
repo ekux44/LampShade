@@ -13,6 +13,10 @@ public class RegistrationResponse {
   }
 
   public class ResponseSuccess {
+    private String username;
 
+    public String getUsername() {
+      return username;
+    }
   }
 }
