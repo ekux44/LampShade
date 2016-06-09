@@ -138,11 +138,9 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
   class RegistrationListener implements Listener<RegistrationResponse[]> {
 
     public String bridgeIP;
-    //public String username;
 
     public RegistrationListener(String ip) {
       bridgeIP = ip;
-      //username = userName;
     }
 
     @Override
