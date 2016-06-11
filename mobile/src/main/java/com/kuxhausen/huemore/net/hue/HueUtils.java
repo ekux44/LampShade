@@ -1,5 +1,7 @@
 package com.kuxhausen.huemore.net.hue;
 
+import android.support.annotation.Nullable;
+
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
 
@@ -29,7 +31,11 @@ public class HueUtils {
     UNKNOWN
   }
 
-  private static Gamut getGamut(String modelid) {
+  private static Gamut getGamut(@Nullable String modelid) {
+    if (modelid == null) {
+      return Gamut.UNKNOWN;
+    }
+
     switch (modelid) {
       case "LCT001":
       case "LCT007":
