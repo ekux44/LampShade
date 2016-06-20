@@ -409,8 +409,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
             if (requestList) {
               for (Route route : getBestRoutes()) {
                 NetworkMethods
-                    .PreformGetBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
-                                        HubConnection.this, HubConnection.this);
+                    .getBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
+                                 HubConnection.this, HubConnection.this);
 
                 Log.d("net.hue.connection.onTi", "perform request list");
               }
@@ -433,9 +433,9 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                     stateChange =
                     new PendingStateChange(toSend, mPendingOutgoingState);
                 for (Route route : getBestRoutes()) {
-                  NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
-                                                             getRequestQueue(), HubConnection.this,
-                                                             stateChange);
+                  NetworkMethods.transmitPendingState(route, mData.hashedUsername, mContext,
+                                                      getRequestQueue(), HubConnection.this,
+                                                      stateChange);
                   Log.d("net.hue.connection.onTi",
                         "perform transmit" + stateChange.hubBulb.getBaseId()
                         + "," + stateChange.sentState.toString()
@@ -450,10 +450,10 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
               for (Route route : getBestRoutes()) {
                 NetworkMethods
-                    .PreformGetBulbAttributes(route, mData.hashedUsername, mContext,
-                                              getRequestQueue(),
-                                              HubConnection.this, HubConnection.this,
-                                              toQuerry.getHubBulbNumber());
+                    .getBulbAttributes(route, mData.hashedUsername, mContext,
+                                       getRequestQueue(),
+                                       HubConnection.this, HubConnection.this,
+                                       toQuerry.getHubBulbNumber());
                 Log.d("net.hue.connection.onTi",
                       "perform querry" + toQuerry.getBaseId()
                 );

@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +25,6 @@ import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.net.hue.api.RegistrationResponse;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class RegisterWithHubDialogFragment extends DialogFragment {
 
@@ -91,7 +86,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
           progressBar
               .setProgress((int) (((length_in_milliseconds - millisUntilFinished) * 100.0)
                                   / length_in_milliseconds));
-          NetworkMethods.PreformRegister(rq, getListeners(), bridges, getDeviceType());
+          NetworkMethods.register(rq, getListeners(), bridges, getDeviceType());
         }
       }
 
@@ -99,7 +94,7 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
       public void onFinish() {
         if (isAdded()) {
           // try one last time
-          NetworkMethods.PreformRegister(rq, getListeners(), bridges, getDeviceType());
+          NetworkMethods.register(rq, getListeners(), bridges, getDeviceType());
 
           // launch the failed registration dialog
           RegistrationFailDialogFragment rfdf = new RegistrationFailDialogFragment();

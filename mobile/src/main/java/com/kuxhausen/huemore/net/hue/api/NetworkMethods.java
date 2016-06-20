@@ -15,9 +15,9 @@ import com.kuxhausen.huemore.net.hue.api.BulbListSuccessListener.OnBulbListRetur
 
 public class NetworkMethods {
 
-  public static void preformTransmitPendingState(Route route, String hash, Context context,
-                                                 RequestQueue queue, HubConnection connection,
-                                                 PendingStateChange pState) {
+  public static void transmitPendingState(Route route, String hash, Context context,
+                                          RequestQueue queue, HubConnection connection,
+                                          PendingStateChange pState) {
     if (queue == null) {
       return;
     }
@@ -37,10 +37,10 @@ public class NetworkMethods {
     queue.add(req);
   }
 
-  public static void PreformGetBulbAttributes(Route route, String hash, Context context,
-                                              RequestQueue queue, ConnectionMonitor monitor,
-                                              OnBulbAttributesReturnedListener listener,
-                                              String bulb) {
+  public static void getBulbAttributes(Route route, String hash, Context context,
+                                       RequestQueue queue, ConnectionMonitor monitor,
+                                       OnBulbAttributesReturnedListener listener,
+                                       String bulb) {
     if (queue == null) {
       return;
     }
@@ -78,9 +78,9 @@ public class NetworkMethods {
     queue.add(req);
   }
 
-  public static void PreformGetBulbList(Route route, String hash, Context context,
-                                        RequestQueue queue, ConnectionMonitor monitor,
-                                        OnBulbListReturnedListener listener) {
+  public static void getBulbList(Route route, String hash, Context context,
+                                 RequestQueue queue, ConnectionMonitor monitor,
+                                 OnBulbListReturnedListener listener) {
     if (queue == null) {
       return;
     }
@@ -97,9 +97,9 @@ public class NetworkMethods {
     queue.add(req);
   }
 
-  public static void PreformRegister(RequestQueue queue,
-                                     Listener<RegistrationResponse[]>[] listeners, Bridge[] bridges,
-                                     String deviceType) {
+  public static void register(RequestQueue queue,
+                              Listener<RegistrationResponse[]>[] listeners, Bridge[] bridges,
+                              String deviceType) {
     if (queue == null || bridges == null) {
       return;
     }
