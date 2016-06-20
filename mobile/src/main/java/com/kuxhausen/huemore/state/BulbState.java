@@ -259,12 +259,20 @@ public class BulbState {
         && alert == null && effect == null && transitiontime == null);
   }
 
+  public boolean hasOn() {
+    return on != null;
+  }
+
   public Boolean getOn() {
     return on;
   }
 
   public void setOn(Boolean newOn) {
     on = newOn;
+  }
+
+  public boolean hasBri() {
+    return bri != null;
   }
 
   public Integer getPercentBri() {
@@ -347,6 +355,10 @@ public class BulbState {
     xy = newXY;
   }
 
+  public boolean hasEffect() {
+    return effect != null;
+  }
+
   public Effect getEffect() {
     return effect;
   }
@@ -355,12 +367,20 @@ public class BulbState {
     effect = ef;
   }
 
+  public boolean hasAlert() {
+    return alert != null;
+  }
+
   public Alert getAlert() {
     return alert;
   }
 
   public void setAlert(Alert a) {
     alert = a;
+  }
+
+  public boolean hasTransitionTime() {
+    return transitiontime != null;
   }
 
   public Integer getTransitionTime() {

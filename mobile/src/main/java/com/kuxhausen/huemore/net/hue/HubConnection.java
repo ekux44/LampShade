@@ -23,6 +23,7 @@ import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.utils.RateLimiter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -359,12 +360,20 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
   public class ChangeLoopManager {
 
+    // How many state changes can be sent per second.
+    private final static int TRANSMITS_PER_SECOND = 24;
+
     private LinkedHashSet<HueBulb> mOutgoingStateQueue = new LinkedHashSet<HueBulb>();
     private LinkedHashSet<HueBulb> mIncomingStateQueue = new LinkedHashSet<HueBulb>();
     private boolean requestList = false;
 
     private CountDownTimer countDownTimer;
-    private final static int TRANSMITS_PER_SECOND = 10;
+    private RateLimiter mRateLimiter;
+    private HueBulb mPendingOutgoingState;
+
+    public ChangeLoopManager() {
+      mRateLimiter = new RateLimiter(1000L, TRANSMITS_PER_SECOND);
+    }
 
     protected void onDestroy() {
       if (countDownTimer != null) {
@@ -388,9 +397,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     }
 
     private void ensureLooping() {
-
       if (countDownTimer == null) {
-        countDownTimer = new CountDownTimer(Integer.MAX_VALUE, (1000 / TRANSMITS_PER_SECOND)) {
+        countDownTimer = new CountDownTimer(Integer.MAX_VALUE, 1000L / TRANSMITS_PER_SECOND) {
 
           @Override
           public void onFinish() {
@@ -407,25 +415,34 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                 Log.d("net.hue.connection.onTi", "perform request list");
               }
               requestList = false;
-            } else if (mOutgoingStateQueue.size() > 0) {
-              HueBulb selected = mOutgoingStateQueue.iterator().next();
-              mOutgoingStateQueue.remove(selected);
-
-              BulbState toSend = selected.getSendState();
-              if (toSend != null && !toSend.isEmpty() && selected.lastSendInitiatedTime == null) {
-
-                PendingStateChange stateChange = new PendingStateChange(toSend, selected);
+            } else if (mPendingOutgoingState != null || mOutgoingStateQueue.size() > 0) {
+              if(mPendingOutgoingState == null) {
+                mPendingOutgoingState = mOutgoingStateQueue.iterator().next();
+                mOutgoingStateQueue.remove(mPendingOutgoingState);
+              }
+              BulbState toSend = mPendingOutgoingState.getSendState();
+              if (toSend != null && !toSend.isEmpty()
+                  && mPendingOutgoingState.lastSendInitiatedTime == null) {
+                long sentTime = SystemClock.elapsedRealtime();
+                int capacity = HueUtils.countZibBeeCommandsRequired(toSend);
+                if(!mRateLimiter.hasCapacity(sentTime, capacity)) {
+                  return;
+                }
+                mRateLimiter.consumeCapacity(sentTime, capacity);
+                PendingStateChange
+                    stateChange =
+                    new PendingStateChange(toSend, mPendingOutgoingState);
                 for (Route route : getBestRoutes()) {
                   NetworkMethods.preformTransmitPendingState(route, mData.hashedUsername, mContext,
                                                              getRequestQueue(), HubConnection.this,
                                                              stateChange);
                   Log.d("net.hue.connection.onTi",
                         "perform transmit" + stateChange.hubBulb.getBaseId()
-                        + "," + stateChange.sentState.isEmpty()
                         + "," + stateChange.sentState.toString()
                   );
                 }
-                selected.lastSendInitiatedTime = SystemClock.elapsedRealtime();
+                mPendingOutgoingState.lastSendInitiatedTime = sentTime;
+                mPendingOutgoingState = null;
               }
             } else if (mIncomingStateQueue.size() > 0) {
               HueBulb toQuerry = mIncomingStateQueue.iterator().next();

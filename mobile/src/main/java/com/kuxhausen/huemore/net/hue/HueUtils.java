@@ -130,4 +130,34 @@ public class HueUtils {
 
     return adjusted;
   }
+
+  /**
+   * @return The number of ZigBee commands that will be required to send all of the state parameters
+   * to a single bulb in the hue network. Note: ZigBee can do at most 1 command per 40ms.
+   */
+  public static int countZibBeeCommandsRequired(BulbState state) {
+    int result = 0;
+    if (state.hasOn()) {
+      result += 1;
+    }
+    if (state.hasBri()) {
+      result += 1;
+    }
+    if (state.hasXY()) {
+      result += 1;
+    }
+    if (state.hasCT()) {
+      result += 1;
+    }
+    if (state.hasAlert()) {
+      result += 2; // Hue docs don't cover this, so play conservative here
+    }
+    if (state.hasEffect()) {
+      result += 2; // Hue docs don't cover this, so play conservative here
+    }
+    if (state.hasTransitionTime()) {
+      result += 0; // Hue docs have a missing footnote about this, so probably need further testing
+    }
+    return result;
+  }
 }
