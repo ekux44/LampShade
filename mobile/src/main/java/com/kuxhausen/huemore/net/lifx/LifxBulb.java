@@ -2,11 +2,11 @@ package com.kuxhausen.huemore.net.lifx;
 
 import android.content.Context;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.persistence.Utils;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import lifx.java.android.entities.LFXHSBKColor;
 import lifx.java.android.entities.LFXTypes;
@@ -83,7 +83,7 @@ public class LifxBulb implements NetworkBulb, LFXLight.LFXLightListener {
 
   @Override
   public void setState(BulbState bs) {
-    Log.d("lifx", "setState but mLight?null " + (mLight == null));
+    DeferredLog.d("lifx", "setState but mLight?null %b", (mLight == null));
 
     mDesiredLastChanged = SystemClock.elapsedRealtime();
 

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.InboxStyle;
-import android.util.Log;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.DecodeErrorActivity;
@@ -27,6 +26,7 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.NfcGroup;
+import com.kuxhausen.huemore.utils.DeferredLog;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
 import java.util.List;
@@ -195,9 +195,9 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
         Mood mood = Utils.getMoodFromDatabase(moodName, this);
 
         if (group == null) {
-          Log.e("ConnectivityService", "Failed to load group:" + groupName);
+          DeferredLog.e("ConnectivityService", "Failed to load group: %s", groupName);
         } else if (mood == null) {
-          Log.e("ConnectivityService", "Failed to load mood:" + moodName);
+          DeferredLog.e("ConnectivityService", "Failed to load mood: %s", moodName);
         } else {
           getMoodPlayer().playMood(group, mood, moodName, maxBri);
         }

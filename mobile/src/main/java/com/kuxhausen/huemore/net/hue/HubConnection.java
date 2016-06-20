@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -23,6 +22,7 @@ import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.utils.DeferredLog;
 import com.kuxhausen.huemore.utils.RateLimiter;
 
 import java.util.ArrayList;
@@ -412,7 +412,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                     .getBulbList(route, mData.hashedUsername, mContext, getRequestQueue(),
                                  HubConnection.this, HubConnection.this);
 
-                Log.d("net.hue.connection.onTi", "perform request list");
+                DeferredLog.d("net.hue.connection.onTi", "get bulb list");
               }
               requestList = false;
             } else if (mPendingOutgoingState != null || mOutgoingStateQueue.size() > 0) {
@@ -436,10 +436,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                   NetworkMethods.transmitPendingState(route, mData.hashedUsername, mContext,
                                                       getRequestQueue(), HubConnection.this,
                                                       stateChange);
-                  Log.d("net.hue.connection.onTi",
-                        "perform transmit" + stateChange.hubBulb.getBaseId()
-                        + "," + stateChange.sentState.toString()
-                  );
+                  DeferredLog.d("net.hue.connection.onTi", "transmit pending state %d, %s",
+                                stateChange.hubBulb.getBaseId(), stateChange.sentState);
                 }
                 mPendingOutgoingState.lastSendInitiatedTime = sentTime;
                 mPendingOutgoingState = null;
@@ -454,9 +452,8 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                                        getRequestQueue(),
                                        HubConnection.this, HubConnection.this,
                                        toQuerry.getHubBulbNumber());
-                Log.d("net.hue.connection.onTi",
-                      "perform querry" + toQuerry.getBaseId()
-                );
+                DeferredLog.d("net.hue.connection.onTi",
+                              "get bulb attributes %s", toQuerry.getBaseId());
               }
             } else {
               ChangeLoopManager.this.countDownTimer = null;

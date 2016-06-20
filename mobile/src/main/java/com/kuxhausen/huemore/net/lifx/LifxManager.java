@@ -5,10 +5,10 @@ import com.google.gson.Gson;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import com.kuxhausen.huemore.net.DeviceManager;
 import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
     }
     cursor.close();
 
-    Log.d("lifx", connections.size() + " connections loaded");
+    DeferredLog.d("lifx", "%d connections loaded", connections.size());
     return connections;
   }
 
@@ -78,14 +78,14 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
     mDeviceManager = dm;
     mConnections = toInitialize;
     
-    Log.d("lifx", "lifxManager onCreate");
+    DeferredLog.d("lifx", "lifxManager onCreate");
 
     networkContext = LFXClient.getSharedInstance(c).getLocalNetworkContext();
     networkContext.addNetworkContextListener(this);
     networkContext.getAllLightsCollection().addLightCollectionListener(this);
     networkContext.connect();
 
-    Log.d("lifx", " num lights now:" + networkContext.getAllLightsCollection().getLights()
+    DeferredLog.d("lifx", " num lights now: %d", networkContext.getAllLightsCollection().getLights()
         .size());
 
   }
@@ -100,8 +100,8 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
 
   @Override
   public void networkContextDidConnect(LFXNetworkContext networkContext) {
-    Log.d("lifx",
-          "didConnect, num lights now:" + networkContext.getAllLightsCollection().getLights()
+    DeferredLog.d("lifx",
+          "didConnect, num lights now: %d", networkContext.getAllLightsCollection().getLights()
               .size()
     );
 
@@ -111,7 +111,7 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
 
   @Override
   public void networkContextDidDisconnect(LFXNetworkContext networkContext) {
-    Log.d("lifx", "lifxManager networkContextDidDisconnect");
+    DeferredLog.d("lifx", "lifxManager networkContextDidDisconnect");
 
     assignLights();
     mDeviceManager.onConnectionChanged();
@@ -120,20 +120,20 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
   @Override
   public void networkContextDidAddTaggedLightCollection(LFXNetworkContext networkContext,
                                                         LFXTaggedLightCollection collection) {
-    Log.d("lifx", "lifxManager networkContextDidAddTaggedLightCollection");
+    DeferredLog.d("lifx", "lifxManager networkContextDidAddTaggedLightCollection");
 
   }
 
   @Override
   public void networkContextDidRemoveTaggedLightCollection(LFXNetworkContext networkContext,
                                                            LFXTaggedLightCollection collection) {
-    Log.d("lifx", "lifxManager networkContextDidRemoveTaggedLightCollection");
+    DeferredLog.d("lifx", "lifxManager networkContextDidRemoveTaggedLightCollection");
 
   }
 
   @Override
   public void lightCollectionDidAddLight(LFXLightCollection lightCollection, LFXLight light) {
-    Log.d("lifx", "lifxManager lightCollectionDidAddLight");
+    DeferredLog.d("lifx", "lifxManager lightCollectionDidAddLight");
 
     assignLights();
     mDeviceManager.onConnectionChanged();
@@ -141,7 +141,7 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
 
   @Override
   public void lightCollectionDidRemoveLight(LFXLightCollection lightCollection, LFXLight light) {
-    Log.d("lifx", "lifxManager lightCollectionDidRemoveLight");
+    DeferredLog.d("lifx", "lifxManager lightCollectionDidRemoveLight");
 
     assignLights();
     mDeviceManager.onConnectionChanged();
@@ -149,18 +149,18 @@ public class LifxManager implements LFXNetworkContext.LFXNetworkContextListener,
 
   @Override
   public void lightCollectionDidChangeLabel(LFXLightCollection lightCollection, String label) {
-    Log.d("lifx", "lifxManager lightCollectionDidChangeLabel");
+    DeferredLog.d("lifx", "lifxManager lightCollectionDidChangeLabel");
   }
 
   @Override
   public void lightCollectionDidChangeColor(LFXLightCollection lightCollection,
                                             LFXHSBKColor color) {
-    Log.d("lifx", "lifxManager lightCollectionDidChangeColor");
+    DeferredLog.d("lifx", "lifxManager lightCollectionDidChangeColor");
   }
 
   @Override
   public void lightCollectionDidChangeFuzzyPowerState(LFXLightCollection lightCollection,
                                                       LFXTypes.LFXFuzzyPowerState fuzzyPowerState) {
-    Log.d("lifx", "lifxManager lightCollectionDidChangeFuzzyPowerState");
+    DeferredLog.d("lifx", "lifxManager lightCollectionDidChangeFuzzyPowerState");
   }
 }

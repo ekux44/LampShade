@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 public class ConnectivityServiceLauncher extends WakefulBroadcastReceiver {
 
@@ -37,7 +37,7 @@ public class ConnectivityServiceLauncher extends WakefulBroadcastReceiver {
     if (intent.getAction() != null
         && intent.getAction()
         .equals(Definitions.InternalArguments.CONNECTIVITY_SERVICE_INTENT_ACTION)) {
-      Log.d("alarm", "napping mood wakeup");
+      DeferredLog.d("alarm", "napping mood wakeup");
 
       Intent transmitter = new Intent(context, ConnectivityService.class);
       startWakefulService(context, transmitter);

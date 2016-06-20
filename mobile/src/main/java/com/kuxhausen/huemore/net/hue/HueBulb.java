@@ -2,12 +2,12 @@ package com.kuxhausen.huemore.net.hue;
 
 import android.content.Context;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.kuxhausen.huemore.net.NetworkBulb;
 import com.kuxhausen.huemore.net.hue.api.BulbAttributes;
 import com.kuxhausen.huemore.net.hue.api.NetworkMethods;
 import com.kuxhausen.huemore.state.BulbState;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 public class HueBulb implements NetworkBulb {
 
@@ -60,7 +60,9 @@ public class HueBulb implements NetworkBulb {
     //TODO move or limit to actual state changes
     this.mConnection.getDeviceManager().onStateChanged();
 
-    Log.i("setState", reachableTarget.toString());
+    if(DeferredLog.isLoggable()) {
+      DeferredLog.i("setState", reachableTarget.toString());
+    }
   }
 
   @Override
@@ -88,7 +90,7 @@ public class HueBulb implements NetworkBulb {
     // remove successful changes from pending
     lastSendInitiatedTime = null;
 
-    Log.d("net.hue.bulb.confirm", "unconfirmedDesired" + desiredState.toString());
+    DeferredLog.d("net.hue.bulb.confirm", "unconfirmedDesired %s", desiredState);
     // recalculate any remaining desired state
     //desiredState = transmitted.delta(desiredState);
 
@@ -97,7 +99,7 @@ public class HueBulb implements NetworkBulb {
     BulbState.confirmChange(desiredState, transmitted);
     //desiredState = confirmed.delta(desiredState);
 
-    Log.d("net.hue.bulb.confirm", "confirmedDesired" + desiredState.toString());
+    DeferredLog.d("net.hue.bulb.confirm", "confirmedDesired %s", desiredState);
 
   }
 
@@ -116,7 +118,8 @@ public class HueBulb implements NetworkBulb {
       //notify brightness bar
       this.mConnection.getDeviceManager().onStateChanged();
 
-      Log.d("net.hue.bulb.attribute", "onAttributeReturned with bri:" + desiredState.get255Bri());
+      DeferredLog.d("net.hue.bulb.attribute", "onAttributeReturned with bri: %d",
+                    desiredState.get255Bri());
     }
   }
 
