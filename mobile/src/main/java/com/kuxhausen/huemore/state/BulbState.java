@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import android.support.annotation.Size;
 
+import com.kuxhausen.huemore.utils.DeferredLog;
+
 import java.util.Arrays;
 
 public class BulbState {
@@ -70,7 +72,17 @@ public class BulbState {
    */
   private Integer transitiontime;
 
+  // For debugging memory leaks
+  private static int mCountCreated;
+
   public BulbState() {
+    mCountCreated++;
+    DeferredLog.d("Svelt", "BulbState initialization count %d", mCountCreated);
+  }
+
+  public BulbState(String creationReason) {
+    this();
+    DeferredLog.d("Svelt", creationReason);
   }
 
   /**
@@ -126,28 +138,49 @@ public class BulbState {
    * return a BulbState with the values of o when the differ from this object
    */
   public BulbState delta(BulbState o) {
-    BulbState delta = new BulbState();
+    BulbState delta = null;
 
     if (o.on != null && (on == null || !on.equals(o.on))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.on = o.on;
     }
     if (o.bri != null && (bri == null || !bri.equals(o.bri))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.bri = o.bri;
     }
     if (o.alert != null && (alert == null || !alert.equals(o.alert))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.alert = o.alert;
     }
     if (o.effect != null && (effect == null || !effect.equals(o.effect))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.effect = o.effect;
     }
     if (o.transitiontime != null
         && (transitiontime == null || !transitiontime.equals(o.transitiontime))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.transitiontime = o.transitiontime;
     }
 
     if (o.xy != null && (xy == null || !(xy[0]==(o.xy[0]) && xy[1]==(o.xy[1])))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.xy = o.xy;
     } else if (o.ct != null && (ct == null || !ct.equals(o.ct))) {
+      if(delta == null) {
+        delta = new BulbState("delta");
+      }
       delta.ct = o.ct;
     }
     return delta;
@@ -196,7 +229,7 @@ public class BulbState {
     try {
       return gson.fromJson(gson.toJson(this), BulbState.class);
     } catch (Exception e) {
-      return new BulbState();
+      return new BulbState("clone");
     }
   }
 
