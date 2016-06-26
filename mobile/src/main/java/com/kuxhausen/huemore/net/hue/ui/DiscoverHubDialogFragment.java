@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -20,6 +19,7 @@ import com.kuxhausen.huemore.net.hue.api.Bridge;
 import com.kuxhausen.huemore.net.hue.api.HubSearch;
 import com.kuxhausen.huemore.net.hue.api.HubSearch.OnHubFoundListener;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFoundListener {
 
@@ -46,7 +46,7 @@ public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFo
     });
 
     startDiscovery();
-    Log.e("asdf", "hubSearchStarted");
+    DeferredLog.e("asdf", "hubSearchStarted");
 
     // Create the AlertDialog object and return it
     return builder.create();
@@ -78,12 +78,12 @@ public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFo
 
   @Override
   public void onHubFoundResult(Bridge[] bridges) {
-    Log.e("asdf", "onHubFoundResult");
+    DeferredLog.e("asdf", "onHubFoundResult");
     if (bridges != null && bridges.length > 0) {
       RegisterWithHubDialogFragment rwhdf = new RegisterWithHubDialogFragment();
       Bundle args = new Bundle();
       args.putString(InternalArguments.BRIDGES, gson.toJson(bridges));
-      Log.e("asdf", gson.toJson(bridges));
+      DeferredLog.e("asdf", gson.toJson(bridges));
       rwhdf.setArguments(args);
       rwhdf.show(getFragmentManager(), InternalArguments.FRAG_MANAGER_DIALOG_TAG);
     } else {

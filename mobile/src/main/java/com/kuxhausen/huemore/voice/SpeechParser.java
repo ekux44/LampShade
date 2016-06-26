@@ -2,12 +2,12 @@ package com.kuxhausen.huemore.voice;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class SpeechParser {
     //TODO do something more intelligent with multiple strings and confidences
 
     best = best.toLowerCase();
-    Log.d("voice", best);
+    DeferredLog.d("voice", best);
 
     GroupMoodBrightness result = new GroupMoodBrightness();
     if (best.equals("lumos maxima")) {
@@ -37,7 +37,7 @@ public class SpeechParser {
       String[] mood2Args = best.split(" 2 ");
 
       if (briArgs.length == 2) {
-        Log.d("voice", briArgs[0] + "," + briArgs[1]);
+        DeferredLog.d("voice", briArgs[0] + "," + briArgs[1]);
 
         String lowercaseGroupName = briArgs[0].toLowerCase().trim();
         String brightness = briArgs[1].replaceAll("[^\\d]", "");
@@ -54,11 +54,11 @@ public class SpeechParser {
           result.group = groupName;
           result.brightness = brightnessVal;
 
-          Log.d("voice", "success:" + groupName + "," + brightnessVal);
+          DeferredLog.d("voice", "success:" + groupName + "," + brightnessVal);
         }
 
       } else if (moodArgs.length == 2) {
-        Log.d("voice", moodArgs[0] + "," + moodArgs[1]);
+        DeferredLog.d("voice", moodArgs[0] + "," + moodArgs[1]);
 
         String lowercaseGroupName = moodArgs[0].toLowerCase().trim();
         String lowercaseMoodName = moodArgs[1].toLowerCase().trim();
@@ -70,10 +70,10 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:" + groupName + "," + moodName);
+          DeferredLog.d("voice", "success: %s , %s", groupName, moodName);
         }
       } else if (moodTooArgs.length == 2) {
-        Log.d("voice", moodTooArgs[0] + "," + moodTooArgs[1]);
+        DeferredLog.d("voice", moodTooArgs[0] + "," + moodTooArgs[1]);
 
         String lowercaseGroupName = moodTooArgs[0].toLowerCase().trim();
         String lowercaseMoodName = moodTooArgs[1].toLowerCase().trim();
@@ -85,10 +85,10 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:" + groupName + "," + moodName);
+          DeferredLog.d("voice", "success: %s , %s", groupName, moodName);
         }
       } else if (moodTwoArgs.length == 2) {
-        Log.d("voice", moodTwoArgs[0] + "," + moodTwoArgs[1]);
+        DeferredLog.d("voice", moodTwoArgs[0] + "," + moodTwoArgs[1]);
 
         String lowercaseGroupName = moodTwoArgs[0].toLowerCase().trim();
         String lowercaseMoodName = moodTwoArgs[1].toLowerCase().trim();
@@ -100,10 +100,10 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:" + groupName + "," + moodName);
+          DeferredLog.d("voice", "success: %s , %s", groupName, moodName);
         }
       } else if (mood2Args.length == 2) {
-        Log.d("voice", mood2Args[0] + "," + mood2Args[1]);
+        DeferredLog.d("voice", mood2Args[0] + "," + mood2Args[1]);
 
         String lowercaseGroupName = mood2Args[0].toLowerCase().trim();
         String lowercaseMoodName = mood2Args[1].toLowerCase().trim();
@@ -115,7 +115,7 @@ public class SpeechParser {
           result.group = groupName;
           result.mood = moodName;
 
-          Log.d("voice", "success:" + groupName + "," + moodName);
+          DeferredLog.d("voice", "success: %s , %s", groupName, moodName);
         }
       }
     }

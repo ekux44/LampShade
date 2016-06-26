@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.kuxhausen.huemore.BuildConfig;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.Calendar;
 
@@ -139,7 +139,7 @@ public class AlarmLogic {
   }
 
   public static void logAlarm(String eventMessage, AlarmData alarmData) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+    if(DeferredLog.isLoggable()) {
       StringBuilder sb = new StringBuilder(eventMessage);
       sb.append(',');
       Calendar time = alarmData.getAlarmTime();
@@ -156,7 +156,7 @@ public class AlarmLogic {
       sb.append(alarmData.getMoodName());
       sb.append(',');
       sb.append(alarmData.getGroupName());
-      Log.i("AlarmDebug", sb.toString());
+      DeferredLog.i("AlarmDebug", sb.toString());
     }
   }
 }

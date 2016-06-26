@@ -2,10 +2,11 @@ package com.kuxhausen.huemore.utils;
 
 import android.util.Log;
 
+import com.kuxhausen.huemore.BuildConfig;
+
 public class DeferredLog {
 
-  // TODO replace with build varient checks to enable logging on debug builds
-  public final static boolean IS_LOGGABLE = false;
+  public final static boolean IS_LOGGABLE = BuildConfig.DEBUG;
 
   public static boolean isLoggable() {
     return IS_LOGGABLE;

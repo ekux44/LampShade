@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore.net.dev;
 
-import android.util.Log;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.HashMap;
 
@@ -16,7 +16,7 @@ public class DevLogger {
 
   public static void debugLog(String output) {
     if (NET_DEBUG) {
-      Log.e("abcd", output);
+      DeferredLog.e("abcd", output);
     }
   }
 
@@ -41,6 +41,6 @@ public class DevLogger {
     }
 
     accumulator.add(message);
-    Log.e(tag, accumulator.toString());
+    DeferredLog.e(tag, accumulator.toString());
   }
 }

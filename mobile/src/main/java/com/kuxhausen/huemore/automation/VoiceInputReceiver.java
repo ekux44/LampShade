@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ public class VoiceInputReceiver extends WakefulBroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.v(TAG, "onReceive");
+    DeferredLog.v(TAG, "onReceive");
 
     if (ACTION_VOICE_INPUT.equals(intent.getAction())) {
       Intent transmitter = new Intent(context, ConnectivityService.class);
@@ -62,7 +62,7 @@ public class VoiceInputReceiver extends WakefulBroadcastReceiver {
             }
           }
 
-          Log.v(TAG, "valid voice extras");
+          DeferredLog.v(TAG, "valid voice extras");
           startWakefulService(context, transmitter);
         }
       } else if (b.containsKey(EXTRA_VOICE_INPUT_STRING)) {
@@ -70,7 +70,7 @@ public class VoiceInputReceiver extends WakefulBroadcastReceiver {
         if (voiceList != null) {
           transmitter.putStringArrayListExtra(InternalArguments.VOICE_INPUT, voiceList);
 
-          Log.v(TAG, "valid voice extras");
+          DeferredLog.v(TAG, "valid voice extras");
           startWakefulService(context, transmitter);
         }
       }

@@ -9,11 +9,11 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.state.GroupMoodBrightness;
+import com.kuxhausen.huemore.utils.DeferredLog;
 import com.kuxhausen.huemore.voice.SpeechParser;
 
 public class WearService extends WearableListenerService {
@@ -28,18 +28,18 @@ public class WearService extends WearableListenerService {
         .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
           @Override
           public void onConnected(Bundle connectionHint) {
-            Log.d("wear", "onConnected: " + connectionHint);
+            DeferredLog.d("wear", "onConnected: %s", connectionHint);
           }
 
           @Override
           public void onConnectionSuspended(int cause) {
-            Log.d("wear", "onConnectionSuspended: " + cause);
+            DeferredLog.d("wear", "onConnectionSuspended: %s",cause);
           }
         })
         .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
           @Override
           public void onConnectionFailed(ConnectionResult result) {
-            Log.d("wear", "onConnectionFailed: " + result);
+            DeferredLog.d("wear", "onConnectionFailed: %s", result);
           }
         })
         .addApi(Wearable.API)
@@ -55,14 +55,14 @@ public class WearService extends WearableListenerService {
     String id = peer.getId();
     String name = peer.getDisplayName();
 
-    Log.d("wear", "Connected peer name & ID: " + name + "|" + id);
+    DeferredLog.d("wear", "Connected peer name & ID: %s | %d", name, id);
   }
 
   @Override
   public void onMessageReceived(MessageEvent messageEvent) {
 
-    Log.v("wear", "msg rcvd");
-    Log.v("wear", messageEvent.getPath());
+    DeferredLog.v("wear", "msg rcvd");
+    DeferredLog.v("wear", messageEvent.getPath());
 
     GroupMoodBrightness gmb = SpeechParser.parse(this, messageEvent.getPath(), null, null);
     Intent trasmitter = new Intent(this, ConnectivityService.class);

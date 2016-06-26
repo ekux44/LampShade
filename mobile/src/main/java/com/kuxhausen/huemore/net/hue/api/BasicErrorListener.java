@@ -1,11 +1,10 @@
 package com.kuxhausen.huemore.net.hue.api;
 
-import android.util.Log;
-
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.kuxhausen.huemore.net.NetworkBulb.ConnectivityState;
 import com.kuxhausen.huemore.net.hue.Route;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 public class BasicErrorListener implements ErrorListener {
 
@@ -21,7 +20,8 @@ public class BasicErrorListener implements ErrorListener {
   public void onErrorResponse(VolleyError error) {
     parrent.setHubConnectionState(mRoute, ConnectivityState.Unreachable);
 
-    Log.d("volleyError", error.getLocalizedMessage() + "   ");
+    if(DeferredLog.isLoggable()) {
+      DeferredLog.d("volleyError", error.getLocalizedMessage());
+    }
   }
-
 }

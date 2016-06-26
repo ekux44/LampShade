@@ -6,10 +6,10 @@ import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.annotation.Size;
-import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.state.Mood;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.Calendar;
 
@@ -225,7 +225,7 @@ public class Utils {
           3.0817580 * Math.pow(xc, 3) - 5.87338670 * Math.pow(xc, 2) + 3.75112997 * xc
           - 0.37001483d;
     }
-    Log.e("ctConversion", ct + " , " + xc + " , " + yc);
+    DeferredLog.e("ctConversion", "%f , %f , %f", ct, + xc, yc);
     float[] result = {(float) xc, (float) yc};
     return result;
   }
