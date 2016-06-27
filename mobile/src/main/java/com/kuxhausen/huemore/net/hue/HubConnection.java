@@ -362,11 +362,18 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
 
     // How many state changes can be sent per second.
     private final static int TRANSMITS_PER_SECOND = 24;
+    // How often we should poll the hub for the latest state
+    private final static long POLL_STATE_INTERVAL_MS = 4000L;
 
     private LinkedHashSet<HueBulb> mOutgoingStateQueue = new LinkedHashSet<HueBulb>();
     private LinkedHashSet<HueBulb> mIncomingStateQueue = new LinkedHashSet<HueBulb>();
     private boolean requestList = false;
 
+    /**
+     * When the last time all of bulbs were queued to poll for their actual state
+     * In SystemClock.elapsedRealtime();
+    */
+    private long mLastPollTimeMs = 0L;
     private CountDownTimer countDownTimer;
     private RateLimiter mRateLimiter;
     private HueBulb mPendingOutgoingState;
@@ -378,6 +385,7 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
     protected void onDestroy() {
       if (countDownTimer != null) {
         countDownTimer.cancel();
+        countDownTimer = null;
       }
     }
 
@@ -455,9 +463,12 @@ public class HubConnection implements Connection, OnBulbAttributesReturnedListen
                 DeferredLog.d("net.hue.connection.onTi",
                               "get bulb attributes %s", toQuerry.getBaseId());
               }
-            } else {
-              ChangeLoopManager.this.countDownTimer = null;
-              this.cancel();
+            } else if (SystemClock.elapsedRealtime() > mLastPollTimeMs + POLL_STATE_INTERVAL_MS
+                       && mIncomingStateQueue.size() < mBulbList.size()) {
+              // If we have nothing else to do, and we haven't polled all the bulbs recently
+              // and the poll queue is not backlogged, add all bulbs to the poll queue
+              mIncomingStateQueue.addAll(mBulbList);
+              mLastPollTimeMs = SystemClock.elapsedRealtime();
             }
           }
         };
