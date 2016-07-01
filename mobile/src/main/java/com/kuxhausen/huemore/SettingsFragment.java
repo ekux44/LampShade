@@ -25,6 +25,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
       this.getPreferenceScreen().addPreference(preference);
     }
 
+    // Hide the doze option if the phone doesn't support doze.
+    if (!DisableDozeDialogFragment.systemSupportsDoze()) {
+      Preference ignoreDoze = getPreferenceScreen().findPreference(getString(R.string.preference_ignore_doze));
+      if (ignoreDoze != null) {
+          ignoreDoze.setVisible(false);
+      }
+    }
+
     showSelectedLanguage();
 
     Preference buildVersion = getPreferenceScreen().findPreference(

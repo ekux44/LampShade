@@ -52,6 +52,7 @@
     <string name="preference_use_system_language">USE_SYSTEM_LANGUAGE</string>
     <string name="preference_user_selected_locale_lang">USER_SELECTED_LOCALE_LANG</string>
     <string name="preference_show_nfc_controls">SHOW_ACTIVITY_ON_NFC_READ</string>
+    <string name="preference_ignore_doze">IGNORE_DOZE</string>
     <string name="preference_social_links">SOCIAL_LINKS</string>
     <string name="preference_build_version">BUILD_VERSION</string>
     <string name="preference_developer_options">DEVELOPER_OPTIONS</string>
