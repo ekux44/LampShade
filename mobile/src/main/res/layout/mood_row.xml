@@ -2,25 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/activatedBackgroundIndicator"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:orientation="horizontal">
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="6dip"
+        android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
     <TextView
         android:id="@android:id/text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="6dip"
+        android:layout_marginEnd="?android:attr/listPreferredItemPaddingEnd"
         android:gravity="center_vertical"
         android:text="@string/star"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 </LinearLayout>
