@@ -2,12 +2,10 @@ package com.kuxhausen.huemore.net.hue.ui;
 
 import com.google.gson.Gson;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -52,14 +50,9 @@ public class DiscoverHubDialogFragment extends DialogFragment implements OnHubFo
     return builder.create();
   }
 
-  @TargetApi(11)
   public void startDiscovery() {
     hubSearch = new HubSearch(this, getActivity());
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      hubSearch.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    } else {
-      hubSearch.execute();
-    }
+    hubSearch.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   @Override

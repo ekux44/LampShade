@@ -1,12 +1,10 @@
 package com.kuxhausen.huemore.widget;
 
-import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -19,7 +17,6 @@ import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 /**
  * This is the service that provides the factory to be bound to the collection service.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AlarmWidgetService extends RemoteViewsService {
 
   @Override
@@ -28,11 +25,9 @@ public class AlarmWidgetService extends RemoteViewsService {
   }
 }
 
-
 /**
  * This is the factory that will provide data to the collection widget.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
   private Context mContext;

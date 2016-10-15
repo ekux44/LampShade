@@ -2,7 +2,6 @@ package com.kuxhausen.huemore.editmood;
 
 import com.google.gson.Gson;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -403,7 +402,6 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     redrawGrid();
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public void redrawGrid() {
     if (grid == null) {
       return;

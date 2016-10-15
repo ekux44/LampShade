@@ -1,16 +1,13 @@
 package com.kuxhausen.huemore.alarm;
 
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.PowerManager;
 
 import com.kuxhausen.huemore.persistence.Definitions;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 public class ReinitalizerReceiver extends BroadcastReceiver {
 
   /**
@@ -19,29 +16,26 @@ public class ReinitalizerReceiver extends BroadcastReceiver {
    */
   @Override
   public void onReceive(final Context context, Intent intent) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+    final String action = intent.getAction();
 
-      final String action = intent.getAction();
+    final PendingResult result = goAsync();
+    final PowerManager.WakeLock wl = AlarmWakeLock.createPartialWakeLock(context);
+    wl.acquire();
 
-      final PendingResult result = goAsync();
-      final PowerManager.WakeLock wl = AlarmWakeLock.createPartialWakeLock(context);
-      wl.acquire();
+    // We must increment the global id out of the async task to prevent race conditions
+    AlarmLogic.updateGloablIntentId(context);
 
-      // We must increment the global id out of the async task to prevent race conditions
-      AlarmLogic.updateGloablIntentId(context);
+    AlarmAsyncHandler.post(new Runnable() {
+      @Override
+      public void run() {
 
-      AlarmAsyncHandler.post(new Runnable() {
-        @Override
-        public void run() {
+        // Update all the alarm instances on time change event
+        updateAndScheduleAllAlarms(context);
+        result.finish();
 
-          // Update all the alarm instances on time change event
-          updateAndScheduleAllAlarms(context);
-          result.finish();
-
-          wl.release();
-        }
-      });
-    }
+        wl.release();
+      }
+    });
   }
 
   private static void updateAndScheduleAllAlarms(Context context) {

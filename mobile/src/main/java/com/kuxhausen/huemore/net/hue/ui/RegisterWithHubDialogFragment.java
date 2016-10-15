@@ -2,7 +2,6 @@ package com.kuxhausen.huemore.net.hue.ui;
 
 import com.google.gson.Gson;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -79,7 +78,6 @@ public class RegisterWithHubDialogFragment extends DialogFragment {
     countDownTimer = new CountDownTimer(length_in_milliseconds, period_in_milliseconds) {
       private boolean warned = false;
 
-      @TargetApi(Build.VERSION_CODES.HONEYCOMB)
       @Override
       public void onTick(long millisUntilFinished) {
         if (isAdded()) {

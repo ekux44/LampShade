@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.editmood;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -26,41 +24,36 @@ public class CellOnLongClickListener implements OnLongClickListener {
     mViewType = viewType;
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   @Override
   public boolean onLongClick(View v) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      switch (mViewType) {
-        case StateCell:
-          mFrag.mStateGrid.setStateSelectionByTag(v);
-          // Instantiates the drag shadow builder.
-          View.DragShadowBuilder myCellShadow = new View.DragShadowBuilder(v);
-          // Starts the drag
-          v.startDrag(null, myCellShadow, mViewType, 0);
-          break;
-        case Channel:
-          mFrag.mStateGrid.setChannelSelectionByTag(v);
-          View.DragShadowBuilder myChannelShadow =
-              new ChannelShadowBuilder(v, mFrag.getGridHeight(), mFrag.getActivity());
-          v.startDrag(null, myChannelShadow, mViewType, 0);
-          break;
-        case Timeslot:
-          mFrag.mStateGrid.setTimeslotSelectionByTag(v);
-          View.DragShadowBuilder myTimeslotShadow =
-              new TimeslotShadowBuilder(v, mFrag.getGridWidth(), mFrag.getActivity());
-          v.startDrag(null, myTimeslotShadow, mViewType, 0);
-          break;
-      }
-      // enter action mode
-      mFrag.mActionMode =
-          ((ActionBarActivity) mFrag.getActivity()).startSupportActionMode(new StateGridActionMode(
-              mFrag, mViewType));
+    switch (mViewType) {
+      case StateCell:
+        mFrag.mStateGrid.setStateSelectionByTag(v);
+        // Instantiates the drag shadow builder.
+        View.DragShadowBuilder myCellShadow = new View.DragShadowBuilder(v);
+        // Starts the drag
+        v.startDrag(null, myCellShadow, mViewType, 0);
+        break;
+      case Channel:
+        mFrag.mStateGrid.setChannelSelectionByTag(v);
+        View.DragShadowBuilder myChannelShadow =
+            new ChannelShadowBuilder(v, mFrag.getGridHeight(), mFrag.getActivity());
+        v.startDrag(null, myChannelShadow, mViewType, 0);
+        break;
+      case Timeslot:
+        mFrag.mStateGrid.setTimeslotSelectionByTag(v);
+        View.DragShadowBuilder myTimeslotShadow =
+            new TimeslotShadowBuilder(v, mFrag.getGridWidth(), mFrag.getActivity());
+        v.startDrag(null, myTimeslotShadow, mViewType, 0);
+        break;
     }
+    // enter action mode
+    mFrag.mActionMode =
+        ((ActionBarActivity) mFrag.getActivity()).startSupportActionMode(new StateGridActionMode(
+            mFrag, mViewType));
     return true;
   }
 
-
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   private static class TimeslotShadowBuilder extends View.DragShadowBuilder {
 
     private static Drawable shadow;
@@ -114,7 +107,6 @@ public class CellOnLongClickListener implements OnLongClickListener {
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   private static class ChannelShadowBuilder extends View.DragShadowBuilder {
 
     private static Drawable shadow;

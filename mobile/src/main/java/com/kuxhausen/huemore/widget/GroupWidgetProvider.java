@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.widget;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -21,7 +19,6 @@ import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.net.ConnectivityService;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
-
 
 /**
  * Our data observer just notifies an update for all group widgets when it detects a change.
@@ -37,16 +34,13 @@ class GroupDataProviderObserver extends ContentObserver {
     mComponentName = cn;
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   @Override
   public void onChange(boolean selfChange) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      // The data has changed, so notify the widget that the collection view needs to be updated.
-      // In response, the factory's onDataSetChanged() will be called which will requery the
-      // cursor for the new data.
-      mAppWidgetManager.notifyAppWidgetViewDataChanged(
-          mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.group_list);
-    }
+    // The data has changed, so notify the widget that the collection view needs to be updated.
+    // In response, the factory's onDataSetChanged() will be called which will requery the
+    // cursor for the new data.
+    mAppWidgetManager.notifyAppWidgetViewDataChanged(
+        mAppWidgetManager.getAppWidgetIds(mComponentName), R.id.group_list);
   }
 }
 
@@ -95,47 +89,44 @@ public class GroupWidgetProvider extends AppWidgetProvider {
     super.onReceive(ctx, intent);
   }
 
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   private RemoteViews buildLayout(Context context, int appWidgetId) {
     RemoteViews rv;
     // Specify the service to provide data for the collection widget. Note that we need to
     // embed the appWidgetId via the data otherwise it will be ignored.
     rv = new RemoteViews(context.getPackageName(), R.layout.widget_group_layout);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      final Intent intent = new Intent(context, GroupWidgetService.class);
-      intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-      intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+    final Intent intent = new Intent(context, GroupWidgetService.class);
+    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+    intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-      rv.setRemoteAdapter(appWidgetId, R.id.group_list, intent);
+    rv.setRemoteAdapter(appWidgetId, R.id.group_list, intent);
 
-      // Set the empty view to be displayed if the collection is empty. It must be a sibling
-      // view of the collection view.
-      rv.setEmptyView(R.id.group_list, R.id.empty_view);
+    // Set the empty view to be displayed if the collection is empty. It must be a sibling
+    // view of the collection view.
+    rv.setEmptyView(R.id.group_list, R.id.empty_view);
 
-      final Intent onClickIntent = new Intent(context, GroupWidgetProvider.class);
-      onClickIntent.setAction(InternalArguments.CLICK_ACTION);
-      onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-      onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
-      final PendingIntent onClickPendingIntent =
-          PendingIntent.getBroadcast(context, 1, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-      rv.setPendingIntentTemplate(R.id.group_list, onClickPendingIntent);
+    final Intent onClickIntent = new Intent(context, GroupWidgetProvider.class);
+    onClickIntent.setAction(InternalArguments.CLICK_ACTION);
+    onClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+    onClickIntent.setData(Uri.parse(onClickIntent.toUri(Intent.URI_INTENT_SCHEME)));
+    final PendingIntent onClickPendingIntent =
+        PendingIntent.getBroadcast(context, 1, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    rv.setPendingIntentTemplate(R.id.group_list, onClickPendingIntent);
 
-      final Intent startVoiceIntent = new Intent(context, VoiceReadRouterActivity.class);
-      startVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-      final PendingIntent openVoicePendingIntent =
-          PendingIntent.getActivity(context, 2, startVoiceIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
-      rv.setOnClickPendingIntent(R.id.voice_icon, openVoicePendingIntent);
+    final Intent startVoiceIntent = new Intent(context, VoiceReadRouterActivity.class);
+    startVoiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    final PendingIntent openVoicePendingIntent =
+        PendingIntent.getActivity(context, 2, startVoiceIntent,
+                                  PendingIntent.FLAG_UPDATE_CURRENT);
+    rv.setOnClickPendingIntent(R.id.voice_icon, openVoicePendingIntent);
 
-      final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
-      openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_TITLE,
-                                 context.getString(R.string.nav_drawer_groups));
-      openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      final PendingIntent openHueMorePendingIntent =
-          PendingIntent.getActivity(context, 3, openHueMoreIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT);
-      rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
-    }
+    final Intent openHueMoreIntent = new Intent(context, NavigationDrawerActivity.class);
+    openHueMoreIntent.putExtra(InternalArguments.NAV_DRAWER_TITLE,
+                               context.getString(R.string.nav_drawer_groups));
+    openHueMoreIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    final PendingIntent openHueMorePendingIntent =
+        PendingIntent.getActivity(context, 3, openHueMoreIntent,
+                                  PendingIntent.FLAG_UPDATE_CURRENT);
+    rv.setOnClickPendingIntent(R.id.huemore_icon, openHueMorePendingIntent);
     return rv;
   }
 
