@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 20
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 83 // must match the value in mobile
     }
     buildTypes {
