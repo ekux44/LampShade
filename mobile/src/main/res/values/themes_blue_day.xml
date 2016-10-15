@@ -12,11 +12,11 @@
 
     <item name="android:seekBarStyle">@style/SeekBarblue_day</item>
 
-    <item name="android:listViewStyle">@style/ListViewblue_day</item>
+    <item name="android:listChoiceBackgroundIndicator">@drawable/blue_day_list_selector_holo_light</item>
 
-    <item name="android:listViewWhiteStyle">@style/ListViewblue_day.White</item>
+    <item name="android:activatedBackgroundIndicator">@drawable/blue_day_activated_background_holo_light</item>
 
-    <item name="android:spinnerItemStyle">@style/SpinnerItemblue_day</item>
+    <item name="android:fastScrollThumbDrawable">@drawable/blue_day_fastscroll_thumb_holo</item>
 
   </style>
 
