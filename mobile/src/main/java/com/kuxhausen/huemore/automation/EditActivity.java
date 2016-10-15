@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
@@ -92,11 +91,7 @@ public class EditActivity extends NetworkManagedActivity implements
     cancelButton = (Button) this.findViewById(R.id.cancel);
     cancelButton.setOnClickListener(this);
 
-    // We need to use a different list item layout for devices older than Honeycomb
-    int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-        ? android.R.layout.simple_list_item_activated_1
-        : android.R.layout.simple_list_item_1;
+    int layout = android.R.layout.simple_list_item_activated_1;
 
     LoaderManager lm = getSupportLoaderManager();
     lm.initLoader(GROUPS_LOADER, null, this);

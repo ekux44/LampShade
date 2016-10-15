@@ -2,7 +2,6 @@ package com.kuxhausen.huemore;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -96,11 +95,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (getString(R.string.preference_user_selected_locale_lang).equals(key)) {
       //now reload the page with the new language (doesn't work on Gingerbread)
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        getActivity().recreate();
-      } else {
-        showSelectedLanguage();
-      }
+      getActivity().recreate();
     }
   }
 }

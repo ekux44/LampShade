@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore.alarm;
 
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
@@ -55,10 +54,7 @@ public class NewAlarmDialogFragment extends DialogFragment implements OnClickLis
       lm.restartLoader(GROUPS_LOADER, null, this);
       lm.restartLoader(MOODS_LOADER, null, this);
 
-      int layout =
-          Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-          ? android.R.layout.simple_list_item_activated_1
-          : android.R.layout.simple_list_item_1;
+      int layout = android.R.layout.simple_list_item_activated_1;
 
       groupDataSource =
           new SimpleCursorAdapter(getActivity(), layout, null, GROUP_SELECTION,

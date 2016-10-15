@@ -67,10 +67,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(data.getAlarmTime().getTimeInMillis(), pending);
       alarmMgr.setAlarmClock(info, pending);
-    } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      alarmMgr.setExact(AlarmManager.RTC_WAKEUP, data.getAlarmTime().getTimeInMillis(), pending);
     } else {
-      alarmMgr.set(AlarmManager.RTC_WAKEUP, data.getAlarmTime().getTimeInMillis(), pending);
+      alarmMgr.setExact(AlarmManager.RTC_WAKEUP, data.getAlarmTime().getTimeInMillis(), pending);
     }
     
     if (showToast) {

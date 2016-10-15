@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -168,10 +167,7 @@ public class NavigationDrawerActivity extends NetworkManagedActivity implements
     mDrawerTitles.add(TITLE_BULB_FRAG);
     mDrawerTitles.add(TITLE_GROUP_FRAG);
     mDrawerTitles.add(TITLE_CONNECTIONS_FRAG);
-    //Alarms only supported on 3.1+
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      mDrawerTitles.add(TITLE_ALARM_FRAG);
-    }
+    mDrawerTitles.add(TITLE_ALARM_FRAG);
     //Only show NFC option on supported devices
     //if (NfcAdapter.getDefaultAdapter(this) == null) {
     mDrawerTitles.add(TITLE_NFC_FRAG);

@@ -1,7 +1,6 @@
 package com.kuxhausen.huemore;
 
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
@@ -44,11 +43,7 @@ public class BulbListFragment extends ListFragment
                            Bundle savedInstanceState) {
     mParent = (NavigationDrawerActivity) getActivity();
 
-    // We need to use a different list item layout for devices older than Honeycomb
-    int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-        ? android.R.layout.simple_list_item_activated_1
-        : android.R.layout.simple_list_item_1;
+    int layout = android.R.layout.simple_list_item_activated_1;
 
     getLoaderManager().initLoader(BULBS_LOADER, null, this);
 

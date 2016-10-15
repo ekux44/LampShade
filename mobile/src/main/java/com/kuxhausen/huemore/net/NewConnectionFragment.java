@@ -3,7 +3,6 @@ package com.kuxhausen.huemore.net;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -65,10 +64,7 @@ public class NewConnectionFragment extends DialogFragment implements OnItemClick
     mTypeList = (ListView) myView.findViewById(android.R.id.list);
     mTypeList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-    int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-        ? android.R.layout.simple_list_item_activated_1
-        : android.R.layout.simple_list_item_1;
+    int layout = android.R.layout.simple_list_item_activated_1;
     deviceTypes = mParent.getResources().getStringArray(R.array.add_devices_list);
     ArrayAdapter<String> aa = new ArrayAdapter<String>(mParent, layout, deviceTypes);
     mTypeList.setAdapter(aa);

@@ -10,7 +10,6 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -90,10 +89,7 @@ public class NfcWriterFragment extends Fragment implements LoaderManager.LoaderC
      */
 
     // We need to use a different list item layout for devices older than Honeycomb
-    int layout =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-        ? android.R.layout.simple_list_item_activated_1
-        : android.R.layout.simple_list_item_1;
+    int layout = android.R.layout.simple_list_item_activated_1;
 
     brightnessBar = (SeekBar) myView.findViewById(R.id.brightnessBar);
     brightnessBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
