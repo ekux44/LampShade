@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<resources>
-
-    <style name="Basecoat" parent="Theme.AppCompat.NoActionBar">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="android:activatedBackgroundIndicator">?android:attr/selectableItemBackground</item>
-    </style>
-</resources>
