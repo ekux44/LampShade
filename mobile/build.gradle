@@ -8,8 +8,8 @@ android {
     signingConfigs {
         playRelease
     }
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.3'
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
         versionCode 85 // version code in wear module must kept in sync with this
@@ -26,11 +26,11 @@ android {
     productFlavors {
         playEdition {
             minSdkVersion 19
-            targetSdkVersion 23
+            targetSdkVersion 24
         }
         compatabilityEdition {
             minSdkVersion 19
-            targetSdkVersion 23
+            targetSdkVersion 24
         }
     }
     sourceSets {
@@ -61,16 +61,15 @@ if (propFile.canRead()){
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:gridlayout-v7:18.0.0'
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:preference-v7:23.0.1'
-    compile 'com.android.support:preference-v14:23.0.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:preference-v14:24.2.1'
     compile 'com.larswerkman:HoloColorPicker:1.4'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':volley')
     compile project(':lifx')
-    playEditionCompile 'com.google.android.gms:play-services-wearable:7.5.0'
+    playEditionCompile 'com.google.android.gms:play-services-wearable:9.6.1'
     //playEditionWearApp project(':wear')
 }

@@ -5,12 +5,12 @@ android {
     signingConfigs {
         playRelease
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
         minSdkVersion 20
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 83 // must match the value in mobile
     }
     buildTypes {
@@ -46,7 +46,7 @@ if (propFile.canRead()){
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.google.android.support:wearable:1.1.0'
-    compile 'com.google.android.gms:play-services-wearable:7.5.0'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.google.android.support:wearable:1.4.0'
+    compile 'com.google.android.gms:play-services-wearable:9.6.1'
 }
