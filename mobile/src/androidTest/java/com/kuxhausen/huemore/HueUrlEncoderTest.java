@@ -56,7 +56,7 @@ public class HueUrlEncoderTest {
 
     try {
       for (int i = 0; i < states.length; i++) {
-        Mood m = new Mood(states[i]);
+        Mood m = new Mood.Builder(states[i]).build();
         String encodedM = HueUrlEncoder.encode(m);
         Mood decodedM = HueUrlEncoder.decode(encodedM).second.first;
 
@@ -129,8 +129,9 @@ public class HueUrlEncoderTest {
 
     Event e1 = new Event(bs1, 0, 0);
 
-    Mood m = new Mood();
-    m.setEvents(new Event[]{e1});
+    Mood m = new Mood.Builder()
+        .setEvents(new Event[]{e1})
+        .build();
 
     String encoded = HueUrlEncoder.encode(m);
     String savedEncodedV4 = "AQQAAQAAAAMBAAQAAAA=";

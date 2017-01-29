@@ -232,19 +232,19 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   }
 
   protected Mood getMood() {
-    Mood m = new Mood();
+    Mood.Builder moodBuilder = new Mood.Builder();
     if (pageType == PageType.DAILY_PAGE || pageType == PageType.RELATIVE_PAGE) {
-      m.setUsesTiming(true);
+      moodBuilder.setUsesTiming(true);
     } else {
-      m.setUsesTiming(false);
+      moodBuilder.setUsesTiming(false);
     }
-    m.setNumChannels(gridCols());
+    moodBuilder.setNumChannels(gridCols());
     if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE) {
-      m.setTimeAddressingRepeatPolicy(true);
+      moodBuilder.setTimeAddressingRepeatPolicy(true);
     } else {
-      m.setTimeAddressingRepeatPolicy(false);
+      moodBuilder.setTimeAddressingRepeatPolicy(false);
     }
-    m.setInfiniteLooping(parentFrag.isChecked());
+    moodBuilder.setInfiniteLooping(parentFrag.isChecked());
 
     ArrayList<Event> events = new ArrayList<Event>();
     for (int r = 0; r < moodRows.size(); r++) {
@@ -261,9 +261,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       eRay[i] = events.get(i);
     }
 
-    m.setEvents(eRay);
-    m.setLoopMilliTime(Utils.fromDeciSeconds(loopTimeslot.getStartTime()));
-    return m;
+    moodBuilder.setEvents(eRay);
+    moodBuilder.setLoopMilliTime(Utils.fromDeciSeconds(loopTimeslot.getStartTime()));
+    return moodBuilder.build();
   }
 
   /**
@@ -323,9 +323,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         redrawGrid();
         break;
       case R.id.infoImageButton:
-        Mood showChanM = new Mood();
-        showChanM.setUsesTiming(false);
-        showChanM.setNumChannels(gridCols());
+        Mood.Builder moodBuilder = new Mood.Builder();
+        moodBuilder.setUsesTiming(false);
+        moodBuilder.setNumChannels(gridCols());
 
         int channelToFlash = (Integer) v.getTag();
         BulbState bs = new BulbState();
@@ -334,7 +334,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
 
         Event e = new Event(bs, channelToFlash, 0l);
         Event[] eRay = {e};
-        showChanM.setEvents(eRay);
+        moodBuilder.setEvents(eRay);
+
+        Mood showChanM = moodBuilder.build();
 
         ConnectivityService service = ((NetworkManagedActivity) this.getActivity()).getService();
         if (service.getDeviceManager().getSelectedGroup() != null) {

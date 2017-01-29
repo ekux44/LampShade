@@ -27,26 +27,18 @@ public class Mood implements Cloneable {
    */
   private Integer numLoops;
 
-  public Mood() {
-    timeAddressingRepeatPolicy = false;
-    numChannels = 1;
-    numLoops = 0;
-    mEvents = new Event[0];
+  private Mood() {
+    // for Gson
   }
 
-  public Mood(BulbState simple) {
-    timeAddressingRepeatPolicy = false;
-    numChannels = 1;
-    numLoops = 0;
-    mEvents = new Event[]{new Event(simple, 0, 0l)};
-  }
-
-  public void setInfiniteLooping(boolean infinite) {
-    if (infinite) {
-      numLoops = 127;
-    } else {
-      numLoops = 0;
-    }
+  private Mood(Event[] events, int loopIterationTimeLength, int numChannels, Integer numLoops,
+               Boolean timeAddressingRepeatPolicy, boolean usesTiming) {
+    this.mEvents = events;
+    this.loopIterationTimeLength = loopIterationTimeLength;
+    this.numChannels = numChannels;
+    this.numLoops = numLoops;
+    this.timeAddressingRepeatPolicy = timeAddressingRepeatPolicy;
+    this.mUsesTiming = usesTiming;
   }
 
   public boolean isInfiniteLooping() {
@@ -57,20 +49,12 @@ public class Mood implements Cloneable {
     }
   }
 
-  public void setNumLoops(int num) {
-    numLoops = Math.max(0, Math.min(127, num));
-  }
-
   public int getNumLoops() {
     return numLoops;
   }
 
   public int getNumChannels() {
     return Math.max(numChannels, 1);
-  }
-
-  public void setNumChannels(int num) {
-    numChannels = num;
   }
 
   @Override
@@ -91,13 +75,6 @@ public class Mood implements Cloneable {
       }
     }
     return result;
-  }
-
-  public void setEvents(Event[] events) {
-    if (events == null) {
-      throw new IllegalArgumentException();
-    }
-    mEvents = events;
   }
 
   public Event[] getEvents() {
@@ -140,24 +117,12 @@ public class Mood implements Cloneable {
     return timeAddressingRepeatPolicy;
   }
 
-  public void setTimeAddressingRepeatPolicy(boolean dailyMode) {
-    timeAddressingRepeatPolicy = dailyMode;
-  }
-
   public long getLoopMilliTime() {
     if (getTimeAddressingRepeatPolicy()) {
       return NUMBER_OF_MILLISECONDS_IN_DAY;
     } else {
       return loopIterationTimeLength * 100l;
     }
-  }
-
-  public void setLoopMilliTime(long milliseconds) {
-    loopIterationTimeLength = (int) (milliseconds / 100l);
-  }
-
-  public void setUsesTiming(boolean usesTiming) {
-    mUsesTiming = usesTiming;
   }
 
   public boolean getUsesTiming() {
@@ -177,5 +142,76 @@ public class Mood implements Cloneable {
             && this.getLoopMilliTime() == ((Mood) obj).getLoopMilliTime()
             && this.getTimeAddressingRepeatPolicy() == ((Mood) obj)
         .getTimeAddressingRepeatPolicy());
+  }
+
+  public static class Builder {
+
+    private Event[] mEvents;
+    private int mLoopIterationTimeLength;
+    private int mNumChannels;
+    private Integer mNumLoops;
+    private Boolean mTimeAddressingRepeatPolicy;
+    private boolean mUsesTiming;
+
+    public Builder() {
+      mTimeAddressingRepeatPolicy = false;
+      mNumChannels = 1;
+      mNumLoops = 0;
+      mEvents = new Event[0];
+    }
+
+    public Builder(BulbState bulbState) {
+      mTimeAddressingRepeatPolicy = false;
+      mNumChannels = 1;
+      mNumLoops = 0;
+      mEvents = new Event[]{new Event(bulbState, 0, 0l)};
+    }
+
+    public Builder setEvents(Event[] events) {
+      if (events == null) {
+        throw new IllegalArgumentException();
+      }
+      mEvents = events;
+      return this;
+    }
+
+    public Builder setNumChannels(int num) {
+      mNumChannels = num;
+      return this;
+    }
+
+    public Builder setTimeAddressingRepeatPolicy(boolean dailyMode) {
+      mTimeAddressingRepeatPolicy = dailyMode;
+      return this;
+    }
+
+    public Builder setInfiniteLooping(boolean infinite) {
+      if (infinite) {
+        mNumLoops = 127;
+      } else {
+        mNumLoops = 0;
+      }
+      return this;
+    }
+
+    public Builder setLoopMilliTime(long milliseconds) {
+      mLoopIterationTimeLength = (int) (milliseconds / 100l);
+      return this;
+    }
+
+    public Builder setNumLoops(int num) {
+      mNumLoops = Math.max(0, Math.min(127, num));
+      return this;
+    }
+
+    public Builder setUsesTiming(boolean usesTiming) {
+      mUsesTiming = usesTiming;
+      return this;
+    }
+
+    public Mood build() {
+      return new Mood(mEvents, mLoopIterationTimeLength, mNumChannels, mNumLoops,
+                      mTimeAddressingRepeatPolicy, mUsesTiming);
+    }
   }
 }

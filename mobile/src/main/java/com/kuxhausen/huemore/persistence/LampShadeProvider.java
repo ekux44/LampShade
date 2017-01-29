@@ -329,7 +329,7 @@ public class LampShadeProvider extends ContentProvider {
       // If mood doesn't exist in db, return a blank mood
       BulbState resultState = new BulbState();
 
-      Mood m = new Mood(resultState);
+      Mood m = new Mood.Builder(resultState).build();
 
       String[] moodColumns = {MoodColumns.COL_MOOD_VALUE};
       MatrixCursor mc = new MatrixCursor(moodColumns);

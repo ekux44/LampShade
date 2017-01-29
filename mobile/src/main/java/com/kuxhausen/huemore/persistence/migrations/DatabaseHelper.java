@@ -135,12 +135,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Event e = new Event(gson.fromJson(stateJson.get(i), BulbState.class), i, 0l);
             events[i] = e;
           }
-          Mood m = new Mood();
-          m.setNumChannels(stateJson.size());
-          m.setEvents(events);
+          Mood mood = new Mood.Builder()
+              .setNumChannels(stateJson.size())
+              .setEvents(events)
+              .build();
 
           cv.put(MoodColumns.COL_MOOD_NAME, key);
-          cv.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(m));
+          cv.put(MoodColumns.COL_MOOD_VALUE, HueUrlEncoder.encode(mood));
           db.insert(MoodColumns.TABLE_NAME, null, cv);
         }
         cursor.close();
@@ -665,13 +666,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     BulbState resultState = new BulbState();
     resultState.setOn(true);
     resultState.setEffect(BulbState.Effect.NONE);
-    return HueUrlEncoder.encode(new Mood(resultState));
+    return HueUrlEncoder.encode(new Mood.Builder(resultState).build());
   }
 
   private static String getEncodedOff() {
     BulbState resultState = new BulbState();
     resultState.setOn(false);
     resultState.setEffect(BulbState.Effect.NONE);
-    return HueUrlEncoder.encode(new Mood(resultState));
+    return HueUrlEncoder.encode(new Mood.Builder(resultState).build());
   }
 }

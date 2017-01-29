@@ -33,17 +33,17 @@ public class PlayingMoodTest {
     } catch (IllegalArgumentException e) {
     }
 
-    new PlayingMood(new Mood(), null, new SyntheticGroup(null, null), 1, -1000, null);
+    Mood m = new Mood.Builder().build();
+    new PlayingMood(m, null, new SyntheticGroup(null, null), 1, -1000, null);
 
     try {
-      new PlayingMood(new Mood(), "", null, 1, -1000, null);
+      new PlayingMood(m, "", null, 1, -1000, null);
       fail();
     } catch (IllegalArgumentException e) {
     }
 
     String mName = "some mood";
     String gName = "some group";
-    Mood m = new Mood();
     Group g = new SyntheticGroup(new ArrayList<Long>(), gName);
     PlayingMood pm = new PlayingMood(m, mName, g, 1, -1000, null);
     assertEquals(g, pm.getGroup());
@@ -67,9 +67,10 @@ public class PlayingMoodTest {
     Event e2 = new Event(bs2, 1, 0l);
     Event[] eRay = {e1, e2};
 
-    Mood m = new Mood();
-    m.setEvents(eRay);
-    m.setNumChannels(2);
+    Mood m = new Mood.Builder()
+        .setEvents(eRay)
+        .setNumChannels(2)
+        .build();
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;
@@ -113,9 +114,10 @@ public class PlayingMoodTest {
     Event e2 = new Event(bs2, 1, 100l);
     Event[] eRay = {e1, e2};
 
-    Mood m = new Mood();
-    m.setEvents(eRay);
-    m.setNumChannels(2);
+    Mood m = new Mood.Builder()
+        .setEvents(eRay)
+        .setNumChannels(2)
+        .build();
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;
@@ -169,11 +171,12 @@ public class PlayingMoodTest {
     Event e2 = new Event(bs2, 1, 100l);
     Event[] eRay = {e1, e2};
 
-    Mood m = new Mood();
-    m.setEvents(eRay);
-    m.setNumChannels(2);
-    m.setInfiniteLooping(true);
-    m.setLoopMilliTime(200);
+    Mood m = new Mood.Builder()
+        .setEvents(eRay)
+        .setNumChannels(2)
+        .setInfiniteLooping(true)
+        .setLoopMilliTime(200)
+        .build();
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;
@@ -262,11 +265,12 @@ public class PlayingMoodTest {
     Event e2 = new Event(bs2, 1, 100);
     Event[] eRay = {e1, e2};
 
-    Mood m = new Mood();
-    m.setEvents(eRay);
-    m.setNumChannels(2);
-    m.setInfiniteLooping(true);
-    m.setLoopMilliTime(200);
+    Mood m = new Mood.Builder()
+        .setEvents(eRay)
+        .setNumChannels(2)
+        .setInfiniteLooping(true)
+        .setLoopMilliTime(200)
+        .build();
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;
@@ -376,10 +380,11 @@ public class PlayingMoodTest {
     Event e2 = new Event(bs2, 1, (13 * millisPerHour));
     Event[] eRay = {e1, e2};
 
-    Mood m = new Mood();
-    m.setEvents(eRay);
-    m.setNumChannels(2);
-    m.setTimeAddressingRepeatPolicy(true);
+    Mood m = new Mood.Builder()
+        .setEvents(eRay)
+        .setNumChannels(2)
+        .setTimeAddressingRepeatPolicy(true)
+        .build();
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;
@@ -489,10 +494,11 @@ public class PlayingMoodTest {
     Event e2 = new Event(bs2, 1, (13 * millisPerHour));
     Event[] eRay = {e1, e2};
 
-    Mood m = new Mood();
-    m.setEvents(eRay);
-    m.setNumChannels(2);
-    m.setTimeAddressingRepeatPolicy(true);
+    Mood m = new Mood.Builder()
+        .setEvents(eRay)
+        .setNumChannels(2)
+        .setTimeAddressingRepeatPolicy(true)
+        .build();
 
     Long bulb1 = 123l;
     Long bulb2 = 456l;

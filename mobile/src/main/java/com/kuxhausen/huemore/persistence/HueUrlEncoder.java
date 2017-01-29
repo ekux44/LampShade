@@ -391,7 +391,9 @@ public class HueUrlEncoder {
   public static Pair<Integer[], Pair<Mood, Integer>> decode(String code)
       throws InvalidEncodingException, FutureEncodingException {
     try {
-      Mood mood = new Mood();
+      Mood.Builder moodBuilder = new Mood.Builder();
+      int numChannels = 0;
+      int numLoops = 0;
       ArrayList<Integer> bList = new ArrayList<Integer>();
       Integer brightness = null;
       ManagedBitSet mBitSet = new ManagedBitSet(code);
@@ -424,16 +426,17 @@ public class HueUrlEncoder {
           }
         }
 
-        int numChannels = mBitSet.extractNumber(6);
-        mood.setNumChannels(numChannels);
+        numChannels = mBitSet.extractNumber(6);
+        moodBuilder.setNumChannels(numChannels);
 
         // 1 bit timing addressing reference mode
-        mood.setTimeAddressingRepeatPolicy(mBitSet.incrementingGet());
+        moodBuilder.setTimeAddressingRepeatPolicy(mBitSet.incrementingGet());
 
         // 7 bit timing repeat number
-        mood.setNumLoops(mBitSet.extractNumber(7));
+        numLoops = mBitSet.extractNumber(7);
+        moodBuilder.setNumLoops(numLoops);
         // flag infinite looping if max numLoops
-        mood.setInfiniteLooping(mood.getNumLoops() == 127);
+        moodBuilder.setInfiniteLooping(numLoops == 127);
 
         // 6 bit number of timestamps
         int numTimestamps = mBitSet.extractNumber(6);
@@ -442,7 +445,7 @@ public class HueUrlEncoder {
           // 20 bit timestamp
           timeArray[i] = mBitSet.extractNumber(20);
         }
-        mood.setUsesTiming(
+        moodBuilder.setUsesTiming(
             !(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0)));
 
         int numStates;
@@ -479,7 +482,7 @@ public class HueUrlEncoder {
         Event[] eList = new Event[numEvents];
 
         for (int i = 0; i < numEvents; i++) {
-          int channel = mBitSet.extractNumber(getBitLength(mood.getNumChannels()));
+          int channel = mBitSet.extractNumber(getBitLength(numChannels));
 
           long
               milliseconds =
@@ -489,11 +492,11 @@ public class HueUrlEncoder {
 
           eList[i] = new Event(state, channel, milliseconds);
         }
-        mood.setEvents(eList);
+        moodBuilder.setEvents(eList);
 
         // 20 bit loopIterationTimeLength is only difference between encodingVersion=1 & =2
         if (encodingVersion >= 2) {
-          mood.setLoopMilliTime(Utils.fromDeciSeconds(mBitSet.extractNumber(20)));
+          moodBuilder.setLoopMilliTime(Utils.fromDeciSeconds(mBitSet.extractNumber(20)));
         }
 
       } else if (encodingVersion == 0) {
@@ -517,10 +520,10 @@ public class HueUrlEncoder {
 
           eventArray[i] = new Event(state, i, 0l);
         }
-        mood.setEvents(eventArray);
-        mood.setNumChannels(numStates);
-        mood.setTimeAddressingRepeatPolicy(false);
-        mood.setUsesTiming(false);
+        moodBuilder.setEvents(eventArray);
+        moodBuilder.setNumChannels(numStates);
+        moodBuilder.setTimeAddressingRepeatPolicy(false);
+        moodBuilder.setUsesTiming(false);
 
       } else {
         throw new FutureEncodingException();
@@ -534,6 +537,7 @@ public class HueUrlEncoder {
         }
       }
 
+      Mood mood = moodBuilder.build();
       return new Pair<Integer[], Pair<Mood, Integer>>(bulbs, new Pair<Mood, Integer>(mood,
                                                                                      brightness));
     } catch (FutureEncodingException e) {
