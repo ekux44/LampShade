@@ -1,17 +1,17 @@
 package com.kuxhausen.huemore.net.hue;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
-public class HueBulbDataTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
+@RunWith(AndroidJUnit4.class)
+public class HueBulbDataTest {
 
+  @Test
   public void testMatches() {
     HueBulbData data1 = new HueBulbData();
     HueBulbData data2 = new HueBulbData();

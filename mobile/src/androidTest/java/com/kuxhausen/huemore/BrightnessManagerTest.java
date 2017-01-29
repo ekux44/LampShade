@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.net.BrightnessManager;
 import com.kuxhausen.huemore.net.BrightnessManager.BrightnessPolicy;
@@ -10,18 +10,19 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Alert;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 
-public class BrightnessManagerTest extends AndroidTestCase {
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+@RunWith(AndroidJUnit4.class)
+public class BrightnessManagerTest {
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
+  @Test
   public void testConstructor() {
     try {
       BrightnessManager manager = new BrightnessManager(null);
@@ -30,6 +31,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     }
   }
 
+  @Test
   public void testPolicyToggle1() {
     BrightnessManager manager = new BrightnessManager(new ArrayList<NetworkBulb>());
     assertEquals(manager.getPolicy(), BrightnessPolicy.DIRECT_BRI);
@@ -43,6 +45,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
   }
 
   //test get/set brightness across the policies
+  @Test
   public void testSetBrightness1() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
@@ -71,6 +74,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     assertEquals(manager.getBrightness(), 40);
   }
 
+  @Test
   public void testSetState1() {
     try {
       BrightnessManager manager = new BrightnessManager(new ArrayList<NetworkBulb>());
@@ -80,6 +84,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
     }
   }
 
+  @Test
   public void testSetState2() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
@@ -121,6 +126,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
   }
 
   //This simulates functionality required for a sunrise alarm clock
+  @Test
   public void testFunctionality1() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();
@@ -195,6 +201,7 @@ public class BrightnessManagerTest extends AndroidTestCase {
   }
 
   //This simulates functionality required to manually trigger a sunset mood
+  @Test
   public void testFunctionality2() {
     ArrayList<NetworkBulb> list = new ArrayList<NetworkBulb>();
     MockNetBulb aBulb = new MockNetBulb();

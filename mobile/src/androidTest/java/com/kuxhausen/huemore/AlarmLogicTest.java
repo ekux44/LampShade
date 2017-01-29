@@ -1,22 +1,28 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.alarm.AlarmData;
 import com.kuxhausen.huemore.alarm.AlarmLogic;
 import com.kuxhausen.huemore.alarm.DaysOfWeek;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.Calendar;
 
-public class AlarmLogicTest extends AndroidTestCase {
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class AlarmLogicTest {
 
   private Calendar twoDaysPrior, yesterday, now, oneMinForward, oneHourForward, oneDayForward,
       oneDayOneMinForward, twoDaysForward, sixDaysForward, sevenDaysForward, eightDaysForward,
       thirteenDaysForward;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-
+  @Before
+  public void setUp() throws Exception {
     twoDaysPrior = Calendar.getInstance();
     twoDaysPrior.clear();
     twoDaysPrior.set(2014, Calendar.JULY, 24, 13, 44);
@@ -66,10 +72,7 @@ public class AlarmLogicTest extends AndroidTestCase {
     thirteenDaysForward.set(2014, Calendar.AUGUST, 8, 13, 44);
   }
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
+  @Test
   public void testComputeNextAlarmTime1() {
 
     AlarmData ad1 = new AlarmData();
@@ -78,9 +81,9 @@ public class AlarmLogicTest extends AndroidTestCase {
 
     assertEquals(oneDayForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(),
                                                                 ad1.getRepeatDays(), now));
-
   }
 
+  @Test
   public void testComputeNextAlarmTime2() {
 
     AlarmData ad1 = new AlarmData();
@@ -90,9 +93,9 @@ public class AlarmLogicTest extends AndroidTestCase {
     assertEquals(oneDayOneMinForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
                                                                       ad1.getMinute(),
                                                                       ad1.getRepeatDays(), now));
-
   }
 
+  @Test
   public void testComputeNextAlarmTime3() {
 
     AlarmData ad1 = new AlarmData();
@@ -102,9 +105,9 @@ public class AlarmLogicTest extends AndroidTestCase {
     assertEquals(oneHourForward, AlarmLogic.computeNextAlarmTime(ad1.getHourOfDay(),
                                                                  ad1.getMinute(),
                                                                  ad1.getRepeatDays(), now));
-
   }
 
+  @Test
   public void testComputeNextAlarmTime4() {
 
     AlarmData ad1 = new AlarmData();
@@ -115,6 +118,7 @@ public class AlarmLogicTest extends AndroidTestCase {
                                                                 ad1.getRepeatDays(), now));
   }
 
+  @Test
   public void testComputeNextAlarmTime1Repeating() {
 
     DaysOfWeek fridays = new DaysOfWeek();
@@ -142,9 +146,9 @@ public class AlarmLogicTest extends AndroidTestCase {
     assertEquals(thirteenDaysForward, AlarmLogic
         .computeNextAlarmTime(ad1.getHourOfDay(), ad1.getMinute(), ad1.getRepeatDays(),
                               sixDaysForward));
-
   }
 
+  @Test
   public void testComputeNextAlarmTime2Repeating() {
 
     DaysOfWeek weekends = new DaysOfWeek();

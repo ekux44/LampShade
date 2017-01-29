@@ -1,20 +1,18 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.persistence.ManagedBitSet;
 
-public class ManagedBitSetTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+import static org.junit.Assert.assertEquals;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
+@RunWith(AndroidJUnit4.class)
+public class ManagedBitSetTest {
 
-
+  @Test
   public void testIncrementing() {
     boolean[] set = new boolean[1000];
     for (int i = 0; i < set.length; i++) {
@@ -36,6 +34,7 @@ public class ManagedBitSetTest extends AndroidTestCase {
     }
   }
 
+  @Test
   public void testNumber() {
 
     ManagedBitSet input = new ManagedBitSet();

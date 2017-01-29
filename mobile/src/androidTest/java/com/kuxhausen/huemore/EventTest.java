@@ -1,20 +1,21 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 
-public class EventTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
+@RunWith(AndroidJUnit4.class)
+public class EventTest {
 
+  @Test
   public void testConstructor() {
     try {
       Event e1 = new Event(null, 0, 0l);
@@ -39,6 +40,7 @@ public class EventTest extends AndroidTestCase {
 
   }
 
+  @Test
   public void testEquals() {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);

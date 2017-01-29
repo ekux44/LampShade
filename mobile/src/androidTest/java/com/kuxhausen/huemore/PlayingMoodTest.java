@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 import android.util.Pair;
 
 import com.kuxhausen.huemore.net.PlayingMood;
@@ -10,20 +10,22 @@ import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 import com.kuxhausen.huemore.state.SyntheticGroup;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayingMoodTest extends AndroidTestCase {
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+@RunWith(AndroidJUnit4.class)
+public class PlayingMoodTest {
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
+  @Test
   public void testConstructor() {
     try {
       new PlayingMood(null, "", new SyntheticGroup(null, null), 1, -1000, null);
@@ -53,6 +55,7 @@ public class PlayingMoodTest extends AndroidTestCase {
   /**
    * playing a simple on mood
    */
+  @Test
   public void testFunctionality1() {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
@@ -98,6 +101,7 @@ public class PlayingMoodTest extends AndroidTestCase {
   /**
    * playing a timed, non-looping mood
    */
+  @Test
   public void testFunctionality2() {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
@@ -153,6 +157,7 @@ public class PlayingMoodTest extends AndroidTestCase {
   /**
    * playing a timed looping mood
    */
+  @Test
   public void testFunctionality3() {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
@@ -245,6 +250,7 @@ public class PlayingMoodTest extends AndroidTestCase {
   /**
    * playing a timed looping mood with saves & resumes
    */
+  @Test
   public void testFunctionality4() {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
@@ -353,6 +359,7 @@ public class PlayingMoodTest extends AndroidTestCase {
   /**
    * playing a daily mood with some save/restarts
    */
+  @Test
   public void testFunctionality5() {
     long startTime = 543l;
     long dayStartTime = 12l;
@@ -465,6 +472,7 @@ public class PlayingMoodTest extends AndroidTestCase {
   /**
    * playing a daily mood with some save/restarts when the device has recently booted
    */
+  @Test
   public void testFunctionality6() {
     long startTime = 543l;
     long dayStartTime = -4000;

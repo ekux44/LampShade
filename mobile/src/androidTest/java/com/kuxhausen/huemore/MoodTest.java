@@ -1,24 +1,24 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.Arrays;
 
-//TODO flush out
-public class MoodTest extends AndroidTestCase {
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+@RunWith(AndroidJUnit4.class)
+public class MoodTest {
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
+  @Test
   public void testConstructor() {
     Mood m = new Mood();
     assertFalse(m.getTimeAddressingRepeatPolicy());
@@ -40,6 +40,7 @@ public class MoodTest extends AndroidTestCase {
 
   }
 
+  @Test
   public void testEquals() {
     BulbState bs1 = new BulbState();
     bs1.setOn(true);
@@ -117,8 +118,9 @@ public class MoodTest extends AndroidTestCase {
   }
 
   /*
-  Tests the Off mood
+   * Tests the Off mood
    */
+  @Test
   public void functionality1() {
     BulbState bs1 = new BulbState();
     bs1.setOn(false);
@@ -138,8 +140,9 @@ public class MoodTest extends AndroidTestCase {
   }
 
   /*
-  Tests the Deep Sea mood
+   * Tests the Deep Sea mood
    */
+  @Test
   public void functionality2() {
     BulbState bs1 = new BulbState();
     bs1.setXY(new float[]{.3f, .4f});
@@ -164,8 +167,9 @@ public class MoodTest extends AndroidTestCase {
   }
 
   /*
-    Tests a sunset mood
+   * Tests a sunset mood
    */
+  @Test
   public void functionality3() {
     BulbState bs1 = new BulbState();
     bs1.setMiredCT(333);
@@ -190,8 +194,9 @@ public class MoodTest extends AndroidTestCase {
   }
 
   /*
-    Tests a cycling mood
+   * Tests a cycling mood
    */
+  @Test
   public void functionality4() {
     BulbState bs1 = new BulbState();
     bs1.setMiredCT(333);
@@ -218,8 +223,9 @@ public class MoodTest extends AndroidTestCase {
   }
 
   /*
-    Tests a daily mood
+   * Tests a daily mood
    */
+  @Test
   public void functionality5() {
     BulbState bs1 = new BulbState();
     bs1.setMiredCT(333);

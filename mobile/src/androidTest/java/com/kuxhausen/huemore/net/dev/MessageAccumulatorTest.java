@@ -1,9 +1,16 @@
 package com.kuxhausen.huemore.net.dev;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
-public class MessageAccumulatorTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class MessageAccumulatorTest {
+
+  @Test
   public void testAdd() {
     MessageAccumulator accumulator = new MessageAccumulator();
     accumulator.add(1);

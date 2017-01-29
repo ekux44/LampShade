@@ -1,6 +1,6 @@
 package com.kuxhausen.huemore;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -10,17 +10,16 @@ import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Mood;
 
-public class HueUrlEncoderTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
+@RunWith(AndroidJUnit4.class)
+public class HueUrlEncoderTest {
 
-
+  @Test
   public void testEncodeDecode() {
     BulbState[] states = new BulbState[10];
     for (int i = 0; i < states.length; i++) {
@@ -70,6 +69,7 @@ public class HueUrlEncoderTest extends AndroidTestCase {
     }
   }
 
+  @Test
   public void testFutureEncodingException() {
     ManagedBitSet bits = new ManagedBitSet();
     bits.addNumber(HueUrlEncoder.PROTOCOL_VERSION_NUMBER + 1, 3);
@@ -122,6 +122,7 @@ public class HueUrlEncoderTest extends AndroidTestCase {
   /**
    * tests Off mood *
    */
+  @Test
   public void functionality1() {
     BulbState bs1 = new BulbState();
     bs1.setOn(false);

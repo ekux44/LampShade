@@ -1,20 +1,27 @@
 package com.kuxhausen.huemore;
 
 import android.content.ContentValues;
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.alarm.AlarmData;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.Calendar;
 
-public class AlarmDataTest extends AndroidTestCase {
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class AlarmDataTest {
 
   private Calendar twoDaysPrior, yesterday, now, oneMinForward, oneHourForward, oneDayForward,
       oneMonthForward, oneYearForward;
 
-  protected void setUp() throws Exception {
-    super.setUp();
+  @Before
+  public void setUp() throws Exception {
 
     twoDaysPrior = Calendar.getInstance();
     twoDaysPrior.clear();
@@ -50,12 +57,9 @@ public class AlarmDataTest extends AndroidTestCase {
 
   }
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
-
+  @Test
   public void testSetAlarm() {
+
     AlarmData alarm = new AlarmData();
 
     alarm.setAlarmTime(now);
@@ -80,7 +84,9 @@ public class AlarmDataTest extends AndroidTestCase {
     assertEquals(alarm.getAlarmTime(), oneYearForward);
   }
 
+  @Test
   public void testGetValues() {
+
     AlarmData alarm = new AlarmData();
 
     alarm.setAlarmTime(now);

@@ -2,22 +2,24 @@ package com.kuxhausen.huemore;
 
 import com.google.gson.Gson;
 
-import android.test.AndroidTestCase;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.kuxhausen.huemore.state.BulbState;
 import com.kuxhausen.huemore.state.BulbState.Alert;
 import com.kuxhausen.huemore.state.BulbState.Effect;
 
-public class BulbStateTest extends AndroidTestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertEquals;
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
+@RunWith(AndroidJUnit4.class)
+public class BulbStateTest {
 
+  private static final float DELTA = 1e-6f;
+
+  @Test
   public void testPercentBrightness() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getPercentBri());
@@ -41,6 +43,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getPercentBri());
   }
 
+  @Test
   public void test256Brightness() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.get255Bri());
@@ -64,6 +67,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.get255Bri());
   }
 
+  @Test
   public void testMiredCT() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getMiredCT());
@@ -81,6 +85,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getMiredCT());
   }
 
+  @Test
   public void testKelvinCT() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getKelvinCT());
@@ -98,13 +103,14 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getKelvinCT());
   }
 
+  @Test
   public void testXY(){
     BulbState bs = new BulbState();
     assertEquals(null, bs.getXY());
 
     bs.setXY(new float[]{.2f, .4f});
-    assertEquals(.2f, bs.getXY()[0]);
-    assertEquals(.4f, bs.getXY()[1]);
+    assertEquals(.2f, bs.getXY()[0], DELTA);
+    assertEquals(.4f, bs.getXY()[1], DELTA);
 
     // Test the XY array will never be a length other than 2, even if the device sends bad data
     Gson gson = new Gson();
@@ -113,6 +119,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getXY());
   }
 
+  @Test
   public void testOn() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getOn());
@@ -127,6 +134,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, bs.getOn());
   }
 
+  @Test
   public void testEffect() {
     Gson gson = new Gson();
     BulbState bs = new BulbState();
@@ -148,6 +156,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, gson.fromJson(json3, BulbState.class).getEffect());
   }
 
+  @Test
   public void testAlert() {
     Gson gson = new Gson();
     BulbState bs = new BulbState();
@@ -174,6 +183,7 @@ public class BulbStateTest extends AndroidTestCase {
     assertEquals(null, gson.fromJson(json4, BulbState.class).getAlert());
   }
 
+  @Test
   public void testTransitionTime() {
     BulbState bs = new BulbState();
     assertEquals(null, bs.getTransitionTime());
@@ -189,6 +199,7 @@ public class BulbStateTest extends AndroidTestCase {
 
   }
 
+  @Test
   public void testEquals() {
     BulbState state1 = new BulbState();
     BulbState state2 = new BulbState();
