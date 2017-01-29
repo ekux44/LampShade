@@ -70,6 +70,4 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':volley')
     compile project(':lifx')
-    playEditionCompile 'com.google.android.gms:play-services-wearable:9.6.1'
-    //playEditionWearApp project(':wear')
 }
