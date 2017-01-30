@@ -383,7 +383,7 @@ public class PlayingMoodTest {
     Mood m = new Mood.Builder()
         .setEvents(eRay)
         .setNumChannels(2)
-        .setTimeAddressingRepeatPolicy(true)
+        .setRelativeToMidnight(true)
         .build();
 
     Long bulb1 = 123l;
@@ -497,7 +497,7 @@ public class PlayingMoodTest {
     Mood m = new Mood.Builder()
         .setEvents(eRay)
         .setNumChannels(2)
-        .setTimeAddressingRepeatPolicy(true)
+        .setRelativeToMidnight(true)
         .build();
 
     Long bulb1 = 123l;

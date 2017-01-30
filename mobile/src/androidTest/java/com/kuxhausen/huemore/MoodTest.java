@@ -22,7 +22,7 @@ public class MoodTest {
   public void testConstructor_default() {
     Mood m = new Mood.Builder().build();
 
-    assertFalse(m.getTimeAddressingRepeatPolicy());
+    assertFalse(m.isRelativeToMidnight());
     assertFalse(m.isInfiniteLooping());
     assertTrue(m.isSimple());
     assertEquals(1, m.getNumChannels());
@@ -35,7 +35,7 @@ public class MoodTest {
     bs.setOn(true);
     Mood m = new Mood.Builder(bs).build();
 
-    assertFalse(m.getTimeAddressingRepeatPolicy());
+    assertFalse(m.isRelativeToMidnight());
     assertFalse(m.isInfiniteLooping());
     assertTrue(m.isSimple());
     assertEquals(1, m.getNumChannels());
@@ -59,7 +59,7 @@ public class MoodTest {
     Mood m1 = new Mood.Builder()
         .setLoopMilliTime(500l)
         .setInfiniteLooping(false)
-        .setTimeAddressingRepeatPolicy(false)
+        .setRelativeToMidnight(false)
         .setNumChannels(2)
         .setEvents(new Event[]{e1, e2, e3})
         .build();
@@ -69,7 +69,7 @@ public class MoodTest {
     Mood m2 = new Mood.Builder()
         .setLoopMilliTime(500l)
         .setInfiniteLooping(true)
-        .setTimeAddressingRepeatPolicy(false)
+        .setRelativeToMidnight(false)
         .setNumChannels(2)
         .setEvents(new Event[]{e1, e2, e3})
         .build();
@@ -79,7 +79,7 @@ public class MoodTest {
     Mood m3 = new Mood.Builder()
         .setLoopMilliTime(500l)
         .setInfiniteLooping(false)
-        .setTimeAddressingRepeatPolicy(true)
+        .setRelativeToMidnight(true)
         .setNumChannels(2)
         .setEvents(new Event[]{e1, e2, e3})
         .build();
@@ -89,7 +89,7 @@ public class MoodTest {
     Mood m4 = new Mood.Builder()
         .setLoopMilliTime(500l)
         .setInfiniteLooping(false)
-        .setTimeAddressingRepeatPolicy(true)
+        .setRelativeToMidnight(true)
         .setNumChannels(3)
         .setEvents(new Event[]{e1, e2, e3})
         .build();
@@ -99,7 +99,7 @@ public class MoodTest {
     Mood m5 = new Mood.Builder()
         .setLoopMilliTime(2300l)
         .setInfiniteLooping(false)
-        .setTimeAddressingRepeatPolicy(false)
+        .setRelativeToMidnight(false)
         .setNumChannels(2)
         .setEvents(new Event[]{e1, e2, e3})
         .build();
@@ -109,7 +109,7 @@ public class MoodTest {
     Mood m6 = new Mood.Builder()
         .setLoopMilliTime(500l)
         .setInfiniteLooping(false)
-        .setTimeAddressingRepeatPolicy(false)
+        .setRelativeToMidnight(false)
         .setNumChannels(2)
         .setEvents(new Event[]{e1, e2})
         .build();
@@ -119,7 +119,7 @@ public class MoodTest {
     Mood m7 = new Mood.Builder()
         .setLoopMilliTime(500l)
         .setInfiniteLooping(false)
-        .setTimeAddressingRepeatPolicy(false)
+        .setRelativeToMidnight(false)
         .setNumChannels(2)
         .setEvents(new Event[]{e4, e2, e3})
         .build();
@@ -141,7 +141,7 @@ public class MoodTest {
         .setEvents(new Event[]{e1})
         .build();
 
-    assertFalse(m.getTimeAddressingRepeatPolicy());
+    assertFalse(m.isRelativeToMidnight());
     assertFalse(m.isInfiniteLooping());
     assertTrue(m.isSimple());
     assertEquals(1, m.getNumChannels());
@@ -169,7 +169,7 @@ public class MoodTest {
         .setEvents(new Event[]{e1, e2, e3})
         .build();
 
-    assertFalse(m.getTimeAddressingRepeatPolicy());
+    assertFalse(m.isRelativeToMidnight());
     assertFalse(m.isInfiniteLooping());
     assertTrue(m.isSimple());
     assertEquals(3, m.getNumChannels());
@@ -197,7 +197,7 @@ public class MoodTest {
         .setNumChannels(2)
         .build();
 
-    assertFalse(m.getTimeAddressingRepeatPolicy());
+    assertFalse(m.isRelativeToMidnight());
     assertFalse(m.isInfiniteLooping());
     assertFalse(m.isSimple());
     assertEquals(2, m.getNumChannels());
@@ -227,7 +227,7 @@ public class MoodTest {
         .setLoopMilliTime(2000l)
         .build();
 
-    assertFalse(m.getTimeAddressingRepeatPolicy());
+    assertFalse(m.isRelativeToMidnight());
     assertTrue(m.isInfiniteLooping());
     assertFalse(m.isSimple());
     assertEquals(2, m.getNumChannels());
@@ -253,10 +253,10 @@ public class MoodTest {
     Mood m = new Mood.Builder()
         .setEvents(new Event[]{e1, e2})
         .setNumChannels(2)
-        .setTimeAddressingRepeatPolicy(true)
+        .setRelativeToMidnight(true)
         .build();
 
-    assertTrue(m.getTimeAddressingRepeatPolicy());
+    assertTrue(m.isRelativeToMidnight());
     assertTrue(m.isInfiniteLooping());
     assertFalse(m.isSimple());
     assertEquals(1, m.getNumChannels());

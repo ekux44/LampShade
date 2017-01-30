@@ -44,7 +44,7 @@ public class LegacyTests {
       Log.e("tests", tNum + "infiniteLoopingNotEqual");
       return false;
     }
-    if (m1.getTimeAddressingRepeatPolicy() != m2.getTimeAddressingRepeatPolicy()) {
+    if (m1.isRelativeToMidnight() != m2.isRelativeToMidnight()) {
       Log.e("tests", tNum + "timeAddressingRepeatPolicyNotEqual");
       return false;
     }

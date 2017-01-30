@@ -47,7 +47,7 @@ public class PlayingMood {
       mMoodName = "?";
     }
     mGroup = g;
-    if (m.getTimeAddressingRepeatPolicy()) {
+    if (m.isRelativeToMidnight()) {
       mStartTime = dayStartTime;
 
       long[] lastTickedTimePerChannel = new long[m.getNumChannels()];
@@ -105,7 +105,7 @@ public class PlayingMood {
     if (mMood.getEvents().length == 0) {
       return false;
     }
-    if (mMood.getTimeAddressingRepeatPolicy()) {
+    if (mMood.isRelativeToMidnight()) {
       return true;
     }
     if (mMood.isInfiniteLooping()) {
@@ -158,7 +158,7 @@ public class PlayingMood {
 
     List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
 
-    if (mMood.getTimeAddressingRepeatPolicy()) {
+    if (mMood.isRelativeToMidnight()) {
       int
           priorLoops =
           (int) Math.floor(((double) (sinceTime - mStartTime)) / mMood.getLoopMilliTime());

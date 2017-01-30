@@ -183,7 +183,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   public static PageType calculateMoodType(Mood m) {
     if (!m.getUsesTiming()) {
       return PageType.SIMPLE_PAGE;
-    } else if (m.getTimeAddressingRepeatPolicy() == true) {
+    } else if (m.isRelativeToMidnight() == true) {
       return PageType.DAILY_PAGE;
     } else {
       return PageType.RELATIVE_PAGE;
@@ -240,9 +240,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     }
     moodBuilder.setNumChannels(gridCols());
     if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE) {
-      moodBuilder.setTimeAddressingRepeatPolicy(true);
+      moodBuilder.setRelativeToMidnight(true);
     } else {
-      moodBuilder.setTimeAddressingRepeatPolicy(false);
+      moodBuilder.setRelativeToMidnight(false);
     }
     moodBuilder.setInfiniteLooping(parentFrag.isChecked());
 
