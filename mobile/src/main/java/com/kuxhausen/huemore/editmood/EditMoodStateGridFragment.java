@@ -183,7 +183,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
   public static PageType calculateMoodType(Mood m) {
     if (!m.getUsesTiming()) {
       return PageType.SIMPLE_PAGE;
-    } else if (m.isRelativeToMidnight() == true) {
+    } else if (m.getTimingPolicy() == Mood.TimingPolicy.DAILY) {
       return PageType.DAILY_PAGE;
     } else {
       return PageType.RELATIVE_PAGE;
@@ -224,7 +224,7 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     }
 
     // set loop button
-    parentFrag.setChecked(mFromDB.isInfiniteLooping());
+    parentFrag.setChecked(mFromDB.getTimingPolicy() == Mood.TimingPolicy.LOOPING);
 
     loopTimeslot.setStartTime(Utils.toDeciSeconds(mFromDB.getLoopMilliTime()));
 
@@ -239,12 +239,13 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
       moodBuilder.setUsesTiming(false);
     }
     moodBuilder.setNumChannels(gridCols());
-    if (pageType == PageType.SIMPLE_PAGE || pageType == PageType.DAILY_PAGE) {
-      moodBuilder.setRelativeToMidnight(true);
+    if (pageType == PageType.DAILY_PAGE) {
+      moodBuilder.setTimingPolicy(Mood.TimingPolicy.DAILY);
+    } else if (pageType == PageType.RELATIVE_PAGE && parentFrag.isChecked()) {
+      moodBuilder.setTimingPolicy(Mood.TimingPolicy.LOOPING);
     } else {
-      moodBuilder.setRelativeToMidnight(false);
+      moodBuilder.setTimingPolicy(Mood.TimingPolicy.BASIC);
     }
-    moodBuilder.setInfiniteLooping(parentFrag.isChecked());
 
     ArrayList<Event> events = new ArrayList<Event>();
     for (int r = 0; r < moodRows.size(); r++) {

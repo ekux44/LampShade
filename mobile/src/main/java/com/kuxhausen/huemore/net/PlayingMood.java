@@ -47,7 +47,7 @@ public class PlayingMood {
       mMoodName = "?";
     }
     mGroup = g;
-    if (m.isRelativeToMidnight()) {
+    if (m.getTimingPolicy() == Mood.TimingPolicy.DAILY) {
       mStartTime = dayStartTime;
 
       long[] lastTickedTimePerChannel = new long[m.getNumChannels()];
@@ -105,11 +105,11 @@ public class PlayingMood {
     if (mMood.getEvents().length == 0) {
       return false;
     }
-    if (mMood.isRelativeToMidnight()) {
-      return true;
-    }
-    if (mMood.isInfiniteLooping()) {
-      return true;
+    switch (mMood.getTimingPolicy()) {
+      case DAILY:
+        return true;
+      case LOOPING:
+        return true;
     }
     if ((mMood.getEvents()[mMood.getEvents().length - 1].getMilliTime() + mStartTime)
         > mLastTickedTime) {
@@ -126,7 +126,8 @@ public class PlayingMood {
       throw new IllegalStateException();
     }
 
-    if (mMood.isInfiniteLooping()) {
+    if (mMood.getTimingPolicy() == Mood.TimingPolicy.DAILY
+        || mMood.getTimingPolicy() == Mood.TimingPolicy.LOOPING) {
       long
           cycleStart =
           mStartTime + ((mLastTickedTime - mStartTime) / mMood.getLoopMilliTime())
@@ -158,7 +159,7 @@ public class PlayingMood {
 
     List<Pair<List<Long>, BulbState>> result = new ArrayList<Pair<List<Long>, BulbState>>();
 
-    if (mMood.isRelativeToMidnight()) {
+    if (mMood.getTimingPolicy() == Mood.TimingPolicy.DAILY) {
       int
           priorLoops =
           (int) Math.floor(((double) (sinceTime - mStartTime)) / mMood.getLoopMilliTime());
@@ -176,7 +177,7 @@ public class PlayingMood {
         }
       }
 
-    } else if (mMood.isInfiniteLooping()) {
+    } else if (mMood.getTimingPolicy() == Mood.TimingPolicy.LOOPING) {
       int priorLoops = (int) Math.max(0, (sinceTime - mStartTime) / mMood.getLoopMilliTime());
 
       for (int numCycles = priorLoops;
@@ -209,7 +210,7 @@ public class PlayingMood {
    */
   public List<Pair<List<Long>, BulbState>> tick(long throughTime) {
     if (throughTime < mLastTickedTime) {
-      throw new IllegalArgumentException(throughTime+",'"+mLastTickedTime);
+      throw new IllegalArgumentException(throughTime + ",'" + mLastTickedTime);
     }
 
     long sinceT = mLastTickedTime;

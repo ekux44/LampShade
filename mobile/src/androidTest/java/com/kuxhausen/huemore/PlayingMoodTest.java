@@ -174,7 +174,7 @@ public class PlayingMoodTest {
     Mood m = new Mood.Builder()
         .setEvents(eRay)
         .setNumChannels(2)
-        .setInfiniteLooping(true)
+        .setTimingPolicy(Mood.TimingPolicy.LOOPING)
         .setLoopMilliTime(200)
         .build();
 
@@ -268,7 +268,7 @@ public class PlayingMoodTest {
     Mood m = new Mood.Builder()
         .setEvents(eRay)
         .setNumChannels(2)
-        .setInfiniteLooping(true)
+        .setTimingPolicy(Mood.TimingPolicy.LOOPING)
         .setLoopMilliTime(200)
         .build();
 
@@ -383,7 +383,7 @@ public class PlayingMoodTest {
     Mood m = new Mood.Builder()
         .setEvents(eRay)
         .setNumChannels(2)
-        .setRelativeToMidnight(true)
+        .setTimingPolicy(Mood.TimingPolicy.DAILY)
         .build();
 
     Long bulb1 = 123l;
@@ -497,7 +497,7 @@ public class PlayingMoodTest {
     Mood m = new Mood.Builder()
         .setEvents(eRay)
         .setNumChannels(2)
-        .setRelativeToMidnight(true)
+        .setTimingPolicy(Mood.TimingPolicy.DAILY)
         .build();
 
     Long bulb1 = 123l;

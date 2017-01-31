@@ -11,6 +11,7 @@ import com.kuxhausen.huemore.state.Event;
 import com.kuxhausen.huemore.state.Group;
 import com.kuxhausen.huemore.state.Mood;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -141,10 +142,15 @@ public class HueUrlEncoder {
    */
   private static void addTimingRepeatPolicy(ManagedBitSet mBitSet, Mood mood) {
     // 1 bit timing addressing reference mode
-    mBitSet.incrementingSet(mood.isRelativeToMidnight());
+    boolean isRelativeToMidnight = (mood.getTimingPolicy() == Mood.TimingPolicy.DAILY);
+    mBitSet.incrementingSet(isRelativeToMidnight);
 
-    // 7 bit timing repeat number (max value specialcased to infinity)
-    mBitSet.addNumber(mood.getNumLoops(), 7);
+    // 7 bit timing repeat number. Clients only support 0 (no loops) or 127 (infinite loops).
+    boolean isLooping =
+        (mood.getTimingPolicy() == Mood.TimingPolicy.DAILY
+         || mood.getTimingPolicy() == Mood.TimingPolicy.LOOPING);
+    int numLoops = isLooping ? 127 : 0;
+    mBitSet.addNumber(numLoops, 7);
   }
 
   /**
@@ -393,7 +399,6 @@ public class HueUrlEncoder {
     try {
       Mood.Builder moodBuilder = new Mood.Builder();
       int numChannels = 0;
-      int numLoops = 0;
       ArrayList<Integer> bList = new ArrayList<Integer>();
       Integer brightness = null;
       ManagedBitSet mBitSet = new ManagedBitSet(code);
@@ -429,14 +434,12 @@ public class HueUrlEncoder {
         numChannels = mBitSet.extractNumber(6);
         moodBuilder.setNumChannels(numChannels);
 
-        // 1 bit timing addressing reference mode
-        moodBuilder.setRelativeToMidnight(mBitSet.incrementingGet());
+        // 1 bit timing addressing reference mode.
+        boolean isRelativeToMidnight = mBitSet.incrementingGet();
 
-        // 7 bit timing repeat number
-        numLoops = mBitSet.extractNumber(7);
-        moodBuilder.setNumLoops(numLoops);
-        // flag infinite looping if max numLoops
-        moodBuilder.setInfiniteLooping(numLoops == 127);
+        // 7 bit timing repeat number. Clients only support 0 (no loops) or 127 (infinite loops).
+        int numLoops = mBitSet.extractNumber(7);
+        boolean isLooping = (numLoops == 127);
 
         // 6 bit number of timestamps
         int numTimestamps = mBitSet.extractNumber(6);
@@ -445,8 +448,17 @@ public class HueUrlEncoder {
           // 20 bit timestamp
           timeArray[i] = mBitSet.extractNumber(20);
         }
-        moodBuilder.setUsesTiming(
-            !(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0)));
+        boolean usesTiming =
+            !(timeArray.length == 0 || (timeArray.length == 1 && timeArray[0] == 0));
+
+        if (usesTiming && isRelativeToMidnight) {
+          moodBuilder.setTimingPolicy(Mood.TimingPolicy.DAILY);
+        } else if (usesTiming && isLooping) {
+          moodBuilder.setTimingPolicy(Mood.TimingPolicy.LOOPING);
+        } else {
+          moodBuilder.setTimingPolicy(Mood.TimingPolicy.BASIC);
+        }
+        moodBuilder.setUsesTiming(usesTiming);
 
         int numStates;
         if (encodingVersion >= 4) {
@@ -500,31 +512,7 @@ public class HueUrlEncoder {
         }
 
       } else if (encodingVersion == 0) {
-        mBitSet.useLittleEndianEncoding(true);
-
-        // 7 bit number of states
-        int numStates = mBitSet.extractNumber(7);
-        Event[] eventArray = new Event[numStates];
-
-        /** Decode each state **/
-        for (int i = 0; i < numStates; i++) {
-          // decode each state
-          BulbState state = extractState(mBitSet);
-
-          // convert from old brightness stuffing to new relative brightness + total brightness
-          // system
-          if (state.get255Bri() != null) {
-            brightness = state.get255Bri();
-            state.set255Bri(null);
-          }
-
-          eventArray[i] = new Event(state, i, 0l);
-        }
-        moodBuilder.setEvents(eventArray);
-        moodBuilder.setNumChannels(numStates);
-        moodBuilder.setRelativeToMidnight(false);
-        moodBuilder.setUsesTiming(false);
-
+        throw new UnsupportedEncodingException();
       } else {
         throw new FutureEncodingException();
       }

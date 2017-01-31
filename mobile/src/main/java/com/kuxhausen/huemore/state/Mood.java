@@ -2,8 +2,6 @@ package com.kuxhausen.huemore.state;
 
 import com.google.gson.Gson;
 
-import android.support.annotation.IntRange;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +9,6 @@ import java.util.HashSet;
 public class Mood implements Cloneable {
 
   public final static long NUMBER_OF_MILLISECONDS_IN_DAY = 86400000;
-  public final static int NUM_LOOPS_INFINITE = 127;
 
   private Event[] mEvents;
   private int mNumChannels;
@@ -20,41 +17,25 @@ public class Mood implements Cloneable {
    * in units of 1/10 of a second
    */
   private int mLoopIterationTimeLength;
-  /**
-   * if true, timestamps in events are offsets from beginning of the day, otherwise they are offsets
-   * from mood start time
-   */
-  private boolean mRelativeToMidnight;
-  /**
-   * Number of times to loop back after playing the events. 127 means infinite.
-   */
-  @IntRange(from = 0, to = NUM_LOOPS_INFINITE)
-  private int mNumLoops;
+  private TimingPolicy mTimingPolicy;
+
+  public enum TimingPolicy {
+    BASIC, // play the mood relative to start time, no looping
+    LOOPING, // play the mood relative to start time, looping
+    DAILY, // play the mood relative to start of day, looping
+  }
 
   private Mood() {
     // for Gson
   }
 
-  private Mood(Event[] events, int loopIterationTimeLength, int numChannels, Integer numLoops,
-               Boolean timeAddressingRepeatPolicy, boolean usesTiming) {
+  private Mood(Event[] events, int loopIterationTimeLength, int numChannels,
+               TimingPolicy timingPolicy, boolean usesTiming) {
     this.mEvents = events;
     this.mLoopIterationTimeLength = loopIterationTimeLength;
     this.mNumChannels = numChannels;
-    this.mNumLoops = numLoops;
-    this.mRelativeToMidnight = timeAddressingRepeatPolicy;
+    this.mTimingPolicy = timingPolicy;
     this.mUsesTiming = usesTiming;
-  }
-
-  public boolean isInfiniteLooping() {
-    if (isRelativeToMidnight()) {
-      return true;
-    } else {
-      return (mNumLoops == NUM_LOOPS_INFINITE);
-    }
-  }
-
-  public int getNumLoops() {
-    return mNumLoops;
   }
 
   public int getNumChannels() {
@@ -114,16 +95,17 @@ public class Mood implements Cloneable {
     return true;
   }
 
-  public boolean isRelativeToMidnight() {
-    return mRelativeToMidnight;
-  }
 
   public long getLoopMilliTime() {
-    if (isRelativeToMidnight()) {
+    if (mTimingPolicy == TimingPolicy.DAILY) {
       return NUMBER_OF_MILLISECONDS_IN_DAY;
     } else {
       return mLoopIterationTimeLength * 100l;
     }
+  }
+
+  public TimingPolicy getTimingPolicy() {
+    return mTimingPolicy;
   }
 
   public boolean getUsesTiming() {
@@ -138,11 +120,9 @@ public class Mood implements Cloneable {
 
     return (Arrays.equals(this.getEvents(), ((Mood) obj).getEvents())
             && this.getNumChannels() == ((Mood) obj).getNumChannels()
-            && this.isInfiniteLooping() == ((Mood) obj).isInfiniteLooping()
+            && this.getTimingPolicy() == ((Mood) obj).getTimingPolicy()
             && this.getUsesTiming() == ((Mood) obj).getUsesTiming()
-            && this.getLoopMilliTime() == ((Mood) obj).getLoopMilliTime()
-            && this.isRelativeToMidnight() == ((Mood) obj)
-        .isRelativeToMidnight());
+            && this.getLoopMilliTime() == ((Mood) obj).getLoopMilliTime());
   }
 
   public static class Builder {
@@ -150,8 +130,7 @@ public class Mood implements Cloneable {
     private Event[] mEvents;
     private int mLoopIterationTimeLength;
     private Integer mNumChannels;
-    private int mNumLoops;
-    private boolean mRelativeToMidnight;
+    private TimingPolicy mTimingPolicy;
     private boolean mUsesTiming;
 
     public Builder() {
@@ -175,30 +154,13 @@ public class Mood implements Cloneable {
       return this;
     }
 
-    public Builder setRelativeToMidnight(boolean relativeToMidnight) {
-      mRelativeToMidnight = relativeToMidnight;
-      return this;
-    }
-
-    public Builder setInfiniteLooping(boolean infinite) {
-      if (infinite) {
-        mNumLoops = NUM_LOOPS_INFINITE;
-      } else {
-        mNumLoops = 0;
-      }
-      return this;
-    }
-
     public Builder setLoopMilliTime(long milliseconds) {
       mLoopIterationTimeLength = (int) (milliseconds / 100l);
       return this;
     }
 
-    public Builder setNumLoops(@IntRange(from = 0, to = NUM_LOOPS_INFINITE) int numLoops) {
-      if (numLoops < 0 || numLoops > NUM_LOOPS_INFINITE) {
-        throw new IllegalArgumentException();
-      }
-      mNumLoops = numLoops;
+    public Builder setTimingPolicy(TimingPolicy timingPolicy) {
+      mTimingPolicy = timingPolicy;
       return this;
     }
 
@@ -212,6 +174,9 @@ public class Mood implements Cloneable {
       if (mEvents == null) {
         throw new IllegalStateException();
       }
+      if (mTimingPolicy == null) {
+        mTimingPolicy = TimingPolicy.BASIC;
+      }
       if (mNumChannels == null) {
         mNumChannels = 0;
         for (Event e : mEvents) {
@@ -221,8 +186,7 @@ public class Mood implements Cloneable {
         }
       }
 
-      return new Mood(mEvents, mLoopIterationTimeLength, mNumChannels, mNumLoops,
-                      mRelativeToMidnight, mUsesTiming);
+      return new Mood(mEvents, mLoopIterationTimeLength, mNumChannels, mTimingPolicy, mUsesTiming);
     }
   }
 }
