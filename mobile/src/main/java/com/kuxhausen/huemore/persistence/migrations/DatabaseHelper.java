@@ -187,6 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         moodMap.put("Blacklight", "AQwAAQAAACPl49NJ4s09ywYAxNIDAA==﻿");
         moodMap.put("Cyan", "AQQAAQAAACf_54NbqOJrvVAAABAABAAAAA==\uFEFF");
         moodMap.put("Neon Green", "AQQAAQAAACf_570O5eFXdmkFABAABAAAAA==\uFEFF");
+        moodMap.put("Glow", "AQQAAQAAACf_56NDs-CHE6wDABAABAAAAA== ");
 
 
         // add the stock moods (and write over old hsv versions)
