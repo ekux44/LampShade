@@ -45,6 +45,8 @@ public class MainFragment extends Fragment implements
   private boolean mIsTrackingTouch = false;
   private ForwardingPageListener mForwardPage;
   private TextView mBrightnessDescriptor;
+  private String brightnesstitle = "";
+  private String brightnesspercent = ": 0%";
 
   /*
    * @Override public void onConnectionStatusChanged(){ this.supportInvalidateOptionsMenu(); }
@@ -205,7 +207,8 @@ public class MainFragment extends Fragment implements
       mMaxBrightnessBar.setVisibility(View.VISIBLE);
       ///mBrightnessDescriptor.setText(R.string.max_brightness);
       brightnesstitle = getContext().getApplicationContext().getString(R.string.max_brightness);
-      mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);    } else {
+      mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
+    } else {
       mBrightnessBar.setVisibility(View.VISIBLE);
       mMaxBrightnessBar.setVisibility(View.GONE);
       ///mBrightnessDescriptor.setText(R.string.brightness);
