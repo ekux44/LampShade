@@ -120,6 +120,8 @@ public class MainFragment extends Fragment implements
               DeviceManager dm = mParent.getService().getDeviceManager();
               if (dm.getSelectedGroup() != null) {
                 dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+                brightnesspercent = ": " + progress + "%";
+                mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
               }
             }
           }
@@ -146,6 +148,8 @@ public class MainFragment extends Fragment implements
               DeviceManager dm = mParent.getService().getDeviceManager();
               if (dm.getSelectedGroup() != null) {
                 dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+                brightnesspercent = ": " + progress + "%";
+                mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
               }
             }
           }
@@ -199,11 +203,14 @@ public class MainFragment extends Fragment implements
     if (bm != null && bm.getPolicy() == BrightnessManager.BrightnessPolicy.VOLUME_BRI) {
       mBrightnessBar.setVisibility(View.GONE);
       mMaxBrightnessBar.setVisibility(View.VISIBLE);
-      mBrightnessDescriptor.setText(R.string.max_brightness);
-    } else {
+      ///mBrightnessDescriptor.setText(R.string.max_brightness);
+      brightnesstitle = getContext().getApplicationContext().getString(R.string.max_brightness);
+      mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);    } else {
       mBrightnessBar.setVisibility(View.VISIBLE);
       mMaxBrightnessBar.setVisibility(View.GONE);
-      mBrightnessDescriptor.setText(R.string.brightness);
+      ///mBrightnessDescriptor.setText(R.string.brightness);
+      brightnesstitle = getContext().getApplicationContext().getString(R.string.brightness);
+      mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
     }
   }
 
