@@ -282,6 +282,8 @@ public class MainFragment extends Fragment implements
         int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
         mBrightnessBar.setProgress(brightness);
         mMaxBrightnessBar.setProgress(brightness);
+        brightnesspercent = ": " + brightness + "%";
+        mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
       }
     }
   }
