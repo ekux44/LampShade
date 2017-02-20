@@ -176,14 +176,14 @@ public class SecondaryFragment extends Fragment
       mBrightnessBar.setVisibility(View.GONE);
       mMaxBrightnessBar.setVisibility(View.VISIBLE);
       ///mBrightnessDescriptor.setText(R.string.max_brightness);
-      brightnesstitle = getContext().getApplicationContext().getString(R.string.max_brightness);
+      brightnesstitle = getActivity().getString(R.string.max_brightness);
       mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
 
     } else {
       mBrightnessBar.setVisibility(View.VISIBLE);
       mMaxBrightnessBar.setVisibility(View.GONE);
       ///mBrightnessDescriptor.setText(R.string.brightness);
-      brightnesstitle = getContext().getApplicationContext().getString(R.string.brightness);
+      brightnesstitle = getActivity().getString(R.string.brightness);
       mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
     }
   }
