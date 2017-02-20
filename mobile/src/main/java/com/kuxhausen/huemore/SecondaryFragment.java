@@ -37,6 +37,8 @@ public class SecondaryFragment extends Fragment
   private SeekBar mBrightnessBar, mMaxBrightnessBar;
   private TextView mBrightnessDescriptor;
   private boolean mIsTrackingTouch = false;
+  private String brightnesstitle = "";
+  private String brightnesspercent = ": 0%";
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,6 +99,8 @@ public class SecondaryFragment extends Fragment
             DeviceManager dm = mParent.getService().getDeviceManager();
             if (dm.getSelectedGroup() != null) {
               dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+              brightnesspercent = ": " + progress + "%";
+              mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
             }
           }
         }
@@ -123,6 +127,8 @@ public class SecondaryFragment extends Fragment
             DeviceManager dm = mParent.getService().getDeviceManager();
             if (dm.getSelectedGroup() != null) {
               dm.obtainBrightnessManager(dm.getSelectedGroup()).setBrightness(progress);
+              brightnesspercent = ": " + progress + "%";
+              mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
             }
           }
         }
@@ -169,11 +175,16 @@ public class SecondaryFragment extends Fragment
     if (bm != null && bm.getPolicy() == BrightnessManager.BrightnessPolicy.VOLUME_BRI) {
       mBrightnessBar.setVisibility(View.GONE);
       mMaxBrightnessBar.setVisibility(View.VISIBLE);
-      mBrightnessDescriptor.setText(R.string.max_brightness);
+      ///mBrightnessDescriptor.setText(R.string.max_brightness);
+      brightnesstitle = getActivity().getString(R.string.max_brightness);
+      mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
+
     } else {
       mBrightnessBar.setVisibility(View.VISIBLE);
       mMaxBrightnessBar.setVisibility(View.GONE);
-      mBrightnessDescriptor.setText(R.string.brightness);
+      ///mBrightnessDescriptor.setText(R.string.brightness);
+      brightnesstitle = getActivity().getString(R.string.brightness);
+      mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
     }
   }
 
@@ -224,6 +235,9 @@ public class SecondaryFragment extends Fragment
         int brightness = dm.obtainBrightnessManager(dm.getSelectedGroup()).getBrightness();
         mBrightnessBar.setProgress(brightness);
         mMaxBrightnessBar.setProgress(brightness);
+        brightnesspercent = ": " + brightness + "%";
+        mBrightnessDescriptor.setText(brightnesstitle + brightnesspercent);
+
       }
     }
   }
