@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
+import com.kuxhausen.huemore.utils.DeferredLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +119,7 @@ public class DatabaseGroup extends Group {
       if (lowercaseGroupCursor != null && lowercaseGroupCursor.moveToFirst()) {
         return lowercaseGroupCursor;
       } else {
-        Log.w("Database", "Group " + name + " not in database");
+        DeferredLog.w("Database", "Group %s not in database", name);
 
         if (lowercaseGroupCursor != null) {
           lowercaseGroupCursor.close();
@@ -140,7 +140,7 @@ public class DatabaseGroup extends Group {
     if (groupCursor != null && groupCursor.moveToFirst()) {
       return groupCursor;
     } else {
-      Log.w("Database", "Group id " + id + " not in database");
+      DeferredLog.w("Database", "Group id %d not in database", id);
       if (groupCursor != null) {
         groupCursor.close();
       }
