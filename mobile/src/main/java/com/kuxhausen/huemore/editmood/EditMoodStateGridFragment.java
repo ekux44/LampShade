@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.view.ActionMode;
@@ -83,11 +82,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
     super.onCreate(savedInstanceState);
     View myView = inflater.inflate(R.layout.edit_mood_state_grid_fragment, null);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mCellDragListener = new CellOnDragListener(this, ViewType.StateCell);
-      mChannelDragListener = new CellOnDragListener(this, ViewType.Channel);
-      mTimeslotDragListener = new CellOnDragListener(this, ViewType.Timeslot);
-    }
+    mCellDragListener = new CellOnDragListener(this, ViewType.StateCell);
+    mChannelDragListener = new CellOnDragListener(this, ViewType.Channel);
+    mTimeslotDragListener = new CellOnDragListener(this, ViewType.Timeslot);
 
     mStateGrid = new StateGridSelections(this);
 
@@ -422,12 +419,9 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
                     grid,
                     this,
                     this,
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ? mCellLongListener
-                                                                             : null
+                    mCellLongListener
                 );
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          v.setOnDragListener(mCellDragListener);
-        }
+        v.setOnDragListener(mCellDragListener);
         mStateGrid.tagStateCell(v, r, c);
         grid.addView(v, vg);
       }
@@ -466,10 +460,8 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
           ((ViewGroup) v.getParent()).removeView(v);
         }
         v.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          v.setOnLongClickListener(mChannelLongListener);
-          v.setOnDragListener(mChannelDragListener);
-        }
+        v.setOnLongClickListener(mChannelLongListener);
+        v.setOnDragListener(mChannelDragListener);
         mStateGrid.tagChannel(v, c);
         grid.addView(v, vg);
       }
@@ -487,10 +479,8 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         if (v.getParent() != null) {
           ((ViewGroup) v.getParent()).removeView(v);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          v.setOnLongClickListener(mTimeslotLongListener);
-          v.setOnDragListener(mTimeslotDragListener);
-        }
+        v.setOnLongClickListener(mTimeslotLongListener);
+        v.setOnDragListener(mTimeslotDragListener);
         mStateGrid.tagTimeslot(v, r);
         grid.addView(v, vg);
       }
@@ -507,10 +497,8 @@ public class EditMoodStateGridFragment extends Fragment implements OnClickListen
         if (v.getParent() != null) {
           ((ViewGroup) v.getParent()).removeView(v);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          v.setOnLongClickListener(mTimeslotLongListener);
-          v.setOnDragListener(mTimeslotDragListener);
-        }
+        v.setOnLongClickListener(mTimeslotLongListener);
+        v.setOnDragListener(mTimeslotDragListener);
         mStateGrid.tagTimeslot(v, r);
         grid.addView(v, vg);
       }

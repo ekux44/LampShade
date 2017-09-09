@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.editmood;
 
-import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Pair;
@@ -9,7 +8,6 @@ import android.view.View;
 
 import com.kuxhausen.huemore.R;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class CellOnDragListener implements View.OnDragListener {
 
   private EditMoodStateGridFragment mFrag;

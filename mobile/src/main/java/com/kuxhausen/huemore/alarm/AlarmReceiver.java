@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.text.format.DateUtils;
 import android.widget.Toast;
@@ -64,12 +63,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     PendingIntent pending = generatePendingIntent(context, data);
     AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(data.getAlarmTime().getTimeInMillis(), pending);
-      alarmMgr.setAlarmClock(info, pending);
-    } else {
-      alarmMgr.setExact(AlarmManager.RTC_WAKEUP, data.getAlarmTime().getTimeInMillis(), pending);
-    }
+    AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(data.getAlarmTime().getTimeInMillis(), pending);
+    alarmMgr.setAlarmClock(info, pending);
     
     if (showToast) {
       Toast.makeText(context, context.getString(R.string.next_scheduled_intro) + " " + DateUtils

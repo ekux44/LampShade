@@ -1,6 +1,5 @@
 package com.kuxhausen.huemore.net;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.ContextMenu;
@@ -29,10 +28,6 @@ public class ConnectionListFragment extends ListFragment implements
 
   private NavigationDrawerActivity mParent;
   private ArrayAdapter<Connection> aa;
-  private int layout =
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB
-      ? android.R.layout.simple_list_item_activated_1
-      : android.R.layout.simple_list_item_1;
   private Connection selectedRow;
 
   @Override
@@ -96,7 +91,7 @@ public class ConnectionListFragment extends ListFragment implements
     if (connections == null) {
       return;
     }
-    aa = new ConnectionRowAdapter(mParent, layout, connections);
+    aa = new ConnectionRowAdapter(mParent, android.R.layout.simple_list_item_activated_1, connections);
     setListAdapter(aa);
   }
 
