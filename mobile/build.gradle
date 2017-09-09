@@ -26,11 +26,11 @@ android {
     }
     productFlavors {
         playEdition {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 25
         }
         compatabilityEdition {
-            minSdkVersion 19
+            minSdkVersion 21
             targetSdkVersion 25
         }
     }
