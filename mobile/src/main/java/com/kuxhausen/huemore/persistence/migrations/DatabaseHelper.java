@@ -17,6 +17,7 @@ import com.kuxhausen.huemore.alarm.DaysOfWeek;
 import com.kuxhausen.huemore.net.hue.HueBulbData;
 import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.AlarmColumns;
+import com.kuxhausen.huemore.persistence.Definitions.BasicUsageStats;
 import com.kuxhausen.huemore.persistence.Definitions.GroupBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "huemore.db";
-  private static final int DATABASE_VERSION = 12;
+  private static final int DATABASE_VERSION = 13;
   Gson gson = new Gson();
   private Context mContext;
 
@@ -664,6 +665,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           moodCursor.close();
         }
         oldAlarmsCursor.close();
+      }
+      case 12: {
+        // Create the BasicUsageStats table
+        db.execSQL("CREATE TABLE " + BasicUsageStats.TABLE_NAME + " (" +
+                   BaseColumns._ID + " INTEGER PRIMARY KEY," +
+                   BasicUsageStats.COL_GROUP_ID + " INTEGER," +
+                   BasicUsageStats.COL_MOOD_ID + " INTEGER," +
+                   BasicUsageStats.COL_NUM_REQUESTED + " INTEGER," +
+                   BasicUsageStats.COL_LAST_REQUEST_TIME + " INTEGER," +
+                   " FOREIGN KEY (" + BasicUsageStats.COL_GROUP_ID + ") REFERENCES " +
+                   GroupColumns.TABLE_NAME + " (" + GroupColumns._ID + " ) ON DELETE CASCADE " +
+                   " FOREIGN KEY (" + BasicUsageStats.COL_MOOD_ID + ") REFERENCES " +
+                   MoodColumns.TABLE_NAME + " (" + MoodColumns._ID + " ) ON DELETE CASCADE " +
+                   ");");
       }
     }
   }

@@ -23,11 +23,12 @@ public final class Definitions {
     public static final Uri ALARMS_URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH_ALARMS);
 
     /**
-     * String, must be valid entry in Groups table
+     * Row id of the group in the groups table.
      */
     public static final String COL_GROUP_ID = "COL_GROUP_ID";
 
-    /* row id of mood in moods database
+    /*
+     * Row id of mood in moods table.
      */
     public static final String COL_MOOD_ID = "COL_MOOD_ID";
 
@@ -228,6 +229,41 @@ public final class Definitions {
 
     // This class cannot be instantiated
     private PlayingMood() {
+    }
+  }
+
+  /*
+   * This table is used to track how often the user requests each group / mood pairing.
+   */
+  public static final class BasicUsageStats implements BaseColumns {
+
+    public static final String TABLE_NAME = "basicusagestats";
+
+    public static final String PATH = "basicusagestats";
+    public static final Uri URI = Uri.parse(SCHEME + AUTHORITY + SLASH + PATH);
+
+    /**
+     * Row id of the group in the groups table.
+     */
+    public static final String COL_GROUP_ID = "COL_GROUP_ID";
+
+    /*
+     * Row id of mood in moods table.
+     */
+    public static final String COL_MOOD_ID = "COL_MOOD_ID";
+
+    /*
+     * Number of times the user has selected this group + mood.
+     */
+    public static final String COL_NUM_REQUESTED = "COL_NUM_REQUESTED";
+
+    /**
+     * Numeric unix epoch time. The most recent time the user selected this group + mood.
+     */
+    public static final String COL_LAST_REQUEST_TIME = "COL_LAST_REQUEST_TIME";
+
+    // This class cannot be instantiated
+    private BasicUsageStats() {
     }
   }
 

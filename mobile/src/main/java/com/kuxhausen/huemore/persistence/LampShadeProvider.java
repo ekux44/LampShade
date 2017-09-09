@@ -18,6 +18,7 @@ import com.kuxhausen.huemore.persistence.Definitions.GroupColumns;
 import com.kuxhausen.huemore.persistence.Definitions.MoodColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetBulbColumns;
 import com.kuxhausen.huemore.persistence.Definitions.NetConnectionColumns;
+import com.kuxhausen.huemore.persistence.Definitions.BasicUsageStats;
 import com.kuxhausen.huemore.persistence.Definitions.PlayingMood;
 import com.kuxhausen.huemore.persistence.migrations.DatabaseHelper;
 import com.kuxhausen.huemore.state.BulbState;
@@ -38,7 +39,7 @@ public class LampShadeProvider extends ContentProvider {
    * Constants used by the Uri matcher to choose an action based on the pattern of the incoming URI
    */
   private static final int GROUPS = 1, GROUPBULBS = 2, MOODS = 3, ALARMS = 4,
-      NETBULBS = 5, NETCONNECTIONS = 6, PLAYINGMOOD = 7;
+      NETBULBS = 5, NETCONNECTIONS = 6, PLAYINGMOOD = 7, BASICUSAGESTATS = 8;
 
   /**
    * projection mapping between content provider value names and sql column names to enable
@@ -65,6 +66,7 @@ public class LampShadeProvider extends ContentProvider {
       sUriMatcher.addURI(Definitions.AUTHORITY, NetBulbColumns.PATH, NETBULBS);
       sUriMatcher.addURI(Definitions.AUTHORITY, NetConnectionColumns.PATH, NETCONNECTIONS);
       sUriMatcher.addURI(Definitions.AUTHORITY, PlayingMood.PATH, PLAYINGMOOD);
+      sUriMatcher.addURI(Definitions.AUTHORITY, BasicUsageStats.PATH, BASICUSAGESTATS);
 
       sAlarmQueryProjectionMap = new HashMap<String, String>();
       sAlarmQueryProjectionMap
@@ -161,6 +163,10 @@ public class LampShadeProvider extends ContentProvider {
      * Choose the projection and adjust the "where" clause based on URI pattern-matching.
      */
     switch (sUriMatcher.match(uri)) {
+      case BASICUSAGESTATS:
+        qb.setTables(BasicUsageStats.TABLE_NAME);
+        toNotify.add(BasicUsageStats.URI);
+        break;
       case PLAYINGMOOD:
         qb.setTables(PlayingMood.TABLE_NAME);
         toNotify.add(PlayingMood.URI);
@@ -255,6 +261,10 @@ public class LampShadeProvider extends ContentProvider {
      * Choose the projection and adjust the "where" clause based on URI pattern-matching.
      */
     switch (sUriMatcher.match(uri)) {
+      case BASICUSAGESTATS:
+        qb.setTables(BasicUsageStats.TABLE_NAME);
+        groupBy = null;
+        break;
       case PLAYINGMOOD:
         qb.setTables(PlayingMood.TABLE_NAME);
         groupBy = null;
@@ -362,6 +372,10 @@ public class LampShadeProvider extends ContentProvider {
 
     // Does the update based on the incoming URI pattern
     switch (sUriMatcher.match(uri)) {
+      case BASICUSAGESTATS:
+        count = db.update(BasicUsageStats.TABLE_NAME, values, selection, selectionArgs);
+        toNotify.add(BasicUsageStats.URI);
+        break;
       case MOODS:
         count = db.update(MoodColumns.TABLE_NAME, values, selection, selectionArgs);
         if (values.size() == 1 && values.containsKey(MoodColumns.COL_MOOD_PRIORITY)) {
