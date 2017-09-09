@@ -3,12 +3,11 @@ package com.kuxhausen.huemore.net;
 import android.app.Service;
 import android.content.Context;
 import android.os.PowerManager;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 
 import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
-
-import alt.android.os.CountDownTimer;
 
 public class LifecycleController {
 

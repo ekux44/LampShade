@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -22,8 +23,6 @@ import com.kuxhausen.huemore.state.SyntheticGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import alt.android.os.CountDownTimer;
 
 public class MoodPlayer {
 

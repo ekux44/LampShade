@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 
 import com.android.volley.RequestQueue;
@@ -28,8 +29,6 @@ import com.kuxhausen.huemore.utils.RateLimiter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-
-import alt.android.os.CountDownTimer;
 
 public class HubConnection implements Connection, OnBulbAttributesReturnedListener,
                                       ConnectionMonitor, OnBulbListReturnedListener {
