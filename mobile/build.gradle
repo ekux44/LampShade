@@ -23,6 +23,7 @@ android {
             applicationIdSuffix ".debug"
         }
     }
+    flavorDimensions "ecosystem"
     productFlavors {
         playEdition {
             minSdkVersion 10
