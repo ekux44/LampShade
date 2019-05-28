@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
@@ -115,7 +116,7 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
   }
 
   public void onDataSetChanged() {
-
+    final long identityToken = Binder.clearCallingIdentity();
     // Refresh the cursor
     if (mCursor != null) {
       mCursor.close();
@@ -124,6 +125,6 @@ class GroupStackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     ContentResolver r = mContext.getContentResolver();
     String[] columns = {GroupColumns.COL_GROUP_NAME, GroupColumns._ID};
     mCursor = r.query(GroupColumns.URI, columns, null, null, null);
-
+    Binder.restoreCallingIdentity(identityToken);
   }
 }

@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
@@ -113,6 +114,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
   }
 
   public void onDataSetChanged() {
+    final long identityToken = Binder.clearCallingIdentity();
     // Refresh the cursor
     if (mCursor != null) {
       mCursor.close();
@@ -120,7 +122,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     ContentResolver r = mContext.getContentResolver();
     mCursor =
-        r.query(Definitions.AlarmColumns.ALARMS_URI, AlarmData.QUERY_COLUMNS, null, null, null);
-
+            r.query(Definitions.AlarmColumns.ALARMS_URI, AlarmData.QUERY_COLUMNS, null, null, null);
+    Binder.restoreCallingIdentity(identityToken);
   }
 }

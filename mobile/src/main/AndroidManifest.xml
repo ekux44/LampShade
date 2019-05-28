@@ -51,7 +51,7 @@
         <provider
             android:name=".persistence.LampShadeProvider"
             android:authorities="${applicationId}.provider.database"
-            android:exported="true" />
+            android:exported="false" />
 
         <receiver android:name=".persistence.LocalizationReceiver">
             <intent-filter>
