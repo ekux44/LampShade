@@ -12,12 +12,6 @@
         android:text="@string/community_message" />
 
     <Button
-        android:id="@+id/googleButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/community_google_plus" />
-
-    <Button
         android:id="@+id/facebookButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

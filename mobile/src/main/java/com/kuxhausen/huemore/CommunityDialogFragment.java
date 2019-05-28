@@ -26,9 +26,6 @@ public class CommunityDialogFragment extends DialogFragment implements OnClickLi
     Button facebookButton = (Button) myView.findViewById(R.id.facebookButton);
     facebookButton.setOnClickListener(this);
 
-    Button googleButton = (Button) myView.findViewById(R.id.googleButton);
-    googleButton.setOnClickListener(this);
-
     Button twitterButton = (Button) myView.findViewById(R.id.twitterButton);
     twitterButton.setOnClickListener(this);
 
@@ -50,11 +47,6 @@ public class CommunityDialogFragment extends DialogFragment implements OnClickLi
     Intent i = new Intent(Intent.ACTION_VIEW);
 
     switch (v.getId()) {
-      case R.id.googleButton:
-        url = "https://plus.google.com/communities/117876087643455039742";
-        i.setData(Uri.parse(url));
-        startActivity(i);
-        break;
       case R.id.facebookButton:
         url = "https://www.facebook.com/LampShade.io";
         i.setData(Uri.parse(url));

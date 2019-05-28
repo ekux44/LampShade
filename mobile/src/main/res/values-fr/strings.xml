@@ -69,7 +69,6 @@
 	<string name="advanced_timeslot_limit">Désolé, les ambiances sont limitées à 64 plages de temps dans cette version</string>
 	<string name="advanced_channel_limit">Désolé, les ambiances sont limitées à 64 canaux dans cette version</string>
 	<string name="community_facebook">LampShade.io sur Facebook</string>
-	<string name="community_google_plus">LampShade.io sur Google+</string>
 	<string name="community_twitter">LampShade.io sur Twitter</string>
 	<string name="action_communities">Communauté et assistance</string>
 	<string name="community_message">Rejoignez la communauté LampShade.io en ligne pour partager des ambiances et discuter des fonctionnalités de LampShade.io</string>

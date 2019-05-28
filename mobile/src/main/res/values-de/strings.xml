@@ -69,7 +69,6 @@
 	<string name="advanced_timeslot_limit">Sorry, leider sind die Zeitvorgaben in dieser Version auf 64 Einträge beschränkt</string>
 	<string name="advanced_channel_limit">Sorry, leider sind die Kanäle in dieser Version auf 64 Einträge beschränkt</string>
 	<string name="community_facebook">LampShade.io auf Facebook</string>
-	<string name="community_google_plus">LampShade.io auf Google+</string>
 	<string name="community_twitter">LampShade.io auf Twitter</string>
 	<string name="action_communities">Community und Support</string>
 	<string name="community_message">Trete der Lampshade.io Online Community bei, um Szenen zu teilen und über Verbesserungen zu diskutieren</string>

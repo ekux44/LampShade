@@ -69,7 +69,6 @@
 	<string name="advanced_timeslot_limit">Sorry, moods are limited to 64 timeslots in this version</string>
 	<string name="advanced_channel_limit">Sorry, moods are limited to 64 channels in this version</string>
 	<string name="community_facebook">LampShade.io on Facebook</string>
-	<string name="community_google_plus">LampShade.io on Google+</string>
 	<string name="community_twitter">LampShade.io on Twitter</string>
 	<string name="action_communities">Community and Support</string>
 	<string name="community_message">Join the LampShade.io online community to share moods and discuss LampShade.io features</string>
