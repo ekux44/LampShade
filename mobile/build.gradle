@@ -12,8 +12,8 @@ android {
     buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
-        versionCode 85 // version code in wear module must kept in sync with this
-        versionName "3.2.4"
+        versionCode 86
+        versionName "3.3.0"
     }
     buildTypes {
         release {
