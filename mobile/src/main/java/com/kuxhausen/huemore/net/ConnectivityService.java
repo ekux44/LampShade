@@ -1,9 +1,17 @@
 package com.kuxhausen.huemore.net;
 
+import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.Notification.Builder;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -17,6 +25,7 @@ import com.kuxhausen.huemore.OnActiveMoodsChangedListener;
 import com.kuxhausen.huemore.R;
 import com.kuxhausen.huemore.automation.FireReceiver;
 import com.kuxhausen.huemore.automation.VoiceInputReceiver;
+import com.kuxhausen.huemore.persistence.Definitions;
 import com.kuxhausen.huemore.persistence.Definitions.InternalArguments;
 import com.kuxhausen.huemore.persistence.FutureEncodingException;
 import com.kuxhausen.huemore.persistence.HueUrlEncoder;
@@ -56,6 +65,45 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
     super.onCreate();
 
     mLifecycleController = new LifecycleController(this, this);
+  }
+
+  public static void startConnectivityService(Context context, String group, String mood) {
+    Intent intent = new Intent(context, ConnectivityService.class);
+    intent.putExtra(InternalArguments.MOOD_NAME, mood);
+    intent.putExtra(InternalArguments.GROUP_NAME, group);
+
+    if (Build.VERSION.SDK_INT  < Build.VERSION_CODES.O) {
+      context.startService(intent);
+    } else {
+      context.startForegroundService(intent);
+    }
+  }
+
+  public static void scheduleInternalAlarm(Context context,
+                                           Long wakeupTimeInElapsedRealtimeMillis) {
+
+    Intent intent = new Intent(context, ConnectivityService.class);
+
+    PendingIntent pendingIntent;
+    if (Build.VERSION.SDK_INT  < Build.VERSION_CODES.O) {
+      pendingIntent = PendingIntent.getService(context, 8, intent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+    } else {
+      pendingIntent = PendingIntent.getForegroundService(context, 8, intent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+      alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, wakeupTimeInElapsedRealtimeMillis,
+              pendingIntent);
+    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, wakeupTimeInElapsedRealtimeMillis,
+              pendingIntent);
+    } else {
+      alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, wakeupTimeInElapsedRealtimeMillis,
+              pendingIntent);
+    }
   }
 
   @Override
@@ -127,7 +175,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       }
 
       // remove any possible launched wakelocks
-      ConnectivityServiceLauncher.completeWakefulIntent(intent);
       FireReceiver.completeWakefulIntent(intent);
       VoiceInputReceiver.completeWakefulIntent(intent);
 
@@ -226,6 +273,53 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       PendingIntent
           openPI = PendingIntent.getActivity(this, 0, openI, PendingIntent.FLAG_UPDATE_CURRENT);
 
+      // Directly create notification channel version on O until migrated to new compat libraries
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // TODO move channel registration to one-time app startup task
+        CharSequence name = getString(R.string.notification_channel_name);
+        //String description = getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(
+                Definitions.NotificationChannelIds.PlayingMoodsChannel,
+                name,
+                NotificationManager.IMPORTANCE_LOW);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        Notification.Builder mBuilder =
+                new Notification.Builder(this, Definitions.NotificationChannelIds.PlayingMoodsChannel)
+                        .setSmallIcon(R.drawable.ic_notification_whiteshade)
+                        .setContentTitle(this.getResources().getString(R.string.app_name))
+                        .setContentText(getMoodPlayer().getPlayingMoods().get(0).toString())
+                        .setContentIntent(openPI);
+
+        // now create rich notification for supported devices
+        List<PlayingMood> playing = getMoodPlayer().getPlayingMoods();
+        Notification.InboxStyle iStyle = new Notification.InboxStyle();
+        for (int i = 0; (i < 5 && i < playing.size()); i++) {
+          iStyle.addLine(playing.get(i).toString());
+        }
+        if (playing.size() > 5) {
+          iStyle.setSummaryText("+" + (playing.size() - 5) + " "
+                  + this.getResources().getString(R.string.notification_overflow_more));
+        }
+        mBuilder.setStyle(iStyle);
+
+        //now add cancel button for supported devices
+        Intent stopI = new Intent(this, ConnectivityService.class);
+        stopI.putExtra(InternalArguments.FLAG_CANCEL_PLAYING, true);
+        PendingIntent
+                stopPI = PendingIntent.getService(this, 0, stopI, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        String
+                message =
+                (playing.size() == 1) ? getResources().getString(R.string.action_stop_all)
+                        : getResources().getString(R.string.action_stop);
+        mBuilder.addAction(R.drawable.ic_action_discard, message, stopPI);
+
+        this.startForeground(notificationId, mBuilder.build());
+        return;
+      }
       // create basic compatibility notification
       NotificationCompat.Builder mBuilder =
           new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_notification_whiteshade)
@@ -260,7 +354,6 @@ public class ConnectivityService extends Service implements OnActiveMoodsChanged
       this.startForeground(notificationId, mBuilder.build());
     }
   }
-
 
   @Override
   public void onDestroy() {

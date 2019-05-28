@@ -72,7 +72,6 @@ public abstract class NetworkManagedActivity extends ActionBarActivity implement
     super.onResume();
     // Bind to LocalService
     Intent intent = new Intent(this, ConnectivityService.class);
-    startService(intent);
     bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     this.registerOnServiceConnectedListener(this);
   }

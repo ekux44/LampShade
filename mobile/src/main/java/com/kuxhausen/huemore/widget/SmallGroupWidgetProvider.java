@@ -85,10 +85,7 @@ public class SmallGroupWidgetProvider extends AppWidgetProvider {
       String group = intent.getStringExtra(InternalArguments.GROUP_NAME);
       String mood = intent.getStringExtra(InternalArguments.MOOD_NAME);
 
-      Intent trasmitter = new Intent(ctx, ConnectivityService.class);
-      trasmitter.putExtra(InternalArguments.MOOD_NAME, mood);
-      trasmitter.putExtra(InternalArguments.GROUP_NAME, group);
-      ctx.startService(trasmitter);
+      ConnectivityService.startConnectivityService(ctx, group, mood);
     }
 
     super.onReceive(ctx, intent);

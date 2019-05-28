@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:longClickable="true"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/groupTextView"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="4dp"
+        android:text="@string/groups"
+        android:textColor="@color/accent" />
+
+    <Button
+        android:id="@+id/offButton"
+        style="@android:style/Widget.Holo.Light.Button.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cap_off"
+        android:textColor="@color/accent"/>
+
+    <Button
+        android:id="@+id/onButton"
+        style="@android:style/Widget.Holo.Light.Button.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cap_on"
+        android:textColor="@color/accent"/>
+
+</LinearLayout>

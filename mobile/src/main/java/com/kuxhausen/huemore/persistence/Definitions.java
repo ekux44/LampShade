@@ -260,7 +260,6 @@ public final class Definitions {
     public static final String CLICK_ACTION = "com.kuxhausen.huemore.CLICK_ACTION";
     public static final String ALARM_HANDLER_THREAD = "ALARM_HANDLER_THREAD";
     public static final String ALARM_INTENT_ACTION = "com.kuxhausen.huemore.alarm";
-    public static final String CONNECTIVITY_SERVICE_INTENT_ACTION = "com.kuxhausen.huemore.net";
     public static final String DAYS_OF_WEEK_AS_BYTE = "DAYS_OF_WEEK_AS_BYTE";
     public static final String GROUP_ID = "GROUP_ID";
   }
@@ -290,6 +289,10 @@ public final class Definitions {
     public static final String LOCAL_BRIDGE_IP_ADDRESS = "Local_Bridge_IP_Address";
     public static final String INTERNET_BRIDGE_IP_ADDRESS = "Internet_Bridge_IP_Address";
     public static final String HASHED_USERNAME = "Hashed_Username";
+  }
+
+  public static final class NotificationChannelIds {
+    public static final String PlayingMoodsChannel = "PLAYING_MOODS";
   }
 
   public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.database";

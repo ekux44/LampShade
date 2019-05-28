@@ -207,7 +207,7 @@ public class MoodPlayer {
       mContext.getContentResolver().insert(Definitions.PlayingMood.URI, cv);
     }
 
-    ConnectivityServiceLauncher.scheduleInternalAlarm(mContext, awakenTime);
+    ConnectivityService.scheduleInternalAlarm(mContext, awakenTime);
   }
 
   private synchronized void restoreNappingMoods() {

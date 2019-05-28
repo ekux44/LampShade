@@ -204,10 +204,6 @@
         </receiver>
 
         <receiver
-            android:name=".net.ConnectivityServiceLauncher"
-            android:exported="false" />
-
-        <receiver
             android:name=".alarm.AlarmReceiver"
             android:exported="false" />
 

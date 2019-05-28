@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:longClickable="true"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/rowExcludingCompoundButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="8dp">
+
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alarms"
+            android:textColor="@color/accent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/subTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alarms"
+            android:textColor="@color/accent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/alarmOnOffImageButton"
+        style="@android:style/Widget.Holo.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" />
+</LinearLayout>

@@ -8,7 +8,7 @@ android {
     signingConfigs {
         playRelease
     }
-    compileSdkVersion 23
+    compileSdkVersion 27
     buildToolsVersion '23.0.2'
     defaultConfig {
         applicationId "com.kuxhausen.huemore"
@@ -27,11 +27,11 @@ android {
     productFlavors {
         playEdition {
             minSdkVersion 10
-            targetSdkVersion 22
+            targetSdkVersion 27
         }
         compatabilityEdition {
             minSdkVersion 10
-            targetSdkVersion 22
+            targetSdkVersion 27
         }
     }
     sourceSets {

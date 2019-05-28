@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.kuxhausen.huemore.NavigationDrawerActivity;
@@ -85,11 +86,9 @@ public class GroupWidgetProvider extends AppWidgetProvider {
 
       String group = intent.getStringExtra(InternalArguments.GROUP_NAME);
       String mood = intent.getStringExtra(InternalArguments.MOOD_NAME);
+      Log.e("wtf","wtf");
 
-      Intent trasmitter = new Intent(ctx, ConnectivityService.class);
-      trasmitter.putExtra(InternalArguments.MOOD_NAME, mood);
-      trasmitter.putExtra(InternalArguments.GROUP_NAME, group);
-      ctx.startService(trasmitter);
+      ConnectivityService.startConnectivityService(ctx, group, mood);
     }
 
     super.onReceive(ctx, intent);
